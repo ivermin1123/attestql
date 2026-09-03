@@ -1,0 +1,27 @@
+# Runs the same checks as `just check`, on the oldest Python the project supports and the one it is
+# developed on. Until a run has been observed green this file is configuration, not evidence.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: extractions/setup-just@v4
+      - run: uv sync --locked
+      - run: just check

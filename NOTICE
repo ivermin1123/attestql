@@ -1,0 +1,28 @@
+AttestQL
+Copyright 2026 Hoang Le
+
+This repository is licensed under the Apache License, Version 2.0 (see LICENSE), with the
+exceptions listed here.
+
+The following files contain material excerpted from BIRD Mini-Dev
+(https://github.com/bird-bench/mini_dev), which is licensed under the Creative Commons
+Attribution-ShareAlike 4.0 International licence (CC BY-SA 4.0,
+https://creativecommons.org/licenses/by-sa/4.0/). That material is not covered by the
+Apache License and keeps its own licence and attribution:
+
+  tools/audit-sandbox/questions.json
+      the question text, evidence text, gold SQL and difficulty of Mini-Dev questions 1029, 879
+      and 207, reproduced because the defect the sandbox replays is in that shipped gold; the rows
+      those statements run against are this repository's own synthetic fixture.
+  plans/reports/spike-260902-three-gold-defects/
+      evidence records and counterexamples for the same three questions, holding their gold SQL
+      and a few result rows from the Mini-Dev PostgreSQL databases.
+  plans/reports/sweep-260902-gold-only-probes/fired.json
+      the question text, evidence text and gold SQL of the 52 Mini-Dev questions on which a
+      gold-only probe fired, with the rows the probe read.
+  plans/reports/parser-260903-postgast-against-pglast/current-parser.json and previous-parser.json
+      the table names and the ordering expressions of the 498 Mini-Dev gold statements, as two
+      parsers read them.
+
+Every other file, including the run outputs that carry only question ids, verdicts, hashes and
+counts, is this repository's own work under the Apache License.

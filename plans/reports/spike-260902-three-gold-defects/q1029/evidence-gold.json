@@ -1,0 +1,118 @@
+{
+  "question_as_asked": "What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?",
+  "resolved_interpretation": {
+    "metrics": [],
+    "metric_versions": {
+      "bird_minidev_question_set": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab"
+    },
+    "windows": [],
+    "trend_rule": null,
+    "dimensions": [],
+    "filters": [],
+    "join_paths": [],
+    "evaluation_clock": "2024-06-13T14:23:20+00:00"
+  },
+  "executed_sql": "SELECT t1.buildUpPlaySpeed FROM Team_Attributes AS t1 INNER JOIN Team AS t2 ON t1.team_api_id = t2.team_api_id ORDER BY t1.buildUpPlaySpeed ASC NULLS FIRST LIMIT 4",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "spike:pglast-parse-only",
+  "policy_version": "spike:observed-widths",
+  "mapping_version": "spike:none",
+  "authorization_policy_version": "spike:none",
+  "metric_definition_versions": {
+    "bird_minidev_question_set": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab"
+  },
+  "subject_id": "spike:local-operator",
+  "credential_id": "spike:pgpassword-env",
+  "canonical_operation": "benchmark.gold_sql.audit",
+  "effective_database_role": "postgres",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | postmaster_start=2026-09-02T13:32:04.693942+00:00 | backend_pid=196",
+  "tenant_context": "spike:none (a single-tenant benchmark database)",
+  "rls_context": {
+    "pg_policy_rows": "0",
+    "row_security": "on"
+  },
+  "execution_limits": {
+    "max_rows": 10000,
+    "max_result_bytes": 8000000,
+    "max_ast_nodes": 5000,
+    "statement_timeout_ms": 30000,
+    "fetch_batch_rows": 1000,
+    "lock_timeout_ms": 30000,
+    "idle_in_transaction_session_timeout_ms": 60000,
+    "work_mem_kb": 65536,
+    "temp_file_limit_kb": 1048576
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "buildupplayspeed",
+        "pg_type": "int8"
+      }
+    ],
+    "row_count": 4,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "int",
+          "value": 20
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 20
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 20
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 23
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | postmaster_start=2026-09-02T13:32:04.693942+00:00 | backend_pid=196"
+  },
+  "canonical_ordering": [
+    {
+      "column": "t1.buildupplayspeed",
+      "descending": true
+    }
+  ],
+  "serialization": {
+    "version": "spike:gold-audit/1",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "data_as_of": "2024-06-13T14:23:20+00:00",
+  "evaluation_clock": "2024-06-13T14:23:20+00:00",
+  "schema_version": "1.1.0",
+  "fixture_hash": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec",
+  "execution_metadata": {
+    "executed_at": "2026-09-02T13:53:53.257885+00:00",
+    "database_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | postmaster_start=2026-09-02T13:32:04.693942+00:00 | backend_pid=196",
+    "row_count": 4
+  },
+  "run_id": "spike:q1029:gold",
+  "rerun_instruction": "uv run python tools/gold-audit-spike/run.py with ATTESTQL_SPIKE_DSN, PGPASSWORD, ATTESTQL_SPIKE_DUMP and ATTESTQL_SPIKE_QUESTIONS set, against a PostgreSQL server loaded from the BIRD Mini-Dev PostgreSQL dump",
+  "replay_rule": "R-ORD",
+  "result_hash": "sha256:0f5bfb379a4e1a4beb26140ee3bac36dd95260cdd0fe4690bdfb236a57f4ce5e",
+  "record_hash": "sha256:56c361acc8ac1a33b788470c89a92157b6eb92fbb7fde1e3b5ad382e542af36f"
+}

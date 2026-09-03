@@ -1,0 +1,42 @@
+# Fast checks that run before a commit exists. Pyright and pytest stay in `just check`, where a
+# slower gate is acceptable.
+#
+# Every hook checks and refuses; none rewrites a file. ruff-check runs without --fix and
+# ruff-format with --check. The upstream trailing-whitespace and end-of-file-fixer hooks fix in
+# place and are deliberately not used. The developer applies fixes with `just fix` and reviews
+# the result before committing.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-merge-conflict
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.4
+    hooks:
+      - id: ruff-check
+      - id: ruff-format
+        args: [--check]
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.23.2
+    hooks:
+      - id: markdownlint-cli2
+  - repo: local
+    hooks:
+      - id: check-typography
+        name: typography (no em dash, en dash or numero sign in .md or .py)
+        entry: uv run python tools/check_typography.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check-doc-links
+        name: documentation links resolve
+        entry: uv run python tools/check_doc_links.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check-adr-index
+        name: ADR index matches docs/adr/
+        entry: uv run python tools/check_adr_index.py
+        language: system
+        pass_filenames: false
+        always_run: true

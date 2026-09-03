@@ -1,0 +1,725 @@
+"""The PostgreSQL backend: read-only execution with the envelope read back.
+
+The one property ADR-0013 point 7 carried over from the deleted product executor lives
+here. Every statement runs inside ``BEGIN READ ONLY`` with a ``SET LOCAL
+statement_timeout``, and before the statement is sent the session is asked what it
+actually holds. If it does not hold both, the execution is refused: rows returned by a
+session that is not the session the record would describe are not evidence, and a record
+that stated the timeout it asked for rather than the one in force would be stating an
+intention as a fact.
+
+This is the only module in the project that imports the driver, which ``tests/
+test_boundary.py`` asserts by walking the AST of every source file. Everything above it
+speaks to ``audit.backend.Backend``, so the second engine ADR-0013 point 4 names lands
+beside this file rather than inside the code that uses it.
+
+No driver exception leaves this module. Every cursor is taken through ``_cursor`` and
+every statement runs inside a ``psycopg.Error`` handler, so a connection that died between
+two questions is a ``BackendRefused`` naming the step that asked, which the audit reports
+as that one question's error; a raw driver error crossing this seam would abort a run that
+has questions left to answer.
+
+The connection is handed in rather than built here, except by ``connect``, so a test can
+drive the read-back refusal with a connection that answers differently. The driver's own
+connection is passed through one cast at that seam: psycopg's cursor is overloaded and
+generic, and matching those overloads structurally would state something about the
+driver's typing rather than about what this module needs from a connection.
+
+Two result types are loaded as the server renders them rather than as the driver would
+otherwise decide. A ``float4`` or ``float8`` arrives as the exact decimal the server
+printed for it: the canonical serialization states no rendering for a Python float, and
+in Mini-Dev 107 of 498 gold statements return one, so without this a fifth of the corpus
+would be refused rather than measured. ``extra_float_digits`` is a precondition, so that
+text is the shortest form that round-trips and no digit is invented or lost. An
+``interval`` arrives as its own text for the same kind of reason and under the
+``IntervalStyle`` precondition. Both keep the type the server named on the column, so a
+reader of a record sees ``float8`` beside a value tagged ``dec`` and ``interval`` beside
+one tagged ``str``.
+
+One thing here writes, and it is named so that nothing else has to be guessed at: the
+shuffled copies of ADR-0013 point 2's fourth smell are created as tables in a scratch
+schema that already exists and that the role already owns, and dropped again at the end
+of the run. This tool creates no schema and drops none: the login a benchmark maintainer
+audits with holds SELECT and one place to write, so a shuffle that needed CREATE on the
+database would be a shuffle nobody could run. The copies are made inside an explicit
+``BEGIN; SET TRANSACTION READ WRITE``, which is what a role whose
+``default_transaction_read_only`` is on has to state to write at all, under an advisory
+lock keyed on the scratch schema so that two runs sharing one schema make their copies one
+after the other rather than inside each other. Every audited statement still runs inside
+``BEGIN READ ONLY``, and no table the audit reads is ever written to.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from collections.abc import Generator, Mapping, Sequence
+from contextlib import contextmanager, suppress
+from decimal import Decimal, InvalidOperation
+from typing import Any, Protocol, cast
+
+import psycopg
+from psycopg import pq
+from psycopg import sql as sql_builder
+from psycopg.abc import Buffer
+from psycopg.adapt import Loader
+
+from attestql.audit.backend import BackendRefused, ReadBackDrift, ShuffledCopies, TextCensus
+from attestql.evidence.types import SessionSettings
+from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
+
+DRIVER_ERROR: type[Exception] = psycopg.Error
+"""The one failure this module translates, named so that it can be raised from outside.
+
+Everything the driver raises is one of these, and everything this module does with one is
+to name the step that met it and refuse. It is stated here because no other file may import
+the driver (``tests/test_boundary.py``), and a test that has to prove a lost connection
+becomes a refusal rather than an exception has to be able to raise what one raises."""
+
+PRECONDITION_SETTINGS: tuple[str, ...] = (
+    "TimeZone",
+    "DateStyle",
+    "IntervalStyle",
+    "extra_float_digits",
+)
+"""The four session settings ADR-0013 point 6 makes preconditions. The fifth, the
+database's default collation, is a property of the database and is read separately."""
+
+RECORDED_SETTINGS: tuple[str, ...] = (
+    "statement_timeout",
+    "search_path",
+    "server_version_num",
+    "transaction_read_only",
+)
+"""What is read back beside the preconditions, recorded and never blocking."""
+
+DEFAULT_SCHEMA = "public"
+"""Where a table named without a schema is looked for. BIRD's gold names bare tables and
+the dump loads them into one schema, so an unqualified name means this one, stated here
+rather than left to whatever the session's search path happens to be."""
+
+DEFAULT_SCRATCH_SCHEMA = "attestql_scratch"
+"""The schema the shuffled copies are made in, which this tool never creates or drops.
+
+It is a schema the role already owns, arranged once by whoever grants the login its
+SELECT, because a read-only auditing role cannot create a schema and should not be able
+to. Only the tables this run made in it are dropped, and only at the end of the run, since
+the schema is not this tool's to remove. The audited tables are never written to."""
+
+PLAN_CONTROLS: tuple[sql_builder.SQL, ...] = (
+    sql_builder.SQL("SET LOCAL enable_seqscan = off"),
+    sql_builder.SQL("SET LOCAL enable_hashjoin = off"),
+    sql_builder.SQL("SET LOCAL enable_mergejoin = off"),
+)
+"""The same statement over the same rows, with three fewer ways to read them."""
+
+CENSUS_SQL = """
+SELECT count(*),
+       count(*) FILTER (WHERE {column} IS NULL),
+       count(*) FILTER (WHERE {column} = ''),
+       count(*) FILTER (WHERE {column} IS NOT NULL AND {column} <> '' AND {column} !~ %s)
+FROM {table}
+"""
+"""One pass over a text column for the four counts a numeric-text census is."""
+
+
+class NumericFromFloatText(Loader):
+    """``float4`` and ``float8`` as the exact decimal the server printed for them."""
+
+    format = pq.Format.TEXT
+
+    def load(self, data: Buffer) -> Decimal:
+        text = bytes(data).decode("utf-8")
+        try:
+            return Decimal(text)
+        except InvalidOperation as unreadable:
+            # The server printed something no decimal can hold. Refusing names the value;
+            # returning a float would put a type in a record that has no rendering.
+            raise BackendRefused("float_loader", f"the server printed {text!r} for a float") from (
+                unreadable
+            )
+
+
+class TextFromInterval(Loader):
+    """``interval`` as the server's own text, under the ``IntervalStyle`` precondition."""
+
+    format = pq.Format.TEXT
+
+    def load(self, data: Buffer) -> str:
+        return bytes(data).decode("utf-8")
+
+
+class ColumnDescription(Protocol):
+    """One column as the driver describes it: its name and its type oid."""
+
+    @property
+    def name(self) -> str: ...
+
+    @property
+    def type_code(self) -> int: ...
+
+
+class Cursor(Protocol):
+    """What this module needs from a cursor, and nothing else.
+
+    A cell is ``Any`` because the driver decides what Python type a column comes back as,
+    which is the point of a typed replay: the value is carried as it arrived and the
+    canonical serialization is what states its type.
+    """
+
+    @property
+    def description(self) -> Sequence[ColumnDescription] | None: ...
+
+    def execute(self, query: object, params: Sequence[object] | None = None) -> object: ...
+
+    def fetchall(self) -> Sequence[tuple[Any, ...]]: ...
+
+    def fetchone(self) -> tuple[Any, ...] | None: ...
+
+    def close(self) -> None: ...
+
+
+class LoaderRegistry(Protocol):
+    """Where a connection is told what Python type a server type loads as.
+
+    The parameters are positional so that this states what is asked of the driver and
+    not what the driver happens to call its arguments.
+    """
+
+    def register_loader(self, type_name: str, loader: type[Loader], /) -> None: ...
+
+
+class Connection(Protocol):
+    """What this module needs from a connection: cursors, and the loaders it registers."""
+
+    @property
+    def adapters(self) -> LoaderRegistry: ...
+
+    def cursor(self) -> Cursor: ...
+
+
+class PostgresBackend:
+    """One PostgreSQL connection, read-only, behind ``audit.backend.Backend``.
+
+    The connection must be in autocommit mode: this class opens and rolls back its own
+    transactions by statement, and a driver managing a transaction underneath would make
+    ``BEGIN READ ONLY`` mean something other than what it says. ``connect`` builds one
+    that way.
+    """
+
+    def __init__(
+        self, connection: Connection, *, scratch_schema: str = DEFAULT_SCRATCH_SCHEMA
+    ) -> None:
+        self._connection = connection
+        self._identity: str | None = None
+        self._shuffled: ShuffledCopies | None = None
+        self._scratch_schema = scratch_schema
+        connection.adapters.register_loader("float4", NumericFromFloatText)
+        connection.adapters.register_loader("float8", NumericFromFloatText)
+        connection.adapters.register_loader("interval", TextFromInterval)
+
+    @classmethod
+    def connect(
+        cls,
+        dsn: str,
+        *,
+        password: str | None = None,
+        scratch_schema: str = DEFAULT_SCRATCH_SCHEMA,
+    ) -> PostgresBackend:
+        """Open one autocommit connection from a DSN, with the credential kept out of it.
+
+        The password is a separate argument so a DSN that is written into a record or a
+        log never has to carry one. The scratch schema is named here because it is a
+        property of the login: it is where this role may write, and the run is told it
+        rather than looking for somewhere it could.
+        """
+        try:
+            connection = psycopg.connect(dsn, password=password, autocommit=True)
+        except psycopg.Error as failed:
+            # Named the way this interface names failures, so a caller that must not
+            # import the driver can still tell a server it could not reach from a
+            # question it could not answer.
+            raise BackendRefused("connect", str(failed).strip()) from failed
+        return cls(cast("Connection", connection), scratch_schema=scratch_schema)
+
+    @property
+    def scratch_schema(self) -> str:
+        """Where the shuffled copies are made. Named so a summary can state it."""
+        return self._scratch_schema
+
+    def identity(self) -> str:
+        """Version, server, and database, read once and repeated verbatim after that."""
+        if self._identity is None:
+            row = self._one(
+                "SELECT version(), coalesce(inet_server_addr()::text, 'local'), "
+                "coalesce(inet_server_port(), 0), current_database()",
+                step="identity",
+            )
+            self._identity = f"{row[0]} | server={row[1]}:{row[2]} | database={row[3]}"
+        return self._identity
+
+    def effective_database_role(self) -> str:
+        return str(self._one("SELECT current_user", step="role")[0])
+
+    def default_collation(self) -> str:
+        return str(
+            self._one(
+                "SELECT datcollate FROM pg_database WHERE datname = current_database()",
+                step="collation",
+            )[0]
+        )
+
+    def session_settings(self) -> SessionSettings:
+        """The five settings that decide comparability, and the four recorded beside them."""
+        read_back = self._settings((*PRECONDITION_SETTINGS, *RECORDED_SETTINGS))
+        missing = sorted(name for name in PRECONDITION_SETTINGS if name not in read_back)
+        if missing:
+            raise BackendRefused("session_settings", f"the session reported no value for {missing}")
+        return SessionSettings(
+            time_zone=read_back["TimeZone"],
+            date_style=read_back["DateStyle"],
+            interval_style=read_back["IntervalStyle"],
+            extra_float_digits=read_back["extra_float_digits"],
+            database_collation=self.default_collation(),
+            recorded={name: read_back[name] for name in RECORDED_SETTINGS if name in read_back},
+        )
+
+    def execute(self, sql: str, *, statement_timeout_seconds: int) -> ExecutionResult:
+        """One statement, read-only, with the envelope read back before it is sent."""
+        return self._execute(sql, statement_timeout_seconds=statement_timeout_seconds)
+
+    def execute_shuffled(self, sql: str, *, statement_timeout_seconds: int) -> ExecutionResult:
+        """The same statement over the shuffled copies, reached by the search path.
+
+        The statement is not rewritten: an unqualified table name finds the copy because
+        the scratch schema is ahead of ``public`` on the path, and a name the statement
+        qualified itself still finds the table it qualified. Which tables were copied is
+        what ``prepare_shuffled_copies`` returned, and a caller states it beside the
+        result rather than assuming every table moved.
+        """
+        if self._shuffled is None:
+            raise BackendRefused("execute_shuffled", "no shuffled copies have been prepared")
+        path = sql_builder.SQL("SET LOCAL search_path = {}, {}").format(
+            sql_builder.Identifier(self._scratch_schema), sql_builder.Identifier(DEFAULT_SCHEMA)
+        )
+        return self._execute(
+            sql, statement_timeout_seconds=statement_timeout_seconds, before=(path,)
+        )
+
+    def execute_plan_variant(self, sql: str, *, statement_timeout_seconds: int) -> ExecutionResult:
+        """The same statement over the same tables, with three ways to read them off."""
+        return self._execute(
+            sql, statement_timeout_seconds=statement_timeout_seconds, before=PLAN_CONTROLS
+        )
+
+    def _execute(
+        self, sql: str, *, statement_timeout_seconds: int, before: Sequence[object] = ()
+    ) -> ExecutionResult:
+        """One statement, read-only, with the envelope read back before it is sent.
+
+        ``before`` runs inside the same transaction and after the read-back, so anything
+        it sets is ``SET LOCAL`` and is gone with the rollback. It never carries the
+        statement itself and never changes what read-only means.
+        """
+        if statement_timeout_seconds < 1:
+            raise BackendRefused("timeout", "a statement timeout is a whole number of seconds")
+        timeout_ms = statement_timeout_seconds * 1000
+        cursor = self._cursor("begin")
+        try:
+            try:
+                cursor.execute("BEGIN READ ONLY")
+                cursor.execute(
+                    "SELECT set_config('statement_timeout', %s, true)", [str(timeout_ms)]
+                )
+                cursor.fetchall()
+            except psycopg.Error as failed:
+                # The envelope itself, which is where a connection that went away between
+                # two questions surfaces. Named like every other refusal, so the audit
+                # reports one question's error rather than ending on a driver exception.
+                raise BackendRefused("begin", str(failed).strip()) from failed
+            self._require_the_envelope(cursor, timeout_ms)
+            try:
+                for control in before:
+                    cursor.execute(control)
+                cursor.execute(sql)
+                described = tuple(
+                    (column.name, column.type_code) for column in cursor.description or ()
+                )
+                rows = tuple(tuple(row) for row in cursor.fetchall())
+            except psycopg.Error as failed:
+                # The driver's own error, named the way this interface names failures, so
+                # a caller of Backend never has to know which driver refused.
+                raise BackendRefused("execute", str(failed).strip()) from failed
+        finally:
+            _roll_back(cursor)
+        return ExecutionResult(
+            columns=self._columns(described),
+            rows=rows,
+            backend_identity=self.identity(),
+            limits_in_force=ExecutionLimits(statement_timeout_ms=timeout_ms),
+            truncated=False,
+        )
+
+    def existing_tables(self, tables: Sequence[str]) -> tuple[str, ...]:
+        """Which of those names the catalogue holds, asked once and never by counting them.
+
+        ``information_schema.tables`` lists what this role may see, which is the same
+        question: a table it cannot reach is a table it cannot measure, and the gold that
+        names it fails on its own line with the server's own message. Views are listed
+        there too, and a gold that reads one is reading a table as far as this is
+        concerned.
+        """
+        wanted = tuple(dict.fromkeys(tables))
+        if not wanted:
+            return ()
+        rows = self._all(
+            "SELECT table_schema || '.' || table_name FROM information_schema.tables "
+            "WHERE table_schema || '.' || table_name = ANY(%s)",
+            [list(_qualified(wanted))],
+            step="existing_tables",
+        )
+        found = {str(row[0]) for row in rows}
+        return tuple(name for name in wanted if _qualify(name) in found)
+
+    def schema_digest(self, tables: Sequence[str]) -> str:
+        """One digest over the columns of those tables, in a stated order."""
+        qualified = _qualified(tables)
+        rows = self._all(
+            "SELECT table_schema, table_name, column_name, data_type, is_nullable "
+            "FROM information_schema.columns "
+            "WHERE table_schema || '.' || table_name = ANY(%s) "
+            "ORDER BY table_schema, table_name, ordinal_position",
+            [list(qualified)],
+            step="schema_digest",
+        )
+        payload = json.dumps([[str(value) for value in row] for row in rows], separators=(",", ":"))
+        return f"sha256:{hashlib.sha256(payload.encode('utf-8')).hexdigest()}"
+
+    def row_counts(self, tables: Sequence[str]) -> Mapping[str, int]:
+        """The exact count of each table, counted one table at a time."""
+        counts: dict[str, int] = {}
+        for name in _qualified(tables):
+            statement = sql_builder.SQL("SELECT count(*) FROM {}").format(_identifier(name))
+            counts[name] = int(self._one(statement, step="row_counts")[0])
+        return counts
+
+    def column_types(self, tables: Sequence[str]) -> Mapping[str, Mapping[str, str]]:
+        """Per qualified table, the declared type of every column, as the catalogue names it."""
+        rows = self._all(
+            "SELECT table_schema, table_name, column_name, data_type "
+            "FROM information_schema.columns "
+            "WHERE table_schema || '.' || table_name = ANY(%s) "
+            "ORDER BY table_schema, table_name, ordinal_position",
+            [list(_qualified(tables))],
+            step="column_types",
+        )
+        types: dict[str, dict[str, str]] = {}
+        for row in rows:
+            types.setdefault(f"{row[0]}.{row[1]}", {})[str(row[2])] = str(row[3])
+        return types
+
+    def numeric_text_census(self, table: str, column: str, pattern: str) -> TextCensus:
+        """The four counts, taken in one pass over the column the caller named."""
+        qualified = _qualified((table,))[0]
+        statement = sql_builder.SQL(CENSUS_SQL).format(
+            column=sql_builder.Identifier(column), table=_identifier(qualified)
+        )
+        counted = self._one(statement, [pattern], step="numeric_text_census")
+        rows, nulls, empties, non_numeric = (int(value) for value in counted)
+        return TextCensus(
+            rows=rows,
+            nulls=nulls,
+            empty_strings=empties,
+            non_numeric=non_numeric,
+            pattern=pattern,
+        )
+
+    def prepare_shuffled_copies(
+        self, tables: Sequence[str], *, seed: str, row_limit: int
+    ) -> ShuffledCopies:
+        """One copy of each table small enough, in an order the seed fixes, made once.
+
+        This is the write, and it happens in the scratch schema this backend was given and
+        nowhere else. Every copy is a ``CREATE TABLE AS SELECT`` off the table it copies,
+        preceded by a ``DROP TABLE IF EXISTS`` that clears a copy a previous run left
+        behind, and the tables themselves are only ever read. A copy carries no key, no
+        index and no constraint of its own, so a statement whose grouping relied on a
+        primary key will not run against it; that is the rerun's error and is reported per
+        statement rather than hidden here.
+
+        A scratch schema that does not exist, or that this role cannot create in, is a
+        refusal naming which of the two it was. It is not a tool error: the caller reports
+        the shuffle as not run and audits everything else.
+        """
+        if row_limit < 1:
+            raise BackendRefused("prepare_shuffled_copies", "a row limit is at least one row")
+        counts = self.row_counts(tables)
+        copied: list[str] = []
+        skipped: dict[str, int] = {}
+        self._shuffled = None
+        with self._writing("prepare_shuffled_copies") as cursor:
+            self._require_the_scratch_schema(cursor)
+            for qualified, rows in sorted(counts.items()):
+                if rows > row_limit:
+                    skipped[qualified] = rows
+                    continue
+                _, _, table = qualified.partition(".")
+                cursor.execute(self._drop_copy(table))
+                cursor.execute(
+                    sql_builder.SQL(
+                        "CREATE TABLE {scratch}.{table} AS "
+                        "SELECT * FROM {source} AS t ORDER BY md5({seed} || t::text)"
+                    ).format(
+                        scratch=sql_builder.Identifier(self._scratch_schema),
+                        table=sql_builder.Identifier(table),
+                        source=_identifier(qualified),
+                        seed=sql_builder.Literal(seed),
+                    )
+                )
+                copied.append(qualified)
+        prepared = ShuffledCopies(
+            copied=tuple(copied), skipped=skipped, seed=seed, row_limit=row_limit
+        )
+        self._shuffled = prepared
+        return prepared
+
+    def drop_shuffled_copies(self) -> None:
+        """Drop the copies this run made, one table at a time, and nothing else.
+
+        The scratch schema outlives the run and is not this tool's to remove, and a table
+        in it that this run did not create is somebody else's. A run that prepared nothing
+        has nothing to drop and asks the server nothing.
+        """
+        prepared, self._shuffled = self._shuffled, None
+        if prepared is None:
+            return
+        with self._writing("drop_shuffled_copies") as cursor:
+            for qualified in prepared.copied:
+                _, _, table = qualified.partition(".")
+                cursor.execute(self._drop_copy(table))
+
+    def _drop_copy(self, table: str) -> sql_builder.Composed:
+        """Remove one copy if it is there, which is how a leftover from a run that was
+        interrupted is cleared before the same copy is made again."""
+        return sql_builder.SQL("DROP TABLE IF EXISTS {scratch}.{table}").format(
+            scratch=sql_builder.Identifier(self._scratch_schema),
+            table=sql_builder.Identifier(table),
+        )
+
+    def _require_the_scratch_schema(self, cursor: Cursor) -> None:
+        """Refuse before writing anything unless the schema is there and the role may use it."""
+        cursor.execute(
+            "SELECT count(*) FROM pg_namespace WHERE nspname = %s", [self._scratch_schema]
+        )
+        found = cursor.fetchone()
+        if found is None or not int(found[0]):
+            raise BackendRefused(
+                "prepare_shuffled_copies",
+                f"the scratch schema {self._scratch_schema} does not exist and this tool "
+                "creates none",
+            )
+        cursor.execute(
+            "SELECT current_user, has_schema_privilege(%s, 'CREATE')", [self._scratch_schema]
+        )
+        privilege = cursor.fetchone()
+        if privilege is None or not bool(privilege[1]):
+            raise BackendRefused(
+                "prepare_shuffled_copies",
+                f"the role {'' if privilege is None else privilege[0]} cannot create in the "
+                f"scratch schema {self._scratch_schema}",
+            )
+
+    @contextmanager
+    def _writing(self, step: str) -> Generator[Cursor]:
+        """One read-write transaction in the scratch schema, alone among concurrent runs.
+
+        ``SET TRANSACTION READ WRITE`` is stated rather than assumed: the login this tool
+        is written for has ``default_transaction_read_only`` on, which is a default and not
+        a privilege, so the one transaction that writes says so and every other one stays
+        read only. The advisory lock is keyed on the scratch schema name and held to the
+        end of this transaction, so two runs told the same schema make and remove their
+        copies one after the other instead of one dropping a table the other is creating.
+        """
+        cursor = self._cursor(step)
+        try:
+            cursor.execute("BEGIN")
+            cursor.execute("SET TRANSACTION READ WRITE")
+            cursor.execute("SELECT pg_advisory_xact_lock(%s)", [_lock_key(self._scratch_schema)])
+            cursor.fetchall()
+            yield cursor
+            cursor.execute("COMMIT")
+        except psycopg.Error as failed:
+            _undo(cursor)
+            raise BackendRefused(step, str(failed).strip()) from failed
+        except BackendRefused:
+            # This backend's own refusal, raised inside the transaction: the transaction is
+            # unwound and the refusal is what the caller sees.
+            _undo(cursor)
+            raise
+        finally:
+            _close(cursor)
+
+    def content_digests(self, tables: Sequence[str]) -> Mapping[str, str]:
+        """A digest of every row of each table, taken in a sorted order the server fixes."""
+        digests: dict[str, str] = {}
+        for name in _qualified(tables):
+            statement = sql_builder.SQL(
+                "SELECT md5(coalesce(string_agg(t::text, chr(10) ORDER BY t::text), '')) "
+                "FROM {} AS t"
+            ).format(_identifier(name))
+            digests[name] = f"md5:{self._one(statement, step='content_digests')[0]}"
+        return digests
+
+    def _require_the_envelope(self, cursor: Cursor, timeout_ms: int) -> None:
+        """Refuse the execution unless the session holds what was just set on it."""
+        try:
+            cursor.execute(
+                "SELECT name, setting FROM pg_settings WHERE name = ANY(%s)",
+                [["statement_timeout", "transaction_read_only"]],
+            )
+            held = {str(row[0]): str(row[1]) for row in cursor.fetchall()}
+        except psycopg.Error as failed:
+            raise BackendRefused("read_back", str(failed).strip()) from failed
+        if held.get("transaction_read_only") != "on":
+            raise ReadBackDrift(
+                "read_back",
+                "the transaction is not read only; it reports "
+                f"{held.get('transaction_read_only', 'nothing')}",
+            )
+        if held.get("statement_timeout") != str(timeout_ms):
+            raise ReadBackDrift(
+                "read_back",
+                f"statement_timeout was set to {timeout_ms} and the session holds "
+                f"{held.get('statement_timeout', 'nothing')}",
+            )
+
+    def _columns(self, described: Sequence[tuple[str, int]]) -> tuple[ColumnType, ...]:
+        """The projection, with the server's own name for each result type oid."""
+        oids = [oid for _, oid in described]
+        names: dict[int, str] = {}
+        if oids:
+            rows = self._all(
+                "SELECT oid, typname FROM pg_type WHERE oid = ANY(%s)", [oids], step="pg_type"
+            )
+            names = {int(row[0]): str(row[1]) for row in rows}
+        return tuple(
+            ColumnType(name=name, pg_type=names.get(oid, f"oid:{oid}")) for name, oid in described
+        )
+
+    def _settings(self, names: Sequence[str]) -> dict[str, str]:
+        rows = self._all(
+            "SELECT name, setting FROM pg_settings WHERE name = ANY(%s)",
+            [list(names)],
+            step="session_settings",
+        )
+        return {str(row[0]): str(row[1]) for row in rows}
+
+    def _cursor(self, step: str) -> Cursor:
+        """One cursor, with a connection that is gone named the way this interface names it.
+
+        Every question this module asks starts here. A connection the server closed raises
+        from the driver on the cursor rather than on the statement, so the step that asked
+        is named here too and no caller of ``Backend`` ever sees a ``psycopg`` exception.
+        """
+        try:
+            return self._connection.cursor()
+        except psycopg.Error as failed:
+            raise BackendRefused(step, str(failed).strip()) from failed
+
+    def _all(
+        self, statement: object, params: Sequence[object] | None = None, *, step: str
+    ) -> Sequence[tuple[Any, ...]]:
+        """One question this module asks the server, with the driver's error named."""
+        cursor = self._cursor(step)
+        try:
+            cursor.execute(statement, params)
+            return cursor.fetchall()
+        except psycopg.Error as failed:
+            raise BackendRefused(step, str(failed).strip()) from failed
+        finally:
+            _close(cursor)
+
+    def _one(
+        self, statement: object, params: Sequence[object] | None = None, *, step: str
+    ) -> tuple[Any, ...]:
+        rows = self._all(statement, params, step=step)
+        if not rows:
+            raise BackendRefused(
+                step, "the server returned no row for a question it always answers"
+            )
+        return rows[0]
+
+
+def _undo(cursor: Cursor) -> None:
+    """End the transaction whatever happened.
+
+    A rollback that fails has nothing left to undo: the transaction is already gone, and
+    letting that failure out would replace the refusal or the driver error that is the
+    reason this is being unwound at all.
+    """
+    with suppress(psycopg.Error):
+        cursor.execute("ROLLBACK")
+
+
+def _roll_back(cursor: Cursor) -> None:
+    """Unwind the transaction, and close the cursor whatever that did."""
+    try:
+        _undo(cursor)
+    finally:
+        _close(cursor)
+
+
+def _close(cursor: Cursor) -> None:
+    """Give the cursor back, and never let that replace what is already being raised.
+
+    Closing happens in a finally, and a cursor on a connection the server closed can refuse
+    to close. What a caller has to see is the refusal being unwound, not the failure of the
+    tidying up after it.
+    """
+    with suppress(psycopg.Error):
+        cursor.close()
+
+
+def _lock_key(scratch_schema: str) -> int:
+    """The advisory lock key of one scratch schema: the same number in every process.
+
+    Derived from the name rather than from a sequence or a random draw, so two runs that
+    were told the same scratch schema take the same lock and two that were told different
+    ones do not wait on each other.
+    """
+    return int.from_bytes(
+        hashlib.sha256(scratch_schema.encode("utf-8")).digest()[:8], "big", signed=True
+    )
+
+
+def _qualify(table: str) -> str:
+    """One table name as the catalogue holds it: the schema it named, or the default one."""
+    return table if "." in table else f"{DEFAULT_SCHEMA}.{table}"
+
+
+def _qualified(tables: Sequence[str]) -> tuple[str, ...]:
+    """The table names, schema-qualified, deduplicated and in a fixed order."""
+    return tuple(sorted({_qualify(name) for name in tables}))
+
+
+def _identifier(qualified: str) -> sql_builder.Identifier:
+    schema, _, table = qualified.partition(".")
+    return sql_builder.Identifier(schema, table)
+
+
+__all__ = [
+    "CENSUS_SQL",
+    "DEFAULT_SCHEMA",
+    "DEFAULT_SCRATCH_SCHEMA",
+    "DRIVER_ERROR",
+    "PLAN_CONTROLS",
+    "PRECONDITION_SETTINGS",
+    "RECORDED_SETTINGS",
+    "ColumnDescription",
+    "Connection",
+    "Cursor",
+    "LoaderRegistry",
+    "NumericFromFloatText",
+    "PostgresBackend",
+    "TextFromInterval",
+]

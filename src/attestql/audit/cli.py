@@ -1,0 +1,1028 @@
+"""``attestql audit``: one command over a question file and a database.
+
+ADR-0013 point 2. A stranger loads the BIRD Mini-Dev PostgreSQL dump, runs this against
+it, and gets one line per question, a directory per disagreement or fired smell, a
+summary line and ``summary.json``. With ``--predictions`` each prediction is compared
+with its gold under the gold's own replay rule; without them the gold-only smells run
+alone.
+
+**What a verdict means.** NOT_EQUAL says the gold and the prediction disagree on this
+data under this rule. It never says which of them is wrong, and neither does a smell,
+which is a heuristic and says so in its own evidence. Exit status follows ADR-0013:
+0 when nothing disagreed, 1 when something did, 2 when this tool could not run at all.
+The counts live in the summary and never in the exit code, and ``--fail-on-smell`` is
+for whoever wants a heuristic to block a pipeline.
+
+**The credential is never here.** The DSN is libpq keyword form. A URI is refused
+whatever it holds, because a URI is where a password is written, and so is a keyword DSN
+that names one; the password comes from ``PGPASSWORD`` or ``~/.pgpass`` through the
+driver, is never read by this module, and appears in no line, file or error.
+
+**Nothing aborts a run except the tool failing to start.** Failing to start is reading the
+question file, reading the predictions file, making the output directory, and asking the
+backend what it is; nothing after that. A gold that does not parse, a statement that times
+out, a table this database does not hold, a value with no rendering, a server that went
+away between two questions: each is that question's ``ERROR`` line with the message, an
+entry in the summary's ``errors``, and the run goes on to the next question and still
+writes ``summary.json``.
+
+**An error is not the exit status.** ADR-0013 point 2 fixes 0 for no disagreement, 1 for
+at least one NOT_EQUAL and 2 for a tool error, and a question the run could not answer is
+none of the three: the tool ran, the other questions were audited, and their verdicts are
+what the status states. The exception is a run that answered no question at all, which
+produced no audit and is therefore the tool failing after all: it exits 2, with the
+summary naming every question it could not answer written first.
+
+The module holds three things and nothing else: reading what the command was given,
+``run_audit``, which a test drives with a scripted backend, and ``main``, which builds
+the PostgreSQL one. Everything printed goes through a writer, so a test reads the lines
+rather than a captured stream.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+import time
+import uuid
+from collections.abc import Generator, Mapping, Sequence
+from contextlib import contextmanager
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any, Protocol, TextIO, cast
+
+from attestql.audit.backend import Backend, BackendRefused, ShuffledCopies
+from attestql.audit.compare import (
+    DEFAULT_STATEMENT_TIMEOUT_SECONDS,
+    GOLD_RECORD_FILE,
+    Comparison,
+    compare_statements,
+    record_statement,
+    write_comparison,
+)
+from attestql.audit.fixture import CACHE_FILE, file_digest, fixture_digest
+from attestql.audit.postgres import DEFAULT_SCRATCH_SCHEMA, PostgresBackend
+from attestql.audit.smells import (
+    DEFAULT_SHUFFLE_ROW_LIMIT,
+    DEFAULT_SHUFFLE_SEED,
+    SMELL_NAMES,
+    QuestionText,
+    Smell,
+    SmellSettings,
+    all_smells,
+    smells_json,
+)
+from attestql.audit.statements import StatementRefused, parse_statement
+from attestql.evidence.record import EvidenceRecord
+from attestql.evidence.render import Json, record_json, write_json
+from attestql.evidence.replay import ComparabilityResult
+from attestql.evidence.serialize import SerializationDescriptor, UnsupportedValue
+from attestql.evidence.types import FixtureDigest, QuestionMetadata
+
+PROGRAM = "attestql"
+SUMMARY_FILE = "summary.json"
+SUMMARY_FORMAT = "attestql/audit/summary/1"
+SMELLS_FILE = "smells.json"
+
+GOLD_ONLY = "GOLD-ONLY"
+"""The verdict column of a question that had no prediction to compare the gold with."""
+
+ERROR = "ERROR"
+"""The verdict column of a question whose statement could not be run and recorded."""
+
+NO_SMELL = "none"
+
+SERIALIZATION = SerializationDescriptor(
+    version="attestql/audit/1",
+    numeric_scale=6,
+    timestamp_format="%Y-%m-%dT%H:%M:%S.%fZ",
+    timezone="UTC",
+    null_rendering="NULL",
+    encoding="utf-8",
+)
+"""What every result of an audit is rendered under, stated in every record it writes.
+
+One descriptor for the whole tool: two records rendered under different rules are not
+comparable, and a run that let its rendering be configured would produce records that
+cannot be compared with anyone else's."""
+
+BIRD_PREDICTION_SUFFIX = "\t----- bird -----\t"
+"""What BIRD's own ``predict_dev.json`` appends to each statement: a tab, a marker and
+the database it was written for. The statement is what comes before it."""
+
+
+class ToolError(Exception):
+    """This tool could not run at all, which is exit status 2 and not a finding."""
+
+
+@dataclass(frozen=True)
+class Question:
+    """One row of the question file, as the file states it."""
+
+    question_id: int
+    db_id: str
+    difficulty: str
+    question: str
+    evidence: str
+    sql: str
+
+
+@dataclass(frozen=True)
+class QuestionSet:
+    """The questions a run will audit, and what the file they came from held."""
+
+    questions: tuple[Question, ...]
+    entries: int
+    duplicate_ids: tuple[int, ...]
+    digest: str
+    path: Path
+
+
+@dataclass(frozen=True)
+class AuditOptions:
+    """Everything the command was asked for, with the credential deliberately absent."""
+
+    dsn: str
+    questions: Path
+    out: Path
+    predictions: Path | None = None
+    ids: tuple[int, ...] = ()
+    fixture_digest: str = "counts"
+    fail_on_smell: bool = False
+    experimental_s2: bool = False
+    plan_variant: bool = False
+    shuffle_seed: int = DEFAULT_SHUFFLE_SEED
+    shuffle_row_limit: int = DEFAULT_SHUFFLE_ROW_LIMIT
+    scratch_schema: str = DEFAULT_SCRATCH_SCHEMA
+    statement_timeout_seconds: int = DEFAULT_STATEMENT_TIMEOUT_SECONDS
+    data_as_of: datetime | None = None
+
+    @property
+    def with_content_digests(self) -> bool:
+        return self.fixture_digest == "full"
+
+
+@dataclass(frozen=True)
+class _Measured:
+    """What the run measured before the questions, and what it could not measure.
+
+    ``missing`` are the names a gold used that this database does not hold; they are the
+    summary's ``fixture.missing_tables`` and the reason the questions that use them will
+    error. ``refused`` is filled when the measurement itself was refused, which leaves the
+    run without a digest and every question to fail or succeed on its own.
+    """
+
+    digest: FixtureDigest | None
+    present: tuple[str, ...]
+    missing: tuple[str, ...]
+    refused: str
+
+
+@dataclass(frozen=True)
+class QuestionError:
+    """One question this run could not answer, and what stopped it."""
+
+    question_id: int
+    step: str
+    message: str
+
+
+@dataclass(frozen=True)
+class Summary:
+    """What a run found, counted. The same numbers the summary line and the file state."""
+
+    run_id: str
+    questions: int
+    verdicts: Mapping[str, int]
+    smells: Mapping[str, int]
+    errors: tuple[QuestionError, ...]
+    elapsed_seconds: Mapping[str, float]
+    exit_status: int
+
+    @property
+    def not_equal(self) -> int:
+        return self.verdicts.get(ComparabilityResult.NOT_EQUAL.name, 0)
+
+    @property
+    def not_comparable(self) -> int:
+        return self.verdicts.get(ComparabilityResult.NOT_COMPARABLE.name, 0)
+
+    @property
+    def smells_fired(self) -> int:
+        return sum(self.smells.values())
+
+
+class Writer(Protocol):
+    """Where the command's lines go. One method, so a test can be one."""
+
+    def line(self, text: str) -> None: ...
+
+
+class ConsoleWriter:
+    """The lines, to a stream, one per call."""
+
+    def __init__(self, stream: TextIO) -> None:
+        self._stream = stream
+
+    def line(self, text: str) -> None:
+        print(text, file=self._stream)
+
+
+@dataclass
+class Phases:
+    """Wall time per phase of a run, accumulated across the questions."""
+
+    elapsed: dict[str, float] = field(default_factory=dict[str, float])
+
+    @contextmanager
+    def timed(self, name: str) -> Generator[None]:
+        start = time.perf_counter()
+        try:
+            yield
+        finally:
+            self.elapsed[name] = self.elapsed.get(name, 0.0) + time.perf_counter() - start
+
+    def rounded(self) -> Mapping[str, float]:
+        return {name: round(value, 3) for name, value in sorted(self.elapsed.items())}
+
+
+def read_questions(path: Path, ids: Sequence[int] = ()) -> QuestionSet:
+    """Every question of the file, deduplicated by id, filtered to ``ids`` when given.
+
+    A duplicated id whose entry is identical is one question and is kept once: BIRD's own
+    Mini-Dev file holds 500 entries with 498 distinct ids that way. A duplicated id whose
+    entries differ is two questions with one name, which no run can answer, so the ids
+    are named and the run does not start.
+    """
+    entries = _question_entries(_read_json(path, "the question file"), path)
+    kept: dict[int, Question] = {}
+    duplicates: list[int] = []
+    conflicting: list[int] = []
+    for index, entry in enumerate(entries):
+        question = _question(entry, path, index)
+        seen = kept.get(question.question_id)
+        if seen is None:
+            kept[question.question_id] = question
+            continue
+        duplicates.append(question.question_id)
+        if seen != question:
+            conflicting.append(question.question_id)
+    if conflicting:
+        raise ToolError(
+            f"{path} states different questions under the same ids "
+            f"{sorted(set(conflicting))}; no run can answer both"
+        )
+    wanted = tuple(kept[found] for found in ids if found in kept) if ids else tuple(kept.values())
+    missing = [found for found in ids if found not in kept]
+    if missing:
+        raise ToolError(f"{path} holds no question with the ids {missing}")
+    return QuestionSet(
+        questions=wanted,
+        entries=len(entries),
+        duplicate_ids=tuple(sorted(set(duplicates))),
+        digest=file_digest(path),
+        path=path,
+    )
+
+
+def _question(entry: object, path: Path, index: int) -> Question:
+    """One entry as a question, or a refusal naming the entry that was not one."""
+    if not isinstance(entry, dict):
+        raise ToolError(f"{path} entry {index} is {type(entry).__name__} and not an object")
+    fields = cast("dict[str, Any]", entry)
+    try:
+        return Question(
+            question_id=int(fields["question_id"]),
+            db_id=str(fields["db_id"]),
+            difficulty=str(fields.get("difficulty", "")),
+            question=str(fields["question"]),
+            evidence=str(fields.get("evidence", "")),
+            sql=str(fields["SQL"]),
+        )
+    except (KeyError, TypeError, ValueError) as incomplete:
+        raise ToolError(f"{path} entry {index} is not a question: {incomplete}") from incomplete
+
+
+def read_predictions(path: Path) -> Mapping[int, str]:
+    """The predictions by question id, in either of the two forms BIRD writes.
+
+    The keys are the question ids, as strings or as numbers. A value is the statement,
+    and BIRD's own ``predict_dev.json`` appends a tab, a marker and the database name to
+    it, which is stripped here so that one file works in both forms.
+    """
+    document = _read_json(path, "the predictions file")
+    if not isinstance(document, dict):
+        raise ToolError(f"{path} holds {type(document).__name__} and predictions are an object")
+    predictions: dict[int, str] = {}
+    for key, value in cast("dict[object, object]", document).items():
+        try:
+            question_id = int(cast("int | str", key))
+        except (TypeError, ValueError) as unreadable:
+            raise ToolError(f"{path} has the key {key!r}, which is no question id") from unreadable
+        if not isinstance(value, str):
+            raise ToolError(f"{path}[{key}] is {type(value).__name__} and a prediction is SQL")
+        predictions[question_id] = value.partition(BIRD_PREDICTION_SUFFIX)[0].strip()
+    return predictions
+
+
+def _question_entries(raw: object, path: Path) -> list[object]:
+    """The list of question entries, bare as Mini-Dev ships it or wrapped in an object.
+
+    A wrapped file is ``{"source": ..., "questions": [...]}``: a bare list cannot carry an
+    attribution, and a fixture that reproduces a benchmark's questions has to, so the list may
+    sit under ``questions`` beside the fields that say where it came from.
+    """
+    kind = type(raw).__name__
+    if isinstance(raw, dict):
+        wrapped = cast("dict[str, object]", raw).get("questions")
+        if isinstance(wrapped, list):
+            return cast("list[object]", wrapped)
+    if isinstance(raw, list):
+        return cast("list[object]", raw)
+    raise ToolError(
+        f"{path} holds {kind} and a question file is a list, "
+        "or an object whose 'questions' field is one"
+    )
+
+
+def _read_json(path: Path, what: str) -> object:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except OSError as unreadable:
+        raise ToolError(f"{what} {path} cannot be read: {unreadable}") from unreadable
+    except ValueError as broken:
+        raise ToolError(f"{what} {path} is not JSON: {broken}") from broken
+
+
+def _question_metadata(question: Question, question_set: str) -> QuestionMetadata:
+    return QuestionMetadata(
+        question_id=str(question.question_id),
+        question_set=question_set,
+        question_text=question.question,
+        evidence_text=question.evidence,
+    )
+
+
+def _line(
+    question: Question, rule: str, verdict: str, smells: Sequence[str], directory: str | None
+) -> str:
+    """One question's line: the id, the database, the rule, the verdict and the smells."""
+    fired = ",".join(smells) if smells else NO_SMELL
+    line = (
+        f"{'q' + str(question.question_id):<5} {question.db_id:<11} "
+        f"{rule:<6} {verdict:<10} smells={fired}"
+    )
+    return f"{line}  {directory}" if directory else line
+
+
+def _prepare_shuffle(
+    backend: Backend, tables: Sequence[str], options: AuditOptions
+) -> tuple[ShuffledCopies | None, str]:
+    """The shuffled copies for the run, or the reason there are none."""
+    if not tables:
+        return None, "no gold statement named a table to copy"
+    try:
+        return (
+            backend.prepare_shuffled_copies(
+                tables, seed=str(options.shuffle_seed), row_limit=options.shuffle_row_limit
+            ),
+            "",
+        )
+    except BackendRefused as refused:
+        # A backend that will not make the copies is not a backend that cannot audit:
+        # every other smell and every comparison still runs, and the summary says which
+        # measurement was not taken.
+        return None, _refusal(refused)
+
+
+def _referenced_tables(questions: Sequence[Question]) -> tuple[str, ...]:
+    """Every table the golds name, for the one fixture measurement and the copies.
+
+    A gold that does not parse names nothing here and is reported as its own question's
+    error when the run reaches it.
+    """
+    tables: dict[str, None] = {}
+    for question in questions:
+        try:
+            for table in parse_statement(question.sql).tables:
+                tables[table] = None
+        except StatementRefused:
+            continue
+    return tuple(tables)
+
+
+def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summary:
+    """Audit every question the options name, on that backend, and write what was found.
+
+    Raises ``ToolError`` when the run cannot start: an unreadable file, a question file
+    that states two different questions under one id, or a backend that will not say what
+    it is. Everything a single question can fail at is that question's error line.
+    """
+    phases = Phases()
+    run_id = f"audit-{uuid.uuid4()}"
+    data_as_of = options.data_as_of or datetime.now(UTC)
+    question_set = read_questions(options.questions, options.ids)
+    predictions: Mapping[int, str] = (
+        read_predictions(options.predictions) if options.predictions else {}
+    )
+    try:
+        options.out.mkdir(parents=True, exist_ok=True)
+    except OSError as unwritable:
+        raise ToolError(f"the output directory {options.out} cannot be made: {unwritable}") from (
+            unwritable
+        )
+    try:
+        identity = backend.identity()
+        role = backend.effective_database_role()
+        settings = backend.session_settings()
+    except BackendRefused as refused:
+        raise ToolError(f"the backend will not state what it is: {refused}") from refused
+    tables = _referenced_tables(question_set.questions)
+    with phases.timed("fixture"):
+        measured = _run_fixture(backend, tables, options)
+    with phases.timed("shuffle"):
+        shuffled, no_shuffle = _prepare_shuffle(backend, measured.present, options)
+    try:
+        counted = _audit_questions(
+            options,
+            backend,
+            writer,
+            phases,
+            question_set=question_set,
+            predictions=predictions,
+            run_id=run_id,
+            data_as_of=data_as_of,
+            shuffled=shuffled,
+            no_shuffle=no_shuffle,
+        )
+    finally:
+        # The copies are this tool's own and outlive nothing: dropped whether the run
+        # ended, failed or was interrupted.
+        _drop_shuffle(backend)
+    summary = _summarise(options, counted, run_id=run_id, elapsed=phases.rounded())
+    writer.line(
+        f"{summary.questions} questions: {summary.not_equal} NOT_EQUAL, "
+        f"{summary.not_comparable} NOT_COMPARABLE, {summary.smells_fired} smells fired"
+    )
+    write_json(
+        options.out / SUMMARY_FILE,
+        _summary_json(
+            options,
+            summary,
+            question_set=question_set,
+            predictions=predictions,
+            identity=identity,
+            role=role,
+            settings_recorded=dict(settings.recorded),
+            measured=measured,
+            shuffled=shuffled,
+            no_shuffle=no_shuffle,
+            data_as_of=data_as_of,
+        ),
+    )
+    return summary
+
+
+def _run_fixture(backend: Backend, tables: Sequence[str], options: AuditOptions) -> _Measured:
+    """The digest of everything the run will read, over the tables that are there.
+
+    A gold that names a table this database does not hold is a defect in the question file,
+    which is one of the things this tool exists to find. Measuring it would refuse, so the
+    tables are asked for first and the measurement covers the ones that exist; the others
+    are named in the summary and error on the lines of the questions that used them.
+
+    Nothing here ends a run. A backend that will not answer at all leaves the run without a
+    digest and with the reason recorded, and every question then fails on its own line with
+    the server's message rather than the run stopping with nothing audited.
+    """
+    if not tables:
+        return _Measured(None, (), (), "")
+    try:
+        present = tuple(backend.existing_tables(tables))
+    except BackendRefused as refused:
+        return _Measured(None, tuple(tables), (), _refusal(refused))
+    missing = tuple(name for name in tables if name not in set(present))
+    if not present:
+        return _Measured(None, (), missing, "")
+    try:
+        digest = fixture_digest(
+            backend,
+            present,
+            directory=options.out,
+            with_content_digests=options.with_content_digests,
+        )
+    except BackendRefused as refused:
+        return _Measured(None, present, missing, _refusal(refused))
+    return _Measured(digest, present, missing, "")
+
+
+def _refusal(refused: BackendRefused) -> str:
+    """One refusal as the one line a summary states it in."""
+    return f"{refused.step}: {refused.detail}"
+
+
+def _drop_shuffle(backend: Backend) -> None:
+    """Remove the scratch copies, whether the run made them, failed halfway or made none.
+
+    Asked unconditionally, because what a backend made is the backend's to know: a run
+    that prepared nothing drops nothing, and one that was interrupted after copying part
+    of the tables still clears what it copied.
+    """
+    try:
+        backend.drop_shuffled_copies()
+    except BackendRefused as refused:
+        # Nothing left to unwind: the run is over and what is being reported is its
+        # result, not the state of a scratch schema a reader can drop by hand. A run whose
+        # connection died is where this happens, and it is said on stderr so that the
+        # summary the run still writes is not the place a reader learns it.
+        print(f"{PROGRAM}: the scratch copies were left behind: {refused}", file=sys.stderr)
+
+
+@dataclass
+class _Counted:
+    """The running counts of one audit, in the order the questions were answered."""
+
+    verdicts: dict[str, int] = field(default_factory=dict[str, int])
+    smells: dict[str, int] = field(default_factory=dict[str, int])
+    errors: list[QuestionError] = field(default_factory=list[QuestionError])
+    questions: int = 0
+
+
+def _audit_questions(
+    options: AuditOptions,
+    backend: Backend,
+    writer: Writer,
+    phases: Phases,
+    *,
+    question_set: QuestionSet,
+    predictions: Mapping[int, str],
+    run_id: str,
+    data_as_of: datetime,
+    shuffled: ShuffledCopies | None,
+    no_shuffle: str,
+) -> _Counted:
+    """Every question in turn, each one's failure its own."""
+    counted = _Counted()
+    settings = SmellSettings(
+        serialization=SERIALIZATION,
+        statement_timeout_seconds=options.statement_timeout_seconds,
+        shuffle_seed=options.shuffle_seed,
+        shuffle_row_limit=options.shuffle_row_limit,
+        plan_variant=options.plan_variant,
+        experimental_s2=options.experimental_s2,
+    )
+    for question in question_set.questions:
+        counted.questions += 1
+        try:
+            with phases.timed("questions"):
+                _audit_one(
+                    question,
+                    options,
+                    backend,
+                    writer,
+                    counted,
+                    question_set=question_set,
+                    prediction=predictions.get(question.question_id),
+                    run_id=run_id,
+                    data_as_of=data_as_of,
+                    shuffled=shuffled,
+                    no_shuffle=no_shuffle,
+                    settings=settings,
+                )
+        except (StatementRefused, BackendRefused, UnsupportedValue) as failed:
+            step = failed.step if isinstance(failed, BackendRefused) else "statement"
+            message = " ".join(str(failed).split())
+            counted.errors.append(QuestionError(question.question_id, step, message))
+            counted.verdicts[ERROR] = counted.verdicts.get(ERROR, 0) + 1
+            writer.line(_line(question, "", ERROR, (), None) + f"  {message}")
+    return counted
+
+
+def _audit_one(
+    question: Question,
+    options: AuditOptions,
+    backend: Backend,
+    writer: Writer,
+    counted: _Counted,
+    *,
+    question_set: QuestionSet,
+    prediction: str | None,
+    run_id: str,
+    data_as_of: datetime,
+    shuffled: ShuffledCopies | None,
+    no_shuffle: str,
+    settings: SmellSettings,
+) -> None:
+    """One question: the gold, the prediction when there is one, then the smells."""
+    metadata = _question_metadata(question, question_set.path.stem)
+    directory = options.out / f"q{question.question_id}"
+    comparison: Comparison | None = None
+    if prediction is None:
+        recorded = record_statement(
+            question=metadata,
+            question_set_version=question_set.digest,
+            sql=question.sql,
+            backend=backend,
+            serialization=SERIALIZATION,
+            run_id=run_id,
+            directory=options.out,
+            data_as_of=data_as_of,
+            statement_timeout_seconds=options.statement_timeout_seconds,
+            with_content_digests=options.with_content_digests,
+        )
+        parsed, gold = recorded.parsed, recorded.record
+        verdict = GOLD_ONLY
+    else:
+        comparison = compare_statements(
+            question=metadata,
+            question_set_version=question_set.digest,
+            gold_sql=question.sql,
+            second_sql=prediction,
+            backend=backend,
+            serialization=SERIALIZATION,
+            run_id=run_id,
+            directory=options.out,
+            data_as_of=data_as_of,
+            statement_timeout_seconds=options.statement_timeout_seconds,
+            with_content_digests=options.with_content_digests,
+        )
+        parsed, gold = parse_statement(question.sql), comparison.gold
+        verdict = comparison.verdict.result.name
+    found = all_smells(
+        parsed,
+        backend,
+        gold.result,
+        settings=settings,
+        question=QuestionText(question.question, question.evidence),
+        shuffled=shuffled,
+        no_shuffle=no_shuffle,
+    )
+    fired = [smell.name for smell in found if smell.fired]
+    counted.verdicts[verdict] = counted.verdicts.get(verdict, 0) + 1
+    for name in fired:
+        counted.smells[name] = counted.smells.get(name, 0) + 1
+    disagreed = verdict in {
+        ComparabilityResult.NOT_EQUAL.name,
+        ComparabilityResult.NOT_COMPARABLE.name,
+    }
+    written = disagreed or bool(fired)
+    if written:
+        _write_question(directory, comparison, gold_record=gold, found=found)
+    writer.line(
+        _line(
+            question,
+            parsed.replay_rule.value,
+            verdict,
+            fired,
+            f"{options.out.as_posix()}/q{question.question_id}/" if written else None,
+        )
+    )
+
+
+def _write_question(
+    directory: Path,
+    comparison: Comparison | None,
+    *,
+    gold_record: EvidenceRecord,
+    found: Sequence[Smell],
+) -> None:
+    """The directory a reader opens: the counterexample when there is one, and the smells.
+
+    Without a prediction there is no counterexample to write and the gold's own record is
+    what the fired smell is evidence about, so the directory holds that and the smells.
+    """
+    if comparison is not None:
+        write_comparison(comparison, directory)
+    else:
+        write_json(directory / GOLD_RECORD_FILE, record_json(gold_record))
+    write_json(directory / SMELLS_FILE, smells_json(found))
+
+
+def _summarise(
+    options: AuditOptions, counted: _Counted, *, run_id: str, elapsed: Mapping[str, float]
+) -> Summary:
+    """The counts as one value, with the exit status ADR-0013 point 2 states.
+
+    A question that errored moves nothing here: it is neither a disagreement nor this tool
+    failing, and the summary is where a reader counts them. A run whose every question
+    errored is the one case that is 2, because it audited nothing at all, and that is what
+    2 means; a run with no questions to audit asked nothing and is not that case.
+    """
+    smells = {name: counted.smells.get(name, 0) for name in SMELL_NAMES}
+    fired = sum(smells.values())
+    not_equal = counted.verdicts.get(ComparabilityResult.NOT_EQUAL.name, 0)
+    errored = counted.verdicts.get(ERROR, 0)
+    if counted.questions and errored == counted.questions:
+        status = 2
+    else:
+        status = 1 if not_equal or (options.fail_on_smell and fired) else 0
+    return Summary(
+        run_id=run_id,
+        questions=counted.questions,
+        verdicts=dict(counted.verdicts),
+        smells=smells,
+        errors=tuple(counted.errors),
+        elapsed_seconds=elapsed,
+        exit_status=status,
+    )
+
+
+def _summary_json(
+    options: AuditOptions,
+    summary: Summary,
+    *,
+    question_set: QuestionSet,
+    predictions: Mapping[int, str],
+    identity: str,
+    role: str,
+    settings_recorded: Mapping[str, str],
+    measured: _Measured,
+    shuffled: ShuffledCopies | None,
+    no_shuffle: str,
+    data_as_of: datetime,
+) -> Json:
+    """The whole run in one document: what was audited, on what, and what was found."""
+    digest = measured.digest
+    return {
+        "format": SUMMARY_FORMAT,
+        "run_id": summary.run_id,
+        "backend_identity": identity,
+        "effective_database_role": role,
+        "session_settings_recorded": dict(settings_recorded),
+        "question_set": {
+            "path": str(question_set.path),
+            "digest": question_set.digest,
+            "entries": question_set.entries,
+            "audited": summary.questions,
+            "duplicate_ids": list(question_set.duplicate_ids),
+            "ids": list(options.ids),
+        },
+        "predictions": (
+            None
+            if options.predictions is None
+            else {"path": str(options.predictions), "statements": len(predictions)}
+        ),
+        "verdicts": dict(summary.verdicts),
+        "smells": dict(summary.smells),
+        "smells_fired": summary.smells_fired,
+        "fixture": {
+            "depth": options.fixture_digest,
+            "cache": f"{options.out.as_posix()}/{CACHE_FILE}",
+            "schema_digest": None if digest is None else digest.schema_digest,
+            "row_counts": {} if digest is None else dict(digest.row_counts),
+            "content_digests": {} if digest is None else dict(digest.content_digests),
+            "measured_tables": list(measured.present),
+            "missing_tables": list(measured.missing),
+            "refused": measured.refused,
+        },
+        "shuffle": {
+            "seed": options.shuffle_seed,
+            "row_limit": options.shuffle_row_limit,
+            "scratch_schema": options.scratch_schema,
+            "prepared": shuffled is not None,
+            "reason": no_shuffle,
+            "copied": [] if shuffled is None else list(shuffled.copied),
+            "skipped": {} if shuffled is None else dict(shuffled.skipped),
+        },
+        "settings": {
+            "statement_timeout_seconds": options.statement_timeout_seconds,
+            "fail_on_smell": options.fail_on_smell,
+            "experimental_s2": options.experimental_s2,
+            "plan_variant": options.plan_variant,
+            "out": options.out.as_posix(),
+            "serialization": SERIALIZATION.version,
+        },
+        "data_as_of": data_as_of.isoformat(),
+        "data_as_of_source": (
+            "the instant the run started" if options.data_as_of is None else "--data-as-of"
+        ),
+        "elapsed_seconds": dict(summary.elapsed_seconds),
+        "errors": [
+            {"question_id": error.question_id, "step": error.step, "message": error.message}
+            for error in summary.errors
+        ],
+        "exit_status": summary.exit_status,
+    }
+
+
+def _dsn(value: str) -> str:
+    """A DSN this tool will connect with: libpq keyword form, and no password in it.
+
+    A URI is refused before its contents are looked at. ``postgresql://user:secret@host/db``
+    carries the credential in the text itself, where it would reach every record, log and
+    process listing this DSN reaches, and no rule about what a URI may contain is worth
+    trusting when the keyword form has no such shape.
+    """
+    if "://" in value:
+        raise argparse.ArgumentTypeError(
+            "the DSN is a URI; this tool takes the libpq keyword form, "
+            "host=... port=... dbname=... user=..., because a URI is where a password is "
+            "written; set PGPASSWORD or use ~/.pgpass so that no credential is ever "
+            "written into a record, a log or this command line"
+        )
+    if "password" in value.lower():
+        raise argparse.ArgumentTypeError(
+            "the DSN names a password; set PGPASSWORD or use ~/.pgpass so that no "
+            "credential is ever written into a record, a log or this command line"
+        )
+    if not value.strip():
+        raise argparse.ArgumentTypeError("the DSN is empty")
+    return value
+
+
+def _schema(value: str) -> str:
+    """A schema name the copies can be written into: one name, and not an empty one.
+
+    Whether it exists and whether this role may create in it is the server's answer and is
+    asked at the moment the copies are made, so what is refused here is only what no server
+    could be asked about.
+    """
+    name = value.strip()
+    if not name:
+        raise argparse.ArgumentTypeError("the scratch schema is named by nothing")
+    return name
+
+
+def _ids(value: str) -> tuple[int, ...]:
+    try:
+        return tuple(int(found) for found in value.split(",") if found.strip())
+    except ValueError as unreadable:
+        raise argparse.ArgumentTypeError(f"{value!r} is not a comma separated list of ids") from (
+            unreadable
+        )
+
+
+def _instant(value: str) -> datetime:
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError as unreadable:
+        raise argparse.ArgumentTypeError(f"{value!r} is not an ISO 8601 instant") from unreadable
+    if parsed.tzinfo is None:
+        raise argparse.ArgumentTypeError(
+            f"{value!r} states no offset; an instant a record carries states one"
+        )
+    return parsed.astimezone(UTC)
+
+
+def _positive(value: str) -> int:
+    try:
+        number = int(value)
+    except ValueError as unreadable:
+        raise argparse.ArgumentTypeError(f"{value!r} is not a whole number") from unreadable
+    if number < 1:
+        raise argparse.ArgumentTypeError(f"{value!r} is not at least one")
+    return number
+
+
+def build_parser() -> argparse.ArgumentParser:
+    """The command line, as ADR-0013 point 2 states it."""
+    parser = argparse.ArgumentParser(
+        prog=PROGRAM, description="Audit text-to-SQL gold statements and predictions."
+    )
+    subcommands = parser.add_subparsers(dest="command", required=True)
+    audit = subcommands.add_parser(
+        "audit",
+        help="compare golds and predictions on one database and record what differs",
+        description=(
+            "Run each gold statement, and each prediction beside it, against one "
+            "PostgreSQL database; report where they disagree and which golds smell wrong."
+        ),
+    )
+    audit.add_argument(
+        "--dsn",
+        required=True,
+        type=_dsn,
+        help="libpq keyword DSN without a password; PGPASSWORD or ~/.pgpass supplies it",
+    )
+    audit.add_argument(
+        "--questions", required=True, type=Path, help="the BIRD Mini-Dev question file"
+    )
+    audit.add_argument(
+        "--predictions", type=Path, help="a JSON object of question id to predicted SQL"
+    )
+    audit.add_argument(
+        "--out", required=True, type=Path, help="the directory the evidence is written to"
+    )
+    audit.add_argument("--ids", type=_ids, default=(), help="audit only these question ids")
+    audit.add_argument(
+        "--fixture-digest",
+        choices=("counts", "full"),
+        default="counts",
+        help="how deep the data is measured: schema and row counts, or every row",
+    )
+    audit.add_argument(
+        "--fail-on-smell", action="store_true", help="exit 1 when any smell fired as well"
+    )
+    audit.add_argument(
+        "--experimental-s2",
+        action="store_true",
+        help="run the experimental direction-against-question smell",
+    )
+    audit.add_argument(
+        "--plan-variant", action="store_true", help="also rerun each gold under another plan"
+    )
+    audit.add_argument(
+        "--shuffle-seed",
+        type=int,
+        default=DEFAULT_SHUFFLE_SEED,
+        help="the seed the shuffled copies are ordered by",
+    )
+    audit.add_argument(
+        "--scratch-schema",
+        type=_schema,
+        default=DEFAULT_SCRATCH_SCHEMA,
+        help=(
+            "an existing schema this role may create tables in, where the shuffled copies "
+            "are made; this tool creates no schema and drops none"
+        ),
+    )
+    audit.add_argument(
+        "--shuffle-row-limit",
+        type=_positive,
+        default=DEFAULT_SHUFFLE_ROW_LIMIT,
+        help="a table with more rows than this is not copied for the shuffle",
+    )
+    audit.add_argument(
+        "--statement-timeout",
+        type=_positive,
+        default=DEFAULT_STATEMENT_TIMEOUT_SECONDS,
+        help="how long one statement may run, in seconds",
+    )
+    audit.add_argument(
+        "--data-as-of", type=_instant, help="what instant the data is as of; the run's by default"
+    )
+    return parser
+
+
+def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
+    """The command line as options, or an argparse exit for anything it refuses."""
+    parsed = build_parser().parse_args(argv)
+    return AuditOptions(
+        dsn=cast("str", parsed.dsn),
+        questions=cast("Path", parsed.questions),
+        predictions=cast("Path | None", parsed.predictions),
+        out=cast("Path", parsed.out),
+        ids=cast("tuple[int, ...]", parsed.ids),
+        fixture_digest=cast("str", parsed.fixture_digest),
+        fail_on_smell=cast("bool", parsed.fail_on_smell),
+        experimental_s2=cast("bool", parsed.experimental_s2),
+        plan_variant=cast("bool", parsed.plan_variant),
+        scratch_schema=cast("str", parsed.scratch_schema),
+        shuffle_seed=cast("int", parsed.shuffle_seed),
+        shuffle_row_limit=cast("int", parsed.shuffle_row_limit),
+        statement_timeout_seconds=cast("int", parsed.statement_timeout),
+        data_as_of=cast("datetime | None", parsed.data_as_of),
+    )
+
+
+def audit(options: AuditOptions, backend: Backend, writer: Writer) -> int:
+    """One audit's exit status: what it found, or 2 when it could not run at all.
+
+    The status is the whole of what this returns, as ADR-0013 point 2 states: the counts
+    are in the summary, and a run that found nothing and a run that could not start are
+    told apart here rather than by reading them.
+    """
+    try:
+        return run_audit(options, backend, writer).exit_status
+    except ToolError as failed:
+        print(f"{PROGRAM}: {failed}", file=sys.stderr)
+        return 2
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Build the PostgreSQL backend and run the audit. The exit status is the answer."""
+    options = parse_arguments(argv)
+    try:
+        backend = PostgresBackend.connect(options.dsn, scratch_schema=options.scratch_schema)
+    except BackendRefused as refused:
+        print(f"{PROGRAM}: the database could not be reached: {refused}", file=sys.stderr)
+        return 2
+    return audit(options, backend, ConsoleWriter(sys.stdout))
+
+
+__all__ = [
+    "ERROR",
+    "GOLD_ONLY",
+    "PROGRAM",
+    "SERIALIZATION",
+    "SMELLS_FILE",
+    "SUMMARY_FILE",
+    "SUMMARY_FORMAT",
+    "AuditOptions",
+    "ConsoleWriter",
+    "Question",
+    "QuestionError",
+    "QuestionSet",
+    "Summary",
+    "ToolError",
+    "Writer",
+    "audit",
+    "build_parser",
+    "main",
+    "parse_arguments",
+    "read_predictions",
+    "read_questions",
+    "run_audit",
+]

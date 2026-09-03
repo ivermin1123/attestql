@@ -1,0 +1,6 @@
+{
+  // Files markdownlint does not lint. Rule configuration lives in .markdownlint.jsonc.
+  "ignores": [
+    "node_modules"
+  ]
+}

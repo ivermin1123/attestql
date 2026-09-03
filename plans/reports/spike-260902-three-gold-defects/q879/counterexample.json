@@ -1,0 +1,234 @@
+{
+  "spike": "tools/gold-audit-spike",
+  "kind": "upstream-reported gold defect",
+  "question_id": 879,
+  "db_id": "formula_1",
+  "question": "For the driver who set the fastest lap speed, what is his nationality?",
+  "evidence": "the fastest lap speed refers to (MAX) fastestLapSpeed;",
+  "difficulty": "moderate",
+  "gold_sql": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY T2.fastestLapSpeed DESC NULLS LAST LIMIT 1",
+  "correction_sql": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY T2.fastestLapSpeed::numeric DESC NULLS LAST LIMIT 1",
+  "correction_note": "the ordering key is cast to numeric; the join, the projection and the LIMIT are the gold's own",
+  "upstream_issue": {
+    "url": "https://github.com/bird-bench/mini_dev/issues/24",
+    "state": "closed",
+    "reported": "2025-09-13"
+  },
+  "bird_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "set(predicted_rows) == set(gold_rows)",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 1,
+    "predicted_rows": 1,
+    "gold_distinct_rows": 1,
+    "predicted_distinct_rows": 1
+  },
+  "attestql": {
+    "replay_rule": "R-ORD",
+    "rule_chosen_by": "the gold parse: R-ORD when the gold has a top-level ORDER BY, R-SET when it has none",
+    "result": "not_equal",
+    "mismatched": [],
+    "canonical_ordering": [
+      {
+        "column": "CAST(t2.fastestlapspeed AS numeric)",
+        "descending": true
+      }
+    ],
+    "canonical_ordering_taken_from": "the correction's ORDER BY, which is the ordering the question demands; the same ordering is on both records so the comparison is between the two answers and not between the two orderings",
+    "under_each_statements_own_ordering": {
+      "applies": true,
+      "result": "not_comparable",
+      "mismatched": [
+        "canonical_ordering"
+      ],
+      "gold_ordering": [
+        "t2.fastestlapspeed desc"
+      ],
+      "correction_ordering": [
+        "CAST(t2.fastestlapspeed AS numeric) desc"
+      ]
+    }
+  },
+  "gold_result": {
+    "columns": [
+      {
+        "name": "nationality",
+        "pg_type": "text"
+      }
+    ],
+    "row_count": 1,
+    "truncated": false,
+    "rows_shown": 1,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "Italian"
+        }
+      ]
+    ],
+    "result_hash": "sha256:46f80dfc7611883ca6471d8331ceebd4ce8fd88d94133c7355432a92784f0fda"
+  },
+  "correction_result": {
+    "columns": [
+      {
+        "name": "nationality",
+        "pg_type": "text"
+      }
+    ],
+    "row_count": 1,
+    "truncated": false,
+    "rows_shown": 1,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "Brazilian"
+        }
+      ]
+    ],
+    "result_hash": "sha256:d9dada707572d635454ad337ed28a8923c53f510bd6dee6c80f63b95716493d0"
+  },
+  "differing_rows": {
+    "in_gold_not_in_correction": [
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Italian"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "in_gold_not_in_correction_total": 1,
+    "in_correction_not_in_gold": [
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Brazilian"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "in_correction_not_in_gold_total": 1
+  },
+  "result_hashes": {
+    "gold": "sha256:46f80dfc7611883ca6471d8331ceebd4ce8fd88d94133c7355432a92784f0fda",
+    "correction": "sha256:d9dada707572d635454ad337ed28a8923c53f510bd6dee6c80f63b95716493d0"
+  },
+  "evidence_records": {
+    "gold": {
+      "path": "evidence-gold.json",
+      "record_hash": "sha256:e6d690c1b6cfc6a461ff449e8e03c511b0749a5c4e70095cb20e5b30c5d51462"
+    },
+    "correction": {
+      "path": "evidence-correction.json",
+      "record_hash": "sha256:5e374dcd1d4cc9f60b2149ef1cc9395c46e3a311b6314a751add431d8216e5da"
+    }
+  },
+  "blocked_fields": [
+    {
+      "field": "schema_version",
+      "why": "build_evidence_record writes attestql.contract.schema.SCHEMA_VERSION unconditionally and takes no argument for it. That constant versions the synthetic schema contract this repository declares and describes nothing about the BIRD database the statement read, so the record states a schema version that is not the schema it queried.",
+      "what_the_record_says": "1.1.0",
+      "what_was_observed_instead": "observed_schema_digest, below: a sha256 over the column list of every table the two statements name, read from information_schema"
+    }
+  ],
+  "observed_schema_digest": {
+    "tables": [
+      "drivers",
+      "results"
+    ],
+    "column_count": 27,
+    "digest": "sha256:f9edcd5b6a56acbcf4caaa3b260b7e15c3115427d7a621877f92081b257c117a",
+    "covers": "table_name, column_name, data_type and is_nullable for every column of every table the gold and correction statements name, in ordinal order"
+  },
+  "ast_nodes": {
+    "gold": 25,
+    "correction": 29
+  },
+  "probes": {
+    "ordering_over_numeric_looking_text": {
+      "probe": "ordering over numeric-looking text",
+      "ordering_key": "t2.fastestlapspeed",
+      "column": "results.fastestlapspeed",
+      "declared_type": "text",
+      "is_text": true,
+      "rows": 23179,
+      "nulls": 18185,
+      "empty_strings": 0,
+      "non_numeric_non_empty_values": 0,
+      "every_non_null_non_empty_value_parses_as_a_number": true,
+      "cast_used_by_the_correction": "t2.fastestlapspeed::numeric",
+      "why_no_nullif_or_filter": "there are no empty strings and no non-numeric values in this column, so a plain cast is exact and NULLIF would guard against nothing",
+      "top_5_under_the_text_ordering": [
+        "91.610",
+        "89.540",
+        "257.320",
+        "256.324",
+        "255.874"
+      ],
+      "top_5_under_the_numeric_ordering": [
+        "257.320",
+        "256.324",
+        "255.874",
+        "254.861",
+        "253.874"
+      ],
+      "the_two_orderings_differ": true
+    },
+    "not_a_function_of_the_data": {
+      "probe": "not a function of the data",
+      "rule": "R-ORD",
+      "baseline_result_hash": "sha256:46f80dfc7611883ca6471d8331ceebd4ce8fd88d94133c7355432a92784f0fda",
+      "with_seqscan_disabled": {
+        "result": "equal",
+        "mismatched": [],
+        "row_count": 1,
+        "result_hash": "sha256:46f80dfc7611883ca6471d8331ceebd4ce8fd88d94133c7355432a92784f0fda",
+        "rows_shown": [
+          [
+            {
+              "type": "str",
+              "value": "Italian"
+            }
+          ]
+        ]
+      },
+      "tables_named_by_the_statement": [
+        "drivers",
+        "results"
+      ],
+      "estimated_rows": {
+        "drivers": 840,
+        "results": 23179
+      },
+      "shuffled_tables": [
+        "drivers",
+        "results"
+      ],
+      "skipped_tables": [],
+      "skip_reason": null,
+      "over_shuffled_copies": {
+        "result": "equal",
+        "mismatched": [],
+        "row_count": 1,
+        "result_hash": "sha256:46f80dfc7611883ca6471d8331ceebd4ce8fd88d94133c7355432a92784f0fda",
+        "rows_shown": [
+          [
+            {
+              "type": "str",
+              "value": "Italian"
+            }
+          ]
+        ],
+        "note": "run in a read-write transaction because a read-only one cannot create a temporary table; the transaction is rolled back and the copies die with it"
+      }
+    }
+  },
+  "defect_statement": "Question 879 asks for the nationality of the driver who set the fastest lap speed, but results.fastestLapSpeed is a text column, so the gold's ORDER BY sorts it lexicographically and takes a value beginning with a 9 as the maximum over the numerically largest value, returning the wrong driver's nationality."
+}

@@ -1,0 +1,488 @@
+{
+  "spike": "tools/gold-audit-spike",
+  "kind": "upstream-reported gold defect",
+  "question_id": 207,
+  "db_id": "toxicology",
+  "question": "What elements are in a double type bond?",
+  "evidence": "double type bond refers to bond_type = '=';",
+  "difficulty": "challenging",
+  "gold_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN connected AS T3 ON T1.atom_id = T3.atom_id WHERE T2.bond_type = '='",
+  "correction_sql": "SELECT DISTINCT T1.element FROM atom AS T1 JOIN connected AS T2 ON T1.atom_id = T2.atom_id JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '='",
+  "correction_note": "atom is joined to connected on atom_id and connected to bond on bond_id, which is the only path from an atom to the bonds it is actually part of",
+  "upstream_issue": {
+    "url": "https://github.com/AlibabaResearch/DAMO-ConvAI/issues/227",
+    "state": "open",
+    "reported": "2026-03-29"
+  },
+  "bird_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "set(predicted_rows) == set(gold_rows)",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 13,
+    "predicted_rows": 5,
+    "gold_distinct_rows": 13,
+    "predicted_distinct_rows": 5
+  },
+  "attestql": {
+    "replay_rule": "R-SET",
+    "rule_chosen_by": "the gold parse: R-ORD when the gold has a top-level ORDER BY, R-SET when it has none",
+    "result": "not_equal",
+    "mismatched": [],
+    "canonical_ordering": [],
+    "canonical_ordering_taken_from": "the correction's ORDER BY, which is the ordering the question demands; the same ordering is on both records so the comparison is between the two answers and not between the two orderings",
+    "under_each_statements_own_ordering": {
+      "applies": false,
+      "why": "the gold has no top-level ORDER BY, so the record is R-SET and carries no canonical ordering to disagree about"
+    }
+  },
+  "gold_result": {
+    "columns": [
+      {
+        "name": "element",
+        "pg_type": "text"
+      }
+    ],
+    "row_count": 13,
+    "truncated": false,
+    "rows_shown": 13,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "sn"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "ca"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "cu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "p"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "h"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "cl"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "o"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "s"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "c"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "br"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "n"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "f"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "pb"
+        }
+      ]
+    ],
+    "result_hash": "sha256:a4d16572124efb7bf6e19872553d90bc0268352ab3c2d8b91d6a1c30fe72623e"
+  },
+  "correction_result": {
+    "columns": [
+      {
+        "name": "element",
+        "pg_type": "text"
+      }
+    ],
+    "row_count": 5,
+    "truncated": false,
+    "rows_shown": 5,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "ca"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "o"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "s"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "c"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "n"
+        }
+      ]
+    ],
+    "result_hash": "sha256:69bdeb11bb4ecb2f999887ddc87cf32ff290f783d2128ef1d00734ef23cd3eed"
+  },
+  "differing_rows": {
+    "in_gold_not_in_correction": [
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "br"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "cl"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "cu"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "f"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "h"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "p"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "pb"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "sn"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "in_gold_not_in_correction_total": 8,
+    "in_correction_not_in_gold": [],
+    "in_correction_not_in_gold_total": 0
+  },
+  "result_hashes": {
+    "gold": "sha256:a4d16572124efb7bf6e19872553d90bc0268352ab3c2d8b91d6a1c30fe72623e",
+    "correction": "sha256:69bdeb11bb4ecb2f999887ddc87cf32ff290f783d2128ef1d00734ef23cd3eed"
+  },
+  "evidence_records": {
+    "gold": {
+      "path": "evidence-gold.json",
+      "record_hash": "sha256:76c8c8a48ebcb4dad186900cdd34e0114cb35c18c70abc0b12fb992d07cd7d82"
+    },
+    "correction": {
+      "path": "evidence-correction.json",
+      "record_hash": "sha256:789002676193d4d81bd0df467955291fbd821488915bf4439135c15b01267684"
+    }
+  },
+  "blocked_fields": [
+    {
+      "field": "schema_version",
+      "why": "build_evidence_record writes attestql.contract.schema.SCHEMA_VERSION unconditionally and takes no argument for it. That constant versions the synthetic schema contract this repository declares and describes nothing about the BIRD database the statement read, so the record states a schema version that is not the schema it queried.",
+      "what_the_record_says": "1.1.0",
+      "what_was_observed_instead": "observed_schema_digest, below: a sha256 over the column list of every table the two statements name, read from information_schema"
+    }
+  ],
+  "observed_schema_digest": {
+    "tables": [
+      "atom",
+      "bond",
+      "connected"
+    ],
+    "column_count": 9,
+    "digest": "sha256:41e606eaddfbdd8ef761f30b60239414a376357d9ff636cfa28d006ac38d6e19",
+    "covers": "table_name, column_name, data_type and is_nullable for every column of every table the gold and correction statements name, in ordinal order"
+  },
+  "ast_nodes": {
+    "gold": 37,
+    "correction": 37
+  },
+  "probes": {
+    "not_a_function_of_the_data": {
+      "probe": "not a function of the data",
+      "rule": "R-SET",
+      "baseline_result_hash": "sha256:a4d16572124efb7bf6e19872553d90bc0268352ab3c2d8b91d6a1c30fe72623e",
+      "with_seqscan_disabled": {
+        "result": "equal",
+        "mismatched": [],
+        "row_count": 13,
+        "result_hash": "sha256:7e416dc187e16d2a864d5c6fb6f1ef34bee992c94fdaf893631bc4a1e9c108c3",
+        "rows_shown": [
+          [
+            {
+              "type": "str",
+              "value": "br"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "c"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "ca"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "cl"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "cu"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "f"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "h"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "n"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "o"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "p"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "pb"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "s"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "sn"
+            }
+          ]
+        ]
+      },
+      "tables_named_by_the_statement": [
+        "connected",
+        "atom",
+        "bond"
+      ],
+      "estimated_rows": {
+        "atom": 9111,
+        "bond": 9156,
+        "connected": 18312
+      },
+      "shuffled_tables": [
+        "atom",
+        "bond",
+        "connected"
+      ],
+      "skipped_tables": [],
+      "skip_reason": null,
+      "over_shuffled_copies": {
+        "result": "equal",
+        "mismatched": [],
+        "row_count": 13,
+        "result_hash": "sha256:be91ccf2267c4599e6e4522dec49c764ac38e0c4567d67a3e94699bc28e66eec",
+        "rows_shown": [
+          [
+            {
+              "type": "str",
+              "value": "n"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "ca"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "br"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "cu"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "cl"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "c"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "pb"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "h"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "o"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "s"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "f"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "sn"
+            }
+          ],
+          [
+            {
+              "type": "str",
+              "value": "p"
+            }
+          ]
+        ],
+        "note": "run in a read-write transaction because a read-only one cannot create a temporary table; the transaction is rolled back and the copies die with it"
+      }
+    }
+  },
+  "defect_statement": "Question 207 asks which elements are in a double bond, but the gold SQL joins atom to bond on molecule_id and leaves the connected table unconstrained, so it returns every element of every molecule that contains any double bond rather than the elements actually joined by one."
+}

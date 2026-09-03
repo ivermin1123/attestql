@@ -1,0 +1,324 @@
+{
+  "spike": "tools/gold-audit-spike",
+  "kind": "upstream-reported gold defect",
+  "question_id": 1029,
+  "db_id": "european_football_2",
+  "question": "What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?",
+  "evidence": "speed in which attacks are put together refers to buildUpPlaySpeed;highest build up play speed refers to MAX(buildUpPlaySpeed)",
+  "difficulty": "moderate",
+  "gold_sql": "SELECT t1.buildUpPlaySpeed FROM Team_Attributes AS t1 INNER JOIN Team AS t2 ON t1.team_api_id = t2.team_api_id ORDER BY t1.buildUpPlaySpeed ASC NULLS FIRST LIMIT 4",
+  "correction_sql": "SELECT t1.buildUpPlaySpeed FROM Team_Attributes AS t1 INNER JOIN Team AS t2 ON t1.team_api_id = t2.team_api_id ORDER BY t1.buildUpPlaySpeed DESC NULLS LAST LIMIT 4",
+  "correction_note": "the one change is the direction of the ORDER BY: DESC NULLS LAST where the gold has ASC NULLS FIRST",
+  "upstream_issue": {
+    "url": "https://github.com/bird-bench/mini_dev/issues/38",
+    "state": "open",
+    "reported": "2026-08-09"
+  },
+  "bird_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "set(predicted_rows) == set(gold_rows)",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 4,
+    "predicted_rows": 4,
+    "gold_distinct_rows": 2,
+    "predicted_distinct_rows": 3
+  },
+  "attestql": {
+    "replay_rule": "R-ORD",
+    "rule_chosen_by": "the gold parse: R-ORD when the gold has a top-level ORDER BY, R-SET when it has none",
+    "result": "not_equal",
+    "mismatched": [],
+    "canonical_ordering": [
+      {
+        "column": "t1.buildupplayspeed",
+        "descending": true
+      }
+    ],
+    "canonical_ordering_taken_from": "the correction's ORDER BY, which is the ordering the question demands; the same ordering is on both records so the comparison is between the two answers and not between the two orderings",
+    "under_each_statements_own_ordering": {
+      "applies": true,
+      "result": "not_comparable",
+      "mismatched": [
+        "canonical_ordering"
+      ],
+      "gold_ordering": [
+        "t1.buildupplayspeed asc"
+      ],
+      "correction_ordering": [
+        "t1.buildupplayspeed desc"
+      ]
+    }
+  },
+  "gold_result": {
+    "columns": [
+      {
+        "name": "buildupplayspeed",
+        "pg_type": "int8"
+      }
+    ],
+    "row_count": 4,
+    "truncated": false,
+    "rows_shown": 4,
+    "rows": [
+      [
+        {
+          "type": "int",
+          "value": 20
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 20
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 20
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 23
+        }
+      ]
+    ],
+    "result_hash": "sha256:0f5bfb379a4e1a4beb26140ee3bac36dd95260cdd0fe4690bdfb236a57f4ce5e"
+  },
+  "correction_result": {
+    "columns": [
+      {
+        "name": "buildupplayspeed",
+        "pg_type": "int8"
+      }
+    ],
+    "row_count": 4,
+    "truncated": false,
+    "rows_shown": 4,
+    "rows": [
+      [
+        {
+          "type": "int",
+          "value": 80
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 78
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 78
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 77
+        }
+      ]
+    ],
+    "result_hash": "sha256:668ea5cc643849b8e5b4504df0324a5b6c24da7b5a2dff448de6a31b2d8d3759"
+  },
+  "differing_rows": {
+    "in_gold_not_in_correction": [
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 20
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 23
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "in_gold_not_in_correction_total": 4,
+    "in_correction_not_in_gold": [
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 78
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 77
+          }
+        ],
+        "count": 1
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 80
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "in_correction_not_in_gold_total": 4
+  },
+  "result_hashes": {
+    "gold": "sha256:0f5bfb379a4e1a4beb26140ee3bac36dd95260cdd0fe4690bdfb236a57f4ce5e",
+    "correction": "sha256:668ea5cc643849b8e5b4504df0324a5b6c24da7b5a2dff448de6a31b2d8d3759"
+  },
+  "evidence_records": {
+    "gold": {
+      "path": "evidence-gold.json",
+      "record_hash": "sha256:56c361acc8ac1a33b788470c89a92157b6eb92fbb7fde1e3b5ad382e542af36f"
+    },
+    "correction": {
+      "path": "evidence-correction.json",
+      "record_hash": "sha256:d65d925e245b7d26ff72aa2c0201bcd082a802f6e20e61bd86d6399b05c91ea9"
+    }
+  },
+  "blocked_fields": [
+    {
+      "field": "schema_version",
+      "why": "build_evidence_record writes attestql.contract.schema.SCHEMA_VERSION unconditionally and takes no argument for it. That constant versions the synthetic schema contract this repository declares and describes nothing about the BIRD database the statement read, so the record states a schema version that is not the schema it queried.",
+      "what_the_record_says": "1.1.0",
+      "what_was_observed_instead": "observed_schema_digest, below: a sha256 over the column list of every table the two statements name, read from information_schema"
+    }
+  ],
+  "observed_schema_digest": {
+    "tables": [
+      "team",
+      "team_attributes"
+    ],
+    "column_count": 30,
+    "digest": "sha256:c486449a5e7fe00b53a79a42254365f1e91b01ea0fe87b9fa6a84cf2b41a48f7",
+    "covers": "table_name, column_name, data_type and is_nullable for every column of every table the gold and correction statements name, in ordinal order"
+  },
+  "ast_nodes": {
+    "gold": 25,
+    "correction": 25
+  },
+  "probes": {
+    "direction_versus_question": {
+      "probe": "direction versus question",
+      "intent_words_in_the_question_or_evidence": [
+        "highest",
+        "max",
+        "top"
+      ],
+      "the_question_asks_for_a_maximum": true,
+      "gold_ordering_key": "t1.buildupplayspeed",
+      "gold_ordering_direction": "asc",
+      "gold_ordering_nulls": "first",
+      "contradiction": true,
+      "column": "team_attributes.buildupplayspeed",
+      "rows": 1458,
+      "nulls": 0,
+      "min": 20,
+      "max": 80,
+      "nulls_first_is_inert_here": true,
+      "what_the_gold_returns": "the four smallest values, not nulls: the column has no null at all, so NULLS FIRST changes nothing and the whole of the defect is the direction"
+    },
+    "not_a_function_of_the_data": {
+      "probe": "not a function of the data",
+      "rule": "R-ORD",
+      "baseline_result_hash": "sha256:0f5bfb379a4e1a4beb26140ee3bac36dd95260cdd0fe4690bdfb236a57f4ce5e",
+      "with_seqscan_disabled": {
+        "result": "equal",
+        "mismatched": [],
+        "row_count": 4,
+        "result_hash": "sha256:0f5bfb379a4e1a4beb26140ee3bac36dd95260cdd0fe4690bdfb236a57f4ce5e",
+        "rows_shown": [
+          [
+            {
+              "type": "int",
+              "value": 20
+            }
+          ],
+          [
+            {
+              "type": "int",
+              "value": 20
+            }
+          ],
+          [
+            {
+              "type": "int",
+              "value": 20
+            }
+          ],
+          [
+            {
+              "type": "int",
+              "value": 23
+            }
+          ]
+        ]
+      },
+      "tables_named_by_the_statement": [
+        "team_attributes",
+        "team"
+      ],
+      "estimated_rows": {
+        "team": 299,
+        "team_attributes": 1458
+      },
+      "shuffled_tables": [
+        "team",
+        "team_attributes"
+      ],
+      "skipped_tables": [],
+      "skip_reason": null,
+      "over_shuffled_copies": {
+        "result": "equal",
+        "mismatched": [],
+        "row_count": 4,
+        "result_hash": "sha256:0f5bfb379a4e1a4beb26140ee3bac36dd95260cdd0fe4690bdfb236a57f4ce5e",
+        "rows_shown": [
+          [
+            {
+              "type": "int",
+              "value": 20
+            }
+          ],
+          [
+            {
+              "type": "int",
+              "value": 20
+            }
+          ],
+          [
+            {
+              "type": "int",
+              "value": 20
+            }
+          ],
+          [
+            {
+              "type": "int",
+              "value": 23
+            }
+          ]
+        ],
+        "note": "run in a read-write transaction because a read-only one cannot create a temporary table; the transaction is rolled back and the copies die with it"
+      }
+    }
+  },
+  "defect_statement": "Question 1029 asks for the top 4 teams with the highest buildUpPlaySpeed, but the gold SQL orders ascending, so it returns the four lowest values instead of the four highest."
+}

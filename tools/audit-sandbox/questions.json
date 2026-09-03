@@ -1,0 +1,52 @@
+{
+  "source": {
+    "attribution": "The question, evidence, gold SQL and difficulty of 1029, 879 and 207 are BIRD Mini-Dev's own (mini_dev_postgresql.json), reproduced here because the defect being replayed is in that shipped gold. The rows they run against are this repository's synthetic fixture and hold nothing of BIRD's data.",
+    "questions_url": "https://github.com/bird-bench/mini_dev",
+    "licence": "CC BY-SA 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "synthetic": "900001 and 900002 are this repository's own, written for the two smell tables in fixture.sql, and carry no db_id of BIRD's.",
+    "field_names": "question_id, db_id, question, evidence, SQL and difficulty are Mini-Dev's field names, kept so that a question file from the benchmark and this one are read by the same code."
+  },
+  "questions": [
+    {
+      "question_id": 1029,
+      "db_id": "european_football_2",
+      "question": "What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?",
+      "evidence": "speed in which attacks are put together refers to buildUpPlaySpeed;highest build up play speed refers to MAX(buildUpPlaySpeed)",
+      "SQL": "SELECT t1.buildUpPlaySpeed FROM Team_Attributes AS t1 INNER JOIN Team AS t2 ON t1.team_api_id = t2.team_api_id ORDER BY t1.buildUpPlaySpeed ASC NULLS FIRST LIMIT 4",
+      "difficulty": "moderate"
+    },
+    {
+      "question_id": 879,
+      "db_id": "formula_1",
+      "question": "For the driver who set the fastest lap speed, what is his nationality?",
+      "evidence": "the fastest lap speed refers to (MAX) fastestLapSpeed;",
+      "SQL": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY T2.fastestLapSpeed DESC NULLS LAST LIMIT 1",
+      "difficulty": "moderate"
+    },
+    {
+      "question_id": 207,
+      "db_id": "toxicology",
+      "question": "What elements are in a double type bond?",
+      "evidence": "double type bond refers to bond_type = '=';",
+      "SQL": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN connected AS T3 ON T1.atom_id = T3.atom_id WHERE T2.bond_type = '='",
+      "difficulty": "challenging"
+    },
+    {
+      "question_id": 900001,
+      "db_id": "synthetic",
+      "question": "What is the total amount spent in each category?",
+      "evidence": "the total amount spent refers to SUM(spent)",
+      "SQL": "SELECT category, sum(spent) FROM spend GROUP BY category ORDER BY category ASC",
+      "difficulty": "simple"
+    },
+    {
+      "question_id": 900002,
+      "db_id": "synthetic",
+      "question": "Who holds the highest score?",
+      "evidence": "the highest score refers to MAX(score)",
+      "SQL": "SELECT name FROM scores ORDER BY score DESC LIMIT 1",
+      "difficulty": "simple"
+    }
+  ]
+}

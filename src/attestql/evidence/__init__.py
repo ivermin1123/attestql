@@ -1,0 +1,72 @@
+"""Evidence record shape, canonical serialization, replay comparability and rendering."""
+
+from attestql.evidence.build import ExecutionIdentity, IncompleteEvidence, build_evidence_record
+from attestql.evidence.record import EvidenceRecord, ValidationOutcome
+from attestql.evidence.render import (
+    RowDifference,
+    RowGroup,
+    record_json,
+    result_digest,
+    result_json,
+    row_difference,
+    row_difference_json,
+    write_json,
+)
+from attestql.evidence.replay import (
+    PRECONDITION_FIELDS,
+    RULE_FIELDS,
+    SESSION_PRECONDITIONS,
+    ComparabilityResult,
+    ComparabilityVerdict,
+    compare_r_ord,
+    compare_r_set,
+    precondition_mismatches,
+    preconditions_match,
+)
+from attestql.evidence.serialize import (
+    SerializationDescriptor,
+    UnsupportedValue,
+    canonical_serialize,
+    canonical_type_tag,
+)
+from attestql.evidence.types import (
+    FixtureDigest,
+    QuestionMetadata,
+    ReplayRule,
+    SessionSettings,
+    SortKey,
+)
+
+__all__ = [
+    "PRECONDITION_FIELDS",
+    "RULE_FIELDS",
+    "SESSION_PRECONDITIONS",
+    "ComparabilityResult",
+    "ComparabilityVerdict",
+    "EvidenceRecord",
+    "ExecutionIdentity",
+    "FixtureDigest",
+    "IncompleteEvidence",
+    "QuestionMetadata",
+    "ReplayRule",
+    "RowDifference",
+    "RowGroup",
+    "SerializationDescriptor",
+    "SessionSettings",
+    "SortKey",
+    "UnsupportedValue",
+    "ValidationOutcome",
+    "build_evidence_record",
+    "canonical_serialize",
+    "canonical_type_tag",
+    "compare_r_ord",
+    "compare_r_set",
+    "precondition_mismatches",
+    "preconditions_match",
+    "record_json",
+    "result_digest",
+    "result_json",
+    "row_difference",
+    "row_difference_json",
+    "write_json",
+]

@@ -1,0 +1,556 @@
+{
+  "what": "the four gold-only probes of ADR-0013 over every distinct gold statement in BIRD Mini-Dev PostgreSQL. A measurement, not a verdict: no count here says any gold is wrong.",
+  "dsn": "host=127.0.0.1 port=5498 dbname=bird user=postgres",
+  "server_version": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+  "questions": {
+    "path": "minidev/MINIDEV/mini_dev_postgresql.json",
+    "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+    "entries": 500,
+    "distinct_ids": 498,
+    "duplicate_ids": [
+      137,
+      138
+    ],
+    "duplicate_ids_that_differ": []
+  },
+  "fixture": {
+    "digest": "sha256:64a32aa584ee14aacdf3729c73de154d168b8913039a324a3592f67bfe75ae58",
+    "covers": "table_name, column_name, data_type and is_nullable for every column of every public table, in ordinal order, plus the exact row count of each table",
+    "tables": 75,
+    "columns": 798,
+    "rows": 3898114,
+    "data_as_of": "2026-09-02T15:20:28.450741+00:00",
+    "dump_path": "sweep:the-fixture-identity-is-read-from-the-server-not-from-a-file"
+  },
+  "float_handling": {
+    "what": "float4 and float8 are loaded as Decimal built from the text the server sent",
+    "why": "the canonical serialization states no rendering for a Python float, and 107 of the 498 gold statements return one; without this the sweep would refuse them",
+    "extra_float_digits": "1",
+    "cells_are_tagged": "dec",
+    "column_pg_type_reported": "unchanged, as the server named it"
+  },
+  "rows": {
+    "total": 498,
+    "executed": 498,
+    "timeout": 0,
+    "error": 0
+  },
+  "probes": {
+    "s1": {
+      "applicable": 12,
+      "fired": 2,
+      "not_fired": 10,
+      "not_applicable": 486,
+      "errored": 0
+    },
+    "s2": {
+      "applicable": 84,
+      "fired": 12,
+      "not_fired": 72,
+      "not_applicable": 414,
+      "errored": 0
+    },
+    "s3": {
+      "applicable": 87,
+      "fired": 25,
+      "not_fired": 62,
+      "not_applicable": 410,
+      "errored": 1
+    },
+    "s4": {
+      "applicable": 493,
+      "fired": 32,
+      "not_fired": 461,
+      "not_applicable": 0,
+      "errored": 5
+    }
+  },
+  "by_db": {
+    "debit_card_specializing": {
+      "rows": 30,
+      "executed": 30,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 0,
+          "fired": 0,
+          "not_fired": 0,
+          "not_applicable": 30,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 4,
+          "fired": 0,
+          "not_fired": 4,
+          "not_applicable": 26,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 4,
+          "fired": 0,
+          "not_fired": 4,
+          "not_applicable": 26,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 28,
+          "fired": 5,
+          "not_fired": 23,
+          "not_applicable": 0,
+          "errored": 2
+        }
+      }
+    },
+    "student_club": {
+      "rows": 48,
+      "executed": 48,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 1,
+          "fired": 0,
+          "not_fired": 1,
+          "not_applicable": 47,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 5,
+          "fired": 0,
+          "not_fired": 5,
+          "not_applicable": 43,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 5,
+          "fired": 1,
+          "not_fired": 4,
+          "not_applicable": 43,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 46,
+          "fired": 3,
+          "not_fired": 43,
+          "not_applicable": 0,
+          "errored": 2
+        }
+      }
+    },
+    "thrombosis_prediction": {
+      "rows": 50,
+      "executed": 50,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 0,
+          "fired": 0,
+          "not_fired": 0,
+          "not_applicable": 50,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 6,
+          "fired": 4,
+          "not_fired": 2,
+          "not_applicable": 44,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 6,
+          "fired": 3,
+          "not_fired": 3,
+          "not_applicable": 44,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 50,
+          "fired": 1,
+          "not_fired": 49,
+          "not_applicable": 0,
+          "errored": 0
+        }
+      }
+    },
+    "european_football_2": {
+      "rows": 51,
+      "executed": 51,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 2,
+          "fired": 0,
+          "not_fired": 2,
+          "not_applicable": 49,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 14,
+          "fired": 2,
+          "not_fired": 12,
+          "not_applicable": 37,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 15,
+          "fired": 2,
+          "not_fired": 13,
+          "not_applicable": 36,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 51,
+          "fired": 4,
+          "not_fired": 47,
+          "not_applicable": 0,
+          "errored": 0
+        }
+      }
+    },
+    "formula_1": {
+      "rows": 66,
+      "executed": 66,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 4,
+          "fired": 1,
+          "not_fired": 3,
+          "not_applicable": 62,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 22,
+          "fired": 3,
+          "not_fired": 19,
+          "not_applicable": 44,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 22,
+          "fired": 5,
+          "not_fired": 17,
+          "not_applicable": 43,
+          "errored": 1
+        },
+        "s4": {
+          "applicable": 66,
+          "fired": 4,
+          "not_fired": 62,
+          "not_applicable": 0,
+          "errored": 0
+        }
+      }
+    },
+    "superhero": {
+      "rows": 52,
+      "executed": 52,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 1,
+          "fired": 0,
+          "not_fired": 1,
+          "not_applicable": 51,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 5,
+          "fired": 0,
+          "not_fired": 5,
+          "not_applicable": 47,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 6,
+          "fired": 4,
+          "not_fired": 2,
+          "not_applicable": 46,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 52,
+          "fired": 4,
+          "not_fired": 48,
+          "not_applicable": 0,
+          "errored": 0
+        }
+      }
+    },
+    "codebase_community": {
+      "rows": 49,
+      "executed": 49,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 0,
+          "fired": 0,
+          "not_fired": 0,
+          "not_applicable": 49,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 9,
+          "fired": 0,
+          "not_fired": 9,
+          "not_applicable": 40,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 9,
+          "fired": 2,
+          "not_fired": 7,
+          "not_applicable": 40,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 48,
+          "fired": 2,
+          "not_fired": 46,
+          "not_applicable": 0,
+          "errored": 1
+        }
+      }
+    },
+    "card_games": {
+      "rows": 52,
+      "executed": 52,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 0,
+          "fired": 0,
+          "not_fired": 0,
+          "not_applicable": 52,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 1,
+          "fired": 0,
+          "not_fired": 1,
+          "not_applicable": 51,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 2,
+          "fired": 2,
+          "not_fired": 0,
+          "not_applicable": 50,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 52,
+          "fired": 5,
+          "not_fired": 47,
+          "not_applicable": 0,
+          "errored": 0
+        }
+      }
+    },
+    "toxicology": {
+      "rows": 40,
+      "executed": 40,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 2,
+          "fired": 0,
+          "not_fired": 2,
+          "not_applicable": 38,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 2,
+          "fired": 2,
+          "not_fired": 0,
+          "not_applicable": 38,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 2,
+          "fired": 2,
+          "not_fired": 0,
+          "not_applicable": 38,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 40,
+          "fired": 0,
+          "not_fired": 40,
+          "not_applicable": 0,
+          "errored": 0
+        }
+      }
+    },
+    "california_schools": {
+      "rows": 30,
+      "executed": 30,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 0,
+          "fired": 0,
+          "not_fired": 0,
+          "not_applicable": 30,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 9,
+          "fired": 0,
+          "not_fired": 9,
+          "not_applicable": 21,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 9,
+          "fired": 2,
+          "not_fired": 7,
+          "not_applicable": 21,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 30,
+          "fired": 3,
+          "not_fired": 27,
+          "not_applicable": 0,
+          "errored": 0
+        }
+      }
+    },
+    "financial": {
+      "rows": 30,
+      "executed": 30,
+      "timeout": 0,
+      "error": 0,
+      "probes": {
+        "s1": {
+          "applicable": 2,
+          "fired": 1,
+          "not_fired": 1,
+          "not_applicable": 28,
+          "errored": 0
+        },
+        "s2": {
+          "applicable": 7,
+          "fired": 1,
+          "not_fired": 6,
+          "not_applicable": 23,
+          "errored": 0
+        },
+        "s3": {
+          "applicable": 7,
+          "fired": 2,
+          "not_fired": 5,
+          "not_applicable": 23,
+          "errored": 0
+        },
+        "s4": {
+          "applicable": 30,
+          "fired": 1,
+          "not_fired": 29,
+          "not_applicable": 0,
+          "errored": 0
+        }
+      }
+    }
+  },
+  "probe_errors": {
+    "s4": [
+      {
+        "question_id": 1479,
+        "db_id": "debit_card_specializing",
+        "reason": "plan_variant: timeout: canceling statement due to statement timeout"
+      },
+      {
+        "question_id": 1480,
+        "db_id": "debit_card_specializing",
+        "reason": "plan_variant: timeout: canceling statement due to statement timeout"
+      },
+      {
+        "question_id": 1322,
+        "db_id": "student_club",
+        "reason": "shuffled_copies: error: column \"t1.event_name\" must appear in the GROUP BY clause or be used in an aggregate function LINE 1: SELECT T1.event_name FROM event AS T1 INNER JOIN attendance ... ^"
+      },
+      {
+        "question_id": 1323,
+        "db_id": "student_club",
+        "reason": "shuffled_copies: error: column \"t1.event_name\" must appear in the GROUP BY clause or be used in an aggregate function LINE 1: SELECT T1.event_name FROM event AS T1 INNER JOIN attendance ... ^"
+      },
+      {
+        "question_id": 687,
+        "db_id": "codebase_community",
+        "reason": "shuffled_copies: error: column \"t1.score\" must appear in the GROUP BY clause or be used in an aggregate function LINE 1: ...S T2 ON T1.Id = T2.PostId GROUP BY T1.Id ORDER BY T1.Score D... ^"
+      }
+    ],
+    "s3": [
+      {
+        "question_id": 988,
+        "db_id": "formula_1",
+        "reason": "error: result_types: column k0 (interval) returned a value the canonical serialization has no rule for: no canonical rendering is stated for a value of type timedelta"
+      }
+    ]
+  },
+  "wall_seconds": {
+    "baseline": 6.482,
+    "drop_scratch": 0.066,
+    "fixture": 0.367,
+    "s1": 0.061,
+    "s2": 0.013,
+    "s3": 2.252,
+    "s4_plan": 240.536,
+    "s4_shuffle": 6.69,
+    "table_copies": 9.978,
+    "total": 269.322
+  },
+  "scratch_schema": {
+    "name": "sweep",
+    "row_limit": 300000,
+    "copied": 70,
+    "not_copied": [
+      {
+        "table": "laptimes",
+        "rows": 400524
+      },
+      {
+        "table": "legalities",
+        "rows": 427907
+      },
+      {
+        "table": "posthistory",
+        "rows": 303155
+      },
+      {
+        "table": "trans",
+        "rows": 1056320
+      },
+      {
+        "table": "yearmonth",
+        "rows": 383282
+      }
+    ],
+    "analyzed": true
+  },
+  "caps": {
+    "statement_timeout": "30s",
+    "timeouts_by_phase": {
+      "s4_plan": 5
+    },
+    "rows_bounded_in_evidence": 10
+  },
+  "probe_outcomes": {
+    "fired": "the probe applied and its condition held",
+    "not_fired": "the probe applied and its condition did not hold",
+    "not_applicable": "the probe does not apply to this statement",
+    "errored": "the probe applied and could not reach a verdict",
+    "applicable": "fired plus not_fired"
+  }
+}

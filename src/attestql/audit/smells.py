@@ -1,0 +1,904 @@
+"""The four gold-only smells: mechanical reasons to read a gold statement again.
+
+ADR-0013 point 2 and the four probes of
+``plans/reports/mechanism-260902-2055-gold-audit-detection.md``, measured over all 498
+Mini-Dev golds in ``plans/reports/measurement-260902-2226-gold-only-probes-mini-dev.md``
+and shipped under the decisions that measurement recorded. Each smell takes the parsed
+gold, a backend and the result the gold produced, asks the database one more question,
+and answers whether something about the statement makes its answer arbitrary.
+
+**A smell is a heuristic and never a verdict.** Nothing here says a gold is wrong.
+Every ``Smell`` carries ``heuristic: true`` and a ``means`` sentence a maintainer can
+read, and the fired ones are a reading order, not a defect list. On the measured corpus
+two of three valid fires were worth acting on and one in three was not.
+
+**What each one asks.**
+
+``ordering-over-numeric-text`` orders by a text column whose values all look like
+numbers, then reruns the gold with that key cast to numeric: when the two answers differ,
+the statement sorted 91.610 above 257.320 and the question almost certainly did not mean
+that.
+
+``arbitrary-cut`` looks at a LIMIT and asks whether the cut is arbitrary and the answer
+depends on it. An unordered bound fires when a rerun over shuffled data changes the
+result. An ordered bound fires when the rows at the cut are tied on every ordering key
+and those tied rows project different answers; tied rows that project the same answer
+are not a hazard, which is what removed every miss on the measured corpus. Its third
+case is a key that puts nulls first and a bounded result that then holds one.
+
+``not-a-function-of-the-data`` reruns the gold over a seeded shuffled copy of its tables
+and compares the full result under the gold's own rule. When the two differ, the answer
+depended on the order rows happened to be stored in. When the only differing cells are
+floats that agree to six significant digits, the smell is reported as
+``float-aggregate-order`` instead: that is summation order, not a defect in the
+statement, and BIRD compares floats exactly.
+
+``direction-against-question`` is experimental and off unless asked for. It reads the
+question text for words meaning a maximum or a minimum and fires on the contradiction
+with the first ordering key. Its precision on the measured corpus was 17 %, and it needs
+a birthday inversion rule and an "alphabetical" exception before it is a feature.
+
+Nothing here writes to the database. The shuffled copies are made once per run by the
+backend and are named in the evidence, including the tables too large to have been
+copied, so a quiet smell never reads as a measurement that was taken.
+"""
+
+from __future__ import annotations
+
+import re
+from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass, field
+from decimal import Decimal, localcontext
+
+from attestql.audit.backend import Backend, BackendRefused, ShuffledCopies, TextCensus
+from attestql.audit.statements import ORDERING_KEY_PREFIX, OrderingKey, ParsedStatement
+from attestql.evidence.render import Json, json_row, result_digest, result_json
+from attestql.evidence.replay import ComparabilityResult, ReplayRule, compare_results
+from attestql.evidence.serialize import SerializationDescriptor, canonical_type_tag
+from attestql.kernel.types import ExecutionResult
+
+ORDERING_OVER_NUMERIC_TEXT = "ordering-over-numeric-text"
+ARBITRARY_CUT = "arbitrary-cut"
+NOT_A_FUNCTION_OF_THE_DATA = "not-a-function-of-the-data"
+FLOAT_AGGREGATE_ORDER = "float-aggregate-order"
+DIRECTION_AGAINST_QUESTION = "direction-against-question"
+
+SMELL_NAMES: tuple[str, ...] = (
+    ORDERING_OVER_NUMERIC_TEXT,
+    ARBITRARY_CUT,
+    NOT_A_FUNCTION_OF_THE_DATA,
+    FLOAT_AGGREGATE_ORDER,
+    DIRECTION_AGAINST_QUESTION,
+)
+"""Every name a smell can be reported under, so a summary can count them all at zero."""
+
+ROWS_IN_EVIDENCE = 10
+"""How many rows a fired smell shows. The record beside it holds the whole result."""
+
+NUMERIC_TEXT = r"^-?[0-9]+(\.[0-9]+)?$"
+"""What counts as a numeric-looking text value. A form this rejects is counted
+non-numeric and the smell stays quiet, which is the conservative direction."""
+
+TEXT_TYPES: frozenset[str] = frozenset({"text", "character varying", "character"})
+"""The declared types the first smell applies to, as a catalogue names them. These are
+PostgreSQL's ``information_schema`` names; a second engine adds its own here."""
+
+FLOAT_TYPES: frozenset[str] = frozenset({"float4", "float8"})
+"""The result types whose summation order the fourth smell forgives, by their server
+type names, which is what a result column carries."""
+
+SIGNIFICANT_DIGITS = 6
+"""How far two float values have to agree before their difference is called summation
+order rather than a difference in the answer."""
+
+DEFAULT_SHUFFLE_ROW_LIMIT = 300_000
+"""A table with more rows than this is not copied for the shuffle; the skip is recorded."""
+
+DEFAULT_SHUFFLE_SEED = 1
+"""The seed the shuffled copies are ordered by, so one run reproduces another."""
+
+NO_SHUFFLE = "no shuffled copies were prepared"
+"""Why a smell that reruns over shuffled copies did not ask its question at all. A caller
+that knows the reason states it instead; this is what is said when it has none."""
+
+MAX_INTENT: tuple[str, ...] = (
+    "highest",
+    "most",
+    "max",
+    "maximum",
+    "top",
+    "largest",
+    "greatest",
+    "biggest",
+    "longest",
+    "latest",
+    "newest",
+    "best",
+    "richest",
+    "oldest",
+)
+MIN_INTENT: tuple[str, ...] = (
+    "lowest",
+    "least",
+    "min",
+    "minimum",
+    "fewest",
+    "smallest",
+    "shortest",
+    "earliest",
+    "youngest",
+    "worst",
+    "cheapest",
+    "poorest",
+)
+"""The two intent lists the experimental smell searches for, whole words and case
+insensitive, over the question and its hint together."""
+
+_MEANS: Mapping[str, str] = {
+    ORDERING_OVER_NUMERIC_TEXT: (
+        "this statement orders by a text column holding only numbers, and ordering it as "
+        "a number gives a different answer, so the gold may be sorting 9.5 above 10"
+    ),
+    ARBITRARY_CUT: (
+        "this statement cuts its result at a LIMIT that does not decide which rows come "
+        "back, so a different but equally correct statement can return other rows and score zero"
+    ),
+    NOT_A_FUNCTION_OF_THE_DATA: (
+        "rerun over the same rows in another physical order this statement gives another "
+        "answer, so its result depends on how the rows are stored and not only on the data"
+    ),
+    FLOAT_AGGREGATE_ORDER: (
+        "this statement aggregates floating point numbers, so its last digits depend on "
+        "the order the rows were summed in; the values agree to six significant digits"
+    ),
+    DIRECTION_AGAINST_QUESTION: (
+        "the question asks for a maximum or a minimum and the statement orders the other "
+        "way, so the bounded result may be the wrong end of the list; experimental"
+    ),
+}
+
+_WORD = re.compile(r"[a-z]+")
+
+
+@dataclass(frozen=True)
+class Smell:
+    """What one smell found on one gold statement.
+
+    ``applicable`` says the question was asked at all: a statement with no LIMIT is not
+    quiet about its cut, it has none. ``fired`` says the answer was yes. ``evidence``
+    holds what was measured, always with ``heuristic`` and ``means`` in it, and
+    ``counterexample_rows`` holds the rows a reader should look at first, bounded, and is
+    empty unless the smell fired.
+    """
+
+    name: str
+    fired: bool
+    applicable: bool
+    evidence: Json
+    counterexample_rows: tuple[tuple[object, ...], ...] = ()
+
+    def __post_init__(self) -> None:
+        if self.fired and not self.applicable:
+            raise ValueError(f"{self.name} fired on a statement it does not apply to")
+        if self.counterexample_rows and not self.fired:
+            raise ValueError(f"{self.name} is quiet and still carries counterexample rows")
+
+
+@dataclass(frozen=True)
+class SmellSettings:
+    """What every smell needs beyond the statement, the backend and the result."""
+
+    serialization: SerializationDescriptor
+    statement_timeout_seconds: int
+    shuffle_seed: int = DEFAULT_SHUFFLE_SEED
+    shuffle_row_limit: int = DEFAULT_SHUFFLE_ROW_LIMIT
+    plan_variant: bool = False
+    experimental_s2: bool = False
+
+
+@dataclass(frozen=True)
+class QuestionText:
+    """The question as it was asked and the hint the set supplied beside it."""
+
+    question: str
+    evidence: str = field(default="")
+
+
+def _evidence(name: str, payload: Json) -> Json:
+    """One smell's evidence, with what it is and what it would mean stated in it."""
+    return {"heuristic": True, "means": _MEANS[name], **payload}
+
+
+def _quiet(name: str, payload: Json, *, applicable: bool) -> Smell:
+    return Smell(name=name, fired=False, applicable=applicable, evidence=_evidence(name, payload))
+
+
+def _fired(name: str, payload: Json, rows: Sequence[tuple[object, ...]]) -> Smell:
+    return Smell(
+        name=name,
+        fired=True,
+        applicable=True,
+        evidence=_evidence(name, payload),
+        counterexample_rows=tuple(rows[:ROWS_IN_EVIDENCE]),
+    )
+
+
+def _typed(row: Sequence[object]) -> tuple[tuple[str, object], ...]:
+    """One row keyed the way both replay rules key it: each value beside its type tag."""
+    return tuple((canonical_type_tag(value), value) for value in row)
+
+
+def _columns_of(
+    catalogue: Mapping[str, Mapping[str, str]], relation: str
+) -> Mapping[str, str] | None:
+    """The columns of one relation, whether the catalogue keyed it bare or qualified."""
+    if relation in catalogue:
+        return catalogue[relation]
+    for name, columns in catalogue.items():
+        if name.rpartition(".")[2] == relation:
+            return columns
+    return None
+
+
+def _declared_type(columns: Mapping[str, str], column: str) -> str | None:
+    """The declared type of a column, matching the case the catalogue reports it in."""
+    if column in columns:
+        return columns[column]
+    lowered = column.lower()
+    for name, declared in columns.items():
+        if name.lower() == lowered:
+            return declared
+    return None
+
+
+def _resolve_key(
+    parsed: ParsedStatement, catalogue: Mapping[str, Mapping[str, str]], key: OrderingKey
+) -> tuple[str, str, str] | str:
+    """An ordering key as ``(relation, column, declared type)``, or why it is not one."""
+    fields = key.column_reference
+    if not fields:
+        return "the key is an expression and not a column"
+    if len(fields) == 1:
+        name = fields[0]
+        if name in parsed.output_names:
+            return "the key names an output column of the select list"
+        holders = [
+            relation
+            for relation in sorted(set(parsed.aliases.values()))
+            if _declared_type(_columns_of(catalogue, relation) or {}, name) is not None
+        ]
+        if not holders:
+            return "no table in the FROM clause holds a column of that name"
+        if len(holders) > 1:
+            return f"the name is held by {len(holders)} of the tables in the FROM clause"
+        relation = holders[0]
+    else:
+        found = parsed.aliases.get(fields[-2])
+        if found is None:
+            return "the qualifier does not name a table of the FROM clause"
+        relation = found
+    columns = _columns_of(catalogue, relation)
+    declared = _declared_type(columns or {}, fields[-1])
+    if declared is None:
+        return f"{relation} has no column named {fields[-1]}"
+    return (relation, fields[-1], declared)
+
+
+def _census_json(census: TextCensus) -> Json:
+    return {
+        "rows": census.rows,
+        "nulls": census.nulls,
+        "empty_strings": census.empty_strings,
+        "non_numeric": census.non_numeric,
+        "pattern": census.pattern,
+    }
+
+
+def ordering_over_numeric_text(
+    parsed: ParsedStatement, backend: Backend, baseline: ExecutionResult, *, settings: SmellSettings
+) -> Smell:
+    """The gold orders by text that holds numbers, and ordering it as numbers differs."""
+    name = ORDERING_OVER_NUMERIC_TEXT
+    if not parsed.ordering:
+        return _quiet(
+            name, {"reason": "the statement states no top level ORDER BY"}, applicable=False
+        )
+    if parsed.set_operation or parsed.from_has_subquery:
+        return _quiet(
+            name,
+            {"reason": "an ordering key of a set operation or a subselect resolves to no column"},
+            applicable=False,
+        )
+    try:
+        catalogue = backend.column_types(parsed.tables)
+    except BackendRefused as refused:
+        return _quiet(name, {"error": refused.detail, "step": refused.step}, applicable=True)
+    keys: list[Json] = []
+    over_text: list[tuple[int, str, str]] = []
+    for index, key in enumerate(parsed.ordering):
+        resolved = _resolve_key(parsed, catalogue, key)
+        if isinstance(resolved, str):
+            keys.append({"key": key.expression, "not_applicable": resolved})
+            continue
+        relation, column, declared = resolved
+        textual = declared in TEXT_TYPES
+        keys.append(
+            {
+                "key": key.expression,
+                "column": f"{relation}.{column}",
+                "declared_type": declared,
+                "not_applicable": None if textual else "the column is not declared as text",
+            }
+        )
+        if textual:
+            over_text.append((index, relation, column))
+    if not over_text:
+        return _quiet(
+            name,
+            {"reason": "no ORDER BY key resolves to a text column", "keys": keys},
+            applicable=False,
+        )
+    return _numeric_cast_reruns(parsed, backend, baseline, settings, keys, over_text)
+
+
+def _numeric_cast_reruns(
+    parsed: ParsedStatement,
+    backend: Backend,
+    baseline: ExecutionResult,
+    settings: SmellSettings,
+    keys: list[Json],
+    over_text: Sequence[tuple[int, str, str]],
+) -> Smell:
+    """Census each text key and, when it holds only numbers, rerun the gold cast."""
+    name = ORDERING_OVER_NUMERIC_TEXT
+    fired = False
+    for index, relation, column in over_text:
+        evidence = keys[index]
+        try:
+            census = backend.numeric_text_census(relation, column, NUMERIC_TEXT)
+        except BackendRefused as refused:
+            evidence["census_error"] = refused.detail
+            continue
+        evidence["census"] = _census_json(census)
+        readable = census.rows - census.nulls - census.empty_strings
+        if census.non_numeric or readable < 1:
+            evidence["every_value_is_numeric"] = False
+            continue
+        evidence["every_value_is_numeric"] = True
+        cast_sql = parsed.with_ordering_key_cast_to_numeric(index)
+        evidence["cast_sql"] = cast_sql
+        try:
+            rerun = backend.execute(
+                cast_sql, statement_timeout_seconds=settings.statement_timeout_seconds
+            )
+        except BackendRefused as refused:
+            evidence["cast_error"] = refused.detail
+            continue
+        verdict = compare_results(
+            baseline, rerun, rule=ReplayRule.R_ORD, serialization=settings.serialization
+        )
+        evidence["verdict"] = verdict.result.value
+        evidence["gold_result"] = result_json(
+            baseline, settings.serialization, bound=ROWS_IN_EVIDENCE
+        )
+        evidence["cast_result"] = result_json(rerun, settings.serialization, bound=ROWS_IN_EVIDENCE)
+        fired = fired or verdict.result is ComparabilityResult.NOT_EQUAL
+    payload: Json = {"keys": keys}
+    if not fired:
+        return _quiet(name, payload, applicable=True)
+    return _fired(name, payload, baseline.rows)
+
+
+def _nulls_first_in_effect(key: OrderingKey) -> bool:
+    """Whether this key would put its nulls at the top of the result.
+
+    A written NULLS FIRST or NULLS LAST decides it and nothing else is consulted. Left to
+    the default, the placement is PostgreSQL's: a null sorts as larger than every value, so
+    an ascending key puts its nulls last and a descending key puts them first.
+
+    Reading the default the other way round is what made this probe call a plain
+    ``ORDER BY x ASC LIMIT 1`` a null-first cut, which on PostgreSQL it is not.
+    """
+    if key.nulls != "default":
+        return key.nulls == "first"
+    return key.descending
+
+
+def arbitrary_cut(
+    parsed: ParsedStatement,
+    backend: Backend,
+    baseline: ExecutionResult,
+    *,
+    settings: SmellSettings,
+    shuffled: ShuffledCopies | None = None,
+    no_shuffle: str = "",
+) -> Smell:
+    """The gold bounds its result at a cut that does not decide which rows come back.
+
+    ``no_shuffle`` is why there are no copies, when the caller knows: the no-ORDER-BY case
+    is answered by rerunning over them, so without them the question was not asked and the
+    smell says which reason stopped it rather than reading as a quiet no.
+    """
+    name = ARBITRARY_CUT
+    if not parsed.limit_stated:
+        return _quiet(name, {"reason": "the statement states no LIMIT"}, applicable=False)
+    if parsed.limit_count is None:
+        return _quiet(name, {"reason": "the LIMIT is not an integer constant"}, applicable=False)
+    if parsed.offset_stated and parsed.offset_count is None:
+        return _quiet(name, {"reason": "the OFFSET is not an integer constant"}, applicable=False)
+    offset = parsed.offset_count or 0
+    cut = offset + parsed.limit_count
+    if cut < 1:
+        return _quiet(
+            name,
+            {"reason": "the bound admits no row, so there is no cut", "cut": cut},
+            applicable=False,
+        )
+    if not parsed.ordering:
+        return _unordered_cut(parsed, backend, baseline, settings, shuffled, no_shuffle, cut)
+    if parsed.set_operation:
+        return _quiet(
+            name,
+            {"reason": "a set operation has no select list to project its ordering keys through"},
+            applicable=False,
+        )
+    return _ordered_cut(parsed, backend, settings, offset, cut)
+
+
+def _unordered_cut(
+    parsed: ParsedStatement,
+    backend: Backend,
+    baseline: ExecutionResult,
+    settings: SmellSettings,
+    shuffled: ShuffledCopies | None,
+    no_shuffle: str,
+    cut: int,
+) -> Smell:
+    """A bound with no ordering: fired when the same rows in another order answer otherwise."""
+    name = ARBITRARY_CUT
+    payload: Json = {
+        "case": "no-ordering",
+        "cut": cut,
+        "why": "the statement bounds its result and states no ORDER BY, so which rows it "
+        "returns is whichever ones the plan produced first",
+    }
+    if shuffled is None:
+        # Not applicable rather than quiet: the one measurement that answers this case was
+        # not taken, and a reader has to be able to tell that from a bound that was tested.
+        payload["reason"] = f"{no_shuffle or NO_SHUFFLE}, so the bound was not tested"
+        return _quiet(name, payload, applicable=False)
+    payload["shuffle"] = _shuffle_json(parsed, shuffled)
+    try:
+        rerun = backend.execute_shuffled(
+            parsed.sql, statement_timeout_seconds=settings.statement_timeout_seconds
+        )
+    except BackendRefused as refused:
+        payload["error"] = refused.detail
+        return _quiet(name, payload, applicable=True)
+    verdict = compare_results(
+        baseline, rerun, rule=ReplayRule.R_SET, serialization=settings.serialization
+    )
+    payload["verdict"] = verdict.result.value
+    payload["gold_result"] = result_json(baseline, settings.serialization, bound=ROWS_IN_EVIDENCE)
+    payload["shuffled_result"] = result_json(rerun, settings.serialization, bound=ROWS_IN_EVIDENCE)
+    if verdict.result is not ComparabilityResult.NOT_EQUAL:
+        return _quiet(name, payload, applicable=True)
+    return _fired(name, payload, rerun.rows)
+
+
+def _ordered_cut(
+    parsed: ParsedStatement,
+    backend: Backend,
+    settings: SmellSettings,
+    offset: int,
+    cut: int,
+) -> Smell:
+    """An ordered bound: the rows at the cut, and where the nulls in the keys went."""
+    name = ARBITRARY_CUT
+    variant_sql = parsed.without_the_bound_and_projecting_its_keys()
+    payload: Json = {
+        "cut": cut,
+        "offset": offset,
+        "distinct_kept": parsed.distinct,
+        "unbounded_sql": variant_sql,
+    }
+    try:
+        unbounded = backend.execute(
+            variant_sql, statement_timeout_seconds=settings.statement_timeout_seconds
+        )
+    except BackendRefused as refused:
+        payload["error"] = refused.detail
+        return _quiet(name, payload, applicable=True)
+    keys = len(parsed.ordering)
+    projected = len(unbounded.columns) - keys
+    rows = unbounded.rows
+    payload["unbounded_rows"] = len(rows)
+    payload["projected_columns"] = [column.name for column in unbounded.columns[:projected]]
+    payload["ordering_key_columns"] = [
+        column.name
+        for column in unbounded.columns[projected:]
+        if column.name.startswith(ORDERING_KEY_PREFIX)
+    ]
+    tied = _tied_at_the_cut(rows, cut, projected)
+    null_rows = _rows_with_a_null_key(parsed, rows[offset:cut], projected, payload)
+    cases: list[str] = []
+    if tied is not None:
+        positions, answers = tied
+        payload["tied_at_the_cut"] = {
+            "positions": list(positions[:ROWS_IN_EVIDENCE]),
+            "tied_rows": len(positions),
+            "distinct_projected_answers": answers,
+            "rows": [
+                json_row(rows[position][:projected]) for position in positions[:ROWS_IN_EVIDENCE]
+            ],
+        }
+        if answers > 1:
+            cases.append("tie-at-the-cut")
+    if null_rows:
+        cases.append("null-first")
+    payload["case"] = ", ".join(cases) if cases else None
+    if not cases:
+        return _quiet(name, payload, applicable=True)
+    shown = [rows[position] for position in (tied[0] if tied and tied[1] > 1 else ())]
+    return _fired(name, payload, shown or null_rows)
+
+
+def _tied_at_the_cut(
+    rows: Sequence[tuple[object, ...]], cut: int, projected: int
+) -> tuple[tuple[int, ...], int] | None:
+    """The run of rows tied with the cut on every ordering key, and how many answers it holds.
+
+    ``None`` when there is no row after the cut, or when the rows on either side of it
+    differ in a key: then the cut is the ordering's own and not this tool's to question.
+    """
+    if len(rows) <= cut or cut < 1:
+        return None
+    at_the_cut = _typed(rows[cut][projected:])
+    if _typed(rows[cut - 1][projected:]) != at_the_cut:
+        return None
+    first = cut - 1
+    while first > 0 and _typed(rows[first - 1][projected:]) == at_the_cut:
+        first -= 1
+    last = cut
+    while last + 1 < len(rows) and _typed(rows[last + 1][projected:]) == at_the_cut:
+        last += 1
+    positions = tuple(range(first, last + 1))
+    answers = {_typed(rows[position][:projected]) for position in positions}
+    return positions, len(answers)
+
+
+def _rows_with_a_null_key(
+    parsed: ParsedStatement,
+    returned: Sequence[tuple[object, ...]],
+    projected: int,
+    payload: Json,
+) -> tuple[tuple[object, ...], ...]:
+    """The returned rows whose null in a nulls-first key is why they were returned."""
+    keys: list[Json] = []
+    with_a_null: list[tuple[object, ...]] = []
+    for index, key in enumerate(parsed.ordering):
+        first = _nulls_first_in_effect(key)
+        nulls = [row for row in returned if row[projected + index] is None]
+        keys.append(
+            {
+                "key": key.expression,
+                "direction": "desc" if key.descending else "asc",
+                "nulls": key.nulls,
+                "nulls_first_in_effect": first,
+                "returned_rows_null_in_this_key": len(nulls),
+                "fires": bool(first and nulls),
+            }
+        )
+        if first and nulls:
+            with_a_null.extend(nulls)
+    payload["ordering_keys"] = keys
+    if with_a_null:
+        payload["returned_rows_with_a_null_key"] = [
+            json_row(row[:projected]) for row in with_a_null[:ROWS_IN_EVIDENCE]
+        ]
+    return tuple(with_a_null)
+
+
+def _shuffle_json(parsed: ParsedStatement, shuffled: ShuffledCopies) -> Json:
+    """What the shuffle covered of this statement's tables, and what it did not."""
+    copied = {name.rpartition(".")[2] for name in shuffled.copied}
+    return {
+        "seed": shuffled.seed,
+        "row_limit": shuffled.row_limit,
+        "tables": list(parsed.tables),
+        "tables_not_shuffled": [
+            table for table in parsed.tables if table.rpartition(".")[2] not in copied
+        ],
+        "tables_skipped_for_size": dict(shuffled.skipped),
+    }
+
+
+def not_a_function_of_the_data(
+    parsed: ParsedStatement,
+    backend: Backend,
+    baseline: ExecutionResult,
+    *,
+    settings: SmellSettings,
+    shuffled: ShuffledCopies | None = None,
+    no_shuffle: str = "",
+) -> Smell:
+    """The same rows in another order, or read another way, give another answer.
+
+    With neither shuffled copies nor a plan variant nothing was rerun, so the smell is not
+    applicable and says why rather than reading as a statement that survived a rerun.
+    """
+    name = NOT_A_FUNCTION_OF_THE_DATA
+    rule = parsed.replay_rule
+    payload: Json = {
+        "rule": rule.value,
+        "baseline_result_hash": result_digest(baseline, settings.serialization),
+        "baseline_result": result_json(baseline, settings.serialization, bound=ROWS_IN_EVIDENCE),
+    }
+    reruns: list[_Rerun] = []
+    if shuffled is None:
+        payload["shuffled_copies"] = {"run": False, "reason": no_shuffle or NO_SHUFFLE}
+    else:
+        payload["shuffle"] = _shuffle_json(parsed, shuffled)
+        _rerun(
+            payload,
+            "shuffled_copies",
+            reruns,
+            lambda: backend.execute_shuffled(
+                parsed.sql, statement_timeout_seconds=settings.statement_timeout_seconds
+            ),
+            settings,
+            baseline,
+            rule,
+        )
+    if settings.plan_variant:
+        _rerun(
+            payload,
+            "plan_variant",
+            reruns,
+            lambda: backend.execute_plan_variant(
+                parsed.sql, statement_timeout_seconds=settings.statement_timeout_seconds
+            ),
+            settings,
+            baseline,
+            rule,
+        )
+    else:
+        payload["plan_variant"] = {"run": False, "reason": "the plan variant was not asked for"}
+    asked = shuffled is not None or settings.plan_variant
+    differing = [rerun for rerun in reruns if rerun.differs]
+    if not differing:
+        return _quiet(name, payload, applicable=asked)
+    floats = _float_order_only(baseline, [rerun.result for rerun in differing])
+    if floats is not None:
+        payload["float_cells"] = floats
+        payload["significant_digits"] = SIGNIFICANT_DIGITS
+        return _fired(FLOAT_AGGREGATE_ORDER, payload, differing[0].result.rows)
+    return _fired(name, payload, differing[0].result.rows)
+
+
+@dataclass(frozen=True)
+class _Rerun:
+    """One rerun of a gold, and whether it answered differently."""
+
+    variant: str
+    result: ExecutionResult
+    differs: bool
+
+
+def _rerun(
+    payload: Json,
+    variant: str,
+    reruns: list[_Rerun],
+    execute: Callable[[], ExecutionResult],
+    settings: SmellSettings,
+    baseline: ExecutionResult,
+    rule: ReplayRule,
+) -> None:
+    """One rerun of the gold, its verdict against the baseline, and both written down."""
+    try:
+        result = execute()
+    except BackendRefused as refused:
+        payload[variant] = {"run": True, "error": refused.detail, "step": refused.step}
+        return
+    verdict = compare_results(baseline, result, rule=rule, serialization=settings.serialization)
+    differs = verdict.result is ComparabilityResult.NOT_EQUAL
+    payload[variant] = {
+        "run": True,
+        "verdict": verdict.result.value,
+        "differs": differs,
+        "result_hash": result_digest(result, settings.serialization),
+        "result": result_json(result, settings.serialization, bound=ROWS_IN_EVIDENCE),
+    }
+    reruns.append(_Rerun(variant=variant, result=result, differs=differs))
+
+
+def _significant(value: Decimal, digits: int) -> Decimal:
+    """One value at that many significant digits, so two of them can be compared there."""
+    with localcontext() as context:
+        context.prec = digits
+        return +value
+
+
+def _float_order_only(
+    baseline: ExecutionResult, reruns: Sequence[ExecutionResult]
+) -> list[Json] | None:
+    """The differing cells when every one of them is a float agreeing to six digits.
+
+    ``None`` as soon as anything else differs: a row count, a projection, a value of any
+    other type, or two floats that disagree in the digits that were compared. The rows
+    are paired by position, which is what a difference of summation order leaves intact
+    and what a difference in the rows themselves does not.
+    """
+    cells: list[Json] = []
+    floats = {
+        index for index, column in enumerate(baseline.columns) if column.pg_type in FLOAT_TYPES
+    }
+    if not floats:
+        return None
+    for rerun in reruns:
+        if rerun.columns != baseline.columns or len(rerun.rows) != len(baseline.rows):
+            return None
+        for position, (left, right) in enumerate(zip(baseline.rows, rerun.rows, strict=True)):
+            for index, (one, other) in enumerate(zip(left, right, strict=True)):
+                if _typed((one,)) == _typed((other,)):
+                    continue
+                if (
+                    index not in floats
+                    or not isinstance(one, Decimal)
+                    or not isinstance(other, Decimal)
+                ):
+                    return None
+                if not one.is_finite() or not other.is_finite():
+                    return None
+                if _significant(one, SIGNIFICANT_DIGITS) != _significant(other, SIGNIFICANT_DIGITS):
+                    return None
+                cells.append(
+                    {
+                        "row": position,
+                        "column": baseline.columns[index].name,
+                        "pg_type": baseline.columns[index].pg_type,
+                        "baseline": format(one, "f"),
+                        "rerun": format(other, "f"),
+                    }
+                )
+    return cells if cells else None
+
+
+def direction_against_question(
+    parsed: ParsedStatement,
+    backend: Backend,
+    baseline: ExecutionResult,
+    *,
+    settings: SmellSettings,
+    question: QuestionText,
+) -> Smell:
+    """The question asks for one end of the list and the statement orders to the other."""
+    del backend  # the question and the parse decide this one; the data is not asked
+    name = DIRECTION_AGAINST_QUESTION
+    if not parsed.ordering or not parsed.limit_stated:
+        return _quiet(
+            name,
+            {"reason": "the statement states no top level ORDER BY with a LIMIT"},
+            applicable=False,
+        )
+    words = set(_WORD.findall(f"{question.question} {question.evidence}".lower()))
+    maxima = [word for word in MAX_INTENT if word in words]
+    minima = [word for word in MIN_INTENT if word in words]
+    first = parsed.ordering[0]
+    against_maximum = bool(maxima) and not minima and not first.descending
+    against_minimum = bool(minima) and not maxima and first.descending
+    contradiction = (
+        "maximum intent with an ascending first key"
+        if against_maximum
+        else ("minimum intent with a descending first key" if against_minimum else None)
+    )
+    payload: Json = {
+        "maximum_intent_words": maxima,
+        "minimum_intent_words": minima,
+        "order_by": _order_by_text(parsed.ordering),
+        "first_key_direction": "desc" if first.descending else "asc",
+        "contradiction": contradiction,
+        "gold_result": result_json(baseline, settings.serialization, bound=ROWS_IN_EVIDENCE),
+    }
+    if contradiction is None:
+        return _quiet(name, payload, applicable=True)
+    return _fired(name, payload, baseline.rows)
+
+
+def _order_by_text(ordering: Sequence[OrderingKey]) -> str:
+    """The ORDER BY as the statement wrote it, so the evidence can name what it read."""
+    return ", ".join(
+        f"{key.expression} {'DESC' if key.descending else 'ASC'}"
+        + ("" if key.nulls == "default" else f" NULLS {key.nulls.upper()}")
+        for key in ordering
+    )
+
+
+def all_smells(
+    parsed: ParsedStatement,
+    backend: Backend,
+    baseline: ExecutionResult,
+    *,
+    settings: SmellSettings,
+    question: QuestionText,
+    shuffled: ShuffledCopies | None = None,
+    no_shuffle: str = "",
+) -> tuple[Smell, ...]:
+    """Every smell that release 1 runs on one gold, in the order it runs them.
+
+    The experimental one is absent unless it was asked for, so a summary that counts the
+    smells it was given never counts an experiment as a finding. ``no_shuffle`` is the
+    run's one reason there are no shuffled copies, repeated into every smell that needed
+    them, so each question's evidence says why rather than only that.
+    """
+    found = [
+        ordering_over_numeric_text(parsed, backend, baseline, settings=settings),
+        arbitrary_cut(
+            parsed, backend, baseline, settings=settings, shuffled=shuffled, no_shuffle=no_shuffle
+        ),
+        not_a_function_of_the_data(
+            parsed, backend, baseline, settings=settings, shuffled=shuffled, no_shuffle=no_shuffle
+        ),
+    ]
+    if settings.experimental_s2:
+        found.append(
+            direction_against_question(
+                parsed, backend, baseline, settings=settings, question=question
+            )
+        )
+    return tuple(found)
+
+
+def smells_json(found: Sequence[Smell]) -> Json:
+    """Every smell that ran on one gold, as one document a maintainer reads."""
+    return {
+        "format": SMELLS_FORMAT,
+        "reading": SMELLS_READING,
+        "smells": [
+            {
+                "name": smell.name,
+                "fired": smell.fired,
+                "applicable": smell.applicable,
+                "evidence": smell.evidence,
+                "counterexample_rows": [json_row(row) for row in smell.counterexample_rows],
+            }
+            for smell in found
+        ],
+    }
+
+
+SMELLS_FORMAT = "attestql/audit/smells/1"
+SMELLS_READING = (
+    "A smell is a mechanical reason to read this gold statement again. It is a heuristic: "
+    "it does not state that the statement is wrong, and a maintainer decides."
+)
+
+
+__all__ = [
+    "ARBITRARY_CUT",
+    "DEFAULT_SHUFFLE_ROW_LIMIT",
+    "DEFAULT_SHUFFLE_SEED",
+    "DIRECTION_AGAINST_QUESTION",
+    "FLOAT_AGGREGATE_ORDER",
+    "MAX_INTENT",
+    "MIN_INTENT",
+    "NOT_A_FUNCTION_OF_THE_DATA",
+    "NO_SHUFFLE",
+    "NUMERIC_TEXT",
+    "ORDERING_OVER_NUMERIC_TEXT",
+    "ROWS_IN_EVIDENCE",
+    "SIGNIFICANT_DIGITS",
+    "SMELLS_FORMAT",
+    "SMELLS_READING",
+    "SMELL_NAMES",
+    "TEXT_TYPES",
+    "QuestionText",
+    "Smell",
+    "SmellSettings",
+    "all_smells",
+    "arbitrary_cut",
+    "direction_against_question",
+    "not_a_function_of_the_data",
+    "ordering_over_numeric_text",
+    "smells_json",
+]

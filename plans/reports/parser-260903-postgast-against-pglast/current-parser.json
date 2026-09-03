@@ -1,0 +1,7039 @@
+[
+ {
+  "question_id": 1471,
+  "rule": "R-SET",
+  "tables": [
+   "customers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1472,
+  "rule": "R-ORD",
+  "tables": [
+   "customers",
+   "yearmonth"
+  ],
+  "ordering": [
+   {
+    "expression": "sum(t2.consumption)",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1473,
+  "rule": "R-SET",
+  "tables": [
+   "customers",
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1476,
+  "rule": "R-SET",
+  "tables": [
+   "customers",
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1479,
+  "rule": "R-ORD",
+  "tables": [
+   "customers",
+   "yearmonth"
+  ],
+  "ordering": [
+   {
+    "expression": "sum(t2.consumption)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1480,
+  "rule": "R-ORD",
+  "tables": [
+   "customers",
+   "yearmonth"
+  ],
+  "ordering": [
+   {
+    "expression": "sum(t2.consumption)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1481,
+  "rule": "R-SET",
+  "tables": [
+   "customers",
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1482,
+  "rule": "R-SET",
+  "tables": [
+   "customers",
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1483,
+  "rule": "R-SET",
+  "tables": [
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1484,
+  "rule": "R-SET",
+  "tables": [
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1486,
+  "rule": "R-SET",
+  "tables": [
+   "customers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1490,
+  "rule": "R-SET",
+  "tables": [
+   "customers",
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1493,
+  "rule": "R-SET",
+  "tables": [
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1498,
+  "rule": "R-ORD",
+  "tables": [
+   "yearmonth"
+  ],
+  "ordering": [
+   {
+    "expression": "sum(consumption)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1500,
+  "rule": "R-SET",
+  "tables": [
+   "products",
+   "transactions_1k",
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1501,
+  "rule": "R-SET",
+  "tables": [
+   "yearmonth",
+   "transactions_1k",
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1505,
+  "rule": "R-SET",
+  "tables": [
+   "yearmonth",
+   "customers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1506,
+  "rule": "R-SET",
+  "tables": [
+   "products",
+   "transactions_1k",
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1507,
+  "rule": "R-SET",
+  "tables": [
+   "transactions_1k",
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1509,
+  "rule": "R-SET",
+  "tables": [
+   "transactions_1k",
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1514,
+  "rule": "R-SET",
+  "tables": [
+   "customers",
+   "transactions_1k",
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1515,
+  "rule": "R-SET",
+  "tables": [
+   "transactions_1k",
+   "customers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1521,
+  "rule": "R-SET",
+  "tables": [
+   "transactions_1k",
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1524,
+  "rule": "R-SET",
+  "tables": [
+   "transactions_1k",
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1525,
+  "rule": "R-SET",
+  "tables": [
+   "transactions_1k",
+   "customers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1526,
+  "rule": "R-SET",
+  "tables": [
+   "yearmonth",
+   "transactions_1k",
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1528,
+  "rule": "R-SET",
+  "tables": [
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1529,
+  "rule": "R-SET",
+  "tables": [
+   "yearmonth",
+   "transactions_1k",
+   "gasstations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1531,
+  "rule": "R-SET",
+  "tables": [
+   "customers",
+   "transactions_1k",
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1533,
+  "rule": "R-SET",
+  "tables": [
+   "transactions_1k",
+   "yearmonth"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1312,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "major"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1317,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "event",
+   "attendance"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1322,
+  "rule": "R-SET",
+  "tables": [
+   "event",
+   "attendance"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1323,
+  "rule": "R-SET",
+  "tables": [
+   "event",
+   "attendance"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1331,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "income"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1334,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "zip_code"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1338,
+  "rule": "R-SET",
+  "tables": [
+   "expense",
+   "event",
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1339,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "expense"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1340,
+  "rule": "R-SET",
+  "tables": [
+   "event",
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1344,
+  "rule": "R-SET",
+  "tables": [
+   "income"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1346,
+  "rule": "R-SET",
+  "tables": [
+   "member"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1350,
+  "rule": "R-SET",
+  "tables": [
+   "budget",
+   "expense"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1351,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "major"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1352,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "major"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1356,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "major"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1357,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "income"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1359,
+  "rule": "R-SET",
+  "tables": [
+   "budget",
+   "event"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1361,
+  "rule": "R-SET",
+  "tables": [
+   "expense"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1362,
+  "rule": "R-SET",
+  "tables": [
+   "zip_code"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1368,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "major"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1371,
+  "rule": "R-SET",
+  "tables": [
+   "event",
+   "attendance"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1375,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "major"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1376,
+  "rule": "R-ORD",
+  "tables": [
+   "budget",
+   "event"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.spent / (NULLIF(t1.amount, 0))",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1378,
+  "rule": "R-SET",
+  "tables": [
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1380,
+  "rule": "R-SET",
+  "tables": [
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1381,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "attendance"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1387,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "expense",
+   "event",
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1389,
+  "rule": "R-ORD",
+  "tables": [
+   "expense",
+   "event",
+   "budget"
+  ],
+  "ordering": [
+   {
+    "expression": "t3.cost",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1390,
+  "rule": "R-SET",
+  "tables": [
+   "expense",
+   "event",
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1392,
+  "rule": "R-ORD",
+  "tables": [
+   "income"
+  ],
+  "ordering": [
+   {
+    "expression": "source",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1394,
+  "rule": "R-SET",
+  "tables": [
+   "major",
+   "member"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1398,
+  "rule": "R-ORD",
+  "tables": [
+   "budget",
+   "event"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.spent",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1399,
+  "rule": "R-SET",
+  "tables": [
+   "event",
+   "member",
+   "attendance"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1401,
+  "rule": "R-SET",
+  "tables": [
+   "expense",
+   "event",
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1403,
+  "rule": "R-ORD",
+  "tables": [
+   "budget",
+   "event"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.remaining",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1404,
+  "rule": "R-SET",
+  "tables": [
+   "expense",
+   "event",
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1405,
+  "rule": "R-ORD",
+  "tables": [
+   "event",
+   "budget"
+  ],
+  "ordering": [
+   {
+    "expression": "sum(t2.amount)",
+    "descending": false,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1409,
+  "rule": "R-SET",
+  "tables": [
+   "expense"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1410,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "expense"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1411,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "expense"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1422,
+  "rule": "R-SET",
+  "tables": [
+   "event",
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1426,
+  "rule": "R-SET",
+  "tables": [
+   "major",
+   "member"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1427,
+  "rule": "R-SET",
+  "tables": [
+   "event",
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1432,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "income"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1435,
+  "rule": "R-SET",
+  "tables": [
+   "event"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1457,
+  "rule": "R-SET",
+  "tables": [
+   "member",
+   "expense",
+   "budget"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1460,
+  "rule": "R-SET",
+  "tables": [
+   "expense",
+   "member"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1464,
+  "rule": "R-SET",
+  "tables": [
+   "income",
+   "member",
+   "event",
+   "attendance"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1149,
+  "rule": "R-SET",
+  "tables": [
+   "patient"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1150,
+  "rule": "R-SET",
+  "tables": [
+   "patient"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1152,
+  "rule": "R-SET",
+  "tables": [
+   "patient"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1153,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1155,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1156,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "examination"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1157,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "examination"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1162,
+  "rule": "R-SET",
+  "tables": [
+   "patient"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1164,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "examination"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1166,
+  "rule": "R-ORD",
+  "tables": [
+   "patient",
+   "examination"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.birthday",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1168,
+  "rule": "R-ORD",
+  "tables": [
+   "laboratory",
+   "patient"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.birthday",
+    "descending": false,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1169,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1171,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "examination"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1175,
+  "rule": "R-ORD",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.hgb",
+    "descending": true,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1179,
+  "rule": "R-SET",
+  "tables": [
+   "examination",
+   "patient"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1185,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1187,
+  "rule": "R-SET",
+  "tables": [
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1189,
+  "rule": "R-SET",
+  "tables": [
+   "examination"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1192,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1195,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1198,
+  "rule": "R-SET",
+  "tables": [
+   "patient"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1201,
+  "rule": "R-SET",
+  "tables": [
+   "patient"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1205,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1208,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1209,
+  "rule": "R-ORD",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.birthday",
+    "descending": false,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1220,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1225,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1227,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1229,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1231,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1232,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1235,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1238,
+  "rule": "R-ORD",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.birthday",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1239,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1241,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1242,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1243,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1247,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1251,
+  "rule": "R-SET",
+  "tables": [
+   "examination",
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1252,
+  "rule": "R-SET",
+  "tables": [
+   "examination",
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1254,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1255,
+  "rule": "R-ORD",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [
+   {
+    "expression": "count(t1.diagnosis)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1256,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1257,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1265,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1267,
+  "rule": "R-SET",
+  "tables": [
+   "examination",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1270,
+  "rule": "R-SET",
+  "tables": [
+   "examination",
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1275,
+  "rule": "R-SET",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1281,
+  "rule": "R-ORD",
+  "tables": [
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.birthday",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1302,
+  "rule": "R-SET",
+  "tables": [
+   "examination",
+   "patient",
+   "laboratory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1025,
+  "rule": "R-ORD",
+  "tables": [
+   "match",
+   "league"
+  ],
+  "ordering": [
+   {
+    "expression": "sum(t1.home_team_goal + t1.away_team_goal)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1028,
+  "rule": "R-ORD",
+  "tables": [
+   "team",
+   "league",
+   "match"
+  ],
+  "ordering": [
+   {
+    "expression": "count(*)",
+    "descending": true,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1029,
+  "rule": "R-ORD",
+  "tables": [
+   "team_attributes",
+   "team"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.buildupplayspeed",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 4,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1030,
+  "rule": "R-ORD",
+  "tables": [
+   "match",
+   "league"
+  ],
+  "ordering": [
+   {
+    "expression": "count(t1.id)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1031,
+  "rule": "R-SET",
+  "tables": [
+   "player_attributes",
+   "player"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1032,
+  "rule": "R-SET",
+  "tables": [
+   "league",
+   "match"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1035,
+  "rule": "R-SET",
+  "tables": [
+   "team_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1036,
+  "rule": "R-SET",
+  "tables": [
+   "team_attributes",
+   "team"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1037,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1039,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1040,
+  "rule": "R-ORD",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [
+   {
+    "expression": "sum(t2.heading_accuracy)::real / (NULLIF(count(t2.player_fifa_api_id), 0))",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 10,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1042,
+  "rule": "R-SET",
+  "tables": [
+   "league",
+   "match"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1044,
+  "rule": "R-SET",
+  "tables": [
+   "player"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1048,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1057,
+  "rule": "R-SET",
+  "tables": [
+   "country",
+   "match"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1058,
+  "rule": "R-ORD",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [
+   {
+    "expression": "result",
+    "descending": true,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1068,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1076,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1078,
+  "rule": "R-ORD",
+  "tables": [
+   "player"
+  ],
+  "ordering": [
+   {
+    "expression": "birthday",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1079,
+  "rule": "R-ORD",
+  "tables": [
+   "player"
+  ],
+  "ordering": [
+   {
+    "expression": "height",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1080,
+  "rule": "R-SET",
+  "tables": [
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1084,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1088,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1091,
+  "rule": "R-SET",
+  "tables": [
+   "league",
+   "match"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1092,
+  "rule": "R-SET",
+  "tables": [
+   "league",
+   "match"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1094,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1096,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1098,
+  "rule": "R-ORD",
+  "tables": [
+   "team",
+   "team_attributes"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.chancecreationpassing",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1102,
+  "rule": "R-ORD",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.birthday",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1103,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1105,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1107,
+  "rule": "R-ORD",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [
+   {
+    "expression": "date",
+    "descending": true,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1110,
+  "rule": "R-SET",
+  "tables": [
+   "team",
+   "team_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1113,
+  "rule": "R-SET",
+  "tables": [
+   "team",
+   "team_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1114,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1115,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1116,
+  "rule": "R-SET",
+  "tables": [
+   "player"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1122,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1124,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1130,
+  "rule": "R-SET",
+  "tables": [
+   "team",
+   "team_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1133,
+  "rule": "R-SET",
+  "tables": [
+   "player"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1134,
+  "rule": "R-SET",
+  "tables": [
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1135,
+  "rule": "R-ORD",
+  "tables": [
+   "player_attributes"
+  ],
+  "ordering": [
+   {
+    "expression": "potential",
+    "descending": false,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 4,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1136,
+  "rule": "R-SET",
+  "tables": [
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1139,
+  "rule": "R-SET",
+  "tables": [
+   "league",
+   "match"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1141,
+  "rule": "R-SET",
+  "tables": [
+   "team_attributes",
+   "team"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1144,
+  "rule": "R-SET",
+  "tables": [
+   "player_attributes",
+   "player"
+  ],
+  "ordering": [],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1145,
+  "rule": "R-ORD",
+  "tables": [
+   "league",
+   "match"
+  ],
+  "ordering": [
+   {
+    "expression": "count(t2.id)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 4,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1146,
+  "rule": "R-ORD",
+  "tables": [
+   "match",
+   "team"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.away_team_goal",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1147,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 1148,
+  "rule": "R-SET",
+  "tables": [
+   "player",
+   "player_attributes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 846,
+  "rule": "R-ORD",
+  "tables": [
+   "qualifying",
+   "drivers"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.q1",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 5,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 847,
+  "rule": "R-ORD",
+  "tables": [
+   "qualifying",
+   "drivers"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.q2",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 850,
+  "rule": "R-SET",
+  "tables": [
+   "circuits",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 854,
+  "rule": "R-SET",
+  "tables": [
+   "circuits",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 857,
+  "rule": "R-SET",
+  "tables": [
+   "circuits",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 859,
+  "rule": "R-SET",
+  "tables": [
+   "qualifying",
+   "drivers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 861,
+  "rule": "R-SET",
+  "tables": [
+   "qualifying",
+   "drivers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 862,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "races",
+   "results"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 865,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers",
+   "results"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.dob",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 866,
+  "rule": "R-SET",
+  "tables": [
+   "laptimes",
+   "drivers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 868,
+  "rule": "R-SET",
+  "tables": [
+   "circuits",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 869,
+  "rule": "R-ORD",
+  "tables": [
+   "constructorresults",
+   "constructors"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.points",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 872,
+  "rule": "R-SET",
+  "tables": [
+   "qualifying",
+   "drivers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 875,
+  "rule": "R-SET",
+  "tables": [
+   "races",
+   "seasons"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 877,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers",
+   "results"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.dob",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 879,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers",
+   "results"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.fastestlapspeed",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 880,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "results"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 881,
+  "rule": "R-SET",
+  "tables": [
+   "races",
+   "results"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 884,
+  "rule": "R-SET",
+  "tables": [
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 892,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers",
+   "races",
+   "driverstandings"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.points",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 894,
+  "rule": "R-ORD",
+  "tables": [
+   "races",
+   "drivers",
+   "laptimes"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.milliseconds",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 895,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "races",
+   "laptimes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 896,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "races",
+   "driverstandings"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 897,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers",
+   "driverstandings"
+  ],
+  "ordering": [
+   {
+    "expression": "count(t2.wins)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 898,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers"
+  ],
+  "ordering": [
+   {
+    "expression": "dob",
+    "descending": true,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 901,
+  "rule": "R-SET",
+  "tables": [
+   "circuits",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 902,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "races",
+   "driverstandings"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 904,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers",
+   "races",
+   "laptimes"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.milliseconds",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 906,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers",
+   "races",
+   "driverstandings"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.year",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 909,
+  "rule": "R-SET",
+  "tables": [
+   "circuits",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 910,
+  "rule": "R-SET",
+  "tables": [
+   "circuits"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 912,
+  "rule": "R-SET",
+  "tables": [
+   "circuits"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 915,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers"
+  ],
+  "ordering": [
+   {
+    "expression": "dob",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 928,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "races",
+   "results"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 930,
+  "rule": "R-SET",
+  "tables": [
+   "races",
+   "results",
+   "drivers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 931,
+  "rule": "R-ORD",
+  "tables": [
+   "races",
+   "results"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.fastestlapspeed",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 933,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "races",
+   "results"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 937,
+  "rule": "R-SET",
+  "tables": [
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 940,
+  "rule": "R-SET",
+  "tables": [
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 944,
+  "rule": "R-SET",
+  "tables": [
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 945,
+  "rule": "R-SET",
+  "tables": [
+   "circuits"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 948,
+  "rule": "R-SET",
+  "tables": [
+   "constructorstandings",
+   "constructors"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 950,
+  "rule": "R-SET",
+  "tables": [
+   "constructorstandings",
+   "constructors"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 951,
+  "rule": "R-SET",
+  "tables": [
+   "constructorstandings",
+   "constructors"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 954,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 955,
+  "rule": "R-SET",
+  "tables": [
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 959,
+  "rule": "R-SET",
+  "tables": [
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 960,
+  "rule": "R-SET",
+  "tables": [
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 962,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 963,
+  "rule": "R-SET",
+  "tables": [
+   "drivers",
+   "laptimes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 964,
+  "rule": "R-SET",
+  "tables": [
+   "drivers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 967,
+  "rule": "R-SET",
+  "tables": [
+   "drivers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 971,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers"
+  ],
+  "ordering": [
+   {
+    "expression": "dob",
+    "descending": false,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 972,
+  "rule": "R-SET",
+  "tables": [
+   "results",
+   "drivers"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 977,
+  "rule": "R-SET",
+  "tables": [
+   "results"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 978,
+  "rule": "R-SET",
+  "tables": [
+   "circuits"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 981,
+  "rule": "R-ORD",
+  "tables": [
+   "races",
+   "qualifying",
+   "drivers"
+  ],
+  "ordering": [
+   {
+    "expression": "t3.date",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 988,
+  "rule": "R-ORD",
+  "tables": [
+   "pitstops",
+   "drivers"
+  ],
+  "ordering": [
+   {
+    "expression": "avg(t1.duration::interval)",
+    "descending": false,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 3,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 989,
+  "rule": "R-SET",
+  "tables": [
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 990,
+  "rule": "R-SET",
+  "tables": [
+   "constructors",
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 717,
+  "rule": "R-SET",
+  "tables": [
+   "superpower",
+   "superhero",
+   "hero_power"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 994,
+  "rule": "R-ORD",
+  "tables": [
+   "races",
+   "constructorresults",
+   "constructors"
+  ],
+  "ordering": [
+   {
+    "expression": "sum(t1.points)",
+    "descending": true,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1001,
+  "rule": "R-ORD",
+  "tables": [
+   "races",
+   "qualifying",
+   "drivers",
+   "circuits"
+  ],
+  "ordering": [
+   {
+    "expression": "((split_part(q3, ':', 1)::int * 60) + split_part(split_part(q3, ':', 2), '.', 1)::real) + (split_part(q3, '.', 2)::real / 1000)",
+    "descending": false,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1002,
+  "rule": "R-ORD",
+  "tables": [
+   "races",
+   "drivers",
+   "driverstandings"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.dob",
+    "descending": true,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1003,
+  "rule": "R-ORD",
+  "tables": [
+   "status",
+   "results",
+   "races"
+  ],
+  "ordering": [
+   {
+    "expression": "count(t1.driverid)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1011,
+  "rule": "R-ORD",
+  "tables": [
+   "drivers",
+   "laptimes"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.min_time_in_seconds",
+    "descending": false,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 20,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 1014,
+  "rule": "R-SET",
+  "tables": [
+   "circuits",
+   "results",
+   "races"
+  ],
+  "ordering": [],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 719,
+  "rule": "R-SET",
+  "tables": [
+   "superpower",
+   "superhero",
+   "hero_power"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 723,
+  "rule": "R-SET",
+  "tables": [
+   "colour",
+   "superpower",
+   "superhero",
+   "hero_power"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 724,
+  "rule": "R-SET",
+  "tables": [
+   "colour",
+   "superhero"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 726,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 728,
+  "rule": "R-SET",
+  "tables": [
+   "publisher",
+   "superhero",
+   "colour"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 730,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "publisher",
+   "hero_power",
+   "superpower"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 732,
+  "rule": "R-ORD",
+  "tables": [
+   "attribute",
+   "hero_attribute",
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [
+   {
+    "expression": "t3.attribute_value",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 733,
+  "rule": "R-SET",
+  "tables": [
+   "colour",
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 736,
+  "rule": "R-ORD",
+  "tables": [
+   "attribute",
+   "superhero",
+   "hero_attribute"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.attribute_value",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 737,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "race"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 738,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "hero_attribute",
+   "attribute"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 739,
+  "rule": "R-SET",
+  "tables": [
+   "superpower",
+   "superhero",
+   "hero_power"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 740,
+  "rule": "R-SET",
+  "tables": [
+   "gender",
+   "attribute",
+   "superhero",
+   "hero_attribute"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 743,
+  "rule": "R-SET",
+  "tables": [
+   "alignment",
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 744,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 745,
+  "rule": "R-SET",
+  "tables": [
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 747,
+  "rule": "R-SET",
+  "tables": [
+   "superhero"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 750,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "gender"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 751,
+  "rule": "R-SET",
+  "tables": [
+   "gender",
+   "superpower",
+   "superhero",
+   "hero_power"
+  ],
+  "ordering": [],
+  "limit_count": 5,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 753,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "colour"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 758,
+  "rule": "R-SET",
+  "tables": [
+   "colour",
+   "superhero",
+   "race"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 760,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 761,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "gender"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 764,
+  "rule": "R-SET",
+  "tables": [
+   "hero_power",
+   "superpower"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 765,
+  "rule": "R-SET",
+  "tables": [
+   "hero_power",
+   "superpower"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 766,
+  "rule": "R-ORD",
+  "tables": [
+   "attribute",
+   "superhero",
+   "hero_attribute"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.attribute_value",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 769,
+  "rule": "R-ORD",
+  "tables": [
+   "publisher",
+   "attribute",
+   "superhero",
+   "hero_attribute"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.attribute_value",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 772,
+  "rule": "R-SET",
+  "tables": [
+   "gender",
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 773,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 775,
+  "rule": "R-SET",
+  "tables": [
+   "colour",
+   "superhero",
+   "gender"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 779,
+  "rule": "R-SET",
+  "tables": [
+   "hero_power",
+   "superhero"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 781,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "colour"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 782,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "colour"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 785,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "alignment"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 786,
+  "rule": "R-SET",
+  "tables": [
+   "hero_attribute",
+   "attribute"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 788,
+  "rule": "R-SET",
+  "tables": [
+   "gender",
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 790,
+  "rule": "R-SET",
+  "tables": [
+   "superhero"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 791,
+  "rule": "R-SET",
+  "tables": [
+   "superhero"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 792,
+  "rule": "R-SET",
+  "tables": [
+   "superpower",
+   "superhero",
+   "hero_power"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 794,
+  "rule": "R-ORD",
+  "tables": [
+   "attribute",
+   "superhero",
+   "hero_attribute"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.attribute_value",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 796,
+  "rule": "R-SET",
+  "tables": [
+   "attribute",
+   "superhero",
+   "hero_attribute"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 797,
+  "rule": "R-SET",
+  "tables": [
+   "colour",
+   "superhero"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 798,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 800,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "colour"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 801,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "gender"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 806,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "colour"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 819,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "colour"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 822,
+  "rule": "R-SET",
+  "tables": [
+   "colour",
+   "superhero",
+   "alignment"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 824,
+  "rule": "R-ORD",
+  "tables": [
+   "superpower",
+   "superhero",
+   "hero_power"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.superhero_name",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 825,
+  "rule": "R-SET",
+  "tables": [
+   "gender",
+   "superpower",
+   "superhero",
+   "hero_power"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 829,
+  "rule": "R-SET",
+  "tables": [
+   "superhero",
+   "publisher"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 531,
+  "rule": "R-SET",
+  "tables": [
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 532,
+  "rule": "R-SET",
+  "tables": [
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 533,
+  "rule": "R-SET",
+  "tables": [
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 539,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 537,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 544,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 547,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 549,
+  "rule": "R-SET",
+  "tables": [
+   "tags",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 555,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 557,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 563,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "comments"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 565,
+  "rule": "R-SET",
+  "tables": [
+   "comments",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 567,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 568,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "votes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 571,
+  "rule": "R-SET",
+  "tables": [
+   "votes",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 572,
+  "rule": "R-SET",
+  "tables": [
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 573,
+  "rule": "R-SET",
+  "tables": [
+   "comments"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 576,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "comments"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 578,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 581,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 584,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "posthistory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 586,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "posts",
+   "votes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 587,
+  "rule": "R-SET",
+  "tables": [
+   "comments",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 592,
+  "rule": "R-SET",
+  "tables": [
+   "badges"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 595,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users",
+   "posthistory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 598,
+  "rule": "R-SET",
+  "tables": [
+   "badges"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 604,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 629,
+  "rule": "R-SET",
+  "tables": [
+   "votes"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 633,
+  "rule": "R-ORD",
+  "tables": [
+   "posts",
+   "users",
+   "posthistory"
+  ],
+  "ordering": [
+   {
+    "expression": "t3.answercount",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 634,
+  "rule": "R-ORD",
+  "tables": [
+   "posts",
+   "users",
+   "posthistory"
+  ],
+  "ordering": [
+   {
+    "expression": "sum(t3.viewcount)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 637,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users",
+   "posthistory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 639,
+  "rule": "R-SET",
+  "tables": [
+   "tags",
+   "users",
+   "posthistory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 640,
+  "rule": "R-SET",
+  "tables": [
+   "posts",
+   "users",
+   "posthistory"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 665,
+  "rule": "R-SET",
+  "tables": [
+   "postlinks",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 669,
+  "rule": "R-ORD",
+  "tables": [
+   "users",
+   "votes"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.creationdate",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 671,
+  "rule": "R-ORD",
+  "tables": [
+   "users",
+   "badges"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.date",
+    "descending": false,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 672,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 678,
+  "rule": "R-ORD",
+  "tables": [
+   "users",
+   "posts"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.viewcount",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 682,
+  "rule": "R-ORD",
+  "tables": [
+   "users",
+   "posts"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.favoritecount",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 683,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 685,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "posthistory",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 687,
+  "rule": "R-ORD",
+  "tables": [
+   "posts",
+   "comments"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.score",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 694,
+  "rule": "R-ORD",
+  "tables": [
+   "comments",
+   "users",
+   "posts"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.creationdate",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 10,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 701,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 704,
+  "rule": "R-SET",
+  "tables": [
+   "tags"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 705,
+  "rule": "R-SET",
+  "tables": [
+   "comments",
+   "users"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 707,
+  "rule": "R-ORD",
+  "tables": [
+   "comments",
+   "posts"
+  ],
+  "ordering": [
+   {
+    "expression": "score",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 710,
+  "rule": "R-SET",
+  "tables": [
+   "comments",
+   "posts"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 716,
+  "rule": "R-SET",
+  "tables": [
+   "users",
+   "comments"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 340,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 341,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 344,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 345,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 346,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 347,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "rulings"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 349,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "rulings"
+  ],
+  "ordering": [],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 352,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "foreign_data"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 356,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 358,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 366,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 368,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 371,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "foreign_data"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 377,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 379,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 383,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 391,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "foreign_data"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 397,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 402,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 405,
+  "rule": "R-SET",
+  "tables": [
+   "sets",
+   "set_translations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 407,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "foreign_data"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 408,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "rulings"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 409,
+  "rule": "R-SET",
+  "tables": [
+   "rulings",
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 412,
+  "rule": "R-SET",
+  "tables": [
+   "foreign_data",
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 414,
+  "rule": "R-SET",
+  "tables": [
+   "sets",
+   "set_translations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 415,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 416,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "foreign_data"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 422,
+  "rule": "R-SET",
+  "tables": [
+   "foreign_data"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 424,
+  "rule": "R-SET",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 427,
+  "rule": "R-SET",
+  "tables": [
+   "sets",
+   "set_translations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 440,
+  "rule": "R-SET",
+  "tables": [
+   "foreign_data"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 459,
+  "rule": "R-ORD",
+  "tables": [
+   "cards"
+  ],
+  "ordering": [
+   {
+    "expression": "convertedmanacost",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 462,
+  "rule": "R-SET",
+  "tables": [
+   "set_translations",
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 465,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "set_translations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 466,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "set_translations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 468,
+  "rule": "R-SET",
+  "tables": [
+   "sets",
+   "set_translations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 469,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "sets"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 472,
+  "rule": "R-SET",
+  "tables": [
+   "sets",
+   "set_translations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 473,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "sets"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 474,
+  "rule": "R-SET",
+  "tables": [
+   "sets",
+   "set_translations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 477,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "sets"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 479,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "sets"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 480,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "foreign_data"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 483,
+  "rule": "R-SET",
+  "tables": [
+   "sets",
+   "foreign_data",
+   "cards"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 484,
+  "rule": "R-ORD",
+  "tables": [
+   "sets",
+   "foreign_data",
+   "cards"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.convertedmanacost",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 486,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "sets"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 487,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "sets"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 518,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 522,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 528,
+  "rule": "R-SET",
+  "tables": [
+   "legalities",
+   "cards",
+   "sets"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 529,
+  "rule": "R-SET",
+  "tables": [
+   "sets",
+   "set_translations"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 530,
+  "rule": "R-SET",
+  "tables": [
+   "cards",
+   "legalities"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 195,
+  "rule": "R-SET",
+  "tables": [
+   "bond"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 197,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "bond"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 198,
+  "rule": "R-SET",
+  "tables": [
+   "molecule",
+   "bond",
+   "atom"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 200,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 201,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "bond"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 206,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 207,
+  "rule": "R-SET",
+  "tables": [
+   "connected",
+   "atom",
+   "bond"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 208,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 212,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 213,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 215,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "atom",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 218,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 219,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 220,
+  "rule": "R-ORD",
+  "tables": [
+   "atom"
+  ],
+  "ordering": [
+   {
+    "expression": "t.element",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 3,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 226,
+  "rule": "R-SET",
+  "tables": [
+   "bond"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 227,
+  "rule": "R-SET",
+  "tables": [
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 228,
+  "rule": "R-SET",
+  "tables": [
+   "atom"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 230,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 231,
+  "rule": "R-SET",
+  "tables": [
+   "bond"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 232,
+  "rule": "R-ORD",
+  "tables": [
+   "bond",
+   "molecule"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.molecule_id",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 3,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 234,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 236,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 239,
+  "rule": "R-SET",
+  "tables": [
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 240,
+  "rule": "R-SET",
+  "tables": [
+   "atom"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 242,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 243,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 244,
+  "rule": "R-SET",
+  "tables": [
+   "molecule",
+   "bond"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 245,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 247,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 248,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "atom",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 249,
+  "rule": "R-SET",
+  "tables": [
+   "connected",
+   "atom"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 253,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "bond",
+   "connected"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 255,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 260,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 263,
+  "rule": "R-SET",
+  "tables": [
+   "bond",
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 268,
+  "rule": "R-SET",
+  "tables": [
+   "connected",
+   "atom"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 273,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 281,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 282,
+  "rule": "R-SET",
+  "tables": [
+   "atom",
+   "molecule"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 327,
+  "rule": "R-SET",
+  "tables": [
+   "molecule",
+   "atom"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 5,
+  "rule": "R-SET",
+  "tables": [
+   "satscores",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 11,
+  "rule": "R-SET",
+  "tables": [
+   "schools",
+   "frpm"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 12,
+  "rule": "R-SET",
+  "tables": [
+   "frpm",
+   "satscores"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 17,
+  "rule": "R-SET",
+  "tables": [
+   "schools",
+   "satscores"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 23,
+  "rule": "R-SET",
+  "tables": [
+   "schools",
+   "frpm"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 24,
+  "rule": "R-SET",
+  "tables": [
+   "satscores",
+   "frpm"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 25,
+  "rule": "R-SET",
+  "tables": [
+   "satscores",
+   "frpm"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 26,
+  "rule": "R-SET",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 27,
+  "rule": "R-SET",
+  "tables": [
+   "schools",
+   "satscores"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 28,
+  "rule": "R-SET",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 31,
+  "rule": "R-ORD",
+  "tables": [
+   "frpm"
+  ],
+  "ordering": [
+   {
+    "expression": "\"Enrollment (K-12)\"",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 2,
+  "limit_stated": true,
+  "offset_count": 9,
+  "distinct": false
+ },
+ {
+  "question_id": 32,
+  "rule": "R-ORD",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.\"FRPM Count (K-12)\"",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 5,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 37,
+  "rule": "R-ORD",
+  "tables": [
+   "satscores",
+   "schools"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.numge1500::real / (NULLIF(t1.numtsttakr, 0))",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 36,
+  "rule": "R-ORD",
+  "tables": [
+   "satscores",
+   "schools"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.numge1500",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 39,
+  "rule": "R-SET",
+  "tables": [
+   "satscores",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 40,
+  "rule": "R-ORD",
+  "tables": [
+   "satscores",
+   "schools"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.avgscrread",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 41,
+  "rule": "R-SET",
+  "tables": [
+   "satscores",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 45,
+  "rule": "R-SET",
+  "tables": [
+   "satscores",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 46,
+  "rule": "R-ORD",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.\"Enrollment (K-12)\"",
+    "descending": true,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 47,
+  "rule": "R-SET",
+  "tables": [
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 48,
+  "rule": "R-SET",
+  "tables": [
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 50,
+  "rule": "R-ORD",
+  "tables": [
+   "satscores",
+   "schools"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.avgscrmath",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": 6,
+  "distinct": false
+ },
+ {
+  "question_id": 62,
+  "rule": "R-SET",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 72,
+  "rule": "R-SET",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 77,
+  "rule": "R-SET",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 79,
+  "rule": "R-ORD",
+  "tables": [
+   "schools"
+  ],
+  "ordering": [
+   {
+    "expression": "count(virtual)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 82,
+  "rule": "R-ORD",
+  "tables": [
+   "schools"
+  ],
+  "ordering": [
+   {
+    "expression": "abs(longitude)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 83,
+  "rule": "R-SET",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 85,
+  "rule": "R-SET",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 87,
+  "rule": "R-SET",
+  "tables": [
+   "frpm",
+   "schools"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 89,
+  "rule": "R-SET",
+  "tables": [
+   "district",
+   "account"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 92,
+  "rule": "R-SET",
+  "tables": [
+   "client",
+   "district"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 93,
+  "rule": "R-SET",
+  "tables": [
+   "client",
+   "district"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 94,
+  "rule": "R-ORD",
+  "tables": [
+   "client",
+   "disp",
+   "district",
+   "account"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.a11",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 95,
+  "rule": "R-SET",
+  "tables": [
+   "district",
+   "client",
+   "account",
+   "disp"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 98,
+  "rule": "R-ORD",
+  "tables": [
+   "loan",
+   "account"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.amount",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 99,
+  "rule": "R-ORD",
+  "tables": [
+   "loan",
+   "account"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.amount",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 100,
+  "rule": "R-SET",
+  "tables": [
+   "district",
+   "client"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 112,
+  "rule": "R-SET",
+  "tables": [
+   "district",
+   "client"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 115,
+  "rule": "R-ORD",
+  "tables": [
+   "client",
+   "district"
+  ],
+  "ordering": [
+   {
+    "expression": "t2.a4",
+    "descending": true,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 116,
+  "rule": "R-SET",
+  "tables": [
+   "trans",
+   "loan",
+   "account"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 117,
+  "rule": "R-SET",
+  "tables": [
+   "loan"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 118,
+  "rule": "R-SET",
+  "tables": [
+   "loan"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 125,
+  "rule": "R-SET",
+  "tables": [
+   "district",
+   "loan",
+   "account"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 128,
+  "rule": "R-ORD",
+  "tables": [
+   "client",
+   "district"
+  ],
+  "ordering": [
+   {
+    "expression": "count(t1.client_id)",
+    "descending": true,
+    "nulls": "last"
+   }
+  ],
+  "limit_count": 9,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 136,
+  "rule": "R-SET",
+  "tables": [
+   "account",
+   "loan"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 137,
+  "rule": "R-SET",
+  "tables": [
+   "loan",
+   "account",
+   "district"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 138,
+  "rule": "R-SET",
+  "tables": [
+   "client",
+   "district"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 129,
+  "rule": "R-ORD",
+  "tables": [
+   "trans",
+   "district",
+   "account"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.a2",
+    "descending": false,
+    "nulls": "default"
+   }
+  ],
+  "limit_count": 10,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": true
+ },
+ {
+  "question_id": 145,
+  "rule": "R-SET",
+  "tables": [
+   "trans",
+   "account"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 149,
+  "rule": "R-SET",
+  "tables": [
+   "disp",
+   "district",
+   "account"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 152,
+  "rule": "R-SET",
+  "tables": [
+   "district",
+   "account"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 159,
+  "rule": "R-SET",
+  "tables": [
+   "trans",
+   "account",
+   "client",
+   "disp"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 168,
+  "rule": "R-SET",
+  "tables": [
+   "district",
+   "client"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 169,
+  "rule": "R-SET",
+  "tables": [
+   "client",
+   "disp",
+   "loan",
+   "account"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 173,
+  "rule": "R-SET",
+  "tables": [
+   "account",
+   "order"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 186,
+  "rule": "R-SET",
+  "tables": [
+   "disp",
+   "account",
+   "client",
+   "district"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 189,
+  "rule": "R-ORD",
+  "tables": [
+   "disp",
+   "account",
+   "client",
+   "district"
+  ],
+  "ordering": [
+   {
+    "expression": "t1.birth_date",
+    "descending": false,
+    "nulls": "first"
+   },
+   {
+    "expression": "t2.a11",
+    "descending": false,
+    "nulls": "first"
+   }
+  ],
+  "limit_count": 1,
+  "limit_stated": true,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 192,
+  "rule": "R-SET",
+  "tables": [
+   "account",
+   "loan"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ },
+ {
+  "question_id": 194,
+  "rule": "R-SET",
+  "tables": [
+   "client",
+   "disp",
+   "card"
+  ],
+  "ordering": [],
+  "limit_count": null,
+  "limit_stated": false,
+  "offset_count": null,
+  "distinct": false
+ }
+]

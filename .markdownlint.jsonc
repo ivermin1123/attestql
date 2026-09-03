@@ -1,0 +1,14 @@
+{
+  // markdownlint defaults, with the exceptions below. Each exception and its reason is
+  // recorded in plans/2026-08-25-slice1-mt-tooling.md.
+  "default": true,
+  // Documents wrap at 100 by hand, and tables legitimately exceed that width.
+  "MD013": false,
+  // Journals carry a front-matter title and a body H1; that is the journal tool's format,
+  // so the front-matter title is not counted as a second top-level heading.
+  "MD025": { "front_matter_title": "" },
+  // Table pipe spacing style. The documents are internally consistent (spaced cells,
+  // compact delimiter rows); reflowing every table would be whitespace churn that fixes
+  // no defect.
+  "MD060": false
+}

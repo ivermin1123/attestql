@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "attestql"
+version = "0.1.1"
+description = "Audit text-to-SQL gold and predictions on PostgreSQL with typed replay evidence."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "psycopg[binary]>=3.3.4,<4",
+    # The audit's parser: a BSD-2-Clause binding to libpg_query, which is PostgreSQL's own
+    # grammar compiled as a library, so the tool and the server read a statement the same
+    # way. Pinned exactly, because the parse decides the replay rule and the ordering a
+    # record states, and a parser that changed under a rerun would change the record with
+    # it. The licence is the reason the previous parser was replaced: the audit parses on
+    # the product path, and a GPL parser there sets the terms of everything that embeds it.
+    "postgast==0.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/ivermin1123/attestql"
+Repository = "https://github.com/ivermin1123/attestql"
+Issues = "https://github.com/ivermin1123/attestql/issues"
+
+[project.scripts]
+attestql = "attestql.audit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tools"]
+markers = [
+    "sandbox: needs the audit sandbox (tools/audit-sandbox/run.sh); skipped when ATTESTQL_AUDIT_SANDBOX is absent",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.6.2",
+    "pyright>=1.1.411",
+    "pytest>=9.1.1",
+    "ruff>=0.16.4",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests", "tools"]
+# The formatter would otherwise rewrite Python fences inside Markdown; documents quote code
+# verbatim (evidence cited by line), so Markdown is out of ruff's scope entirely.
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF", "S"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# S101: pytest expresses every assertion as a bare assert. This allowance covers S101 only.
+"tests/**" = ["S101"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.11"
+include = ["src", "tests", "tools"]
+extraPaths = ["src", "tools"]
