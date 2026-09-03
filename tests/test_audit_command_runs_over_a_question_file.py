@@ -53,6 +53,7 @@ ELEMENTS_ONE_ROW = "SELECT element FROM atom LIMIT 1"
 TWO_ROWS = "SELECT name FROM players LIMIT 2"
 SEASONS = "SELECT year FROM seasons"
 DRIVERS = "SELECT nationality FROM drivers"
+BARE_SELECT = "SELECT"
 
 NATIONALITY = (("nationality", "text"),)
 NATIONALITY_AND_SPEED = (("nationality", "text"), ("attestql_ordering_key_0", "text"))
@@ -365,6 +366,59 @@ def test_a_gold_that_does_not_parse_is_one_error_line_and_not_the_end_of_the_run
     assert summary.verdicts == {"ERROR": 1, "GOLD-ONLY": 1}
     assert summary.exit_status == 0, "an error is not a disagreement"
     assert summary_of(tmp_path)["errors"][0]["question_id"] == 1
+
+
+NO_COLUMNS = "the statement projects no column, so there is no answer to record or compare"
+
+
+def test_a_prediction_that_projects_no_column_is_that_question_s_error_line(
+    tmp_path: Path,
+) -> None:
+    """A bare ``SELECT`` is what BIRD's gpt-4-turbo predicted for q1481. PostgreSQL accepts
+    it and answers one row of no columns, so the question is an error line and the question
+    after it decides the status on its own."""
+    write(
+        tmp_path / "questions.json",
+        [question(1481, "toxicology", ELEMENTS), question(879, "formula_1", FASTEST_LAP)],
+    )
+    write(tmp_path / "predictions.json", {"1481": BARE_SELECT, "879": NUMERIC})
+    backend = _defect_backend(
+        **{ELEMENTS: fake_result(ELEMENT, (("c",),)), BARE_SELECT: fake_result((), ((),))}
+    )
+    lines = Lines()
+    summary = run_audit(
+        options(tmp_path, predictions=tmp_path / "predictions.json"), backend, lines
+    )
+    written = summary_of(tmp_path)
+
+    assert "ERROR" in lines.written[0]
+    assert "projects no column" in lines.written[0]
+    assert "NOT_EQUAL" in lines.written[1]
+    assert summary.verdicts == {"ERROR": 1, "NOT_EQUAL": 1}
+    assert written["errors"] == [{"question_id": 1481, "step": "statement", "message": NO_COLUMNS}]
+    assert summary.exit_status == 1, "the question that disagreed decided it alone"
+
+
+def test_a_gold_that_projects_no_column_is_that_question_s_error_line(tmp_path: Path) -> None:
+    """The same refusal on the side nothing was predicted for."""
+    write(
+        tmp_path / "questions.json",
+        [question(1, "financial", BARE_SELECT), question(207, "toxicology", ELEMENTS)],
+    )
+    backend = FakeBackend(
+        {BARE_SELECT: fake_result((), ((),)), ELEMENTS: fake_result(ELEMENT, (("c",), ("o",)))},
+        row_counts={"atom": 2},
+    )
+    lines = Lines()
+    summary = run_audit(options(tmp_path), backend, lines)
+    written = summary_of(tmp_path)
+
+    assert "ERROR" in lines.written[0]
+    assert "projects no column" in lines.written[0]
+    assert lines.written[1] == "q207  toxicology  R-SET  GOLD-ONLY  smells=none"
+    assert summary.verdicts == {"ERROR": 1, "GOLD-ONLY": 1}
+    assert written["errors"] == [{"question_id": 1, "step": "statement", "message": NO_COLUMNS}]
+    assert summary.exit_status == 0, "an error is not a disagreement"
 
 
 class RefusingBackend(FakeBackend):

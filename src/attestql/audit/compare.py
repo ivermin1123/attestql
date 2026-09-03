@@ -39,6 +39,7 @@ from attestql.audit.statements import (
     VALIDATOR_VERSION,
     OrderingKey,
     ParsedStatement,
+    StatementRefused,
     parse_statement,
 )
 from attestql.evidence.build import ExecutionIdentity, build_evidence_record
@@ -242,6 +243,14 @@ def _execute_and_record(
     record that stated its own would make the comparison a comparison of rules.
     """
     result = backend.execute(parsed.sql, statement_timeout_seconds=statement_timeout_seconds)
+    if not result.columns:
+        # PostgreSQL accepts a bare SELECT and answers it with one row of no columns, which
+        # is what a model that predicted nothing at all reaches this with. There is no
+        # projection to compare, to record or to hash, so it is refused the way a statement
+        # that did not parse is.
+        raise StatementRefused(
+            "the statement projects no column, so there is no answer to record or compare"
+        )
     # The clock is this process's, taken the moment the rows came back: the interface a
     # second engine implements does not promise a server clock, and a record says when the
     # audit ran the statement rather than what the server thought the time was.
