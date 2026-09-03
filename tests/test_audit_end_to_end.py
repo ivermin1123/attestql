@@ -34,7 +34,11 @@ import pytest
 
 from attestql.audit.cli import SMELLS_FILE, SUMMARY_FILE, AuditOptions, Summary, run_audit
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
-from attestql.audit.postgres import DEFAULT_SCRATCH_SCHEMA, PostgresBackend
+from attestql.audit.postgres import (
+    DEFAULT_SCRATCH_SCHEMA,
+    PostgresBackend,
+    _lock_key,  # pyright: ignore[reportPrivateUsage]  # the key the backend locks on, so the test cannot name another
+)
 from attestql.audit.statements import VALIDATOR_VERSION
 
 pytestmark = pytest.mark.sandbox
@@ -399,3 +403,36 @@ def test_the_run_leaves_no_table_behind_in_the_scratch_schema(
     assert f"'{DEFAULT_SCRATCH_SCHEMA}'" in SCRATCH_TABLES_SQL
     assert audited.summary_document()["shuffle"]["copied"] == COPIED_TABLES
     assert scratch_tables(sandbox_backend) == []
+
+
+def advisory(backend: PostgresBackend, function: str) -> bool:
+    """One advisory lock question over the scratch schema's key, as another run would ask it.
+
+    The key is derived here the way the backend derives it, so the test and the code cannot
+    disagree about which lock is being asked for.
+    """
+    statement = f"SELECT {function}({_lock_key(DEFAULT_SCRATCH_SCHEMA)})"
+    result = backend.execute(statement, statement_timeout_seconds=TIMEOUT_SECONDS)
+    return bool(result.rows[0][0])
+
+
+def test_a_second_connection_cannot_take_the_scratch_schema_while_the_copies_are_there(
+    sandbox_backend: PostgresBackend,
+) -> None:
+    """The lock is held for the run, not for the transaction that made the copies.
+
+    A second connection asks for the same key on the same server and is refused for as long
+    as the copies are there: this is what keeps two runs told one scratch schema from
+    reading and dropping each other's tables. ``pg_try_advisory_lock`` rather than the
+    waiting one, so a schema this test cannot have is a false and not a hung suite, and what
+    it is granted once the copies are gone it gives back.
+    """
+    other = PostgresBackend.connect(os.environ[SANDBOX_DSN])
+    sandbox_backend.prepare_shuffled_copies(("drivers",), seed="lock", row_limit=1_000)
+    try:
+        assert advisory(other, "pg_try_advisory_lock") is False
+    finally:
+        sandbox_backend.drop_shuffled_copies()
+
+    assert advisory(other, "pg_try_advisory_lock") is True
+    assert advisory(other, "pg_advisory_unlock") is True

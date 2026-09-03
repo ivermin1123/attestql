@@ -46,10 +46,12 @@ of the run. This tool creates no schema and drops none: the login a benchmark ma
 audits with holds SELECT and one place to write, so a shuffle that needed CREATE on the
 database would be a shuffle nobody could run. The copies are made inside an explicit
 ``BEGIN; SET TRANSACTION READ WRITE``, which is what a role whose
-``default_transaction_read_only`` is on has to state to write at all, under an advisory
-lock keyed on the scratch schema so that two runs sharing one schema make their copies one
-after the other rather than inside each other. Every audited statement still runs inside
-``BEGIN READ ONLY``, and no table the audit reads is ever written to.
+``default_transaction_read_only`` is on has to state to write at all. Around the whole run
+is a session-level advisory lock keyed on the scratch schema name, taken before the first
+copy is made and released after the last one is dropped: a lock the writing transaction
+owned would be given back at its commit, and a second run told the same schema would then
+recreate or drop the copies the first is still rerunning against. Every audited statement
+still runs inside ``BEGIN READ ONLY``, and no table the audit reads is ever written to.
 """
 
 from __future__ import annotations
@@ -122,6 +124,16 @@ It is a schema the role already owns, arranged once by whoever grants the login 
 SELECT, because a read-only auditing role cannot create a schema and should not be able
 to. Only the tables this run made in it are dropped, and only at the end of the run, since
 the schema is not this tool's to remove. The audited tables are never written to."""
+
+LOCK_WAIT_SECONDS = 60
+"""How long a run waits for the scratch schema before it is told another run holds it.
+
+The lock is held for the length of a run, so a run that waited on it without a bound would
+wait for the length of the run that holds it, and a maintainer auditing a large question
+set twice at once would see the second command sitting there saying nothing. A minute is
+long enough to outlast the copies of a run that is finishing and short enough that what
+comes back is an answer: the shuffle was not run because the schema is held, and every
+other measurement of that run still is."""
 
 NO_PARALLEL_AGGREGATION = "SET LOCAL max_parallel_workers_per_gather = 0"
 """One worker, so that a float sum is added in one order.
@@ -240,6 +252,9 @@ class PostgresBackend:
         self._identity: str | None = None
         self._shuffled: ShuffledCopies | None = None
         self._scratch_schema = scratch_schema
+        self._holds_the_scratch_schema = False
+        """Whether this session took the run's advisory lock, so that it is taken once and
+        given back once whatever the copies did."""
         connection.adapters.register_loader("float4", NumericFromFloatText)
         connection.adapters.register_loader("float8", NumericFromFloatText)
         connection.adapters.register_loader("interval", TextFromInterval)
@@ -490,12 +505,19 @@ class PostgresBackend:
         primary key will not run against it; that is the rerun's error and is reported per
         statement rather than hidden here.
 
-        A scratch schema that does not exist, or that this role cannot create in, is a
-        refusal naming which of the two it was. It is not a tool error: the caller reports
-        the shuffle as not run and audits everything else.
+        The schema is taken before anything is counted or created and is held until the
+        copies are dropped, because the reruns that read them are the reason they exist. The
+        lock is a session-level advisory lock keyed on the scratch schema name: a second run
+        told the same schema waits ``LOCK_WAIT_SECONDS`` for it and is then told the schema
+        is held, rather than making its own copies over this run's.
+
+        A scratch schema that does not exist, that this role cannot create in, or that
+        another run holds, is a refusal naming which of the three it was. It is not a tool
+        error: the caller reports the shuffle as not run and audits everything else.
         """
         if row_limit < 1:
             raise BackendRefused("prepare_shuffled_copies", "a row limit is at least one row")
+        self._hold_the_scratch_schema()
         counts = self.row_counts(tables)
         copied: list[str] = []
         skipped: dict[str, int] = {}
@@ -527,19 +549,78 @@ class PostgresBackend:
         return prepared
 
     def drop_shuffled_copies(self) -> None:
-        """Drop the copies this run made, one table at a time, and nothing else.
+        """Drop the copies this run made, one table at a time, and give the schema back.
 
         The scratch schema outlives the run and is not this tool's to remove, and a table
         in it that this run did not create is somebody else's. A run that prepared nothing
         has nothing to drop and asks the server nothing.
+
+        This is the end of the run's hold on the schema, so the advisory lock keyed on its
+        name is released whatever the drop did: a copy this run could not remove is stranded
+        and said so above, and a lock stranded with it would keep every later run out of a
+        schema whose copies nobody is reading.
         """
         prepared, self._shuffled = self._shuffled, None
-        if prepared is None:
+        if prepared is None and not self._holds_the_scratch_schema:
             return
-        with self._writing("drop_shuffled_copies") as cursor:
-            for qualified in prepared.copied:
-                _, _, table = qualified.partition(".")
-                cursor.execute(self._drop_copy(table))
+        try:
+            if prepared is not None:
+                with self._writing("drop_shuffled_copies") as cursor:
+                    for qualified in prepared.copied:
+                        _, _, table = qualified.partition(".")
+                        cursor.execute(self._drop_copy(table))
+        finally:
+            self._release_the_scratch_schema()
+
+    def _hold_the_scratch_schema(self) -> None:
+        """Take the run's advisory lock on the scratch schema, once, under a bounded wait.
+
+        Session-level rather than transaction-level, so that it outlives the transaction
+        that makes the copies and covers every rerun that reads them. Taken in its own short
+        transaction because ``SET LOCAL lock_timeout`` needs one, and committed rather than
+        rolled back so that nothing about the copies waits on this. A run that already holds
+        the schema does not take a second lock on it: two would need two releases, and one
+        release would leave the schema held for the life of the connection.
+        """
+        if self._holds_the_scratch_schema:
+            return
+        cursor = self._cursor("prepare_shuffled_copies")
+        try:
+            cursor.execute("BEGIN")
+            cursor.execute("SELECT set_config('lock_timeout', %s, true)", [f"{LOCK_WAIT_SECONDS}s"])
+            cursor.fetchall()
+            cursor.execute("SELECT pg_advisory_lock(%s)", [_lock_key(self._scratch_schema)])
+            cursor.fetchall()
+            cursor.execute("COMMIT")
+        except psycopg.Error as failed:
+            _undo(cursor)
+            raise BackendRefused(
+                "prepare_shuffled_copies",
+                f"the scratch schema {self._scratch_schema} was not locked within "
+                f"{LOCK_WAIT_SECONDS} seconds: {str(failed).strip()}",
+            ) from failed
+        finally:
+            _close(cursor)
+        self._holds_the_scratch_schema = True
+
+    def _release_the_scratch_schema(self) -> None:
+        """Give the run's lock back, and never let that replace what is already being raised.
+
+        A release the server refuses is nothing to report: a lock this session does not hold
+        comes back false, and a connection that is gone gave the lock back on the server when
+        it went. What a caller has to see is the run's own result, not the tidying up after
+        it, so this asks and says nothing about the answer.
+        """
+        if not self._holds_the_scratch_schema:
+            return
+        self._holds_the_scratch_schema = False
+        with suppress(psycopg.Error):
+            cursor = self._connection.cursor()
+            try:
+                cursor.execute("SELECT pg_advisory_unlock(%s)", [_lock_key(self._scratch_schema)])
+                cursor.fetchall()
+            finally:
+                _close(cursor)
 
     def _drop_copy(self, table: str) -> sql_builder.Composed:
         """Remove one copy if it is there, which is how a leftover from a run that was
@@ -574,21 +655,20 @@ class PostgresBackend:
 
     @contextmanager
     def _writing(self, step: str) -> Generator[Cursor]:
-        """One read-write transaction in the scratch schema, alone among concurrent runs.
+        """One read-write transaction in the scratch schema, under the run's own lock.
 
         ``SET TRANSACTION READ WRITE`` is stated rather than assumed: the login this tool
         is written for has ``default_transaction_read_only`` on, which is a default and not
         a privilege, so the one transaction that writes says so and every other one stays
-        read only. The advisory lock is keyed on the scratch schema name and held to the
-        end of this transaction, so two runs told the same schema make and remove their
-        copies one after the other instead of one dropping a table the other is creating.
+        read only. What keeps two runs told one scratch schema apart is not this
+        transaction: the caller holds the session-level advisory lock keyed on the schema
+        name for the whole run, from before the copies are made until after they are
+        dropped, and a lock taken here would be given back at the commit below.
         """
         cursor = self._cursor(step)
         try:
             cursor.execute("BEGIN")
             cursor.execute("SET TRANSACTION READ WRITE")
-            cursor.execute("SELECT pg_advisory_xact_lock(%s)", [_lock_key(self._scratch_schema)])
-            cursor.fetchall()
             yield cursor
             cursor.execute("COMMIT")
         except psycopg.Error as failed:

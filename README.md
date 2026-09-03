@@ -71,9 +71,11 @@ The password comes from `PGPASSWORD` or `~/.pgpass`; a DSN that contains one, or
 refused. Loading BIRD's dump prints 99 `role "..." does not exist` errors from its ownership
 statements; they are harmless. The role needs SELECT on the audited tables and an existing schema it may create tables in
 (`--scratch-schema`, default `attestql_scratch`); without one, the shuffle probe reports itself
-as not run in `summary.json` and everything else still runs. Run one audit per scratch schema at
-a time. On the full Mini-Dev gold set the run prints one line per question; three of them, and
-the last line (the whole output is in `plans/reports/audit-260902-minidev-gold-only/`):
+as not run in `summary.json` and everything else still runs. A run holds its scratch schema from
+before it makes the copies until after it drops them, so a second audit told the same schema waits
+a minute for it and then reports its own shuffle as not run: give concurrent audits a schema each.
+On the full Mini-Dev gold set the run prints one line per question; three of them, and the last
+line (the whole output is in `plans/reports/audit-260902-minidev-gold-only/`):
 
 ```text
 q1380 student_club R-SET  GOLD-ONLY  smells=float-aggregate-order  audit/q1380/

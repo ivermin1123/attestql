@@ -29,11 +29,14 @@ import pytest
 
 from attestql.audit.backend import Backend, BackendRefused, ReadBackDrift, TableLookup
 from attestql.audit.postgres import (
+    DEFAULT_SCRATCH_SCHEMA,
     DRIVER_ERROR,
+    LOCK_WAIT_SECONDS,
     NO_PARALLEL_AGGREGATION,
     NumericFromFloatText,
     PostgresBackend,
     TextFromInterval,
+    _lock_key,  # pyright: ignore[reportPrivateUsage]  # the key the backend locks on, so the test cannot name another
 )
 
 VERSION = "PostgreSQL 16.4 on aarch64"
@@ -83,9 +86,12 @@ class FakeCursor:
         return self._description
 
     def execute(self, query: object, params: Sequence[object] | None = None) -> object:
-        del params
         text = str(query)
         self._connection.log.append(text)
+        if "pg_advisory" in text:
+            # The key is a parameter, so a log of statement text alone cannot say which
+            # schema a lock was keyed on. Kept beside the log rather than in it.
+            self._connection.lock_keys.append(params[0] if params else None)
         self._rows, self._description = self._connection.answer(text)
         return self
 
@@ -134,6 +140,7 @@ class FakeConnection:
         scratch_exists: bool = True,
         scratch_writable: bool = True,
         keeps_its_gather: bool = False,
+        refuses_the_lock: bool = False,
     ) -> None:
         self.settings = dict(settings)
         self.local: dict[str, str] = {}
@@ -143,6 +150,14 @@ class FakeConnection:
         drift the read-back is there to catch."""
         self.scratch_exists = scratch_exists
         self.scratch_writable = scratch_writable
+        self.refuses_the_lock = refuses_the_lock
+        """A server that would not grant the advisory lock inside the wait it was given,
+        which is what a second run told a schema another run holds meets."""
+        self.refuses_drops = False
+        """Set after the copies are made, so that a drop can fail where the create did
+        not: what a role whose grant was taken away mid-run meets."""
+        self.lock_keys: list[object] = []
+        """The key of every advisory lock and unlock the backend asked for, in order."""
         self.census = census
         self.rows = rows
         self.columns = columns
@@ -165,8 +180,14 @@ class FakeConnection:
             if not self.keeps_its_gather:
                 self.local["max_parallel_workers_per_gather"] = text.rsplit("=", 1)[1].strip()
             return (), None
-        if "pg_advisory_xact_lock" in text:
+        if "pg_advisory_unlock" in text:
+            return ((True,),), None
+        if "pg_advisory_lock" in text:
+            if self.refuses_the_lock:
+                raise DRIVER_ERROR("canceling statement due to lock timeout")
             return ((None,),), None
+        if self.refuses_drops and "DROP TABLE" in text:
+            raise DRIVER_ERROR("permission denied for schema attestql_scratch")
         if "pg_class" in text:
             # The catalogue lists what is there whatever the grants are, and says of each
             # whether this role may read it. Asked before the scratch schema's question
@@ -540,11 +561,67 @@ def test_the_copies_are_made_in_one_read_write_transaction_under_the_advisory_lo
     """A role whose transactions default to read only writes only where it says so."""
     connection = FakeConnection(counts={"drivers": 100})
     _backend(connection).prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
-    assert connection.log[connection.log.index("BEGIN") + 1] == "SET TRANSACTION READ WRITE"
+    writing = connection.log.index("SET TRANSACTION READ WRITE")
+    assert connection.log[writing - 1] == "BEGIN"
     lock = next(index for index, line in enumerate(connection.log) if "advisory" in line)
     created = next(index for index, line in enumerate(connection.log) if "CREATE TABLE" in line)
-    assert lock < created
+    assert lock < writing < created
     assert connection.log[-1] == "COMMIT"
+
+
+def test_the_scratch_schema_is_locked_for_the_run_and_not_for_one_transaction() -> None:
+    """The lock the copies are made under is the lock the reruns read them under.
+
+    A lock the commit gives back covers the create and the drop and nothing between them,
+    so a second run told the same schema takes it while the first is still rerunning
+    against its copies, and recreates or drops the tables the first is reading. The lock
+    is the session's: taken before anything is created, in its own transaction and under a
+    bounded wait, keyed on the scratch schema name, and still held after that transaction
+    commits.
+    """
+    connection = FakeConnection(counts={"drivers": 100})
+    _backend(connection).prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+
+    taken = next(index for index, line in enumerate(connection.log) if "pg_advisory_lock" in line)
+    created = next(index for index, line in enumerate(connection.log) if "CREATE TABLE" in line)
+    assert taken < created
+    assert connection.log[taken - 2] == "BEGIN"
+    assert "lock_timeout" in connection.log[taken - 1]
+    assert connection.log[taken + 1] == "COMMIT"
+    assert connection.lock_keys == [_lock_key(DEFAULT_SCRATCH_SCHEMA)]
+    assert not any("pg_advisory_xact_lock" in line for line in connection.log), (
+        "a lock the transaction owns is given back while the copies are still there"
+    )
+    assert not any("pg_advisory_unlock" in line for line in connection.log), (
+        "the run gives the schema back when it drops the copies, not before"
+    )
+
+
+def test_preparing_the_copies_twice_takes_the_one_lock() -> None:
+    """A run that prepares again is a run that never let go: a second lock on the same key
+    would have to be released twice, and one release would leave the schema held."""
+    connection = FakeConnection(counts={"drivers": 100})
+    backend = _backend(connection)
+    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    backend.prepare_shuffled_copies(("drivers",), seed="2", row_limit=1_000)
+
+    assert len([line for line in connection.log if "pg_advisory_lock" in line]) == 1
+    assert connection.lock_keys == [_lock_key(DEFAULT_SCRATCH_SCHEMA)]
+
+
+def test_a_scratch_schema_another_run_holds_is_a_refusal_naming_the_wait() -> None:
+    """Waiting on the lock for as long as the run holding it takes would make one audit's
+    length the other's, so the wait is bounded and what it did not get is said."""
+    connection = FakeConnection(counts={"drivers": 100}, refuses_the_lock=True)
+    with pytest.raises(
+        BackendRefused,
+        match=f"scratch schema {DEFAULT_SCRATCH_SCHEMA} was not locked "
+        f"within {LOCK_WAIT_SECONDS} seconds",
+    ) as refused:
+        _backend(connection).prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    assert refused.value.step == "prepare_shuffled_copies"
+    assert not any("CREATE TABLE" in line for line in connection.log)
+    assert connection.log[-1] == "ROLLBACK"
 
 
 def test_a_scratch_schema_that_is_not_there_is_a_refusal_and_no_write() -> None:
@@ -602,7 +679,42 @@ def test_dropping_the_copies_removes_the_tables_this_run_made_and_no_others() ->
     dropped = [line for line in connection.log if "DROP TABLE IF EXISTS" in line]
     assert len(dropped) == 1
     assert "drivers" in dropped[0] and "attestql_scratch" in dropped[0]
-    assert connection.log[-1] == "COMMIT"
+    assert connection.log[connection.log.index(dropped[0]) + 1] == "COMMIT"
+
+
+def test_dropping_the_copies_gives_the_scratch_schema_back() -> None:
+    """The run's hold on the schema ends where its copies do, and not before: the lock is
+    released after the last table is gone, on the key it was taken on."""
+    connection = FakeConnection(counts={"drivers": 100})
+    backend = _backend(connection)
+    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    connection.log.clear()
+    connection.lock_keys.clear()
+    backend.drop_shuffled_copies()
+
+    dropped = next(index for index, line in enumerate(connection.log) if "DROP TABLE" in line)
+    released = next(
+        index for index, line in enumerate(connection.log) if "pg_advisory_unlock" in line
+    )
+    assert dropped < released
+    assert connection.lock_keys == [_lock_key(DEFAULT_SCRATCH_SCHEMA)]
+
+
+def test_a_drop_the_server_refuses_gives_the_scratch_schema_back_anyway() -> None:
+    """A copy this run cannot remove is stranded and the caller is told so. The schema is
+    not stranded with it: a run that ended still holding the lock would keep every later
+    run out of a schema whose copies nobody is reading."""
+    connection = FakeConnection(counts={"drivers": 100})
+    backend = _backend(connection)
+    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    connection.refuses_drops = True
+    connection.lock_keys.clear()
+
+    with pytest.raises(BackendRefused, match="permission denied") as refused:
+        backend.drop_shuffled_copies()
+    assert refused.value.step == "drop_shuffled_copies"
+    assert any("pg_advisory_unlock" in line for line in connection.log)
+    assert connection.lock_keys == [_lock_key(DEFAULT_SCRATCH_SCHEMA)]
 
 
 def test_dropping_the_copies_is_safe_when_there_are_none() -> None:
