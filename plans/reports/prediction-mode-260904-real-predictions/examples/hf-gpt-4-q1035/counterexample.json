@@ -1,0 +1,626 @@
+{
+  "format": "attestql/audit/counterexample/1",
+  "question": {
+    "question_id": "1035",
+    "question_set": "mini_dev_pg-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-04)",
+    "question_text": "Give the team_fifa_api_id of teams with more than 50 but less than 60 build-up play speed.",
+    "evidence_text": "teams with more than 50 but less than 60 build-up play speed refers to buildUpPlaySpeed >50 AND buildUpPlaySpeed <60; "
+  },
+  "question_set_version": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+  "sources": {
+    "gold": {
+      "path": "data/hf/mini_dev_pg-00000-of-00001.json",
+      "digest": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+      "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-04)",
+      "date": "2026-01-18T08:44:25Z"
+    },
+    "second": {
+      "path": "data/preds-by-id/predict_mini_dev_gpt-4_postgresql.json",
+      "digest": "sha256:5923a30b810c586103ab1127671b24184f952e9efdfdbc51feaedc76df044173",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4_postgresql.json, re-keyed by question id with predictions_by_question_id.py",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "bird_ex": {
+    "value": 1,
+    "equal": true,
+    "method": "set(second_rows) == set(gold_rows)",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 161,
+    "second_rows": 356,
+    "gold_distinct_rows": 161,
+    "second_distinct_rows": 161
+  },
+  "gold": {
+    "executed_sql": "SELECT DISTINCT team_fifa_api_id FROM Team_Attributes WHERE buildUpPlaySpeed > 50 AND buildUpPlaySpeed < 60",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "team_fifa_api_id",
+          "pg_type": "int8"
+        }
+      ],
+      "row_count": 161,
+      "truncated": false,
+      "rows_shown": 25,
+      "rows": [
+        [
+          {
+            "type": "int",
+            "value": 485
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 110744
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 477
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 71
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1889
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 68
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 229
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 481
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 52
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 70
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 80
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1971
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 112225
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1861
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 378
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 874
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 450
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 10030
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1799
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 900
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 110745
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1750
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 462
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 237
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 69
+          }
+        ]
+      ],
+      "result_hash": "sha256:86222e875afd2e2a28e78e481873cabee9c902f8cfea2e28d50473b77c594aa8"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT team_fifa_api_id\nFROM Team_Attributes\nWHERE buildUpPlaySpeed > 50 AND buildUpPlaySpeed < 60",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "team_fifa_api_id",
+          "pg_type": "int8"
+        }
+      ],
+      "row_count": 356,
+      "truncated": false,
+      "rows_shown": 25,
+      "rows": [
+        [
+          {
+            "type": "int",
+            "value": 434
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 77
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 77
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 77
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 614
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 614
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 614
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 614
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1901
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1901
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 650
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 650
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 650
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1861
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 229
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 229
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 229
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 229
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 111989
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 240
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 240
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 100409
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 100409
+          }
+        ]
+      ],
+      "result_hash": "sha256:f11a2d01fefee8aaeb5257d9037698be9549a56f9f376537f66f5b8f82398039"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 110569
+          }
+        ],
+        "count": 4
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 13
+          }
+        ],
+        "count": 4
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 15005
+          }
+        ],
+        "count": 4
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 1715
+          }
+        ],
+        "count": 4
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 242
+          }
+        ],
+        "count": 4
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 31
+          }
+        ],
+        "count": 4
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 4
+          }
+        ],
+        "count": 4
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 462
+          }
+        ],
+        "count": 4
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 900
+          }
+        ],
+        "count": 4
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 100879
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 110329
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 110724
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 110832
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 111239
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 15
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 165
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 1832
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 203
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 229
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 232
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 237
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 449
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 450
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 459
+          }
+        ],
+        "count": 3
+      },
+      {
+        "row": [
+          {
+            "type": "int",
+            "value": 468
+          }
+        ],
+        "count": 3
+      }
+    ],
+    "in_second_not_in_gold_total": 195,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:86222e875afd2e2a28e78e481873cabee9c902f8cfea2e28d50473b77c594aa8",
+    "second": "sha256:f11a2d01fefee8aaeb5257d9037698be9549a56f9f376537f66f5b8f82398039"
+  },
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "fixture": {
+    "schema_digest": "sha256:98bc0cba85d167faa0d5bb8e4db8801339559c93568b09cfd7c9a911f2c12123",
+    "row_counts": {
+      "public.team_attributes": 1458
+    },
+    "content_digests": {},
+    "source_file_sha256": ""
+  },
+  "run_id": "audit-e8a3df00-b9a3-47cd-9c07-5762d0023c0e"
+}

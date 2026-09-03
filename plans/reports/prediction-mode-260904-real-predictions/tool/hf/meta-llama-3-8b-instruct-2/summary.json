@@ -1,0 +1,1601 @@
+{
+ "format": "attestql/audit/summary/1",
+ "run_id": "audit-5eb323db-d9a8-4809-a826-e2152a0911e2",
+ "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+ "effective_database_role": "auditor",
+ "session_settings_recorded": {
+  "statement_timeout": "0",
+  "search_path": "\"$user\", public",
+  "server_version_num": "160015",
+  "transaction_read_only": "on"
+ },
+ "question_set": {
+  "path": "data/hf/mini_dev_pg-00000-of-00001.json",
+  "digest": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+  "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-04)",
+  "date": "2026-01-18T08:44:25Z",
+  "entries": 500,
+  "audited": 500,
+  "duplicate_ids": [],
+  "ids": []
+ },
+ "predictions": {
+  "path": "data/preds-by-id/predict_mini_dev_meta-llama-3-8b-instruct-2_postgresql.json",
+  "digest": "sha256:68e5def21843da45f9b28e48e79ed1648f7a07548d65d2225ce22725162fd413",
+  "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_meta-llama-3-8b-instruct-2_postgresql.json, re-keyed by question id with predictions_by_question_id.py",
+  "date": "2024-06-19",
+  "keyed_by": "question-id",
+  "statements": 498,
+  "positions_unused": []
+ },
+ "verdicts": {
+  "ERROR": 258,
+  "NOT_EQUAL": 159,
+  "EQUAL": 81,
+  "GOLD-ONLY": 2
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 7,
+  "not-a-function-of-the-data": 6,
+  "float-aggregate-order": 3,
+  "direction-against-question": 0
+ },
+ "smells_fired": 16,
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool/hf/meta-llama-3-8b-instruct-2/fixture.json",
+  "schema_digest": "sha256:25aabd5763d7a18135a8741194c4a704141761bd0c7fdbfbf3f7c2bc9e0bf08c",
+  "row_counts": {
+   "public.account": 4500,
+   "public.alignment": 4,
+   "public.atom": 9111,
+   "public.attendance": 326,
+   "public.attribute": 6,
+   "public.badges": 79851,
+   "public.bond": 9156,
+   "public.budget": 52,
+   "public.card": 892,
+   "public.cards": 56822,
+   "public.circuits": 72,
+   "public.client": 5369,
+   "public.colour": 35,
+   "public.comments": 174285,
+   "public.connected": 18312,
+   "public.constructorresults": 11082,
+   "public.constructors": 208,
+   "public.constructorstandings": 11836,
+   "public.country": 11,
+   "public.customers": 32461,
+   "public.disp": 5369,
+   "public.district": 77,
+   "public.drivers": 840,
+   "public.driverstandings": 31578,
+   "public.event": 42,
+   "public.examination": 106,
+   "public.expense": 32,
+   "public.foreign_data": 229186,
+   "public.frpm": 9986,
+   "public.gasstations": 5716,
+   "public.gender": 3,
+   "public.hero_attribute": 3738,
+   "public.hero_power": 5825,
+   "public.income": 36,
+   "public.laboratory": 13908,
+   "public.laptimes": 400524,
+   "public.league": 11,
+   "public.legalities": 427907,
+   "public.loan": 682,
+   "public.major": 113,
+   "public.match": 25979,
+   "public.member": 33,
+   "public.molecule": 343,
+   "public.order": 6471,
+   "public.patient": 1238,
+   "public.pitstops": 5815,
+   "public.player": 11060,
+   "public.player_attributes": 183978,
+   "public.posthistory": 303155,
+   "public.postlinks": 11102,
+   "public.posts": 91966,
+   "public.products": 591,
+   "public.publisher": 25,
+   "public.qualifying": 6967,
+   "public.race": 61,
+   "public.races": 954,
+   "public.results": 23179,
+   "public.rulings": 87769,
+   "public.satscores": 2269,
+   "public.schools": 17686,
+   "public.seasons": 68,
+   "public.set_translations": 1210,
+   "public.sets": 551,
+   "public.status": 134,
+   "public.superhero": 750,
+   "public.superpower": 167,
+   "public.tags": 1032,
+   "public.team": 299,
+   "public.team_attributes": 1458,
+   "public.trans": 1056320,
+   "public.transactions_1k": 1000,
+   "public.users": 40325,
+   "public.votes": 38930,
+   "public.yearmonth": 383282,
+   "public.zip_code": 41877
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "customers",
+   "yearmonth",
+   "gasstations",
+   "products",
+   "transactions_1k",
+   "member",
+   "major",
+   "event",
+   "attendance",
+   "income",
+   "zip_code",
+   "expense",
+   "budget",
+   "patient",
+   "laboratory",
+   "examination",
+   "match",
+   "league",
+   "team",
+   "team_attributes",
+   "player_attributes",
+   "player",
+   "country",
+   "qualifying",
+   "drivers",
+   "circuits",
+   "races",
+   "results",
+   "laptimes",
+   "constructorresults",
+   "constructors",
+   "seasons",
+   "driverstandings",
+   "constructorstandings",
+   "pitstops",
+   "superpower",
+   "superhero",
+   "hero_power",
+   "status",
+   "colour",
+   "publisher",
+   "attribute",
+   "hero_attribute",
+   "race",
+   "gender",
+   "alignment",
+   "users",
+   "posts",
+   "tags",
+   "comments",
+   "votes",
+   "posthistory",
+   "badges",
+   "postlinks",
+   "cards",
+   "legalities",
+   "rulings",
+   "foreign_data",
+   "sets",
+   "set_translations",
+   "bond",
+   "atom",
+   "molecule",
+   "connected",
+   "satscores",
+   "schools",
+   "frpm",
+   "district",
+   "account",
+   "client",
+   "disp",
+   "loan",
+   "trans",
+   "order",
+   "card"
+  ],
+  "missing_tables": [],
+  "refused": ""
+ },
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "attestql_scratch2",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "public.account",
+   "public.alignment",
+   "public.atom",
+   "public.attendance",
+   "public.attribute",
+   "public.badges",
+   "public.bond",
+   "public.budget",
+   "public.card",
+   "public.cards",
+   "public.circuits",
+   "public.client",
+   "public.colour",
+   "public.comments",
+   "public.connected",
+   "public.constructorresults",
+   "public.constructors",
+   "public.constructorstandings",
+   "public.country",
+   "public.customers",
+   "public.disp",
+   "public.district",
+   "public.drivers",
+   "public.driverstandings",
+   "public.event",
+   "public.examination",
+   "public.expense",
+   "public.foreign_data",
+   "public.frpm",
+   "public.gasstations",
+   "public.gender",
+   "public.hero_attribute",
+   "public.hero_power",
+   "public.income",
+   "public.laboratory",
+   "public.league",
+   "public.loan",
+   "public.major",
+   "public.match",
+   "public.member",
+   "public.molecule",
+   "public.order",
+   "public.patient",
+   "public.pitstops",
+   "public.player",
+   "public.player_attributes",
+   "public.postlinks",
+   "public.posts",
+   "public.products",
+   "public.publisher",
+   "public.qualifying",
+   "public.race",
+   "public.races",
+   "public.results",
+   "public.rulings",
+   "public.satscores",
+   "public.schools",
+   "public.seasons",
+   "public.set_translations",
+   "public.sets",
+   "public.status",
+   "public.superhero",
+   "public.superpower",
+   "public.tags",
+   "public.team",
+   "public.team_attributes",
+   "public.transactions_1k",
+   "public.users",
+   "public.votes",
+   "public.zip_code"
+  ],
+  "skipped": {
+   "public.laptimes": 400524,
+   "public.legalities": 427907,
+   "public.posthistory": 303155,
+   "public.trans": 1056320,
+   "public.yearmonth": 383282
+  }
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool/hf/meta-llama-3-8b-instruct-2",
+  "serialization": "attestql/audit/1"
+ },
+ "data_as_of": "2026-09-03T18:13:40.409889+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.19,
+  "questions": 58.046,
+  "shuffle": 5.84
+ },
+ "errors": [
+  {
+   "question_id": 1471,
+   "step": "execute",
+   "message": "execute: column \"currency\" does not exist"
+  },
+  {
+   "question_id": 1481,
+   "step": "execute",
+   "message": "execute: column \"segment\" does not exist"
+  },
+  {
+   "question_id": 1482,
+   "step": "execute",
+   "message": "execute: column \"segment\" does not exist"
+  },
+  {
+   "question_id": 1486,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.currencies\" does not exist"
+  },
+  {
+   "question_id": 1493,
+   "step": "execute",
+   "message": "execute: column \"consumption\" does not exist"
+  },
+  {
+   "question_id": 1501,
+   "step": "execute",
+   "message": "execute: date/time field value out of range: \"201306\""
+  },
+  {
+   "question_id": 1505,
+   "step": "execute",
+   "message": "execute: column \"currency\" does not exist"
+  },
+  {
+   "question_id": 1507,
+   "step": "execute",
+   "message": "execute: function pg_catalog.extract(unknown, text) does not exist"
+  },
+  {
+   "question_id": 1515,
+   "step": "execute",
+   "message": "execute: column ym.segment does not exist"
+  },
+  {
+   "question_id": 1524,
+   "step": "execute",
+   "message": "execute: column c.country does not exist"
+  },
+  {
+   "question_id": 1529,
+   "step": "statement",
+   "message": "2 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 1531,
+   "step": "execute",
+   "message": "execute: column t.currency does not exist"
+  },
+  {
+   "question_id": 1533,
+   "step": "execute",
+   "message": "execute: division by zero"
+  },
+  {
+   "question_id": 1312,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.link_to_major\" does not exist"
+  },
+  {
+   "question_id": 1317,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"FROM\""
+  },
+  {
+   "question_id": 1322,
+   "step": "execute",
+   "message": "execute: aggregate functions are not allowed in WHERE"
+  },
+  {
+   "question_id": 1338,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.link_to_event\" does not exist"
+  },
+  {
+   "question_id": 1339,
+   "step": "execute",
+   "message": "execute: function pg_catalog.extract(unknown, text) does not exist"
+  },
+  {
+   "question_id": 1340,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"WHERE\""
+  },
+  {
+   "question_id": 1350,
+   "step": "execute",
+   "message": "execute: column b.link_to_budget does not exist"
+  },
+  {
+   "question_id": 1351,
+   "step": "execute",
+   "message": "execute: column major.link_to_major does not exist"
+  },
+  {
+   "question_id": 1356,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"`\""
+  },
+  {
+   "question_id": 1359,
+   "step": "execute",
+   "message": "execute: column \"event_name\" does not exist"
+  },
+  {
+   "question_id": 1368,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.link_to_major\" does not exist"
+  },
+  {
+   "question_id": 1375,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.link_to_major\" does not exist"
+  },
+  {
+   "question_id": 1389,
+   "step": "execute",
+   "message": "execute: column e1.link_to_event does not exist"
+  },
+  {
+   "question_id": 1390,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"WHERE\""
+  },
+  {
+   "question_id": 1394,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.link_to_major\" does not exist"
+  },
+  {
+   "question_id": 1401,
+   "step": "execute",
+   "message": "execute: column \"link_to_event\" does not exist"
+  },
+  {
+   "question_id": 1404,
+   "step": "execute",
+   "message": "execute: column e.event_name does not exist"
+  },
+  {
+   "question_id": 1410,
+   "step": "execute",
+   "message": "execute: column e.link_to_event does not exist"
+  },
+  {
+   "question_id": 1426,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.link_to_major\" does not exist"
+  },
+  {
+   "question_id": 1432,
+   "step": "execute",
+   "message": "execute: column \"t_shirt_size\" does not exist"
+  },
+  {
+   "question_id": 1460,
+   "step": "execute",
+   "message": "execute: column e.link_to_event does not exist"
+  },
+  {
+   "question_id": 1150,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"FROM\""
+  },
+  {
+   "question_id": 1152,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1153,
+   "step": "execute",
+   "message": "execute: column e.examination_id does not exist"
+  },
+  {
+   "question_id": 1155,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1156,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1157,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1162,
+   "step": "execute",
+   "message": "execute: function year(date) does not exist"
+  },
+  {
+   "question_id": 1164,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1166,
+   "step": "execute",
+   "message": "execute: column p.patient_id does not exist"
+  },
+  {
+   "question_id": 1168,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1169,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1171,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1175,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1179,
+   "step": "execute",
+   "message": "execute: column p.patient_id does not exist"
+  },
+  {
+   "question_id": 1185,
+   "step": "execute",
+   "message": "execute: column p.patient_id does not exist"
+  },
+  {
+   "question_id": 1187,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1189,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"`\""
+  },
+  {
+   "question_id": 1192,
+   "step": "execute",
+   "message": "execute: column p.patient_id does not exist"
+  },
+  {
+   "question_id": 1195,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1198,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1201,
+   "step": "execute",
+   "message": "execute: column \"birthday\" does not exist"
+  },
+  {
+   "question_id": 1205,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1208,
+   "step": "execute",
+   "message": "execute: column p.patient_id does not exist"
+  },
+  {
+   "question_id": 1209,
+   "step": "execute",
+   "message": "execute: column p.patient_id does not exist"
+  },
+  {
+   "question_id": 1220,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1225,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1227,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"`\""
+  },
+  {
+   "question_id": 1229,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1231,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1232,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1235,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1238,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1239,
+   "step": "execute",
+   "message": "execute: column e.patient_id does not exist"
+  },
+  {
+   "question_id": 1241,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1242,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1243,
+   "step": "execute",
+   "message": "execute: column patient.patientid does not exist"
+  },
+  {
+   "question_id": 1247,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1251,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1252,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1254,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1255,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.diagnosis\" does not exist"
+  },
+  {
+   "question_id": 1256,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1257,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1265,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1267,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1270,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1275,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1281,
+   "step": "execute",
+   "message": "execute: column p.patient_id does not exist"
+  },
+  {
+   "question_id": 1302,
+   "step": "execute",
+   "message": "execute: column p.patientid does not exist"
+  },
+  {
+   "question_id": 1028,
+   "step": "execute",
+   "message": "execute: column pa.match_api_id does not exist"
+  },
+  {
+   "question_id": 1029,
+   "step": "execute",
+   "message": "execute: column ta.teamid does not exist"
+  },
+  {
+   "question_id": 1030,
+   "step": "execute",
+   "message": "execute: column \"league_name\" does not exist"
+  },
+  {
+   "question_id": 1031,
+   "step": "execute",
+   "message": "execute: column p.player_id does not exist"
+  },
+  {
+   "question_id": 1032,
+   "step": "execute",
+   "message": "execute: column l.league_id does not exist"
+  },
+  {
+   "question_id": 1036,
+   "step": "execute",
+   "message": "execute: function strftime(unknown, text) does not exist"
+  },
+  {
+   "question_id": 1037,
+   "step": "execute",
+   "message": "execute: function multiply(bigint, integer) does not exist"
+  },
+  {
+   "question_id": 1044,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1048,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1057,
+   "step": "execute",
+   "message": "execute: column \"name\" does not exist"
+  },
+  {
+   "question_id": 1058,
+   "step": "execute",
+   "message": "execute: column p1.player_id does not exist"
+  },
+  {
+   "question_id": 1068,
+   "step": "execute",
+   "message": "execute: function strftime(unknown, text) does not exist"
+  },
+  {
+   "question_id": 1076,
+   "step": "execute",
+   "message": "execute: column \"player_name\" does not exist"
+  },
+  {
+   "question_id": 1079,
+   "step": "execute",
+   "message": "execute: column p.player_id does not exist"
+  },
+  {
+   "question_id": 1084,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1088,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1091,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"league\""
+  },
+  {
+   "question_id": 1092,
+   "step": "execute",
+   "message": "execute: column \"league_name\" does not exist"
+  },
+  {
+   "question_id": 1094,
+   "step": "execute",
+   "message": "execute: column \"overall_rating\" does not exist"
+  },
+  {
+   "question_id": 1096,
+   "step": "execute",
+   "message": "execute: column \"player_name\" does not exist"
+  },
+  {
+   "question_id": 1098,
+   "step": "execute",
+   "message": "execute: column player_attributes.player_id does not exist"
+  },
+  {
+   "question_id": 1102,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1103,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1105,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1107,
+   "step": "execute",
+   "message": "execute: column \"player_name\" does not exist"
+  },
+  {
+   "question_id": 1110,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1113,
+   "step": "execute",
+   "message": "execute: column ta.defence_aggression does not exist"
+  },
+  {
+   "question_id": 1114,
+   "step": "execute",
+   "message": "execute: column \"player_name\" does not exist"
+  },
+  {
+   "question_id": 1115,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"overall_rating\""
+  },
+  {
+   "question_id": 1116,
+   "step": "execute",
+   "message": "execute: column pa.player_name does not exist"
+  },
+  {
+   "question_id": 1122,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1124,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1130,
+   "step": "execute",
+   "message": "execute: column player_attributes.player_id does not exist"
+  },
+  {
+   "question_id": 1134,
+   "step": "execute",
+   "message": "execute: column pa1.player_id does not exist"
+  },
+  {
+   "question_id": 1135,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1139,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"league\""
+  },
+  {
+   "question_id": 1141,
+   "step": "execute",
+   "message": "execute: column \"team_long_name\" does not exist"
+  },
+  {
+   "question_id": 1144,
+   "step": "execute",
+   "message": "execute: column pa.player_id does not exist"
+  },
+  {
+   "question_id": 1146,
+   "step": "execute",
+   "message": "execute: column \"team.team_api_id\" must appear in the GROUP BY clause or be used in an aggregate function"
+  },
+  {
+   "question_id": 1147,
+   "step": "execute",
+   "message": "execute: column p.player_id does not exist"
+  },
+  {
+   "question_id": 1148,
+   "step": "execute",
+   "message": "execute: column pa.height does not exist"
+  },
+  {
+   "question_id": 859,
+   "step": "execute",
+   "message": "execute: more than one row returned by a subquery used as an expression"
+  },
+  {
+   "question_id": 869,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"c\""
+  },
+  {
+   "question_id": 880,
+   "step": "execute",
+   "message": "execute: column \"raceid\" does not exist"
+  },
+  {
+   "question_id": 895,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"races\""
+  },
+  {
+   "question_id": 896,
+   "step": "execute",
+   "message": "execute: column \"surname\" does not exist"
+  },
+  {
+   "question_id": 897,
+   "step": "execute",
+   "message": "execute: column r.wins does not exist"
+  },
+  {
+   "question_id": 898,
+   "step": "execute",
+   "message": "execute: function year(timestamp with time zone) does not exist"
+  },
+  {
+   "question_id": 901,
+   "step": "execute",
+   "message": "execute: function month(date) does not exist"
+  },
+  {
+   "question_id": 904,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"s\""
+  },
+  {
+   "question_id": 906,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"r\""
+  },
+  {
+   "question_id": 909,
+   "step": "execute",
+   "message": "execute: column r.country does not exist"
+  },
+  {
+   "question_id": 915,
+   "step": "execute",
+   "message": "execute: column c.country does not exist"
+  },
+  {
+   "question_id": 931,
+   "step": "execute",
+   "message": "execute: column results.year does not exist"
+  },
+  {
+   "question_id": 933,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"races\""
+  },
+  {
+   "question_id": 944,
+   "step": "execute",
+   "message": "execute: operator does not exist: text - text"
+  },
+  {
+   "question_id": 954,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"FROM\""
+  },
+  {
+   "question_id": 955,
+   "step": "execute",
+   "message": "execute: column r.year does not exist"
+  },
+  {
+   "question_id": 959,
+   "step": "execute",
+   "message": "execute: column r.year does not exist"
+  },
+  {
+   "question_id": 960,
+   "step": "execute",
+   "message": "execute: function avg(text) does not exist"
+  },
+  {
+   "question_id": 962,
+   "step": "execute",
+   "message": "execute: function year(date) does not exist"
+  },
+  {
+   "question_id": 967,
+   "step": "statement",
+   "message": "2 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 981,
+   "step": "execute",
+   "message": "execute: more than one row returned by a subquery used as an expression"
+  },
+  {
+   "question_id": 988,
+   "step": "execute",
+   "message": "execute: column ps.resultid does not exist"
+  },
+  {
+   "question_id": 1001,
+   "step": "execute",
+   "message": "execute: operator does not exist: bigint = text"
+  },
+  {
+   "question_id": 1014,
+   "step": "execute",
+   "message": "execute: column lt.circuitid does not exist"
+  },
+  {
+   "question_id": 736,
+   "step": "execute",
+   "message": "execute: column ha.attribute_name does not exist"
+  },
+  {
+   "question_id": 740,
+   "step": "execute",
+   "message": "execute: column attribute.attribute_value does not exist"
+  },
+  {
+   "question_id": 758,
+   "step": "execute",
+   "message": "execute: column s.race does not exist"
+  },
+  {
+   "question_id": 760,
+   "step": "execute",
+   "message": "execute: column \"publisher_name\" does not exist"
+  },
+  {
+   "question_id": 764,
+   "step": "execute",
+   "message": "execute: column s.power_name does not exist"
+  },
+  {
+   "question_id": 773,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"JOIN\""
+  },
+  {
+   "question_id": 775,
+   "step": "execute",
+   "message": "execute: column \"skin_colour_id\" does not exist"
+  },
+  {
+   "question_id": 786,
+   "step": "execute",
+   "message": "execute: column \"attribute_name\" does not exist"
+  },
+  {
+   "question_id": 788,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"WHERE\""
+  },
+  {
+   "question_id": 790,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"WHERE\""
+  },
+  {
+   "question_id": 792,
+   "step": "execute",
+   "message": "execute: column \"power_name\" does not exist"
+  },
+  {
+   "question_id": 796,
+   "step": "execute",
+   "message": "execute: column ha.attribute_name does not exist"
+  },
+  {
+   "question_id": 800,
+   "step": "execute",
+   "message": "execute: column \"eye_colour_id\" does not exist"
+  },
+  {
+   "question_id": 801,
+   "step": "execute",
+   "message": "execute: column \"gender_id\" does not exist"
+  },
+  {
+   "question_id": 825,
+   "step": "execute",
+   "message": "execute: column s.gender does not exist"
+  },
+  {
+   "question_id": 829,
+   "step": "execute",
+   "message": "execute: column \"publisher_name\" does not exist"
+  },
+  {
+   "question_id": 572,
+   "step": "execute",
+   "message": "execute: column \"views\" does not exist"
+  },
+  {
+   "question_id": 584,
+   "step": "execute",
+   "message": "execute: column ph.editeddate does not exist"
+  },
+  {
+   "question_id": 629,
+   "step": "execute",
+   "message": "execute: function year(date) does not exist"
+  },
+  {
+   "question_id": 639,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"p\""
+  },
+  {
+   "question_id": 665,
+   "step": "execute",
+   "message": "execute: aggregate function calls cannot be nested"
+  },
+  {
+   "question_id": 682,
+   "step": "execute",
+   "message": "execute: function year(timestamp with time zone) does not exist"
+  },
+  {
+   "question_id": 694,
+   "step": "execute",
+   "message": "execute: canceling statement due to statement timeout"
+  },
+  {
+   "question_id": 701,
+   "step": "execute",
+   "message": "execute: subquery uses ungrouped column \"u.id\" from outer query"
+  },
+  {
+   "question_id": 716,
+   "step": "execute",
+   "message": "execute: column \"upvotes\" does not exist"
+  },
+  {
+   "question_id": 344,
+   "step": "execute",
+   "message": "execute: column l.multiverseid does not exist"
+  },
+  {
+   "question_id": 346,
+   "step": "execute",
+   "message": "execute: operator does not exist: bigint = text"
+  },
+  {
+   "question_id": 347,
+   "step": "statement",
+   "message": "2 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 349,
+   "step": "execute",
+   "message": "execute: column \"scryfallid\" does not exist"
+  },
+  {
+   "question_id": 352,
+   "step": "execute",
+   "message": "execute: column c.language does not exist"
+  },
+  {
+   "question_id": 366,
+   "step": "execute",
+   "message": "execute: column s.uuid does not exist"
+  },
+  {
+   "question_id": 368,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"FROM\""
+  },
+  {
+   "question_id": 371,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"WHERE\""
+  },
+  {
+   "question_id": 377,
+   "step": "execute",
+   "message": "execute: column \"subtype\" does not exist"
+  },
+  {
+   "question_id": 383,
+   "step": "execute",
+   "message": "execute: column \"status\" does not exist"
+  },
+  {
+   "question_id": 391,
+   "step": "execute",
+   "message": "execute: operator does not exist: text = bigint"
+  },
+  {
+   "question_id": 407,
+   "step": "execute",
+   "message": "execute: column s.subtypes does not exist"
+  },
+  {
+   "question_id": 409,
+   "step": "execute",
+   "message": "execute: column \"format\" does not exist"
+  },
+  {
+   "question_id": 412,
+   "step": "execute",
+   "message": "execute: operator does not exist: text = bigint"
+  },
+  {
+   "question_id": 415,
+   "step": "execute",
+   "message": "execute: function divide(bigint, bigint) does not exist"
+  },
+  {
+   "question_id": 416,
+   "step": "execute",
+   "message": "execute: operator does not exist: text = bigint"
+  },
+  {
+   "question_id": 424,
+   "step": "execute",
+   "message": "execute: column \"istextless\" does not exist"
+  },
+  {
+   "question_id": 427,
+   "step": "execute",
+   "message": "execute: column \"mcmname\" does not exist"
+  },
+  {
+   "question_id": 465,
+   "step": "execute",
+   "message": "execute: operator does not exist: text = bigint"
+  },
+  {
+   "question_id": 480,
+   "step": "execute",
+   "message": "execute: operator does not exist: bigint = text"
+  },
+  {
+   "question_id": 483,
+   "step": "execute",
+   "message": "execute: operator does not exist: bigint = text"
+  },
+  {
+   "question_id": 484,
+   "step": "execute",
+   "message": "execute: operator does not exist: text = bigint"
+  },
+  {
+   "question_id": 486,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"cards\""
+  },
+  {
+   "question_id": 487,
+   "step": "execute",
+   "message": "execute: column \"cardkingdomfoilid\" does not exist"
+  },
+  {
+   "question_id": 518,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.format\" does not exist"
+  },
+  {
+   "question_id": 522,
+   "step": "execute",
+   "message": "execute: column l.multiverseid does not exist"
+  },
+  {
+   "question_id": 528,
+   "step": "execute",
+   "message": "execute: column l.multiverseid does not exist"
+  },
+  {
+   "question_id": 529,
+   "step": "execute",
+   "message": "execute: column s.language does not exist"
+  },
+  {
+   "question_id": 530,
+   "step": "statement",
+   "message": "3 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 197,
+   "step": "execute",
+   "message": "execute: aggregate function calls cannot be nested"
+  },
+  {
+   "question_id": 198,
+   "step": "execute",
+   "message": "execute: aggregate function calls cannot be nested"
+  },
+  {
+   "question_id": 201,
+   "step": "execute",
+   "message": "execute: column reference \"atom_id\" is ambiguous"
+  },
+  {
+   "question_id": 208,
+   "step": "execute",
+   "message": "execute: column c.label does not exist"
+  },
+  {
+   "question_id": 212,
+   "step": "execute",
+   "message": "execute: column \"atom.element\" must appear in the GROUP BY clause or be used in an aggregate function"
+  },
+  {
+   "question_id": 213,
+   "step": "execute",
+   "message": "execute: column \"atom_id\" does not exist"
+  },
+  {
+   "question_id": 219,
+   "step": "execute",
+   "message": "execute: column \"label\" does not exist"
+  },
+  {
+   "question_id": 226,
+   "step": "execute",
+   "message": "execute: function sum(boolean) does not exist"
+  },
+  {
+   "question_id": 227,
+   "step": "execute",
+   "message": "execute: column \"label\" does not exist"
+  },
+  {
+   "question_id": 228,
+   "step": "execute",
+   "message": "execute: function divide(bigint, bigint) does not exist"
+  },
+  {
+   "question_id": 231,
+   "step": "statement",
+   "message": "2 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 245,
+   "step": "execute",
+   "message": "execute: column reference \"bond_id\" is ambiguous"
+  },
+  {
+   "question_id": 255,
+   "step": "execute",
+   "message": "execute: column \"bond_type\" does not exist"
+  },
+  {
+   "question_id": 263,
+   "step": "execute",
+   "message": "execute: function divide(bigint, bigint) does not exist"
+  },
+  {
+   "question_id": 273,
+   "step": "execute",
+   "message": "execute: column reference \"molecule_id\" is ambiguous"
+  },
+  {
+   "question_id": 282,
+   "step": "execute",
+   "message": "execute: function divide(bigint, bigint) does not exist"
+  },
+  {
+   "question_id": 11,
+   "step": "execute",
+   "message": "execute: column s.Enrollment (K-12) does not exist"
+  },
+  {
+   "question_id": 17,
+   "step": "execute",
+   "message": "execute: column \"s.cds\" must appear in the GROUP BY clause or be used in an aggregate function"
+  },
+  {
+   "question_id": 23,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"5\""
+  },
+  {
+   "question_id": 24,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"Meal\""
+  },
+  {
+   "question_id": 25,
+   "step": "execute",
+   "message": "execute: column s.rtype does not exist"
+  },
+  {
+   "question_id": 26,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"%\""
+  },
+  {
+   "question_id": 27,
+   "step": "execute",
+   "message": "execute: column s.phone does not exist"
+  },
+  {
+   "question_id": 28,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"5\""
+  },
+  {
+   "question_id": 31,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"Meal\""
+  },
+  {
+   "question_id": 32,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"(\""
+  },
+  {
+   "question_id": 37,
+   "step": "execute",
+   "message": "execute: division by zero"
+  },
+  {
+   "question_id": 40,
+   "step": "execute",
+   "message": "execute: column \"phone\" does not exist"
+  },
+  {
+   "question_id": 45,
+   "step": "execute",
+   "message": "execute: column \"s.sname\" must appear in the GROUP BY clause or be used in an aggregate function"
+  },
+  {
+   "question_id": 48,
+   "step": "execute",
+   "message": "execute: division by zero"
+  },
+  {
+   "question_id": 50,
+   "step": "statement",
+   "message": "the text does not parse: LIMIT #,# syntax is not supported"
+  },
+  {
+   "question_id": 62,
+   "step": "execute",
+   "message": "execute: invalid input syntax for type numeric: \"Free Meal Count (K-12)\""
+  },
+  {
+   "question_id": 72,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"Year\""
+  },
+  {
+   "question_id": 77,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"%\""
+  },
+  {
+   "question_id": 79,
+   "step": "row_counts",
+   "message": "row_counts: relation \"public.counties\" does not exist"
+  },
+  {
+   "question_id": 83,
+   "step": "statement",
+   "message": "2 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 85,
+   "step": "statement",
+   "message": "the text does not parse: syntax error at or near \"Meal\""
+  },
+  {
+   "question_id": 92,
+   "step": "execute",
+   "message": "execute: column a.a11 does not exist"
+  },
+  {
+   "question_id": 93,
+   "step": "execute",
+   "message": "execute: column \"a11\" does not exist"
+  },
+  {
+   "question_id": 94,
+   "step": "statement",
+   "message": "2 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 95,
+   "step": "execute",
+   "message": "execute: column \"a11\" does not exist"
+  },
+  {
+   "question_id": 99,
+   "step": "execute",
+   "message": "execute: operator does not exist: date ~~ unknown"
+  },
+  {
+   "question_id": 115,
+   "step": "execute",
+   "message": "execute: column \"d.a4\" must appear in the GROUP BY clause or be used in an aggregate function"
+  },
+  {
+   "question_id": 117,
+   "step": "execute",
+   "message": "execute: column \"status\" does not exist"
+  },
+  {
+   "question_id": 125,
+   "step": "execute",
+   "message": "execute: column l.client_id does not exist"
+  },
+  {
+   "question_id": 128,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"d\""
+  },
+  {
+   "question_id": 138,
+   "step": "execute",
+   "message": "execute: column \"a15\" does not exist"
+  },
+  {
+   "question_id": 129,
+   "step": "execute",
+   "message": "execute: column a.client_id does not exist"
+  },
+  {
+   "question_id": 149,
+   "step": "execute",
+   "message": "execute: column \"a2\" does not exist"
+  },
+  {
+   "question_id": 168,
+   "step": "execute",
+   "message": "execute: division by zero"
+  },
+  {
+   "question_id": 169,
+   "step": "execute",
+   "message": "execute: column account.client_id does not exist"
+  },
+  {
+   "question_id": 173,
+   "step": "statement",
+   "message": "2 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 186,
+   "step": "execute",
+   "message": "execute: missing FROM-clause entry for table \"client\""
+  },
+  {
+   "question_id": 189,
+   "step": "execute",
+   "message": "execute: column \"a11\" does not exist"
+  },
+  {
+   "question_id": 194,
+   "step": "execute",
+   "message": "execute: function datediff(date, date) does not exist"
+  }
+ ],
+ "exit_status": 1
+}

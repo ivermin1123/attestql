@@ -1,0 +1,108 @@
+{
+  "format": "attestql/audit/counterexample/1",
+  "question": {
+    "question_id": "565",
+    "question_set": "mini_dev_pg-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-04)",
+    "question_text": "User No.23853 gave a comment to a post at 9:08:18 on 2013/7/12, was that post well-finished?",
+    "evidence_text": "user no. 23853 refers to UserId = '23853'; at 9:08:18 on 2013/7/12 refers to CreationDate = '2013-07-12 09:08:18.0'; not well-finished refers to ClosedDate IS NULL and vice versa"
+  },
+  "question_set_version": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+  "sources": {
+    "gold": {
+      "path": "data/hf/mini_dev_pg-00000-of-00001.json",
+      "digest": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+      "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-04)",
+      "date": "2026-01-18T08:44:25Z"
+    },
+    "second": {
+      "path": "data/preds-by-id/predict_mini_dev_meta-llama-3-70b-instruct-2_postgresql.json",
+      "digest": "sha256:efa3d60c1b86bd145caa08a3b19681d7382d3c97e03c7c124a7d850a1360b34f",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_meta-llama-3-70b-instruct-2_postgresql.json, re-keyed by question id with predictions_by_question_id.py",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "projection_names_differ": {
+    "gold": [
+      "resylt"
+    ],
+    "second": [
+      "?column?"
+    ],
+    "reading": "The two statements name their result columns differently. A projection is compared by position and declared type, so these names did not decide the verdict. They are part of the canonical rendering each result is hashed under, so the two result hashes differ with them."
+  },
+  "bird_ex": {
+    "value": 1,
+    "equal": true,
+    "method": "set(second_rows) == set(gold_rows)",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 0,
+    "second_rows": 0,
+    "gold_distinct_rows": 0,
+    "second_distinct_rows": 0
+  },
+  "gold": {
+    "executed_sql": "SELECT CASE WHEN T2.ClosedDate IS NULL THEN 'NOT well-finished' ELSE 'well-finished' END AS resylt FROM comments AS T1 INNER JOIN posts AS T2 ON T1.PostId = T2.Id WHERE T1.UserId = 23853 AND T1.CreationDate = '2013-07-12 09:08:18.0'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "resylt",
+          "pg_type": "text"
+        }
+      ],
+      "row_count": 0,
+      "truncated": false,
+      "rows_shown": 0,
+      "rows": [],
+      "result_hash": "sha256:c9c174d2e987102c93822d22411c9e2f868a00870adda1bbf7f471b96a3873a0"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT p.ClosedDate IS NOT NULL \nFROM comments c \nJOIN posts p ON c.postid = p.id \nWHERE c.userid = 23853 AND c.creationdate = '2013-07-12 09:08:18.0';",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "?column?",
+          "pg_type": "bool"
+        }
+      ],
+      "row_count": 0,
+      "truncated": false,
+      "rows_shown": 0,
+      "rows": [],
+      "result_hash": "sha256:2c5dd43becdbe15c12f25d72b4c9edc248974f6ee9f0e5736e25631be3970a49"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [],
+    "in_second_not_in_gold_total": 0,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:c9c174d2e987102c93822d22411c9e2f868a00870adda1bbf7f471b96a3873a0",
+    "second": "sha256:2c5dd43becdbe15c12f25d72b4c9edc248974f6ee9f0e5736e25631be3970a49"
+  },
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "fixture": {
+    "schema_digest": "sha256:12a0cd4270009d3ecf574b6c23a6a95edca554e78e3c5e7253463eea5cd0e3ca",
+    "row_counts": {
+      "public.comments": 174285,
+      "public.posts": 91966
+    },
+    "content_digests": {},
+    "source_file_sha256": ""
+  },
+  "run_id": "audit-84feb552-938c-49cf-a7e1-b01a31a37d07"
+}

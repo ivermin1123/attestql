@@ -1,0 +1,142 @@
+{
+  "format": "attestql/audit/counterexample/1",
+  "question": {
+    "question_id": "1473",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-04), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "What was the average monthly consumption of customers in SME for the year 2013?",
+    "evidence_text": "Average Monthly consumption = AVG(Consumption) / 12; Year 2013 can be presented as Between 201301 And 201312; The first 4 strings of the Date values in the yearmonth table can represent year."
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "sources": {
+    "gold": {
+      "path": "data/zip/minidev/MINIDEV/mini_dev_postgresql.json",
+      "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+      "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-04), member minidev/MINIDEV/mini_dev_postgresql.json",
+      "date": "2024-06-19"
+    },
+    "second": {
+      "path": "data/preds/predict_mini_dev_phi-3-medium-128k-instruct-1_postgresql.json",
+      "digest": "sha256:8defb4399ab3393200cfba510024df7d9cf2cff8c9c7df647e3309cf751ac82d",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_phi-3-medium-128k-instruct-1_postgresql.json",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "projection_names_differ": {
+    "gold": [
+      "?column?"
+    ],
+    "second": [
+      "avg_monthly_consumption"
+    ],
+    "reading": "The two statements name their result columns differently. A projection is compared by position and declared type, so these names did not decide the verdict. They are part of the canonical rendering each result is hashed under, so the two result hashes differ with them."
+  },
+  "bird_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "set(second_rows) == set(gold_rows)",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 1,
+    "second_rows": 1,
+    "gold_distinct_rows": 1,
+    "second_distinct_rows": 1
+  },
+  "gold": {
+    "executed_sql": "SELECT AVG(T2.Consumption) / NULLIF(12, 0) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "?column?",
+          "pg_type": "float8"
+        }
+      ],
+      "row_count": 1,
+      "truncated": false,
+      "rows_shown": 1,
+      "rows": [
+        [
+          {
+            "type": "dec",
+            "value": "459.95626421124297"
+          }
+        ]
+      ],
+      "result_hash": "sha256:a5b7363207263467222a95e4127f170414d7e6aa83b46577a4625a3456e07d16"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT AVG(consumption) / 12 AS avg_monthly_consumption\nFROM yearmonth\nWHERE date BETWEEN '201301' AND '201312'\nAND customerid IN (\n    SELECT customerid\n    FROM customers\n    WHERE segment = 'SME'\n);",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "avg_monthly_consumption",
+          "pg_type": "float8"
+        }
+      ],
+      "row_count": 1,
+      "truncated": false,
+      "rows_shown": 1,
+      "rows": [
+        [
+          {
+            "type": "dec",
+            "value": "459.95626421124325"
+          }
+        ]
+      ],
+      "result_hash": "sha256:c9900ebece971384a8f196ccc5d23e8551fac7d014d7b88f4fb2edb1953202aa"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [
+      {
+        "row": [
+          {
+            "type": "dec",
+            "value": "459.95626421124297"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "in_gold_not_in_second_total": 1,
+    "in_second_not_in_gold": [
+      {
+        "row": [
+          {
+            "type": "dec",
+            "value": "459.95626421124325"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "in_second_not_in_gold_total": 1,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:a5b7363207263467222a95e4127f170414d7e6aa83b46577a4625a3456e07d16",
+    "second": "sha256:c9900ebece971384a8f196ccc5d23e8551fac7d014d7b88f4fb2edb1953202aa"
+  },
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "fixture": {
+    "schema_digest": "sha256:808947361d5e98fdfcaf192086e97e103446adf3e974573c0f50c4f2e5242320",
+    "row_counts": {
+      "public.customers": 32461,
+      "public.yearmonth": 383282
+    },
+    "content_digests": {},
+    "source_file_sha256": ""
+  },
+  "run_id": "audit-4d61811a-b1f6-42de-933e-1d10c741adfb"
+}

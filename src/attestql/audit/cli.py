@@ -377,10 +377,10 @@ class ResolvedPredictions:
     """The predictions a run will compare, by question id, and what was left over.
 
     ``positions_unused`` is empty under question-id keying. Under position keying it names
-    every position whose prediction was not compared with anything, which happens when two
-    positions name one question: the question file holds one entry twice, the lowest
-    position is the prediction that is compared, and the rest are recorded here rather
-    than silently dropped.
+    every position that lost to a lower one naming the same question: the question file
+    holds one entry twice, the lowest position is the prediction that is compared, and the
+    rest are recorded here rather than silently dropped. A position whose question was
+    left out by ``--ids`` is not listed; it was not compared, but nothing displaced it.
     """
 
     by_id: Mapping[int, str]

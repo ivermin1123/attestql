@@ -147,6 +147,7 @@
     "PGPASSWORD",
     "yearmonth",
     "pglast",
-    "birdsql"
+    "birdsql",
+    "mixtral"
   ]
 }

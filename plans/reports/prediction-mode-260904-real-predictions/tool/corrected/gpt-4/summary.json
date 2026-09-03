@@ -1,0 +1,107 @@
+{
+ "format": "attestql/audit/summary/1",
+ "run_id": "audit-25044a7e-ddee-4391-a175-61138877a9c5",
+ "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+ "effective_database_role": "auditor",
+ "session_settings_recorded": {
+  "statement_timeout": "0",
+  "search_path": "\"$user\", public",
+  "server_version_num": "160015",
+  "transaction_read_only": "on"
+ },
+ "question_set": {
+  "path": "data/corrected-gold.json",
+  "digest": "sha256:1c632dac043fea1b8f8aed8c14a2f02f55d8e5cfc0a1fc81011bcf413fe603f7",
+  "origin": "corrected golds for 1029, 879 and 207 from tools/audit-sandbox/predictions.json of ivermin1123/attestql at ff432e4",
+  "date": "2026-09-04",
+  "entries": 3,
+  "audited": 3,
+  "duplicate_ids": [],
+  "ids": [
+   1029,
+   879,
+   207
+  ]
+ },
+ "predictions": {
+  "path": "data/preds-by-id/predict_mini_dev_gpt-4_postgresql.json",
+  "digest": "sha256:5923a30b810c586103ab1127671b24184f952e9efdfdbc51feaedc76df044173",
+  "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4_postgresql.json, re-keyed by question id with predictions_by_question_id.py",
+  "date": "2024-06-19",
+  "keyed_by": "question-id",
+  "statements": 498,
+  "positions_unused": []
+ },
+ "verdicts": {
+  "EQUAL": 2,
+  "NOT_EQUAL": 1
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 0,
+  "not-a-function-of-the-data": 0,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 0,
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool/corrected/gpt-4/fixture.json",
+  "schema_digest": "sha256:ae0a03e6fc2daea1fe83fe4d8a4849f72d53ae3c678fca1debbe7c83df24620a",
+  "row_counts": {
+   "public.atom": 9111,
+   "public.bond": 9156,
+   "public.connected": 18312,
+   "public.drivers": 840,
+   "public.results": 23179,
+   "public.team": 299,
+   "public.team_attributes": 1458
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "team_attributes",
+   "team",
+   "drivers",
+   "results",
+   "bond",
+   "atom",
+   "connected"
+  ],
+  "missing_tables": [],
+  "refused": ""
+ },
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "attestql_scratch2",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "public.atom",
+   "public.bond",
+   "public.connected",
+   "public.drivers",
+   "public.results",
+   "public.team",
+   "public.team_attributes"
+  ],
+  "skipped": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool/corrected/gpt-4",
+  "serialization": "attestql/audit/1"
+ },
+ "data_as_of": "2026-09-03T18:15:41.485927+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.012,
+  "questions": 0.131,
+  "shuffle": 0.152
+ },
+ "errors": [],
+ "exit_status": 1
+}

@@ -1,0 +1,122 @@
+{
+  "format": "attestql/audit/counterexample/1",
+  "question": {
+    "question_id": "1057",
+    "question_set": "mini_dev_pg-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-04)",
+    "question_text": "Calculate the average home team goal in the 2010/2011 season in the country of Poland.",
+    "evidence_text": "average home team goal = AVG(home_team_goal)= SUM(home_team_goal) / COUNT(DISTINCT Match.id) WHERE name = 'Poland' and season = '2010/2011';"
+  },
+  "question_set_version": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+  "sources": {
+    "gold": {
+      "path": "data/hf/mini_dev_pg-00000-of-00001.json",
+      "digest": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+      "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-04)",
+      "date": "2026-01-18T08:44:25Z"
+    },
+    "second": {
+      "path": "data/preds-by-id/predict_mini_dev_gpt-35-turbo-instruct_postgresql.json",
+      "digest": "sha256:f33ba388e685faa991e7ce697c4903f32ccf7964c08b9435c8768edf5a3af73c",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo-instruct_postgresql.json, re-keyed by question id with predictions_by_question_id.py",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "projection_names_differ": {
+    "gold": [
+      "?column?"
+    ],
+    "second": [
+      "avg"
+    ],
+    "reading": "The two statements name their result columns differently. A projection is compared by position and declared type, so these names did not decide the verdict. They are part of the canonical rendering each result is hashed under, so the two result hashes differ with them."
+  },
+  "bird_ex": {
+    "value": 1,
+    "equal": true,
+    "method": "set(second_rows) == set(gold_rows)",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 1,
+    "second_rows": 1,
+    "gold_distinct_rows": 1,
+    "second_distinct_rows": 1
+  },
+  "gold": {
+    "executed_sql": "SELECT CAST(SUM(t2.home_team_goal) AS REAL) / NULLIF(COUNT(t2.id), 0) FROM Country AS t1 INNER JOIN Match AS t2 ON t1.id = t2.country_id WHERE t1.name = 'Poland' AND t2.season = '2010/2011'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "?column?",
+          "pg_type": "float8"
+        }
+      ],
+      "row_count": 1,
+      "truncated": false,
+      "rows_shown": 1,
+      "rows": [
+        [
+          {
+            "type": "dec",
+            "value": "1.5041666666666667"
+          }
+        ]
+      ],
+      "result_hash": "sha256:338bade0f1c5c8720d92bbf27cd34769972296b27dba6d547a4aaafe8ed8af46"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT  AVG(home_team_goal)\nFROM Match\nWHERE country_id = (SELECT id FROM Country WHERE name = 'Poland')\nAND season = '2010/2011'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "avg",
+          "pg_type": "numeric"
+        }
+      ],
+      "row_count": 1,
+      "truncated": false,
+      "rows_shown": 1,
+      "rows": [
+        [
+          {
+            "type": "dec",
+            "value": "1.5041666666666667"
+          }
+        ]
+      ],
+      "result_hash": "sha256:697b2fa202a892ade119d926f93175e5f7bb7f3d6be727c1feb8e8787a5a11b7"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [],
+    "in_second_not_in_gold_total": 0,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:338bade0f1c5c8720d92bbf27cd34769972296b27dba6d547a4aaafe8ed8af46",
+    "second": "sha256:697b2fa202a892ade119d926f93175e5f7bb7f3d6be727c1feb8e8787a5a11b7"
+  },
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "fixture": {
+    "schema_digest": "sha256:c9e88e0e72a41fa80b1d818c96fdc678cfa6a8e934dd4aa0e4297514d1da88d9",
+    "row_counts": {
+      "public.country": 11,
+      "public.match": 25979
+    },
+    "content_digests": {},
+    "source_file_sha256": ""
+  },
+  "run_id": "audit-a43166ae-6574-4ee5-afd7-525ee0e86aa8"
+}
