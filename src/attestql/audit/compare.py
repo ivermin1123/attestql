@@ -288,7 +288,7 @@ def record_statement(
     data_as_of: datetime,
     statement_timeout_seconds: int = DEFAULT_STATEMENT_TIMEOUT_SECONDS,
     with_content_digests: bool = False,
-    source_file: Path | None = None,
+    source_digest: str = "",
 ) -> RecordedStatement:
     """Execute one statement under its own rule and record it, with nothing to compare.
 
@@ -302,7 +302,7 @@ def record_statement(
         parsed.tables,
         directory=directory,
         with_content_digests=with_content_digests,
-        source_file=source_file,
+        source_digest=source_digest,
     )
     record = _execute_and_record(
         parsed,
@@ -348,7 +348,7 @@ def compare_statements(
     data_as_of: datetime,
     statement_timeout_seconds: int = DEFAULT_STATEMENT_TIMEOUT_SECONDS,
     with_content_digests: bool = False,
-    source_file: Path | None = None,
+    source_digest: str = "",
 ) -> Comparison:
     """Execute both statements on one backend and compare them under the gold's rule.
 
@@ -365,7 +365,7 @@ def compare_statements(
         tables,
         directory=directory,
         with_content_digests=with_content_digests,
-        source_file=source_file,
+        source_digest=source_digest,
     )
     settings = backend.session_settings()
     identity = ExecutionIdentity(

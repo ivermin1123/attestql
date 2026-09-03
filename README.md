@@ -65,7 +65,10 @@ line `i`; read one with `--predictions-keyed-by position`, and under the default
 that shape is refused rather than paired with whichever questions happen to carry those numbers.
 `--questions-origin`, `--questions-date`, `--predictions-origin` and `--predictions-date` record
 where each of the two files came from and what date its origin states, beside the sha256 this tool
-computes for it, in `summary.json` and in every evidence record.
+computes for it, in `summary.json` and in every evidence record. The data the server holds came
+from a file too: `--data-file` names the dump it was loaded from, which this tool digests and
+never reads, and `--data-origin` and `--data-date` state where that file came from, so all three
+sources are recorded alike.
 
 The password comes from `PGPASSWORD` or `~/.pgpass`; a DSN that contains one, or any URI form, is
 refused. Loading BIRD's dump prints 99 `role "..." does not exist` errors from its ownership

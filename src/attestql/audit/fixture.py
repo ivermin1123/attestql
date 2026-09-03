@@ -3,8 +3,9 @@
 ADR-0013 point 6. Per referenced table, the schema digest and the exact row count, always;
 a digest of the table's contents when the caller asks for one, because that reads every
 row of every table and on Mini-Dev costs fourteen seconds against half a second for the
-other two. The digest of the file the data was loaded from is recorded when a file is
-named and is never a precondition.
+other two. The digest of the file the data was loaded from is recorded when the caller
+names one and is never a precondition; the caller takes it once for the whole run, because
+a gigabyte dump costs seconds a pass and every question would ask for the same answer.
 
 The cache exists because an audit asks the same question of the same tables once per
 question and the answer cannot change under it: the executor only ever reads. The key is
@@ -65,13 +66,17 @@ def fixture_digest(
     *,
     directory: Path,
     with_content_digests: bool = False,
-    source_file: Path | None = None,
+    source_digest: str = "",
 ) -> FixtureDigest:
-    """The digest of the data those tables hold, from the cache when it holds it."""
+    """The digest of the data those tables hold, from the cache when it holds it.
+
+    ``source_digest`` is what the caller measured of the file the data was loaded from, or
+    the empty string when no file was named. It is recorded and never measured here: the
+    file is the caller's and is hashed once for a run rather than once a question.
+    """
     wanted = tuple(sorted(set(tables)))
     schema_digest = backend.schema_digest(wanted)
     signal = dict(backend.content_signal(wanted))
-    source_digest = file_digest(source_file) if source_file is not None else ""
     key = _key(
         backend.identity(), schema_digest, with_content_digests=with_content_digests, tables=wanted
     )
@@ -111,8 +116,8 @@ def _entry(payload: object, signal: Mapping[str, str], source_digest: str) -> Fi
     counts happen to be old.
 
     The source file's digest is not read from the cache. It describes a file this run was
-    given rather than the server the rest of the entry was measured on, so it is taken
-    fresh and the cached entry never gets to state it.
+    given rather than the server the rest of the entry was measured on, so it is the
+    caller's and the cached entry never gets to state it.
     """
     if not isinstance(payload, dict):
         return None

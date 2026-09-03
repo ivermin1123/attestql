@@ -110,24 +110,25 @@ def test_a_cache_entry_of_the_wrong_shape_is_a_miss(tmp_path: Path) -> None:
     assert len(backend.row_count_calls) == 2
 
 
-def test_the_source_file_is_digested_when_one_is_named_and_is_empty_when_none_is(
+def test_the_source_digest_is_recorded_when_one_is_given_and_is_empty_when_none_is(
     tmp_path: Path,
 ) -> None:
     dump = tmp_path / "dump.sql"
     dump.write_text("CREATE TABLE t (x int);\n", encoding="utf-8")
-    with_file = fixture_digest(_backend(), TABLES, directory=tmp_path, source_file=dump)
-    assert with_file.source_file_sha256 == file_digest(dump)
+    given = file_digest(dump)
+    with_file = fixture_digest(_backend(), TABLES, directory=tmp_path, source_digest=given)
+    assert with_file.source_file_sha256 == given
     assert with_file.source_file_sha256.startswith("sha256:")
     assert fixture_digest(_backend(), TABLES, directory=tmp_path).source_file_sha256 == ""
 
 
-def test_the_source_file_digest_is_never_served_from_the_cache(tmp_path: Path) -> None:
+def test_the_source_digest_is_never_served_from_the_cache(tmp_path: Path) -> None:
     """It describes a file this run was given, not the server the entry was measured on."""
     dump = tmp_path / "dump.sql"
     dump.write_text("one", encoding="utf-8")
-    first = fixture_digest(_backend(), TABLES, directory=tmp_path, source_file=dump)
+    first = fixture_digest(_backend(), TABLES, directory=tmp_path, source_digest=file_digest(dump))
     dump.write_text("another", encoding="utf-8")
-    second = fixture_digest(_backend(), TABLES, directory=tmp_path, source_file=dump)
+    second = fixture_digest(_backend(), TABLES, directory=tmp_path, source_digest=file_digest(dump))
     assert second.source_file_sha256 != first.source_file_sha256
     assert second.row_counts == first.row_counts
 

@@ -187,6 +187,9 @@ class AuditOptions:
     predictions_origin: str | None = None
     predictions_date: str | None = None
     predictions_keyed_by: str = QUESTION_ID_KEYING
+    data_file: Path | None = None
+    data_origin: str | None = None
+    data_date: str | None = None
     ids: tuple[int, ...] = ()
     fixture_digest: str = "counts"
     fail_on_smell: bool = False
@@ -569,6 +572,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
     keyed: Mapping[int, str] = read_predictions(options.predictions) if options.predictions else {}
     resolved = resolve_predictions(keyed, question_set, options.predictions_keyed_by)
     predictions_source = _predictions_source(options)
+    data_digest = _data_digest(options)
     predictions = (
         {}
         if predictions_source is None
@@ -606,6 +610,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
             predictions=predictions,
             run_id=run_id,
             data_as_of=data_as_of,
+            data_digest=data_digest,
             shuffled=shuffled,
             no_shuffle=no_shuffle,
         )
@@ -634,6 +639,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
             shuffled=shuffled,
             no_shuffle=no_shuffle,
             data_as_of=data_as_of,
+            data_digest=data_digest,
         ),
     )
     return summary
@@ -677,6 +683,27 @@ def _predictions_source(options: AuditOptions) -> StatementSource | None:
         origin=options.predictions_origin,
         date=options.predictions_date,
     )
+
+
+def _data_digest(options: AuditOptions) -> str:
+    """The digest of the file the data was loaded from, or the empty string for no file.
+
+    Taken here, once, for the same reason the predictions file's is: every record states
+    it, and a dump is a gigabyte whose sha256 costs seconds a pass. The file is never read
+    for anything else; what the data is, is measured on the server.
+
+    Raises ``ToolError`` when it cannot be read: the operator named a file to have it
+    stated, and a run that recorded an origin for a file it never hashed would state less
+    than it was asked to.
+    """
+    if options.data_file is None:
+        return ""
+    try:
+        return file_digest(options.data_file)
+    except (OSError, ValueError) as unreadable:
+        raise ToolError(f"the data file {options.data_file} cannot be read: {unreadable}") from (
+            unreadable
+        )
 
 
 def _run_fixture(backend: Backend, tables: Sequence[str], options: AuditOptions) -> _Measured:
@@ -759,6 +786,7 @@ def _audit_questions(
     predictions: Mapping[int, Prediction],
     run_id: str,
     data_as_of: datetime,
+    data_digest: str,
     shuffled: ShuffledCopies | None,
     no_shuffle: str,
 ) -> _Counted:
@@ -787,6 +815,7 @@ def _audit_questions(
                     prediction=predictions.get(question.question_id),
                     run_id=run_id,
                     data_as_of=data_as_of,
+                    data_digest=data_digest,
                     shuffled=shuffled,
                     no_shuffle=no_shuffle,
                     settings=settings,
@@ -812,6 +841,7 @@ def _audit_one(
     prediction: Prediction | None,
     run_id: str,
     data_as_of: datetime,
+    data_digest: str,
     shuffled: ShuffledCopies | None,
     no_shuffle: str,
     settings: SmellSettings,
@@ -833,6 +863,7 @@ def _audit_one(
             data_as_of=data_as_of,
             statement_timeout_seconds=options.statement_timeout_seconds,
             with_content_digests=options.with_content_digests,
+            source_digest=data_digest,
         )
         parsed, gold = recorded.parsed, recorded.record
         verdict = GOLD_ONLY
@@ -851,6 +882,7 @@ def _audit_one(
             data_as_of=data_as_of,
             statement_timeout_seconds=options.statement_timeout_seconds,
             with_content_digests=options.with_content_digests,
+            source_digest=data_digest,
         )
         parsed, gold = parse_statement(question.sql), comparison.gold
         verdict = comparison.verdict.result.name
@@ -948,6 +980,7 @@ def _summary_json(
     shuffled: ShuffledCopies | None,
     no_shuffle: str,
     data_as_of: datetime,
+    data_digest: str,
 ) -> Json:
     """The whole run in one document: what was audited, on what, and what was found.
 
@@ -996,6 +1029,16 @@ def _summary_json(
         "fixture": {
             "depth": options.fixture_digest,
             "cache": f"{options.out.as_posix()}/{CACHE_FILE}",
+            "source": (
+                None
+                if options.data_file is None
+                else {
+                    "path": str(options.data_file),
+                    "sha256": data_digest,
+                    "origin": options.data_origin,
+                    "date": options.data_date,
+                }
+            ),
             "schema_digest": None if digest is None else digest.schema_digest,
             "row_counts": {} if digest is None else dict(digest.row_counts),
             "content_digests": {} if digest is None else dict(digest.content_digests),
@@ -1180,6 +1223,25 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     audit.add_argument(
+        "--data-file",
+        type=Path,
+        help=(
+            "the dump or SQL file the data was loaded from; it is digested and never read, "
+            "so that a record states which file the server was loaded from"
+        ),
+    )
+    audit.add_argument(
+        "--data-origin",
+        default=None,
+        help="where the data file came from, a URL or a note, recorded beside its digest",
+    )
+    audit.add_argument(
+        "--data-date",
+        type=_stated_date,
+        default=None,
+        help="the date that origin states for the data file, ISO 8601",
+    )
+    audit.add_argument(
         "--out", required=True, type=Path, help="the directory the evidence is written to"
     )
     audit.add_argument("--ids", type=_ids, default=(), help="audit only these question ids")
@@ -1235,7 +1297,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
     """The command line as options, or an argparse exit for anything it refuses."""
-    parsed = build_parser().parse_args(argv)
+    parser = build_parser()
+    parsed = parser.parse_args(argv)
+    if parsed.data_file is None and (parsed.data_origin, parsed.data_date) != (None, None):
+        parser.error(
+            "--data-origin and --data-date state where the data file came from; "
+            "name that file with --data-file"
+        )
     return AuditOptions(
         dsn=cast("str", parsed.dsn),
         questions=cast("Path", parsed.questions),
@@ -1245,6 +1313,9 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
         predictions_origin=cast("str | None", parsed.predictions_origin),
         predictions_date=cast("str | None", parsed.predictions_date),
         predictions_keyed_by=cast("str", parsed.predictions_keyed_by),
+        data_file=cast("Path | None", parsed.data_file),
+        data_origin=cast("str | None", parsed.data_origin),
+        data_date=cast("str | None", parsed.data_date),
         out=cast("Path", parsed.out),
         ids=cast("tuple[int, ...]", parsed.ids),
         fixture_digest=cast("str", parsed.fixture_digest),

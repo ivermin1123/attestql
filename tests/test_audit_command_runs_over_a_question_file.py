@@ -1032,6 +1032,119 @@ def test_a_gold_only_record_names_the_question_file_as_the_source_of_its_stateme
     assert summary_of(tmp_path)["predictions"] is None
 
 
+# where the data the server holds came from
+
+
+DATA_ORIGIN = "https://example.org/bench/mini_dev_postgresql.dump"
+DUMP = "CREATE TABLE atom (element text);\nCOPY atom FROM stdin;\nc\no\n\\.\n"
+
+
+def _dump(tmp_path: Path) -> Path:
+    path = tmp_path / "mini_dev.dump"
+    path.write_text(DUMP, encoding="utf-8")
+    return path
+
+
+def _differing(tmp_path: Path) -> tuple[Path, FakeBackend]:
+    """A run whose gold and prediction disagree, so both records are written and read."""
+    other = "SELECT element FROM atom WHERE element = 'c'"
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    predictions = write(tmp_path / "preds.json", {"207": other})
+    backend = FakeBackend(
+        {ELEMENTS: fake_result(ELEMENT, (("c",), ("o",))), other: fake_result(ELEMENT, (("c",),))},
+        row_counts={"atom": 2},
+    )
+    return predictions, backend
+
+
+def test_the_data_file_is_recorded_with_its_digest_origin_and_date(tmp_path: Path) -> None:
+    """A run over a stale dump is the failure this tool exists to catch, and the server
+    cannot say which file it was loaded from: the operator names it and the run states it."""
+    predictions, backend = _differing(tmp_path)
+    dump = _dump(tmp_path)
+    run_audit(
+        options(
+            tmp_path,
+            predictions=predictions,
+            data_file=dump,
+            data_origin=DATA_ORIGIN,
+            data_date="2026-03-01",
+        ),
+        backend,
+        Lines(),
+    )
+
+    assert summary_of(tmp_path)["fixture"]["source"] == {
+        "path": str(dump),
+        "sha256": sha256_of(dump),
+        "origin": DATA_ORIGIN,
+        "date": "2026-03-01",
+    }
+    directory = tmp_path / "audit" / "q207"
+    for name in (GOLD_RECORD_FILE, SECOND_RECORD_FILE, COUNTEREXAMPLE_FILE):
+        written = json.loads((directory / name).read_text(encoding="utf-8"))
+        assert written["fixture"]["source_file_sha256"] == sha256_of(dump), name
+
+
+def test_without_a_data_file_the_summary_says_so_and_no_record_states_a_digest(
+    tmp_path: Path,
+) -> None:
+    """The absence is stated: nobody named a file, rather than a file that hashed to nothing."""
+    predictions, backend = _differing(tmp_path)
+    run_audit(options(tmp_path, predictions=predictions), backend, Lines())
+
+    assert summary_of(tmp_path)["fixture"]["source"] is None
+    directory = tmp_path / "audit" / "q207"
+    for name in (GOLD_RECORD_FILE, SECOND_RECORD_FILE, COUNTEREXAMPLE_FILE):
+        written = json.loads((directory / name).read_text(encoding="utf-8"))
+        assert written["fixture"]["source_file_sha256"] == "", name
+
+
+def test_a_data_file_that_cannot_be_read_stops_the_run(tmp_path: Path) -> None:
+    """The digest is the whole point of naming it, so a file that is not there is not a run."""
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    with pytest.raises(ToolError, match="cannot be read"):
+        run_audit(options(tmp_path, data_file=tmp_path / "gone.dump"), _quiet_backend(), Lines())
+
+
+def test_the_command_line_takes_the_data_file_with_its_origin_and_date(tmp_path: Path) -> None:
+    dump = _dump(tmp_path)
+    parsed = parse_arguments(
+        [
+            "audit",
+            "--dsn",
+            "host=h dbname=d",
+            "--questions",
+            "q.json",
+            "--out",
+            "o/",
+            "--data-file",
+            str(dump),
+            "--data-origin",
+            DATA_ORIGIN,
+            "--data-date",
+            "2026-03-01",
+        ]
+    )
+    assert parsed.data_file == dump
+    assert parsed.data_origin == DATA_ORIGIN
+    assert parsed.data_date == "2026-03-01"
+
+
+@pytest.mark.parametrize(
+    ("flag", "value"), [("--data-origin", DATA_ORIGIN), ("--data-date", "2026-03-01")]
+)
+def test_stating_where_the_data_came_from_without_naming_the_file_is_refused(
+    flag: str, value: str
+) -> None:
+    """There is nothing to digest, so the run would record an origin for a file it never read."""
+    with pytest.raises(SystemExit) as refused:
+        parse_arguments(
+            ["audit", "--dsn", "host=h", "--questions", "q.json", "--out", "a", flag, value]
+        )
+    assert refused.value.code == 2
+
+
 # predictions keyed by position
 
 
