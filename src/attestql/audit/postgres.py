@@ -64,7 +64,13 @@ from psycopg import sql as sql_builder
 from psycopg.abc import Buffer
 from psycopg.adapt import Loader
 
-from attestql.audit.backend import BackendRefused, ReadBackDrift, ShuffledCopies, TextCensus
+from attestql.audit.backend import (
+    BackendRefused,
+    ReadBackDrift,
+    ShuffledCopies,
+    TableLookup,
+    TextCensus,
+)
 from attestql.evidence.types import SessionSettings
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
@@ -360,26 +366,39 @@ class PostgresBackend:
             truncated=False,
         )
 
-    def existing_tables(self, tables: Sequence[str]) -> tuple[str, ...]:
-        """Which of those names the catalogue holds, asked once and never by counting them.
+    def existing_tables(self, tables: Sequence[str]) -> TableLookup:
+        """Which of those names the catalogue holds, and which of them this login may read.
 
-        ``information_schema.tables`` lists what this role may see, which is the same
-        question: a table it cannot reach is a table it cannot measure, and the gold that
-        names it fails on its own line with the server's own message. Views are listed
-        there too, and a gold that reads one is reading a table as far as this is
-        concerned.
+        ``information_schema.tables`` cannot answer this: it lists only the tables the
+        current role holds some privilege on, so a table that is there and was never
+        granted is absent from it and indistinguishable from a table nobody loaded. That
+        is one word over two defects, and the two are repaired in different places. The
+        catalogue lists what is there whatever the grants are, and
+        ``has_table_privilege`` says of each row whether this login may read it, in the
+        same round trip. The information schema is also a view over these same catalogues
+        and is slower for it on a large one.
+
+        ``relkind`` names the relations a gold can select from: ordinary and partitioned
+        tables, views, materialised views and foreign tables. A gold that reads one of
+        those is reading a table as far as this is concerned.
         """
         wanted = tuple(dict.fromkeys(tables))
         if not wanted:
-            return ()
+            return TableLookup((), ())
         rows = self._all(
-            "SELECT table_schema || '.' || table_name FROM information_schema.tables "
-            "WHERE table_schema || '.' || table_name = ANY(%s)",
+            "SELECT n.nspname || '.' || c.relname, has_table_privilege(c.oid, 'SELECT') "
+            "FROM pg_catalog.pg_class AS c "
+            "JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace "
+            "WHERE c.relkind IN ('r', 'p', 'v', 'm', 'f') "
+            "AND n.nspname || '.' || c.relname = ANY(%s)",
             [list(_qualified(wanted))],
             step="existing_tables",
         )
-        found = {str(row[0]) for row in rows}
-        return tuple(name for name in wanted if _qualify(name) in found)
+        readable = {str(row[0]): bool(row[1]) for row in rows}
+        return TableLookup(
+            tuple(name for name in wanted if readable.get(_qualify(name)) is True),
+            tuple(name for name in wanted if readable.get(_qualify(name)) is False),
+        )
 
     def schema_digest(self, tables: Sequence[str]) -> str:
         """One digest over the columns of those tables, in a stated order."""

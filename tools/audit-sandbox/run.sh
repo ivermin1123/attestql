@@ -126,6 +126,7 @@ echo "fixture loaded in ${load_seconds}s; the load log is $out/load.txt"
 # psql over the pipe and never exists as an argument vector or a temporary file. The role is
 # read-only three times over: it holds SELECT and nothing else on the fixture, it cannot create
 # anything in the schema that holds it, and its sessions open read-only transactions by default.
+# public.sealed is the one table it is not granted at all.
 # The one place it may write is attestql_scratch, which the shuffled-copy smell needs and which
 # holds no fixture table.
 {
@@ -137,6 +138,10 @@ REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 REVOKE CREATE ON SCHEMA public FROM auditor;
 GRANT USAGE ON SCHEMA public TO auditor;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO auditor;
+-- One table the grant above reached and this takes back: the audit needs a table that is
+-- there and that its login may not read, which is not the same thing as a table nobody
+-- loaded and is not repaired in the same place.
+REVOKE SELECT ON public.sealed FROM auditor;
 ALTER ROLE auditor SET default_transaction_read_only = on;
 CREATE SCHEMA attestql_scratch AUTHORIZATION auditor;
 SQL

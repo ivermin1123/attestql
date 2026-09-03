@@ -13,22 +13,25 @@ the quiet case rather than a line of setup per statement. ``scratch_refusal`` is
 other shape: a backend that will not make the copies at all, which is what a scratch
 schema that is missing or unwritable looks like from above.
 
-Two ways to fail are scripted because a real database has them and a fake without them
+Three ways to fail are scripted because a real database has them and a fake without them
 made them untestable. ``missing_tables`` names tables this database does not hold, which
 is what a gold that names a table nobody loaded meets: they are absent from
-``existing_tables`` and counting them refuses the way a server refuses. ``refusing`` is
-the connection that went away: set it at any moment, from a writer between two questions,
-and every call after it refuses naming its own step, which is what the audit sees when the
-server closed the socket under it. The identity, the role and the settings are read once
-before the questions and never refuse, so a fake built with ``refusing`` already set is a
-connection that went away after the run had started rather than one that never opened.
+``existing_tables`` and counting them refuses the way a server refuses.
+``unreadable_tables`` names tables it holds and this login was never granted, which
+``existing_tables`` answers under its own word and counting refuses with the server's other
+message; the two are kept apart here because telling them apart is what is being tested.
+``refusing`` is the connection that went away: set it at any moment, from a writer between
+two questions, and every call after it refuses naming its own step, which is what the audit
+sees when the server closed the socket under it. The identity, the role and the settings are
+read once before the questions and never refuse, so a fake built with ``refusing`` already set
+is a connection that went away after the run had started rather than one that never opened.
 """
 
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 
-from attestql.audit.backend import BackendRefused, ShuffledCopies, TextCensus
+from attestql.audit.backend import BackendRefused, ShuffledCopies, TableLookup, TextCensus
 from attestql.evidence.serialize import SerializationDescriptor
 from attestql.evidence.types import SessionSettings, StatementSource
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
@@ -109,6 +112,7 @@ class FakeBackend:
         skipped_tables: Mapping[str, int] | None = None,
         scratch_refusal: str | None = None,
         missing_tables: Sequence[str] = (),
+        unreadable_tables: Sequence[str] = (),
         refusing: str | None = None,
     ) -> None:
         self._results = dict(results)
@@ -125,6 +129,7 @@ class FakeBackend:
         self._skipped_tables = dict(skipped_tables or {})
         self._scratch_refusal = scratch_refusal
         self._missing_tables = set(missing_tables)
+        self._unreadable_tables = set(unreadable_tables)
         self.refusing = refusing
         """What every call refuses with from now on, or ``None`` while the server is there."""
         self.executed: list[tuple[str, int]] = []
@@ -163,10 +168,15 @@ class FakeBackend:
             raise AssertionError(f"no result was scripted for {sql!r}")
         return self._results[sql]
 
-    def existing_tables(self, tables: Sequence[str]) -> tuple[str, ...]:
+    def existing_tables(self, tables: Sequence[str]) -> TableLookup:
         self.existing_table_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("existing_tables")
-        return tuple(name for name in dict.fromkeys(tables) if name not in self._missing_tables)
+        wanted = tuple(dict.fromkeys(tables))
+        absent = self._missing_tables | self._unreadable_tables
+        return TableLookup(
+            tuple(name for name in wanted if name not in absent),
+            tuple(name for name in wanted if name in self._unreadable_tables),
+        )
 
     def schema_digest(self, tables: Sequence[str]) -> str:
         self.schema_digest_calls.append(tuple(tables))
@@ -181,6 +191,10 @@ class FakeBackend:
             # What counting a table nobody loaded costs on a server, in the words a server
             # uses, because that message is what reaches the question's line.
             raise BackendRefused("row_counts", f'relation "{absent[0]}" does not exist')
+        denied = [name for name in tables if name in self._unreadable_tables]
+        if denied:
+            # The other message, for the table that is there and was never granted.
+            raise BackendRefused("row_counts", f"permission denied for table {denied[0]}")
         return {name: self._row_counts.get(name, 0) for name in tables}
 
     def content_digests(self, tables: Sequence[str]) -> Mapping[str, str]:

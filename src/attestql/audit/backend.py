@@ -18,7 +18,10 @@ The digests are three calls rather than one so that the expensive one is optiona
 ``schema_digest`` and ``row_counts`` are always taken; ``content_digests`` reads every
 row of every table and is taken only when the caller asks for it (ADR-0013 point 6).
 ``existing_tables`` is asked before any of them, because a name the data does not hold is
-one question's error and never the end of a run.
+one question's error and never the end of a run. It answers in two parts, because there are
+two ways a name can fail to be measurable and they are repaired in different places: a table
+nobody loaded is a defect in the question file, and a table the audit's login was never
+granted is a defect in the grants.
 """
 
 from __future__ import annotations
@@ -71,6 +74,24 @@ class TextCensus:
 
 
 @dataclass(frozen=True)
+class TableLookup:
+    """Of the names asked about, the ones the database holds and the ones it will not read.
+
+    ``present`` exists and this login may read it, which is what a fixture measurement can
+    cover. ``unreadable`` exists and the login may not read it, which is a grant nobody made
+    rather than a table nobody loaded; a name in neither is absent. Two states, two words,
+    because the operator repairs them in two different places and a summary that spelled them
+    the same way sent them to the wrong one.
+
+    The names are the caller's spelling in the caller's order and without duplicates, because
+    the caller is what has to say which of the names it asked about ended up where.
+    """
+
+    present: tuple[str, ...]
+    unreadable: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class ShuffledCopies:
     """What a shuffled copy of the data covers, and what it does not.
 
@@ -113,15 +134,18 @@ class Backend(Protocol):
         """
         raise NotImplementedError
 
-    def existing_tables(self, tables: Sequence[str]) -> tuple[str, ...]:
-        """Which of those names the database holds, in the spelling they were given.
+    def existing_tables(self, tables: Sequence[str]) -> TableLookup:
+        """Which of those names the database holds and may read, in the spelling given.
 
         A gold that names a table this database does not have is one question's error and
         not the end of a run, so what is measured before the questions asks this first
-        rather than discovering it by failing: what exists is measured, what does not is
-        named in the summary, and the questions that reference it fail on their own lines
-        with the server's own message. The spelling is the caller's, because the caller is
-        what has to say which of the names it asked about was not there.
+        rather than discovering it by failing: what exists and can be read is measured, the
+        rest is named in the summary, and the questions that reference it fail on their own
+        lines with the server's own message.
+
+        Existence and readability are one question here and not two, because an
+        implementation that asked them apart could answer them of two different moments,
+        and because the answer is asked once for a whole run.
         """
         raise NotImplementedError
 
@@ -209,4 +233,11 @@ class Backend(Protocol):
         raise NotImplementedError
 
 
-__all__ = ["Backend", "BackendRefused", "ReadBackDrift", "ShuffledCopies", "TextCensus"]
+__all__ = [
+    "Backend",
+    "BackendRefused",
+    "ReadBackDrift",
+    "ShuffledCopies",
+    "TableLookup",
+    "TextCensus",
+]

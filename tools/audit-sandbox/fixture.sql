@@ -1,4 +1,5 @@
--- The audit sandbox fixture: three shipped-gold defects and two smells, in synthetic rows.
+-- The audit sandbox fixture: three shipped-gold defects, two smells and one table the
+-- auditor may not read, in synthetic rows.
 --
 -- Every table, column and row below is written for this sandbox. Nothing is copied from BIRD:
 -- what is reproduced is the shape of the three defects the spike found on the Mini-Dev
@@ -147,3 +148,18 @@ CREATE TABLE scores (
 
 INSERT INTO scores (name, score) VALUES
     ('ash', 99), ('bram', 99), ('cleo', 99), ('dara', 71), ('esme', 64), ('flint', 12);
+
+-- ---------------------------------------------------------------------------------------------
+-- The table this fixture loads and the auditor is not granted
+-- ---------------------------------------------------------------------------------------------
+
+-- Created here like every other table and revoked from the auditor by run.sh, so the audit meets
+-- a table that exists and that its login may not read. That is a different defect from a table
+-- nobody loaded, it is repaired with a GRANT rather than in the question file, and the summary
+-- names the two under two different words.
+CREATE TABLE sealed (
+    id     bigint PRIMARY KEY,
+    secret text   NOT NULL
+);
+
+INSERT INTO sealed (id, secret) VALUES (1, 'withheld'), (2, 'withheld too');

@@ -4,7 +4,7 @@
     "questions_url": "https://github.com/bird-bench/mini_dev",
     "licence": "CC BY-SA 4.0",
     "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-    "synthetic": "900001 and 900002 are this repository's own, written for the two smell tables in fixture.sql, and carry no db_id of BIRD's.",
+    "synthetic": "900001, 900002 and 900003 are this repository's own, written for the two smell tables and for the table the auditor is not granted in fixture.sql, and carry no db_id of BIRD's.",
     "field_names": "question_id, db_id, question, evidence, SQL and difficulty are Mini-Dev's field names, kept so that a question file from the benchmark and this one are read by the same code."
   },
   "questions": [
@@ -46,6 +46,14 @@
       "question": "Who holds the highest score?",
       "evidence": "the highest score refers to MAX(score)",
       "SQL": "SELECT name FROM scores ORDER BY score DESC LIMIT 1",
+      "difficulty": "simple"
+    },
+    {
+      "question_id": 900003,
+      "db_id": "synthetic",
+      "question": "What secrets are held?",
+      "evidence": "a secret refers to sealed.secret; the auditor is not granted this table",
+      "SQL": "SELECT secret FROM sealed ORDER BY id ASC",
       "difficulty": "simple"
     }
   ]

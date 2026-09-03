@@ -197,15 +197,19 @@ class AuditOptions:
 class _Measured:
     """What the run measured before the questions, and what it could not measure.
 
-    ``missing`` are the names a gold used that this database does not hold; they are the
-    summary's ``fixture.missing_tables`` and the reason the questions that use them will
-    error. ``refused`` is filled when the measurement itself was refused, which leaves the
-    run without a digest and every question to fail or succeed on its own.
+    ``missing`` are the names a gold used that this database does not hold and
+    ``unreadable`` the ones it holds and this login was never granted; they are the
+    summary's ``fixture.missing_tables`` and ``fixture.unreadable_tables`` and the reason
+    the questions that use them will error. They are two fields because the first is
+    repaired in the question file and the second with a GRANT. ``refused`` is filled when
+    the measurement itself was refused, which leaves the run without a digest and every
+    question to fail or succeed on its own.
     """
 
     digest: FixtureDigest | None
     present: tuple[str, ...]
     missing: tuple[str, ...]
+    unreadable: tuple[str, ...]
     refused: str
 
 
@@ -640,26 +644,30 @@ def _predictions_source(options: AuditOptions) -> StatementSource | None:
 
 
 def _run_fixture(backend: Backend, tables: Sequence[str], options: AuditOptions) -> _Measured:
-    """The digest of everything the run will read, over the tables that are there.
+    """The digest of everything the run will read, over the tables it can read.
 
     A gold that names a table this database does not hold is a defect in the question file,
-    which is one of the things this tool exists to find. Measuring it would refuse, so the
-    tables are asked for first and the measurement covers the ones that exist; the others
-    are named in the summary and error on the lines of the questions that used them.
+    which is one of the things this tool exists to find; a gold that names one this login
+    was never granted is a defect in the grants. Measuring either would refuse, so the
+    tables are asked for first and the measurement covers the ones that exist and can be
+    read; the others are named in the summary, each under the word for what it is, and
+    error on the lines of the questions that used them.
 
     Nothing here ends a run. A backend that will not answer at all leaves the run without a
     digest and with the reason recorded, and every question then fails on its own line with
     the server's message rather than the run stopping with nothing audited.
     """
     if not tables:
-        return _Measured(None, (), (), "")
+        return _Measured(None, (), (), (), "")
     try:
-        present = tuple(backend.existing_tables(tables))
+        lookup = backend.existing_tables(tables)
     except BackendRefused as refused:
-        return _Measured(None, tuple(tables), (), _refusal(refused))
-    missing = tuple(name for name in tables if name not in set(present))
+        return _Measured(None, tuple(tables), (), (), _refusal(refused))
+    present = lookup.present
+    accounted = set(present) | set(lookup.unreadable)
+    missing = tuple(name for name in tables if name not in accounted)
     if not present:
-        return _Measured(None, (), missing, "")
+        return _Measured(None, (), missing, lookup.unreadable, "")
     try:
         digest = fixture_digest(
             backend,
@@ -668,8 +676,8 @@ def _run_fixture(backend: Backend, tables: Sequence[str], options: AuditOptions)
             with_content_digests=options.with_content_digests,
         )
     except BackendRefused as refused:
-        return _Measured(None, present, missing, _refusal(refused))
-    return _Measured(digest, present, missing, "")
+        return _Measured(None, present, missing, lookup.unreadable, _refusal(refused))
+    return _Measured(digest, present, missing, lookup.unreadable, "")
 
 
 def _refusal(refused: BackendRefused) -> str:
@@ -947,6 +955,7 @@ def _summary_json(
             "content_digests": {} if digest is None else dict(digest.content_digests),
             "measured_tables": list(measured.present),
             "missing_tables": list(measured.missing),
+            "unreadable_tables": list(measured.unreadable),
             "refused": measured.refused,
         },
         "shuffle": {

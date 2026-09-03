@@ -27,7 +27,7 @@ from decimal import Decimal
 
 import pytest
 
-from attestql.audit.backend import Backend, BackendRefused, ReadBackDrift
+from attestql.audit.backend import Backend, BackendRefused, ReadBackDrift, TableLookup
 from attestql.audit.postgres import (
     DRIVER_ERROR,
     NumericFromFloatText,
@@ -115,6 +115,7 @@ class FakeConnection:
         collation: str = "en_US.UTF-8",
         schema: Sequence[tuple[str, ...]] = (),
         tables: Sequence[str] = (),
+        unreadable_tables: Sequence[str] = (),
         counts: Mapping[str, int] | None = None,
         census: tuple[int, ...] = (0, 0, 0, 0),
         scratch_exists: bool = True,
@@ -129,6 +130,7 @@ class FakeConnection:
         self.collation = collation
         self.schema = schema
         self.tables = tuple(tables)
+        self.unreadable_tables = tuple(unreadable_tables)
         self.counts = dict(counts or {})
         self.log: list[str] = []
         self.adapters = FakeAdapters()
@@ -141,6 +143,15 @@ class FakeConnection:
             return (), None
         if "pg_advisory_xact_lock" in text:
             return ((None,),), None
+        if "pg_class" in text:
+            # The catalogue lists what is there whatever the grants are, and says of each
+            # whether this role may read it. Asked before the scratch schema's question
+            # below, which names pg_namespace too.
+            return (
+                tuple((name, True) for name in self.tables)
+                + tuple((name, False) for name in self.unreadable_tables),
+                None,
+            )
         if "pg_namespace" in text:
             return ((1 if self.scratch_exists else 0,),), None
         if "has_schema_privilege" in text:
@@ -159,8 +170,6 @@ class FakeConnection:
             return tuple((oid, name) for oid, name in TYPES.items()), None
         if "information_schema.columns" in text:
             return tuple(self.schema), None
-        if "information_schema.tables" in text:
-            return tuple((name,) for name in self.tables), None
         if "FILTER (WHERE" in text:
             return (self.census,), None
         if "count(*)" in text:
@@ -355,13 +364,26 @@ def test_the_tables_the_database_holds_are_the_ones_the_catalogue_names() -> Non
     found = _backend(connection).existing_tables(
         ("results", "public.drivers", "seasons", "results")
     )
-    assert found == ("results", "public.drivers")
+    assert found.present == ("results", "public.drivers")
+    assert found.unreadable == ()
     assert not any("count(*)" in line for line in connection.log), "a missing table was counted"
+
+
+def test_a_table_this_role_may_not_read_is_not_a_table_that_is_not_there() -> None:
+    """Two states one word used to cover: a grant nobody made, and a table nobody loaded.
+    The first is repaired with GRANT and the second in the question file, so a summary that
+    spells them the same way sends the operator to fix the wrong one."""
+    connection = FakeConnection(tables=("public.results",), unreadable_tables=("public.sealed",))
+    found = _backend(connection).existing_tables(("results", "sealed", "seasons"))
+
+    assert found.present == ("results",)
+    assert found.unreadable == ("sealed",)
+    assert len(connection.log) == 1, "what exists and what may be read were two round trips"
 
 
 def test_asking_which_of_no_tables_exist_asks_the_server_nothing() -> None:
     connection = FakeConnection()
-    assert _backend(connection).existing_tables(()) == ()
+    assert _backend(connection).existing_tables(()) == TableLookup((), ())
     assert connection.log == []
 
 

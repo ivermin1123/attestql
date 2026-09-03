@@ -52,6 +52,7 @@ ELEMENTS = "SELECT element FROM atom"
 ELEMENTS_ONE_ROW = "SELECT element FROM atom LIMIT 1"
 TWO_ROWS = "SELECT name FROM players LIMIT 2"
 SEASONS = "SELECT year FROM seasons"
+SEALED = "SELECT secret FROM sealed"
 DRIVERS = "SELECT nationality FROM drivers"
 BARE_SELECT = "SELECT"
 
@@ -564,6 +565,39 @@ def test_a_gold_naming_a_table_this_database_does_not_hold_is_that_question_s_er
     assert backend.row_count_calls[0] == ("atom",), "the run measured a table that is not there"
     copied = [(("atom",), "1", DEFAULT_SHUFFLE_ROW_LIMIT)]
     assert backend.prepared == copied, "a table that is not there was copied"
+
+
+def test_a_gold_naming_a_table_this_login_may_not_read_is_not_one_that_is_not_there(
+    tmp_path: Path,
+) -> None:
+    """A table nobody loaded is repaired in the question file and one nobody granted with a
+    GRANT, so the summary names them under two words and the operator knows which to fix."""
+    write(
+        tmp_path / "questions.json",
+        [
+            question(1, "formula_1", SEASONS),
+            question(2, "formula_1", SEALED),
+            question(207, "toxicology", ELEMENTS),
+        ],
+    )
+    backend = FakeBackend(
+        {ELEMENTS: fake_result(ELEMENT, (("c",), ("o",)))},
+        row_counts={"atom": 2},
+        missing_tables=("seasons",),
+        unreadable_tables=("sealed",),
+    )
+    lines = Lines()
+    summary = run_audit(options(tmp_path), backend, lines)
+    written = summary_of(tmp_path)
+
+    assert 'relation "seasons" does not exist' in lines.written[0]
+    assert "permission denied for table sealed" in lines.written[1]
+    assert lines.written[2] == "q207  toxicology  R-SET  GOLD-ONLY  smells=none"
+    assert summary.exit_status == 0
+    assert written["fixture"]["missing_tables"] == ["seasons"]
+    assert written["fixture"]["unreadable_tables"] == ["sealed"]
+    assert written["fixture"]["measured_tables"] == ["atom"]
+    assert backend.row_count_calls[0] == ("atom",), "the run measured a table it cannot read"
 
 
 # the exit statuses

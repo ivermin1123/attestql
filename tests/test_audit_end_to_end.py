@@ -1,16 +1,18 @@
 """``attestql audit`` end to end on the sandbox: the command, the evidence, the status.
 
 ``tests/test_audit_sandbox_smoke.py`` observes the audit core against the same fixture, one
-comparison at a time. This file runs the command itself: one ``run_audit`` over the five
+comparison at a time. This file runs the command itself: one ``run_audit`` over the six
 questions and the three corrections that live beside the fixture, and then reads what a
 maintainer would read afterwards -- the lines it printed, the directories it wrote, the
 counterexample in each of them, ``summary.json``, and the exit status.
 
-Three of the five questions reproduce the shape of a shipped-gold defect and are NOT_EQUAL
-against their correction; the other two are this repository's own and exist so that two of
-the gold-only smells have something to fire on. Nothing here says a gold is wrong: the
+Three of the six questions reproduce the shape of a shipped-gold defect and are NOT_EQUAL
+against their correction; two more are this repository's own and exist so that two of the
+gold-only smells have something to fire on. Nothing here says a gold is wrong: the
 counterexamples state what differs, and the fixture is built so that a reader can see which
-answer the question asked for.
+answer the question asked for. The sixth reads the one table the sandbox's auditor is not
+granted, and is here because a run has to survive it and the summary has to say which of the
+two ways to be unmeasurable it was.
 
 The shuffled copies the fourth smell needs are made in ``attestql_scratch``, the one schema
 the sandbox's read-only ``auditor`` owns, and the last test observes that the run left no
@@ -55,8 +57,8 @@ describes the data every record here is about."""
 DEFECTS = ("1029", "879", "207")
 """The three questions whose shipped gold and correction disagree on this data."""
 
-SUMMARY_LINE = "5 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 4 smells fired"
-EXPERIMENTAL_SUMMARY_LINE = "5 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 5 smells fired"
+SUMMARY_LINE = "6 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 4 smells fired"
+EXPERIMENTAL_SUMMARY_LINE = "6 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 5 smells fired"
 """The same run with the experimental smell asked for: q1029 fires it and nothing else moves."""
 
 COPIED_TABLES = [
@@ -70,8 +72,9 @@ COPIED_TABLES = [
     "public.team",
     "public.team_attributes",
 ]
-"""Every table the five golds name, which is what the shuffle copies. ``public.molecule`` is
-in the fixture and in no gold, so it is not copied and not read."""
+"""Every table the golds name that the auditor may read, which is what the shuffle copies.
+``public.molecule`` is in the fixture and in no gold, and ``public.sealed`` is in a gold and
+not readable, so neither is copied and neither is read."""
 
 
 class Lines:
@@ -158,12 +161,12 @@ def result_values(document: dict[str, Any]) -> list[object]:
 
 @pytest.fixture(scope="module")
 def audited(sandbox_backend: PostgresBackend, tmp_path_factory: pytest.TempPathFactory) -> Run:
-    """One audit of the five questions with the three corrections, run once for this file."""
+    """One audit of the six questions with the three corrections, run once for this file."""
     return audit(sandbox_backend, tmp_path_factory.mktemp("audit"), predictions=PREDICTIONS_FILE)
 
 
 def test_every_question_prints_the_line_adr_0013_writes_down(audited: Run) -> None:
-    """The five lines, whole: the id, the database, the replay rule, the verdict, the smells
+    """The six lines, whole: the id, the database, the replay rule, the verdict, the smells
     and the directory. A defect that stopped reproducing changes one of these."""
     out = audited.out.as_posix()
 
@@ -181,7 +184,29 @@ def test_every_question_prints_the_line_adr_0013_writes_down(audited: Run) -> No
         "q900002 synthetic   R-ORD  GOLD-ONLY  "
         f"smells=arbitrary-cut,not-a-function-of-the-data  {out}/q900002/"
     )
+    assert audited.line_of("900003") == (
+        "q900003 synthetic          ERROR      smells=none  "
+        "row_counts: permission denied for table sealed"
+    )
     assert audited.lines[-1] == SUMMARY_LINE
+
+
+def test_a_table_the_auditor_may_not_read_is_not_a_table_that_is_not_there(audited: Run) -> None:
+    """``public.sealed`` is in the fixture and revoked from the auditor, so the summary names
+    it as unreadable and not as missing: the first is repaired with a GRANT and the second in
+    the question file, and a run that spelled them the same way sent the reader to the wrong
+    one. The question that reads it is its own line with the server's own message, and the
+    five the auditor may read are audited as they were before it existed."""
+    written = audited.summary_document()["fixture"]
+    line = audited.line_of("900003")
+
+    assert written["unreadable_tables"] == ["sealed"]
+    assert written["missing_tables"] == []
+    assert "sealed" not in written["measured_tables"]
+    assert "ERROR" in line
+    assert "permission denied for table sealed" in line
+    assert audited.summary.verdicts["ERROR"] == 1
+    assert not audited.directory("900003").exists(), "a question that errored wrote a directory"
 
 
 def test_a_disagreement_is_exit_status_one(audited: Run) -> None:

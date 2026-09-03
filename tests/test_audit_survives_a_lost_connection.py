@@ -139,6 +139,7 @@ def test_a_connection_that_dies_between_two_questions_errors_the_rest_and_writes
     assert document["verdicts"] == {"GOLD-ONLY": 1, "ERROR": 2}
     assert document["exit_status"] == 0
     assert document["fixture"]["missing_tables"] == []
+    assert document["fixture"]["unreadable_tables"] == []
     assert document["shuffle"]["copied"] == [], "a copy this run cannot drop was committed"
     assert "the scratch copies were left behind" in capsys.readouterr().err
     assert f"'{DEFAULT_SCRATCH_SCHEMA}'" in SCRATCH_TABLES_SQL

@@ -84,8 +84,9 @@ FIXTURE_ROWS = {
     "public.spend": 15,
     "public.scores": 6,
 }
-"""What fixture.sql inserts, table by table. A record's fixture digest states these counts, so
-stating them again here is how a fixture edited without this test being read is caught."""
+"""What fixture.sql inserts, table by table, but for ``public.sealed``: the auditor is not
+granted that one and cannot count it. A record's fixture digest states these counts, so stating
+them again here is how a fixture edited without this test being read is caught."""
 
 TIMEOUT_SECONDS = 30
 
@@ -244,6 +245,19 @@ def test_the_fixture_holds_the_rows_the_three_defects_need(
     assert dict(digest.row_counts) == FIXTURE_ROWS
     assert digest.schema_digest.startswith("sha256:")
     assert digest.content_digests == {}
+
+
+def test_the_catalogue_tells_a_table_this_login_may_not_read_from_one_that_is_not_there(
+    sandbox_backend: PostgresBackend,
+) -> None:
+    """``information_schema.tables`` cannot answer this, which is why the lookup does not ask
+    it: it lists only what the role holds a privilege on, so ``sealed`` would be absent from
+    it and indistinguishable from a name nobody loaded. Asked of the real server because what
+    is being relied on is the server's own reading of the grants."""
+    lookup = sandbox_backend.existing_tables(("scores", "sealed", "public.seasons", "scores"))
+
+    assert lookup.present == ("scores",)
+    assert lookup.unreadable == ("sealed",)
 
 
 def test_the_auditor_reads_the_fixture_and_writes_only_the_scratch_schema(
