@@ -1,0 +1,113 @@
+{
+  "sqlite": {
+    "zip_file": "minidev/MINIDEV/mini_dev_sqlite.json",
+    "hf_file": "data/mini_dev_sqlite-00000-of-00001.json",
+    "hf_sha256": "88ceb0710163cae46a256ecea8f0a8c98286599530b60587fda5c3cfe57d45d2",
+    "zip": {
+      "entries": 500,
+      "distinct_ids": 498,
+      "duplicated_ids": [
+        137,
+        138
+      ],
+      "duplicates_identical": true
+    },
+    "hf": {
+      "entries": 500,
+      "distinct_ids": 500,
+      "duplicated_ids": []
+    },
+    "ids_only_in_hf": [
+      119,
+      120
+    ],
+    "ids_only_in_zip": [],
+    "sql_differs": [
+      {
+        "question_id": 879,
+        "zip": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY T2.fastestLapSpeed DESC LIMIT 1",
+        "hf": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY CAST(T2.fastestLapSpeed AS REAL) DESC LIMIT 1"
+      },
+      {
+        "question_id": 1322,
+        "zip": "SELECT T1.event_name FROM event AS T1  INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id  HAVING COUNT(T2.link_to_event) > 10 EXCEPT SELECT T1.event_name  FROM event AS T1  WHERE T1.type = 'Meeting'",
+        "hf": "SELECT COUNT(DISTINCT T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10"
+      }
+    ],
+    "other_fields_differ": []
+  },
+  "mysql": {
+    "zip_file": "minidev/MINIDEV/mini_dev_mysql.json",
+    "hf_file": "data/mini_dev_mysql-00000-of-00001.json",
+    "hf_sha256": "858aa16b97a05c8d6d8d448c081870c74958118ed22e2925a2feb0ee35c40920",
+    "zip": {
+      "entries": 500,
+      "distinct_ids": 498,
+      "duplicated_ids": [
+        137,
+        138
+      ],
+      "duplicates_identical": true
+    },
+    "hf": {
+      "entries": 500,
+      "distinct_ids": 500,
+      "duplicated_ids": []
+    },
+    "ids_only_in_hf": [
+      119,
+      120
+    ],
+    "ids_only_in_zip": [],
+    "sql_differs": [
+      {
+        "question_id": 879,
+        "zip": "SELECT\n  `T1`.`nationality`\nFROM `drivers` AS `T1`\nINNER JOIN `results` AS `T2`\n  ON `T2`.`driverId` = `T1`.`driverId`\nORDER BY\n  `T2`.`fastestLapSpeed` DESC\nLIMIT 1",
+        "hf": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY CAST(T2.fastestLapSpeed AS DECIMAL(10,3)) DESC LIMIT 1"
+      },
+      {
+        "question_id": 1322,
+        "zip": "SELECT\n  `T1`.`event_name`\nFROM `event` AS `T1`\nINNER JOIN `attendance` AS `T2`\n  ON `T1`.`event_id` = `T2`.`link_to_event`\nGROUP BY\n  `T1`.`event_id`\nHAVING\n  COUNT(`T2`.`link_to_event`) > 10\nEXCEPT\nSELECT\n  `T1`.`event_name`\nFROM `event` AS `T1`\nWHERE\n  `T1`.`type` = 'Meeting'",
+        "hf": "SELECT COUNT(DISTINCT T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10"
+      }
+    ],
+    "other_fields_differ": []
+  },
+  "postgresql": {
+    "zip_file": "minidev/MINIDEV/mini_dev_postgresql.json",
+    "hf_file": "data/mini_dev_pg-00000-of-00001.json",
+    "hf_sha256": "7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+    "zip": {
+      "entries": 500,
+      "distinct_ids": 498,
+      "duplicated_ids": [
+        137,
+        138
+      ],
+      "duplicates_identical": true
+    },
+    "hf": {
+      "entries": 500,
+      "distinct_ids": 500,
+      "duplicated_ids": []
+    },
+    "ids_only_in_hf": [
+      119,
+      120
+    ],
+    "ids_only_in_zip": [],
+    "sql_differs": [
+      {
+        "question_id": 879,
+        "zip": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY T2.fastestLapSpeed DESC NULLS LAST LIMIT 1",
+        "hf": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY CAST(T2.fastestLapSpeed AS DOUBLE PRECISION) DESC NULLS LAST LIMIT 1"
+      },
+      {
+        "question_id": 1322,
+        "zip": "SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10 EXCEPT SELECT T1.event_name FROM event AS T1 WHERE T1.type = 'Meeting'",
+        "hf": "SELECT COUNT(DISTINCT T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10"
+      }
+    ],
+    "other_fields_differ": []
+  }
+}

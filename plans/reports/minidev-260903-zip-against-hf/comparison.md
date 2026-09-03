@@ -25,5 +25,17 @@ The two statements that differ:
 | q1322 (`student_club`) | `SELECT T1.event_name ... GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10 EXCEPT SELECT T1.event_name FROM event AS T1 WHERE T1.type = 'Meeting'`: the events attended by more than ten that are not meetings, by name | `SELECT COUNT(DISTINCT T1.event_id) ... WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10`: one row per qualifying meeting, each counting one event |
 
 The question of q1322 asks "among the events attended by more than 10 members, how many of them
-are meetings"; neither statement returns that count as one number, which is stated here as an
-observation, not a finding.
+are meetings". On the PostgreSQL dump (checked 2026-09-04) the Hugging Face statement returns four
+rows, each holding 1, one per meeting with more than ten attendees; the zip's statement returns nine
+event names, the events over ten attendees that are not meetings; the count the question asks for,
+meetings with more than ten attendees counted once, is 4. Under R-SET the two statements are
+NOT_EQUAL with no smell fired; neither returns the question's number as one value.
+
+## The SQLite and MySQL files, checked 2026-09-04
+
+`diff-dialects.json` repeats the comparison for all three dialect files. The zip's
+`mini_dev_sqlite.json` and `mini_dev_mysql.json` carry the same shape as the PostgreSQL file: 500
+entries, 498 ids, 137 and 138 duplicated as byte-identical entries, 119 and 120 absent; the Hugging
+Face `data/mini_dev_sqlite-00000-of-00001.json` (sha256 `88ceb071…`) and
+`data/mini_dev_mysql-00000-of-00001.json` (sha256 `858aa16b…`) hold 500 distinct ids each; in every
+dialect exactly q879 and q1322 differ in SQL and no other field differs on any shared id.
