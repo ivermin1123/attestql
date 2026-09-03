@@ -1,8 +1,10 @@
 """The fixture digest: measured on the server, cached for the run, never assumed.
 
-The cache is a speed decision and never an evidence decision, so the two tests that
-matter are that a hit returns what was measured and that the schema digest is taken from
-the server every time. A cache that cannot be read is replaced rather than obeyed.
+The cache is a speed decision and never an evidence decision, so the tests that matter
+are that a hit returns what was measured, that the schema digest and the content signal
+are taken from the server every time, and that data which moved under an unchanged schema
+is measured again rather than served. A cache that cannot be read is replaced rather than
+obeyed.
 """
 
 from __future__ import annotations
@@ -66,6 +68,7 @@ def test_the_measurement_is_written_to_the_cache_and_read_back_from_it(tmp_path:
     assert second == first
     assert backend.row_count_calls == [("drivers", "results")], "the counts were counted twice"
     assert len(backend.schema_digest_calls) == 2, "the schema is read from the server every time"
+    assert len(backend.content_signal_calls) == 2, "the signal is read from the server every time"
 
 
 def test_a_cache_written_against_another_schema_is_not_a_hit(tmp_path: Path) -> None:
@@ -127,3 +130,23 @@ def test_the_source_file_digest_is_never_served_from_the_cache(tmp_path: Path) -
     second = fixture_digest(_backend(), TABLES, directory=tmp_path, source_file=dump)
     assert second.source_file_sha256 != first.source_file_sha256
     assert second.row_counts == first.row_counts
+
+
+def test_data_that_changed_under_the_same_schema_is_measured_again(tmp_path: Path) -> None:
+    """A schema digest is a statement about columns, so it cannot notice a reload."""
+    first = fixture_digest(_backend(), TABLES, directory=tmp_path, with_content_digests=True)
+    reloaded = FakeBackend(
+        {},
+        row_counts={"drivers": 30, "results": 70},
+        content_digests={"drivers": "md5:other-drivers", "results": "md5:other-results"},
+    )
+    second = fixture_digest(reloaded, TABLES, directory=tmp_path, with_content_digests=True)
+
+    assert second.schema_digest == first.schema_digest
+    assert dict(second.row_counts) == {"drivers": 30, "results": 70}
+    assert dict(second.content_digests) == {
+        "drivers": "md5:other-drivers",
+        "results": "md5:other-results",
+    }
+    entries = json.loads((tmp_path / CACHE_FILE).read_text(encoding="utf-8"))["entries"]
+    assert len(entries) == 1, "the stale entry was kept beside the one that replaced it"

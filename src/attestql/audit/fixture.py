@@ -13,6 +13,17 @@ never read against another, and a schema that changed is a new key rather than a
 hit. The schema digest is therefore always taken from the server, and only the counts and
 the content digests are ever served from the file.
 
+The file outlives the run that wrote it, and a schema digest is a statement about columns
+and types and not about rows, so the key alone would serve yesterday's counts for data
+reloaded under the same schema today. Every entry therefore also carries the content
+signal its measurement was taken under, and an entry whose signal is not the one this run
+reads from the server is a miss. What the signal is: the counters the server already keeps
+per table, taken fresh on every run at the cost of one question. What it is not: evidence,
+or a proof that the data is the same. Counters can be reset and a database of the same
+name can be made again, and then a signal that did not move is a signal that missed a
+reload. The evidence is the digests, which are measured on the server whenever the signal
+does not vouch for what the file holds.
+
 A cache file this module cannot read is replaced rather than obeyed. It is not evidence:
 everything in it can be recomputed from the server, which is the only thing here that is.
 """
@@ -31,7 +42,7 @@ from attestql.evidence.types import FixtureDigest
 CACHE_FILE = "fixture.json"
 """The cache, under the output directory the audit writes to."""
 
-CACHE_FORMAT = "attestql/audit/fixture-cache/1"
+CACHE_FORMAT = "attestql/audit/fixture-cache/2"
 """What the layout below is. A file that does not say this is not read."""
 
 _BLOCK = 1 << 22
@@ -59,12 +70,13 @@ def fixture_digest(
     """The digest of the data those tables hold, from the cache when it holds it."""
     wanted = tuple(sorted(set(tables)))
     schema_digest = backend.schema_digest(wanted)
+    signal = dict(backend.content_signal(wanted))
     source_digest = file_digest(source_file) if source_file is not None else ""
     key = _key(
         backend.identity(), schema_digest, with_content_digests=with_content_digests, tables=wanted
     )
     cached = _read_cache(directory)
-    hit = _entry(cached.get(key), source_digest)
+    hit = _entry(cached.get(key), signal, source_digest)
     if hit is not None:
         return hit
     digest = FixtureDigest(
@@ -77,6 +89,7 @@ def fixture_digest(
         "schema_digest": digest.schema_digest,
         "row_counts": dict(digest.row_counts),
         "content_digests": dict(digest.content_digests),
+        "content_signal": signal,
     }
     _write_cache(directory, cached)
     return digest
@@ -90,8 +103,12 @@ def _key(
     return "\n".join((identity, schema_digest, depth, ",".join(tables)))
 
 
-def _entry(payload: object, source_digest: str) -> FixtureDigest | None:
+def _entry(payload: object, signal: Mapping[str, str], source_digest: str) -> FixtureDigest | None:
     """A cached measurement as a digest, or ``None`` when the file does not hold one.
+
+    ``signal`` is what the server says about those tables now. An entry measured under
+    another one describes data this run does not have, so it is a miss and not a hit whose
+    counts happen to be old.
 
     The source file's digest is not read from the cache. It describes a file this run was
     given rather than the server the rest of the entry was measured on, so it is taken
@@ -103,6 +120,9 @@ def _entry(payload: object, source_digest: str) -> FixtureDigest | None:
     # format writes, and every value is converted below where a wrong one raises.
     entry = cast("dict[str, Any]", payload)
     try:
+        measured = {str(key): str(value) for key, value in entry["content_signal"].items()}
+        if measured != dict(signal):
+            return None
         return FixtureDigest(
             schema_digest=str(entry["schema_digest"]),
             row_counts={str(key): int(value) for key, value in entry["row_counts"].items()},

@@ -136,6 +136,7 @@ class FakeConnection:
         tables: Sequence[str] = (),
         unreadable_tables: Sequence[str] = (),
         counts: Mapping[str, int] | None = None,
+        signals: Mapping[str, Sequence[int]] | None = None,
         census: tuple[int, ...] = (0, 0, 0, 0),
         scratch_exists: bool = True,
         scratch_writable: bool = True,
@@ -166,6 +167,8 @@ class FakeConnection:
         self.tables = tuple(tables)
         self.unreadable_tables = tuple(unreadable_tables)
         self.counts = dict(counts or {})
+        self.signals = {name: tuple(values) for name, values in (signals or {}).items()}
+        """Per qualified table, the file node and the four tuple counters the catalogue holds."""
         self.log: list[str] = []
         self.adapters = FakeAdapters()
 
@@ -188,6 +191,10 @@ class FakeConnection:
             return ((None,),), None
         if self.refuses_drops and "DROP TABLE" in text:
             raise DRIVER_ERROR("permission denied for schema attestql_scratch")
+        if "pg_stat_user_tables" in text:
+            # Answered before the branch below because both questions join pg_class: this is
+            # the one that reads the counters and that one is the one that reads the grants.
+            return tuple((name, *values) for name, values in self.signals.items()), None
         if "pg_class" in text:
             # The catalogue lists what is there whatever the grants are, and says of each
             # whether this role may read it. Asked before the scratch schema's question
@@ -413,6 +420,7 @@ def test_every_call_over_a_connection_that_is_gone_refuses_and_names_where_it_wa
         ("schema_digest", lambda: backend.schema_digest(("results",))),
         ("row_counts", lambda: backend.row_counts(("results",))),
         ("content_digests", lambda: backend.content_digests(("results",))),
+        ("content_signal", lambda: backend.content_signal(("results",))),
         ("column_types", lambda: backend.column_types(("results",))),
         ("session_settings", lambda: backend.session_settings()),
         (
@@ -490,6 +498,26 @@ def test_the_counts_and_the_content_digests_are_keyed_by_the_qualified_table_nam
     assert dict(backend.content_digests(("public.results",))) == {
         "public.results": "md5:d41d8cd98f00b204e9800998ecf8427e"
     }
+
+
+def test_the_content_signal_is_one_question_and_moves_when_the_rows_do() -> None:
+    """What tells a cached measurement of yesterday's data from one of today's. One round
+    trip, and a name the catalogue answers nothing for gets no invented counter."""
+    connection = FakeConnection(signals={"public.results": (16_384, 23_179, 0, 0, 23_179)})
+    signal = _backend(connection).content_signal(("results", "seasons"))
+
+    assert signal == {"public.results": "16384/23179/0/0/23179", "public.seasons": ""}
+    assert len(connection.log) == 1, "the signal cost more than the one question it is worth"
+
+    updated = FakeConnection(signals={"public.results": (16_384, 23_179, 12, 0, 23_179)})
+    moved = _backend(updated).content_signal(("results",))
+    assert moved["public.results"] != signal["public.results"]
+
+
+def test_asking_for_the_signal_of_no_tables_asks_the_server_nothing() -> None:
+    connection = FakeConnection()
+    assert _backend(connection).content_signal(()) == {}
+    assert connection.log == []
 
 
 def test_the_backend_registers_the_two_result_types_it_loads_as_the_server_renders_them() -> None:

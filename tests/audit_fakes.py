@@ -141,6 +141,7 @@ class FakeBackend:
         self.schema_digest_calls: list[tuple[str, ...]] = []
         self.row_count_calls: list[tuple[str, ...]] = []
         self.content_digest_calls: list[tuple[str, ...]] = []
+        self.content_signal_calls: list[tuple[str, ...]] = []
         self.column_type_calls: list[tuple[str, ...]] = []
         self.census_calls: list[tuple[str, str, str]] = []
         self.executed_shuffled: list[tuple[str, int]] = []
@@ -205,6 +206,21 @@ class FakeBackend:
         self.content_digest_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("content_digests")
         return {name: self._content_digests.get(name, f"md5:{name}") for name in tables}
+
+    def content_signal(self, tables: Sequence[str]) -> Mapping[str, str]:
+        """What a server's own counters would say about these rows, derived from them here.
+
+        A fake whose signal were scripted apart from its rows could be told to hold new rows
+        under the counters of the old ones, which is a database nobody has: on a server the
+        counters move because the rows did. So the signal is read off what this backend was
+        built with, and a test states a reload by building one that holds other rows.
+        """
+        self.content_signal_calls.append(tuple(tables))
+        self._refuse_if_the_server_went_away("content_signal")
+        return {
+            name: f"{self._row_counts.get(name, 0)}/{self._content_digests.get(name, '')}"
+            for name in tables
+        }
 
     def column_types(self, tables: Sequence[str]) -> Mapping[str, Mapping[str, str]]:
         self.column_type_calls.append(tuple(tables))

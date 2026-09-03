@@ -17,7 +17,9 @@ engine cannot quietly drop it.
 The digests are three calls rather than one so that the expensive one is optional.
 ``schema_digest`` and ``row_counts`` are always taken; ``content_digests`` reads every
 row of every table and is taken only when the caller asks for it (ADR-0013 point 6).
-``existing_tables`` is asked before any of them, because a name the data does not hold is
+``content_signal`` is none of the three: it reads what the engine already counts about
+its own tables, so that a measurement cached by an earlier run can be told apart from one
+the data has moved under since. ``existing_tables`` is asked before any of them, because a name the data does not hold is
 one question's error and never the end of a run. It answers in two parts, because there are
 two ways a name can fail to be measurable and they are repaired in different places: a table
 nobody loaded is a defect in the question file, and a table the audit's login was never
@@ -159,6 +161,16 @@ class Backend(Protocol):
 
     def content_digests(self, tables: Sequence[str]) -> Mapping[str, str]:
         """A digest of the sorted rows of each table. The expensive one, asked for by name."""
+        raise NotImplementedError
+
+    def content_signal(self, tables: Sequence[str]) -> Mapping[str, str]:
+        """One cheap string per qualified table that moves when the table's rows move.
+
+        Read from whatever the engine already counts about its own tables, so that asking
+        it costs one question for a whole run rather than a pass over the data. It is not
+        a digest and never appears in a record: it exists so that a cached measurement of
+        data that has since changed can be recognised as stale and taken again.
+        """
         raise NotImplementedError
 
     def column_types(self, tables: Sequence[str]) -> Mapping[str, Mapping[str, str]]:

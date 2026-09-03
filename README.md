@@ -99,7 +99,10 @@ holds the counts, the fixture digest, whether the shuffle ran, the session the r
 validator, the `postgast` release and the libpg_query grammar version). A rerun into the same
 `--out` clears the previous run's `q<id>/` directories and `summary.json` before it writes anything,
 so what is in there is one run's evidence and not two; `fixture.json`, the fixture cache keyed by
-the server and the schema digest, stays, and so does anything else you put there.
+the server and the schema digest, stays, and so does anything else you put there. A cached
+measurement is used only when the server's own per-table counters still say what they said when it
+was taken, so data reloaded or edited under an unchanged schema is measured again rather than read
+back from the file.
 
 ## What it does
 

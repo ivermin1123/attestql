@@ -693,6 +693,36 @@ class PostgresBackend:
             digests[name] = f"md5:{self._one(statement, step='content_digests')[0]}"
         return digests
 
+    def content_signal(self, tables: Sequence[str]) -> Mapping[str, str]:
+        """The counters the server already keeps for those tables, in one question.
+
+        ``relfilenode`` changes when the relation was rewritten, which is what a table
+        dropped and loaded again looks like, and the four tuple counters move on every
+        insert, update and delete the server saw. Together they are five numbers a run can
+        ask for in a single round trip against a catalogue, where reading the rows costs a
+        pass over every table.
+
+        A name the catalogue answers nothing for gets the empty string rather than an
+        invented number: a view has no file and no tuple counters, and a table that is not
+        there is about to be refused by whatever asks for its rows.
+        """
+        wanted = _qualified(tables)
+        if not wanted:
+            return {}
+        rows = self._all(
+            "SELECT n.nspname || '.' || c.relname, c.relfilenode, "
+            "coalesce(s.n_tup_ins, 0), coalesce(s.n_tup_upd, 0), "
+            "coalesce(s.n_tup_del, 0), coalesce(s.n_live_tup, 0) "
+            "FROM pg_catalog.pg_class AS c "
+            "JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace "
+            "LEFT JOIN pg_catalog.pg_stat_user_tables AS s ON s.relid = c.oid "
+            "WHERE n.nspname || '.' || c.relname = ANY(%s)",
+            [list(wanted)],
+            step="content_signal",
+        )
+        counted = {str(row[0]): "/".join(str(value) for value in row[1:]) for row in rows}
+        return {name: counted.get(name, "") for name in wanted}
+
     def _require_the_envelope(self, cursor: Cursor, timeout_ms: int) -> None:
         """Refuse the execution unless the session holds what was just set on it."""
         try:

@@ -247,6 +247,22 @@ def test_the_fixture_holds_the_rows_the_three_defects_need(
     assert digest.content_digests == {}
 
 
+def test_the_content_signal_names_every_table_with_the_counters_the_server_keeps(
+    sandbox_backend: PostgresBackend,
+) -> None:
+    """The question the cache asks before it trusts a file an earlier run wrote. Asked of the
+    real server because the counters live in catalogues a scripted connection can only claim
+    to hold, and a table this login may not read still has to answer with something."""
+    signal = sandbox_backend.content_signal((*FIXTURE_ROWS, "sealed", "public.seasons"))
+
+    assert set(signal) == set(FIXTURE_ROWS) | {"public.sealed", "public.seasons"}
+    for name in (*FIXTURE_ROWS, "public.sealed"):
+        counters = signal[name].split("/")
+        assert len(counters) == 5, signal[name]
+        assert all(value.isdigit() for value in counters), signal[name]
+    assert signal["public.seasons"] == "", "a table nobody loaded was given a counter"
+
+
 def test_the_catalogue_tells_a_table_this_login_may_not_read_from_one_that_is_not_there(
     sandbox_backend: PostgresBackend,
 ) -> None:
