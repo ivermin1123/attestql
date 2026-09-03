@@ -30,6 +30,7 @@ import pytest
 from attestql.audit.backend import Backend, BackendRefused, ReadBackDrift, TableLookup
 from attestql.audit.postgres import (
     DRIVER_ERROR,
+    NO_PARALLEL_AGGREGATION,
     NumericFromFloatText,
     PostgresBackend,
     TextFromInterval,
@@ -53,8 +54,13 @@ HEALTHY_SETTINGS: Mapping[str, str] = {
     "IntervalStyle": "postgres",
     "extra_float_digits": "1",
     "search_path": '"$user", public',
+    "server_version": "16.4 (Debian 16.4-1.pgdg120+1)",
     "server_version_num": "160004",
+    "max_parallel_workers_per_gather": "2",
 }
+"""What the session holds outside any transaction, which is what a run records. The gather
+is on here, as it is on a server nobody configured, so that the value each execution sets
+inside its own transaction is visibly not the value the session was found with."""
 
 
 @dataclass(frozen=True)
@@ -104,7 +110,14 @@ class FakeAdapters:
 
 
 class FakeConnection:
-    """A connection that answers the questions this backend asks and nothing else."""
+    """A connection that answers the questions this backend asks and nothing else.
+
+    ``SET LOCAL`` is answered the way a server answers one: what a transaction set is what
+    the session reports until the rollback takes it off again, so a read-back reads back
+    something the executor really did. ``keeps_its_gather`` is the other case, a session
+    that reports its own value whatever was set on it, which is the drift the read-back is
+    there to catch.
+    """
 
     def __init__(
         self,
@@ -120,8 +133,14 @@ class FakeConnection:
         census: tuple[int, ...] = (0, 0, 0, 0),
         scratch_exists: bool = True,
         scratch_writable: bool = True,
+        keeps_its_gather: bool = False,
     ) -> None:
         self.settings = dict(settings)
+        self.local: dict[str, str] = {}
+        """What ``SET LOCAL`` put on the open transaction, which the rollback takes off."""
+        self.keeps_its_gather = keeps_its_gather
+        """A session that reports its own value however the transaction set it, which is the
+        drift the read-back is there to catch."""
         self.scratch_exists = scratch_exists
         self.scratch_writable = scratch_writable
         self.census = census
@@ -140,6 +159,11 @@ class FakeConnection:
 
     def answer(self, text: str) -> tuple[Sequence[tuple[object, ...]], Sequence[FakeColumn] | None]:
         if text in {"BEGIN READ ONLY", "BEGIN", "SET TRANSACTION READ WRITE", "COMMIT", "ROLLBACK"}:
+            self.local.clear()
+            return (), None
+        if text.startswith("SET LOCAL max_parallel_workers_per_gather"):
+            if not self.keeps_its_gather:
+                self.local["max_parallel_workers_per_gather"] = text.rsplit("=", 1)[1].strip()
             return (), None
         if "pg_advisory_xact_lock" in text:
             return ((None,),), None
@@ -159,7 +183,8 @@ class FakeConnection:
         if "set_config" in text:
             return ((self.settings.get("statement_timeout", ""),),), None
         if "pg_settings" in text:
-            return tuple((name, value) for name, value in self.settings.items()), None
+            held = {**self.settings, **self.local}
+            return tuple((name, value) for name, value in held.items()), None
         if "version()" in text:
             return ((VERSION, "local", 0, "bird"),), None
         if "current_user" in text:
@@ -262,6 +287,35 @@ def test_a_timeout_the_session_did_not_hold_stops_the_execution() -> None:
     assert connection.log[-1] == "ROLLBACK"
 
 
+def test_every_execution_adds_a_float_sum_in_one_worker() -> None:
+    """Partial sums a gather collected are added in whatever order they came back, so the
+    same statement over the same rows can differ in its last digits between two executions.
+    Every way in turns the gather off inside its own transaction, after the envelope is set
+    and before the read-back that has to see it, so what a reader is shown differing is the
+    statement and not the plan the server happened to choose."""
+    connection = FakeConnection(counts={"drivers": 100})
+    backend = _backend(connection)
+    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+
+    for run in (backend.execute, backend.execute_shuffled, backend.execute_plan_variant):
+        connection.log.clear()
+        run(STATEMENT, statement_timeout_seconds=30)
+        read_back = next(i for i, line in enumerate(connection.log) if "pg_settings" in line)
+        turned_off = connection.log.index(NO_PARALLEL_AGGREGATION)
+        assert connection.log.index("BEGIN READ ONLY") < turned_off < read_back
+        assert read_back < connection.log.index(STATEMENT)
+
+
+def test_a_session_that_kept_its_gather_stops_the_execution() -> None:
+    """The same refusal the timeout gets: a session that does not hold what was set on it
+    is not the session a record would describe, and rows from it are not evidence."""
+    connection = FakeConnection(keeps_its_gather=True)
+    with pytest.raises(ReadBackDrift, match="max_parallel_workers_per_gather was set to 0"):
+        _backend(connection).execute(STATEMENT, statement_timeout_seconds=30)
+    assert STATEMENT not in connection.log
+    assert connection.log[-1] == "ROLLBACK"
+
+
 def test_a_session_that_reports_nothing_at_all_stops_the_execution() -> None:
     connection = FakeConnection(settings={})
     with pytest.raises(ReadBackDrift, match="reports nothing"):
@@ -276,6 +330,10 @@ def test_a_timeout_that_is_not_a_whole_second_is_refused_before_a_transaction_op
 
 
 def test_the_session_settings_name_the_five_and_record_the_rest() -> None:
+    """The recorded gather is the session's own, read before any transaction set it to 0:
+    the two are different scopes, and a summary stating 0 here would say the server runs no
+    parallel plan at all. ``server_version`` is beside the number because a reader of a
+    summary sees the build the rows came from and not only its integer."""
     settings = _backend(FakeConnection()).session_settings()
     assert settings.time_zone == "UTC"
     assert settings.date_style == "ISO, MDY"
@@ -285,8 +343,10 @@ def test_the_session_settings_name_the_five_and_record_the_rest() -> None:
     assert dict(settings.recorded) == {
         "statement_timeout": "30000",
         "search_path": '"$user", public',
+        "server_version": "16.4 (Debian 16.4-1.pgdg120+1)",
         "server_version_num": "160004",
         "transaction_read_only": "on",
+        "max_parallel_workers_per_gather": "2",
     }
 
 
@@ -305,15 +365,16 @@ def test_a_connection_that_died_in_the_envelope_is_a_refusal_naming_that_step() 
 
 
 def test_a_connection_that_died_before_the_read_back_is_a_refusal_naming_that_step() -> None:
-    """The envelope was set and the session cannot be asked what it holds."""
+    """The envelope was set and the session cannot be asked what it holds. Three statements
+    make that envelope: the read-only begin, the timeout, and the gather turned off."""
     with pytest.raises(BackendRefused) as refused:
-        _backend(DeadConnection(kill_after=2)).execute(STATEMENT, statement_timeout_seconds=30)
+        _backend(DeadConnection(kill_after=3)).execute(STATEMENT, statement_timeout_seconds=30)
     assert refused.value.step == "read_back"
 
 
 def test_a_connection_that_died_at_the_statement_is_a_refusal_naming_that_step() -> None:
     with pytest.raises(BackendRefused) as refused:
-        _backend(DeadConnection(kill_after=3)).execute(STATEMENT, statement_timeout_seconds=30)
+        _backend(DeadConnection(kill_after=4)).execute(STATEMENT, statement_timeout_seconds=30)
     assert refused.value.step == "execute"
 
 

@@ -35,6 +35,7 @@ import pytest
 from attestql.audit.cli import SMELLS_FILE, SUMMARY_FILE, AuditOptions, Summary, run_audit
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
 from attestql.audit.postgres import DEFAULT_SCRATCH_SCHEMA, PostgresBackend
+from attestql.audit.statements import VALIDATOR_VERSION
 
 pytestmark = pytest.mark.sandbox
 
@@ -225,6 +226,28 @@ def test_the_summary_states_the_shuffled_copies_the_run_made(audited: Run) -> No
     assert written["scratch_schema"] == DEFAULT_SCRATCH_SCHEMA
     assert written["copied"] == COPIED_TABLES
     assert written["skipped"] == {}
+
+
+def test_the_summary_names_the_server_and_the_grammar_that_judged_this_run(
+    audited: Run, sandbox_backend: PostgresBackend
+) -> None:
+    """What a reader needs to compare this summary with another one: the build the rows came
+    from, beside the version number it already had, and the parser that decided every
+    statement was one SELECT. The gather is read from the server twice, once before the
+    questions and once after them, because every execution sets it to 0 on its own
+    transaction and a value that survived the run would mean one of those rollbacks did
+    not."""
+    written = audited.summary_document()
+    recorded = written["session_settings_recorded"]
+    major = str(int(recorded["server_version_num"]) // 10_000)
+    afterwards = sandbox_backend.session_settings().recorded["max_parallel_workers_per_gather"]
+
+    assert recorded["server_version"].startswith(major)
+    assert recorded["max_parallel_workers_per_gather"] == afterwards
+    assert written["parser"]["validator"] == VALIDATOR_VERSION
+    assert written["parser"]["postgast"]
+    assert isinstance(written["parser"]["grammar_version"], int)
+    assert written["parser"]["grammar_version"] > 0
 
 
 def test_each_disagreement_is_a_directory_a_reader_can_open(audited: Run) -> None:

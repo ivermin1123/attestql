@@ -21,6 +21,7 @@ is what a record's ``validation_outcome`` then states, and it proves nothing els
 
 from __future__ import annotations
 
+import importlib.metadata
 from collections import deque
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
@@ -60,11 +61,19 @@ out by making it the one column of a select list and taking off what the wrapper
 The wrapper names no relation and no output column, so there is nothing else to take
 off."""
 
-_PARSE_VERSION: Final[int] = postgast.parse("SELECT 1").version
+GRAMMAR_VERSION: Final[int] = postgast.parse("SELECT 1").version
 """The protobuf tree version this build of libpg_query writes and reads.
 
-A tree assembled here rather than parsed carries it too, so the wrapper above is deparsed
-by the same grammar that parsed the expression inside it."""
+Read from a parse and never written down, because a number stated here and a grammar
+underneath it that moved would be two different claims about the same statement. A tree
+assembled rather than parsed carries it too, so the wrapper above is deparsed by the same
+grammar that parsed the expression inside it, and a wrong value would fail every deparse
+in this module rather than reach a summary quietly."""
+
+POSTGAST_VERSION: Final[str] = importlib.metadata.version("postgast")
+"""The binding's own release, beside the grammar it was built around. The two move apart:
+a binding can be reissued over the same libpg_query, and a summary that named only one of
+them would not say what read its statements."""
 
 
 class StatementRefused(ValueError):
@@ -87,7 +96,7 @@ def _expression_text(node: nodes.Node) -> str:
     writing one expression come back as one string, which is what makes an ordering key
     comparable at all.
     """
-    holder = nodes.ParseResult(version=_PARSE_VERSION)
+    holder = nodes.ParseResult(version=GRAMMAR_VERSION)
     holder.stmts.add().stmt.select_stmt.target_list.add().res_target.val.CopyFrom(node)
     written = postgast.deparse(holder)
     if not written.startswith(_PROJECTION):
@@ -445,7 +454,9 @@ def parse_statement(sql: str) -> ParsedStatement:
 
 __all__ = [
     "CHECKS_PASSED",
+    "GRAMMAR_VERSION",
     "ORDERING_KEY_PREFIX",
+    "POSTGAST_VERSION",
     "VALIDATOR_VERSION",
     "OrderingKey",
     "ParsedStatement",

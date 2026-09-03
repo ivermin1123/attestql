@@ -84,7 +84,13 @@ from attestql.audit.smells import (
     all_smells,
     smells_json,
 )
-from attestql.audit.statements import StatementRefused, parse_statement
+from attestql.audit.statements import (
+    GRAMMAR_VERSION,
+    POSTGAST_VERSION,
+    VALIDATOR_VERSION,
+    StatementRefused,
+    parse_statement,
+)
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import Json, record_json, write_json
 from attestql.evidence.replay import ComparabilityResult
@@ -921,6 +927,11 @@ def _summary_json(
         "backend_identity": identity,
         "effective_database_role": role,
         "session_settings_recorded": dict(settings_recorded),
+        "parser": {
+            "validator": VALIDATOR_VERSION,
+            "postgast": POSTGAST_VERSION,
+            "grammar_version": GRAMMAR_VERSION,
+        },
         "question_set": {
             "path": str(question_set.path),
             "digest": question_set.digest,

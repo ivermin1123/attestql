@@ -69,10 +69,14 @@ SETTINGS = SessionSettings(
     recorded={
         "statement_timeout": "30000",
         "search_path": '"$user", public',
+        "server_version": "16.4 (Debian 16.4-1.pgdg120+1)",
         "server_version_num": "160004",
         "transaction_read_only": "off",
+        "max_parallel_workers_per_gather": "2",
     },
 )
+"""The session a scripted run states it held. The gather is on, as it is on a server nobody
+configured: what each execution sets on its own transaction is not this."""
 
 
 def fake_result(

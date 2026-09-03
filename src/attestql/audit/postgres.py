@@ -2,11 +2,14 @@
 
 The one property ADR-0013 point 7 carried over from the deleted product executor lives
 here. Every statement runs inside ``BEGIN READ ONLY`` with a ``SET LOCAL
-statement_timeout``, and before the statement is sent the session is asked what it
-actually holds. If it does not hold both, the execution is refused: rows returned by a
-session that is not the session the record would describe are not evidence, and a record
-that stated the timeout it asked for rather than the one in force would be stating an
-intention as a fact.
+statement_timeout`` and with the gather turned off, and before the statement is sent the
+session is asked what it actually holds. If it does not hold all three, the execution is
+refused: rows returned by a session that is not the session the record would describe are
+not evidence, and a record that stated the timeout it asked for rather than the one in
+force would be stating an intention as a fact. The gather is the third because a float sum
+a server split across workers is added in whatever order the partial sums came back, so
+two executions of one statement over one table can disagree in a late digit; a comparison
+that showed that difference would be reporting the plan and calling it the statement.
 
 This is the only module in the project that imports the driver, which ``tests/
 test_boundary.py`` asserts by walking the AST of every source file. Everything above it
@@ -94,10 +97,18 @@ database's default collation, is a property of the database and is read separate
 RECORDED_SETTINGS: tuple[str, ...] = (
     "statement_timeout",
     "search_path",
+    "server_version",
     "server_version_num",
     "transaction_read_only",
+    "max_parallel_workers_per_gather",
 )
-"""What is read back beside the preconditions, recorded and never blocking."""
+"""What is read back beside the preconditions, recorded and never blocking.
+
+``server_version`` is here beside the number because the number says 160004 and the build
+string says which PostgreSQL that was, which is what a reader of two summaries compares.
+``max_parallel_workers_per_gather`` is the session's own, read before anything is set on
+it: every execution turns the gather off on its own transaction, so this says what the
+server would otherwise have been free to do rather than what any statement ran with."""
 
 DEFAULT_SCHEMA = "public"
 """Where a table named without a schema is looked for. BIRD's gold names bare tables and
@@ -111,6 +122,15 @@ It is a schema the role already owns, arranged once by whoever grants the login 
 SELECT, because a read-only auditing role cannot create a schema and should not be able
 to. Only the tables this run made in it are dropped, and only at the end of the run, since
 the schema is not this tool's to remove. The audited tables are never written to."""
+
+NO_PARALLEL_AGGREGATION = "SET LOCAL max_parallel_workers_per_gather = 0"
+"""One worker, so that a float sum is added in one order.
+
+A gather splits an aggregate across workers and adds the partial sums in whatever order
+they came back, so the same statement over the same rows can return a different last digit
+on two executions, and a comparison of the two would blame the statement for the plan. It
+is ``SET LOCAL``, so it holds for the statement's own transaction and is gone with the
+rollback: what the session was found holding is what a summary records."""
 
 PLAN_CONTROLS: tuple[sql_builder.SQL, ...] = (
     sql_builder.SQL("SET LOCAL enable_seqscan = off"),
@@ -276,7 +296,7 @@ class PostgresBackend:
         )
 
     def session_settings(self) -> SessionSettings:
-        """The five settings that decide comparability, and the four recorded beside them."""
+        """The five settings that decide comparability, and the six recorded beside them."""
         read_back = self._settings((*PRECONDITION_SETTINGS, *RECORDED_SETTINGS))
         missing = sorted(name for name in PRECONDITION_SETTINGS if name not in read_back)
         if missing:
@@ -325,7 +345,10 @@ class PostgresBackend:
 
         ``before`` runs inside the same transaction and after the read-back, so anything
         it sets is ``SET LOCAL`` and is gone with the rollback. It never carries the
-        statement itself and never changes what read-only means.
+        statement itself and never changes what read-only means. The gather is turned off
+        ahead of the read-back rather than in ``before``, because it is not a variant of
+        this execution: every way in runs one statement over one plan whose aggregate is
+        summed in one order.
         """
         if statement_timeout_seconds < 1:
             raise BackendRefused("timeout", "a statement timeout is a whole number of seconds")
@@ -338,6 +361,7 @@ class PostgresBackend:
                     "SELECT set_config('statement_timeout', %s, true)", [str(timeout_ms)]
                 )
                 cursor.fetchall()
+                cursor.execute(NO_PARALLEL_AGGREGATION)
             except psycopg.Error as failed:
                 # The envelope itself, which is where a connection that went away between
                 # two questions surfaces. Named like every other refusal, so the audit
@@ -594,7 +618,13 @@ class PostgresBackend:
         try:
             cursor.execute(
                 "SELECT name, setting FROM pg_settings WHERE name = ANY(%s)",
-                [["statement_timeout", "transaction_read_only"]],
+                [
+                    [
+                        "statement_timeout",
+                        "transaction_read_only",
+                        "max_parallel_workers_per_gather",
+                    ]
+                ],
             )
             held = {str(row[0]): str(row[1]) for row in cursor.fetchall()}
         except psycopg.Error as failed:
@@ -610,6 +640,12 @@ class PostgresBackend:
                 "read_back",
                 f"statement_timeout was set to {timeout_ms} and the session holds "
                 f"{held.get('statement_timeout', 'nothing')}",
+            )
+        if held.get("max_parallel_workers_per_gather") != "0":
+            raise ReadBackDrift(
+                "read_back",
+                "max_parallel_workers_per_gather was set to 0 and the session holds "
+                f"{held.get('max_parallel_workers_per_gather', 'nothing')}",
             )
 
     def _columns(self, described: Sequence[tuple[str, int]]) -> tuple[ColumnType, ...]:

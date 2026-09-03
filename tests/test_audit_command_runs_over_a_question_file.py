@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 from typing import Any, cast
 
@@ -37,9 +38,14 @@ from attestql.audit.cli import (
 )
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
 from attestql.audit.smells import DEFAULT_SHUFFLE_ROW_LIMIT, NUMERIC_TEXT
-from attestql.audit.statements import parse_statement
+from attestql.audit.statements import (
+    GRAMMAR_VERSION,
+    POSTGAST_VERSION,
+    VALIDATOR_VERSION,
+    parse_statement,
+)
 from attestql.kernel.types import ExecutionResult
-from tests.audit_fakes import FakeBackend, fake_result
+from tests.audit_fakes import SETTINGS, FakeBackend, fake_result
 
 FASTEST_LAP = (
     "SELECT t1.nationality FROM drivers AS t1 JOIN results AS t2 "
@@ -202,6 +208,31 @@ def test_a_gold_only_run_with_nothing_to_report_writes_no_directory(tmp_path: Pa
     assert written["data_as_of_source"] == "the instant the run started"
     assert written["fixture"]["row_counts"] == {"atom": 2}
     assert written["shuffle"]["prepared"] is True
+
+
+def test_the_summary_names_the_session_and_the_grammar_the_run_was_judged_by(
+    tmp_path: Path,
+) -> None:
+    """Two summaries that disagree were produced by some server and some grammar, and one
+    that names neither leaves a reader with nothing to compare them by. The gather recorded
+    here is the session's own: every statement runs with it off, and this says what the
+    server would otherwise have been free to do."""
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    run_audit(options(tmp_path), _quiet_backend(), Lines())
+    written = summary_of(tmp_path)
+    recorded = written["session_settings_recorded"]
+
+    assert recorded == dict(SETTINGS.recorded)
+    assert recorded["max_parallel_workers_per_gather"] == "2"
+    assert recorded["server_version"].startswith("16.4")
+    assert recorded["server_version_num"] == "160004"
+    assert written["parser"] == {
+        "validator": VALIDATOR_VERSION,
+        "postgast": POSTGAST_VERSION,
+        "grammar_version": GRAMMAR_VERSION,
+    }
+    assert isinstance(written["parser"]["grammar_version"], int)
+    assert re.fullmatch(r"\d+\.\d+.*", POSTGAST_VERSION), POSTGAST_VERSION
 
 
 def test_a_fired_smell_writes_the_gold_record_and_the_smells_beside_it(tmp_path: Path) -> None:

@@ -73,6 +73,21 @@ FORBIDDEN_IMPORTS = frozenset(
     }
 )
 
+PACKAGE_METADATA = "importlib.metadata"
+"""Where an installed distribution states its own release number, and the whole of the
+exemption below. It reads what a package manager wrote and imports no code, which is the
+reason ``importlib`` is in the set above."""
+
+METADATA_READER = SRC / "audit" / "statements.py"
+"""The one file permitted to read installed package metadata, and permitted
+``importlib.metadata`` alone.
+
+A summary states which parser judged its statements, and half of that is the binding's own
+release, which the binding does not carry as an attribute. An exact path, as the driver's
+and the parser's are, and exercised by the test below, so the day it stops being used is
+the day it stops being granted. Every other primitive in the set is forbidden there too,
+including the rest of ``importlib``."""
+
 CONSOLE_SCRIPT_TEST = TESTS / "test_audit_end_to_end.py"
 """The one file permitted to start a process, and permitted ``subprocess`` alone.
 
@@ -241,6 +256,8 @@ def forbidden_primitives(path: Path) -> list[str]:
     for node in ast.walk(parse(path)):
         if isinstance(node, (ast.Import, ast.ImportFrom)):
             for name in imported_modules_of(node):
+                if path == METADATA_READER and name == PACKAGE_METADATA:
+                    continue
                 if name.split(".")[0] in forbidden_imports:
                     found.append(f"line {node.lineno}: import {name}")
         elif isinstance(node, ast.Call):
@@ -270,6 +287,13 @@ def imported_modules_of(node: ast.Import | ast.ImportFrom) -> list[str]:
 def test_no_dynamic_code_execution_or_network_primitives(path: Path) -> None:
     found = forbidden_primitives(path)
     assert not found, f"{path}: {found}"
+
+
+def test_the_metadata_reader_really_reads_the_metadata_it_is_allowed_to() -> None:
+    """The positive case of the one metadata permission, on the same ground as the rest."""
+    assert PACKAGE_METADATA in imported_modules(METADATA_READER), (
+        f"{METADATA_READER.name} is the allowed metadata reader and reads none"
+    )
 
 
 def test_the_console_script_test_really_starts_the_process_it_is_allowed_to() -> None:

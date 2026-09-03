@@ -13,11 +13,13 @@ is: the CIDR 2026 audit by Jin et al. measured 52.8 % annotation error in BIRD M
 wrong gold sit open on the benchmark trackers with nobody able to say, mechanically, where two
 statements disagree.
 
-AttestQL executes both statements under a read-only transaction, renders each result with a typed
-canonical serializer, compares them under a stated rule (ordered sequence when the gold orders,
-multiset otherwise), and writes an evidence record per execution with everything a second person
-needs to re-run it. When the two disagree it writes the differing rows as a counterexample. On the
-gold alone it runs mechanical probes for the defects that need no second statement.
+AttestQL executes both statements under a read-only transaction with the server's parallel gather
+turned off, so that a float sum is added in one order and two runs of one statement cannot differ
+in a late digit, renders each result with a typed canonical serializer, compares them under a
+stated rule (ordered sequence when the gold orders, multiset otherwise), and writes an evidence
+record per execution with everything a second person needs to re-run it. When the two disagree it
+writes the differing rows as a counterexample. On the gold alone it runs mechanical probes for the
+defects that need no second statement.
 
 **NOT_EQUAL never means the gold is wrong.** It means these two statements disagree on this data
 under this rule; here are the rows; decide.
@@ -90,7 +92,9 @@ the difference being q879. Both runs, with each file's digest and origin, are in
 Exit status is 0 with no disagreement, 1 with at least one, 2 on a tool error. `--fail-on-smell`
 makes a fired probe exit 1 too. Every `audit/q<id>/` holds `counterexample.json`, the two evidence
 records (`evidence-gold.json`, `evidence-second.json`) and `smells.json`; `audit/summary.json`
-holds the counts, the fixture digest, and whether the shuffle ran.
+holds the counts, the fixture digest, whether the shuffle ran, the session the run was made in
+(the server's version string beside its number) and the parser that judged every statement (the
+validator, the `postgast` release and the libpg_query grammar version).
 
 ## What it does
 
