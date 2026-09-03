@@ -38,6 +38,8 @@ không đổi từ 2026-09-03T17:44Z, 0 phản hồi ngoài comment của mình 
 | 03:46 | `d3d6cb6` | Mục 2.8: tên bảng là cặp (schema, relation) từ parser đến catalogue; sửa 4 lỗi tái hiện được (alias mất schema nên smell đọc `public.y` thay `Quoted.y`; `_qualify` cắt `"a.b"`; hai schema cùng tên bare đè một bản sao scratch; bảng qualified bị khai là shuffle đã phủ); sandbox thêm schema `"Quoted"` + 2 câu | test 563 -> 572, sandbox 25 -> 29; gate xanh |
 | 04:02 | `7b2f595` | Mục 2.9: NaN là một giá trị (như PostgreSQL gộp và sắp), định nghĩa ở một chỗ: `typed_value`/`typed_row` trong `evidence/serialize.py`; replay, tie detector, float-order-only dùng chung; `smells._typed` bỏ; ADR-0004 + README ghi luật. Sửa tiền đề brief: `hash(Decimal('NaN'))` không raise trên 3.11/3.13, hai NaN chỉ bị coi là khác nhau (NOT_EQUAL âm thầm) | test 572 -> 583, sandbox 29; gate xanh |
 | 04:16 | `0b0da6e` | Mục 2.10: `session_settings` cache trong backend như `identity`, `run_audit` đọc một lần và truyền xuống; gold parse một lần trước khi đo fixture rồi truyền `ParsedStatement` xuống `record_statement`/`compare_statements` (tham số `parsed`, `gold_parsed`, `second_parsed`, `session_settings`); `smells._typed` đã bỏ ở 2.9 | test 583 -> 586, sandbox 29; gate xanh |
+| 04:25 | `7c2a5f5` | Đóng run log lần đầu (bảng commit, quyết định, kết thúc) | docs + repocheck xanh |
+| 04:15 | `d8ac6c7` | Đo lại toàn bộ mục 1 ở HEAD: artifact `remeasure-at-head/`, register A21 và A22, mục "Đo lại" trong report này | `just check` xanh 586 + 29; commit cuối cùng là bản cập nhật report này |
 
 ## Còn mở (thấy trong lúc làm, không làm)
 
@@ -127,7 +129,8 @@ file dự đoán, container mới rồi xóa. Artifact:
   commit; không container nào còn chạy (`docker ps` không có container audit); mọi terminal
   worker của phiên đã release.
 - Chưa làm: mục 2.7 (xem "Còn mở"); không có việc nào bỏ dở, cây làm việc sạch ngoài report này.
-- Chủ cần làm: đọc report, `git push` (14 commit từ `41621c0`), quyết mục 2.7 và ADR-0014.
+- Chủ cần làm: đọc report, `git push` (15 commit từ `41621c0`, kể cả commit report cuối), quyết mục 2.7
+  và ADR-0014.
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).
