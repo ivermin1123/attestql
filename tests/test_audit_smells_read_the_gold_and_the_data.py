@@ -30,6 +30,7 @@ from attestql.audit.smells import (
     QuestionText,
     Smell,
     SmellSettings,
+    _float_order_only,  # pyright: ignore[reportPrivateUsage]  # no public path reaches it over a NaN
     all_smells,
     arbitrary_cut,
     direction_against_question,
@@ -255,6 +256,69 @@ def test_an_arbitrary_cut_is_quiet_when_the_tied_rows_project_the_same_answer() 
     assert found.evidence["tied_at_the_cut"]["distinct_projected_answers"] == 1
 
 
+NAME_AND_A_FLOAT_KEY = (("name", "text"), ("attestql_ordering_key_0", "float8"))
+A_FLOAT = (("score", "float8"),)
+A_FLOAT_AND_ITS_KEY = (("score", "float8"), ("attestql_ordering_key_0", "int8"))
+
+BY_RANK = "SELECT score FROM players ORDER BY rank LIMIT 2"
+
+
+def _not_a_number() -> Decimal:
+    """A fresh NaN per cell, which is what a result holds. Python keys a NaN by its identity,
+    so one object shared between two cells would compare equal for the wrong reason."""
+    return Decimal("NaN")
+
+
+def test_an_arbitrary_cut_reads_a_run_of_not_a_number_keys_as_a_tie() -> None:
+    """PostgreSQL sorts NaN above every number and holds two of them equal, so a bound that
+    cuts into a run of them cuts a tie. Python holds the two keys unequal, and a detector
+    reading them that way calls the cut the ordering's own and says nothing."""
+    rows = (
+        ("a", _not_a_number()),
+        ("b", _not_a_number()),
+        ("c", _not_a_number()),
+        ("d", Decimal("1.5")),
+    )
+    backend = FakeBackend(
+        {
+            TOP_TWO: fake_result(NAME, (("a",), ("b",))),
+            _unbounded(TOP_TWO): fake_result(NAME_AND_A_FLOAT_KEY, rows),
+        }
+    )
+    found = arbitrary_cut(
+        parse_statement(TOP_TWO),
+        backend,
+        backend.execute(TOP_TWO, statement_timeout_seconds=30),
+        settings=SETTINGS,
+    )
+    assert _smell(found) == (ARBITRARY_CUT, True, True)
+    assert found.evidence["case"] == "tie-at-the-cut"
+    assert found.evidence["tied_at_the_cut"]["positions"] == [0, 1, 2]
+    assert found.evidence["tied_at_the_cut"]["distinct_projected_answers"] == 3
+
+
+def test_an_arbitrary_cut_counts_a_not_a_number_among_the_answers_it_found() -> None:
+    """The answers the tied rows project are counted as a set, where two NaN answers are two
+    keys to Python and one answer to PostgreSQL. A cut through rows that all answer NaN is
+    not a hazard, and a cut through rows where one of them does is."""
+    rows = ((_not_a_number(), 5), (_not_a_number(), 5), (Decimal("1.5"), 5))
+    backend = FakeBackend(
+        {
+            BY_RANK: fake_result(A_FLOAT, ((_not_a_number(),), (_not_a_number(),))),
+            _unbounded(BY_RANK): fake_result(A_FLOAT_AND_ITS_KEY, rows),
+        }
+    )
+    found = arbitrary_cut(
+        parse_statement(BY_RANK),
+        backend,
+        backend.execute(BY_RANK, statement_timeout_seconds=30),
+        settings=SETTINGS,
+    )
+    assert _smell(found) == (ARBITRARY_CUT, True, True)
+    assert found.evidence["tied_at_the_cut"]["positions"] == [0, 1, 2]
+    assert found.evidence["tied_at_the_cut"]["distinct_projected_answers"] == 2
+
+
 def test_an_arbitrary_cut_keeps_distinct_when_it_removes_the_bound() -> None:
     distinct = "SELECT DISTINCT name, score FROM players ORDER BY score DESC LIMIT 2"
     assert "DISTINCT" in _unbounded(distinct)
@@ -471,6 +535,28 @@ def test_a_float_that_differs_in_the_digits_that_were_compared_keeps_the_other_n
     )
     assert _smell(found) == (NOT_A_FUNCTION_OF_THE_DATA, True, True)
     assert "float_cells" not in found.evidence
+
+
+A_SUM_AND_A_SHARE = (("sum", "float8"), ("share", "float8"))
+
+
+def test_a_float_that_is_not_a_number_on_both_sides_is_the_same_cell() -> None:
+    """Asked of the check itself: the canonical rendering refuses a non-finite numeric, so a
+    rerun holding one never reaches the evidence this smell writes around the decision. A NaN
+    is one value on both sides, and what differed is the cell beside it."""
+    baseline = fake_result(A_SUM_AND_A_SHARE, ((Decimal("1.5000000001"), _not_a_number()),))
+    rerun = fake_result(A_SUM_AND_A_SHARE, ((Decimal("1.5000000002"), _not_a_number()),))
+    cells = _float_order_only(baseline, [rerun])
+    assert cells is not None
+    assert [cell["column"] for cell in cells] == ["sum"]
+
+
+def test_a_float_that_is_not_a_number_on_one_side_only_is_a_difference() -> None:
+    """No number at all on one side and a number on the other is not one sum taken in another
+    order, so the check gives the difference back to be reported under its own name."""
+    baseline = fake_result(A_SUM_AND_A_SHARE, ((Decimal("1.5"), _not_a_number()),))
+    rerun = fake_result(A_SUM_AND_A_SHARE, ((Decimal("1.5"), Decimal("2.5")),))
+    assert _float_order_only(baseline, [rerun]) is None
 
 
 def test_the_plan_variant_runs_only_when_it_was_asked_for() -> None:

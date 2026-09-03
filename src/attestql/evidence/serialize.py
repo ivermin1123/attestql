@@ -29,9 +29,11 @@ sign of it would be two renderings that disagree for a reason no reader can find
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import ROUND_HALF_UP, Decimal, localcontext
+from enum import Enum
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from attestql.kernel.types import ExecutionResult
@@ -83,6 +85,44 @@ def canonical_type_tag(value: object) -> str:
     raise UnsupportedValue(
         f"no canonical rendering is stated for a value of type {type(value).__name__}"
     )
+
+
+class _NotANumber(Enum):
+    """The one value every NaN stands for once a row is keyed for a comparison."""
+
+    NAN = "nan"
+
+
+def typed_value(value: object) -> tuple[str, object]:
+    """One value paired with the tag of the type it was returned as, as a comparison keys it.
+
+    The tag is what makes a comparison typed. Python holds ``1``, ``True`` and ``Decimal(1)``
+    equal and hashes them alike, so a multiset keyed on the values alone would count three
+    different results as one; keyed on the pair, a value only ever meets a value of its type.
+
+    **A NaN is one value.** PostgreSQL holds NaN equal to NaN, groups the two into one and
+    sorts them together above every number, so this engine reads them as one value in every
+    comparison it makes: a result holding one is equal to another holding one, a run of them
+    at a bound is a tie, and a NaN on one side only is a difference like any other. Python
+    disagrees twice over, holding two NaNs unequal, hashing a quiet one by its identity and
+    refusing to hash a signaling one at all, so a key built from the value as it came back
+    would count one answer as two and would raise on the value the server never prints.
+    Standing a NaN's key in for it is what leaves the rule in one place. The infinities need
+    no stand-in: Decimal already holds each equal to itself and to nothing else.
+
+    The rendering is not what changes here. A non-finite numeric still has no rendering at a
+    fixed scale and ``canonical_serialize`` still refuses one; this is how a comparison that
+    counts rows rather than rendering them keys the value.
+    """
+    tag = canonical_type_tag(value)
+    if isinstance(value, Decimal) and value.is_nan():
+        return (tag, _NotANumber.NAN)
+    return (tag, value)
+
+
+def typed_row(row: Iterable[object]) -> tuple[tuple[str, object], ...]:
+    """One row as the keys its values are compared and counted under."""
+    return tuple(typed_value(value) for value in row)
 
 
 def _render_decimal(value: Decimal, numeric_scale: int) -> str:
@@ -225,4 +265,6 @@ __all__ = [
     "UnsupportedValue",
     "canonical_serialize",
     "canonical_type_tag",
+    "typed_row",
+    "typed_value",
 ]

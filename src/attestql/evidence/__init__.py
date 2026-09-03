@@ -29,6 +29,8 @@ from attestql.evidence.serialize import (
     UnsupportedValue,
     canonical_serialize,
     canonical_type_tag,
+    typed_row,
+    typed_value,
 )
 from attestql.evidence.types import (
     FixtureDigest,
@@ -72,5 +74,7 @@ __all__ = [
     "row_difference",
     "row_difference_json",
     "statement_source_json",
+    "typed_row",
+    "typed_value",
     "write_json",
 ]

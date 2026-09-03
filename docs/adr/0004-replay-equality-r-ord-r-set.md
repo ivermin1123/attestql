@@ -3,7 +3,7 @@
 **Status:** Accepted. **Date:** 2026-08-25. **Supersedes:** the earlier "byte-identical result"
 wording in the Slice 1 brief. **Amended:** 2026-08-30, the Open question below is answered by
 ADR-0009 (in the private history before publication), which fixes Q13's result grain at
-one row per segment.
+one row per segment; 2026-09-04, what a NaN is under R-SET is stated at the end.
 
 ## Context
 
@@ -67,3 +67,25 @@ ADR-0009 (in the private history before publication) decides that "per month"
 qualifies the account and not the output, so the grain is one row per segment and the ordering
 key above is total. The decision was made before this note and neither document recorded it;
 that gap is what this note closes.
+
+## What a NaN is, amended 2026-09-04
+
+R-SET above requires values equal under the recorded type-aware rules and names numeric
+precision, timestamps and nulls. It did not say what a NaN is, and a float column returns one.
+
+**A NaN is one value: equal to a NaN and to nothing else.** That is what PostgreSQL does with
+it. The server holds NaN equal to NaN, groups two of them into one row and sorts them together
+above every number, and this tool reads a result the server produced. So two results each
+holding a NaN at a cell are equal there, a NaN on one side only is a difference like any other,
+and a run of NaN ordering keys spanning a bound is the tie the arbitrary-cut smell exists to
+find. Each infinity is one value under the same reading, which Python's `Decimal` already gives.
+
+Python does not give the NaN rule: two NaN values compare unequal there and each hashes by its
+own identity, so a multiset keyed on the value as it came back counts one answer as two and
+reports two runs of one statement as a disagreement. The rule is therefore stated once, in
+`typed_value`, and every comparison this tool makes keys its rows through it.
+
+The canonical rendering is unchanged and still refuses a non-finite numeric, so an R-ORD
+comparison over a result holding one has no bytes to compare rather than a rule of its own. That
+is the same refusal as before this amendment: what is decided here is how a comparison that
+counts rows keys the value, not how a rendering writes it.

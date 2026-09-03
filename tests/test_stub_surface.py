@@ -152,6 +152,8 @@ REAL_FUNCTIONS = frozenset(
         "evidence.replay.compare_results",
         "evidence.replay.precondition_mismatches",
         "evidence.replay.preconditions_match",
+        "evidence.serialize.typed_row",
+        "evidence.serialize.typed_value",
     }
 )
 STUB_MODULES = {

@@ -48,7 +48,6 @@ comparison can have.
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Iterable
 from dataclasses import dataclass, replace
 from enum import Enum
 
@@ -56,7 +55,7 @@ from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.serialize import (
     SerializationDescriptor,
     canonical_serialize,
-    canonical_type_tag,
+    typed_row,
 )
 from attestql.evidence.types import FixtureDigest, ReplayRule  # imported, never redefined
 from attestql.kernel.types import ColumnType, ExecutionResult
@@ -178,17 +177,6 @@ def _verdict(equal: bool) -> ComparabilityVerdict:
     return ComparabilityVerdict(outcome, ())
 
 
-def _typed_row(row: Iterable[object]) -> tuple[tuple[str, object], ...]:
-    """One row as its values paired with the tag of the type each was returned as.
-
-    The tag is what makes the comparison typed. Python holds ``1``, ``True`` and
-    ``Decimal(1)`` equal and hashes them alike, so a multiset keyed on the values
-    alone would count three different results as one; keyed on the pair, a value
-    only ever meets a value of its own type.
-    """
-    return tuple((canonical_type_tag(value), value) for value in row)
-
-
 def _row_multiset(result: ExecutionResult) -> Counter[tuple[tuple[str, object], ...]]:
     """The rows as a multiset of typed rows: how many times each row occurs, no order.
 
@@ -196,8 +184,11 @@ def _row_multiset(result: ExecutionResult) -> Counter[tuple[tuple[str, object], 
     only in order build the same counts from the same keys, so they are equal under
     it without anything being sorted, and a row that occurs twice in one result and
     once in the other is not equal, which a set would have lost.
+
+    The keys are the shared ones, which is where the type tag and the rule for a NaN
+    are stated: the smells key a row the same way, and two keyings would be one too many.
     """
-    return Counter(_typed_row(row) for row in result.rows)
+    return Counter(typed_row(row) for row in result.rows)
 
 
 def _declared_types(result: ExecutionResult) -> tuple[str, ...]:

@@ -60,7 +60,7 @@ from attestql.audit.backend import (
 from attestql.audit.statements import ORDERING_KEY_PREFIX, OrderingKey, ParsedStatement
 from attestql.evidence.render import Json, json_row, result_digest, result_json
 from attestql.evidence.replay import ComparabilityResult, ReplayRule, compare_results
-from attestql.evidence.serialize import SerializationDescriptor, canonical_type_tag
+from attestql.evidence.serialize import SerializationDescriptor, typed_row, typed_value
 from attestql.kernel.types import ExecutionResult
 
 ORDERING_OVER_NUMERIC_TEXT = "ordering-over-numeric-text"
@@ -227,11 +227,6 @@ def _fired(name: str, payload: Json, rows: Sequence[tuple[object, ...]]) -> Smel
         evidence=_evidence(name, payload),
         counterexample_rows=tuple(rows[:ROWS_IN_EVIDENCE]),
     )
-
-
-def _typed(row: Sequence[object]) -> tuple[tuple[str, object], ...]:
-    """One row keyed the way both replay rules key it: each value beside its type tag."""
-    return tuple((canonical_type_tag(value), value) for value in row)
 
 
 def _declared_type(columns: Mapping[str, str], column: str) -> str | None:
@@ -551,17 +546,17 @@ def _tied_at_the_cut(
     """
     if len(rows) <= cut or cut < 1:
         return None
-    at_the_cut = _typed(rows[cut][projected:])
-    if _typed(rows[cut - 1][projected:]) != at_the_cut:
+    at_the_cut = typed_row(rows[cut][projected:])
+    if typed_row(rows[cut - 1][projected:]) != at_the_cut:
         return None
     first = cut - 1
-    while first > 0 and _typed(rows[first - 1][projected:]) == at_the_cut:
+    while first > 0 and typed_row(rows[first - 1][projected:]) == at_the_cut:
         first -= 1
     last = cut
-    while last + 1 < len(rows) and _typed(rows[last + 1][projected:]) == at_the_cut:
+    while last + 1 < len(rows) and typed_row(rows[last + 1][projected:]) == at_the_cut:
         last += 1
     positions = tuple(range(first, last + 1))
-    answers = {_typed(rows[position][:projected]) for position in positions}
+    answers = {typed_row(rows[position][:projected]) for position in positions}
     return positions, len(answers)
 
 
@@ -744,7 +739,7 @@ def _float_order_only(
             return None
         for position, (left, right) in enumerate(zip(baseline.rows, rerun.rows, strict=True)):
             for index, (one, other) in enumerate(zip(left, right, strict=True)):
-                if _typed((one,)) == _typed((other,)):
+                if typed_value(one) == typed_value(other):
                     continue
                 if (
                     index not in floats

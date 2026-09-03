@@ -112,7 +112,8 @@ back from the file.
 - Typed replay comparison: a type tag per cell, declared numeric scale, NULL rendering, a hash per
   result; columns are compared by position and type, never by name, as the benchmark does; R-ORD
   when the gold has a top-level ORDER BY and compares the rendered rows in order, byte for byte,
-  R-SET otherwise; EQUAL, NOT_EQUAL, or
+  R-SET otherwise; a NaN is one value there, equal to a NaN and to nothing else, as PostgreSQL
+  groups and orders it; EQUAL, NOT_EQUAL, or
   NOT_COMPARABLE with the mismatched preconditions named (fixture digest, serialization, rule,
   ordering, and the five session settings that change rendered bytes).
 - An evidence record per execution, twenty-one required fields, no defaults: what ran, as what role,

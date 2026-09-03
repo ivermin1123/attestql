@@ -292,6 +292,56 @@ def test_under_r_set_numeric_values_are_compared_as_the_result_returned_them(
     assert verdict.result is ComparabilityResult.NOT_EQUAL
 
 
+def _a_not_a_number() -> tuple[tuple[object, ...], ...]:
+    """One row holding a fresh NaN. Two executions never return the same object and Python
+    keys a NaN by its identity, so a shared one would compare equal for the wrong reason."""
+    return ((Decimal("NaN"),),)
+
+
+def test_under_r_set_a_not_a_number_is_the_one_value_postgresql_groups_it_as(
+    make_evidence_record: Any, execution_limits: ExecutionLimits
+) -> None:
+    """PostgreSQL holds NaN equal to NaN and groups the two as one value. Python holds two of
+    them unequal and hashes each by its identity, so a multiset keyed on the value the result
+    returned would count one answer as two and call two of the same result a disagreement."""
+    columns = (ColumnType("share", "float8"),)
+    verdict = compare_r_set(
+        make_evidence_record(result=_result(execution_limits, _a_not_a_number(), columns=columns)),
+        make_evidence_record(result=_result(execution_limits, _a_not_a_number(), columns=columns)),
+    )
+    assert verdict == ComparabilityVerdict(ComparabilityResult.EQUAL, ())
+    one_side = compare_r_set(
+        make_evidence_record(result=_result(execution_limits, _a_not_a_number(), columns=columns)),
+        make_evidence_record(
+            result=_result(execution_limits, ((Decimal("1.5"),),), columns=columns)
+        ),
+    )
+    assert one_side.result is ComparabilityResult.NOT_EQUAL
+
+
+def test_under_r_set_an_infinity_is_equal_to_an_infinity_and_not_to_the_other_one(
+    make_evidence_record: Any, execution_limits: ExecutionLimits
+) -> None:
+    """The other two values a float column returns beside a number, which Decimal already
+    holds the way PostgreSQL orders them: one infinity is one value, and the two are not."""
+    columns = (ColumnType("share", "float8"),)
+    infinite: tuple[tuple[object, ...], ...] = ((Decimal("Infinity"),),)
+    verdict = compare_r_set(
+        make_evidence_record(result=_result(execution_limits, infinite, columns=columns)),
+        make_evidence_record(
+            result=_result(execution_limits, ((Decimal("Infinity"),),), columns=columns)
+        ),
+    )
+    assert verdict == ComparabilityVerdict(ComparabilityResult.EQUAL, ())
+    signed = compare_r_set(
+        make_evidence_record(result=_result(execution_limits, infinite, columns=columns)),
+        make_evidence_record(
+            result=_result(execution_limits, ((Decimal("-Infinity"),),), columns=columns)
+        ),
+    )
+    assert signed.result is ComparabilityResult.NOT_EQUAL
+
+
 def test_the_same_values_under_another_alias_are_the_same_answer(
     make_evidence_record: Any, r_ord_overrides: dict[str, Any], execution_limits: ExecutionLimits
 ) -> None:

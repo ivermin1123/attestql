@@ -24,6 +24,8 @@ from attestql.evidence.serialize import (
     UnsupportedValue,
     canonical_serialize,
     canonical_type_tag,
+    typed_row,
+    typed_value,
 )
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
@@ -194,12 +196,17 @@ def test_a_naive_datetime_is_refused_rather_than_assigned_a_timezone(
         )
 
 
+@pytest.mark.parametrize("value", [Decimal("NaN"), Decimal("Infinity"), Decimal("-Infinity")])
 def test_a_non_finite_numeric_is_refused_rather_than_rendered_at_a_scale(
-    execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
+    value: Decimal,
+    execution_limits: ExecutionLimits,
+    serialization_descriptor: SerializationDescriptor,
 ) -> None:
+    """A comparison that counts rows keys a NaN as one value; a rendering at a fixed scale
+    still has nothing to write for one, and refusing is what it has always done."""
     with pytest.raises(UnsupportedValue, match="non-finite"):
         canonical_serialize(
-            _one_value(execution_limits, "numeric", Decimal("NaN")), serialization_descriptor
+            _one_value(execution_limits, "numeric", value), serialization_descriptor
         )
 
 
@@ -319,3 +326,26 @@ def test_every_type_the_engine_understands_carries_its_own_tag() -> None:
     assert canonical_type_tag(datetime(2026, 7, 15, tzinfo=UTC)) != canonical_type_tag(
         date(2026, 7, 15)
     )
+
+
+def test_a_not_a_number_is_keyed_as_the_one_value_it_is_compared_as() -> None:
+    """Both replay rules and the tie detector key a row through this. A NaN is folded to a
+    stand-in because PostgreSQL groups every NaN as one value and Python neither hashes a
+    Decimal NaN nor holds two of them equal."""
+    assert typed_value(Decimal("NaN")) == typed_value(Decimal("-NaN"))
+    assert len({typed_value(Decimal("NaN")), typed_value(Decimal("NaN"))}) == 1
+    assert typed_value(Decimal("NaN")) != typed_value(Decimal(0))
+    assert typed_value(Decimal("NaN")) != typed_value(Decimal("Infinity"))
+
+
+def test_an_infinity_is_keyed_as_itself_and_not_as_the_other_one() -> None:
+    """The rest of what a float column returns beside a number, which needs no stand-in."""
+    assert typed_value(Decimal("Infinity")) == typed_value(Decimal("Infinity"))
+    assert typed_value(Decimal("Infinity")) != typed_value(Decimal("-Infinity"))
+    assert len({typed_value(Decimal("Infinity"))}) == 1
+
+
+def test_a_typed_row_keys_every_value_by_the_type_it_came_back_as() -> None:
+    """Python holds 1, True and Decimal(1) equal and hashes them alike, so a multiset keyed
+    on the values alone would count three results as one."""
+    assert len(set(typed_row((1, True, Decimal(1))))) == 3
