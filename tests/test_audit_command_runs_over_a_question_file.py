@@ -37,6 +37,7 @@ from attestql.audit.cli import (
     run_audit,
 )
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
+from attestql.audit.fixture import CACHE_FILE
 from attestql.audit.smells import DEFAULT_SHUFFLE_ROW_LIMIT, NUMERIC_TEXT
 from attestql.audit.statements import (
     GRAMMAR_VERSION,
@@ -377,6 +378,80 @@ def test_a_question_with_no_prediction_is_audited_gold_only_beside_one_that_has_
     assert "NOT_EQUAL" in lines.written[0]
     assert "GOLD-ONLY" in lines.written[1]
     assert summary.verdicts == {"NOT_EQUAL": 1, "GOLD-ONLY": 1}
+
+
+def test_a_rerun_into_the_same_out_does_not_leave_the_run_before_it_to_be_read(
+    tmp_path: Path,
+) -> None:
+    """The directory is one run's evidence: a question directory the run before it wrote and
+    this one did not is gone, the cache it left is not, and neither is anything a reader put
+    there."""
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    write(tmp_path / "predictions.json", {"207": ELEMENTS_ONE_ROW})
+    backend = FakeBackend(
+        {
+            ELEMENTS: fake_result(ELEMENT, (("c",), ("o",))),
+            ELEMENTS_ONE_ROW: fake_result(ELEMENT, (("c",),)),
+        },
+        row_counts={"atom": 2},
+    )
+    first = run_audit(
+        options(tmp_path, predictions=tmp_path / "predictions.json"), backend, Lines()
+    )
+    out = tmp_path / "audit"
+    assert first.exit_status == 1
+    assert (out / "q207" / COUNTEREXAMPLE_FILE).is_file()
+    schema_reads = len(backend.schema_digest_calls)
+
+    notes = out / "notes.md"
+    notes.write_text("a reader's own", encoding="utf-8")
+    (out / "questions").mkdir()
+
+    second = run_audit(options(tmp_path), backend, Lines())
+    assert not (out / "q207").exists(), "the counterexample of the run before is still readable"
+    assert second.verdicts == {"GOLD-ONLY": 1}
+    written = summary_of(tmp_path)
+    assert written["verdicts"] == {"GOLD-ONLY": 1}
+    assert written["predictions"] is None
+    assert notes.read_text(encoding="utf-8") == "a reader's own"
+    assert (out / "questions").is_dir()
+    assert (out / CACHE_FILE).is_file()
+    assert backend.row_count_calls == [("atom",)], "the data was measured twice"
+    assert len(backend.schema_digest_calls) > schema_reads, (
+        "the schema is read from the server every run"
+    )
+
+
+class Watching(Lines):
+    """A writer that says, at every line it prints, whether ``summary.json`` was on disk.
+
+    The summary of the run before this one has to be gone before this one prints anything,
+    and a writer is what runs while the questions are being answered.
+    """
+
+    def __init__(self, summary: Path) -> None:
+        super().__init__()
+        self._summary = summary
+        self.summary_there: list[bool] = []
+
+    def line(self, text: str) -> None:
+        self.summary_there.append(self._summary.exists())
+        super().line(text)
+
+
+def test_the_summary_of_the_run_before_is_gone_before_this_one_prints_a_line(
+    tmp_path: Path,
+) -> None:
+    """Removed when the run starts and not when it ends: a run that dies halfway leaves no
+    summary of another run behind for a reader to open as its own."""
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    out = tmp_path / "audit"
+    out.mkdir()
+    write(out / SUMMARY_FILE, {"run_id": "audit-the-one-before"})
+    writer = Watching(out / SUMMARY_FILE)
+    run_audit(options(tmp_path), _quiet_backend(), writer)
+    assert writer.summary_there[0] is False, "the summary of the run before outlived its start"
+    assert summary_of(tmp_path)["run_id"] != "audit-the-one-before"
 
 
 # what does not stop a run

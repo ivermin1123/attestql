@@ -29,12 +29,12 @@ that names one; the password comes from ``PGPASSWORD`` or ``~/.pgpass`` through 
 driver, is never read by this module, and appears in no line, file or error.
 
 **Nothing aborts a run except the tool failing to start.** Failing to start is reading the
-question file, reading the predictions file, making the output directory, and asking the
-backend what it is; nothing after that. A gold that does not parse, a statement that times
-out, a table this database does not hold, a value with no rendering, a server that went
-away between two questions: each is that question's ``ERROR`` line with the message, an
-entry in the summary's ``errors``, and the run goes on to the next question and still
-writes ``summary.json``.
+question file, reading the predictions file, making the output directory and clearing the
+run before it out of it, and asking the backend what it is; nothing after that. A gold that
+does not parse, a statement that times out, a table this database does not hold, a value
+with no rendering, a server that went away between two questions: each is that question's
+``ERROR`` line with the message, an entry in the summary's ``errors``, and the run goes on
+to the next question and still writes ``summary.json``.
 
 **An error is not the exit status.** ADR-0013 point 2 fixes 0 for no disagreement, 1 for
 at least one NOT_EQUAL and 2 for a tool error, and a question the run could not answer is
@@ -53,6 +53,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
+import shutil
 import sys
 import time
 import uuid
@@ -99,6 +101,8 @@ from attestql.evidence.types import FixtureDigest, QuestionMetadata, StatementSo
 
 PROGRAM = "attestql"
 SUMMARY_FILE = "summary.json"
+QUESTION_DIRECTORY = re.compile(r"q\d+")
+"""The name of a directory this tool writes a question's evidence to."""
 SUMMARY_FORMAT = "attestql/audit/summary/1"
 SMELLS_FILE = "smells.json"
 
@@ -548,8 +552,9 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
     """Audit every question the options name, on that backend, and write what was found.
 
     Raises ``ToolError`` when the run cannot start: an unreadable file, a question file
-    that states two different questions under one id, or a backend that will not say what
-    it is. Everything a single question can fail at is that question's error line.
+    that states two different questions under one id, an output directory that cannot be
+    made or cleared of the run before it, or a backend that will not say what it is.
+    Everything a single question can fail at is that question's error line.
     """
     phases = Phases()
     run_id = f"audit-{uuid.uuid4()}"
@@ -578,6 +583,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         raise ToolError(f"the output directory {options.out} cannot be made: {unwritable}") from (
             unwritable
         )
+    _clear_previous_run(options.out)
     try:
         identity = backend.identity()
         role = backend.effective_database_role()
@@ -631,6 +637,30 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         ),
     )
     return summary
+
+
+def _clear_previous_run(out: Path) -> None:
+    """Everything a previous run wrote here, gone before this one writes anything of its own.
+
+    A reader opens this directory and reads it as one run, so a question directory the run
+    before wrote and this one does not, or a summary of a run that is not the one whose
+    lines are on screen, is evidence of nothing. The summary goes at the start and not at
+    the end, so a run that dies halfway leaves none rather than another run's. The fixture
+    cache is keyed by the server and the schema digest and is a speed decision, so it stays,
+    and so does anything a reader put here that this tool does not write.
+
+    Raises ``ToolError`` when something cannot be removed: the run would otherwise write its
+    evidence beside evidence it did not produce.
+    """
+    try:
+        (out / SUMMARY_FILE).unlink(missing_ok=True)
+        for child in out.iterdir():
+            if child.is_dir() and QUESTION_DIRECTORY.fullmatch(child.name):
+                shutil.rmtree(child)
+    except OSError as unwritable:
+        raise ToolError(
+            f"the output directory {out} cannot be cleared of the run before it: {unwritable}"
+        ) from unwritable
 
 
 def _predictions_source(options: AuditOptions) -> StatementSource | None:
@@ -919,7 +949,12 @@ def _summary_json(
     no_shuffle: str,
     data_as_of: datetime,
 ) -> Json:
-    """The whole run in one document: what was audited, on what, and what was found."""
+    """The whole run in one document: what was audited, on what, and what was found.
+
+    The ``out`` it states is this run's directory and holds this run's evidence: the
+    question directories and the summary of the run before it were removed before this
+    one wrote anything.
+    """
     digest = measured.digest
     return {
         "format": SUMMARY_FORMAT,
