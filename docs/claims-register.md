@@ -60,3 +60,18 @@ Claims about the V2.9 evidence harness, Slice 1 milestones M0 to M6 and the WP2 
 authority evidence were retired with their code by ADR-0013 on 2026-09-02. The register as it stood
 then, and every artifact it named, is in the private history before publication,
 which the owner can provide on request.
+
+## 5. Upstream engagement
+
+Filed 2026-09-04 by the owner under their personal GitHub identity, as ADR-0013 point 9 requires.
+Each row is evidence for the falsification criterion of ADR-0013 point 10; a maintainer's reply or
+a corrected gold is recorded here when it happens, with its date, and not before.
+
+| # | Where | What was reported | Link |
+|---|---|---|---|
+| U1 | `bird-bench/mini_dev` issue 38, comment | q1029 orders `ASC NULLS FIRST` for "highest"; both copies of the question set carry it | [comment](https://github.com/bird-bench/mini_dev/issues/38#issuecomment-5529732756) |
+| U2 | `bird-bench/mini_dev` issue 39 | q207 joins `bond` on `molecule_id` and returns 13 elements instead of 5; same defect as DAMO-ConvAI 227 | [issue 39](https://github.com/bird-bench/mini_dev/issues/39) |
+| U3 | `bird-bench/mini_dev` issue 40 | the GitHub zip and the Hugging Face dataset differ: ids 137 and 138 duplicated and 119 and 120 missing in the zip, q879 and q1322 with different golds | [issue 40](https://github.com/bird-bench/mini_dev/issues/40) |
+| U4 | `ai-ar-research/SpotIt-plus` issue 1 | the paper calls SpotIt+ open source while its LICENSE reserves all rights; asks which licence applies | [issue 1](https://github.com/ai-ar-research/SpotIt-plus/issues/1) |
+
+Replies received: none yet (checked 2026-09-04).
