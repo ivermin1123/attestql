@@ -30,7 +30,7 @@ from collections.abc import Mapping, Sequence
 
 from attestql.audit.backend import BackendRefused, ShuffledCopies, TextCensus
 from attestql.evidence.serialize import SerializationDescriptor
-from attestql.evidence.types import SessionSettings
+from attestql.evidence.types import SessionSettings, StatementSource
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 IDENTITY = "FakeSQL 1.0 | server=memory:0 | database=fake"
@@ -46,6 +46,16 @@ DESCRIPTOR = SerializationDescriptor(
     null_rendering="NULL",
     encoding="utf-8",
 )
+
+QUESTIONS_SOURCE = StatementSource(
+    path="questions.json", digest="sha256:the-question-file", origin=None, date=None
+)
+PREDICTIONS_SOURCE = StatementSource(
+    path="predictions.json", digest="sha256:the-predictions-file", origin=None, date=None
+)
+"""The two files a record can name as the source of its statement. No file is opened here:
+a scripted backend runs statements this suite writes, and what a record states about where
+they came from is the test's to say."""
 
 SETTINGS = SessionSettings(
     time_zone="UTC",

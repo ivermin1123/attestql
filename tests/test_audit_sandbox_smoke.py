@@ -38,7 +38,7 @@ from attestql.audit.smells import ARBITRARY_CUT, Smell, SmellSettings, arbitrary
 from attestql.audit.statements import parse_statement
 from attestql.evidence.replay import ComparabilityResult
 from attestql.evidence.serialize import SerializationDescriptor
-from attestql.evidence.types import QuestionMetadata, ReplayRule
+from attestql.evidence.types import QuestionMetadata, ReplayRule, StatementSource
 
 pytestmark = pytest.mark.sandbox
 
@@ -49,6 +49,15 @@ PREDICTIONS_FILE = SANDBOX / "predictions.json"
 QUESTION_SET = "attestql_audit_sandbox"
 QUESTION_SET_VERSION = file_digest(QUESTIONS_FILE)
 """The digest of the file the gold statements were read from, as a record states it."""
+
+QUESTIONS_SOURCE = StatementSource(
+    path=str(QUESTIONS_FILE), digest=QUESTION_SET_VERSION, origin=None, date=None
+)
+PREDICTIONS_SOURCE = StatementSource(
+    path=str(PREDICTIONS_FILE), digest=file_digest(PREDICTIONS_FILE), origin=None, date=None
+)
+"""The two files beside the fixture, as the records of this run name them. Nothing states
+where they came from, because they are this repository's own."""
 
 DATA_AS_OF = datetime(2026, 9, 2, tzinfo=UTC)
 """The fixture is loaded from one file and never changes under a run, so one instant
@@ -116,7 +125,9 @@ def _compare(backend: PostgresBackend, directory: Path, question_id: str) -> Com
         ),
         question_set_version=QUESTION_SET_VERSION,
         gold_sql=str(entry["SQL"]),
+        gold_source=QUESTIONS_SOURCE,
         second_sql=PREDICTIONS[question_id],
+        second_source=PREDICTIONS_SOURCE,
         backend=backend,
         serialization=DESCRIPTOR,
         run_id="audit-sandbox-smoke",

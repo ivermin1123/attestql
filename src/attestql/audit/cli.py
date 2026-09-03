@@ -6,6 +6,16 @@ summary line and ``summary.json``. With ``--predictions`` each prediction is com
 with its gold under the gold's own replay rule; without them the gold-only smells run
 alone.
 
+**Which prediction answers which question.** A predictions file written for this tool is
+keyed by question id. BIRD's own ``predict_*.json`` is keyed by the position of an entry
+in the question file, because its evaluation pairs prediction ``i`` with gold line ``i``,
+and ``--predictions-keyed-by position`` is what reads one; the two readings pair different
+statements, so a file whose keys are the positions of a question file that is not keyed by
+them is refused rather than guessed at. Where each file came from is recorded and never
+inferred: the path and the digest are measured, and ``--questions-origin``,
+``--questions-date``, ``--predictions-origin`` and ``--predictions-date`` are what the run
+was told, in the summary and in every record.
+
 **What a verdict means.** NOT_EQUAL says the gold and the prediction disagree on this
 data under this rule. It never says which of them is wrong, and neither does a smell,
 which is a heuristic and says so in its own evidence. Exit status follows ADR-0013:
@@ -79,7 +89,7 @@ from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import Json, record_json, write_json
 from attestql.evidence.replay import ComparabilityResult
 from attestql.evidence.serialize import SerializationDescriptor, UnsupportedValue
-from attestql.evidence.types import FixtureDigest, QuestionMetadata
+from attestql.evidence.types import FixtureDigest, QuestionMetadata, StatementSource
 
 PROGRAM = "attestql"
 SUMMARY_FILE = "summary.json"
@@ -112,6 +122,15 @@ BIRD_PREDICTION_SUFFIX = "\t----- bird -----\t"
 """What BIRD's own ``predict_dev.json`` appends to each statement: a tab, a marker and
 the database it was written for. The statement is what comes before it."""
 
+QUESTION_ID_KEYING = "question-id"
+"""A key of the predictions file is the id of the question its prediction answers, which
+is what a file written for this tool holds."""
+
+POSITION_KEYING = "position"
+"""A key is the position of an entry of the question file in file order, which is what
+BIRD's own prediction files hold: its evaluation pairs prediction ``i`` with gold line
+``i``, so the file is keyed ``"0"`` to ``"499"`` and carries no question id at all."""
+
 
 class ToolError(Exception):
     """This tool could not run at all, which is exit status 2 and not a finding."""
@@ -131,10 +150,15 @@ class Question:
 
 @dataclass(frozen=True)
 class QuestionSet:
-    """The questions a run will audit, and what the file they came from held."""
+    """The questions a run will audit, and what the file they came from held.
+
+    ``entry_ids`` is the id of every entry in file order, duplicates included, so that a
+    position in the file is one lookup away from the question it names.
+    """
 
     questions: tuple[Question, ...]
     entries: int
+    entry_ids: tuple[int, ...]
     duplicate_ids: tuple[int, ...]
     digest: str
     path: Path
@@ -149,6 +173,10 @@ class AuditOptions:
     out: Path
     predictions: Path | None = None
     questions_origin: str | None = None
+    questions_date: str | None = None
+    predictions_origin: str | None = None
+    predictions_date: str | None = None
+    predictions_keyed_by: str = QUESTION_ID_KEYING
     ids: tuple[int, ...] = ()
     fixture_digest: str = "counts"
     fail_on_smell: bool = False
@@ -259,10 +287,12 @@ def read_questions(path: Path, ids: Sequence[int] = ()) -> QuestionSet:
     """
     entries = _question_entries(_read_json(path, "the question file"), path)
     kept: dict[int, Question] = {}
+    entry_ids: list[int] = []
     duplicates: list[int] = []
     conflicting: list[int] = []
     for index, entry in enumerate(entries):
         question = _question(entry, path, index)
+        entry_ids.append(question.question_id)
         seen = kept.get(question.question_id)
         if seen is None:
             kept[question.question_id] = question
@@ -282,6 +312,7 @@ def read_questions(path: Path, ids: Sequence[int] = ()) -> QuestionSet:
     return QuestionSet(
         questions=wanted,
         entries=len(entries),
+        entry_ids=tuple(entry_ids),
         duplicate_ids=tuple(sorted(set(duplicates))),
         digest=file_digest(path),
         path=path,
@@ -307,11 +338,14 @@ def _question(entry: object, path: Path, index: int) -> Question:
 
 
 def read_predictions(path: Path) -> Mapping[int, str]:
-    """The predictions by question id, in either of the two forms BIRD writes.
+    """The predictions by the number the file keys them under, whatever that number is.
 
-    The keys are the question ids, as strings or as numbers. A value is the statement,
-    and BIRD's own ``predict_dev.json`` appends a tab, a marker and the database name to
-    it, which is stripped here so that one file works in both forms.
+    A key is a whole number written as a string or as a number. Which question it names is
+    ``resolve_predictions``'s answer and not this one's: reading the file and pairing its
+    predictions with questions are two steps, so a run refuses a pairing it cannot make
+    before it has run anything. A value is the statement, and BIRD's own
+    ``predict_dev.json`` appends a tab, a marker and the database name to it, which is
+    stripped here so that one file works in both forms.
     """
     document = _read_json(path, "the predictions file")
     if not isinstance(document, dict):
@@ -319,13 +353,89 @@ def read_predictions(path: Path) -> Mapping[int, str]:
     predictions: dict[int, str] = {}
     for key, value in cast("dict[object, object]", document).items():
         try:
-            question_id = int(cast("int | str", key))
+            keyed_under = int(cast("int | str", key))
         except (TypeError, ValueError) as unreadable:
-            raise ToolError(f"{path} has the key {key!r}, which is no question id") from unreadable
+            raise ToolError(
+                f"{path} has the key {key!r}, which is neither a question id nor a position"
+            ) from unreadable
         if not isinstance(value, str):
             raise ToolError(f"{path}[{key}] is {type(value).__name__} and a prediction is SQL")
-        predictions[question_id] = value.partition(BIRD_PREDICTION_SUFFIX)[0].strip()
+        predictions[keyed_under] = value.partition(BIRD_PREDICTION_SUFFIX)[0].strip()
     return predictions
+
+
+@dataclass(frozen=True)
+class Prediction:
+    """One prediction: the statement to compare a gold with, and where its text came from."""
+
+    sql: str
+    source: StatementSource
+
+
+@dataclass(frozen=True)
+class ResolvedPredictions:
+    """The predictions a run will compare, by question id, and what was left over.
+
+    ``positions_unused`` is empty under question-id keying. Under position keying it names
+    every position whose prediction was not compared with anything, which happens when two
+    positions name one question: the question file holds one entry twice, the lowest
+    position is the prediction that is compared, and the rest are recorded here rather
+    than silently dropped.
+    """
+
+    by_id: Mapping[int, str]
+    positions_unused: tuple[int, ...]
+
+
+def resolve_predictions(
+    predictions: Mapping[int, str], question_set: QuestionSet, keyed_by: str
+) -> ResolvedPredictions:
+    """The predictions by question id, from a file keyed by question id or by position.
+
+    Under ``position`` a key is the index of an entry of the question file in file order,
+    which is what BIRD's own evaluation writes: its ``package_sqls`` pairs prediction ``i``
+    with gold line ``i``, so the file holds ``"0"`` to ``"499"`` and no question id at all.
+
+    Raises ``ToolError`` for a position no entry of the question file has, and for a file
+    keyed by question id whose keys are exactly the positions of a question file whose ids
+    are not: those two readings pair different statements, and guessing between them would
+    be this tool comparing golds with predictions written for other questions.
+    """
+    if keyed_by == QUESTION_ID_KEYING:
+        _refuse_positions_read_as_ids(predictions, question_set)
+        return ResolvedPredictions(by_id=dict(predictions), positions_unused=())
+    by_id: dict[int, str] = {}
+    unused: list[int] = []
+    for position in sorted(predictions):
+        if not 0 <= position < question_set.entries:
+            raise ToolError(
+                f"the predictions file is keyed by position and has the key {position}, "
+                f"which is no entry of {question_set.path}: it holds {question_set.entries} "
+                f"entries, so a position is 0 to {question_set.entries - 1}"
+            )
+        question_id = question_set.entry_ids[position]
+        if question_id in by_id:
+            unused.append(position)
+            continue
+        by_id[question_id] = predictions[position]
+    return ResolvedPredictions(by_id=by_id, positions_unused=tuple(unused))
+
+
+def _refuse_positions_read_as_ids(
+    predictions: Mapping[int, str], question_set: QuestionSet
+) -> None:
+    """Refuse a file whose keys are the positions of a question file that is not keyed by
+    them, which is what BIRD's own prediction files are and what reading them as question
+    ids would quietly compare the wrong pairs."""
+    positions = tuple(range(question_set.entries))
+    if set(predictions) != set(positions) or question_set.entry_ids == positions:
+        return
+    raise ToolError(
+        f"the predictions file is keyed 0 to {question_set.entries - 1}, which are the "
+        f"positions of the {question_set.entries} entries of {question_set.path} and not "
+        "its question ids; a prediction file BIRD's own evaluation wrote is keyed by "
+        "position and needs --predictions-keyed-by position"
+    )
 
 
 def _question_entries(raw: object, path: Path) -> list[object]:
@@ -435,8 +545,22 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
     run_id = f"audit-{uuid.uuid4()}"
     data_as_of = options.data_as_of or datetime.now(UTC)
     question_set = read_questions(options.questions, options.ids)
-    predictions: Mapping[int, str] = (
-        read_predictions(options.predictions) if options.predictions else {}
+    questions_source = StatementSource(
+        path=str(options.questions),
+        digest=question_set.digest,
+        origin=options.questions_origin,
+        date=options.questions_date,
+    )
+    keyed: Mapping[int, str] = read_predictions(options.predictions) if options.predictions else {}
+    resolved = resolve_predictions(keyed, question_set, options.predictions_keyed_by)
+    predictions_source = _predictions_source(options)
+    predictions = (
+        {}
+        if predictions_source is None
+        else {
+            question_id: Prediction(sql, predictions_source)
+            for question_id, sql in resolved.by_id.items()
+        }
     )
     try:
         options.out.mkdir(parents=True, exist_ok=True)
@@ -462,6 +586,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
             writer,
             phases,
             question_set=question_set,
+            questions_source=questions_source,
             predictions=predictions,
             run_id=run_id,
             data_as_of=data_as_of,
@@ -483,7 +608,9 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
             options,
             summary,
             question_set=question_set,
-            predictions=predictions,
+            predictions_source=predictions_source,
+            statements=len(keyed),
+            positions_unused=resolved.positions_unused,
             identity=identity,
             role=role,
             settings_recorded=dict(settings.recorded),
@@ -494,6 +621,22 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         ),
     )
     return summary
+
+
+def _predictions_source(options: AuditOptions) -> StatementSource | None:
+    """The file the predictions were read from, or nothing when the run was given none.
+
+    The digest is taken here, once, after the file has been read: every record of a
+    prediction states it, and hashing it per question would state the same thing again.
+    """
+    if options.predictions is None:
+        return None
+    return StatementSource(
+        path=str(options.predictions),
+        digest=file_digest(options.predictions),
+        origin=options.predictions_origin,
+        date=options.predictions_date,
+    )
 
 
 def _run_fixture(backend: Backend, tables: Sequence[str], options: AuditOptions) -> _Measured:
@@ -568,7 +711,8 @@ def _audit_questions(
     phases: Phases,
     *,
     question_set: QuestionSet,
-    predictions: Mapping[int, str],
+    questions_source: StatementSource,
+    predictions: Mapping[int, Prediction],
     run_id: str,
     data_as_of: datetime,
     shuffled: ShuffledCopies | None,
@@ -595,6 +739,7 @@ def _audit_questions(
                     writer,
                     counted,
                     question_set=question_set,
+                    questions_source=questions_source,
                     prediction=predictions.get(question.question_id),
                     run_id=run_id,
                     data_as_of=data_as_of,
@@ -619,7 +764,8 @@ def _audit_one(
     counted: _Counted,
     *,
     question_set: QuestionSet,
-    prediction: str | None,
+    questions_source: StatementSource,
+    prediction: Prediction | None,
     run_id: str,
     data_as_of: datetime,
     shuffled: ShuffledCopies | None,
@@ -634,6 +780,7 @@ def _audit_one(
         recorded = record_statement(
             question=metadata,
             question_set_version=question_set.digest,
+            statement_source=questions_source,
             sql=question.sql,
             backend=backend,
             serialization=SERIALIZATION,
@@ -650,7 +797,9 @@ def _audit_one(
             question=metadata,
             question_set_version=question_set.digest,
             gold_sql=question.sql,
-            second_sql=prediction,
+            gold_source=questions_source,
+            second_sql=prediction.sql,
+            second_source=prediction.source,
             backend=backend,
             serialization=SERIALIZATION,
             run_id=run_id,
@@ -745,7 +894,9 @@ def _summary_json(
     summary: Summary,
     *,
     question_set: QuestionSet,
-    predictions: Mapping[int, str],
+    predictions_source: StatementSource | None,
+    statements: int,
+    positions_unused: tuple[int, ...],
     identity: str,
     role: str,
     settings_recorded: Mapping[str, str],
@@ -766,6 +917,7 @@ def _summary_json(
             "path": str(question_set.path),
             "digest": question_set.digest,
             "origin": options.questions_origin,
+            "date": options.questions_date,
             "entries": question_set.entries,
             "audited": summary.questions,
             "duplicate_ids": list(question_set.duplicate_ids),
@@ -773,8 +925,16 @@ def _summary_json(
         },
         "predictions": (
             None
-            if options.predictions is None
-            else {"path": str(options.predictions), "statements": len(predictions)}
+            if predictions_source is None
+            else {
+                "path": predictions_source.path,
+                "digest": predictions_source.digest,
+                "origin": predictions_source.origin,
+                "date": predictions_source.date,
+                "keyed_by": options.predictions_keyed_by,
+                "statements": statements,
+                "positions_unused": list(positions_unused),
+            }
         ),
         "verdicts": dict(summary.verdicts),
         "smells": dict(summary.smells),
@@ -878,6 +1038,22 @@ def _instant(value: str) -> datetime:
     return parsed.astimezone(UTC)
 
 
+def _stated_date(value: str) -> str:
+    """A date or an instant as the origin states it, kept as the text that was given.
+
+    Parsed only to refuse what is not ISO 8601. A dataset states its own date in its own
+    words, and a run that rewrote them into a normal form would record something the place
+    it came from does not say.
+    """
+    try:
+        datetime.fromisoformat(value)
+    except ValueError as unreadable:
+        raise argparse.ArgumentTypeError(
+            f"{value!r} is not an ISO 8601 date or instant"
+        ) from unreadable
+    return value
+
+
 def _positive(value: str) -> int:
     try:
         number = int(value)
@@ -920,6 +1096,32 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "where the question file came from, a URL or a note, recorded beside its digest so a "
             "reader knows which version of the benchmark was audited"
+        ),
+    )
+    audit.add_argument(
+        "--questions-date",
+        type=_stated_date,
+        default=None,
+        help="the date that origin states for the question file, ISO 8601",
+    )
+    audit.add_argument(
+        "--predictions-origin",
+        default=None,
+        help="where the predictions file came from, a URL or a note, recorded beside its digest",
+    )
+    audit.add_argument(
+        "--predictions-date",
+        type=_stated_date,
+        default=None,
+        help="the date that origin states for the predictions file, ISO 8601",
+    )
+    audit.add_argument(
+        "--predictions-keyed-by",
+        choices=(QUESTION_ID_KEYING, POSITION_KEYING),
+        default=QUESTION_ID_KEYING,
+        help=(
+            "what a key of the predictions file is: a question id, or the position of an entry "
+            "in the question file, which is what BIRD's own predict_*.json files hold"
         ),
     )
     audit.add_argument(
@@ -983,7 +1185,11 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
         dsn=cast("str", parsed.dsn),
         questions=cast("Path", parsed.questions),
         questions_origin=cast("str | None", parsed.questions_origin),
+        questions_date=cast("str | None", parsed.questions_date),
         predictions=cast("Path | None", parsed.predictions),
+        predictions_origin=cast("str | None", parsed.predictions_origin),
+        predictions_date=cast("str | None", parsed.predictions_date),
+        predictions_keyed_by=cast("str", parsed.predictions_keyed_by),
         out=cast("Path", parsed.out),
         ids=cast("tuple[int, ...]", parsed.ids),
         fixture_digest=cast("str", parsed.fixture_digest),
@@ -1026,16 +1232,20 @@ def main(argv: Sequence[str] | None = None) -> int:
 __all__ = [
     "ERROR",
     "GOLD_ONLY",
+    "POSITION_KEYING",
     "PROGRAM",
+    "QUESTION_ID_KEYING",
     "SERIALIZATION",
     "SMELLS_FILE",
     "SUMMARY_FILE",
     "SUMMARY_FORMAT",
     "AuditOptions",
     "ConsoleWriter",
+    "Prediction",
     "Question",
     "QuestionError",
     "QuestionSet",
+    "ResolvedPredictions",
     "Summary",
     "ToolError",
     "Writer",
@@ -1045,5 +1255,6 @@ __all__ = [
     "parse_arguments",
     "read_predictions",
     "read_questions",
+    "resolve_predictions",
     "run_audit",
 ]

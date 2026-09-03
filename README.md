@@ -57,6 +57,14 @@ attestql audit --dsn "host=localhost dbname=bird" \
     --questions minidev/MINIDEV/mini_dev_postgresql.json --predictions preds.json --out audit/
 ```
 
+BIRD's own prediction files under `llm/exp_result/` are keyed by the position of the entry in the
+question file rather than by question id, because its evaluation pairs prediction `i` with gold
+line `i`; read one with `--predictions-keyed-by position`, and under the default keying a file of
+that shape is refused rather than paired with whichever questions happen to carry those numbers.
+`--questions-origin`, `--questions-date`, `--predictions-origin` and `--predictions-date` record
+where each of the two files came from and what date its origin states, beside the sha256 this tool
+computes for it, in `summary.json` and in every evidence record.
+
 The password comes from `PGPASSWORD` or `~/.pgpass`; a DSN that contains one, or any URI form, is
 refused. Loading BIRD's dump prints 99 `role "..." does not exist` errors from its ownership
 statements; they are harmless. The role needs SELECT on the audited tables and an existing schema it may create tables in
@@ -77,8 +85,7 @@ GitHub README (498 distinct ids, q879 still ordering a text column as text) and 
 dataset `birdsql/bird_mini_dev` (500 ids, q879 corrected, q1322 changed; 2026-01-18). The lines
 above are from the zip; the same run over the Hugging Face file fires on 29 golds instead of 30,
 the difference being q879. Both runs, with each file's digest and origin, are in
-`plans/reports/audit-260902-minidev-gold-only/` and `plans/reports/audit-260903-minidev-hf-gold-only/`,
-and `--questions-origin` writes where your file came from into every record and the summary.
+`plans/reports/audit-260902-minidev-gold-only/` and `plans/reports/audit-260903-minidev-hf-gold-only/`.
 
 Exit status is 0 with no disagreement, 1 with at least one, 2 on a tool error. `--fail-on-smell`
 makes a fired probe exit 1 too. Every `audit/q<id>/` holds `counterexample.json`, the two evidence
@@ -93,7 +100,7 @@ holds the counts, the fixture digest, and whether the shuffle ran.
   R-SET otherwise; EQUAL, NOT_EQUAL, or
   NOT_COMPARABLE with the mismatched preconditions named (fixture digest, serialization, rule,
   ordering, and the five session settings that change rendered bytes).
-- An evidence record per execution, twenty required fields, no defaults: what ran, as what role,
+- An evidence record per execution, twenty-one required fields, no defaults: what ran, as what role,
   on which server, under which settings, with which result and hash, and how to re-run it.
 - Gold-only probes, all heuristics and labelled so: ordering over numeric-looking text; an
   arbitrary or null-first cut that changes the answer; a result that is not a function of the data

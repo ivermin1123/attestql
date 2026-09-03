@@ -38,7 +38,16 @@ from attestql.audit.compare import (
 from attestql.audit.statements import StatementRefused
 from attestql.evidence.replay import ComparabilityResult, compare_r_ord, compare_r_set
 from attestql.evidence.types import FixtureDigest, QuestionMetadata, ReplayRule, SortKey
-from tests.audit_fakes import DESCRIPTOR, IDENTITY, ROLE, SETTINGS, FakeBackend, fake_result
+from tests.audit_fakes import (
+    DESCRIPTOR,
+    IDENTITY,
+    PREDICTIONS_SOURCE,
+    QUESTIONS_SOURCE,
+    ROLE,
+    SETTINGS,
+    FakeBackend,
+    fake_result,
+)
 
 QUESTION = QuestionMetadata(
     question_id="q207",
@@ -73,7 +82,9 @@ def _compare(
         question=QUESTION,
         question_set_version=QUESTION_SET_VERSION,
         gold_sql=gold_sql,
+        gold_source=QUESTIONS_SOURCE,
         second_sql=second_sql,
+        second_source=PREDICTIONS_SOURCE,
         backend=backend,
         serialization=DESCRIPTOR,
         run_id="run-under-test",
@@ -244,6 +255,10 @@ def test_each_record_states_the_execution_it_came_from(tmp_path: Path) -> None:
         assert record.executed_at.tzinfo is not None
         assert record.run_id == "run-under-test"
         assert IDENTITY in record.rerun_instruction
+    # The gold was read from the question file and the prediction from the predictions
+    # file, and each record names the one its own statement came from.
+    assert comparison.gold.statement_source == QUESTIONS_SOURCE
+    assert comparison.second.statement_source == PREDICTIONS_SOURCE
 
 
 def test_the_fixture_covers_the_tables_both_statements_name(tmp_path: Path) -> None:
@@ -340,3 +355,19 @@ def test_the_comparison_is_written_as_three_files_a_reader_can_check(tmp_path: P
     assert gold_record["fixture"]["row_counts"] == {"atom": 2}
     second_record = json.loads((tmp_path / "q207" / SECOND_RECORD_FILE).read_text(encoding="utf-8"))
     assert second_record["executed_sql"] == SECOND_SET
+    assert document["sources"] == {
+        "gold": {
+            "path": QUESTIONS_SOURCE.path,
+            "digest": QUESTIONS_SOURCE.digest,
+            "origin": None,
+            "date": None,
+        },
+        "second": {
+            "path": PREDICTIONS_SOURCE.path,
+            "digest": PREDICTIONS_SOURCE.digest,
+            "origin": None,
+            "date": None,
+        },
+    }
+    assert gold_record["statement_source"]["digest"] == QUESTIONS_SOURCE.digest
+    assert second_record["statement_source"]["path"] == PREDICTIONS_SOURCE.path

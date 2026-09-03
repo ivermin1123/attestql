@@ -34,6 +34,7 @@ from attestql.evidence.types import (
     ReplayRule,
     SessionSettings,
     SortKey,
+    StatementSource,
 )
 from attestql.kernel.ports import QueryExecutor
 from attestql.kernel.types import (
@@ -79,6 +80,12 @@ SETTINGS = SessionSettings(
     extra_float_digits="1",
     database_collation="en_US.UTF-8",
     recorded={"statement_timeout": "5000", "server_version_num": "160004"},
+)
+SOURCE = StatementSource(
+    path="questions-under-test.json",
+    digest="sha256:question-file-under-test",
+    origin="https://example.org/questions-under-test.json",
+    date="2026-01-18",
 )
 FIXTURE = FixtureDigest(
     schema_digest="sha256:schema-under-test",
@@ -164,6 +171,7 @@ def build(
             question_as_asked=QUESTION.question_text,
             question=QUESTION,
             question_set_version=QUESTION_SET_VERSION,
+            statement_source=SOURCE,
             statement=statement,
             bound_parameters=statement.parameters,
             result=result,
@@ -231,6 +239,7 @@ def test_the_measurements_the_caller_took_are_the_caller_s_and_not_a_module_cons
     assert record.question == QUESTION
     assert record.question_as_asked == QUESTION.question_text
     assert record.question_set_version == QUESTION_SET_VERSION
+    assert record.statement_source == SOURCE
     assert record.session_settings_in_force == SETTINGS
     assert record.fixture == FIXTURE
     other = build(question_set_version="sha256:another-question-set")
@@ -311,6 +320,17 @@ def test_an_ordered_record_states_the_ordering_and_an_unordered_one_states_none(
         make_record(canonical_ordering=(SortKey("active_accounts", descending=True),))
 
 
+def test_a_record_states_where_the_statement_it_ran_was_read_from(make_record: Any) -> None:
+    """The path and the digest are measured and required; what the run was told about the
+    file may be nothing, and nothing is a value here."""
+    for name in ("path", "digest"):
+        with pytest.raises(ValueError, match=f"{name} is required"):
+            make_record(statement_source=dataclasses.replace(SOURCE, **{name: ""}))
+    told_nothing = make_record(statement_source=dataclasses.replace(SOURCE, origin=None, date=None))
+    assert told_nothing.statement_source.origin is None
+    assert told_nothing.statement_source.date is None
+
+
 def test_a_record_states_the_question_it_answers(make_record: Any) -> None:
     """The identity and the set are required; the hint may be empty and is never absent."""
     with pytest.raises(ValueError, match="question_id"):
@@ -364,11 +384,13 @@ def test_no_question_metadata_or_measurement_field_carries_a_default() -> None:
 
 
 def test_the_record_holds_exactly_the_fields_adr_0013_re_cut_it_to() -> None:
-    """Twenty fields: fifteen kept, five renamed into six, nine dropped."""
+    """Twenty-one fields: the twenty ADR-0013 re-cut the record to, and the source of the
+    statement each one is a record of."""
     assert tuple(field.name for field in dataclasses.fields(EvidenceRecord)) == (
         "question_as_asked",
         "question",
         "question_set_version",
+        "statement_source",
         "executed_sql",
         "bound_parameters",
         "validation_outcome",

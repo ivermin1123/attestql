@@ -51,6 +51,7 @@ from attestql.evidence.render import (
     result_json,
     row_difference,
     row_difference_json,
+    statement_source_json,
     write_json,
 )
 from attestql.evidence.replay import ComparabilityVerdict, compare_r_ord, compare_r_set
@@ -61,6 +62,7 @@ from attestql.evidence.types import (
     ReplayRule,
     SessionSettings,
     SortKey,
+    StatementSource,
 )
 from attestql.kernel.types import (
     ExecutionResult,
@@ -221,6 +223,7 @@ def _execute_and_record(
     *,
     question: QuestionMetadata,
     question_set_version: str,
+    statement_source: StatementSource,
     backend: Backend,
     serialization: SerializationDescriptor,
     identity: ExecutionIdentity,
@@ -247,6 +250,7 @@ def _execute_and_record(
         question_as_asked=question.question_text,
         question=question,
         question_set_version=question_set_version,
+        statement_source=statement_source,
         statement=_admitted(parsed, result, serialization),
         bound_parameters=(),
         result=result,
@@ -266,6 +270,7 @@ def record_statement(
     *,
     question: QuestionMetadata,
     question_set_version: str,
+    statement_source: StatementSource,
     sql: str,
     backend: Backend,
     serialization: SerializationDescriptor,
@@ -294,6 +299,7 @@ def record_statement(
         parsed,
         question=question,
         question_set_version=question_set_version,
+        statement_source=statement_source,
         backend=backend,
         serialization=serialization,
         identity=ExecutionIdentity(
@@ -323,7 +329,9 @@ def compare_statements(
     question: QuestionMetadata,
     question_set_version: str,
     gold_sql: str,
+    gold_source: StatementSource,
     second_sql: str,
+    second_source: StatementSource,
     backend: Backend,
     serialization: SerializationDescriptor,
     run_id: str,
@@ -356,11 +364,12 @@ def compare_statements(
     )
     rerun = _rerun_instruction(backend.identity(), rule)
 
-    def record_of(parsed: ParsedStatement) -> EvidenceRecord:
+    def record_of(parsed: ParsedStatement, source: StatementSource) -> EvidenceRecord:
         return _execute_and_record(
             parsed,
             question=question,
             question_set_version=question_set_version,
+            statement_source=source,
             backend=backend,
             serialization=serialization,
             identity=identity,
@@ -373,8 +382,8 @@ def compare_statements(
             statement_timeout_seconds=statement_timeout_seconds,
         )
 
-    gold_record = record_of(gold_parsed)
-    second_record = record_of(second_parsed)
+    gold_record = record_of(gold_parsed, gold_source)
+    second_record = record_of(second_parsed, second_source)
     verdict = (
         compare_r_ord(gold_record, second_record)
         if rule is ReplayRule.R_ORD
@@ -452,6 +461,10 @@ def counterexample_json(comparison: Comparison) -> Json:
             "evidence_text": comparison.question.evidence_text,
         },
         "question_set_version": comparison.gold.question_set_version,
+        "sources": {
+            "gold": statement_source_json(comparison.gold.statement_source),
+            "second": statement_source_json(comparison.second.statement_source),
+        },
         "replay_rule": comparison.replay_rule.value,
         "verdict": {
             "result": comparison.verdict.result.value,

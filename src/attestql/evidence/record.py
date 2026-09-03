@@ -19,10 +19,12 @@ the five settings that change rendered bytes or row order and records the rest.
 ``fixture`` is a digest of the data the statement actually read, taken from the server
 rather than from a constant beside it, which is what the retired ``schema_version``
 could never honestly hold. ``question_set_version`` is the one version a benchmark row
-has: the set it was read from. ``executed_at`` and ``row_count`` are the two values the
-old execution metadata carried that were not already stated elsewhere; the database
-identity it also held is ``backend_identity_at_checkout`` and one record holding one
-value twice is a record that can disagree with itself.
+has: the set it was read from. ``statement_source`` is the file this record's own statement
+was read from, with its digest and whatever the run was told about where that file came
+from; for a prediction that is not the file the question came from. ``executed_at`` and
+``row_count`` are the two values the old execution metadata carried that were not already
+stated elsewhere; the database identity it also held is ``backend_identity_at_checkout``
+and one record holding one value twice is a record that can disagree with itself.
 """
 
 from __future__ import annotations
@@ -38,6 +40,7 @@ from attestql.evidence.types import (
     ReplayRule,
     SessionSettings,
     SortKey,
+    StatementSource,
 )
 from attestql.kernel.types import BoundParameter, ExecutionResult
 
@@ -59,6 +62,7 @@ class EvidenceRecord:
     question_as_asked: str
     question: QuestionMetadata
     question_set_version: str
+    statement_source: StatementSource
     executed_sql: str
     bound_parameters: tuple[BoundParameter, ...]
     validation_outcome: ValidationOutcome

@@ -15,6 +15,7 @@ connection, which is the only way those two are reachable without a server.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, cast
@@ -48,6 +49,7 @@ NUMERIC = parse_statement(FASTEST_LAP).with_ordering_key_cast_to_numeric(0)
 UNBOUNDED = parse_statement(FASTEST_LAP).without_the_bound_and_projecting_its_keys()
 
 ELEMENTS = "SELECT element FROM atom"
+ELEMENTS_ONE_ROW = "SELECT element FROM atom LIMIT 1"
 TWO_ROWS = "SELECT name FROM players LIMIT 2"
 SEASONS = "SELECT year FROM seasons"
 DRIVERS = "SELECT nationality FROM drivers"
@@ -102,6 +104,12 @@ def options(tmp_path: Path, **changed: Any) -> AuditOptions:
         **changed,
     }
     return AuditOptions(**stated)
+
+
+def sha256_of(path: Path) -> str:
+    """The digest of a file, computed here rather than with the tool's own helper: what a
+    record and the summary state about a file is checked against the file itself."""
+    return f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
 
 
 def summary_of(tmp_path: Path) -> dict[str, Any]:
@@ -651,6 +659,7 @@ def test_the_console_entry_point_is_the_main_this_module_states() -> None:
 
 
 ORIGIN = "https://example.org/bench/mini_dev_pg.json (commit f65faf4a, 2026-01-18)"
+PREDICTIONS_ORIGIN = "https://example.org/runs/predict_mini_dev_gpt.json"
 
 
 def test_the_stated_origin_of_the_question_file_is_in_the_summary_and_every_record(
@@ -705,3 +714,227 @@ def test_the_command_line_takes_the_origin_of_the_question_file() -> None:
         ]
     )
     assert parsed.questions_origin == ORIGIN
+
+
+def test_the_stated_date_of_the_question_file_is_in_the_summary(tmp_path: Path) -> None:
+    """A dataset states a date beside the file it publishes, and the digest alone does not
+    say when the copy that was audited was the current one."""
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    run_audit(options(tmp_path, questions_date="2026-01-18"), _quiet_backend(), Lines())
+    assert summary_of(tmp_path)["question_set"]["date"] == "2026-01-18"
+    run_audit(options(tmp_path), _quiet_backend(), Lines())
+    assert summary_of(tmp_path)["question_set"]["date"] is None
+
+
+def test_the_command_line_takes_the_origin_and_the_date_of_both_files() -> None:
+    parsed = parse_arguments(
+        [
+            "audit",
+            "--dsn",
+            "host=h dbname=d",
+            "--questions",
+            "q.json",
+            "--out",
+            "o/",
+            "--questions-origin",
+            ORIGIN,
+            "--questions-date",
+            "2026-01-18",
+            "--predictions",
+            "p.json",
+            "--predictions-origin",
+            PREDICTIONS_ORIGIN,
+            "--predictions-date",
+            "2026-02-01T00:00:00+00:00",
+            "--predictions-keyed-by",
+            "position",
+        ]
+    )
+    assert parsed.questions_date == "2026-01-18"
+    assert parsed.predictions_origin == PREDICTIONS_ORIGIN
+    assert parsed.predictions_date == "2026-02-01T00:00:00+00:00"
+    assert parsed.predictions_keyed_by == "position"
+
+
+@pytest.mark.parametrize("flag", ["--questions-date", "--predictions-date"])
+def test_a_date_that_is_not_iso_8601_is_refused_before_anything_runs(flag: str) -> None:
+    with pytest.raises(SystemExit) as refused:
+        parse_arguments(
+            ["audit", "--dsn", "host=h", "--questions", "q.json", "--out", "a", flag, "last week"]
+        )
+    assert refused.value.code == 2
+
+
+def test_the_predictions_file_is_recorded_with_its_digest_origin_and_date(
+    tmp_path: Path,
+) -> None:
+    """The gold and the prediction come out of two files, and each record names its own."""
+    other = "SELECT element FROM atom WHERE element = 'c'"
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    predictions = write(tmp_path / "preds.json", {"207": other})
+    backend = FakeBackend(
+        {ELEMENTS: fake_result(ELEMENT, (("c",), ("o",))), other: fake_result(ELEMENT, (("c",),))},
+        row_counts={"atom": 2},
+    )
+    summary = run_audit(
+        options(
+            tmp_path,
+            predictions=predictions,
+            questions_origin=ORIGIN,
+            questions_date="2026-01-18",
+            predictions_origin=PREDICTIONS_ORIGIN,
+            predictions_date="2026-02-01",
+        ),
+        backend,
+        Lines(),
+    )
+    written = summary_of(tmp_path)["predictions"]
+
+    assert summary.not_equal == 1
+    assert written["path"] == str(predictions)
+    assert written["digest"] == sha256_of(predictions)
+    assert written["origin"] == PREDICTIONS_ORIGIN
+    assert written["date"] == "2026-02-01"
+    assert written["keyed_by"] == "question-id"
+    assert written["positions_unused"] == []
+    assert written["statements"] == 1
+
+    directory = tmp_path / "audit" / "q207"
+    gold = json.loads((directory / GOLD_RECORD_FILE).read_text(encoding="utf-8"))
+    second = json.loads((directory / SECOND_RECORD_FILE).read_text(encoding="utf-8"))
+    assert gold["statement_source"] == {
+        "path": str(tmp_path / "questions.json"),
+        "digest": sha256_of(tmp_path / "questions.json"),
+        "origin": ORIGIN,
+        "date": "2026-01-18",
+    }
+    assert second["statement_source"] == {
+        "path": str(predictions),
+        "digest": sha256_of(predictions),
+        "origin": PREDICTIONS_ORIGIN,
+        "date": "2026-02-01",
+    }
+    counterexample = json.loads((directory / COUNTEREXAMPLE_FILE).read_text(encoding="utf-8"))
+    assert counterexample["sources"] == {
+        "gold": gold["statement_source"],
+        "second": second["statement_source"],
+    }
+
+
+def test_a_gold_only_record_names_the_question_file_as_the_source_of_its_statement(
+    tmp_path: Path,
+) -> None:
+    """There is no second statement, so there is one file and the record names it."""
+    questions = write(tmp_path / "questions.json", [question(94, "european_football_2", TWO_ROWS)])
+    backend = FakeBackend(
+        {TWO_ROWS: fake_result(NAME, (("a",), ("b",)))},
+        shuffled_results={TWO_ROWS: fake_result(NAME, (("c",), ("d",)))},
+    )
+    run_audit(options(tmp_path), backend, Lines())
+    record = json.loads((tmp_path / "audit" / "q94" / GOLD_RECORD_FILE).read_text(encoding="utf-8"))
+    assert record["statement_source"]["path"] == str(questions)
+    assert record["statement_source"]["digest"] == sha256_of(questions)
+    assert record["statement_source"]["origin"] is None
+    assert summary_of(tmp_path)["predictions"] is None
+
+
+# predictions keyed by position
+
+
+def _duplicated_question_file(tmp_path: Path) -> Path:
+    """Three entries under two ids, which is the shape of BIRD's own Mini-Dev file: the
+    entry of question 207 is written twice and every position still answers something."""
+    entry = question(207, "toxicology", ELEMENTS)
+    return write(
+        tmp_path / "questions.json",
+        [entry, question(94, "european_football_2", TWO_ROWS), dict(entry)],
+    )
+
+
+def _two_question_backend() -> FakeBackend:
+    return FakeBackend(
+        {
+            ELEMENTS: fake_result(ELEMENT, (("c",), ("o",))),
+            ELEMENTS_ONE_ROW: fake_result(ELEMENT, (("c",),)),
+            TWO_ROWS: fake_result(NAME, (("a",), ("b",))),
+        },
+        row_counts={"atom": 2, "players": 2},
+    )
+
+
+def test_a_prediction_file_keyed_by_position_is_paired_by_position(tmp_path: Path) -> None:
+    """BIRD's own files hold "0" to "499": the position of the entry the prediction
+    answers, not the question's id. Two positions name question 207 here, and the lower
+    one is the prediction that is compared."""
+    _duplicated_question_file(tmp_path)
+    write(
+        tmp_path / "preds.json",
+        {"0": ELEMENTS_ONE_ROW, "1": TWO_ROWS, "2": "SELECT element FROM atom LIMIT 0"},
+    )
+    summary = run_audit(
+        options(
+            tmp_path,
+            predictions=tmp_path / "preds.json",
+            predictions_keyed_by="position",
+        ),
+        _two_question_backend(),
+        Lines(),
+    )
+    written = summary_of(tmp_path)
+
+    assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1}
+    assert written["predictions"]["keyed_by"] == "position"
+    assert written["predictions"]["statements"] == 3
+    assert written["predictions"]["positions_unused"] == [2]
+    second = json.loads(
+        (tmp_path / "audit" / "q207" / SECOND_RECORD_FILE).read_text(encoding="utf-8")
+    )
+    assert second["executed_sql"] == ELEMENTS_ONE_ROW, "position 0's prediction was compared"
+
+
+def test_a_position_no_entry_of_the_question_file_has_stops_the_run(tmp_path: Path) -> None:
+    _duplicated_question_file(tmp_path)
+    write(tmp_path / "preds.json", {"3": ELEMENTS_ONE_ROW})
+    with pytest.raises(ToolError, match="the key 3, which is no entry of"):
+        run_audit(
+            options(
+                tmp_path,
+                predictions=tmp_path / "preds.json",
+                predictions_keyed_by="position",
+            ),
+            _two_question_backend(),
+            Lines(),
+        )
+
+
+def test_keys_that_are_the_positions_of_a_file_keyed_otherwise_are_refused(
+    tmp_path: Path,
+) -> None:
+    """Read as question ids, a BIRD file pairs its predictions with whichever questions
+    happen to be numbered 0, 1, 2, and with nothing elsewhere. That is not a reading this
+    tool guesses at."""
+    _duplicated_question_file(tmp_path)
+    write(tmp_path / "preds.json", {"0": ELEMENTS_ONE_ROW, "1": TWO_ROWS, "2": ELEMENTS})
+    with pytest.raises(ToolError, match="--predictions-keyed-by position"):
+        run_audit(
+            options(tmp_path, predictions=tmp_path / "preds.json"),
+            _two_question_backend(),
+            Lines(),
+        )
+
+
+def test_a_question_file_whose_ids_are_the_positions_is_read_either_way(tmp_path: Path) -> None:
+    """When the ids are 0 to N-1 the two readings pair the same statements, and the full
+    BIRD dev set is numbered that way, so nothing is refused."""
+    write(
+        tmp_path / "questions.json",
+        [question(0, "toxicology", ELEMENTS), question(1, "european_football_2", TWO_ROWS)],
+    )
+    write(tmp_path / "preds.json", {"0": ELEMENTS_ONE_ROW, "1": TWO_ROWS})
+    summary = run_audit(
+        options(tmp_path, predictions=tmp_path / "preds.json"),
+        _two_question_backend(),
+        Lines(),
+    )
+    assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1}
+    assert summary_of(tmp_path)["predictions"]["positions_unused"] == []

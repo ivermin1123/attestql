@@ -28,6 +28,7 @@ from attestql.evidence.serialize import (
     canonical_serialize,
     canonical_type_tag,
 )
+from attestql.evidence.types import StatementSource
 from attestql.kernel.types import ExecutionResult
 
 Json = dict[str, Any]
@@ -164,6 +165,17 @@ def row_difference_json(difference: RowDifference, *, left_key: str, right_key: 
     }
 
 
+def statement_source_json(source: StatementSource) -> Json:
+    """Where one statement's text came from: the file, its digest, and what the run was told
+    about the file. ``origin`` and ``date`` are null when the run was told nothing."""
+    return {
+        "path": source.path,
+        "digest": source.digest,
+        "origin": source.origin,
+        "date": source.date,
+    }
+
+
 def record_json(record: EvidenceRecord) -> Json:
     """Every field of the record, whole, in a form a reader can diff.
 
@@ -187,6 +199,7 @@ def record_json(record: EvidenceRecord) -> Json:
             "evidence_text": record.question.evidence_text,
         },
         "question_set_version": record.question_set_version,
+        "statement_source": statement_source_json(record.statement_source),
         "executed_sql": record.executed_sql,
         "bound_parameters": [
             {"position": p.position, "value": json_value(p.value), "declared_type": p.declared_type}
@@ -264,5 +277,6 @@ __all__ = [
     "result_json",
     "row_difference",
     "row_difference_json",
+    "statement_source_json",
     "write_json",
 ]

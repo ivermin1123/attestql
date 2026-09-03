@@ -12,6 +12,10 @@ them: no metric, no window, no dimension, no join path. A benchmark row has no m
 contract to resolve against, and a record that carried an empty resolution would state
 that a resolution had happened.
 
+``StatementSource`` is where the executed statement's text was read from. A gold and a
+prediction come out of two different files, and a record that did not name the one its own
+statement came from would leave a reader with a statement and no way back to its file.
+
 ``SessionSettings`` and ``FixtureDigest`` are what a comparison of two executions has to
 agree on before an inequality between them means anything (ADR-0013 point 6). Both are
 read from the server rather than configured beside it, and both are stated in full: the
@@ -78,6 +82,27 @@ class QuestionMetadata:
         for name in ("question_text", "evidence_text"):
             if not isinstance(getattr(self, name), str):  # pyright: ignore[reportUnnecessaryIsInstance]  # runtime guard for callers outside the type system
                 raise TypeError(f"{name} must be a string")
+
+
+@dataclass(frozen=True)
+class StatementSource:
+    """The file the executed statement's text was read from, and what it is known to be.
+
+    ``path`` is the path the run was given and ``digest`` the sha256 of what was read
+    there, so a reader who has the file can check that it is the same one. ``origin`` and
+    ``date`` are what the run was told about where that file came from and when, and are
+    ``None`` when it was told nothing, which is a stated absence and not a default.
+    """
+
+    path: str
+    digest: str
+    origin: str | None
+    date: str | None
+
+    def __post_init__(self) -> None:
+        for name in ("path", "digest"):
+            if not getattr(self, name):
+                raise ValueError(f"{name} is required")
 
 
 def read_only_text(name: str, value: Mapping[str, str]) -> Mapping[str, str]:
@@ -203,6 +228,7 @@ __all__ = [
     "ReplayRule",
     "SessionSettings",
     "SortKey",
+    "StatementSource",
     "read_only_counts",
     "read_only_text",
 ]

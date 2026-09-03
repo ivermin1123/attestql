@@ -42,6 +42,7 @@ from attestql.evidence.types import (
     ReplayRule,
     SessionSettings,
     SortKey,
+    StatementSource,
 )
 from attestql.kernel.types import BoundParameter, ExecutionResult, ValidatedStatement
 
@@ -111,6 +112,7 @@ def build_evidence_record(
     question_as_asked: str,
     question: QuestionMetadata,
     question_set_version: str,
+    statement_source: StatementSource,
     statement: ValidatedStatement,
     bound_parameters: tuple[BoundParameter, ...],
     result: ExecutionResult,
@@ -126,8 +128,9 @@ def build_evidence_record(
 ) -> EvidenceRecord:
     """A complete ``EvidenceRecord`` for one execution.
 
-    ``statement`` and ``result`` are the execution. ``fixture`` and
-    ``session_settings_in_force`` are what was measured on the server the statement
+    ``statement`` and ``result`` are the execution. ``statement_source`` is the file the
+    statement's text was read from, which only the caller that opened it knows. ``fixture``
+    and ``session_settings_in_force`` are what was measured on the server the statement
     read, so a comparison can say whether two records are about the same data read
     under the same rules; the caller that took those measurements states them.
     """
@@ -136,6 +139,7 @@ def build_evidence_record(
         question_as_asked=question_as_asked,
         question=question,
         question_set_version=question_set_version,
+        statement_source=statement_source,
         executed_sql=statement.sql,
         bound_parameters=admitted_parameters,
         validation_outcome=ValidationOutcome(statement.checks_passed, True),

@@ -10,6 +10,7 @@ from attestql.evidence.render import (
     result_json,
     row_difference,
     row_difference_json,
+    statement_source_json,
     write_json,
 )
 from attestql.evidence.replay import (
@@ -35,6 +36,7 @@ from attestql.evidence.types import (
     ReplayRule,
     SessionSettings,
     SortKey,
+    StatementSource,
 )
 
 __all__ = [
@@ -54,6 +56,7 @@ __all__ = [
     "SerializationDescriptor",
     "SessionSettings",
     "SortKey",
+    "StatementSource",
     "UnsupportedValue",
     "ValidationOutcome",
     "build_evidence_record",
@@ -68,5 +71,6 @@ __all__ = [
     "result_json",
     "row_difference",
     "row_difference_json",
+    "statement_source_json",
     "write_json",
 ]

@@ -53,6 +53,7 @@ from attestql.evidence.types import (
     ReplayRule,
     SessionSettings,
     SortKey,
+    StatementSource,
 )
 from attestql.kernel.types import BoundParameter, ColumnType, ExecutionLimits, ExecutionResult
 
@@ -80,6 +81,12 @@ FIXTURE = FixtureDigest(
     row_counts={"feature_usage": 12},
     content_digests={},
     source_file_sha256="",
+)
+SOURCE = StatementSource(
+    path="questions-under-test.json",
+    digest="sha256:question-file-under-test",
+    origin=None,
+    date=None,
 )
 
 
@@ -120,6 +127,7 @@ def make_evidence_record(
             validation_outcome=ValidationOutcome(("single_statement", "select_only"), True),
             validator_version="validator-under-test",
             question_set_version="sha256:question-set-under-test",
+            statement_source=SOURCE,
             effective_database_role="attestql_readonly_under_test",
             backend_identity_at_checkout="backend-under-test",
             session_settings_in_force=SETTINGS,
