@@ -1,12 +1,13 @@
--- The audit sandbox fixture: three shipped-gold defects, two smells and one table the
--- auditor may not read, in synthetic rows.
+-- The audit sandbox fixture: three shipped-gold defects, two smells, one table the auditor may
+-- not read and two schemas holding a table of one name, in synthetic rows.
 --
 -- Every table, column and row below is written for this sandbox. Nothing is copied from BIRD:
 -- what is reproduced is the shape of the three defects the spike found on the Mini-Dev
 -- PostgreSQL dump (questions 1029, 879 and 207), small enough that a reader can work out both
 -- answers by hand and see why they differ. The identifiers are lowercase because the dump's are
 -- and because the gold statements name their tables unquoted, which the server folds to
--- lowercase anyway.
+-- lowercase anyway. One schema below is the exception, and is quoted and mixed case on purpose:
+-- what a gold writes to name a table in it has to be written back exactly.
 --
 -- Loaded by run.sh as the container superuser into the database `audit`, before the read-only
 -- `auditor` login is created and granted SELECT, so nothing here names a role or a credential.
@@ -148,6 +149,41 @@ CREATE TABLE scores (
 
 INSERT INTO scores (name, score) VALUES
     ('ash', 99), ('bram', 99), ('cleo', 99), ('dara', 71), ('esme', 64), ('flint', 12);
+
+-- ---------------------------------------------------------------------------------------------
+-- Two tables called y, in two schemas, so that a qualified gold has something to be confused with
+-- ---------------------------------------------------------------------------------------------
+
+-- The same relation name under two schemas, holding different columns and different rows. Each
+-- has one text column of numerals, which is the first smell's case, and the two are named
+-- differently: a gold that names one schema and is resolved against the other names a column
+-- that table does not have, and the smell says so instead of firing. So both golds firing is
+-- what says each was read against the table it named. The schema is quoted and mixed case
+-- because an unquoted name is folded to lowercase by the server, and a name that has to be
+-- written back exactly is the case worth reproducing.
+CREATE SCHEMA "Quoted";
+
+-- Whole numbers as text: '1000' sorts below '200' and both below '7', so ordering this weight as
+-- a number answers otherwise and the four labels come back reversed.
+CREATE TABLE "Quoted".y (
+    id     bigint PRIMARY KEY,
+    label  text   NOT NULL,
+    weight text   NOT NULL
+);
+
+-- Three decimals as text, and a column called mass rather than weight: '10' sorts below '200.5'
+-- and both below '9.5', which is the same defect over other rows under another name.
+CREATE TABLE public.y (
+    id  bigint PRIMARY KEY,
+    tag text   NOT NULL,
+    mass text  NOT NULL
+);
+
+INSERT INTO "Quoted".y (id, label, weight) VALUES
+    (1, 'alder', '30'), (2, 'birch', '7'), (3, 'cedar', '200'), (4, 'deal', '1000');
+
+INSERT INTO public.y (id, tag, mass) VALUES
+    (1, 'iron', '9.5'), (2, 'lead', '10'), (3, 'zinc', '200.5');
 
 -- ---------------------------------------------------------------------------------------------
 -- The table this fixture loads and the auditor is not granted

@@ -37,7 +37,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any, cast
 
-from attestql.audit.backend import Backend
+from attestql.audit.backend import Backend, TableName
 from attestql.evidence.types import FixtureDigest
 
 CACHE_FILE = "fixture.json"
@@ -62,7 +62,7 @@ def file_digest(path: Path) -> str:
 
 def fixture_digest(
     backend: Backend,
-    tables: Sequence[str],
+    tables: Sequence[TableName],
     *,
     directory: Path,
     with_content_digests: bool = False,
@@ -101,11 +101,11 @@ def fixture_digest(
 
 
 def _key(
-    identity: str, schema_digest: str, *, with_content_digests: bool, tables: Sequence[str]
+    identity: str, schema_digest: str, *, with_content_digests: bool, tables: Sequence[TableName]
 ) -> str:
     """One line naming the server, the schema, the tables and how deep the measurement went."""
     depth = "content" if with_content_digests else "counts"
-    return "\n".join((identity, schema_digest, depth, ",".join(tables)))
+    return "\n".join((identity, schema_digest, depth, ",".join(name.text for name in tables)))
 
 
 def _entry(payload: object, signal: Mapping[str, str], source_digest: str) -> FixtureDigest | None:

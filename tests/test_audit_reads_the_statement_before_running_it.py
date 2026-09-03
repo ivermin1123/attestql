@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import pytest
 
+from attestql.audit.backend import TableName
 from attestql.audit.statements import (
     CHECKS_PASSED,
     VALIDATOR_VERSION,
@@ -61,7 +62,7 @@ def test_an_ascending_null_first_key_is_reported_as_written() -> None:
     key = parsed.ordering[0]
     assert (key.expression, key.descending, key.nulls) == ("t1.buildupplayspeed", False, "first")
     assert parsed.limit_count == 4
-    assert set(parsed.tables) == {"team_attributes", "team"}
+    assert set(parsed.tables) == {TableName("", "team_attributes"), TableName("", "team")}
     assert parsed.distinct is False
 
 
@@ -75,7 +76,7 @@ def test_a_cast_in_the_ordering_key_is_part_of_the_key() -> None:
         assert parsed.ordering[0].descending is True
         assert parsed.ordering[0].nulls == "last"
         assert parsed.limit_count == 1
-        assert set(parsed.tables) == {"drivers", "results"}
+        assert set(parsed.tables) == {TableName("", "drivers"), TableName("", "results")}
 
 
 def test_a_statement_with_no_ordering_carries_no_ordering_and_still_reports_its_shape() -> None:
@@ -85,7 +86,11 @@ def test_a_statement_with_no_ordering_carries_no_ordering_and_still_reports_its_
     assert parsed.sort_keys == ()
     assert parsed.limit_count is None
     assert parsed.distinct is True
-    assert set(parsed.tables) == {"atom", "connected", "bond"}
+    assert set(parsed.tables) == {
+        TableName("", "atom"),
+        TableName("", "connected"),
+        TableName("", "bond"),
+    }
 
 
 def test_the_ordering_a_record_states_is_the_expression_and_its_direction() -> None:
@@ -96,13 +101,36 @@ def test_the_ordering_a_record_states_is_the_expression_and_its_direction() -> N
 
 def test_a_qualified_table_keeps_its_schema_and_a_bare_one_is_left_bare() -> None:
     """The audit does not invent a schema here; the backend decides what a bare name means."""
-    assert parse_statement("SELECT a FROM public.t ORDER BY a").tables == ("public.t",)
-    assert parse_statement("SELECT a FROM t").tables == ("t",)
+    assert parse_statement("SELECT a FROM public.t ORDER BY a").tables == (
+        TableName("public", "t"),
+    )
+    assert parse_statement("SELECT a FROM t").tables == (TableName("", "t"),)
+    assert parse_statement('SELECT a FROM "Quoted".t').tables == (TableName("Quoted", "t"),)
+
+
+def test_a_relation_whose_name_holds_a_dot_is_one_name_and_not_two() -> None:
+    """``"a.b"`` is a relation called ``a.b`` and not the table ``b`` of a schema ``a``.
+
+    The grammar hands identifiers back with their quoting taken off, so the two are the
+    same string once they are joined, and everything downstream reads the pair instead.
+    """
+    dotted = parse_statement('SELECT x FROM "a.b"')
+    assert dotted.tables == (TableName("", "a.b"),)
+    assert dotted.tables != parse_statement("SELECT x FROM a.b").tables
+    assert parse_statement("SELECT x FROM a.b").tables == (TableName("a", "b"),)
+
+
+def test_the_relation_an_alias_names_keeps_the_schema_the_from_clause_wrote() -> None:
+    """An ordering key resolved through an alias resolves to the table the statement meant,
+    and not to another table of that name in another schema."""
+    parsed = parse_statement('SELECT t.a FROM "Quoted".y AS t ORDER BY t.a')
+    assert dict(parsed.aliases) == {"t": TableName("Quoted", "y")}
+    assert dict(parse_statement("SELECT a FROM y").aliases) == {"y": TableName("", "y")}
 
 
 def test_a_table_named_twice_is_named_once() -> None:
     parsed = parse_statement("SELECT a.x FROM t AS a JOIN t AS b ON a.x = b.x")
-    assert parsed.tables == ("t",)
+    assert parsed.tables == (TableName("", "t"),)
 
 
 def test_a_name_a_with_clause_defines_is_not_a_table() -> None:
@@ -114,12 +142,12 @@ def test_a_name_a_with_clause_defines_is_not_a_table() -> None:
         "SELECT d.surname FROM fastest JOIN drivers AS d ON d.driverId = fastest.driverId "
         "ORDER BY fastest.ms LIMIT 1"
     )
-    assert set(parsed.tables) == {"results", "drivers"}
+    assert set(parsed.tables) == {TableName("", "results"), TableName("", "drivers")}
 
     nested = parse_statement(
         "SELECT * FROM (WITH inner_rows AS (SELECT a FROM t) SELECT a FROM inner_rows) AS s"
     )
-    assert nested.tables == ("t",)
+    assert nested.tables == (TableName("", "t"),)
 
 
 @pytest.mark.parametrize(
@@ -152,7 +180,7 @@ def test_a_placeholder_is_counted_from_the_tree_and_a_literal_that_looks_like_on
     holding a string with a dollar and a digit in it while naming a parameter the statement
     never had."""
     parsed = parse_statement("SELECT name FROM t WHERE note = '$5 off'")
-    assert parsed.tables == ("t",)
+    assert parsed.tables == (TableName("", "t"),)
     with pytest.raises(StatementRefused, match=r"placeholders \[1\]"):
         parse_statement("SELECT name FROM t WHERE id = $1")
 

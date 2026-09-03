@@ -12,12 +12,16 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from attestql.audit.backend import Backend
+from attestql.audit.backend import Backend, TableName
 from attestql.audit.fixture import CACHE_FILE, CACHE_FORMAT, file_digest, fixture_digest
 from tests.audit_fakes import FakeBackend
 
-TABLES = ("drivers", "results")
+DRIVERS = TableName("", "drivers")
+RESULTS = TableName("", "results")
+TABLES = (DRIVERS, RESULTS)
 COUNTS = {"drivers": 3, "results": 7}
+"""The counts a backend answers with, keyed the way a backend keys them: by the name it
+resolved, which for these two bare names is the name itself."""
 
 
 def _backend() -> FakeBackend:
@@ -40,8 +44,8 @@ def test_the_tables_are_measured_once_each_whatever_order_they_were_named_in(
 ) -> None:
     """Two statements naming the same tables in another order are one measurement."""
     backend = _backend()
-    fixture_digest(backend, ("results", "drivers", "results"), directory=tmp_path)
-    assert backend.row_count_calls == [("drivers", "results")]
+    fixture_digest(backend, (RESULTS, DRIVERS, RESULTS), directory=tmp_path)
+    assert backend.row_count_calls == [(DRIVERS, RESULTS)]
 
 
 def test_content_digests_are_taken_only_when_they_are_asked_for(tmp_path: Path) -> None:
@@ -50,7 +54,7 @@ def test_content_digests_are_taken_only_when_they_are_asked_for(tmp_path: Path) 
     assert backend.content_digest_calls == []
     assert dict(without.content_digests) == {}
     with_content = fixture_digest(backend, TABLES, directory=tmp_path, with_content_digests=True)
-    assert backend.content_digest_calls == [("drivers", "results")]
+    assert backend.content_digest_calls == [(DRIVERS, RESULTS)]
     assert dict(with_content.content_digests) == {
         "drivers": "md5:drivers",
         "results": "md5:results",
@@ -66,7 +70,7 @@ def test_the_measurement_is_written_to_the_cache_and_read_back_from_it(tmp_path:
 
     second = fixture_digest(backend, TABLES, directory=tmp_path)
     assert second == first
-    assert backend.row_count_calls == [("drivers", "results")], "the counts were counted twice"
+    assert backend.row_count_calls == [(DRIVERS, RESULTS)], "the counts were counted twice"
     assert len(backend.schema_digest_calls) == 2, "the schema is read from the server every time"
     assert len(backend.content_signal_calls) == 2, "the signal is read from the server every time"
 
@@ -86,7 +90,7 @@ def test_a_cache_written_by_another_server_is_not_a_hit(tmp_path: Path) -> None:
     fixture_digest(_backend(), TABLES, directory=tmp_path)
     elsewhere = FakeBackend({}, row_counts=COUNTS, identity="FakeSQL 1.0 | server=other | db")
     fixture_digest(elsewhere, TABLES, directory=tmp_path)
-    assert elsewhere.row_count_calls == [("drivers", "results")]
+    assert elsewhere.row_count_calls == [(DRIVERS, RESULTS)]
 
 
 def test_a_cache_that_cannot_be_read_is_replaced_rather_than_obeyed(tmp_path: Path) -> None:

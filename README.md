@@ -121,7 +121,10 @@ back from the file.
   arbitrary or null-first cut that changes the answer; a result that is not a function of the data
   (a seeded shuffle of the referenced tables, copied into the scratch schema, changes it), with
   float aggregates whose value depends on summation order reported under their own name; and,
-  off by default behind `--experimental-s2`, direction against the question.
+  off by default behind `--experimental-s2`, direction against the question. The copies are
+  reached by the search path, which a name that states its own schema never consults, so a gold
+  that writes `public.x` or `"Other".x` is reported as not covered by the shuffle rather than
+  rerun against a copy of it.
 - BIRD's own set-equality reading is computed beside every verdict, so a counterexample states
   what the benchmark would have said.
 

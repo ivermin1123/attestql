@@ -31,6 +31,7 @@ from typing import Any, Final, TypeVar
 import postgast
 from postgast import pg_query_pb2 as nodes
 
+from attestql.audit.backend import TableName
 from attestql.evidence.types import ReplayRule, SortKey
 
 VALIDATOR_VERSION = "audit:libpg_query-parse"
@@ -144,14 +145,14 @@ class ParsedStatement:
     """
 
     sql: str
-    tables: tuple[str, ...]
+    tables: tuple[TableName, ...]
     ordering: tuple[OrderingKey, ...]
     limit_count: int | None
     distinct: bool
     limit_stated: bool
     offset_count: int | None
     offset_stated: bool
-    aliases: Mapping[str, str]
+    aliases: Mapping[str, TableName]
     output_names: tuple[str, ...]
     set_operation: bool
     from_has_subquery: bool
@@ -270,8 +271,13 @@ def _breadth_first(tree: nodes.ParseResult) -> Iterator[Any]:
                 queue.append(postgast.unwrap_node(child))
 
 
-def _tables_named(tree: nodes.ParseResult) -> tuple[str, ...]:
-    """Every table the statement names, schema-qualified where the statement qualified it.
+def _tables_named(tree: nodes.ParseResult) -> tuple[TableName, ...]:
+    """Every table the statement names, with the schema it qualified it with beside it.
+
+    The schema and the relation are kept apart rather than joined into one name, because
+    the grammar hands back identifiers with their quoting taken off: a relation written
+    ``"a.b"`` comes back as the one name ``a.b``, and a name that had been joined could
+    not be told from the table ``b`` of a schema ``a`` afterwards.
 
     A name a ``WITH`` clause defines is not a table: a bare reference to it reads the common
     table expression, which is what PostgreSQL resolves it to even when a table of that name
@@ -283,16 +289,16 @@ def _tables_named(tree: nodes.ParseResult) -> tuple[str, ...]:
     The names come back in first-seen order, each once, which is the order the tree is
     written in and not an order this module chose.
     """
-    names: list[str] = []
+    names: list[TableName] = []
     defined: set[str] = set()
     for node in _breadth_first(tree):
         if isinstance(node, nodes.RangeVar):
             if not node.relname:
                 continue
-            names.append(f"{node.schemaname}.{node.relname}" if node.schemaname else node.relname)
+            names.append(TableName(node.schemaname, node.relname))
         elif isinstance(node, nodes.CommonTableExpr):
             defined.add(node.ctename)
-    return tuple(name for name in dict.fromkeys(names) if name not in defined)
+    return tuple(name for name in dict.fromkeys(names) if name.schema or name.name not in defined)
 
 
 def _placeholders(tree: nodes.ParseResult) -> list[int]:
@@ -341,12 +347,19 @@ def _numeric_cast(node: nodes.Node) -> nodes.Node:
     return cast
 
 
-def _collect_aliases(node: nodes.Node, aliases: dict[str, str], subqueries: list[bool]) -> None:
-    """Every FROM item as the name it can be referred to by, and the relation it names."""
+def _collect_aliases(
+    node: nodes.Node, aliases: dict[str, TableName], subqueries: list[bool]
+) -> None:
+    """Every FROM item as the name it can be referred to by, and the relation it names.
+
+    The relation keeps the schema the FROM clause wrote, so a key resolved through an
+    alias is resolved against the table the statement meant and not against another table
+    of that name in another schema.
+    """
     source = postgast.unwrap_node(node)
     if isinstance(source, nodes.RangeVar):
         alias = source.alias.aliasname if source.HasField("alias") else ""
-        aliases[alias or source.relname] = source.relname
+        aliases[alias or source.relname] = TableName(source.schemaname, source.relname)
     elif isinstance(source, nodes.JoinExpr):
         _collect_aliases(source.larg, aliases, subqueries)
         _collect_aliases(source.rarg, aliases, subqueries)
@@ -430,7 +443,7 @@ def parse_statement(sql: str) -> ParsedStatement:
         # An audit binds no parameters, so a text carrying a placeholder is a text whose
         # values are somewhere else, and a record of it could not be replayed.
         raise StatementRefused(f"placeholders {placeholders} and the audit binds no parameters")
-    aliases: dict[str, str] = {}
+    aliases: dict[str, TableName] = {}
     subqueries: list[bool] = []
     for source in statement.from_clause:
         _collect_aliases(source, aliases, subqueries)

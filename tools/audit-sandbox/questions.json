@@ -4,7 +4,7 @@
     "questions_url": "https://github.com/bird-bench/mini_dev",
     "licence": "CC BY-SA 4.0",
     "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-    "synthetic": "900001, 900002 and 900003 are this repository's own, written for the two smell tables and for the table the auditor is not granted in fixture.sql, and carry no db_id of BIRD's.",
+    "synthetic": "900001, 900002, 900003, 900004 and 900005 are this repository's own, written for the two smell tables, for the table the auditor is not granted, and for the two tables called y that two schemas hold in fixture.sql, and carry no db_id of BIRD's.",
     "field_names": "question_id, db_id, question, evidence, SQL and difficulty are Mini-Dev's field names, kept so that a question file from the benchmark and this one are read by the same code."
   },
   "questions": [
@@ -54,6 +54,22 @@
       "question": "What secrets are held?",
       "evidence": "a secret refers to sealed.secret; the auditor is not granted this table",
       "SQL": "SELECT secret FROM sealed ORDER BY id ASC",
+      "difficulty": "simple"
+    },
+    {
+      "question_id": 900004,
+      "db_id": "synthetic",
+      "question": "What are the labels, lightest first?",
+      "evidence": "the weight refers to \"Quoted\".y.weight",
+      "SQL": "SELECT label FROM \"Quoted\".y ORDER BY weight ASC",
+      "difficulty": "simple"
+    },
+    {
+      "question_id": 900005,
+      "db_id": "synthetic",
+      "question": "What are the tags, lightest first?",
+      "evidence": "the mass refers to public.y.mass",
+      "SQL": "SELECT tag FROM public.y ORDER BY mass ASC",
       "difficulty": "simple"
     }
   ]

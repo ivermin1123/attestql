@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from attestql.audit.backend import ShuffledCopies, TextCensus
+from attestql.audit.backend import ShuffledCopies, TableName, TextCensus
 from attestql.audit.smells import (
     ARBITRARY_CUT,
     DIRECTION_AGAINST_QUESTION,
@@ -42,9 +42,17 @@ from tests.audit_fakes import DESCRIPTOR, FakeBackend, fake_result
 
 SETTINGS = SmellSettings(serialization=DESCRIPTOR, statement_timeout_seconds=30)
 
+PLAYERS = TableName("", "players")
+RESULTS = TableName("", "results")
+DRIVERS = TableName("", "drivers")
+TOTALLED = TableName("", "t")
+"""The four tables these statements name, as they name them: no gold here writes a schema,
+so a copy of each is what a rerun reads and the catalogue is asked under the same names."""
+
 SHUFFLED = ShuffledCopies(
-    copied=("public.players", "public.results", "public.drivers", "public.t"),
+    copied=(PLAYERS, RESULTS, DRIVERS, TOTALLED),
     skipped={},
+    unreachable={},
     seed="1",
     row_limit=300_000,
 )
@@ -65,8 +73,8 @@ BY_LAPS = (
 )
 
 COLUMN_TYPES = {
-    "public.results": {"fastestlapspeed": "text", "laps": "bigint", "driverid": "bigint"},
-    "public.drivers": {"driverid": "bigint", "nationality": "text"},
+    RESULTS: {"fastestlapspeed": "text", "laps": "bigint", "driverid": "bigint"},
+    DRIVERS: {"driverid": "bigint", "nationality": "text"},
 }
 
 ALL_NUMERIC = TextCensus(
@@ -100,7 +108,7 @@ def test_ordering_over_numeric_text_fires_when_the_numeric_order_answers_otherwi
             cast: fake_result(NATIONALITY, (("Brazilian",),)),
         },
         column_types=COLUMN_TYPES,
-        censuses={("results", "fastestlapspeed"): ALL_NUMERIC},
+        censuses={(RESULTS, "fastestlapspeed"): ALL_NUMERIC},
     )
     parsed = parse_statement(FASTEST_LAP)
     found = ordering_over_numeric_text(
@@ -118,7 +126,7 @@ def test_ordering_over_numeric_text_fires_when_the_numeric_order_answers_otherwi
     assert key["census"]["non_numeric"] == 0
     assert key["verdict"] == "not_equal"
     assert key["cast_result"]["rows"][0][0]["value"] == "Brazilian"
-    assert backend.census_calls == [("results", "fastestlapspeed", NUMERIC_TEXT)]
+    assert backend.census_calls == [(RESULTS, "fastestlapspeed", NUMERIC_TEXT)]
 
 
 def test_ordering_over_numeric_text_is_quiet_when_the_numeric_order_agrees() -> None:
@@ -127,7 +135,7 @@ def test_ordering_over_numeric_text_is_quiet_when_the_numeric_order_agrees() -> 
     backend = FakeBackend(
         {FASTEST_LAP: same, cast: same},
         column_types=COLUMN_TYPES,
-        censuses={("results", "fastestlapspeed"): ALL_NUMERIC},
+        censuses={(RESULTS, "fastestlapspeed"): ALL_NUMERIC},
     )
     found = ordering_over_numeric_text(
         parse_statement(FASTEST_LAP), backend, same, settings=SETTINGS
@@ -142,7 +150,7 @@ def test_ordering_over_numeric_text_is_quiet_when_the_column_holds_a_word() -> N
     backend = FakeBackend(
         {FASTEST_LAP: baseline},
         column_types=COLUMN_TYPES,
-        censuses={("results", "fastestlapspeed"): SOME_WORDS},
+        censuses={(RESULTS, "fastestlapspeed"): SOME_WORDS},
     )
     found = ordering_over_numeric_text(
         parse_statement(FASTEST_LAP), backend, baseline, settings=SETTINGS
@@ -160,6 +168,32 @@ def test_ordering_over_numeric_text_does_not_apply_to_a_key_that_is_not_text() -
     )
     assert _smell(found) == (ORDERING_OVER_NUMERIC_TEXT, False, False)
     assert found.evidence["keys"][0]["not_applicable"] == "the column is not declared as text"
+
+
+def test_the_key_is_resolved_against_the_table_the_statement_named() -> None:
+    """Two tables called ``y`` in two schemas hold a ``weight`` of two declared types.
+
+    The gold names the one whose weight is a number, so there is nothing here to read as a
+    lexicographic ordering over numbers. Resolving the key by the relation alone found the
+    other table, called its bigint column text, and censused rows the gold never read.
+    """
+    sql = 'SELECT label FROM "Quoted".y ORDER BY weight ASC'
+    baseline = fake_result((("label", "text"),), (("a",),))
+    backend = FakeBackend(
+        {sql: baseline},
+        column_types={
+            TableName("Quoted", "y"): {"label": "text", "weight": "bigint"},
+            TableName("", "y"): {"label": "text", "weight": "text"},
+        },
+    )
+    found = ordering_over_numeric_text(parse_statement(sql), backend, baseline, settings=SETTINGS)
+
+    key = found.evidence["keys"][0]
+    assert _smell(found) == (ORDERING_OVER_NUMERIC_TEXT, False, False)
+    assert key["column"] == "Quoted.y.weight"
+    assert key["declared_type"] == "bigint"
+    assert key["not_applicable"] == "the column is not declared as text"
+    assert backend.census_calls == [], "a column of another schema's table was censused"
 
 
 def test_ordering_over_numeric_text_does_not_apply_without_an_order_by() -> None:
@@ -461,7 +495,9 @@ def test_the_plan_variant_runs_only_when_it_was_asked_for() -> None:
 
 def test_the_shuffle_evidence_names_the_tables_it_did_not_copy() -> None:
     backend = FakeBackend({TOTAL: fake_result(TOTAL_INT, ((3,),))})
-    shuffled = ShuffledCopies(copied=(), skipped={"public.t": 4_000_000}, seed="1", row_limit=10)
+    shuffled = ShuffledCopies(
+        copied=(), skipped={TOTALLED: 4_000_000}, unreachable={}, seed="1", row_limit=10
+    )
     found = not_a_function_of_the_data(
         parse_statement(TOTAL),
         backend,
@@ -470,7 +506,37 @@ def test_the_shuffle_evidence_names_the_tables_it_did_not_copy() -> None:
         shuffled=shuffled,
     )
     assert found.evidence["shuffle"]["tables_not_shuffled"] == ["t"]
-    assert found.evidence["shuffle"]["tables_skipped_for_size"] == {"public.t": 4_000_000}
+    assert found.evidence["shuffle"]["tables_skipped_for_size"] == {"t": 4_000_000}
+
+
+def test_the_shuffle_evidence_names_a_table_no_copy_could_be_reached_for() -> None:
+    """A statement that qualified its table reads that table however the copies were made,
+    so the rerun covered nothing of it and the evidence says so with the reason. Reported
+    the way a table too large to copy is reported, because a reader is being told the same
+    kind of thing: this part of the data did not move."""
+    qualified = "SELECT sum(x) FROM public.t"
+    backend = FakeBackend({qualified: fake_result(TOTAL_INT, ((3,),))})
+    shuffled = ShuffledCopies(
+        copied=(),
+        skipped={},
+        unreachable={TableName("public", "t"): "the statement names this table's schema"},
+        seed="1",
+        row_limit=10,
+    )
+    found = not_a_function_of_the_data(
+        parse_statement(qualified),
+        backend,
+        backend.execute(qualified, statement_timeout_seconds=30),
+        settings=SETTINGS,
+        shuffled=shuffled,
+    )
+    shuffle = found.evidence["shuffle"]
+
+    assert shuffle["tables_not_shuffled"] == ["public.t"]
+    assert shuffle["tables_not_reached_by_a_copy"] == {
+        "public.t": "the statement names this table's schema"
+    }
+    assert _smell(found) == (NOT_A_FUNCTION_OF_THE_DATA, False, True)
 
 
 # direction-against-question
@@ -532,7 +598,7 @@ def _all_smells_backend() -> FakeBackend:
             ASCENDING: fake_result(NAME, (("a",),)),
             _unbounded(ASCENDING): fake_result(NAME_AND_SCORE, (("a", 1), ("b", 2))),
         },
-        column_types={"public.players": {"name": "text", "score": "bigint"}},
+        column_types={PLAYERS: {"name": "text", "score": "bigint"}},
     )
 
 

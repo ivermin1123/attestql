@@ -30,7 +30,7 @@ from typing import Any, cast
 
 import pytest
 
-from attestql.audit.backend import BackendRefused
+from attestql.audit.backend import BackendRefused, TableName
 from attestql.audit.compare import Comparison, compare_statements
 from attestql.audit.fixture import file_digest, fixture_digest
 from attestql.audit.postgres import PostgresBackend
@@ -73,20 +73,29 @@ DESCRIPTOR = SerializationDescriptor(
 )
 
 FIXTURE_ROWS = {
-    "public.team": 10,
-    "public.team_attributes": 10,
-    "public.drivers": 4,
-    "public.results": 7,
-    "public.molecule": 2,
-    "public.atom": 5,
-    "public.bond": 3,
-    "public.connected": 6,
-    "public.spend": 15,
-    "public.scores": 6,
+    TableName("public", "team"): 10,
+    TableName("public", "team_attributes"): 10,
+    TableName("public", "drivers"): 4,
+    TableName("public", "results"): 7,
+    TableName("public", "molecule"): 2,
+    TableName("public", "atom"): 5,
+    TableName("public", "bond"): 3,
+    TableName("public", "connected"): 6,
+    TableName("public", "spend"): 15,
+    TableName("public", "scores"): 6,
+    TableName("public", "y"): 3,
+    TableName("Quoted", "y"): 4,
 }
 """What fixture.sql inserts, table by table, but for ``public.sealed``: the auditor is not
 granted that one and cannot count it. A record's fixture digest states these counts, so stating
-them again here is how a fixture edited without this test being read is caught."""
+them again here is how a fixture edited without this test being read is caught.
+
+The last two are the same relation name under two schemas, which is what a gold that names a
+schema has to be told apart from."""
+
+COUNTED = {name.text: rows for name, rows in FIXTURE_ROWS.items()}
+"""The same counts under the names a record states them by: the schema and the relation, and the
+default schema filled in for a name that stated none."""
 
 TIMEOUT_SECONDS = 30
 
@@ -242,7 +251,7 @@ def test_the_fixture_holds_the_rows_the_three_defects_need(
     """The digest is measured on the server, and what it counted is what fixture.sql wrote."""
     digest = fixture_digest(sandbox_backend, tuple(FIXTURE_ROWS), directory=tmp_path)
 
-    assert dict(digest.row_counts) == FIXTURE_ROWS
+    assert dict(digest.row_counts) == COUNTED
     assert digest.schema_digest.startswith("sha256:")
     assert digest.content_digests == {}
 
@@ -253,10 +262,12 @@ def test_the_content_signal_names_every_table_with_the_counters_the_server_keeps
     """The question the cache asks before it trusts a file an earlier run wrote. Asked of the
     real server because the counters live in catalogues a scripted connection can only claim
     to hold, and a table this login may not read still has to answer with something."""
-    signal = sandbox_backend.content_signal((*FIXTURE_ROWS, "sealed", "public.seasons"))
+    signal = sandbox_backend.content_signal(
+        (*FIXTURE_ROWS, TableName("", "sealed"), TableName("public", "seasons"))
+    )
 
-    assert set(signal) == set(FIXTURE_ROWS) | {"public.sealed", "public.seasons"}
-    for name in (*FIXTURE_ROWS, "public.sealed"):
+    assert set(signal) == set(COUNTED) | {"public.sealed", "public.seasons"}
+    for name in (*COUNTED, "public.sealed"):
         counters = signal[name].split("/")
         assert len(counters) == 5, signal[name]
         assert all(value.isdigit() for value in counters), signal[name]
@@ -270,10 +281,48 @@ def test_the_catalogue_tells_a_table_this_login_may_not_read_from_one_that_is_no
     it: it lists only what the role holds a privilege on, so ``sealed`` would be absent from
     it and indistinguishable from a name nobody loaded. Asked of the real server because what
     is being relied on is the server's own reading of the grants."""
-    lookup = sandbox_backend.existing_tables(("scores", "sealed", "public.seasons", "scores"))
+    lookup = sandbox_backend.existing_tables(
+        (
+            TableName("", "scores"),
+            TableName("", "sealed"),
+            TableName("public", "seasons"),
+            TableName("", "scores"),
+        )
+    )
 
-    assert lookup.present == ("scores",)
-    assert lookup.unreadable == ("sealed",)
+    assert lookup.present == (TableName("", "scores"),)
+    assert lookup.unreadable == (TableName("", "sealed"),)
+
+
+def test_the_default_schema_written_out_is_the_table_the_bare_name_is(
+    sandbox_backend: PostgresBackend, tmp_path: Path
+) -> None:
+    """``public.scores`` and ``scores`` are one table on this server, so both spellings are
+    present and the measurement counts the rows once. Asked of the real server because what
+    an unqualified name resolves to is the server's answer and not this repository's."""
+    both = (TableName("", "scores"), TableName("public", "scores"))
+    lookup = sandbox_backend.existing_tables(both)
+    digest = fixture_digest(sandbox_backend, both, directory=tmp_path)
+
+    assert lookup.present == both
+    assert lookup.unreadable == ()
+    assert dict(digest.row_counts) == {"public.scores": 6}
+
+
+def test_the_columns_of_a_qualified_gold_are_read_under_the_schema_it_named(
+    sandbox_backend: PostgresBackend,
+) -> None:
+    """Two tables called ``y``, holding different columns on purpose. The catalogue answers
+    under the name it was asked with, so a gold that names one of the two schemas is never
+    told the other one's columns, and a key it resolved there would name a column that table
+    does not have."""
+    quoted, public = TableName("Quoted", "y"), TableName("public", "y")
+    types = sandbox_backend.column_types((quoted, public))
+
+    assert sorted(types[quoted]) == ["id", "label", "weight"]
+    assert sorted(types[public]) == ["id", "mass", "tag"]
+    assert types[quoted]["weight"] == "text"
+    assert types[public]["mass"] == "text"
 
 
 def test_the_auditor_reads_the_fixture_and_writes_only_the_scratch_schema(

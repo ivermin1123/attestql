@@ -124,8 +124,9 @@ echo "fixture loaded in ${load_seconds}s; the load log is $out/load.txt"
 
 # The read-only login the child audits with. printf is a shell builtin, so the credential reaches
 # psql over the pipe and never exists as an argument vector or a temporary file. The role is
-# read-only three times over: it holds SELECT and nothing else on the fixture, it cannot create
-# anything in the schema that holds it, and its sessions open read-only transactions by default.
+# read-only three times over: it holds SELECT and nothing else on the two schemas the fixture
+# loads, it cannot create anything in either of them, and its sessions open read-only
+# transactions by default.
 # public.sealed is the one table it is not granted at all.
 # The one place it may write is attestql_scratch, which the shuffled-copy smell needs and which
 # holds no fixture table.
@@ -138,6 +139,11 @@ REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 REVOKE CREATE ON SCHEMA public FROM auditor;
 GRANT USAGE ON SCHEMA public TO auditor;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO auditor;
+-- The second schema the fixture loads, granted the same way and named the same way it was
+-- created: a schema whose name is mixed case has to be quoted here too, and a gold that reads
+-- one of its tables writes it out exactly like this.
+GRANT USAGE ON SCHEMA "Quoted" TO auditor;
+GRANT SELECT ON ALL TABLES IN SCHEMA "Quoted" TO auditor;
 -- One table the grant above reached and this takes back: the audit needs a table that is
 -- there and that its login may not read, which is not the same thing as a table nobody
 -- loaded and is not repaired in the same place.

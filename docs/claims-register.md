@@ -54,6 +54,7 @@ re-ran or re-derived independently; **OWNER** the owner by hand.
 | The probes are precise | They are heuristics: 67 % actionable over the Mini-Dev fires, and the direction probe 17 %, which is why it is off by default |
 | Any engine but PostgreSQL | SQLite is the first expansion candidate; nothing is built |
 | Differentiating data | Pairs that agree on the shipped rows are found only by the shuffle probe |
+| The shuffle probe covers a gold that names its table's schema | The copies are reached by putting the scratch schema on the search path, which a qualified name never consults. Those tables are reported as not covered, in the summary and in the smell's own evidence, rather than rerun against a copy |
 | Two audits may share one scratch schema at the same time | They take turns: the lock is held for the whole run, so the second waits a minute for the schema and is then told it is held, reporting its shuffle as not run. Concurrent audits want a scratch schema each |
 | The validator admits no wrong statement for this tool | The AST allowlist validator in `kernel/` is off the product path, bound to the retired synthetic schema, and its claim is not re-asserted here |
 | Any security, privacy or production property | The tool runs as the role you give it; use a read-only role |

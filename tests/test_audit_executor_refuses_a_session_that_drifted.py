@@ -27,12 +27,19 @@ from decimal import Decimal
 
 import pytest
 
-from attestql.audit.backend import Backend, BackendRefused, ReadBackDrift, TableLookup
+from attestql.audit.backend import (
+    Backend,
+    BackendRefused,
+    ReadBackDrift,
+    TableLookup,
+    TableName,
+)
 from attestql.audit.postgres import (
     DEFAULT_SCRATCH_SCHEMA,
     DRIVER_ERROR,
     LOCK_WAIT_SECONDS,
     NO_PARALLEL_AGGREGATION,
+    QUALIFIED_NAME_IS_NOT_REACHED,
     NumericFromFloatText,
     PostgresBackend,
     TextFromInterval,
@@ -40,6 +47,19 @@ from attestql.audit.postgres import (
 )
 
 VERSION = "PostgreSQL 16.4 on aarch64"
+
+RESULTS = TableName("", "results")
+DRIVERS = TableName("", "drivers")
+SEALED = TableName("", "sealed")
+SEASONS = TableName("", "seasons")
+"""Four names as a gold writes them, with no schema of their own."""
+
+IN_PUBLIC = TableName("public", "results")
+PUBLIC_DRIVERS = TableName("public", "drivers")
+PUBLIC_SEALED = TableName("public", "sealed")
+"""The same tables as the catalogue holds them, which is what the fake server answers with
+and what a gold that writes the default schema out asks for."""
+
 STATEMENT = "SELECT nationality, laps FROM results"
 COLUMNS: tuple[tuple[str, int], ...] = (("nationality", 25), ("laps", 20))
 ROWS: tuple[tuple[object, ...], ...] = (("Italian", 91), ("Brazilian", 257))
@@ -133,10 +153,10 @@ class FakeConnection:
         columns: tuple[tuple[str, int], ...] = COLUMNS,
         collation: str = "en_US.UTF-8",
         schema: Sequence[tuple[str, ...]] = (),
-        tables: Sequence[str] = (),
-        unreadable_tables: Sequence[str] = (),
+        tables: Sequence[TableName] = (),
+        unreadable_tables: Sequence[TableName] = (),
         counts: Mapping[str, int] | None = None,
-        signals: Mapping[str, Sequence[int]] | None = None,
+        signals: Mapping[TableName, Sequence[int]] | None = None,
         census: tuple[int, ...] = (0, 0, 0, 0),
         scratch_exists: bool = True,
         scratch_writable: bool = True,
@@ -168,7 +188,10 @@ class FakeConnection:
         self.unreadable_tables = tuple(unreadable_tables)
         self.counts = dict(counts or {})
         self.signals = {name: tuple(values) for name, values in (signals or {}).items()}
-        """Per qualified table, the file node and the four tuple counters the catalogue holds."""
+        """Per qualified table, the file node and the four tuple counters the catalogue holds.
+
+        Keyed by the schema and the relation apart, as the catalogue holds them and as the
+        query now asks for them: a server matches the two names and never one string."""
         self.log: list[str] = []
         self.adapters = FakeAdapters()
 
@@ -194,14 +217,17 @@ class FakeConnection:
         if "pg_stat_user_tables" in text:
             # Answered before the branch below because both questions join pg_class: this is
             # the one that reads the counters and that one is the one that reads the grants.
-            return tuple((name, *values) for name, values in self.signals.items()), None
+            return (
+                tuple((name.schema, name.name, *values) for name, values in self.signals.items()),
+                None,
+            )
         if "pg_class" in text:
             # The catalogue lists what is there whatever the grants are, and says of each
             # whether this role may read it. Asked before the scratch schema's question
             # below, which names pg_namespace too.
             return (
-                tuple((name, True) for name in self.tables)
-                + tuple((name, False) for name in self.unreadable_tables),
+                tuple((name.schema, name.name, True) for name in self.tables)
+                + tuple((name.schema, name.name, False) for name in self.unreadable_tables),
                 None,
             )
         if "pg_namespace" in text:
@@ -323,7 +349,7 @@ def test_every_execution_adds_a_float_sum_in_one_worker() -> None:
     statement and not the plan the server happened to choose."""
     connection = FakeConnection(counts={"drivers": 100})
     backend = _backend(connection)
-    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    backend.prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
 
     for run in (backend.execute, backend.execute_shuffled, backend.execute_plan_variant):
         connection.log.clear()
@@ -416,16 +442,16 @@ def test_every_call_over_a_connection_that_is_gone_refuses_and_names_where_it_wa
             "begin",
             lambda: backend.execute_plan_variant(STATEMENT, statement_timeout_seconds=30),
         ),
-        ("existing_tables", lambda: backend.existing_tables(("results",))),
-        ("schema_digest", lambda: backend.schema_digest(("results",))),
-        ("row_counts", lambda: backend.row_counts(("results",))),
-        ("content_digests", lambda: backend.content_digests(("results",))),
-        ("content_signal", lambda: backend.content_signal(("results",))),
-        ("column_types", lambda: backend.column_types(("results",))),
+        ("existing_tables", lambda: backend.existing_tables((RESULTS,))),
+        ("schema_digest", lambda: backend.schema_digest((RESULTS,))),
+        ("row_counts", lambda: backend.row_counts((RESULTS,))),
+        ("content_digests", lambda: backend.content_digests((RESULTS,))),
+        ("content_signal", lambda: backend.content_signal((RESULTS,))),
+        ("column_types", lambda: backend.column_types((RESULTS,))),
         ("session_settings", lambda: backend.session_settings()),
         (
             "numeric_text_census",
-            lambda: backend.numeric_text_census("results", "fastestlapspeed", "^[0-9]+$"),
+            lambda: backend.numeric_text_census(RESULTS, "fastestlapspeed", "^[0-9]+$"),
         ),
     )
 
@@ -440,7 +466,7 @@ def test_dropping_the_copies_over_a_connection_that_died_is_a_refusal_and_not_a_
     finally that drops them would take the run's summary with it."""
     connection = DeadConnection(kill_after=100, counts={"drivers": 100})
     backend = _backend(connection)
-    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    backend.prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     connection.kill_the_cursor = True
 
     with pytest.raises(BackendRefused, match="the connection is closed") as refused:
@@ -450,11 +476,9 @@ def test_dropping_the_copies_over_a_connection_that_died_is_a_refusal_and_not_a_
 
 def test_the_tables_the_database_holds_are_the_ones_the_catalogue_names() -> None:
     """A gold that names a table nobody loaded is answered here, before anything is counted."""
-    connection = FakeConnection(tables=("public.results", "public.drivers"))
-    found = _backend(connection).existing_tables(
-        ("results", "public.drivers", "seasons", "results")
-    )
-    assert found.present == ("results", "public.drivers")
+    connection = FakeConnection(tables=(IN_PUBLIC, PUBLIC_DRIVERS))
+    found = _backend(connection).existing_tables((RESULTS, PUBLIC_DRIVERS, SEASONS, RESULTS))
+    assert found.present == (RESULTS, PUBLIC_DRIVERS)
     assert found.unreadable == ()
     assert not any("count(*)" in line for line in connection.log), "a missing table was counted"
 
@@ -463,11 +487,11 @@ def test_a_table_this_role_may_not_read_is_not_a_table_that_is_not_there() -> No
     """Two states one word used to cover: a grant nobody made, and a table nobody loaded.
     The first is repaired with GRANT and the second in the question file, so a summary that
     spells them the same way sends the operator to fix the wrong one."""
-    connection = FakeConnection(tables=("public.results",), unreadable_tables=("public.sealed",))
-    found = _backend(connection).existing_tables(("results", "sealed", "seasons"))
+    connection = FakeConnection(tables=(IN_PUBLIC,), unreadable_tables=(PUBLIC_SEALED,))
+    found = _backend(connection).existing_tables((RESULTS, SEALED, SEASONS))
 
-    assert found.present == ("results",)
-    assert found.unreadable == ("sealed",)
+    assert found.present == (RESULTS,)
+    assert found.unreadable == (SEALED,)
     assert len(connection.log) == 1, "what exists and what may be read were two round trips"
 
 
@@ -477,16 +501,63 @@ def test_asking_which_of_no_tables_exist_asks_the_server_nothing() -> None:
     assert connection.log == []
 
 
+def test_a_relation_whose_name_holds_a_dot_is_looked_up_as_the_one_name_it_is() -> None:
+    """``"a.b"`` is a relation of the default schema and not the table ``b`` of a schema ``a``.
+
+    The catalogue is asked for a schema and a relation apart, so the name a statement wrote
+    inside quotes reaches the server whole. Matching on the two joined by a dot found a
+    table nobody named, and quoted it back as two identifiers when it counted its rows.
+    """
+    dotted = TableName("", "a.b")
+    connection = FakeConnection(tables=(TableName("public", "a.b"),), counts={"a.b": 5})
+    backend = _backend(connection)
+
+    assert backend.existing_tables((dotted,)).present == (dotted,)
+    assert dict(backend.row_counts((dotted,))) == {"public.a.b": 5}
+    counted = next(line for line in connection.log if "count(*)" in line)
+    assert "Identifier('public', 'a.b')" in counted
+
+
+def test_the_default_schema_written_out_names_the_table_the_bare_name_names() -> None:
+    """One table, two spellings, one measurement: a gold that writes ``public.results`` and
+    one that writes ``results`` are asking about the same rows, and counting them apart
+    would put the same table in a record twice."""
+    connection = FakeConnection(tables=(IN_PUBLIC,), counts={"results": 23_179})
+    backend = _backend(connection)
+
+    found = backend.existing_tables((RESULTS, IN_PUBLIC))
+    assert found.present == (RESULTS, IN_PUBLIC)
+    assert dict(backend.row_counts((RESULTS, IN_PUBLIC))) == {"public.results": 23_179}
+    assert len([line for line in connection.log if "count(*)" in line]) == 1
+
+
+def test_the_columns_come_back_under_the_name_they_were_asked_for() -> None:
+    """Two tables called ``y`` in two schemas are two entries, so a caller that resolves an
+    ordering key against the name its statement wrote cannot be given the other one's."""
+    connection = FakeConnection(
+        schema=(
+            ("Quoted", "y", "weight", "bigint"),
+            ("public", "y", "weight", "text"),
+        )
+    )
+    types = _backend(connection).column_types((TableName("Quoted", "y"), TableName("", "y")))
+
+    assert {name: dict(columns) for name, columns in types.items()} == {
+        TableName("Quoted", "y"): {"weight": "bigint"},
+        TableName("", "y"): {"weight": "text"},
+    }
+
+
 def test_the_schema_digest_covers_the_columns_and_changes_when_they_do() -> None:
     one = _backend(
         FakeConnection(schema=(("public", "results", "laps", "bigint", "YES"),))
-    ).schema_digest(("results",))
+    ).schema_digest((RESULTS,))
     again = _backend(
         FakeConnection(schema=(("public", "results", "laps", "bigint", "YES"),))
-    ).schema_digest(("results",))
+    ).schema_digest((RESULTS,))
     nullability = _backend(
         FakeConnection(schema=(("public", "results", "laps", "bigint", "NO"),))
-    ).schema_digest(("results",))
+    ).schema_digest((RESULTS,))
     assert one == again
     assert one != nullability
     assert one.startswith("sha256:")
@@ -494,8 +565,8 @@ def test_the_schema_digest_covers_the_columns_and_changes_when_they_do() -> None
 
 def test_the_counts_and_the_content_digests_are_keyed_by_the_qualified_table_name() -> None:
     backend = _backend(FakeConnection(counts={"results": 23_179}))
-    assert dict(backend.row_counts(("results",))) == {"public.results": 23_179}
-    assert dict(backend.content_digests(("public.results",))) == {
+    assert dict(backend.row_counts((RESULTS,))) == {"public.results": 23_179}
+    assert dict(backend.content_digests((IN_PUBLIC,))) == {
         "public.results": "md5:d41d8cd98f00b204e9800998ecf8427e"
     }
 
@@ -503,14 +574,14 @@ def test_the_counts_and_the_content_digests_are_keyed_by_the_qualified_table_nam
 def test_the_content_signal_is_one_question_and_moves_when_the_rows_do() -> None:
     """What tells a cached measurement of yesterday's data from one of today's. One round
     trip, and a name the catalogue answers nothing for gets no invented counter."""
-    connection = FakeConnection(signals={"public.results": (16_384, 23_179, 0, 0, 23_179)})
-    signal = _backend(connection).content_signal(("results", "seasons"))
+    connection = FakeConnection(signals={IN_PUBLIC: (16_384, 23_179, 0, 0, 23_179)})
+    signal = _backend(connection).content_signal((RESULTS, SEASONS))
 
     assert signal == {"public.results": "16384/23179/0/0/23179", "public.seasons": ""}
     assert len(connection.log) == 1, "the signal cost more than the one question it is worth"
 
-    updated = FakeConnection(signals={"public.results": (16_384, 23_179, 12, 0, 23_179)})
-    moved = _backend(updated).content_signal(("results",))
+    updated = FakeConnection(signals={IN_PUBLIC: (16_384, 23_179, 12, 0, 23_179)})
+    moved = _backend(updated).content_signal((RESULTS,))
     assert moved["public.results"] != signal["public.results"]
 
 
@@ -561,7 +632,7 @@ def test_a_loaded_float_and_interval_keep_the_type_the_server_named_on_the_colum
     assert result.rows == FLOAT_ROWS
 
 
-SHUFFLE_TABLES: tuple[str, ...] = ("results", "drivers")
+SHUFFLE_TABLES: tuple[TableName, ...] = (RESULTS, DRIVERS)
 
 
 def test_the_shuffled_copies_are_made_in_the_scratch_schema_in_the_seeded_order() -> None:
@@ -570,8 +641,8 @@ def test_the_shuffled_copies_are_made_in_the_scratch_schema_in_the_seeded_order(
     prepared = _backend(connection).prepare_shuffled_copies(
         SHUFFLE_TABLES, seed="7", row_limit=1_000
     )
-    assert prepared.copied == ("public.drivers",)
-    assert dict(prepared.skipped) == {"public.results": 23_179}
+    assert prepared.copied == (DRIVERS,)
+    assert dict(prepared.skipped) == {RESULTS: 23_179}
     assert prepared.seed == "7"
     created = [line for line in connection.log if "CREATE TABLE" in line]
     assert len(created) == 1, "a table over the row limit was copied anyway"
@@ -585,10 +656,39 @@ def test_the_shuffled_copies_are_made_in_the_scratch_schema_in_the_seeded_order(
     assert not any("DELETE" in line or "UPDATE" in line for line in connection.log)
 
 
+def test_a_table_the_statement_qualified_is_not_copied_and_the_answer_says_why() -> None:
+    """A rerun reaches the copies by the search path, which a qualified name never consults.
+
+    So a copy of one would be a table nothing reads, and reporting it as copied told a smell
+    that its rerun had covered data the rerun went on reading in place.
+    """
+    connection = FakeConnection(counts={"drivers": 100})
+    prepared = _backend(connection).prepare_shuffled_copies(
+        (PUBLIC_DRIVERS,), seed="1", row_limit=1_000
+    )
+
+    assert prepared.copied == ()
+    assert dict(prepared.unreachable) == {PUBLIC_DRIVERS: QUALIFIED_NAME_IS_NOT_REACHED}
+    assert not any("CREATE TABLE" in line for line in connection.log)
+
+
+def test_two_tables_of_one_bare_name_are_not_copied_over_each_other() -> None:
+    """The copies are named by the relation alone, so two schemas holding a ``y`` would make
+    one scratch table twice and the second would answer for both."""
+    connection = FakeConnection(counts={"y": 3})
+    prepared = _backend(connection).prepare_shuffled_copies(
+        (TableName("", "y"), TableName("Quoted", "y")), seed="1", row_limit=1_000
+    )
+
+    assert prepared.copied == (TableName("", "y"),)
+    assert dict(prepared.unreachable) == {TableName("Quoted", "y"): QUALIFIED_NAME_IS_NOT_REACHED}
+    assert len([line for line in connection.log if "CREATE TABLE" in line]) == 1
+
+
 def test_the_copies_are_made_in_one_read_write_transaction_under_the_advisory_lock() -> None:
     """A role whose transactions default to read only writes only where it says so."""
     connection = FakeConnection(counts={"drivers": 100})
-    _backend(connection).prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    _backend(connection).prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     writing = connection.log.index("SET TRANSACTION READ WRITE")
     assert connection.log[writing - 1] == "BEGIN"
     lock = next(index for index, line in enumerate(connection.log) if "advisory" in line)
@@ -608,7 +708,7 @@ def test_the_scratch_schema_is_locked_for_the_run_and_not_for_one_transaction() 
     commits.
     """
     connection = FakeConnection(counts={"drivers": 100})
-    _backend(connection).prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    _backend(connection).prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
 
     taken = next(index for index, line in enumerate(connection.log) if "pg_advisory_lock" in line)
     created = next(index for index, line in enumerate(connection.log) if "CREATE TABLE" in line)
@@ -630,8 +730,8 @@ def test_preparing_the_copies_twice_takes_the_one_lock() -> None:
     would have to be released twice, and one release would leave the schema held."""
     connection = FakeConnection(counts={"drivers": 100})
     backend = _backend(connection)
-    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
-    backend.prepare_shuffled_copies(("drivers",), seed="2", row_limit=1_000)
+    backend.prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
+    backend.prepare_shuffled_copies((DRIVERS,), seed="2", row_limit=1_000)
 
     assert len([line for line in connection.log if "pg_advisory_lock" in line]) == 1
     assert connection.lock_keys == [_lock_key(DEFAULT_SCRATCH_SCHEMA)]
@@ -646,7 +746,7 @@ def test_a_scratch_schema_another_run_holds_is_a_refusal_naming_the_wait() -> No
         match=f"scratch schema {DEFAULT_SCRATCH_SCHEMA} was not locked "
         f"within {LOCK_WAIT_SECONDS} seconds",
     ) as refused:
-        _backend(connection).prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+        _backend(connection).prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     assert refused.value.step == "prepare_shuffled_copies"
     assert not any("CREATE TABLE" in line for line in connection.log)
     assert connection.log[-1] == "ROLLBACK"
@@ -655,7 +755,7 @@ def test_a_scratch_schema_another_run_holds_is_a_refusal_naming_the_wait() -> No
 def test_a_scratch_schema_that_is_not_there_is_a_refusal_and_no_write() -> None:
     connection = FakeConnection(counts={"drivers": 100}, scratch_exists=False)
     with pytest.raises(BackendRefused, match="attestql_scratch does not exist"):
-        _backend(connection).prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+        _backend(connection).prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     assert not any("CREATE TABLE" in line for line in connection.log)
     assert connection.log[-1] == "ROLLBACK"
 
@@ -663,7 +763,7 @@ def test_a_scratch_schema_that_is_not_there_is_a_refusal_and_no_write() -> None:
 def test_a_scratch_schema_the_role_cannot_create_in_is_a_refusal_and_no_write() -> None:
     connection = FakeConnection(counts={"drivers": 100}, scratch_writable=False)
     with pytest.raises(BackendRefused, match="cannot create in the scratch schema"):
-        _backend(connection).prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+        _backend(connection).prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     assert not any("CREATE TABLE" in line for line in connection.log)
     assert connection.log[-1] == "ROLLBACK"
 
@@ -671,7 +771,7 @@ def test_a_scratch_schema_the_role_cannot_create_in_is_a_refusal_and_no_write() 
 def test_a_shuffled_rerun_sets_the_search_path_inside_the_read_only_transaction() -> None:
     connection = FakeConnection(counts={"drivers": 100})
     backend = _backend(connection)
-    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    backend.prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     connection.log.clear()
     backend.execute_shuffled(STATEMENT, statement_timeout_seconds=30)
     path = next(index for index, line in enumerate(connection.log) if "search_path" in line)
@@ -701,7 +801,7 @@ def test_the_plan_variant_reads_the_same_tables_three_fewer_ways() -> None:
 def test_dropping_the_copies_removes_the_tables_this_run_made_and_no_others() -> None:
     connection = FakeConnection(counts={"drivers": 100})
     backend = _backend(connection)
-    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    backend.prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     connection.log.clear()
     backend.drop_shuffled_copies()
     dropped = [line for line in connection.log if "DROP TABLE IF EXISTS" in line]
@@ -715,7 +815,7 @@ def test_dropping_the_copies_gives_the_scratch_schema_back() -> None:
     released after the last table is gone, on the key it was taken on."""
     connection = FakeConnection(counts={"drivers": 100})
     backend = _backend(connection)
-    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    backend.prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     connection.log.clear()
     connection.lock_keys.clear()
     backend.drop_shuffled_copies()
@@ -734,7 +834,7 @@ def test_a_drop_the_server_refuses_gives_the_scratch_schema_back_anyway() -> Non
     run out of a schema whose copies nobody is reading."""
     connection = FakeConnection(counts={"drivers": 100})
     backend = _backend(connection)
-    backend.prepare_shuffled_copies(("drivers",), seed="1", row_limit=1_000)
+    backend.prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     connection.refuses_drops = True
     connection.lock_keys.clear()
 
@@ -759,15 +859,15 @@ def test_the_column_types_are_grouped_by_the_qualified_table() -> None:
             ("public", "results", "laps", "bigint"),
         )
     )
-    types = _backend(connection).column_types(("results",))
+    types = _backend(connection).column_types((RESULTS,))
     assert {name: dict(columns) for name, columns in types.items()} == {
-        "public.results": {"fastestlapspeed": "text", "laps": "bigint"}
+        RESULTS: {"fastestlapspeed": "text", "laps": "bigint"}
     }
 
 
 def test_the_census_counts_the_rows_the_nulls_the_empties_and_the_rest() -> None:
     connection = FakeConnection(census=(23_179, 18_185, 0, 0))
-    census = _backend(connection).numeric_text_census("results", "fastestlapspeed", "^[0-9]+$")
+    census = _backend(connection).numeric_text_census(RESULTS, "fastestlapspeed", "^[0-9]+$")
     assert (census.rows, census.nulls, census.empty_strings, census.non_numeric) == (
         23_179,
         18_185,

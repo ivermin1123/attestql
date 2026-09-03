@@ -65,7 +65,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Protocol, TextIO, cast
 
-from attestql.audit.backend import Backend, BackendRefused, ShuffledCopies
+from attestql.audit.backend import Backend, BackendRefused, ShuffledCopies, TableName
 from attestql.audit.compare import (
     DEFAULT_STATEMENT_TIMEOUT_SECONDS,
     GOLD_RECORD_FILE,
@@ -220,9 +220,9 @@ class _Measured:
     """
 
     digest: FixtureDigest | None
-    present: tuple[str, ...]
-    missing: tuple[str, ...]
-    unreadable: tuple[str, ...]
+    present: tuple[TableName, ...]
+    missing: tuple[TableName, ...]
+    unreadable: tuple[TableName, ...]
     refused: str
 
 
@@ -516,7 +516,7 @@ def _line(
 
 
 def _prepare_shuffle(
-    backend: Backend, tables: Sequence[str], options: AuditOptions
+    backend: Backend, tables: Sequence[TableName], options: AuditOptions
 ) -> tuple[ShuffledCopies | None, str]:
     """The shuffled copies for the run, or the reason there are none."""
     if not tables:
@@ -535,13 +535,15 @@ def _prepare_shuffle(
         return None, _refusal(refused)
 
 
-def _referenced_tables(questions: Sequence[Question]) -> tuple[str, ...]:
+def _referenced_tables(questions: Sequence[Question]) -> tuple[TableName, ...]:
     """Every table the golds name, for the one fixture measurement and the copies.
 
     A gold that does not parse names nothing here and is reported as its own question's
-    error when the run reaches it.
+    error when the run reaches it. A table two golds spelled two ways is two names here
+    and one table underneath: what the backend does with the two spellings is its own,
+    and what a summary states is what the golds wrote.
     """
-    tables: dict[str, None] = {}
+    tables: dict[TableName, None] = {}
     for question in questions:
         try:
             for table in parse_statement(question.sql).tables:
@@ -706,7 +708,7 @@ def _data_digest(options: AuditOptions) -> str:
         )
 
 
-def _run_fixture(backend: Backend, tables: Sequence[str], options: AuditOptions) -> _Measured:
+def _run_fixture(backend: Backend, tables: Sequence[TableName], options: AuditOptions) -> _Measured:
     """The digest of everything the run will read, over the tables it can read.
 
     A gold that names a table this database does not hold is a defect in the question file,
@@ -1042,9 +1044,9 @@ def _summary_json(
             "schema_digest": None if digest is None else digest.schema_digest,
             "row_counts": {} if digest is None else dict(digest.row_counts),
             "content_digests": {} if digest is None else dict(digest.content_digests),
-            "measured_tables": list(measured.present),
-            "missing_tables": list(measured.missing),
-            "unreadable_tables": list(measured.unreadable),
+            "measured_tables": [name.text for name in measured.present],
+            "missing_tables": [name.text for name in measured.missing],
+            "unreadable_tables": [name.text for name in measured.unreadable],
             "refused": measured.refused,
         },
         "shuffle": {
@@ -1053,8 +1055,17 @@ def _summary_json(
             "scratch_schema": options.scratch_schema,
             "prepared": shuffled is not None,
             "reason": no_shuffle,
-            "copied": [] if shuffled is None else list(shuffled.copied),
-            "skipped": {} if shuffled is None else dict(shuffled.skipped),
+            "copied": [] if shuffled is None else [name.text for name in shuffled.copied],
+            "skipped": (
+                {}
+                if shuffled is None
+                else {name.text: rows for name, rows in shuffled.skipped.items()}
+            ),
+            "not_reached_by_a_copy": (
+                {}
+                if shuffled is None
+                else {name.text: reason for name, reason in shuffled.unreachable.items()}
+            ),
         },
         "settings": {
             "statement_timeout_seconds": options.statement_timeout_seconds,

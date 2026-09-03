@@ -23,7 +23,7 @@ from typing import Any, cast
 
 import pytest
 
-from attestql.audit.backend import BackendRefused, TextCensus
+from attestql.audit.backend import BackendRefused, TableName, TextCensus
 from attestql.audit.cli import (
     SMELLS_FILE,
     SUMMARY_FILE,
@@ -68,9 +68,17 @@ NATIONALITY_AND_SPEED = (("nationality", "text"), ("attestql_ordering_key_0", "t
 ELEMENT = (("element", "text"),)
 NAME = (("name", "text"),)
 
+ATOM_TABLE = TableName("", "atom")
+DRIVERS_TABLE = TableName("", "drivers")
+RESULTS_TABLE = TableName("", "results")
+SEALED_TABLE = TableName("", "sealed")
+SEASONS_TABLE = TableName("", "seasons")
+"""The tables these questions name, as they name them. No gold here writes a schema, so
+the catalogue is asked under the bare names and the summary states them bare."""
+
 COLUMN_TYPES = {
-    "public.results": {"fastestlapspeed": "text", "laps": "bigint", "driverid": "bigint"},
-    "public.drivers": {"driverid": "bigint", "nationality": "text"},
+    RESULTS_TABLE: {"fastestlapspeed": "text", "laps": "bigint", "driverid": "bigint"},
+    DRIVERS_TABLE: {"driverid": "bigint", "nationality": "text"},
 }
 ALL_NUMERIC = TextCensus(
     rows=23_179, nulls=18_185, empty_strings=0, non_numeric=0, pattern=NUMERIC_TEXT
@@ -307,7 +315,7 @@ def _defect_backend(**also: Any) -> FakeBackend:
         },
         row_counts={"drivers": 3, "results": 23_179},
         column_types=COLUMN_TYPES,
-        censuses={("results", "fastestlapspeed"): ALL_NUMERIC},
+        censuses={(RESULTS_TABLE, "fastestlapspeed"): ALL_NUMERIC},
     )
 
 
@@ -416,7 +424,7 @@ def test_a_rerun_into_the_same_out_does_not_leave_the_run_before_it_to_be_read(
     assert notes.read_text(encoding="utf-8") == "a reader's own"
     assert (out / "questions").is_dir()
     assert (out / CACHE_FILE).is_file()
-    assert backend.row_count_calls == [("atom",)], "the data was measured twice"
+    assert backend.row_count_calls == [(ATOM_TABLE,)], "the data was measured twice"
     assert len(backend.schema_digest_calls) > schema_reads, (
         "the schema is read from the server every run"
     )
@@ -653,7 +661,7 @@ def test_a_gold_naming_a_table_this_database_does_not_hold_is_that_question_s_er
     backend = FakeBackend(
         {ELEMENTS: fake_result(ELEMENT, (("c",), ("o",)))},
         row_counts={"atom": 2},
-        missing_tables=("seasons",),
+        missing_tables=(SEASONS_TABLE,),
     )
     lines = Lines()
     summary = run_audit(options(tmp_path), backend, lines)
@@ -667,9 +675,9 @@ def test_a_gold_naming_a_table_this_database_does_not_hold_is_that_question_s_er
     assert written["fixture"]["measured_tables"] == ["atom"]
     assert written["fixture"]["row_counts"] == {"atom": 2}
     assert written["fixture"]["refused"] == ""
-    assert backend.existing_table_calls == [("seasons", "atom")]
-    assert backend.row_count_calls[0] == ("atom",), "the run measured a table that is not there"
-    copied = [(("atom",), "1", DEFAULT_SHUFFLE_ROW_LIMIT)]
+    assert backend.existing_table_calls == [(SEASONS_TABLE, ATOM_TABLE)]
+    assert backend.row_count_calls[0] == (ATOM_TABLE,), "the run measured a table that is not there"
+    copied = [((ATOM_TABLE,), "1", DEFAULT_SHUFFLE_ROW_LIMIT)]
     assert backend.prepared == copied, "a table that is not there was copied"
 
 
@@ -689,8 +697,8 @@ def test_a_gold_naming_a_table_this_login_may_not_read_is_not_one_that_is_not_th
     backend = FakeBackend(
         {ELEMENTS: fake_result(ELEMENT, (("c",), ("o",)))},
         row_counts={"atom": 2},
-        missing_tables=("seasons",),
-        unreadable_tables=("sealed",),
+        missing_tables=(SEASONS_TABLE,),
+        unreadable_tables=(SEALED_TABLE,),
     )
     lines = Lines()
     summary = run_audit(options(tmp_path), backend, lines)
@@ -703,7 +711,7 @@ def test_a_gold_naming_a_table_this_login_may_not_read_is_not_one_that_is_not_th
     assert written["fixture"]["missing_tables"] == ["seasons"]
     assert written["fixture"]["unreadable_tables"] == ["sealed"]
     assert written["fixture"]["measured_tables"] == ["atom"]
-    assert backend.row_count_calls[0] == ("atom",), "the run measured a table it cannot read"
+    assert backend.row_count_calls[0] == (ATOM_TABLE,), "the run measured a table it cannot read"
 
 
 # the exit statuses

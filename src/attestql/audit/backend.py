@@ -36,6 +36,34 @@ from attestql.evidence.types import SessionSettings
 from attestql.kernel.types import ExecutionResult
 
 
+@dataclass(frozen=True, order=True)
+class TableName:
+    """One relation as a statement named it: the schema it wrote, and the relation.
+
+    The two are kept apart because a name is not a string with a dot in it. A relation
+    called ``"a.b"`` is one name, and the table ``b`` of a schema ``a`` is another; a
+    string that joined them would be the same string for both, and whatever split it back
+    would have to guess. So the parse hands the two parts over as it read them and nothing
+    downstream takes ``text`` apart again.
+
+    ``schema`` is the empty string when the statement named none. What an unqualified name
+    means is the backend's to decide, because the answer is where the engine looks: a
+    caller that filled it in here would be stating one engine's default as the parse.
+    """
+
+    schema: str
+    name: str
+
+    @property
+    def text(self) -> str:
+        """The name as a summary and a record print it, qualified where the statement was.
+
+        For display and for keying, never for parsing back: whoever needs the parts has
+        them beside this.
+        """
+        return f"{self.schema}.{self.name}" if self.schema else self.name
+
+
 class BackendRefused(RuntimeError):
     """The backend will not produce a result it cannot state the provenance of.
 
@@ -89,8 +117,8 @@ class TableLookup:
     the caller is what has to say which of the names it asked about ended up where.
     """
 
-    present: tuple[str, ...]
-    unreadable: tuple[str, ...]
+    present: tuple[TableName, ...]
+    unreadable: tuple[TableName, ...]
 
 
 @dataclass(frozen=True)
@@ -98,12 +126,19 @@ class ShuffledCopies:
     """What a shuffled copy of the data covers, and what it does not.
 
     ``copied`` are the tables a rerun will read instead of the originals; ``skipped``
-    names the tables left behind with the count that made them too large, so a smell
-    that reruns a statement over them says which part of the data it did not shuffle.
+    names the tables left behind with the count that made them too large, and
+    ``unreachable`` the ones a rerun would go on reading in place whatever was copied,
+    each with the reason. A smell that reruns a statement says which part of the data it
+    did not shuffle, and the three fields are what it says it from.
+
+    The names are the caller's own, so a table a gold named twice in two spellings is
+    answered under each of them: whether a rerun reaches a copy is a property of how the
+    statement wrote the name and not of the table underneath it.
     """
 
-    copied: tuple[str, ...]
-    skipped: Mapping[str, int]
+    copied: tuple[TableName, ...]
+    skipped: Mapping[TableName, int]
+    unreachable: Mapping[TableName, str]
     seed: str
     row_limit: int
 
@@ -136,7 +171,7 @@ class Backend(Protocol):
         """
         raise NotImplementedError
 
-    def existing_tables(self, tables: Sequence[str]) -> TableLookup:
+    def existing_tables(self, tables: Sequence[TableName]) -> TableLookup:
         """Which of those names the database holds and may read, in the spelling given.
 
         A gold that names a table this database does not have is one question's error and
@@ -151,19 +186,19 @@ class Backend(Protocol):
         """
         raise NotImplementedError
 
-    def schema_digest(self, tables: Sequence[str]) -> str:
+    def schema_digest(self, tables: Sequence[TableName]) -> str:
         """One digest over the table, column, type and nullability of those tables."""
         raise NotImplementedError
 
-    def row_counts(self, tables: Sequence[str]) -> Mapping[str, int]:
+    def row_counts(self, tables: Sequence[TableName]) -> Mapping[str, int]:
         """The exact number of rows in each table, counted rather than estimated."""
         raise NotImplementedError
 
-    def content_digests(self, tables: Sequence[str]) -> Mapping[str, str]:
+    def content_digests(self, tables: Sequence[TableName]) -> Mapping[str, str]:
         """A digest of the sorted rows of each table. The expensive one, asked for by name."""
         raise NotImplementedError
 
-    def content_signal(self, tables: Sequence[str]) -> Mapping[str, str]:
+    def content_signal(self, tables: Sequence[TableName]) -> Mapping[str, str]:
         """One cheap string per qualified table that moves when the table's rows move.
 
         Read from whatever the engine already counts about its own tables, so that asking
@@ -173,17 +208,22 @@ class Backend(Protocol):
         """
         raise NotImplementedError
 
-    def column_types(self, tables: Sequence[str]) -> Mapping[str, Mapping[str, str]]:
+    def column_types(self, tables: Sequence[TableName]) -> Mapping[TableName, Mapping[str, str]]:
         """Per table, the declared type of each of its columns.
 
         Asked because an ordering key that resolves to a column is only interesting to a
         smell when the column is declared as text: what is being looked for is an
         ordering that is lexicographic where the question means numeric, and the
         statement alone cannot say which one it is.
+
+        Answered under the caller's own names, unlike the digests above, because the
+        caller resolves a key against the name its statement wrote: two tables of one bare
+        name in two schemas are two entries here, and a lookup that had to match them by
+        the tail would read either one.
         """
         raise NotImplementedError
 
-    def numeric_text_census(self, table: str, column: str, pattern: str) -> TextCensus:
+    def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         """Count that column's rows, nulls, empties and values the pattern rejects.
 
         ``pattern`` is a POSIX regular expression. It is the caller's, so what counts as
@@ -193,7 +233,7 @@ class Backend(Protocol):
         raise NotImplementedError
 
     def prepare_shuffled_copies(
-        self, tables: Sequence[str], *, seed: str, row_limit: int
+        self, tables: Sequence[TableName], *, seed: str, row_limit: int
     ) -> ShuffledCopies:
         """Copy those tables into scratch storage in a seeded order, once for a run.
 
@@ -201,7 +241,10 @@ class Backend(Protocol):
         against it answers whether the result was a function of the data or of the order
         the rows happened to be stored in. The order is seeded, so a run reproduces. A
         table with more rows than ``row_limit`` is skipped and named in the answer rather
-        than copied.
+        than copied, and so is a name a rerun would not reach the copy of however it was
+        made: the answer says which tables a rerun really reads differently, because a
+        smell that assumed the rest reports a statement as surviving a shuffle it never
+        had.
 
         The scratch storage exists before the run and is not made here: an implementation
         writes its copies into a place the login already holds and creates no container of
@@ -251,5 +294,6 @@ __all__ = [
     "ReadBackDrift",
     "ShuffledCopies",
     "TableLookup",
+    "TableName",
     "TextCensus",
 ]

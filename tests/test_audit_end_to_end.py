@@ -1,18 +1,24 @@
 """``attestql audit`` end to end on the sandbox: the command, the evidence, the status.
 
 ``tests/test_audit_sandbox_smoke.py`` observes the audit core against the same fixture, one
-comparison at a time. This file runs the command itself: one ``run_audit`` over the six
+comparison at a time. This file runs the command itself: one ``run_audit`` over the eight
 questions and the three corrections that live beside the fixture, and then reads what a
 maintainer would read afterwards -- the lines it printed, the directories it wrote, the
 counterexample in each of them, ``summary.json``, and the exit status.
 
-Three of the six questions reproduce the shape of a shipped-gold defect and are NOT_EQUAL
+Three of the eight questions reproduce the shape of a shipped-gold defect and are NOT_EQUAL
 against their correction; two more are this repository's own and exist so that two of the
 gold-only smells have something to fire on. Nothing here says a gold is wrong: the
 counterexamples state what differs, and the fixture is built so that a reader can see which
 answer the question asked for. The sixth reads the one table the sandbox's auditor is not
 granted, and is here because a run has to survive it and the summary has to say which of the
 two ways to be unmeasurable it was.
+
+The last two name their table's schema, one of them a schema that is not the default and that
+has to be written back exactly as the gold wrote it. They are here because a qualified name is
+measured, resolved and rerun differently at every one of those steps, and because the two
+tables they name share a relation name and a column name and declare that column differently:
+a run that resolved either by the relation alone would answer both questions about one table.
 
 The shuffled copies the fourth smell needs are made in ``attestql_scratch``, the one schema
 the sandbox's read-only ``auditor`` owns, and the last test observes that the run left no
@@ -32,10 +38,12 @@ from typing import Any, cast
 
 import pytest
 
+from attestql.audit.backend import TableName
 from attestql.audit.cli import SMELLS_FILE, SUMMARY_FILE, AuditOptions, Summary, run_audit
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
 from attestql.audit.postgres import (
     DEFAULT_SCRATCH_SCHEMA,
+    QUALIFIED_NAME_IS_NOT_REACHED,
     PostgresBackend,
     _lock_key,  # pyright: ignore[reportPrivateUsage]  # the key the backend locks on, so the test cannot name another
 )
@@ -62,24 +70,30 @@ describes the data every record here is about."""
 DEFECTS = ("1029", "879", "207")
 """The three questions whose shipped gold and correction disagree on this data."""
 
-SUMMARY_LINE = "6 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 4 smells fired"
-EXPERIMENTAL_SUMMARY_LINE = "6 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 5 smells fired"
+SUMMARY_LINE = "8 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 6 smells fired"
+EXPERIMENTAL_SUMMARY_LINE = "8 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 7 smells fired"
 """The same run with the experimental smell asked for: q1029 fires it and nothing else moves."""
 
 COPIED_TABLES = [
-    "public.atom",
-    "public.bond",
-    "public.connected",
-    "public.drivers",
-    "public.results",
-    "public.scores",
-    "public.spend",
-    "public.team",
-    "public.team_attributes",
+    "atom",
+    "bond",
+    "connected",
+    "drivers",
+    "results",
+    "scores",
+    "spend",
+    "team",
+    "team_attributes",
 ]
-"""Every table the golds name that the auditor may read, which is what the shuffle copies.
-``public.molecule`` is in the fixture and in no gold, and ``public.sealed`` is in a gold and
-not readable, so neither is copied and neither is read."""
+"""Every table the golds name without a schema and the auditor may read, which is what the
+shuffle copies and what the reruns then read instead. ``public.molecule`` is in the fixture and
+in no gold, and ``public.sealed`` is in a gold and not readable, so neither is copied and neither
+is read. The two the golds name with a schema are below: a copy of one of those is a table no
+rerun would reach."""
+
+NOT_COPIED = {"Quoted.y": QUALIFIED_NAME_IS_NOT_REACHED, "public.y": QUALIFIED_NAME_IS_NOT_REACHED}
+"""The two tables a gold here names with a schema. A rerun reaches the copies by the search path,
+which a qualified name never consults, so no copy of these is made and the summary says why."""
 
 
 class Lines:
@@ -166,12 +180,12 @@ def result_values(document: dict[str, Any]) -> list[object]:
 
 @pytest.fixture(scope="module")
 def audited(sandbox_backend: PostgresBackend, tmp_path_factory: pytest.TempPathFactory) -> Run:
-    """One audit of the six questions with the three corrections, run once for this file."""
+    """One audit of the eight questions with the three corrections, run once for this file."""
     return audit(sandbox_backend, tmp_path_factory.mktemp("audit"), predictions=PREDICTIONS_FILE)
 
 
 def test_every_question_prints_the_line_adr_0013_writes_down(audited: Run) -> None:
-    """The six lines, whole: the id, the database, the replay rule, the verdict, the smells
+    """The eight lines, whole: the id, the database, the replay rule, the verdict, the smells
     and the directory. A defect that stopped reproducing changes one of these."""
     out = audited.out.as_posix()
 
@@ -192,6 +206,12 @@ def test_every_question_prints_the_line_adr_0013_writes_down(audited: Run) -> No
     assert audited.line_of("900003") == (
         "q900003 synthetic          ERROR      smells=none  "
         "row_counts: permission denied for table sealed"
+    )
+    assert audited.line_of("900004") == (
+        f"q900004 synthetic   R-ORD  GOLD-ONLY  smells=ordering-over-numeric-text  {out}/q900004/"
+    )
+    assert audited.line_of("900005") == (
+        f"q900005 synthetic   R-ORD  GOLD-ONLY  smells=ordering-over-numeric-text  {out}/q900005/"
     )
     assert audited.lines[-1] == SUMMARY_LINE
 
@@ -230,6 +250,7 @@ def test_the_summary_states_the_shuffled_copies_the_run_made(audited: Run) -> No
     assert written["scratch_schema"] == DEFAULT_SCRATCH_SCHEMA
     assert written["copied"] == COPIED_TABLES
     assert written["skipped"] == {}
+    assert written["not_reached_by_a_copy"] == NOT_COPIED
 
 
 def test_the_summary_names_the_server_and_the_grammar_that_judged_this_run(
@@ -335,6 +356,48 @@ def test_the_two_gold_only_questions_fire_the_smells_the_fixture_was_written_for
     assert not (audited.out / "q900001" / COUNTEREXAMPLE_FILE).exists(), "there was no prediction"
 
 
+def test_a_gold_that_names_a_schema_is_measured_and_read_under_that_schema(audited: Run) -> None:
+    """Two tables called ``y`` in two schemas, each with a ``weight`` declared differently.
+
+    The summary measures both under the names the golds wrote, and each gold's smells read the
+    columns of the table its own statement named: the bigint one has nothing to find, and the
+    text one holding numerals is exactly what the first smell is for. Resolving either by the
+    relation alone would have answered both questions about one of the two tables.
+    """
+    measured = audited.summary_document()["fixture"]["measured_tables"]
+    quoted = audited.document("900004", SMELLS_FILE)["smells"]
+    public = audited.document("900005", SMELLS_FILE)["smells"]
+    quoted_key = _ordering_key(quoted)
+    public_key = _ordering_key(public)
+
+    assert {"Quoted.y", "public.y"} <= set(measured)
+    assert quoted_key["column"] == "Quoted.y.weight"
+    assert public_key["column"] == "public.y.mass"
+    # The census is the proof that the rows read were the named table's own: four in the one
+    # schema and three in the other, and neither table holds the other's column at all.
+    assert quoted_key["census"]["rows"] == 4
+    assert public_key["census"]["rows"] == 3
+    assert (quoted_key["verdict"], public_key["verdict"]) == ("not_equal", "not_equal")
+    assert [entry["name"] for entry in quoted if entry["fired"]] == ["ordering-over-numeric-text"]
+    assert [entry["name"] for entry in public if entry["fired"]] == ["ordering-over-numeric-text"]
+
+
+def test_a_gold_that_names_a_schema_is_told_the_shuffle_did_not_cover_it(audited: Run) -> None:
+    """The copies are reached by the search path and a qualified name consults none, so the
+    rerun read the table itself. The smell says which tables it did not shuffle and why, the
+    way it says which were too large, rather than reporting a rerun over data that never moved.
+    """
+    shuffle = _shuffle_of(audited.document("900004", SMELLS_FILE)["smells"])
+
+    assert shuffle["tables"] == ["Quoted.y"]
+    assert shuffle["tables_not_shuffled"] == ["Quoted.y"]
+    assert shuffle["tables_not_reached_by_a_copy"] == NOT_COPIED
+    assert shuffle["tables_skipped_for_size"] == {}
+    # The bare name of the same fixture is copied, so what is not covered here is the spelling
+    # and not the table: nothing about q900004 stopped the shuffle from running.
+    assert "scores" in audited.summary_document()["shuffle"]["copied"]
+
+
 def test_a_gold_only_run_exits_zero_until_a_heuristic_is_asked_to_block(
     sandbox_backend: PostgresBackend, tmp_path: Path
 ) -> None:
@@ -344,9 +407,9 @@ def test_a_gold_only_run_exits_zero_until_a_heuristic_is_asked_to_block(
 
     assert quiet.summary.exit_status == 0
     assert quiet.summary.not_equal == 0
-    assert quiet.summary.smells_fired == 4
+    assert quiet.summary.smells_fired == 6
     assert blocking.summary.exit_status == 1
-    assert blocking.summary.smells_fired == 4
+    assert blocking.summary.smells_fired == 6
 
 
 def test_the_experimental_smell_reads_the_question_against_the_gold(
@@ -405,6 +468,20 @@ def test_the_run_leaves_no_table_behind_in_the_scratch_schema(
     assert scratch_tables(sandbox_backend) == []
 
 
+def _ordering_key(smells: list[dict[str, Any]]) -> dict[str, Any]:
+    """The one ordering key the numeric-text smell resolved, out of that question's smells."""
+    found = next(entry for entry in smells if entry["name"] == "ordering-over-numeric-text")
+    keys = cast("list[dict[str, Any]]", found["evidence"]["keys"])
+    assert len(keys) == 1, keys
+    return keys[0]
+
+
+def _shuffle_of(smells: list[dict[str, Any]]) -> dict[str, Any]:
+    """What the rerun smell said its shuffle covered of that question's tables."""
+    found = next(entry for entry in smells if entry["name"] == "not-a-function-of-the-data")
+    return cast("dict[str, Any]", found["evidence"]["shuffle"])
+
+
 def advisory(backend: PostgresBackend, function: str) -> bool:
     """One advisory lock question over the scratch schema's key, as another run would ask it.
 
@@ -428,7 +505,9 @@ def test_a_second_connection_cannot_take_the_scratch_schema_while_the_copies_are
     it is granted once the copies are gone it gives back.
     """
     other = PostgresBackend.connect(os.environ[SANDBOX_DSN])
-    sandbox_backend.prepare_shuffled_copies(("drivers",), seed="lock", row_limit=1_000)
+    sandbox_backend.prepare_shuffled_copies(
+        (TableName("", "drivers"),), seed="lock", row_limit=1_000
+    )
     try:
         assert advisory(other, "pg_try_advisory_lock") is False
     finally:

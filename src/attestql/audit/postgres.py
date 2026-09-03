@@ -74,6 +74,7 @@ from attestql.audit.backend import (
     ReadBackDrift,
     ShuffledCopies,
     TableLookup,
+    TableName,
     TextCensus,
 )
 from attestql.evidence.types import SessionSettings
@@ -124,6 +125,18 @@ It is a schema the role already owns, arranged once by whoever grants the login 
 SELECT, because a read-only auditing role cannot create a schema and should not be able
 to. Only the tables this run made in it are dropped, and only at the end of the run, since
 the schema is not this tool's to remove. The audited tables are never written to."""
+
+QUALIFIED_NAME_IS_NOT_REACHED = (
+    "the statement names this table's schema, and a name that states its schema is read "
+    "from that schema whatever the search path holds, so the rerun reads this table and "
+    "not a copy of it"
+)
+"""Why a copy of a table a statement qualified would not be the table the rerun reads.
+
+The copies are reached by putting the scratch schema on the search path, which is
+consulted for a name that states no schema and for no other. Written here, beside the
+search path that makes it true, and carried out to the caller so that a smell reports what
+its rerun covered rather than assuming it covered everything."""
 
 LOCK_WAIT_SECONDS = 60
 """How long a run waits for the scratch schema before it is told another run holds it.
@@ -334,8 +347,9 @@ class PostgresBackend:
 
         The statement is not rewritten: an unqualified table name finds the copy because
         the scratch schema is ahead of ``public`` on the path, and a name the statement
-        qualified itself still finds the table it qualified. Which tables were copied is
-        what ``prepare_shuffled_copies`` returned, and a caller states it beside the
+        qualified itself still finds the table it qualified, since a qualified name
+        consults no search path at all. Which tables a rerun therefore reads differently
+        is what ``prepare_shuffled_copies`` returned, and a caller states it beside the
         result rather than assuming every table moved.
         """
         if self._shuffled is None:
@@ -405,7 +419,7 @@ class PostgresBackend:
             truncated=False,
         )
 
-    def existing_tables(self, tables: Sequence[str]) -> TableLookup:
+    def existing_tables(self, tables: Sequence[TableName]) -> TableLookup:
         """Which of those names the catalogue holds, and which of them this login may read.
 
         ``information_schema.tables`` cannot answer this: it lists only the tables the
@@ -425,62 +439,78 @@ class PostgresBackend:
         if not wanted:
             return TableLookup((), ())
         rows = self._all(
-            "SELECT n.nspname || '.' || c.relname, has_table_privilege(c.oid, 'SELECT') "
+            "SELECT n.nspname, c.relname, has_table_privilege(c.oid, 'SELECT') "
             "FROM pg_catalog.pg_class AS c "
             "JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace "
-            "WHERE c.relkind IN ('r', 'p', 'v', 'm', 'f') "
-            "AND n.nspname || '.' || c.relname = ANY(%s)",
-            [list(_qualified(wanted))],
+            "JOIN unnest(%s::text[], %s::text[]) AS asked(nspname, relname) "
+            "ON asked.nspname = n.nspname AND asked.relname = c.relname "
+            "WHERE c.relkind IN ('r', 'p', 'v', 'm', 'f')",
+            _asked_for(_qualified(wanted)),
             step="existing_tables",
         )
-        readable = {str(row[0]): bool(row[1]) for row in rows}
+        readable = {TableName(str(row[0]), str(row[1])): bool(row[2]) for row in rows}
         return TableLookup(
             tuple(name for name in wanted if readable.get(_qualify(name)) is True),
             tuple(name for name in wanted if readable.get(_qualify(name)) is False),
         )
 
-    def schema_digest(self, tables: Sequence[str]) -> str:
+    def schema_digest(self, tables: Sequence[TableName]) -> str:
         """One digest over the columns of those tables, in a stated order."""
-        qualified = _qualified(tables)
         rows = self._all(
-            "SELECT table_schema, table_name, column_name, data_type, is_nullable "
-            "FROM information_schema.columns "
-            "WHERE table_schema || '.' || table_name = ANY(%s) "
-            "ORDER BY table_schema, table_name, ordinal_position",
-            [list(qualified)],
+            "SELECT c.table_schema, c.table_name, c.column_name, c.data_type, c.is_nullable "
+            "FROM information_schema.columns AS c "
+            "JOIN unnest(%s::text[], %s::text[]) AS asked(table_schema, table_name) "
+            "ON asked.table_schema = c.table_schema::text "
+            "AND asked.table_name = c.table_name::text "
+            "ORDER BY c.table_schema, c.table_name, c.ordinal_position",
+            _asked_for(_qualified(tables)),
             step="schema_digest",
         )
         payload = json.dumps([[str(value) for value in row] for row in rows], separators=(",", ":"))
         return f"sha256:{hashlib.sha256(payload.encode('utf-8')).hexdigest()}"
 
-    def row_counts(self, tables: Sequence[str]) -> Mapping[str, int]:
+    def row_counts(self, tables: Sequence[TableName]) -> Mapping[str, int]:
         """The exact count of each table, counted one table at a time."""
         counts: dict[str, int] = {}
         for name in _qualified(tables):
             statement = sql_builder.SQL("SELECT count(*) FROM {}").format(_identifier(name))
-            counts[name] = int(self._one(statement, step="row_counts")[0])
+            counts[name.text] = int(self._one(statement, step="row_counts")[0])
         return counts
 
-    def column_types(self, tables: Sequence[str]) -> Mapping[str, Mapping[str, str]]:
-        """Per qualified table, the declared type of every column, as the catalogue names it."""
+    def column_types(self, tables: Sequence[TableName]) -> Mapping[TableName, Mapping[str, str]]:
+        """Per table asked about, the declared type of every column, under the caller's name.
+
+        The catalogue answers under the schema it holds the table in, and the answer is
+        given back under the name the caller asked with, because that is the name its
+        statement wrote and the name it will resolve an ordering key against.
+        """
+        wanted = tuple(dict.fromkeys(tables))
+        if not wanted:
+            return {}
         rows = self._all(
-            "SELECT table_schema, table_name, column_name, data_type "
-            "FROM information_schema.columns "
-            "WHERE table_schema || '.' || table_name = ANY(%s) "
-            "ORDER BY table_schema, table_name, ordinal_position",
-            [list(_qualified(tables))],
+            "SELECT c.table_schema, c.table_name, c.column_name, c.data_type "
+            "FROM information_schema.columns AS c "
+            "JOIN unnest(%s::text[], %s::text[]) AS asked(table_schema, table_name) "
+            "ON asked.table_schema = c.table_schema::text "
+            "AND asked.table_name = c.table_name::text "
+            "ORDER BY c.table_schema, c.table_name, c.ordinal_position",
+            _asked_for(_qualified(wanted)),
             step="column_types",
         )
-        types: dict[str, dict[str, str]] = {}
+        held: dict[TableName, dict[str, str]] = {}
         for row in rows:
-            types.setdefault(f"{row[0]}.{row[1]}", {})[str(row[2])] = str(row[3])
+            held.setdefault(TableName(str(row[0]), str(row[1])), {})[str(row[2])] = str(row[3])
+        types: dict[TableName, Mapping[str, str]] = {}
+        for name in wanted:
+            columns = held.get(_qualify(name))
+            if columns is not None:
+                types[name] = columns
         return types
 
-    def numeric_text_census(self, table: str, column: str, pattern: str) -> TextCensus:
+    def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         """The four counts, taken in one pass over the column the caller named."""
-        qualified = _qualified((table,))[0]
         statement = sql_builder.SQL(CENSUS_SQL).format(
-            column=sql_builder.Identifier(column), table=_identifier(qualified)
+            column=sql_builder.Identifier(column), table=_identifier(_qualify(table))
         )
         counted = self._one(statement, [pattern], step="numeric_text_census")
         rows, nulls, empties, non_numeric = (int(value) for value in counted)
@@ -493,7 +523,7 @@ class PostgresBackend:
         )
 
     def prepare_shuffled_copies(
-        self, tables: Sequence[str], *, seed: str, row_limit: int
+        self, tables: Sequence[TableName], *, seed: str, row_limit: int
     ) -> ShuffledCopies:
         """One copy of each table small enough, in an order the seed fixes, made once.
 
@@ -504,6 +534,14 @@ class PostgresBackend:
         index and no constraint of its own, so a statement whose grouping relied on a
         primary key will not run against it; that is the rerun's error and is reported per
         statement rather than hidden here.
+
+        Only a name that states no schema is copied. ``execute_shuffled`` reaches the
+        copies by putting the scratch schema first on the search path, which a qualified
+        name never consults, so a copy made for one would be a table nothing reads: it is
+        named as unreachable instead, with the reason, and the rerun that goes on reading
+        the original says so. That is also what keeps the copies apart from each other,
+        since two tables of one bare name in two schemas would otherwise be copied over
+        each other under that one name.
 
         The schema is taken before anything is counted or created and is held until the
         copies are dropped, because the reruns that read them are the reason they exist. The
@@ -518,32 +556,39 @@ class PostgresBackend:
         if row_limit < 1:
             raise BackendRefused("prepare_shuffled_copies", "a row limit is at least one row")
         self._hold_the_scratch_schema()
-        counts = self.row_counts(tables)
-        copied: list[str] = []
-        skipped: dict[str, int] = {}
+        wanted = tuple(dict.fromkeys(tables))
+        reachable = tuple(sorted(name for name in wanted if not name.schema))
+        unreachable = {name: QUALIFIED_NAME_IS_NOT_REACHED for name in wanted if name.schema}
+        counts = self.row_counts(reachable)
+        copied: list[TableName] = []
+        skipped: dict[TableName, int] = {}
         self._shuffled = None
         with self._writing("prepare_shuffled_copies") as cursor:
             self._require_the_scratch_schema(cursor)
-            for qualified, rows in sorted(counts.items()):
+            for name in reachable:
+                rows = counts[_qualify(name).text]
                 if rows > row_limit:
-                    skipped[qualified] = rows
+                    skipped[name] = rows
                     continue
-                _, _, table = qualified.partition(".")
-                cursor.execute(self._drop_copy(table))
+                cursor.execute(self._drop_copy(name.name))
                 cursor.execute(
                     sql_builder.SQL(
                         "CREATE TABLE {scratch}.{table} AS "
                         "SELECT * FROM {source} AS t ORDER BY md5({seed} || t::text)"
                     ).format(
                         scratch=sql_builder.Identifier(self._scratch_schema),
-                        table=sql_builder.Identifier(table),
-                        source=_identifier(qualified),
+                        table=sql_builder.Identifier(name.name),
+                        source=_identifier(_qualify(name)),
                         seed=sql_builder.Literal(seed),
                     )
                 )
-                copied.append(qualified)
+                copied.append(name)
         prepared = ShuffledCopies(
-            copied=tuple(copied), skipped=skipped, seed=seed, row_limit=row_limit
+            copied=tuple(copied),
+            skipped=skipped,
+            unreachable=unreachable,
+            seed=seed,
+            row_limit=row_limit,
         )
         self._shuffled = prepared
         return prepared
@@ -566,9 +611,8 @@ class PostgresBackend:
         try:
             if prepared is not None:
                 with self._writing("drop_shuffled_copies") as cursor:
-                    for qualified in prepared.copied:
-                        _, _, table = qualified.partition(".")
-                        cursor.execute(self._drop_copy(table))
+                    for name in prepared.copied:
+                        cursor.execute(self._drop_copy(name.name))
         finally:
             self._release_the_scratch_schema()
 
@@ -682,7 +726,7 @@ class PostgresBackend:
         finally:
             _close(cursor)
 
-    def content_digests(self, tables: Sequence[str]) -> Mapping[str, str]:
+    def content_digests(self, tables: Sequence[TableName]) -> Mapping[str, str]:
         """A digest of every row of each table, taken in a sorted order the server fixes."""
         digests: dict[str, str] = {}
         for name in _qualified(tables):
@@ -690,10 +734,10 @@ class PostgresBackend:
                 "SELECT md5(coalesce(string_agg(t::text, chr(10) ORDER BY t::text), '')) "
                 "FROM {} AS t"
             ).format(_identifier(name))
-            digests[name] = f"md5:{self._one(statement, step='content_digests')[0]}"
+            digests[name.text] = f"md5:{self._one(statement, step='content_digests')[0]}"
         return digests
 
-    def content_signal(self, tables: Sequence[str]) -> Mapping[str, str]:
+    def content_signal(self, tables: Sequence[TableName]) -> Mapping[str, str]:
         """The counters the server already keeps for those tables, in one question.
 
         ``relfilenode`` changes when the relation was rewritten, which is what a table
@@ -710,18 +754,22 @@ class PostgresBackend:
         if not wanted:
             return {}
         rows = self._all(
-            "SELECT n.nspname || '.' || c.relname, c.relfilenode, "
+            "SELECT n.nspname, c.relname, c.relfilenode, "
             "coalesce(s.n_tup_ins, 0), coalesce(s.n_tup_upd, 0), "
             "coalesce(s.n_tup_del, 0), coalesce(s.n_live_tup, 0) "
             "FROM pg_catalog.pg_class AS c "
             "JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace "
             "LEFT JOIN pg_catalog.pg_stat_user_tables AS s ON s.relid = c.oid "
-            "WHERE n.nspname || '.' || c.relname = ANY(%s)",
-            [list(wanted)],
+            "JOIN unnest(%s::text[], %s::text[]) AS asked(nspname, relname) "
+            "ON asked.nspname = n.nspname AND asked.relname = c.relname",
+            _asked_for(wanted),
             step="content_signal",
         )
-        counted = {str(row[0]): "/".join(str(value) for value in row[1:]) for row in rows}
-        return {name: counted.get(name, "") for name in wanted}
+        counted = {
+            TableName(str(row[0]), str(row[1])): "/".join(str(value) for value in row[2:])
+            for row in rows
+        }
+        return {name.text: counted.get(name, "") for name in wanted}
 
     def _require_the_envelope(self, cursor: Cursor, timeout_ms: int) -> None:
         """Refuse the execution unless the session holds what was just set on it."""
@@ -857,19 +905,37 @@ def _lock_key(scratch_schema: str) -> int:
     )
 
 
-def _qualify(table: str) -> str:
-    """One table name as the catalogue holds it: the schema it named, or the default one."""
-    return table if "." in table else f"{DEFAULT_SCHEMA}.{table}"
+def _qualify(table: TableName) -> TableName:
+    """One table name as the catalogue holds it: the schema it named, or the default one.
+
+    Where an unqualified name is looked for is the engine's answer and not the parse's,
+    which is why the parse leaves the schema empty and this fills it in.
+    """
+    return table if table.schema else TableName(DEFAULT_SCHEMA, table.name)
 
 
-def _qualified(tables: Sequence[str]) -> tuple[str, ...]:
-    """The table names, schema-qualified, deduplicated and in a fixed order."""
+def _qualified(tables: Sequence[TableName]) -> tuple[TableName, ...]:
+    """The table names, each under a schema, deduplicated and in a fixed order.
+
+    Two spellings of one table are one name here: a gold that writes ``public.x`` and one
+    that writes ``x`` name the same rows, and measuring both would count them twice and
+    digest them twice.
+    """
     return tuple(sorted({_qualify(name) for name in tables}))
 
 
-def _identifier(qualified: str) -> sql_builder.Identifier:
-    schema, _, table = qualified.partition(".")
-    return sql_builder.Identifier(schema, table)
+def _asked_for(tables: Sequence[TableName]) -> list[list[str]]:
+    """Those names as two arrays, for a query that matches a schema and a relation apart.
+
+    Matching on ``nspname || '.' || relname`` would make one string of two identifiers,
+    and a relation whose own name holds a dot would then match a table nobody named.
+    """
+    return [[name.schema for name in tables], [name.name for name in tables]]
+
+
+def _identifier(qualified: TableName) -> sql_builder.Identifier:
+    """One qualified name as the two identifiers it is, quoted by the driver."""
+    return sql_builder.Identifier(qualified.schema, qualified.name)
 
 
 __all__ = [
@@ -879,6 +945,7 @@ __all__ = [
     "DRIVER_ERROR",
     "PLAN_CONTROLS",
     "PRECONDITION_SETTINGS",
+    "QUALIFIED_NAME_IS_NOT_REACHED",
     "RECORDED_SETTINGS",
     "ColumnDescription",
     "Connection",

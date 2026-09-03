@@ -31,7 +31,13 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 
-from attestql.audit.backend import BackendRefused, ShuffledCopies, TableLookup, TextCensus
+from attestql.audit.backend import (
+    BackendRefused,
+    ShuffledCopies,
+    TableLookup,
+    TableName,
+    TextCensus,
+)
 from attestql.evidence.serialize import SerializationDescriptor
 from attestql.evidence.types import SessionSettings, StatementSource
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
@@ -40,6 +46,10 @@ IDENTITY = "FakeSQL 1.0 | server=memory:0 | database=fake"
 ROLE = "fake_reader"
 TIMEOUT_MS = 30_000
 SCHEMA_DIGEST = "sha256:fake-schema-digest"
+
+NOT_REACHED = "the statement names this table's schema, so the rerun reads it and not a copy"
+"""Why a copy of a table a statement qualified is not what its rerun reads, in this fake's
+words. A real backend states its own, because how the copies are reached is the engine's."""
 
 DESCRIPTOR = SerializationDescriptor(
     version="audit-test/1",
@@ -109,14 +119,14 @@ class FakeBackend:
         schema_digest: str = SCHEMA_DIGEST,
         row_counts: Mapping[str, int] | None = None,
         content_digests: Mapping[str, str] | None = None,
-        column_types: Mapping[str, Mapping[str, str]] | None = None,
-        censuses: Mapping[tuple[str, str], TextCensus] | None = None,
+        column_types: Mapping[TableName, Mapping[str, str]] | None = None,
+        censuses: Mapping[tuple[TableName, str], TextCensus] | None = None,
         shuffled_results: Mapping[str, ExecutionResult] | None = None,
         plan_results: Mapping[str, ExecutionResult] | None = None,
-        skipped_tables: Mapping[str, int] | None = None,
+        skipped_tables: Mapping[TableName, int] | None = None,
         scratch_refusal: str | None = None,
-        missing_tables: Sequence[str] = (),
-        unreadable_tables: Sequence[str] = (),
+        missing_tables: Sequence[TableName] = (),
+        unreadable_tables: Sequence[TableName] = (),
         refusing: str | None = None,
     ) -> None:
         self._results = dict(results)
@@ -137,16 +147,16 @@ class FakeBackend:
         self.refusing = refusing
         """What every call refuses with from now on, or ``None`` while the server is there."""
         self.executed: list[tuple[str, int]] = []
-        self.existing_table_calls: list[tuple[str, ...]] = []
-        self.schema_digest_calls: list[tuple[str, ...]] = []
-        self.row_count_calls: list[tuple[str, ...]] = []
-        self.content_digest_calls: list[tuple[str, ...]] = []
-        self.content_signal_calls: list[tuple[str, ...]] = []
-        self.column_type_calls: list[tuple[str, ...]] = []
-        self.census_calls: list[tuple[str, str, str]] = []
+        self.existing_table_calls: list[tuple[TableName, ...]] = []
+        self.schema_digest_calls: list[tuple[TableName, ...]] = []
+        self.row_count_calls: list[tuple[TableName, ...]] = []
+        self.content_digest_calls: list[tuple[TableName, ...]] = []
+        self.content_signal_calls: list[tuple[TableName, ...]] = []
+        self.column_type_calls: list[tuple[TableName, ...]] = []
+        self.census_calls: list[tuple[TableName, str, str]] = []
         self.executed_shuffled: list[tuple[str, int]] = []
         self.executed_plan_variant: list[tuple[str, int]] = []
-        self.prepared: list[tuple[tuple[str, ...], str, int]] = []
+        self.prepared: list[tuple[tuple[TableName, ...], str, int]] = []
         self.dropped = 0
 
     def identity(self) -> str:
@@ -173,7 +183,7 @@ class FakeBackend:
             raise AssertionError(f"no result was scripted for {sql!r}")
         return self._results[sql]
 
-    def existing_tables(self, tables: Sequence[str]) -> TableLookup:
+    def existing_tables(self, tables: Sequence[TableName]) -> TableLookup:
         self.existing_table_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("existing_tables")
         wanted = tuple(dict.fromkeys(tables))
@@ -183,31 +193,33 @@ class FakeBackend:
             tuple(name for name in wanted if name in self._unreadable_tables),
         )
 
-    def schema_digest(self, tables: Sequence[str]) -> str:
+    def schema_digest(self, tables: Sequence[TableName]) -> str:
         self.schema_digest_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("schema_digest")
         return self._schema_digest
 
-    def row_counts(self, tables: Sequence[str]) -> Mapping[str, int]:
+    def row_counts(self, tables: Sequence[TableName]) -> Mapping[str, int]:
         self.row_count_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("row_counts")
         absent = [name for name in tables if name in self._missing_tables]
         if absent:
             # What counting a table nobody loaded costs on a server, in the words a server
             # uses, because that message is what reaches the question's line.
-            raise BackendRefused("row_counts", f'relation "{absent[0]}" does not exist')
+            raise BackendRefused("row_counts", f'relation "{absent[0].text}" does not exist')
         denied = [name for name in tables if name in self._unreadable_tables]
         if denied:
             # The other message, for the table that is there and was never granted.
-            raise BackendRefused("row_counts", f"permission denied for table {denied[0]}")
-        return {name: self._row_counts.get(name, 0) for name in tables}
+            raise BackendRefused("row_counts", f"permission denied for table {denied[0].name}")
+        return {name.text: self._row_counts.get(name.text, 0) for name in tables}
 
-    def content_digests(self, tables: Sequence[str]) -> Mapping[str, str]:
+    def content_digests(self, tables: Sequence[TableName]) -> Mapping[str, str]:
         self.content_digest_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("content_digests")
-        return {name: self._content_digests.get(name, f"md5:{name}") for name in tables}
+        return {
+            name.text: self._content_digests.get(name.text, f"md5:{name.text}") for name in tables
+        }
 
-    def content_signal(self, tables: Sequence[str]) -> Mapping[str, str]:
+    def content_signal(self, tables: Sequence[TableName]) -> Mapping[str, str]:
         """What a server's own counters would say about these rows, derived from them here.
 
         A fake whose signal were scripted apart from its rows could be told to hold new rows
@@ -218,35 +230,47 @@ class FakeBackend:
         self.content_signal_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("content_signal")
         return {
-            name: f"{self._row_counts.get(name, 0)}/{self._content_digests.get(name, '')}"
+            name.text: (
+                f"{self._row_counts.get(name.text, 0)}/{self._content_digests.get(name.text, '')}"
+            )
             for name in tables
         }
 
-    def column_types(self, tables: Sequence[str]) -> Mapping[str, Mapping[str, str]]:
+    def column_types(self, tables: Sequence[TableName]) -> Mapping[TableName, Mapping[str, str]]:
         self.column_type_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("column_types")
         return {name: dict(columns) for name, columns in self._column_types.items()}
 
-    def numeric_text_census(self, table: str, column: str, pattern: str) -> TextCensus:
+    def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         self.census_calls.append((table, column, pattern))
         self._refuse_if_the_server_went_away("numeric_text_census")
         scripted = self._censuses.get((table, column))
         if scripted is None:
-            raise AssertionError(f"no census was scripted for {table}.{column}")
+            raise AssertionError(f"no census was scripted for {table.text}.{column}")
         return scripted
 
     def prepare_shuffled_copies(
-        self, tables: Sequence[str], *, seed: str, row_limit: int
+        self, tables: Sequence[TableName], *, seed: str, row_limit: int
     ) -> ShuffledCopies:
+        """The copies a real backend would make: of the bare names, minus the large ones.
+
+        A name that states its schema is copied by no backend, because a rerun reaches the
+        copies by the search path and a qualified name consults none, so it comes back
+        under ``unreachable`` here the way a server's backend reports it.
+        """
         self.prepared.append((tuple(tables), seed, row_limit))
         self._refuse_if_the_server_went_away("prepare_shuffled_copies")
         if self._scratch_refusal is not None:
             # The shape of a scratch schema that is missing or that the login cannot write
             # to: the backend refuses, and the audit runs without the shuffled reruns.
             raise BackendRefused("prepare_shuffled_copies", self._scratch_refusal)
+        reachable = [name for name in tables if not name.schema]
         return ShuffledCopies(
-            copied=tuple(name for name in tables if name not in self._skipped_tables),
-            skipped={name: rows for name, rows in self._skipped_tables.items() if name in tables},
+            copied=tuple(name for name in reachable if name not in self._skipped_tables),
+            skipped={
+                name: rows for name, rows in self._skipped_tables.items() if name in reachable
+            },
+            unreachable={name: NOT_REACHED for name in tables if name.schema},
             seed=seed,
             row_limit=row_limit,
         )

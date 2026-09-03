@@ -50,7 +50,13 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from decimal import Decimal, localcontext
 
-from attestql.audit.backend import Backend, BackendRefused, ShuffledCopies, TextCensus
+from attestql.audit.backend import (
+    Backend,
+    BackendRefused,
+    ShuffledCopies,
+    TableName,
+    TextCensus,
+)
 from attestql.audit.statements import ORDERING_KEY_PREFIX, OrderingKey, ParsedStatement
 from attestql.evidence.render import Json, json_row, result_digest, result_json
 from attestql.evidence.replay import ComparabilityResult, ReplayRule, compare_results
@@ -228,18 +234,6 @@ def _typed(row: Sequence[object]) -> tuple[tuple[str, object], ...]:
     return tuple((canonical_type_tag(value), value) for value in row)
 
 
-def _columns_of(
-    catalogue: Mapping[str, Mapping[str, str]], relation: str
-) -> Mapping[str, str] | None:
-    """The columns of one relation, whether the catalogue keyed it bare or qualified."""
-    if relation in catalogue:
-        return catalogue[relation]
-    for name, columns in catalogue.items():
-        if name.rpartition(".")[2] == relation:
-            return columns
-    return None
-
-
 def _declared_type(columns: Mapping[str, str], column: str) -> str | None:
     """The declared type of a column, matching the case the catalogue reports it in."""
     if column in columns:
@@ -252,9 +246,14 @@ def _declared_type(columns: Mapping[str, str], column: str) -> str | None:
 
 
 def _resolve_key(
-    parsed: ParsedStatement, catalogue: Mapping[str, Mapping[str, str]], key: OrderingKey
-) -> tuple[str, str, str] | str:
-    """An ordering key as ``(relation, column, declared type)``, or why it is not one."""
+    parsed: ParsedStatement, catalogue: Mapping[TableName, Mapping[str, str]], key: OrderingKey
+) -> tuple[TableName, str, str] | str:
+    """An ordering key as ``(relation, column, declared type)``, or why it is not one.
+
+    The relation is the name the statement wrote, schema and all, and the catalogue was
+    asked under those names: two tables called ``y`` in two schemas are two entries, and
+    the key resolves against the one its own FROM clause named.
+    """
     fields = key.column_reference
     if not fields:
         return "the key is an expression and not a column"
@@ -265,7 +264,7 @@ def _resolve_key(
         holders = [
             relation
             for relation in sorted(set(parsed.aliases.values()))
-            if _declared_type(_columns_of(catalogue, relation) or {}, name) is not None
+            if _declared_type(catalogue.get(relation, {}), name) is not None
         ]
         if not holders:
             return "no table in the FROM clause holds a column of that name"
@@ -277,10 +276,9 @@ def _resolve_key(
         if found is None:
             return "the qualifier does not name a table of the FROM clause"
         relation = found
-    columns = _columns_of(catalogue, relation)
-    declared = _declared_type(columns or {}, fields[-1])
+    declared = _declared_type(catalogue.get(relation, {}), fields[-1])
     if declared is None:
-        return f"{relation} has no column named {fields[-1]}"
+        return f"{relation.text} has no column named {fields[-1]}"
     return (relation, fields[-1], declared)
 
 
@@ -314,7 +312,7 @@ def ordering_over_numeric_text(
     except BackendRefused as refused:
         return _quiet(name, {"error": refused.detail, "step": refused.step}, applicable=True)
     keys: list[Json] = []
-    over_text: list[tuple[int, str, str]] = []
+    over_text: list[tuple[int, TableName, str]] = []
     for index, key in enumerate(parsed.ordering):
         resolved = _resolve_key(parsed, catalogue, key)
         if isinstance(resolved, str):
@@ -325,7 +323,7 @@ def ordering_over_numeric_text(
         keys.append(
             {
                 "key": key.expression,
-                "column": f"{relation}.{column}",
+                "column": f"{relation.text}.{column}",
                 "declared_type": declared,
                 "not_applicable": None if textual else "the column is not declared as text",
             }
@@ -347,7 +345,7 @@ def _numeric_cast_reruns(
     baseline: ExecutionResult,
     settings: SmellSettings,
     keys: list[Json],
-    over_text: Sequence[tuple[int, str, str]],
+    over_text: Sequence[tuple[int, TableName, str]],
 ) -> Smell:
     """Census each text key and, when it holds only numbers, rerun the gold cast."""
     name = ORDERING_OVER_NUMERIC_TEXT
@@ -600,16 +598,22 @@ def _rows_with_a_null_key(
 
 
 def _shuffle_json(parsed: ParsedStatement, shuffled: ShuffledCopies) -> Json:
-    """What the shuffle covered of this statement's tables, and what it did not."""
-    copied = {name.rpartition(".")[2] for name in shuffled.copied}
+    """What the shuffle covered of this statement's tables, and what it did not.
+
+    A table is covered when the rerun reads the copy instead of it, which is a property of
+    the name the statement wrote: the copies were made under the caller's own names, so
+    this is a membership test and never a match on the tail of one.
+    """
+    copied = set(shuffled.copied)
     return {
         "seed": shuffled.seed,
         "row_limit": shuffled.row_limit,
-        "tables": list(parsed.tables),
-        "tables_not_shuffled": [
-            table for table in parsed.tables if table.rpartition(".")[2] not in copied
-        ],
-        "tables_skipped_for_size": dict(shuffled.skipped),
+        "tables": [table.text for table in parsed.tables],
+        "tables_not_shuffled": [table.text for table in parsed.tables if table not in copied],
+        "tables_skipped_for_size": {name.text: rows for name, rows in shuffled.skipped.items()},
+        "tables_not_reached_by_a_copy": {
+            name.text: reason for name, reason in shuffled.unreachable.items()
+        },
     }
 
 
