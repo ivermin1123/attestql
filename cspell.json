@@ -148,6 +148,8 @@
     "yearmonth",
     "pglast",
     "birdsql",
-    "mixtral"
+    "mixtral",
+    "livesqlbench",
+    "sqls"
   ]
 }
