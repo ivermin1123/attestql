@@ -1,0 +1,91 @@
+zip totals differ: {'agree': (4471, 4473), 'compared': (2761, 2760), 'disagree': (11, 9), 'errors': (1721, 1722), 'errstep_execute': (1260, 1261), 'ex0': (1521, 1514), 'ex1': (1240, 1246), 'not_equal_names_differ': (1035, 1030), 'official_ex': (1245, 1243)}
+hf totals differ: {'agree': (4473, 4471), 'compared': (2761, 2760), 'disagree': (9, 11), 'errors': (1721, 1722), 'errstep_execute': (1260, 1261), 'ex0': (1521, 1515), 'ex1': (1240, 1245), 'not_equal_names_differ': (1029, 1025), 'official_ex': (1241, 1240)}
+classes same
+distinct_questions same
+unjust_zero same
+unjust_one same
+names_on_equal_rows DIFF
+  old={'equal': 1070, 'differ': 165}
+  new={'equal': 1075, 'differ': 168}
+zip_against_hf DIFF
+  old={'gpt-35-turbo-instruct': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['879', ['EQUAL', 1], ['NOT_EQUAL', 0]]], 'gpt-35-turbo': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['879', ['EQUAL', 1], ['NOT_EQUAL', 0]]], 'gpt-4-32k': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['879', ['EQUAL', 1], ['NOT_EQUAL', 0]]], 'gpt-4-turbo': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['1322', ['NOT_EQUAL', 0], ['EQUAL', 1]]], 'gpt-4': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['1322', ['NOT_EQUAL', 0], ['EQUAL', 1]]], 'meta-llama-3-70b-instruct-2': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['879', ['EQUAL', 1], ['NOT_EQUAL', 0]]], 'meta-llama-3-8b-instruct-2': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]]], 'mistralai-mixtral-8x7b-instru-4': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]]], 'phi-3-medium-128k-instruct-1': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['1322', ['NOT_EQUAL', 0], ['EQUAL', 1]], ['1473', ['NOT_EQUAL', 0], ['EQUAL', 1]]]}
+  new={'gpt-35-turbo-instruct': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['879', ['EQUAL', 1], ['NOT_EQUAL', 0]]], 'gpt-35-turbo': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['879', ['EQUAL', 1], ['NOT_EQUAL', 0]]], 'gpt-4-32k': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['879', ['EQUAL', 1], ['NOT_EQUAL', 0]]], 'gpt-4-turbo': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['1322', ['NOT_EQUAL', 0], ['EQUAL', 1]]], 'gpt-4': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['1322', ['NOT_EQUAL', 0], ['EQUAL', 1]]], 'meta-llama-3-70b-instruct-2': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['879', ['EQUAL', 1], ['NOT_EQUAL', 0]]], 'meta-llama-3-8b-instruct-2': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]]], 'mistralai-mixtral-8x7b-instru-4': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]]], 'phi-3-medium-128k-instruct-1': [['119', None, ['GOLD-ONLY', None]], ['120', None, ['GOLD-ONLY', None]], ['1322', ['NOT_EQUAL', 0], ['EQUAL', 1]]]}
+verdict/bird_ex changes: 13
+  ('zip', 'NOT_EQUAL', 0, 'EQUAL', 1) 6
+  ('hf', 'NOT_EQUAL', 0, 'EQUAL', 1) 5
+  ('hf', 'NOT_EQUAL', 0, 'ERROR', None) 1
+  ('zip', 'NOT_EQUAL', 0, 'ERROR', None) 1
+smell-string changes: 49
+  ('hf', 'none', 'not-a-function-of-the-data') 8
+  ('zip', 'none', 'not-a-function-of-the-data') 8
+  ('hf', 'float-aggregate-order', 'none') 7
+  ('hf', 'not-a-function-of-the-data', 'none') 7
+  ('zip', 'not-a-function-of-the-data', 'none') 7
+  ('zip', 'float-aggregate-order', 'none') 6
+  ('hf', 'arbitrary-cut,not-a-function-of-the-data', 'arbitrary-cut') 1
+  ('hf', 'not-a-function-of-the-data', 'float-aggregate-order') 1
+  ('zip', 'arbitrary-cut,not-a-function-of-the-data', 'arbitrary-cut') 1
+  ('zip', 'not-a-function-of-the-data', 'float-aggregate-order') 1
+  ('zip-by-id', 'none', 'not-a-function-of-the-data') 1
+  ('zip-by-id', 'not-a-function-of-the-data', 'none') 1
+examples:
+  ('smells', 'hf', 'gpt-35-turbo', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'hf', 'gpt-35-turbo', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'hf', 'gpt-35-turbo-instruct', 847, 'arbitrary-cut,not-a-function-of-the-data', 'arbitrary-cut', '')
+  ('smells', 'hf', 'gpt-35-turbo-instruct', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'hf', 'gpt-35-turbo-instruct', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('smells', 'hf', 'gpt-35-turbo-instruct', 1482, 'not-a-function-of-the-data', 'none', '')
+  ('smells', 'hf', 'gpt-35-turbo-instruct', 1529, 'not-a-function-of-the-data', 'float-aggregate-order', '')
+  ('smells', 'hf', 'gpt-4', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'hf', 'gpt-4', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('verdict', 'hf', 'gpt-4', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'hf', 'gpt-4', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'hf', 'gpt-4-32k', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'hf', 'gpt-4-32k', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('verdict', 'hf', 'gpt-4-32k', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'hf', 'gpt-4-32k', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'hf', 'gpt-4-turbo', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('verdict', 'hf', 'gpt-4-turbo', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'hf', 'gpt-4-turbo', 1473, 'float-aggregate-order', 'none', '')
+  ('verdict', 'hf', 'meta-llama-3-70b-instruct-2', 707, 'NOT_EQUAL', 'ERROR', 'execute: canceling statement due to statement timeout')
+  ('smells', 'hf', 'meta-llama-3-70b-instruct-2', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'hf', 'meta-llama-3-70b-instruct-2', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('verdict', 'hf', 'meta-llama-3-70b-instruct-2', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'hf', 'meta-llama-3-70b-instruct-2', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'hf', 'meta-llama-3-8b-instruct-2', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'hf', 'meta-llama-3-8b-instruct-2', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('verdict', 'hf', 'meta-llama-3-8b-instruct-2', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'hf', 'meta-llama-3-8b-instruct-2', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'hf', 'phi-3-medium-128k-instruct-1', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'hf', 'phi-3-medium-128k-instruct-1', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('smells', 'hf', 'phi-3-medium-128k-instruct-1', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'zip', 'gpt-35-turbo', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'zip', 'gpt-35-turbo', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'zip', 'gpt-35-turbo-instruct', 847, 'arbitrary-cut,not-a-function-of-the-data', 'arbitrary-cut', '')
+  ('smells', 'zip', 'gpt-35-turbo-instruct', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'zip', 'gpt-35-turbo-instruct', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('smells', 'zip', 'gpt-35-turbo-instruct', 1482, 'not-a-function-of-the-data', 'none', '')
+  ('smells', 'zip', 'gpt-35-turbo-instruct', 1529, 'not-a-function-of-the-data', 'float-aggregate-order', '')
+  ('smells', 'zip', 'gpt-4', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'zip', 'gpt-4', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('verdict', 'zip', 'gpt-4', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'zip', 'gpt-4', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'zip', 'gpt-4-32k', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'zip', 'gpt-4-32k', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('verdict', 'zip', 'gpt-4-32k', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'zip', 'gpt-4-32k', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'zip', 'gpt-4-turbo', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('verdict', 'zip', 'gpt-4-turbo', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'zip', 'gpt-4-turbo', 1473, 'float-aggregate-order', 'none', '')
+  ('verdict', 'zip', 'meta-llama-3-70b-instruct-2', 707, 'NOT_EQUAL', 'ERROR', 'execute: canceling statement due to statement timeout')
+  ('smells', 'zip', 'meta-llama-3-70b-instruct-2', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'zip', 'meta-llama-3-70b-instruct-2', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('verdict', 'zip', 'meta-llama-3-70b-instruct-2', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'zip', 'meta-llama-3-8b-instruct-2', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'zip', 'meta-llama-3-8b-instruct-2', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('verdict', 'zip', 'meta-llama-3-8b-instruct-2', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'zip', 'meta-llama-3-8b-instruct-2', 1473, 'float-aggregate-order', 'none', '')
+  ('smells', 'zip', 'phi-3-medium-128k-instruct-1', 1011, 'none', 'not-a-function-of-the-data', '')
+  ('smells', 'zip', 'phi-3-medium-128k-instruct-1', 1145, 'not-a-function-of-the-data', 'none', '')
+  ('verdict', 'zip', 'phi-3-medium-128k-instruct-1', 1473, 'NOT_EQUAL', 'EQUAL', '')
+  ('smells', 'zip', 'phi-3-medium-128k-instruct-1', 1473, 'float-aggregate-order', 'none', '')

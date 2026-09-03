@@ -1,0 +1,41 @@
+{
+ "what": "BIRD's own evaluator (evaluation_utils.execute_sql/calculate_ex, psycopg2) run twice on the same server and dump: the rows whose EX differs between the run of 2026-09-04 00:xx (41621c0 artifact, official/) and the rerun at HEAD 7c2a5f5 (04:0x). Both runs used the container's default max_parallel_workers_per_gather = 2.",
+ "files_scored": 18,
+ "flips": [
+  {
+   "gold": "zip",
+   "model": "gpt-4-turbo",
+   "question_id": 1473,
+   "ex_run_41621c0": 1,
+   "ex_run_head": 0
+  },
+  {
+   "gold": "zip",
+   "model": "phi-3-medium-128k-instruct-1",
+   "question_id": 1473,
+   "ex_run_41621c0": 1,
+   "ex_run_head": 0
+  },
+  {
+   "gold": "hf",
+   "model": "gpt-4-32k",
+   "question_id": 1473,
+   "ex_run_41621c0": 1,
+   "ex_run_head": 0
+  },
+  {
+   "gold": "hf",
+   "model": "meta-llama-3-70b-instruct-2",
+   "question_id": 1473,
+   "ex_run_41621c0": 1,
+   "ex_run_head": 0
+  },
+  {
+   "gold": "hf",
+   "model": "meta-llama-3-8b-instruct-2",
+   "question_id": 1473,
+   "ex_run_41621c0": 0,
+   "ex_run_head": 1
+  }
+ ]
+}

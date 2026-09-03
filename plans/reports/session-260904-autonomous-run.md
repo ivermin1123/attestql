@@ -52,6 +52,14 @@ không đổi từ 2026-09-03T17:44Z, 0 phản hồi ngoài comment của mình 
   register A16 đến A20 đang dựa vào. Không tự đảo; chủ quyết: (A) record khai thật, chấp nhận
   đổi số; (B) giữ, và bỏ chữ NOT_COMPARABLE khỏi dòng tổng kết CLI vì không bao giờ xảy ra.
 
+- Smell `not-a-function-of-the-data` đổi giữa hai run cùng input (3/498 câu tại HEAD): plan đổi
+  theo thống kê; cân nhắc `ANALYZE` trước khi đo hoặc ghi `last_analyze` vào tín hiệu fixture.
+- `float-aggregate-order` giờ hiếm bật vì mọi lần chạy đều gather = 0; nếu muốn tool vẫn cảnh báo
+  gold nhạy với cộng song song (đúng cái làm script BIRD lệch), cần một biến thể plan bật gather.
+- README vẫn nêu số đo ở `41621c0` (1,240 EX=1); tại HEAD là 1,245/1,246 do q1473; sửa khi phát hành.
+- `pyproject.toml` vẫn `version = "0.1.2"`: không tự nâng lên 0.1.3 vì đó là quyết định phát hành
+  (kèm tag và PyPI, đều là việc của chủ).
+
 ## Quyết định tự đưa (kèm lý do)
 
 - Thứ tự commit theo đúng thứ tự danh sách; worker chạy gối đầu (Opus viết mục N+1 trong khi
@@ -93,6 +101,26 @@ không đổi từ 2026-09-03T17:44Z, 0 phản hồi ngoài comment của mình 
 - Mục 2.10: chọn phương án B (backend cache + truyền `session_settings` và `ParsedStatement`
   xuống) để summary và mọi record cùng nêu một đối tượng, thay vì chỉ cache ở backend.
 
+## Đo lại toàn bộ mục 1 ở HEAD (04:00 đến 04:08)
+
+Chạy lại `reproduce.sh` (đã commit ở `41621c0`) với `attestql` ở `7c2a5f5`, cùng dump, cùng
+file dự đoán, container mới rồi xóa. Artifact:
+`plans/reports/session-260904-autonomous-run/remeasure-at-head/` (`compare-head.txt`,
+`aggregate-at-head.json`, `official-flips.json`, `compare_head.py`). Kết quả:
+
+- Số chính giữ nguyên: 170 hàng EX=1 mà NOT_EQUAL, lớp tay 69/74/27, 4 "0 oan", số câu riêng.
+- 13 verdict đổi, giải thích hết: q1473 NOT_EQUAL -> EQUAL ở 11 cặp file-gold (mục 2.2: gather = 0
+  xóa lệch thứ tự cộng float; EX=1 tăng 1,240 -> 1,245 trên HF, 1,246 trên zip, dòng q1473 biến khỏi
+  bảng zip-khác-HF); q707 (meta-llama-3-70b) NOT_EQUAL -> ERROR trên cả hai gold vì plan tuần tự
+  vượt statement timeout (lỗi 1,721 -> 1,722). Chủ cân nhắc nâng timeout mặc định hoặc ghi rõ.
+- Script chấm của BIRD tự nó không ổn định: chạy hai lần trên cùng server (gather mặc định 2 của
+  container), EX của q1473 đổi ở 5/18 cặp (4 lần 1 -> 0, 1 lần 0 -> 1). Đây là bằng chứng trực tiếp
+  cho mục 2.2; register A22.
+- Smell đổi 49 dòng: `float-aggregate-order` tắt ở 13 chỗ (hệ quả của gather = 0: biến thể plan
+  không còn đổi thứ tự cộng); `not-a-function-of-the-data` bật/tắt 8/7 mỗi gold và khác nhau giữa
+  hai run cùng input tại HEAD (zip vs zip-by-id: q847, q1482, q1529). Tức smell này phụ thuộc
+  thống kê planner (autovacuum/analyze sau khi nạp dump), không phải code. Ghi "còn mở".
+
 ## Kết thúc
 
 - Test: 541 + 20 sandbox (trước phiên) -> 586 + 29 sandbox (`0b0da6e`); `just check` xanh ở từng
@@ -102,4 +130,4 @@ không đổi từ 2026-09-03T17:44Z, 0 phản hồi ngoài comment của mình 
 - Chủ cần làm: đọc report, `git push` (14 commit từ `41621c0`), quyết mục 2.7 và ADR-0014.
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
-đề xuất; số liệu README vẫn đo ở `41621c0`, chưa đo lại sau 10 commit cứng hoá).
+đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).
