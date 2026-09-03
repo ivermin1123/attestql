@@ -72,6 +72,14 @@ q879  formula_1   R-ORD  GOLD-ONLY  smells=ordering-over-numeric-text  audit/q87
 498 questions: 0 NOT_EQUAL, 0 NOT_COMPARABLE, 39 smells fired
 ```
 
+Two copies of the Mini-Dev question set exist and they differ: the `minidev.zip` linked from the
+GitHub README (498 distinct ids, q879 still ordering a text column as text) and the Hugging Face
+dataset `birdsql/bird_mini_dev` (500 ids, q879 corrected, q1322 changed; 2026-01-18). The lines
+above are from the zip; the same run over the Hugging Face file fires on 29 golds instead of 30,
+the difference being q879. Both runs, with each file's digest and origin, are in
+`plans/reports/audit-260902-minidev-gold-only/` and `plans/reports/audit-260903-minidev-hf-gold-only/`,
+and `--questions-origin` writes where your file came from into every record and the summary.
+
 Exit status is 0 with no disagreement, 1 with at least one, 2 on a tool error. `--fail-on-smell`
 makes a fired probe exit 1 too. Every `audit/q<id>/` holds `counterexample.json`, the two evidence
 records (`evidence-gold.json`, `evidence-second.json`) and `smells.json`; `audit/summary.json`

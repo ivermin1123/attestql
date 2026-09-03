@@ -23,6 +23,9 @@ Apache License and keeps its own licence and attribution:
   plans/reports/parser-260903-postgast-against-pglast/current-parser.json and previous-parser.json
       the table names and the ordering expressions of the 498 Mini-Dev gold statements, as two
       parsers read them.
+  plans/reports/minidev-260903-zip-against-hf/
+      the two gold statements that differ between the GitHub zip and the Hugging Face file, in
+      both forms.
 
 Every other file, including the run outputs that carry only question ids, verdicts, hashes and
 counts, is this repository's own work under the Apache License.

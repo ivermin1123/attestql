@@ -148,6 +148,7 @@ class AuditOptions:
     questions: Path
     out: Path
     predictions: Path | None = None
+    questions_origin: str | None = None
     ids: tuple[int, ...] = ()
     fixture_digest: str = "counts"
     fail_on_smell: bool = False
@@ -356,7 +357,17 @@ def _read_json(path: Path, what: str) -> object:
         raise ToolError(f"{what} {path} is not JSON: {broken}") from broken
 
 
+def _question_set_name(question_set: QuestionSet, options: AuditOptions) -> str:
+    """The file's stem, and its stated origin when there is one."""
+    if options.questions_origin is None:
+        return question_set.path.stem
+    return f"{question_set.path.stem} from {options.questions_origin}"
+
+
 def _question_metadata(question: Question, question_set: str) -> QuestionMetadata:
+    """``question_set`` names the set as the file's stem and, when the run was told where the
+    file came from, that origin after it: two files of the same name from two places are two
+    versions of a benchmark, and the record has to say which one it audited."""
     return QuestionMetadata(
         question_id=str(question.question_id),
         question_set=question_set,
@@ -616,7 +627,7 @@ def _audit_one(
     settings: SmellSettings,
 ) -> None:
     """One question: the gold, the prediction when there is one, then the smells."""
-    metadata = _question_metadata(question, question_set.path.stem)
+    metadata = _question_metadata(question, _question_set_name(question_set, options))
     directory = options.out / f"q{question.question_id}"
     comparison: Comparison | None = None
     if prediction is None:
@@ -754,6 +765,7 @@ def _summary_json(
         "question_set": {
             "path": str(question_set.path),
             "digest": question_set.digest,
+            "origin": options.questions_origin,
             "entries": question_set.entries,
             "audited": summary.questions,
             "duplicate_ids": list(question_set.duplicate_ids),
@@ -903,6 +915,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--predictions", type=Path, help="a JSON object of question id to predicted SQL"
     )
     audit.add_argument(
+        "--questions-origin",
+        default=None,
+        help=(
+            "where the question file came from, a URL or a note, recorded beside its digest so a "
+            "reader knows which version of the benchmark was audited"
+        ),
+    )
+    audit.add_argument(
         "--out", required=True, type=Path, help="the directory the evidence is written to"
     )
     audit.add_argument("--ids", type=_ids, default=(), help="audit only these question ids")
@@ -962,6 +982,7 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
     return AuditOptions(
         dsn=cast("str", parsed.dsn),
         questions=cast("Path", parsed.questions),
+        questions_origin=cast("str | None", parsed.questions_origin),
         predictions=cast("Path | None", parsed.predictions),
         out=cast("Path", parsed.out),
         ids=cast("tuple[int, ...]", parsed.ids),

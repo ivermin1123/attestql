@@ -98,3 +98,10 @@ All three are evaluation hazards, none a gold defect. Over the sweep and this ru
 of 498 golds (2.2 %) have shown a float aggregate whose value is its summation order, not nine; two
 of the sweep's nine (q1476, q1390) read `yearmonth`, which is over the row limit and is not
 shuffled by the command's defaults.
+
+The same command over the Hugging Face copy of the question set (`birdsql/bird_mini_dev`,
+2026-01-18; `plans/reports/audit-260903-minidev-hf-gold-only/`): 500 questions, 39 smells on 29
+golds, 0 errors. q119 and q120, absent from the zip, fire nothing; q1322, whose gold differs, fires
+nothing; q879 fires nothing because its ordering key is cast upstream now; q94 carries its tie
+label again. The two copies are compared field by field in
+`plans/reports/minidev-260903-zip-against-hf/`.

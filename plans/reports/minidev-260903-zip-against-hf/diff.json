@@ -1,0 +1,51 @@
+{
+  "zip": {
+    "file": "minidev.zip:minidev/MINIDEV/mini_dev_postgresql.json",
+    "source": "https://github.com/bird-bench/mini_dev (minidev.zip linked from its README)",
+    "sha256": "d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+    "entries": 500,
+    "distinct_ids": 498,
+    "duplicated_ids": [
+      137,
+      138
+    ]
+  },
+  "hf": {
+    "file": "data/mini_dev_pg-00000-of-00001.json",
+    "source": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/main/data/mini_dev_pg-00000-of-00001.json",
+    "sha256": "7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+    "commit": "f65faf4ae3b638c1fa6df1d3370c8d92c8366301",
+    "last_modified": "2026-01-18T08:44:25Z",
+    "entries": 500,
+    "distinct_ids": 500,
+    "duplicated_ids": []
+  },
+  "ids_only_in_zip": [],
+  "ids_only_in_hf": [
+    119,
+    120
+  ],
+  "golds_differing": 2,
+  "differences": [
+    {
+      "question_id": 879,
+      "db_id": "formula_1",
+      "fields": {
+        "SQL": {
+          "zip": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY T2.fastestLapSpeed DESC NULLS LAST LIMIT 1",
+          "hf": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY CAST(T2.fastestLapSpeed AS DOUBLE PRECISION) DESC NULLS LAST LIMIT 1"
+        }
+      }
+    },
+    {
+      "question_id": 1322,
+      "db_id": "student_club",
+      "fields": {
+        "SQL": {
+          "zip": "SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10 EXCEPT SELECT T1.event_name FROM event AS T1 WHERE T1.type = 'Meeting'",
+          "hf": "SELECT COUNT(DISTINCT T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.type = 'Meeting' GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10"
+        }
+      }
+    }
+  ]
+}

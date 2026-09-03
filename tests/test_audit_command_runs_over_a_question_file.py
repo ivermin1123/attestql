@@ -645,3 +645,63 @@ def parse_arguments_instant(value: str) -> Any:
 
 def test_the_console_entry_point_is_the_main_this_module_states() -> None:
     assert callable(main)
+
+
+# where the question file came from
+
+
+ORIGIN = "https://example.org/bench/mini_dev_pg.json (commit f65faf4a, 2026-01-18)"
+
+
+def test_the_stated_origin_of_the_question_file_is_in_the_summary_and_every_record(
+    tmp_path: Path,
+) -> None:
+    """Two files of the same name from two places are two versions of a benchmark. The
+    digest alone tells them apart only for someone who has both; the origin says which."""
+    other = "SELECT element FROM atom WHERE element = 'c'"
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    write(tmp_path / "preds.json", {"207": other})
+    backend = FakeBackend(
+        {
+            ELEMENTS: fake_result(ELEMENT, (("c",), ("o",))),
+            other: fake_result(ELEMENT, (("c",),)),
+        },
+        row_counts={"atom": 2},
+    )
+    summary = run_audit(
+        options(tmp_path, predictions=tmp_path / "preds.json", questions_origin=ORIGIN),
+        backend,
+        Lines(),
+    )
+    assert summary.not_equal == 1
+    assert summary_of(tmp_path)["question_set"]["origin"] == ORIGIN
+    directory = tmp_path / "audit" / "q207"
+    for name in (GOLD_RECORD_FILE, SECOND_RECORD_FILE, COUNTEREXAMPLE_FILE):
+        assert ORIGIN in (directory / name).read_text(encoding="utf-8"), name
+    record = json.loads((directory / GOLD_RECORD_FILE).read_text(encoding="utf-8"))
+    assert record["question"]["question_set"] == f"questions from {ORIGIN}"
+
+
+def test_without_a_stated_origin_the_summary_says_so_and_the_set_is_the_file_name(
+    tmp_path: Path,
+) -> None:
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    run_audit(options(tmp_path), _quiet_backend(), Lines())
+    assert summary_of(tmp_path)["question_set"]["origin"] is None
+
+
+def test_the_command_line_takes_the_origin_of_the_question_file() -> None:
+    parsed = parse_arguments(
+        [
+            "audit",
+            "--dsn",
+            "host=h dbname=d",
+            "--questions",
+            "q.json",
+            "--out",
+            "o/",
+            "--questions-origin",
+            ORIGIN,
+        ]
+    )
+    assert parsed.questions_origin == ORIGIN

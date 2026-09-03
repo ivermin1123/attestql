@@ -146,6 +146,7 @@
     "pgpass",
     "PGPASSWORD",
     "yearmonth",
-    "pglast"
+    "pglast",
+    "birdsql"
   ]
 }
