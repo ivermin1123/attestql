@@ -1034,7 +1034,7 @@ def _summary_json(
                 if options.data_file is None
                 else {
                     "path": str(options.data_file),
-                    "sha256": data_digest,
+                    "digest": data_digest,
                     "origin": options.data_origin,
                     "date": options.data_date,
                 }

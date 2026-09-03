@@ -1076,7 +1076,7 @@ def test_the_data_file_is_recorded_with_its_digest_origin_and_date(tmp_path: Pat
 
     assert summary_of(tmp_path)["fixture"]["source"] == {
         "path": str(dump),
-        "sha256": sha256_of(dump),
+        "digest": sha256_of(dump),
         "origin": DATA_ORIGIN,
         "date": "2026-03-01",
     }

@@ -22,12 +22,15 @@ Không có gì để chép vào register, không commit `docs(register)`.
 ## Commit trong phiên (một dòng mỗi commit: hash, việc, số liệu, giờ)
 
 | Giờ | Hash | Việc | Số liệu |
-|---|---|---|---|
+|---|---|---|--- |
 | 02:01 | `bc74ccf` | Mục 2.1: `existing_tables` đọc `pg_catalog` + `has_table_privilege`, trả `TableLookup(present, unreadable)`; summary có `fixture.unreadable_tables`; sandbox thêm bảng `public.sealed` bị REVOKE và câu 900003 | 12 file, +265/-67; test 541 -> 543, sandbox 20 -> 22; gate xanh |
 | 02:12 | `64bf96a` | Mục 3: report nghiên cứu `research-260904-next-postgres-targets.md` (92 dòng) + mở run log + 2 từ cspell | 5 tìm kiếm; BIRD-CRITIC pg 390/556 câu parse (70.1 %), flash 144/211; BIRD-Interact, LiveSQLBench 0 gold công khai; Spider 2.0 không có PostgreSQL |
 | 02:15 | `efd9d00` | Mục 2.2: mọi lần chạy `SET LOCAL max_parallel_workers_per_gather = 0` + read-back (ReadBackDrift nếu lệch); ghi `server_version`, gather của session; summary có khối `parser` (validator, postgast 0.1.0, grammar 170007) | 9 file, +232/-27; test 543 -> 547, sandbox 22 -> 23; gate xanh; boundary test thêm 1 ngoại lệ đúng đường dẫn cho `importlib.metadata` |
 | 02:29 | `e203cf2` | Mục 2.3: khóa advisory cấp session giữ suốt run (`pg_advisory_lock` trước khi tạo bản sao, `pg_advisory_unlock` trong finally của drop, chờ tối đa `LOCK_WAIT_SECONDS = 60` rồi refuse); bỏ `pg_advisory_xact_lock`; README + register A11 và non-claim cập nhật | 5 file, +261/-30; test 547 -> 552, sandbox 23 -> 24; gate xanh |
 | 02:41 | `9e4627d` | Mục 2.4: chạy lại cùng `--out` xóa `summary.json` và mọi `q<số>/` của lần trước ngay sau khi tạo thư mục; `fixture.json` giữ nguyên; README + docstring nói thư mục là bằng chứng của một lần chạy | test 552 -> 554, sandbox 24; gate xanh |
+| 02:50 | `ab12e79` | Mục 4: ADR-0014 Proposed (SQLite backend sau cùng một evidence record), dòng index, script kiểm kê phụ thuộc PostgreSQL, run log | 115 dòng ADR; 6,498 dòng src trong 21 file, khoảng 220 dòng gọi thẳng PostgreSQL: `postgres.py` 860 + `statements.py` 465 tách, khoảng 4,000 dòng giữ nguyên |
+| 02:53 | `8a80e14` | Mục 2.5: cache fixture có tín hiệu nội dung (`content_signal`: relfilenode + n_tup_ins/upd/del + n_live_tup từ `pg_class` và `pg_stat_user_tables`, đo mới mỗi lần chạy, lệch là miss); `CACHE_FORMAT` .../2 | test 554 -> 557, sandbox 24 -> 25; gate xanh |
+| 03:05 | `5570b10` | Mục 2.6: giữ và nối `source_file`: cờ `--data-file`, `--data-origin`, `--data-date`; băm một lần mỗi run; summary `fixture.source` (null khi không nêu file); record `source_file_sha256` được điền; ba hàm nhận `source_digest: str` thay vì `Path` | 6 file, +212/-19; gate xanh |
 
 ## Còn mở (thấy trong lúc làm, không làm)
 
