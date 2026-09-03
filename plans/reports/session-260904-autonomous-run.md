@@ -19,6 +19,9 @@ code, Fable review gối đầu; nghiên cứu mục 3 chạy song song bằng s
 nhất), mini_dev #39, mini_dev #40 và SpotIt-plus #1: cả bốn OPEN, chưa có phản hồi của maintainer.
 Không có gì để chép vào register, không commit `docs(register)`.
 
+04:05: đọc lại cả bốn thread (`gh issue view --json state,comments,updatedAt`): vẫn OPEN, updatedAt
+không đổi từ 2026-09-03T17:44Z, 0 phản hồi ngoài comment của mình trên #38.
+
 ## Commit trong phiên (một dòng mỗi commit: hash, việc, số liệu, giờ)
 
 | Giờ | Hash | Việc | Số liệu |
@@ -31,6 +34,10 @@ Không có gì để chép vào register, không commit `docs(register)`.
 | 02:50 | `ab12e79` | Mục 4: ADR-0014 Proposed (SQLite backend sau cùng một evidence record), dòng index, script kiểm kê phụ thuộc PostgreSQL, run log | 115 dòng ADR; 6,498 dòng src trong 21 file, khoảng 220 dòng gọi thẳng PostgreSQL: `postgres.py` 860 + `statements.py` 465 tách, khoảng 4,000 dòng giữ nguyên |
 | 02:53 | `8a80e14` | Mục 2.5: cache fixture có tín hiệu nội dung (`content_signal`: relfilenode + n_tup_ins/upd/del + n_live_tup từ `pg_class` và `pg_stat_user_tables`, đo mới mỗi lần chạy, lệch là miss); `CACHE_FORMAT` .../2 | test 554 -> 557, sandbox 24 -> 25; gate xanh |
 | 03:05 | `5570b10` | Mục 2.6: giữ và nối `source_file`: cờ `--data-file`, `--data-origin`, `--data-date`; băm một lần mỗi run; summary `fixture.source` (null khi không nêu file); record `source_file_sha256` được điền; ba hàm nhận `source_digest: str` thay vì `Path` | 6 file, +212/-19; gate xanh |
+| 03:12 | `0580e49` | Sửa nhỏ sau review 2.6: khóa `fixture.source.sha256` đổi thành `digest` cho giống hai khối `questions`/`predictions` (điều phối tự sửa, 2 file) | test 557 -> 563, sandbox 25; gate xanh |
+| 03:46 | `d3d6cb6` | Mục 2.8: tên bảng là cặp (schema, relation) từ parser đến catalogue; sửa 4 lỗi tái hiện được (alias mất schema nên smell đọc `public.y` thay `Quoted.y`; `_qualify` cắt `"a.b"`; hai schema cùng tên bare đè một bản sao scratch; bảng qualified bị khai là shuffle đã phủ); sandbox thêm schema `"Quoted"` + 2 câu | test 563 -> 572, sandbox 25 -> 29; gate xanh |
+| 04:02 | `7b2f595` | Mục 2.9: NaN là một giá trị (như PostgreSQL gộp và sắp), định nghĩa ở một chỗ: `typed_value`/`typed_row` trong `evidence/serialize.py`; replay, tie detector, float-order-only dùng chung; `smells._typed` bỏ; ADR-0004 + README ghi luật. Sửa tiền đề brief: `hash(Decimal('NaN'))` không raise trên 3.11/3.13, hai NaN chỉ bị coi là khác nhau (NOT_EQUAL âm thầm) | test 572 -> 583, sandbox 29; gate xanh |
+| 04:16 | `0b0da6e` | Mục 2.10: `session_settings` cache trong backend như `identity`, `run_audit` đọc một lần và truyền xuống; gold parse một lần trước khi đo fixture rồi truyền `ParsedStatement` xuống `record_statement`/`compare_statements` (tham số `parsed`, `gold_parsed`, `second_parsed`, `session_settings`); `smells._typed` đã bỏ ở 2.9 | test 583 -> 586, sandbox 29; gate xanh |
 
 ## Còn mở (thấy trong lúc làm, không làm)
 
@@ -69,3 +76,30 @@ Không có gì để chép vào register, không commit `docs(register)`.
   `plans/reports/session-260904-autonomous-run/pg_dependency_inventory.py`. Bài học: file ADR
   chưa link trong `0000-index.md` làm hook pre-commit của worker mục 2.5 từ chối commit (check
   chạy trên cả worktree), nên dòng index được thêm ngay và worker được trả lời để commit lại.
+- Mục 2.1: hợp đồng `existing_tables` đổi sang `TableLookup(present, unreadable)` thay vì giữ
+  tuple, vì hai nguyên nhân (bảng không có, bảng không được GRANT) sửa ở hai chỗ khác nhau và
+  summary phải gọi đúng tên.
+- Mục 2.2: gather = 0 đặt cho MỌI lần chạy (gold, dự đoán, shuffle, plan variant) chứ không
+  riêng baseline, vì so sánh baseline với rerun song song sẽ đổ lỗi thứ tự cộng cho shuffle.
+- Mục 2.3: chờ khóa tối đa 60 giây rồi refuse (shuffle "không chạy"), thay vì chờ vô hạn một
+  run khác đang giữ schema.
+- Mục 2.5: tín hiệu nội dung là relfilenode + bốn bộ đếm tuple (một câu hỏi catalogue), là bộ
+  vô hiệu cache chứ không phải bằng chứng; docstring nói rõ giới hạn (reset stats, tạo lại DB).
+- Mục 2.6: giữ `source_file` và nối thành nguồn thứ ba (`--data-file/--data-origin/--data-date`)
+  thay vì bỏ, vì chạy trên bản dump lệch là đúng lỗ hổng chủ vừa dính; băm một lần mỗi run
+  (phương án A của worker), khóa summary là `digest` cho giống hai khối kia.
+- Mục 2.9: luật NaN đặt ở `evidence/serialize.py` (một chỗ cho replay và smells) nên phần
+  "`smells._typed` dùng `replay._typed_row`" của 2.10 hoàn thành ngay tại 2.9.
+- Mục 2.10: chọn phương án B (backend cache + truyền `session_settings` và `ParsedStatement`
+  xuống) để summary và mọi record cùng nêu một đối tượng, thay vì chỉ cache ở backend.
+
+## Kết thúc
+
+- Test: 541 + 20 sandbox (trước phiên) -> 586 + 29 sandbox (`0b0da6e`); `just check` xanh ở từng
+  commit; không container nào còn chạy (`docker ps` không có container audit); mọi terminal
+  worker của phiên đã release.
+- Chưa làm: mục 2.7 (xem "Còn mở"); không có việc nào bỏ dở, cây làm việc sạch ngoài report này.
+- Chủ cần làm: đọc report, `git push` (14 commit từ `41621c0`), quyết mục 2.7 và ADR-0014.
+
+Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
+đề xuất; số liệu README vẫn đo ở `41621c0`, chưa đo lại sau 10 commit cứng hoá).
