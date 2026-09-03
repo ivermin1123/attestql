@@ -40,7 +40,6 @@ from attestql.audit.statements import (
     OrderingKey,
     ParsedStatement,
     StatementRefused,
-    parse_statement,
 )
 from attestql.evidence.build import ExecutionIdentity, build_evidence_record
 from attestql.evidence.record import EvidenceRecord
@@ -133,7 +132,8 @@ class RecordedStatement:
 
     The gold-only mode of ADR-0013 point 2 has no second statement to compare with and
     still has to hold both: the smells read the parse, and the directory a fired smell
-    writes holds the record.
+    writes holds the record. The parse is the one the caller handed in, returned beside
+    the record so that what ran and what came of it are one object.
     """
 
     parsed: ParsedStatement
@@ -280,9 +280,10 @@ def record_statement(
     question: QuestionMetadata,
     question_set_version: str,
     statement_source: StatementSource,
-    sql: str,
+    parsed: ParsedStatement,
     backend: Backend,
     serialization: SerializationDescriptor,
+    session_settings: SessionSettings,
     run_id: str,
     directory: Path,
     data_as_of: datetime,
@@ -292,10 +293,14 @@ def record_statement(
 ) -> RecordedStatement:
     """Execute one statement under its own rule and record it, with nothing to compare.
 
-    Raises ``StatementRefused`` when the text is not a single SELECT this audit can run,
-    and ``BackendRefused`` when the backend will not stand behind the result.
+    The statement arrives parsed and the session arrives read, because a caller that
+    audits a whole question file holds both before the first statement runs: the tables to
+    measure are read off the parses, and one read of the session is what every record of
+    that run states.
+
+    Raises ``StatementRefused`` when the statement projects no column, and
+    ``BackendRefused`` when the backend will not stand behind the result.
     """
-    parsed = parse_statement(sql)
     rule = parsed.replay_rule
     fixture = fixture_digest(
         backend,
@@ -314,7 +319,7 @@ def record_statement(
         identity=ExecutionIdentity(
             effective_database_role=backend.effective_database_role(), run_id=run_id
         ),
-        settings=backend.session_settings(),
+        settings=session_settings,
         fixture=fixture,
         rule=rule,
         ordering=parsed.sort_keys if rule is ReplayRule.R_ORD else (),
@@ -337,12 +342,13 @@ def compare_statements(
     *,
     question: QuestionMetadata,
     question_set_version: str,
-    gold_sql: str,
+    gold_parsed: ParsedStatement,
     gold_source: StatementSource,
-    second_sql: str,
+    second_parsed: ParsedStatement,
     second_source: StatementSource,
     backend: Backend,
     serialization: SerializationDescriptor,
+    session_settings: SessionSettings,
     run_id: str,
     directory: Path,
     data_as_of: datetime,
@@ -352,11 +358,12 @@ def compare_statements(
 ) -> Comparison:
     """Execute both statements on one backend and compare them under the gold's rule.
 
-    Raises ``StatementRefused`` when either text is not a single SELECT this audit can
-    run, and ``BackendRefused`` when the backend will not stand behind a result.
+    Both statements arrive parsed and the session arrives read, for the reason
+    ``record_statement`` states.
+
+    Raises ``StatementRefused`` when either statement projects no column, and
+    ``BackendRefused`` when the backend will not stand behind a result.
     """
-    gold_parsed = parse_statement(gold_sql)
-    second_parsed = parse_statement(second_sql)
     rule = gold_parsed.replay_rule
     ordering = gold_parsed.sort_keys if rule is ReplayRule.R_ORD else ()
     tables = (*gold_parsed.tables, *second_parsed.tables)
@@ -367,7 +374,6 @@ def compare_statements(
         with_content_digests=with_content_digests,
         source_digest=source_digest,
     )
-    settings = backend.session_settings()
     identity = ExecutionIdentity(
         effective_database_role=backend.effective_database_role(), run_id=run_id
     )
@@ -382,7 +388,7 @@ def compare_statements(
             backend=backend,
             serialization=serialization,
             identity=identity,
-            settings=settings,
+            settings=session_settings,
             fixture=fixture,
             rule=rule,
             ordering=ordering,

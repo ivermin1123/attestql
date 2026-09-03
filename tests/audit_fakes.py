@@ -147,6 +147,8 @@ class FakeBackend:
         self.refusing = refusing
         """What every call refuses with from now on, or ``None`` while the server is there."""
         self.executed: list[tuple[str, int]] = []
+        self.settings_calls = 0
+        """How many times the run asked what session it holds, which a run asks once."""
         self.existing_table_calls: list[tuple[TableName, ...]] = []
         self.schema_digest_calls: list[tuple[TableName, ...]] = []
         self.row_count_calls: list[tuple[TableName, ...]] = []
@@ -166,6 +168,7 @@ class FakeBackend:
         return self._role
 
     def session_settings(self) -> SessionSettings:
+        self.settings_calls += 1
         return self._settings
 
     def default_collation(self) -> str:

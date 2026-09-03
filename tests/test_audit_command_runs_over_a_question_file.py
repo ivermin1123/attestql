@@ -23,6 +23,7 @@ from typing import Any, cast
 
 import pytest
 
+from attestql.audit import cli
 from attestql.audit.backend import BackendRefused, TableName, TextCensus
 from attestql.audit.cli import (
     SMELLS_FILE,
@@ -43,6 +44,7 @@ from attestql.audit.statements import (
     GRAMMAR_VERSION,
     POSTGAST_VERSION,
     VALIDATOR_VERSION,
+    ParsedStatement,
     parse_statement,
 )
 from attestql.kernel.types import ExecutionResult
@@ -368,6 +370,52 @@ def test_a_disagreement_writes_the_counterexample_both_records_and_the_smells(
     assert written["smells"]["ordering-over-numeric-text"] == 1
     assert written["predictions"]["statements"] == 1
     assert summary.exit_status == 1
+
+
+def _two_questions_with_predictions(tmp_path: Path) -> FakeBackend:
+    """Two questions, each with a prediction: the shape that asks for the same thing twice."""
+    write(
+        tmp_path / "questions.json",
+        [question(879, "formula_1", FASTEST_LAP), question(207, "toxicology", ELEMENTS)],
+    )
+    write(tmp_path / "predictions.json", {"879": NUMERIC, "207": ELEMENTS_ONE_ROW})
+    return _defect_backend(
+        **{
+            ELEMENTS: fake_result(ELEMENT, (("c",), ("o",))),
+            ELEMENTS_ONE_ROW: fake_result(ELEMENT, (("c",),)),
+        }
+    )
+
+
+def test_the_session_is_read_from_the_server_once_for_a_whole_run(tmp_path: Path) -> None:
+    """The summary and every record state one read of the session and not one each.
+
+    Two reads are two moments, and a run whose records disagree with its own summary about
+    the session they ran under has said two things about one run.
+    """
+    backend = _two_questions_with_predictions(tmp_path)
+    run_audit(options(tmp_path, predictions=tmp_path / "predictions.json"), backend, Lines())
+    assert backend.settings_calls == 1, "the session was read again for every statement"
+
+
+def test_every_statement_of_a_run_is_parsed_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A parse is a function of its text, so a second one is not a second opinion.
+
+    The golds are parsed before the data is measured, because the tables to measure are
+    read off those parses, and each prediction is parsed where its comparison is asked for.
+    """
+    parses: dict[str, int] = {}
+
+    def counting(sql: str) -> ParsedStatement:
+        parses[sql] = parses.get(sql, 0) + 1
+        return parse_statement(sql)
+
+    monkeypatch.setattr(cli, "parse_statement", counting)
+    backend = _two_questions_with_predictions(tmp_path)
+    run_audit(options(tmp_path, predictions=tmp_path / "predictions.json"), backend, Lines())
+    assert parses == {FASTEST_LAP: 1, NUMERIC: 1, ELEMENTS: 1, ELEMENTS_ONE_ROW: 1}
 
 
 def test_a_question_with_no_prediction_is_audited_gold_only_beside_one_that_has_it(

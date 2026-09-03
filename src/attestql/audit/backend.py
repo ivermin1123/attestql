@@ -160,7 +160,12 @@ class Backend(Protocol):
         raise NotImplementedError
 
     def session_settings(self) -> SessionSettings:
-        """The five settings that decide comparability, and everything else read back."""
+        """The five settings that decide comparability, and everything else read back.
+
+        Asked once for a whole run, like ``existing_tables``: the summary and every record
+        state one read of the session, so that two records of one run cannot say the
+        statements behind them ran under two different sessions.
+        """
         raise NotImplementedError
 
     def execute(self, sql: str, *, statement_timeout_seconds: int) -> ExecutionResult:

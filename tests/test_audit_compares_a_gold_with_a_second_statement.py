@@ -35,7 +35,7 @@ from attestql.audit.compare import (
     counterexample_json,
     write_comparison,
 )
-from attestql.audit.statements import StatementRefused
+from attestql.audit.statements import StatementRefused, parse_statement
 from attestql.evidence.replay import ComparabilityResult, compare_r_ord, compare_r_set
 from attestql.evidence.types import FixtureDigest, QuestionMetadata, ReplayRule, SortKey
 from tests.audit_fakes import (
@@ -81,12 +81,13 @@ def _compare(
     return compare_statements(
         question=QUESTION,
         question_set_version=QUESTION_SET_VERSION,
-        gold_sql=gold_sql,
+        gold_parsed=parse_statement(gold_sql),
         gold_source=QUESTIONS_SOURCE,
-        second_sql=second_sql,
+        second_parsed=parse_statement(second_sql),
         second_source=PREDICTIONS_SOURCE,
         backend=backend,
         serialization=DESCRIPTOR,
+        session_settings=backend.session_settings(),
         run_id="run-under-test",
         directory=directory,
         data_as_of=DATA_AS_OF,

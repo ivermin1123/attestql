@@ -90,6 +90,7 @@ from attestql.audit.statements import (
     GRAMMAR_VERSION,
     POSTGAST_VERSION,
     VALIDATOR_VERSION,
+    ParsedStatement,
     StatementRefused,
     parse_statement,
 )
@@ -97,7 +98,12 @@ from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import Json, record_json, write_json
 from attestql.evidence.replay import ComparabilityResult
 from attestql.evidence.serialize import SerializationDescriptor, UnsupportedValue
-from attestql.evidence.types import FixtureDigest, QuestionMetadata, StatementSource
+from attestql.evidence.types import (
+    FixtureDigest,
+    QuestionMetadata,
+    SessionSettings,
+    StatementSource,
+)
 
 PROGRAM = "attestql"
 SUMMARY_FILE = "summary.json"
@@ -535,21 +541,39 @@ def _prepare_shuffle(
         return None, _refusal(refused)
 
 
-def _referenced_tables(questions: Sequence[Question]) -> tuple[TableName, ...]:
+def _parsed_golds(questions: Sequence[Question]) -> tuple[ParsedStatement | StatementRefused, ...]:
+    """Every gold read once, in the order the questions are asked.
+
+    The tables this run measures are read off these parses and so is every record written
+    from them, and a parse is a function of its text: asking for a second one buys nothing
+    a run does not already hold. A gold this audit cannot read keeps its refusal here and
+    raises it when the run reaches that question, which is where a reader is told.
+    """
+    parsed: list[ParsedStatement | StatementRefused] = []
+    for question in questions:
+        try:
+            parsed.append(parse_statement(question.sql))
+        except StatementRefused as refused:
+            parsed.append(refused)
+    return tuple(parsed)
+
+
+def _referenced_tables(
+    golds: Sequence[ParsedStatement | StatementRefused],
+) -> tuple[TableName, ...]:
     """Every table the golds name, for the one fixture measurement and the copies.
 
-    A gold that does not parse names nothing here and is reported as its own question's
+    A gold that did not parse names nothing here and is reported as its own question's
     error when the run reaches it. A table two golds spelled two ways is two names here
     and one table underneath: what the backend does with the two spellings is its own,
     and what a summary states is what the golds wrote.
     """
     tables: dict[TableName, None] = {}
-    for question in questions:
-        try:
-            for table in parse_statement(question.sql).tables:
-                tables[table] = None
-        except StatementRefused:
+    for gold in golds:
+        if isinstance(gold, StatementRefused):
             continue
+        for table in gold.tables:
+            tables[table] = None
     return tuple(tables)
 
 
@@ -596,7 +620,8 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         settings = backend.session_settings()
     except BackendRefused as refused:
         raise ToolError(f"the backend will not state what it is: {refused}") from refused
-    tables = _referenced_tables(question_set.questions)
+    golds = _parsed_golds(question_set.questions)
+    tables = _referenced_tables(golds)
     with phases.timed("fixture"):
         measured = _run_fixture(backend, tables, options)
     with phases.timed("shuffle"):
@@ -608,8 +633,10 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
             writer,
             phases,
             question_set=question_set,
+            golds=golds,
             questions_source=questions_source,
             predictions=predictions,
+            session_settings=settings,
             run_id=run_id,
             data_as_of=data_as_of,
             data_digest=data_digest,
@@ -784,8 +811,10 @@ def _audit_questions(
     phases: Phases,
     *,
     question_set: QuestionSet,
+    golds: Sequence[ParsedStatement | StatementRefused],
     questions_source: StatementSource,
     predictions: Mapping[int, Prediction],
+    session_settings: SessionSettings,
     run_id: str,
     data_as_of: datetime,
     data_digest: str,
@@ -802,10 +831,14 @@ def _audit_questions(
         plan_variant=options.plan_variant,
         experimental_s2=options.experimental_s2,
     )
-    for question in question_set.questions:
+    for question, gold in zip(question_set.questions, golds, strict=True):
         counted.questions += 1
         try:
             with phases.timed("questions"):
+                if isinstance(gold, StatementRefused):
+                    # Read before the data was measured and raised here, so that a gold
+                    # this audit cannot read is one question's line and not the run's end.
+                    raise gold
                 _audit_one(
                     question,
                     options,
@@ -813,8 +846,10 @@ def _audit_questions(
                     writer,
                     counted,
                     question_set=question_set,
+                    parsed=gold,
                     questions_source=questions_source,
                     prediction=predictions.get(question.question_id),
+                    session_settings=session_settings,
                     run_id=run_id,
                     data_as_of=data_as_of,
                     data_digest=data_digest,
@@ -839,8 +874,10 @@ def _audit_one(
     counted: _Counted,
     *,
     question_set: QuestionSet,
+    parsed: ParsedStatement,
     questions_source: StatementSource,
     prediction: Prediction | None,
+    session_settings: SessionSettings,
     run_id: str,
     data_as_of: datetime,
     data_digest: str,
@@ -848,37 +885,42 @@ def _audit_one(
     no_shuffle: str,
     settings: SmellSettings,
 ) -> None:
-    """One question: the gold, the prediction when there is one, then the smells."""
+    """One question: the gold, the prediction when there is one, then the smells.
+
+    The gold arrives parsed, because the tables this run measured were read off that same
+    parse. The prediction is parsed here, which is the only place that needs it.
+    """
     metadata = _question_metadata(question, _question_set_name(question_set, options))
     directory = options.out / f"q{question.question_id}"
     comparison: Comparison | None = None
     if prediction is None:
-        recorded = record_statement(
+        gold = record_statement(
             question=metadata,
             question_set_version=question_set.digest,
             statement_source=questions_source,
-            sql=question.sql,
+            parsed=parsed,
             backend=backend,
             serialization=SERIALIZATION,
+            session_settings=session_settings,
             run_id=run_id,
             directory=options.out,
             data_as_of=data_as_of,
             statement_timeout_seconds=options.statement_timeout_seconds,
             with_content_digests=options.with_content_digests,
             source_digest=data_digest,
-        )
-        parsed, gold = recorded.parsed, recorded.record
+        ).record
         verdict = GOLD_ONLY
     else:
         comparison = compare_statements(
             question=metadata,
             question_set_version=question_set.digest,
-            gold_sql=question.sql,
+            gold_parsed=parsed,
             gold_source=questions_source,
-            second_sql=prediction.sql,
+            second_parsed=parse_statement(prediction.sql),
             second_source=prediction.source,
             backend=backend,
             serialization=SERIALIZATION,
+            session_settings=session_settings,
             run_id=run_id,
             directory=options.out,
             data_as_of=data_as_of,
@@ -886,7 +928,7 @@ def _audit_one(
             with_content_digests=options.with_content_digests,
             source_digest=data_digest,
         )
-        parsed, gold = parse_statement(question.sql), comparison.gold
+        gold = comparison.gold
         verdict = comparison.verdict.result.name
     found = all_smells(
         parsed,

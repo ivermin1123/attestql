@@ -263,6 +263,7 @@ class PostgresBackend:
     ) -> None:
         self._connection = connection
         self._identity: str | None = None
+        self._session_settings: SessionSettings | None = None
         self._shuffled: ShuffledCopies | None = None
         self._scratch_schema = scratch_schema
         self._holds_the_scratch_schema = False
@@ -324,19 +325,30 @@ class PostgresBackend:
         )
 
     def session_settings(self) -> SessionSettings:
-        """The five settings that decide comparability, and the six recorded beside them."""
-        read_back = self._settings((*PRECONDITION_SETTINGS, *RECORDED_SETTINGS))
-        missing = sorted(name for name in PRECONDITION_SETTINGS if name not in read_back)
-        if missing:
-            raise BackendRefused("session_settings", f"the session reported no value for {missing}")
-        return SessionSettings(
-            time_zone=read_back["TimeZone"],
-            date_style=read_back["DateStyle"],
-            interval_style=read_back["IntervalStyle"],
-            extra_float_digits=read_back["extra_float_digits"],
-            database_collation=self.default_collation(),
-            recorded={name: read_back[name] for name in RECORDED_SETTINGS if name in read_back},
-        )
+        """The five settings that decide comparability, and the six recorded beside them.
+
+        Read once and repeated after that, the way the identity is. Nothing here sets any
+        of them, so a second read of this session could only say what the first one said at
+        the cost of two more round trips. What an execution does set it sets on its own
+        transaction, and reads back there: a session that did not hold it stops that
+        statement, and none of that reaches these values.
+        """
+        if self._session_settings is None:
+            read_back = self._settings((*PRECONDITION_SETTINGS, *RECORDED_SETTINGS))
+            missing = sorted(name for name in PRECONDITION_SETTINGS if name not in read_back)
+            if missing:
+                raise BackendRefused(
+                    "session_settings", f"the session reported no value for {missing}"
+                )
+            self._session_settings = SessionSettings(
+                time_zone=read_back["TimeZone"],
+                date_style=read_back["DateStyle"],
+                interval_style=read_back["IntervalStyle"],
+                extra_float_digits=read_back["extra_float_digits"],
+                database_collation=self.default_collation(),
+                recorded={name: read_back[name] for name in RECORDED_SETTINGS if name in read_back},
+            )
+        return self._session_settings
 
     def execute(self, sql: str, *, statement_timeout_seconds: int) -> ExecutionResult:
         """One statement, read-only, with the envelope read back before it is sent."""

@@ -404,6 +404,20 @@ def test_the_session_settings_name_the_five_and_record_the_rest() -> None:
     }
 
 
+def test_the_session_settings_are_read_once_and_repeated_after_that() -> None:
+    """Two questions about the session are two round trips and one answer.
+
+    Nothing here sets any of these, so the second read can only say what the first one
+    said: what an execution sets is put on its own transaction and read back there.
+    """
+    connection = FakeConnection()
+    backend = _backend(connection)
+    settings = backend.session_settings()
+    assert backend.session_settings() is settings
+    assert sum(1 for asked in connection.log if "pg_settings" in asked) == 1
+    assert sum(1 for asked in connection.log if "datcollate" in asked) == 1
+
+
 def test_a_session_that_cannot_report_a_precondition_setting_is_refused() -> None:
     connection = FakeConnection(settings={"statement_timeout": "30000"})
     with pytest.raises(BackendRefused, match="reported no value for"):
