@@ -217,6 +217,7 @@ def test_a_gold_only_run_with_nothing_to_report_writes_no_directory(tmp_path: Pa
     assert not (tmp_path / "audit" / "q207").exists()
     written = summary_of(tmp_path)
     assert written["verdicts"] == {"GOLD-ONLY": 1}
+    assert written["credited_but_not_equal"] is None, "nothing was compared with BIRD's reading"
     assert written["data_as_of_source"] == "the instant the run started"
     assert written["fixture"]["row_counts"] == {"atom": 2}
     assert written["shuffle"]["prepared"] is True
@@ -342,7 +343,10 @@ def test_the_line_of_a_disagreement_is_the_one_the_adr_writes_down(
     assert lines.written[0] == (
         "q879  formula_1   R-ORD  NOT_EQUAL  smells=ordering-over-numeric-text  audit/q879/"
     )
-    assert lines.written[1] == "1 questions: 1 NOT_EQUAL, 1 smells fired"
+    assert lines.written[1] == (
+        "1 questions: 1 NOT_EQUAL, 1 smells fired, 0 credited by BIRD but NOT_EQUAL "
+        "(0 multiplicity, 0 type, 0 order, 0 truncation)"
+    )
     # Both records of a comparison are built from one session and one fixture, so no run
     # reaches NOT_COMPARABLE and the line does not count what cannot happen.
     assert "NOT_COMPARABLE" not in lines.written[1]
@@ -609,7 +613,10 @@ def test_a_prediction_that_projects_no_column_is_that_question_s_error_line(
     assert "projects no column" in lines.written[0]
     assert "NOT_EQUAL" in lines.written[1]
     assert summary.verdicts == {"ERROR": 1, "NOT_EQUAL": 1}
-    assert written["errors"] == [{"question_id": 1481, "step": "statement", "message": NO_COLUMNS}]
+    assert "prediction: the statement projects no column" in lines.written[0]
+    assert written["errors"] == [
+        {"question_id": 1481, "side": "prediction", "step": "statement", "message": NO_COLUMNS}
+    ]
     assert summary.exit_status == 1, "the question that disagreed decided it alone"
 
 
@@ -631,8 +638,84 @@ def test_a_gold_that_projects_no_column_is_that_question_s_error_line(tmp_path: 
     assert "projects no column" in lines.written[0]
     assert lines.written[1] == "q207  toxicology  R-SET  GOLD-ONLY  smells=none"
     assert summary.verdicts == {"ERROR": 1, "GOLD-ONLY": 1}
-    assert written["errors"] == [{"question_id": 1, "step": "statement", "message": NO_COLUMNS}]
+    assert "gold: the statement projects no column" in lines.written[0]
+    assert written["errors"] == [
+        {"question_id": 1, "side": "gold", "step": "statement", "message": NO_COLUMNS}
+    ]
     assert summary.exit_status == 0, "an error is not a disagreement"
+
+
+def test_a_fixture_the_run_cannot_measure_names_the_run_and_not_either_statement(
+    tmp_path: Path,
+) -> None:
+    """The measurement both records are made under is neither statement's, so the error line
+    says so: an operator reading ``gold`` here would go and read a statement that never ran,
+    where a GRANT on the table is what repairs it."""
+    write(tmp_path / "questions.json", [question(2, "formula_1", SEALED)])
+    write(tmp_path / "predictions.json", {"2": SEALED})
+    backend = FakeBackend({}, unreadable_tables=(SEALED_TABLE,))
+    lines = Lines()
+    summary = run_audit(
+        options(tmp_path, predictions=tmp_path / "predictions.json"), backend, lines
+    )
+    written = summary_of(tmp_path)
+
+    assert "ERROR" in lines.written[0]
+    assert "run: row_counts: permission denied for table sealed" in lines.written[0]
+    assert summary.errors[0].side == "run"
+    assert written["errors"][0]["side"] == "run"
+    assert written["errors"][0]["step"] == "row_counts"
+
+
+# what BIRD credits and this tool rejects
+
+
+DISTINCT_ELEMENTS = "SELECT DISTINCT element FROM atom"
+
+
+def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism(
+    tmp_path: Path,
+) -> None:
+    """``set(predicted) == set(gold)`` scores this pair 1 and the typed multiset does not:
+    the gold holds one row twice and the prediction holds it once. The line and the file say
+    how many of those a run found and what makes them, which is the whole point of running
+    both readings over one pair of results."""
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    write(tmp_path / "predictions.json", {"207": DISTINCT_ELEMENTS})
+    backend = FakeBackend(
+        {
+            ELEMENTS: fake_result(ELEMENT, (("c",), ("c",), ("o",))),
+            DISTINCT_ELEMENTS: fake_result(ELEMENT, (("c",), ("o",))),
+        },
+        row_counts={"atom": 3},
+    )
+    lines = Lines()
+    summary = run_audit(
+        options(tmp_path, predictions=tmp_path / "predictions.json"), backend, lines
+    )
+    written = summary_of(tmp_path)
+    counterexample = json.loads(
+        (tmp_path / "audit" / "q207" / COUNTEREXAMPLE_FILE).read_text(encoding="utf-8")
+    )
+
+    assert lines.written[1] == (
+        "1 questions: 1 NOT_EQUAL, 0 smells fired, 1 credited by BIRD but NOT_EQUAL "
+        "(1 multiplicity, 0 type, 0 order, 0 truncation)"
+    )
+    assert summary.credited_but_not_equal is not None
+    assert summary.credited_but_not_equal.total == 1
+    assert written["credited_but_not_equal"] == {
+        "total": 1,
+        "by_mechanism": {
+            "multiplicity": 1,
+            "type": 0,
+            "order": 0,
+            "truncation": 0,
+            "other": 0,
+        },
+    }
+    assert counterexample["mechanism"]["class"] == "multiplicity"
+    assert counterexample["bird_ex"]["value"] == 1
 
 
 class RefusingBackend(FakeBackend):

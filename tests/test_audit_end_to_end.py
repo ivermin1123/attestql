@@ -71,8 +71,12 @@ describes the data every record here is about."""
 DEFECTS = ("1029", "879", "207")
 """The three questions whose shipped gold and correction disagree on this data."""
 
-SUMMARY_LINE = "8 questions: 3 NOT_EQUAL, 6 smells fired"
-EXPERIMENTAL_SUMMARY_LINE = "8 questions: 3 NOT_EQUAL, 7 smells fired"
+NO_CREDIT = " credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation)"
+"""What the run given predictions states about the gap between the two readings: none of
+the three disagreements here is one BIRD's own check would have scored 1."""
+
+SUMMARY_LINE = f"8 questions: 3 NOT_EQUAL, 6 smells fired, 0{NO_CREDIT}"
+EXPERIMENTAL_SUMMARY_LINE = f"8 questions: 3 NOT_EQUAL, 7 smells fired, 0{NO_CREDIT}"
 """The same run with the experimental smell asked for: q1029 fires it and nothing else moves."""
 
 COPIED_TABLES = [
@@ -206,7 +210,7 @@ def test_every_question_prints_the_line_adr_0013_writes_down(audited: Run) -> No
     )
     assert audited.line_of("900003") == (
         "q900003 synthetic          ERROR      smells=none  "
-        "row_counts: permission denied for table sealed"
+        "run: row_counts: permission denied for table sealed"
     )
     assert audited.line_of("900004") == (
         f"q900004 synthetic   R-ORD  GOLD-ONLY  smells=ordering-over-numeric-text  {out}/q900004/"
@@ -230,7 +234,9 @@ def test_a_table_the_auditor_may_not_read_is_not_a_table_that_is_not_there(audit
     assert written["missing_tables"] == []
     assert "sealed" not in written["measured_tables"]
     assert "ERROR" in line
-    assert "permission denied for table sealed" in line
+    assert "run: row_counts: permission denied for table sealed" in line, (
+        "the measurement both records are made under is neither statement's"
+    )
     assert audited.summary.verdicts["ERROR"] == 1
     assert not audited.directory("900003").exists(), "a question that errored wrote a directory"
 

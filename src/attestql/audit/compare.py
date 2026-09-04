@@ -22,17 +22,28 @@ was compared instead of working it out.
 
 ``bird_ex`` is computed beside the verdict because a counterexample has to state what the
 benchmark's own evaluator would say about the same two results. Where the two disagree,
-that difference is the point.
+that difference is the point, and ``mechanism`` names what makes it: the same distinct rows
+at different counts, the same values at different declared types, the same multiset in
+another order, or one result a cut of the other. A NOT_EQUAL that is none of those is
+``other`` and is never guessed at.
+
+Which side failed is carried out of here rather than reconstructed. A question that ends in
+an error ended in the gold, in the prediction, or in the run around both, and a reader told
+only the server's message cannot tell those apart; ``sided`` names the side of every refusal
+raised under it, and the innermost name wins, so a fixture measured while a statement is
+being recorded stays the run's.
 """
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections import Counter
+from collections.abc import Generator, Sequence
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-from attestql.audit.backend import Backend
+from attestql.audit.backend import Backend, BackendRefused
 from attestql.audit.fixture import fixture_digest
 from attestql.audit.statements import (
     CHECKS_PASSED,
@@ -54,8 +65,13 @@ from attestql.evidence.render import (
     statement_source_json,
     write_json,
 )
-from attestql.evidence.replay import ComparabilityVerdict, compare_r_ord, compare_r_set
-from attestql.evidence.serialize import SerializationDescriptor
+from attestql.evidence.replay import (
+    ComparabilityResult,
+    ComparabilityVerdict,
+    compare_r_ord,
+    compare_r_set,
+)
+from attestql.evidence.serialize import SerializationDescriptor, UnsupportedValue, typed_row
 from attestql.evidence.types import (
     FixtureDigest,
     QuestionMetadata,
@@ -98,6 +114,33 @@ VERDICT_READING = (
     "does not state which of them is wrong."
 )
 
+SIDE_GOLD = "gold"
+SIDE_PREDICTION = "prediction"
+SIDE_RUN = "run"
+"""Which side of a question a refusal came from. The second statement of an audit is a
+prediction, which is the word an error line uses; ``run`` is everything around the two,
+the fixture measurement above all, and is what a refusal nothing narrower named is."""
+
+MECHANISM_MULTIPLICITY = "multiplicity"
+MECHANISM_TYPE = "type"
+MECHANISM_ORDER = "order"
+MECHANISM_TRUNCATION = "truncation"
+MECHANISM_OTHER = "other"
+
+MECHANISM_CLASSES: tuple[str, ...] = (
+    MECHANISM_MULTIPLICITY,
+    MECHANISM_TYPE,
+    MECHANISM_ORDER,
+    MECHANISM_TRUNCATION,
+    MECHANISM_OTHER,
+)
+"""Every class a NOT_EQUAL is put in, in the order a summary counts them."""
+
+MECHANISM_READING = (
+    "The class states what makes these two results unequal under this rule, read off the "
+    "two results and nothing else. It does not state which of the two statements is wrong."
+)
+
 PROJECTION_NAMES_READING = (
     "The two statements name their result columns differently. A projection is compared by "
     "position and declared type, so these names did not decide the verdict. They are part of "
@@ -124,6 +167,33 @@ class BirdEx:
     second_rows: int
     gold_distinct_rows: int
     second_distinct_rows: int
+
+
+@dataclass(frozen=True)
+class Mechanism:
+    """What makes a NOT_EQUAL a NOT_EQUAL, in one class and the observations behind it.
+
+    The rows are keyed the way the comparison keys them, so what is counted here is what
+    the verdict was decided on and not a second reading of the same results. The classes
+    are tried in the order the fields below are read, because more than one can hold at
+    once and the first is the one that would still hold if the others were repaired: two
+    results at different declared types are unequal at every count and every order, so
+    that is what they are, and only results whose types agree are asked about counts.
+
+    ``multiplicity`` is the same distinct rows at different counts, ``type`` the same
+    positions at different declared types, ``order`` one multiset in two orders under
+    R-ORD, and ``truncation`` one result that is the first rows of the other. Anything
+    else is ``other``: the two results hold different values, and this says so rather
+    than naming a mechanism nothing here observed.
+    """
+
+    classification: str
+    gold_types: tuple[str, ...]
+    second_types: tuple[str, ...]
+    multiset_equal: bool
+    set_equal: bool
+    order_equal: bool
+    shorter_result_is_a_prefix: bool
 
 
 @dataclass(frozen=True)
@@ -155,6 +225,42 @@ class Comparison:
     gold_ordering: tuple[OrderingKey, ...]
     second_ordering: tuple[OrderingKey, ...]
     bird_ex: BirdEx
+    mechanism: Mechanism | None
+    """Why the two disagree, on a NOT_EQUAL and on nothing else: an EQUAL has no
+    disagreement to explain and a NOT_COMPARABLE names its own preconditions."""
+
+
+class SideFailed(Exception):
+    """A question that could not be answered, and the side of it that could not.
+
+    "The gold does not run on this database" and "the prediction does not run on this
+    database" are two findings about a benchmark and not one, and an error line carrying
+    only the server's message left a reader to open the record to tell them apart. The
+    refusal itself is kept unchanged in ``failed``: what stopped the question is still the
+    parser's or the server's own words, and ``side`` is what is added in front of them.
+    """
+
+    def __init__(self, side: str, failed: Exception) -> None:
+        super().__init__(str(failed))
+        self.side = side
+        self.failed = failed
+
+
+@contextmanager
+def sided(side: str) -> Generator[None]:
+    """Name the side of every refusal raised inside, unless one inside already named its own.
+
+    The inner name wins because it is the narrower observation: a fixture measured while a
+    statement is being recorded is the run's measurement and not that statement's, and a
+    caller that wraps the whole recording in ``gold`` is saying which statement it handed
+    over, not that everything underneath belongs to it.
+    """
+    try:
+        yield
+    except SideFailed:
+        raise
+    except (StatementRefused, BackendRefused, UnsupportedValue) as failed:
+        raise SideFailed(side, failed) from failed
 
 
 def bird_ex(
@@ -182,6 +288,67 @@ def bird_ex_json(measured: BirdEx) -> Json:
         "second_rows": measured.second_rows,
         "gold_distinct_rows": measured.gold_distinct_rows,
         "second_distinct_rows": measured.second_distinct_rows,
+    }
+
+
+def _is_a_prefix(gold: Sequence[object], second: Sequence[object]) -> bool:
+    """Whether the shorter of two row sequences is the first rows of the longer one.
+
+    What a LIMIT over the same rows in the same order produces, and the one shape of
+    disagreement a reader repairs by looking at a bound rather than at the answer. The
+    shorter side has to hold a row: a result that came back empty is not a cut of the
+    other one, it is a different answer, and calling it a truncation would name a
+    mechanism where there is only an absence.
+    """
+    if len(gold) == len(second):
+        return False
+    shorter, longer = (gold, second) if len(gold) < len(second) else (second, gold)
+    return bool(shorter) and list(shorter) == list(longer[: len(shorter)])
+
+
+def mechanism(gold: ExecutionResult, second: ExecutionResult, rule: ReplayRule) -> Mechanism:
+    """Why these two results are not equal under this rule, read off the two of them."""
+    gold_types = tuple(column.pg_type for column in gold.columns)
+    second_types = tuple(column.pg_type for column in second.columns)
+    gold_rows = [typed_row(row) for row in gold.rows]
+    second_rows = [typed_row(row) for row in second.rows]
+    multiset_equal = Counter(gold_rows) == Counter(second_rows)
+    set_equal = set(gold_rows) == set(second_rows)
+    order_equal = gold_rows == second_rows
+    prefix = _is_a_prefix(gold_rows, second_rows)
+    if gold_types != second_types:
+        classification = MECHANISM_TYPE
+    elif multiset_equal:
+        classification = (
+            MECHANISM_ORDER if rule is ReplayRule.R_ORD and not order_equal else MECHANISM_OTHER
+        )
+    elif set_equal:
+        classification = MECHANISM_MULTIPLICITY
+    elif prefix:
+        classification = MECHANISM_TRUNCATION
+    else:
+        classification = MECHANISM_OTHER
+    return Mechanism(
+        classification=classification,
+        gold_types=gold_types,
+        second_types=second_types,
+        multiset_equal=multiset_equal,
+        set_equal=set_equal,
+        order_equal=order_equal,
+        shorter_result_is_a_prefix=prefix,
+    )
+
+
+def mechanism_json(found: Mechanism) -> Json:
+    return {
+        "class": found.classification,
+        "gold_types": list(found.gold_types),
+        "second_types": list(found.second_types),
+        "multiset_equal": found.multiset_equal,
+        "set_equal": found.set_equal,
+        "order_equal": found.order_equal,
+        "shorter_result_is_a_prefix": found.shorter_result_is_a_prefix,
+        "reading": MECHANISM_READING,
     }
 
 
@@ -298,17 +465,23 @@ def record_statement(
     measure are read off the parses, and one read of the session is what every record of
     that run states.
 
-    Raises ``StatementRefused`` when the statement projects no column, and
-    ``BackendRefused`` when the backend will not stand behind the result.
+    Raises ``SideFailed`` naming ``run`` when what the measurement around the statement
+    needs is refused, and otherwise raises the statement's own refusal for the caller to
+    name the side of: this records one statement and does not know whose it is.
     """
     rule = parsed.replay_rule
-    fixture = fixture_digest(
-        backend,
-        parsed.tables,
-        directory=directory,
-        with_content_digests=with_content_digests,
-        source_digest=source_digest,
-    )
+    with sided(SIDE_RUN):
+        fixture = fixture_digest(
+            backend,
+            parsed.tables,
+            directory=directory,
+            with_content_digests=with_content_digests,
+            source_digest=source_digest,
+        )
+        identity = ExecutionIdentity(
+            effective_database_role=backend.effective_database_role(), run_id=run_id
+        )
+        rerun_instruction = _rerun_instruction(backend.identity(), rule)
     record = _execute_and_record(
         parsed,
         question=question,
@@ -316,14 +489,12 @@ def record_statement(
         statement_source=statement_source,
         backend=backend,
         serialization=serialization,
-        identity=ExecutionIdentity(
-            effective_database_role=backend.effective_database_role(), run_id=run_id
-        ),
+        identity=identity,
         settings=session_settings,
         fixture=fixture,
         rule=rule,
         ordering=parsed.sort_keys if rule is ReplayRule.R_ORD else (),
-        rerun_instruction=_rerun_instruction(backend.identity(), rule),
+        rerun_instruction=rerun_instruction,
         data_as_of=data_as_of,
         statement_timeout_seconds=statement_timeout_seconds,
     )
@@ -361,23 +532,24 @@ def compare_statements(
     Both statements arrive parsed and the session arrives read, for the reason
     ``record_statement`` states.
 
-    Raises ``StatementRefused`` when either statement projects no column, and
-    ``BackendRefused`` when the backend will not stand behind a result.
+    Raises ``SideFailed`` naming the side that stopped the comparison: the gold, the
+    prediction, or the run around them when it is the measurement both are recorded under.
     """
     rule = gold_parsed.replay_rule
     ordering = gold_parsed.sort_keys if rule is ReplayRule.R_ORD else ()
     tables = (*gold_parsed.tables, *second_parsed.tables)
-    fixture = fixture_digest(
-        backend,
-        tables,
-        directory=directory,
-        with_content_digests=with_content_digests,
-        source_digest=source_digest,
-    )
-    identity = ExecutionIdentity(
-        effective_database_role=backend.effective_database_role(), run_id=run_id
-    )
-    rerun = _rerun_instruction(backend.identity(), rule)
+    with sided(SIDE_RUN):
+        fixture = fixture_digest(
+            backend,
+            tables,
+            directory=directory,
+            with_content_digests=with_content_digests,
+            source_digest=source_digest,
+        )
+        identity = ExecutionIdentity(
+            effective_database_role=backend.effective_database_role(), run_id=run_id
+        )
+        rerun = _rerun_instruction(backend.identity(), rule)
 
     def record_of(parsed: ParsedStatement, source: StatementSource) -> EvidenceRecord:
         return _execute_and_record(
@@ -397,8 +569,10 @@ def compare_statements(
             statement_timeout_seconds=statement_timeout_seconds,
         )
 
-    gold_record = record_of(gold_parsed, gold_source)
-    second_record = record_of(second_parsed, second_source)
+    with sided(SIDE_GOLD):
+        gold_record = record_of(gold_parsed, gold_source)
+    with sided(SIDE_PREDICTION):
+        second_record = record_of(second_parsed, second_source)
     verdict = (
         compare_r_ord(gold_record, second_record)
         if rule is ReplayRule.R_ORD
@@ -416,6 +590,11 @@ def compare_statements(
         gold_ordering=gold_parsed.ordering,
         second_ordering=second_parsed.ordering,
         bird_ex=bird_ex(gold_record.result.rows, second_record.result.rows),
+        mechanism=(
+            mechanism(gold_record.result, second_record.result, rule)
+            if verdict.result is ComparabilityResult.NOT_EQUAL
+            else None
+        ),
     )
 
 
@@ -488,6 +667,9 @@ def counterexample_json(comparison: Comparison) -> Json:
         },
         **_projection_names_note(comparison),
         "bird_ex": bird_ex_json(comparison.bird_ex),
+        "mechanism": (
+            None if comparison.mechanism is None else mechanism_json(comparison.mechanism)
+        ),
         "gold": {
             "executed_sql": comparison.gold.executed_sql,
             "own_ordering": _ordering_json(comparison.gold_ordering),
@@ -532,18 +714,33 @@ __all__ = [
     "COUNTEREXAMPLE_FORMAT",
     "DEFAULT_STATEMENT_TIMEOUT_SECONDS",
     "GOLD_RECORD_FILE",
+    "MECHANISM_CLASSES",
+    "MECHANISM_MULTIPLICITY",
+    "MECHANISM_ORDER",
+    "MECHANISM_OTHER",
+    "MECHANISM_READING",
+    "MECHANISM_TRUNCATION",
+    "MECHANISM_TYPE",
     "PROJECTION_NAMES_READING",
     "SECOND_RECORD_FILE",
+    "SIDE_GOLD",
+    "SIDE_PREDICTION",
+    "SIDE_RUN",
     "VERDICT_READING",
     "WIDTH_POLICY_VERSION",
     "BirdEx",
     "Comparison",
+    "Mechanism",
     "RecordedStatement",
+    "SideFailed",
     "bird_ex",
     "bird_ex_json",
     "compare_statements",
     "counterexample_json",
+    "mechanism",
+    "mechanism_json",
     "record_statement",
+    "sided",
     "width_proof",
     "write_comparison",
 ]

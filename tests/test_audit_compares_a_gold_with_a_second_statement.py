@@ -13,6 +13,10 @@ The case where this tool must not separate itself from the benchmark is here too
 prediction that names its columns differently. BIRD compares result tuples by position and
 never sees a name, so calling that pair NOT_EQUAL would be this tool inventing a defect.
 The names go into the counterexample instead.
+
+The mechanism of a NOT_EQUAL is tested class by class on two results and nothing else,
+because that is all it is read off: one class per test, one test for two classes holding at
+once, and one for a disagreement that is none of them and says so.
 """
 
 from __future__ import annotations
@@ -20,6 +24,7 @@ from __future__ import annotations
 import dataclasses
 import json
 from datetime import UTC, datetime
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -27,12 +32,18 @@ import pytest
 from attestql.audit.compare import (
     COUNTEREXAMPLE_FILE,
     GOLD_RECORD_FILE,
+    MECHANISM_MULTIPLICITY,
+    MECHANISM_ORDER,
+    MECHANISM_OTHER,
+    MECHANISM_TRUNCATION,
+    MECHANISM_TYPE,
     PROJECTION_NAMES_READING,
     SECOND_RECORD_FILE,
     VERDICT_READING,
     Comparison,
     compare_statements,
     counterexample_json,
+    mechanism,
     write_comparison,
 )
 from attestql.audit.statements import StatementRefused, parse_statement
@@ -105,6 +116,7 @@ def test_two_statements_with_the_same_rows_agree(tmp_path: Path) -> None:
     assert comparison.replay_rule is ReplayRule.R_SET
     assert comparison.verdict.result is ComparabilityResult.EQUAL
     assert comparison.verdict.mismatched == ()
+    assert comparison.mechanism is None, "two answers that agree have no disagreement to explain"
     assert comparison.gold_result_hash == comparison.second_result_hash
     assert comparison.differing_rows.only_left_total == 0
     assert comparison.differing_rows.only_right_total == 0
@@ -169,6 +181,9 @@ def test_rows_that_differ_only_in_multiplicity_are_not_equal_and_bird_says_they_
     assert comparison.differing_rows.only_right_total == 0
     assert comparison.differing_rows.only_left[0].row == ("c",)
     assert comparison.differing_rows.only_left[0].count == 1
+    assert comparison.mechanism is not None
+    assert comparison.mechanism.classification == MECHANISM_MULTIPLICITY
+    assert counterexample_json(comparison)["mechanism"]["class"] == MECHANISM_MULTIPLICITY
 
 
 def test_rows_that_differ_only_in_order_are_not_equal_under_the_gold_s_rule(
@@ -372,3 +387,94 @@ def test_the_comparison_is_written_as_three_files_a_reader_can_check(tmp_path: P
     }
     assert gold_record["statement_source"]["digest"] == QUESTIONS_SOURCE.digest
     assert second_record["statement_source"]["path"] == PREDICTIONS_SOURCE.path
+
+
+# what makes a NOT_EQUAL
+
+
+NUMBER_INT8 = (("total", "int8"),)
+NUMBER_NUMERIC = (("total", "numeric"),)
+
+
+def test_the_same_distinct_rows_at_different_counts_are_a_multiplicity() -> None:
+    """The 138 rows of the measured run: every row of one result is in the other and one of
+    them is there more often, which is what a prediction missing a DISTINCT produces."""
+    found = mechanism(
+        fake_result(ELEMENT, (("c",), ("c",), ("o",))),
+        fake_result(ELEMENT, (("c",), ("o",))),
+        ReplayRule.R_SET,
+    )
+    assert found.classification == MECHANISM_MULTIPLICITY
+    assert found.set_equal
+    assert not found.multiset_equal
+
+
+def test_the_same_value_under_two_declared_types_is_a_type() -> None:
+    """The other 32: SUM() against a bare column, or AVG() against one, is one number the
+    server hands back at two types, and a typed comparison refuses it by design."""
+    found = mechanism(
+        fake_result(NUMBER_INT8, ((507,),)),
+        fake_result(NUMBER_NUMERIC, ((Decimal("507"),),)),
+        ReplayRule.R_SET,
+    )
+    assert found.classification == MECHANISM_TYPE
+    assert found.gold_types == ("int8",)
+    assert found.second_types == ("numeric",)
+
+
+def test_a_declared_type_that_differs_is_the_class_even_where_the_counts_differ_too() -> None:
+    """Two classes hold at once and the one that would still hold if the other were repaired
+    is the answer: rows at different types are unequal at every count."""
+    found = mechanism(
+        fake_result(NUMBER_INT8, ((1,), (1,))),
+        fake_result(NUMBER_NUMERIC, ((Decimal(1),),)),
+        ReplayRule.R_SET,
+    )
+    assert found.classification == MECHANISM_TYPE
+    assert not found.multiset_equal
+
+
+def test_one_multiset_in_two_orders_under_the_ordered_rule_is_an_order() -> None:
+    found = mechanism(
+        fake_result(SPEED, ((20,), (23,), (80,))),
+        fake_result(SPEED, ((80,), (23,), (20,))),
+        ReplayRule.R_ORD,
+    )
+    assert found.classification == MECHANISM_ORDER
+    assert found.multiset_equal
+    assert not found.order_equal
+
+
+def test_a_result_that_is_the_first_rows_of_the_other_is_a_truncation() -> None:
+    """What a bound applied to one side and not the other leaves: the shorter result is the
+    longer one cut, so a reader repairs it by looking at the LIMIT and not at the answer."""
+    found = mechanism(
+        fake_result(ELEMENT, (("c",), ("o",), ("n",))),
+        fake_result(ELEMENT, (("c",), ("o",))),
+        ReplayRule.R_ORD,
+    )
+    assert found.classification == MECHANISM_TRUNCATION
+    assert found.shorter_result_is_a_prefix
+    assert not found.set_equal
+
+
+def test_two_results_holding_different_values_are_named_other_and_not_guessed_at() -> None:
+    """None of the four classes holds: the two statements answered differently, and saying
+    so is the whole of what these two results state."""
+    found = mechanism(
+        fake_result(ELEMENT, (("c",), ("o",))),
+        fake_result(ELEMENT, (("c",), ("n",))),
+        ReplayRule.R_SET,
+    )
+    assert found.classification == MECHANISM_OTHER
+    assert not found.set_equal
+    assert not found.shorter_result_is_a_prefix
+
+
+def test_an_empty_result_against_a_full_one_is_not_a_truncation() -> None:
+    """A result that came back empty is a different answer and not a cut of the other one."""
+    found = mechanism(
+        fake_result(ELEMENT, (("c",), ("o",))), fake_result(ELEMENT, ()), ReplayRule.R_ORD
+    )
+    assert found.classification == MECHANISM_OTHER
+    assert not found.shorter_result_is_a_prefix

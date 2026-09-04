@@ -103,18 +103,24 @@ validator, the `postgast` release and the libpg_query grammar version). `fixture
 names the tables a gold uses that the catalogue holds but the role may not SELECT from, beside
 `fixture.missing_tables`, the ones the catalogue does not hold at all; the first is repaired with a
 GRANT and the second in the question file, and either makes every question that uses the table an
-error line rather than a verdict. `predictions.positions_unused` is empty unless
-`--predictions-keyed-by position` is given, where it names every position of the prediction file
-that lost to a lower position naming the same question: the question file holds one entry twice, the
-lowest position is the prediction that is compared, and the rest are recorded rather than silently
-dropped. The first run into a directory leaves a `.attestql-run` marker in it; a rerun into a
-directory that has the marker clears that run's `q<id>/` directories and `summary.json` before it
-writes anything, so what is in there is one run's evidence and not two, and a non-empty directory
-without the marker is refused with nothing in it touched. `fixture.json`, the fixture cache keyed by
-the server and the schema digest, stays, and so does anything else you put there. A cached
-measurement is used only when the server's own per-table counters still say what they said when it
-was taken, so data reloaded or edited under an unchanged schema is measured again rather than read
-back from the file.
+error line rather than a verdict, which names the side that failed, `gold`, `prediction` or `run`
+for the measurement around the two, before the message. With `--predictions` the summary line and
+`credited_but_not_equal` in the file count the comparisons BIRD's own `set(predicted) == set(gold)`
+scores 1 and the typed comparison calls NOT_EQUAL, by what makes them: `multiplicity` (the same
+distinct rows at other counts), `type` (the same values at other declared types), `order`,
+`truncation` (one result the first rows of the other) and `other` for a disagreement that is none of
+those; a gold-only run compared nothing against that reading and states null.
+`predictions.positions_unused` is empty unless `--predictions-keyed-by position` is given, where it
+names every position of the prediction file that lost to a lower position naming the same question:
+the question file holds one entry twice, the lowest position is the prediction that is compared, and
+the rest are recorded rather than silently dropped. The first run into a directory leaves a
+`.attestql-run` marker in it; a rerun into a directory that has the marker clears that run's
+`q<id>/` directories and `summary.json` before it writes anything, so what is in there is one run's
+evidence and not two, and a non-empty directory without the marker is refused with nothing in it
+touched. `fixture.json`, the fixture cache keyed by the server and the schema digest, stays, and so
+does anything else you put there. A cached measurement is used only when the server's own per-table
+counters still say what they said when it was taken, so data reloaded or edited under an unchanged
+schema is measured again rather than read back from the file.
 
 ## What it does
 

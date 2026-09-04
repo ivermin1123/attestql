@@ -69,9 +69,19 @@ from attestql.audit.backend import Backend, BackendRefused, ShuffledCopies, Tabl
 from attestql.audit.compare import (
     DEFAULT_STATEMENT_TIMEOUT_SECONDS,
     GOLD_RECORD_FILE,
+    MECHANISM_CLASSES,
+    MECHANISM_MULTIPLICITY,
+    MECHANISM_ORDER,
+    MECHANISM_TRUNCATION,
+    MECHANISM_TYPE,
+    SIDE_GOLD,
+    SIDE_PREDICTION,
+    SIDE_RUN,
     Comparison,
+    SideFailed,
     compare_statements,
     record_statement,
+    sided,
     write_comparison,
 )
 from attestql.audit.fixture import CACHE_FILE, file_digest, fixture_digest
@@ -97,7 +107,7 @@ from attestql.audit.statements import (
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import Json, record_json, write_json
 from attestql.evidence.replay import ComparabilityResult
-from attestql.evidence.serialize import SerializationDescriptor, UnsupportedValue
+from attestql.evidence.serialize import SerializationDescriptor
 from attestql.evidence.types import (
     FixtureDigest,
     QuestionMetadata,
@@ -241,11 +251,32 @@ class _Measured:
 
 @dataclass(frozen=True)
 class QuestionError:
-    """One question this run could not answer, and what stopped it."""
+    """One question this run could not answer, which side of it stopped, and what stopped it.
+
+    ``side`` is the gold, the prediction, or the run around both, and it is the first thing
+    the error line states: a benchmark whose golds do not run on this database and one whose
+    predictions do not are two different findings, and the message alone tells them apart
+    only for a reader who already knows which statement it came from.
+    """
 
     question_id: int
+    side: str
     step: str
     message: str
+
+
+@dataclass(frozen=True)
+class Credited:
+    """The comparisons BIRD's own evaluator credits and this tool calls NOT_EQUAL.
+
+    ``set(predicted) == set(gold)`` scores those pairs 1 and the typed comparison finds the
+    two answers unequal, so this number is the size of the gap between the two readings on
+    one run, and ``by_mechanism`` is what the gap is made of. A run given no predictions
+    compared nothing and has none of this at all.
+    """
+
+    total: int
+    by_mechanism: Mapping[str, int]
 
 
 @dataclass(frozen=True)
@@ -256,6 +287,7 @@ class Summary:
     questions: int
     verdicts: Mapping[str, int]
     smells: Mapping[str, int]
+    credited_but_not_equal: Credited | None
     errors: tuple[QuestionError, ...]
     elapsed_seconds: Mapping[str, float]
     exit_status: int
@@ -652,10 +684,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         # ended, failed or was interrupted.
         _drop_shuffle(backend)
     summary = _summarise(options, counted, run_id=run_id, elapsed=phases.rounded())
-    writer.line(
-        f"{summary.questions} questions: {summary.not_equal} NOT_EQUAL, "
-        f"{summary.smells_fired} smells fired"
-    )
+    writer.line(_summary_line(summary))
     write_json(
         options.out / SUMMARY_FILE,
         _summary_json(
@@ -676,6 +705,28 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         ),
     )
     return summary
+
+
+def _summary_line(summary: Summary) -> str:
+    """The last line of a run: what was audited, what disagreed, and what fired.
+
+    The credited count is on the line only where there is something to count it over: a
+    gold-only run compared nothing against BIRD's reading, and a zero there would read as
+    a measurement rather than as the absence of one.
+    """
+    line = (
+        f"{summary.questions} questions: {summary.not_equal} NOT_EQUAL, "
+        f"{summary.smells_fired} smells fired"
+    )
+    credited = summary.credited_but_not_equal
+    if credited is None:
+        return line
+    counted = credited.by_mechanism
+    return line + (
+        f", {credited.total} credited by BIRD but NOT_EQUAL "
+        f"({counted[MECHANISM_MULTIPLICITY]} multiplicity, {counted[MECHANISM_TYPE]} type, "
+        f"{counted[MECHANISM_ORDER]} order, {counted[MECHANISM_TRUNCATION]} truncation)"
+    )
 
 
 def _clear_previous_run(out: Path) -> None:
@@ -824,6 +875,8 @@ class _Counted:
     smells: dict[str, int] = field(default_factory=dict[str, int])
     errors: list[QuestionError] = field(default_factory=list[QuestionError])
     questions: int = 0
+    credited: int = 0
+    credited_by_mechanism: dict[str, int] = field(default_factory=dict[str, int])
 
 
 def _audit_questions(
@@ -856,11 +909,11 @@ def _audit_questions(
     for question, gold in zip(question_set.questions, golds, strict=True):
         counted.questions += 1
         try:
-            with phases.timed("questions"):
+            with phases.timed("questions"), sided(SIDE_RUN):
                 if isinstance(gold, StatementRefused):
                     # Read before the data was measured and raised here, so that a gold
                     # this audit cannot read is one question's line and not the run's end.
-                    raise gold
+                    raise SideFailed(SIDE_GOLD, gold)
                 _audit_one(
                     question,
                     options,
@@ -879,12 +932,16 @@ def _audit_questions(
                     no_shuffle=no_shuffle,
                     settings=settings,
                 )
-        except (StatementRefused, BackendRefused, UnsupportedValue) as failed:
-            step = failed.step if isinstance(failed, BackendRefused) else "statement"
-            message = " ".join(str(failed).split())
-            counted.errors.append(QuestionError(question.question_id, step, message))
+        except SideFailed as failed:
+            # Everything a question can fail at runs under a side, and the outermost one
+            # is the run: a refusal that named nothing narrower came from around the two
+            # statements rather than from either of them.
+            refusal = failed.failed
+            step = refusal.step if isinstance(refusal, BackendRefused) else "statement"
+            message = " ".join(str(refusal).split())
+            counted.errors.append(QuestionError(question.question_id, failed.side, step, message))
             counted.verdicts[ERROR] = counted.verdicts.get(ERROR, 0) + 1
-            writer.line(_line(question, "", ERROR, (), None) + f"  {message}")
+            writer.line(_line(question, "", ERROR, (), None) + f"  {failed.side}: {message}")
     return counted
 
 
@@ -916,29 +973,32 @@ def _audit_one(
     directory = options.out / f"q{question.question_id}"
     comparison: Comparison | None = None
     if prediction is None:
-        gold = record_statement(
-            question=metadata,
-            question_set_version=question_set.digest,
-            statement_source=questions_source,
-            parsed=parsed,
-            backend=backend,
-            serialization=SERIALIZATION,
-            session_settings=session_settings,
-            run_id=run_id,
-            directory=options.out,
-            data_as_of=data_as_of,
-            statement_timeout_seconds=options.statement_timeout_seconds,
-            with_content_digests=options.with_content_digests,
-            source_digest=data_digest,
-        ).record
+        with sided(SIDE_GOLD):
+            gold = record_statement(
+                question=metadata,
+                question_set_version=question_set.digest,
+                statement_source=questions_source,
+                parsed=parsed,
+                backend=backend,
+                serialization=SERIALIZATION,
+                session_settings=session_settings,
+                run_id=run_id,
+                directory=options.out,
+                data_as_of=data_as_of,
+                statement_timeout_seconds=options.statement_timeout_seconds,
+                with_content_digests=options.with_content_digests,
+                source_digest=data_digest,
+            ).record
         verdict = GOLD_ONLY
     else:
+        with sided(SIDE_PREDICTION):
+            second_parsed = parse_statement(prediction.sql)
         comparison = compare_statements(
             question=metadata,
             question_set_version=question_set.digest,
             gold_parsed=parsed,
             gold_source=questions_source,
-            second_parsed=parse_statement(prediction.sql),
+            second_parsed=second_parsed,
             second_source=prediction.source,
             backend=backend,
             serialization=SERIALIZATION,
@@ -952,6 +1012,7 @@ def _audit_one(
         )
         gold = comparison.gold
         verdict = comparison.verdict.result.name
+        _count_credited(counted, comparison)
     found = all_smells(
         parsed,
         backend,
@@ -980,6 +1041,22 @@ def _audit_one(
             fired,
             f"{options.out.as_posix()}/q{question.question_id}/" if written else None,
         )
+    )
+
+
+def _count_credited(counted: _Counted, comparison: Comparison) -> None:
+    """One comparison BIRD's own evaluator credits and this tool calls NOT_EQUAL, by mechanism.
+
+    Counted here because this is where both readings of one pair of results exist at once.
+    A comparison carries a mechanism when and only when it is a NOT_EQUAL, so the two
+    conditions the count is over are the two tests below.
+    """
+    found = comparison.mechanism
+    if found is None or comparison.bird_ex.value != 1:
+        return
+    counted.credited += 1
+    counted.credited_by_mechanism[found.classification] = (
+        counted.credited_by_mechanism.get(found.classification, 0) + 1
     )
 
 
@@ -1025,6 +1102,16 @@ def _summarise(
         questions=counted.questions,
         verdicts=dict(counted.verdicts),
         smells=smells,
+        credited_but_not_equal=(
+            None
+            if options.predictions is None
+            else Credited(
+                total=counted.credited,
+                by_mechanism={
+                    name: counted.credited_by_mechanism.get(name, 0) for name in MECHANISM_CLASSES
+                },
+            )
+        ),
         errors=tuple(counted.errors),
         elapsed_seconds=elapsed,
         exit_status=status,
@@ -1092,6 +1179,14 @@ def _summary_json(
         "verdicts": dict(summary.verdicts),
         "smells": dict(summary.smells),
         "smells_fired": summary.smells_fired,
+        "credited_but_not_equal": (
+            None
+            if summary.credited_but_not_equal is None
+            else {
+                "total": summary.credited_but_not_equal.total,
+                "by_mechanism": dict(summary.credited_but_not_equal.by_mechanism),
+            }
+        ),
         "fixture": {
             "depth": options.fixture_digest,
             "cache": f"{options.out.as_posix()}/{CACHE_FILE}",
@@ -1145,7 +1240,12 @@ def _summary_json(
         ),
         "elapsed_seconds": dict(summary.elapsed_seconds),
         "errors": [
-            {"question_id": error.question_id, "step": error.step, "message": error.message}
+            {
+                "question_id": error.question_id,
+                "side": error.side,
+                "step": error.step,
+                "message": error.message,
+            }
             for error in summary.errors
         ],
         "exit_status": summary.exit_status,
@@ -1444,6 +1544,7 @@ __all__ = [
     "SUMMARY_FORMAT",
     "AuditOptions",
     "ConsoleWriter",
+    "Credited",
     "Prediction",
     "Question",
     "QuestionError",

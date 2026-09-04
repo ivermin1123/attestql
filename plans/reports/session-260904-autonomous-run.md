@@ -53,6 +53,7 @@ không đổi từ 2026-09-03T17:44Z, 0 phản hồi ngoài comment của mình 
   vs R-ORD -> NOT_COMPARABLE), tức đảo quyết định "gold quyết định rule" mà số liệu README và
   register A16 đến A20 đang dựa vào. Không tự đảo; chủ quyết: (A) record khai thật, chấp nhận
   đổi số; (B) giữ, và bỏ chữ NOT_COMPARABLE khỏi dòng tổng kết CLI vì không bao giờ xảy ra.
+  Chủ chọn B (Phiên 2).
 
 - Smell `not-a-function-of-the-data` đổi giữa hai run cùng input (3/498 câu tại HEAD): plan đổi
   theo thống kê; cân nhắc `ANALYZE` trước khi đo hoặc ghi `last_analyze` vào tín hiệu fixture.
@@ -145,6 +146,17 @@ process kết thúc) được giữ nguyên, không sửa.
 | commit chứa mục này | README thêm `fixture.unreadable_tables` (cạnh `fixture.missing_tables`, README trước đó không nhắc) và `predictions.positions_unused`; report thêm mục này | test 588 + 29 sandbox | 11:34 |
 
 Sau ba commit này main đi trước `41621c0` 18 commit, chưa push.
+
+## Phiên 2 (2026-09-04 chiều): quyết định của chủ, Batch A trên main, Batch B trên nhánh `sqlite-backend`
+
+Chủ quyết: mục 2.7 theo phương án B (gold quyết định rule, bỏ NOT_COMPARABLE khỏi dòng tổng kết);
+ADR-0014 chấp nhận với ba chốt (R-SET so cùng storage class; bird_ex trên SQLite là script chấm
+của BIRD nhập nguyên văn; BIRD dev trước, Spider sau). Luật push: main không push; nhánh
+`sqlite-backend` push sau mỗi phase để CI chạy.
+
+| Hash | Việc | Số liệu | Giờ |
+|---|---|---|--- |
+| `8b67992` | A1: bỏ NOT_COMPARABLE khỏi dòng tổng kết; README nêu vì sao trong một run không xảy ra | test 588 + 29 sandbox | 15:50 |
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).
