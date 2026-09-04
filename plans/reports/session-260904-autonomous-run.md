@@ -129,8 +129,22 @@ file dự đoán, container mới rồi xóa. Artifact:
   commit; không container nào còn chạy (`docker ps` không có container audit); mọi terminal
   worker của phiên đã release.
 - Chưa làm: mục 2.7 (xem "Còn mở"); không có việc nào bỏ dở, cây làm việc sạch ngoài report này.
-- Chủ cần làm: đọc report, `git push` (15 commit từ `41621c0`, kể cả commit report cuối), quyết mục 2.7
+- Chủ cần làm: đọc report, `git push` (18 commit từ `41621c0`, kể cả ba commit bổ sung sau review), quyết mục 2.7
   và ADR-0014.
+
+## Bổ sung sau review của chủ (2026-09-04, sau khi report được đọc)
+
+Reviewer đọc thẳng 15 commit và đưa ba việc, mỗi việc một commit, gate xanh; hai ghi nhận
+"không cần làm" của reviewer (main() không gọi backend.close(); khoá advisory tự nhả khi
+process kết thúc) được giữ nguyên, không sửa.
+
+| Hash | Việc | Số liệu | Giờ |
+|---|---|---|--- |
+| `38fb01b` | `_clear_previous_run` chỉ xoá khi `--out` có file đánh dấu `.attestql-run`; thư mục không rỗng, không có marker thì ToolError và không đụng gì; README sửa câu rerun | test 588 + 29 sandbox | 11:31 |
+| `f120c01` | Docstring `content_signal` và `fixture.py` nêu cửa sổ pg_stat_user_tables công bố trễ sau commit (UPDATE/DELETE không đổi relfilenode); register thêm một hàng non-claim | test 588 + 29 sandbox | 11:33 |
+| commit chứa mục này | README thêm `fixture.unreadable_tables` (cạnh `fixture.missing_tables`, README trước đó không nhắc) và `predictions.positions_unused`; report thêm mục này | test 588 + 29 sandbox | 11:34 |
+
+Sau ba commit này main đi trước `41621c0` 18 commit, chưa push.
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).
