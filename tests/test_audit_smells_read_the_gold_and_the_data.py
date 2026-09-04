@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from attestql.audit.backend import ShuffledCopies, TableName, TextCensus
+from attestql.audit.backend import PlannerStatistics, ShuffledCopies, TableName, TextCensus
 from attestql.audit.smells import (
     ARBITRARY_CUT,
     DIRECTION_AGAINST_QUESTION,
@@ -57,6 +57,16 @@ SHUFFLED = ShuffledCopies(
     seed="1",
     row_limit=300_000,
 )
+
+STATISTICS = PlannerStatistics(
+    last_analyze=None, last_autoanalyze="2026-09-04 09:00:00+00", n_mod_since_analyze=12
+)
+_STATISTICS_JSON = {
+    "last_analyze": None,
+    "last_autoanalyze": "2026-09-04 09:00:00+00",
+    "n_mod_since_analyze": 12,
+}
+"""What the shuffle probe's rerun read the copies with, and how a payload states it."""
 
 NATIONALITY = (("nationality", "text"),)
 NAME = (("name", "text"),)
@@ -476,6 +486,7 @@ def test_a_result_that_changes_with_the_row_order_fires() -> None:
     backend = FakeBackend(
         {TOTAL: fake_result(TOTAL_INT, ((3,),))},
         shuffled_results={TOTAL: fake_result(TOTAL_INT, ((4,),))},
+        planner_statistics={TOTALLED: STATISTICS},
     )
     found = not_a_function_of_the_data(
         parse_statement(TOTAL),
@@ -488,6 +499,27 @@ def test_a_result_that_changes_with_the_row_order_fires() -> None:
     assert found.evidence["shuffled_copies"]["differs"] is True
     assert found.evidence["plan_variant"]["run"] is False
     assert found.counterexample_rows == ((4,),)
+    assert found.evidence["planner_statistics"] == {"t": _STATISTICS_JSON}
+
+
+def test_the_statistics_the_rerun_s_plan_was_chosen_from_are_recorded_on_a_quiet_smell() -> None:
+    """A gold that survived the shuffle and one that did not are comparable across two runs
+    only when both say what the plan was chosen from: an autoanalyze between them can change
+    the plan, and with it the answer the copies give."""
+    backend = FakeBackend(
+        {TOTAL: fake_result(TOTAL_INT, ((3,),))},
+        planner_statistics={TOTALLED: STATISTICS},
+    )
+    found = not_a_function_of_the_data(
+        parse_statement(TOTAL),
+        backend,
+        backend.execute(TOTAL, statement_timeout_seconds=30),
+        settings=SETTINGS,
+        shuffled=SHUFFLED,
+    )
+    assert _smell(found) == (NOT_A_FUNCTION_OF_THE_DATA, False, True)
+    assert found.evidence["planner_statistics"] == {"t": _STATISTICS_JSON}
+    assert backend.planner_statistics_calls == [(TOTALLED,)]
 
 
 def test_a_result_that_survives_the_shuffle_is_quiet() -> None:

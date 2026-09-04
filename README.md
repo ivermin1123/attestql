@@ -143,7 +143,11 @@ schema is measured again rather than read back from the file.
   off by default behind `--experimental-s2`, direction against the question. The copies are
   reached by the search path, which a name that states its own schema never consults, so a gold
   that writes `public.x` or `"Other".x` is reported as not covered by the shuffle rather than
-  rerun against a copy of it.
+  rerun against a copy of it. Which answer a copy gives depends on the plan it is read with, and
+  the plan on the planner's statistics: the run records `last_analyze`, `last_autoanalyze` and
+  `n_mod_since_analyze` per table, in the probe's own evidence and in the summary, and never runs
+  ANALYZE. A probe that fires on one run and is quiet on the next over the same data is that, and
+  the two records show it.
 - BIRD's own set-equality reading is computed beside every verdict, so a counterexample states
   what the benchmark would have said.
 

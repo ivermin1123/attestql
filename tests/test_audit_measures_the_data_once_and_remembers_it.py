@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from attestql.audit.backend import Backend, TableName
+from attestql.audit.backend import Backend, PlannerStatistics, TableName
 from attestql.audit.fixture import CACHE_FILE, CACHE_FORMAT, file_digest, fixture_digest
 from tests.audit_fakes import FakeBackend
 
@@ -73,6 +73,32 @@ def test_the_measurement_is_written_to_the_cache_and_read_back_from_it(tmp_path:
     assert backend.row_count_calls == [(DRIVERS, RESULTS)], "the counts were counted twice"
     assert len(backend.schema_digest_calls) == 2, "the schema is read from the server every time"
     assert len(backend.content_signal_calls) == 2, "the signal is read from the server every time"
+
+
+def _statistics(modified: int) -> dict[TableName, PlannerStatistics]:
+    """The planner's statistics for both tables, alike but for how far the rows have moved."""
+    return {
+        name: PlannerStatistics(
+            last_analyze="2026-09-04 09:00:00+00",
+            last_autoanalyze=None,
+            n_mod_since_analyze=modified,
+        )
+        for name in TABLES
+    }
+
+
+def test_an_entry_measured_before_an_analyze_is_a_miss_after_it(tmp_path: Path) -> None:
+    """The signal carries the planner's statistics, because the shuffle probe reruns a gold
+    with the plan they were chosen from: an entry measured under other statistics describes a
+    database that can answer that probe differently."""
+    before = FakeBackend({}, row_counts=COUNTS, planner_statistics=_statistics(0))
+    fixture_digest(before, TABLES, directory=tmp_path)
+    after = FakeBackend({}, row_counts=COUNTS, planner_statistics=_statistics(41))
+
+    digest = fixture_digest(after, TABLES, directory=tmp_path)
+
+    assert dict(digest.row_counts) == COUNTS
+    assert after.row_count_calls == [(DRIVERS, RESULTS)], "the entry was served rather than missed"
 
 
 def test_a_cache_written_against_another_schema_is_not_a_hit(tmp_path: Path) -> None:

@@ -19,7 +19,9 @@ The digests are three calls rather than one so that the expensive one is optiona
 row of every table and is taken only when the caller asks for it (ADR-0013 point 6).
 ``content_signal`` is none of the three: it reads what the engine already counts about
 its own tables, so that a measurement cached by an earlier run can be told apart from one
-the data has moved under since. ``existing_tables`` is asked before any of them, because a name the data does not hold is
+the data has moved under since, and from one taken before an analyze the planner has since
+chosen a different plan from. ``planner_statistics`` reads the same catalogue for what a
+record and a summary state: what the plan of every rerun this run makes was chosen from. ``existing_tables`` is asked before any of them, because a name the data does not hold is
 one question's error and never the end of a run. It answers in two parts, because there are
 two ways a name can fail to be measurable and they are repaired in different places: a table
 nobody loaded is a defect in the question file, and a table the audit's login was never
@@ -32,6 +34,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Protocol
 
+from attestql.evidence.render import Json
 from attestql.evidence.types import SessionSettings
 from attestql.kernel.types import ExecutionResult
 
@@ -119,6 +122,42 @@ class TableLookup:
 
     present: tuple[TableName, ...]
     unreadable: tuple[TableName, ...]
+
+
+@dataclass(frozen=True)
+class PlannerStatistics:
+    """When one table's planner statistics were last taken, and how far its rows have moved.
+
+    The plan a statement is read with is chosen from these, and a probe that reruns a gold
+    and compares the two answers is comparing two plans whenever they moved in between. So
+    they are recorded beside what was measured under them. They are never repaired here:
+    the audit reads, and ANALYZE writes.
+
+    The timestamps are the engine's own rendering of them, or ``None`` where it holds none,
+    which is what a table nobody has analysed since the statistics were last reset says.
+    ``n_mod_since_analyze`` is what the engine counts as changed since the last one.
+    """
+
+    last_analyze: str | None
+    last_autoanalyze: str | None
+    n_mod_since_analyze: int
+
+
+def planner_statistics_json(statistics: Mapping[TableName, PlannerStatistics]) -> Json:
+    """Those statistics as a summary and a smell's evidence write them, under the names asked.
+
+    One rendering because two runs are compared by diffing what they wrote: a block in a
+    record and a block in a summary that spelled the same three fields differently would be
+    two things to read instead of one.
+    """
+    return {
+        name.text: {
+            "last_analyze": measured.last_analyze,
+            "last_autoanalyze": measured.last_autoanalyze,
+            "n_mod_since_analyze": measured.n_mod_since_analyze,
+        }
+        for name, measured in statistics.items()
+    }
 
 
 @dataclass(frozen=True)
@@ -213,6 +252,22 @@ class Backend(Protocol):
         """
         raise NotImplementedError
 
+    def planner_statistics(
+        self, tables: Sequence[TableName]
+    ) -> Mapping[TableName, PlannerStatistics]:
+        """Per table, when the planner's statistics for it were last taken and how far off.
+
+        Asked because the shuffle probe reruns a gold over copies of the data and reads
+        both with whatever plan the planner chose, and the planner chooses from these. A
+        probe that fires on one run and is quiet on the next over the same data has this
+        underneath it, and a run that did not record them leaves a reader to guess.
+
+        Answered under the caller's own names, like ``column_types``, and a name the engine
+        keeps no statistics for gets no entry rather than an invented zero: an engine that
+        counts nothing of the kind answers with nothing at all.
+        """
+        raise NotImplementedError
+
     def column_types(self, tables: Sequence[TableName]) -> Mapping[TableName, Mapping[str, str]]:
         """Per table, the declared type of each of its columns.
 
@@ -296,9 +351,11 @@ class Backend(Protocol):
 __all__ = [
     "Backend",
     "BackendRefused",
+    "PlannerStatistics",
     "ReadBackDrift",
     "ShuffledCopies",
     "TableLookup",
     "TableName",
     "TextCensus",
+    "planner_statistics_json",
 ]

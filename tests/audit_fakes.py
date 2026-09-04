@@ -33,6 +33,7 @@ from collections.abc import Mapping, Sequence
 
 from attestql.audit.backend import (
     BackendRefused,
+    PlannerStatistics,
     ShuffledCopies,
     TableLookup,
     TableName,
@@ -120,6 +121,7 @@ class FakeBackend:
         row_counts: Mapping[str, int] | None = None,
         content_digests: Mapping[str, str] | None = None,
         column_types: Mapping[TableName, Mapping[str, str]] | None = None,
+        planner_statistics: Mapping[TableName, PlannerStatistics] | None = None,
         censuses: Mapping[tuple[TableName, str], TextCensus] | None = None,
         shuffled_results: Mapping[str, ExecutionResult] | None = None,
         plan_results: Mapping[str, ExecutionResult] | None = None,
@@ -137,6 +139,7 @@ class FakeBackend:
         self._row_counts = dict(row_counts or {})
         self._content_digests = dict(content_digests or {})
         self._column_types = {name: dict(columns) for name, columns in (column_types or {}).items()}
+        self._planner_statistics = dict(planner_statistics or {})
         self._censuses = dict(censuses or {})
         self._shuffled_results = dict(shuffled_results or {})
         self._plan_results = dict(plan_results or {})
@@ -155,6 +158,7 @@ class FakeBackend:
         self.content_digest_calls: list[tuple[TableName, ...]] = []
         self.content_signal_calls: list[tuple[TableName, ...]] = []
         self.column_type_calls: list[tuple[TableName, ...]] = []
+        self.planner_statistics_calls: list[tuple[TableName, ...]] = []
         self.census_calls: list[tuple[TableName, str, str]] = []
         self.executed_shuffled: list[tuple[str, int]] = []
         self.executed_plan_variant: list[tuple[str, int]] = []
@@ -229,12 +233,17 @@ class FakeBackend:
         under the counters of the old ones, which is a database nobody has: on a server the
         counters move because the rows did. So the signal is read off what this backend was
         built with, and a test states a reload by building one that holds other rows.
+
+        The planner's statistics are in it for the same reason they are in a server's: what
+        a cached measurement is worth depends on the plan the data is read with, and an
+        analyze between two runs changes that without moving a row.
         """
         self.content_signal_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("content_signal")
         return {
             name.text: (
                 f"{self._row_counts.get(name.text, 0)}/{self._content_digests.get(name.text, '')}"
+                f"/{self._planner_statistics.get(name)}"
             )
             for name in tables
         }
@@ -243,6 +252,18 @@ class FakeBackend:
         self.column_type_calls.append(tuple(tables))
         self._refuse_if_the_server_went_away("column_types")
         return {name: dict(columns) for name, columns in self._column_types.items()}
+
+    def planner_statistics(
+        self, tables: Sequence[TableName]
+    ) -> Mapping[TableName, PlannerStatistics]:
+        """The statistics a test built this backend with, for the names it holds any for."""
+        self.planner_statistics_calls.append(tuple(tables))
+        self._refuse_if_the_server_went_away("planner_statistics")
+        return {
+            name: self._planner_statistics[name]
+            for name in dict.fromkeys(tables)
+            if name in self._planner_statistics
+        }
 
     def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         self.census_calls.append((table, column, pattern))

@@ -24,7 +24,7 @@ from typing import Any, cast
 import pytest
 
 from attestql.audit import cli
-from attestql.audit.backend import BackendRefused, TableName, TextCensus
+from attestql.audit.backend import BackendRefused, PlannerStatistics, TableName, TextCensus
 from attestql.audit.cli import (
     MARKER_FILE,
     SMELLS_FILE,
@@ -221,6 +221,39 @@ def test_a_gold_only_run_with_nothing_to_report_writes_no_directory(tmp_path: Pa
     assert written["data_as_of_source"] == "the instant the run started"
     assert written["fixture"]["row_counts"] == {"atom": 2}
     assert written["shuffle"]["prepared"] is True
+
+
+def test_the_summary_states_the_planner_statistics_the_run_s_plans_were_chosen_from(
+    tmp_path: Path,
+) -> None:
+    """Two runs of the shuffle probe over the same data can disagree because the planner's
+    statistics moved between them, and the tool never runs ANALYZE. So the run records what
+    the plans were chosen from, per measured table, and two summaries can be diffed."""
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    backend = FakeBackend(
+        {ELEMENTS: fake_result(ELEMENT, (("c",), ("o",)))},
+        row_counts={"atom": 2},
+        planner_statistics={
+            TableName("", "atom"): PlannerStatistics(
+                last_analyze="2026-09-04 09:00:00+00",
+                last_autoanalyze=None,
+                n_mod_since_analyze=12,
+            )
+        },
+    )
+    run_audit(options(tmp_path), backend, Lines())
+    written = summary_of(tmp_path)
+
+    assert written["planner_statistics"] == {
+        "atom": {
+            "last_analyze": "2026-09-04 09:00:00+00",
+            "last_autoanalyze": None,
+            "n_mod_since_analyze": 12,
+        }
+    }
+    assert backend.planner_statistics_calls == [(TableName("", "atom"),)] * 2, (
+        "once with the fixture, for the summary, and again at smell time for the statement's own"
+    )
 
 
 def test_the_summary_names_the_session_and_the_grammar_the_run_was_judged_by(

@@ -56,6 +56,7 @@ from attestql.audit.backend import (
     ShuffledCopies,
     TableName,
     TextCensus,
+    planner_statistics_json,
 )
 from attestql.audit.statements import ORDERING_KEY_PREFIX, OrderingKey, ParsedStatement
 from attestql.evidence.render import Json, json_row, result_digest, result_json
@@ -612,6 +613,22 @@ def _shuffle_json(parsed: ParsedStatement, shuffled: ShuffledCopies) -> Json:
     }
 
 
+def _planner_statistics_json(backend: Backend, parsed: ParsedStatement) -> Json:
+    """What the plans of this statement's reruns were chosen from, taken at smell time.
+
+    Recorded whether the smell fires or not, because a quiet run and a fired one over the
+    same data are only comparable when both say it: the copies are read with the plan the
+    planner chose from these, and an autoanalyze between two runs is enough to change it.
+
+    A backend that will not answer leaves the block empty. These are context beside a rerun
+    and never the reason a question fails, and the rerun's own refusal is already recorded.
+    """
+    try:
+        return planner_statistics_json(backend.planner_statistics(parsed.tables))
+    except BackendRefused:
+        return {}
+
+
 def not_a_function_of_the_data(
     parsed: ParsedStatement,
     backend: Backend,
@@ -632,6 +649,7 @@ def not_a_function_of_the_data(
         "rule": rule.value,
         "baseline_result_hash": result_digest(baseline, settings.serialization),
         "baseline_result": result_json(baseline, settings.serialization, bound=ROWS_IN_EVIDENCE),
+        "planner_statistics": _planner_statistics_json(backend, parsed),
     }
     reruns: list[_Rerun] = []
     if shuffled is None:

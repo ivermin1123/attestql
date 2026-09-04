@@ -19,14 +19,17 @@ and types and not about rows, so the key alone would serve yesterday's counts fo
 reloaded under the same schema today. Every entry therefore also carries the content
 signal its measurement was taken under, and an entry whose signal is not the one this run
 reads from the server is a miss. What the signal is: the counters the server already keeps
-per table, taken fresh on every run at the cost of one question. What it is not: evidence,
-or a proof that the data is the same. Counters can be reset and a database of the same
-name can be made again, and then a signal that did not move is a signal that missed a
-reload. The counters are also published after the writing transaction ended and at most
-about once a second rather than at commit, and an UPDATE or a DELETE leaves relfilenode
-where it was, so a run that starts inside that window can take an entry measured on rows
-that already differ. The evidence is the digests, which are measured on the server whenever the
-signal does not vouch for what the file holds.
+per table, taken fresh on every run at the cost of one question, and beside them what the
+planner's statistics for the table were last taken from. The statistics are in it because
+what a run does with a measurement is read the data with the plan they were chosen from,
+and an analyze moves the plan without moving a row. What it is not: evidence, or a proof
+that the data is the same. Counters can be reset and a database of the same name can be
+made again, and then a signal that did not move is a signal that missed a reload. The
+counters are also published after the writing transaction ended and at most about once a
+second rather than at commit, and an UPDATE or a DELETE leaves relfilenode where it was, so
+a run that starts inside that window can take an entry measured on rows that already
+differ. The evidence is the digests, which are measured on the server whenever the signal
+does not vouch for what the file holds.
 
 A cache file this module cannot read is replaced rather than obeyed. It is not evidence:
 everything in it can be recomputed from the server, which is the only thing here that is.
@@ -46,7 +49,7 @@ from attestql.evidence.types import FixtureDigest
 CACHE_FILE = "fixture.json"
 """The cache, under the output directory the audit writes to."""
 
-CACHE_FORMAT = "attestql/audit/fixture-cache/2"
+CACHE_FORMAT = "attestql/audit/fixture-cache/3"
 """What the layout below is. A file that does not say this is not read."""
 
 _BLOCK = 1 << 22

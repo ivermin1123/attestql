@@ -71,6 +71,7 @@ from psycopg.adapt import Loader
 
 from attestql.audit.backend import (
     BackendRefused,
+    PlannerStatistics,
     ReadBackDrift,
     ShuffledCopies,
     TableLookup,
@@ -749,14 +750,58 @@ class PostgresBackend:
             digests[name.text] = f"md5:{self._one(statement, step='content_digests')[0]}"
         return digests
 
+    def planner_statistics(
+        self, tables: Sequence[TableName]
+    ) -> Mapping[TableName, PlannerStatistics]:
+        """What the plans over those tables are chosen from, in one question.
+
+        The same catalogue and the same join shape as ``content_signal``, read for what a
+        record states rather than for what a cache keys on. The join is an inner one: a name
+        ``pg_stat_user_tables`` holds no row for is a view, a catalogue table or a relation
+        that is not there, and none of the three has statistics an audit could record.
+
+        Answered under the caller's own names, because the caller is what will write them
+        down beside a statement that named them that way.
+        """
+        wanted = tuple(dict.fromkeys(tables))
+        if not wanted:
+            return {}
+        rows = self._all(
+            "SELECT n.nspname, c.relname, "
+            "s.last_analyze::text, s.last_autoanalyze::text, s.n_mod_since_analyze "
+            "FROM pg_catalog.pg_class AS c "
+            "JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace "
+            "JOIN pg_catalog.pg_stat_user_tables AS s ON s.relid = c.oid "
+            "JOIN unnest(%s::text[], %s::text[]) AS asked(nspname, relname) "
+            "ON asked.nspname = n.nspname AND asked.relname = c.relname",
+            _asked_for(_qualified(wanted)),
+            step="planner_statistics",
+        )
+        held = {
+            TableName(str(row[0]), str(row[1])): PlannerStatistics(
+                last_analyze=None if row[2] is None else str(row[2]),
+                last_autoanalyze=None if row[3] is None else str(row[3]),
+                n_mod_since_analyze=int(row[4]),
+            )
+            for row in rows
+        }
+        statistics: dict[TableName, PlannerStatistics] = {}
+        for name in wanted:
+            measured = held.get(_qualify(name))
+            if measured is not None:
+                statistics[name] = measured
+        return statistics
+
     def content_signal(self, tables: Sequence[TableName]) -> Mapping[str, str]:
         """The counters the server already keeps for those tables, in one question.
 
         ``relfilenode`` changes when the relation was rewritten, which is what a table
         dropped and loaded again looks like, and the four tuple counters move on every
-        insert, update and delete the server saw. Together they are five numbers a run can
-        ask for in a single round trip against a catalogue, where reading the rows costs a
-        pass over every table.
+        insert, update and delete the server saw. The last three are the planner's: what a
+        cached measurement is worth depends on the plan a rerun of a gold would get, and an
+        analyze between two runs changes that without moving a row. Together they are eight
+        values a run can ask for in a single round trip against a catalogue, where reading
+        the rows costs a pass over every table.
 
         A name the catalogue answers nothing for gets the empty string rather than an
         invented number: a view has no file and no tuple counters, and a table that is not
@@ -774,7 +819,9 @@ class PostgresBackend:
         rows = self._all(
             "SELECT n.nspname, c.relname, c.relfilenode, "
             "coalesce(s.n_tup_ins, 0), coalesce(s.n_tup_upd, 0), "
-            "coalesce(s.n_tup_del, 0), coalesce(s.n_live_tup, 0) "
+            "coalesce(s.n_tup_del, 0), coalesce(s.n_live_tup, 0), "
+            "coalesce(s.n_mod_since_analyze, 0), "
+            "coalesce(s.last_analyze::text, ''), coalesce(s.last_autoanalyze::text, '') "
             "FROM pg_catalog.pg_class AS c "
             "JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace "
             "LEFT JOIN pg_catalog.pg_stat_user_tables AS s ON s.relid = c.oid "

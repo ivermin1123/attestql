@@ -270,9 +270,29 @@ def test_the_content_signal_names_every_table_with_the_counters_the_server_keeps
     assert set(signal) == set(COUNTED) | {"public.sealed", "public.seasons"}
     for name in (*COUNTED, "public.sealed"):
         counters = signal[name].split("/")
-        assert len(counters) == 5, signal[name]
-        assert all(value.isdigit() for value in counters), signal[name]
+        assert len(counters) == 8, signal[name]
+        assert all(value.isdigit() for value in counters[:6]), signal[name]
+        # The last two are the timestamps of the analyses the plans were chosen from, each
+        # empty until one has run: a signal that moves when they do is what makes an entry
+        # measured before an analyze a miss after it.
+        assert all(value == "" or value[:2] == "20" for value in counters[6:]), signal[name]
     assert signal["public.seasons"] == "", "a table nobody loaded was given a counter"
+
+
+def test_the_planner_statistics_of_a_measured_table_are_read_from_the_server(
+    sandbox_backend: PostgresBackend,
+) -> None:
+    """What the plan of every rerun this run makes was chosen from. Asked of the real server
+    because it lives in a catalogue a scripted connection can only claim to hold, and because
+    a name the view keeps no row for has to answer with nothing rather than with a zero."""
+    scores = TableName("", "scores")
+    statistics = sandbox_backend.planner_statistics((scores, TableName("public", "seasons")))
+
+    assert set(statistics) == {scores}, "a table nobody loaded was given statistics"
+    measured = statistics[scores]
+    assert measured.n_mod_since_analyze >= 0
+    assert measured.last_analyze is None or measured.last_analyze != ""
+    assert measured.last_autoanalyze is None or measured.last_autoanalyze != ""
 
 
 def test_the_catalogue_tells_a_table_this_login_may_not_read_from_one_that_is_not_there(

@@ -65,7 +65,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Protocol, TextIO, cast
 
-from attestql.audit.backend import Backend, BackendRefused, ShuffledCopies, TableName
+from attestql.audit.backend import (
+    Backend,
+    BackendRefused,
+    PlannerStatistics,
+    ShuffledCopies,
+    TableName,
+    planner_statistics_json,
+)
 from attestql.audit.compare import (
     DEFAULT_STATEMENT_TIMEOUT_SECONDS,
     GOLD_RECORD_FILE,
@@ -240,6 +247,11 @@ class _Measured:
     repaired in the question file and the second with a GRANT. ``refused`` is filled when
     the measurement itself was refused, which leaves the run without a digest and every
     question to fail or succeed on its own.
+
+    ``planner_statistics`` is what the plans over the measured tables were chosen from when
+    the run started. The shuffle probe reruns a gold and reads the copies with whichever
+    plan the planner picks, so two runs that disagree about that probe and agree about
+    everything else are told apart by this and by nothing else in the summary.
     """
 
     digest: FixtureDigest | None
@@ -247,6 +259,7 @@ class _Measured:
     missing: tuple[TableName, ...]
     unreadable: tuple[TableName, ...]
     refused: str
+    planner_statistics: Mapping[TableName, PlannerStatistics]
 
 
 @dataclass(frozen=True)
@@ -823,16 +836,16 @@ def _run_fixture(backend: Backend, tables: Sequence[TableName], options: AuditOp
     the server's message rather than the run stopping with nothing audited.
     """
     if not tables:
-        return _Measured(None, (), (), (), "")
+        return _Measured(None, (), (), (), "", {})
     try:
         lookup = backend.existing_tables(tables)
     except BackendRefused as refused:
-        return _Measured(None, tuple(tables), (), (), _refusal(refused))
+        return _Measured(None, tuple(tables), (), (), _refusal(refused), {})
     present = lookup.present
     accounted = set(present) | set(lookup.unreadable)
     missing = tuple(name for name in tables if name not in accounted)
     if not present:
-        return _Measured(None, (), missing, lookup.unreadable, "")
+        return _Measured(None, (), missing, lookup.unreadable, "", {})
     try:
         digest = fixture_digest(
             backend,
@@ -841,8 +854,25 @@ def _run_fixture(backend: Backend, tables: Sequence[TableName], options: AuditOp
             with_content_digests=options.with_content_digests,
         )
     except BackendRefused as refused:
-        return _Measured(None, present, missing, lookup.unreadable, _refusal(refused))
-    return _Measured(digest, present, missing, lookup.unreadable, "")
+        return _Measured(None, present, missing, lookup.unreadable, _refusal(refused), {})
+    return _Measured(
+        digest, present, missing, lookup.unreadable, "", _planner_statistics(backend, present)
+    )
+
+
+def _planner_statistics(
+    backend: Backend, tables: Sequence[TableName]
+) -> Mapping[TableName, PlannerStatistics]:
+    """What the run's plans were chosen from, or nothing where the backend would not say.
+
+    Taken once, beside the fixture, because the summary states one measurement per run and
+    not one per question. A refusal leaves the block empty rather than ending the run: the
+    statistics say why two runs differ and are never what a run is for.
+    """
+    try:
+        return backend.planner_statistics(tables)
+    except BackendRefused:
+        return {}
 
 
 def _refusal(refused: BackendRefused) -> str:
@@ -1208,6 +1238,7 @@ def _summary_json(
             "unreadable_tables": [name.text for name in measured.unreadable],
             "refused": measured.refused,
         },
+        "planner_statistics": planner_statistics_json(measured.planner_statistics),
         "shuffle": {
             "seed": options.shuffle_seed,
             "row_limit": options.shuffle_row_limit,
