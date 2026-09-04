@@ -36,8 +36,12 @@ one() {  # one <gold> <model> <scratch-schema>
   local start=$SECONDS
   $ATTESTQL audit --dsn "$DSN" --questions "$q" --questions-origin "$qo" --questions-date "$qd" \
     --predictions "$p" --predictions-keyed-by "$keyed" --predictions-origin "$po" --predictions-date "$PRED_DATE" \
-    --scratch-schema "$schema" "${extra[@]}" --out "$out" > "$out/stdout.txt" 2> "$out/stderr.txt"
-  echo "$gold $model exit=$? in $((SECONDS - start))s: $(tail -1 "$out/stdout.txt")"
+    --scratch-schema "$schema" "${extra[@]}" --out "$out" > "$out.stdout.txt" 2> "$out.stderr.txt"
+  local status=$?
+  # The console output lands in the run's directory only after the run: the tool takes over
+  # an empty directory or one it marked, and refuses one that holds a file it did not write.
+  mv "$out.stdout.txt" "$out/stdout.txt"; mv "$out.stderr.txt" "$out/stderr.txt"
+  echo "$gold $model exit=$status in $((SECONDS - start))s: $(tail -1 "$out/stdout.txt")"
 }
 
 MODELS=(gpt-35-turbo-instruct gpt-35-turbo gpt-4-32k gpt-4-turbo gpt-4 meta-llama-3-70b-instruct-2 meta-llama-3-8b-instruct-2 mistralai-mixtral-8x7b-instru-4 phi-3-medium-128k-instruct-1)
