@@ -1,0 +1,39 @@
+{
+  "bird_dev": {
+    "file": "D/dev/dev_20240627/dev.json",
+    "sha256": "630272f2b1c44d8cef2c3b246f623355cf0bbc1e832c81061df895530dfc2f06",
+    "source": "https://bird-bench.oss-cn-beijing.aliyuncs.com/dev.zip",
+    "count": 1534
+  },
+  "minidev_sqlite_hf": {
+    "file": "D/mini_dev_sqlite.json",
+    "sha256": "88ceb0710163cae46a256ecea8f0a8c98286599530b60587fda5c3cfe57d45d2",
+    "source_pinned": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_sqlite-00000-of-00001.json",
+    "hf_commit": "f65faf4ae3b638c1fa6df1d3370c8d92c8366301",
+    "count": 500
+  },
+  "minidev_sqlite_zip": {
+    "file": "D/zip/minidev/MINIDEV/mini_dev_sqlite.json",
+    "sha256": "4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+    "source": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip",
+    "minidev_zip_sha256": "cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92",
+    "count": 500,
+    "note": "duplicates question_id 137 and 138, missing 119 and 120; two SQL text diffs from the hf copy at q879 and q1322"
+  },
+  "minidev_evaluator": {
+    "files": ["D/minidev_repo/evaluation_ex.py", "D/minidev_repo/evaluation_utils.py"],
+    "repo_commit": "b3d4bcbbae9a96934ad812551eb400c7a3b23c12",
+    "source": "https://github.com/bird-bench/mini_dev"
+  },
+  "damo_evaluation_py": {
+    "file": "$W/damo_evaluation.py",
+    "sha256": "2f591e559dc2d97e5b35d5b656e80b0c2edf968f0bb5a78ddfd1d88b4bbbc472",
+    "repo_commit": "dec31ae335d7a5168ee17d5cc40c105e0da66d4e",
+    "source": "https://github.com/AlibabaResearch/DAMO-ConvAI/blob/dec31ae335d7a5168ee17d5cc40c105e0da66d4e/bird/llm/src/evaluation.py"
+  },
+  "bird_licence": {
+    "statement": "CC BY-SA 4.0",
+    "source": "https://bird-bench.github.io/",
+    "checked": "2026-09-04"
+  }
+}
