@@ -157,6 +157,8 @@ của BIRD nhập nguyên văn; BIRD dev trước, Spider sau). Luật push: mai
 | Hash | Việc | Số liệu | Giờ |
 |---|---|---|--- |
 | `8b67992` | A1: bỏ NOT_COMPARABLE khỏi dòng tổng kết; README nêu vì sao trong một run không xảy ra | test 588 + 29 sandbox | 15:50 |
+| `824e98b` | A3: NOT_EQUAL có lớp cơ chế (multiplicity/type/order/truncation/other) trong counterexample; summary đếm "BIRD cho 1 mà NOT_EQUAL" theo lớp; dòng ERROR nêu bên lỗi (gold/prediction/run) | test 597 + 29 sandbox | 16:03 |
+| `ed40955` | Script đo: mở stdout.txt sau khi tool chạy (luật marker mới từ chối thư mục có file lạ) | không đổi test | 15:57 |
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).

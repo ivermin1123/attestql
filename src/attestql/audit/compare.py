@@ -21,11 +21,14 @@ because a reader who sees two column lists side by side should be told they were
 was compared instead of working it out.
 
 ``bird_ex`` is computed beside the verdict because a counterexample has to state what the
-benchmark's own evaluator would say about the same two results. Where the two disagree,
-that difference is the point, and ``mechanism`` names what makes it: the same distinct rows
-at different counts, the same values at different declared types, the same multiset in
-another order, or one result a cut of the other. A NOT_EQUAL that is none of those is
-``other`` and is never guessed at.
+benchmark's own evaluator would say about the same two results. It answers for the
+benchmark, so it reads the cells the way the benchmark's driver hands them over: psycopg2
+builds a Python float for a float column, this tool loads the exact decimal the server
+printed for one, and the reading undoes that before its two sets are built. Where the two
+answers disagree, that difference is the point, and ``mechanism`` names what makes it: the
+same distinct rows at different counts, the same values at different declared types, the
+same multiset in another order, or one result a cut of the other. A NOT_EQUAL that is none
+of those is ``other`` and is never guessed at.
 
 Which side failed is carried out of here rather than reconstructed. A question that ends in
 an error ended in the gold, in the prediction, or in the run around both, and a reader told
@@ -41,6 +44,7 @@ from collections.abc import Generator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from decimal import Decimal
 from pathlib import Path
 
 from attestql.audit.backend import Backend, BackendRefused
@@ -106,8 +110,14 @@ COUNTEREXAMPLE_FILE = "counterexample.json"
 GOLD_RECORD_FILE = "evidence-gold.json"
 SECOND_RECORD_FILE = "evidence-second.json"
 
-BIRD_EX_METHOD = "set(second_rows) == set(gold_rows)"
+BIRD_EX_METHOD = (
+    "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 "
+    "returns them, numeric as Decimal"
+)
 BIRD_EX_SOURCE = "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py"
+
+PSYCOPG2_FLOAT_TYPES = ("float4", "float8")
+"""The declared types psycopg2 hands BIRD as a Python float rather than as a Decimal."""
 
 VERDICT_READING = (
     "NOT_EQUAL states that these two statements disagree on this data under this rule. It "
@@ -159,6 +169,13 @@ class BirdEx:
     ``0`` otherwise. It is computed here rather than imported so that what this tool claims
     the benchmark says is visible in one expression, and it is recorded beside the verdict
     so a reader can see the two answers side by side.
+
+    The row tuples are the ones psycopg2 would have built, which is why the cells are read
+    off the results and not off the rows alone: a float column reaches BIRD as a Python
+    float and a numeric one as a Decimal, and Python holds those two unequal on every value
+    a double does not hold exactly. Nothing else about the reading is this tool's, a NaN
+    included: two of them are unequal here because they are unequal in the set the benchmark
+    builds.
     """
 
     value: int
@@ -263,10 +280,42 @@ def sided(side: str) -> Generator[None]:
         raise SideFailed(side, failed) from failed
 
 
-def bird_ex(
-    gold_rows: Sequence[tuple[object, ...]], second_rows: Sequence[tuple[object, ...]]
-) -> BirdEx:
-    """BIRD's execution-accuracy check over the two row sets."""
+def _as_a_driver_float(value: object) -> object:
+    """One cell of a float column as psycopg2 would have built it.
+
+    This tool loads such a cell as the exact decimal the server printed, so that is what is
+    converted; the decimal was built from that rendering, so ``float`` of it is the double
+    ``float`` of the text gives. A NULL is None on both sides of the conversion, and a
+    backend that already returned a Python float returned what the driver would have.
+    """
+    return float(value) if isinstance(value, Decimal) else value
+
+
+def _as_psycopg2_returns_them(result: ExecutionResult) -> list[tuple[object, ...]]:
+    """One result's rows as the driver BIRD runs would have handed them over.
+
+    psycopg2 builds a Python float for a ``float4`` or a ``float8`` and a Decimal for a
+    ``numeric``, and Python compares the two exactly, so 0.1 the double is not 0.1 the
+    decimal. This tool loads a float column as the decimal the server printed instead,
+    which is what typed replay needs and what a reading of the benchmark has to undo before
+    it answers for the benchmark. Every other declared type is left as it came back.
+    """
+    floats = tuple(column.pg_type in PSYCOPG2_FLOAT_TYPES for column in result.columns)
+    if not any(floats):
+        return list(result.rows)
+    return [
+        tuple(
+            _as_a_driver_float(value) if is_float else value
+            for value, is_float in zip(row, floats, strict=True)
+        )
+        for row in result.rows
+    ]
+
+
+def bird_ex(gold: ExecutionResult, second: ExecutionResult) -> BirdEx:
+    """BIRD's execution-accuracy check over the two results, read as its own driver reads them."""
+    gold_rows = _as_psycopg2_returns_them(gold)
+    second_rows = _as_psycopg2_returns_them(second)
     equal = set(second_rows) == set(gold_rows)
     return BirdEx(
         value=1 if equal else 0,
@@ -589,7 +638,7 @@ def compare_statements(
         differing_rows=row_difference(gold_record.result.rows, second_record.result.rows),
         gold_ordering=gold_parsed.ordering,
         second_ordering=second_parsed.ordering,
-        bird_ex=bird_ex(gold_record.result.rows, second_record.result.rows),
+        bird_ex=bird_ex(gold_record.result, second_record.result),
         mechanism=(
             mechanism(gold_record.result, second_record.result, rule)
             if verdict.result is ComparabilityResult.NOT_EQUAL

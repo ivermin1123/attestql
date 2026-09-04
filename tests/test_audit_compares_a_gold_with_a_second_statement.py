@@ -41,6 +41,7 @@ from attestql.audit.compare import (
     SECOND_RECORD_FILE,
     VERDICT_READING,
     Comparison,
+    bird_ex,
     compare_statements,
     counterexample_json,
     mechanism,
@@ -79,6 +80,11 @@ SPEED = (("speed", "int8"),)
 
 SECOND_ALIASED = "SELECT element AS symbol FROM atom"
 SYMBOL = (("symbol", "text"),)
+
+GOLD_AVERAGE = "SELECT avg(speed) FROM team_attributes"
+SECOND_AVERAGE = "SELECT sum(speed) / count(*) FROM team_attributes"
+AVERAGE_FLOAT8 = (("average", "float8"),)
+AVERAGE_NUMERIC = (("average", "numeric"),)
 
 
 def _compare(
@@ -204,6 +210,77 @@ def test_rows_that_differ_only_in_order_are_not_equal_under_the_gold_s_rule(
     assert comparison.bird_ex.value == 1, "the benchmark's own check disregards row order"
     assert comparison.differing_rows.only_left_total == 0
     assert comparison.gold_result_hash != comparison.second_result_hash
+
+
+def test_a_float_column_against_a_numeric_one_is_read_as_psycopg2_hands_them_to_bird(
+    tmp_path: Path,
+) -> None:
+    """The six rows of the measured run: one number the server returns as ``float8`` on one
+    side and ``numeric`` on the other. BIRD runs psycopg2, which hands it a Python float for
+    a float column and a Decimal for a numeric one, and 0.1 is not the decimal 0.1, so its
+    check scores 0. This tool loads a float column as the decimal the server printed, and a
+    set reading over those two decimals would say 1 about a run BIRD scored 0."""
+    backend = FakeBackend(
+        {
+            GOLD_AVERAGE: fake_result(AVERAGE_FLOAT8, ((Decimal("0.1"),),)),
+            SECOND_AVERAGE: fake_result(AVERAGE_NUMERIC, ((Decimal("0.1"),),)),
+        },
+        row_counts={"team_attributes": 3},
+    )
+    comparison = _compare(backend, tmp_path, gold_sql=GOLD_AVERAGE, second_sql=SECOND_AVERAGE)
+    assert comparison.verdict.result is ComparabilityResult.NOT_EQUAL
+    assert comparison.mechanism is not None
+    assert comparison.mechanism.classification == MECHANISM_TYPE
+    assert comparison.bird_ex.value == 0
+
+
+def test_a_float_a_double_holds_exactly_matches_the_same_numeric_under_bird_s_reading(
+    tmp_path: Path,
+) -> None:
+    """The same pair of declared types on a number a double holds exactly: psycopg2's float
+    is equal to the decimal, so BIRD scores 1 where the typed verdict is still NOT_EQUAL.
+    Which of the two rows is credited is the double's business and not this tool's."""
+    backend = FakeBackend(
+        {
+            GOLD_AVERAGE: fake_result(AVERAGE_FLOAT8, ((Decimal("0.5"),),)),
+            SECOND_AVERAGE: fake_result(AVERAGE_NUMERIC, ((Decimal("0.5"),),)),
+        },
+        row_counts={"team_attributes": 3},
+    )
+    comparison = _compare(backend, tmp_path, gold_sql=GOLD_AVERAGE, second_sql=SECOND_AVERAGE)
+    assert comparison.verdict.result is ComparabilityResult.NOT_EQUAL
+    assert comparison.bird_ex.value == 1
+
+
+def test_two_numeric_columns_are_read_as_decimals_on_both_sides(tmp_path: Path) -> None:
+    """Nothing outside a float column moves: psycopg2 hands BIRD a Decimal for a numeric one
+    and both sides are compared as the server printed them."""
+    backend = FakeBackend(
+        {
+            GOLD_AVERAGE: fake_result(AVERAGE_NUMERIC, ((Decimal("0.1"),),)),
+            SECOND_AVERAGE: fake_result(AVERAGE_NUMERIC, ((Decimal("0.1"),),)),
+        },
+        row_counts={"team_attributes": 3},
+    )
+    comparison = _compare(backend, tmp_path, gold_sql=GOLD_AVERAGE, second_sql=SECOND_AVERAGE)
+    assert comparison.verdict.result is ComparabilityResult.EQUAL
+    assert comparison.bird_ex.value == 1
+
+
+def test_a_nan_in_a_float_column_is_unequal_to_itself_under_bird_s_reading() -> None:
+    """What the reading says about a NaN is BIRD's answer and not this tool's.
+
+    psycopg2 hands BIRD a Python float for a float column, and no Python set holds two NaNs
+    equal unless they are the same object, so the check scores 0 on two results that hold
+    the same one. Nothing here special-cases it. The reading is asked directly because this
+    tool never compares such a pair at all: a non-finite numeric has no canonical rendering,
+    so recording either result refuses before a verdict is reached.
+    """
+    measured = bird_ex(
+        fake_result(AVERAGE_FLOAT8, ((Decimal("NaN"),),)),
+        fake_result(AVERAGE_FLOAT8, ((Decimal("NaN"),),)),
+    )
+    assert measured.value == 0
 
 
 def test_both_records_are_compared_under_the_gold_s_ordering_and_keep_their_own_as_data(
