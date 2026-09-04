@@ -117,3 +117,15 @@ and 120 have no prediction and audit gold-only. For `mini_dev` issue 40.
 2. Open: the tool's BIRD reading disagrees with BIRD's harness on `float8` against `numeric` rows
    (six of 4,482), so `bird_ex` should adapt float columns as psycopg2 does; neither the summary
    line nor `summary.json` counts EX=1 and NOT_EQUAL; an ERROR line does not name the failed side.
+
+## Note, 2026-09-04 evening
+
+The whole measurement was rerun at `cf0b033` and the agreement number moved: 4,478 of 4,482 on the
+Hugging Face gold and 4,473 on the zip, against 4,473 and 4,471 here. The tool's reading of BIRD's
+EX now loads float columns as psycopg2 does, so the six `float8` against `numeric` rows agree and
+leave the EX=1 and NOT_EQUAL set, which falls to 164 (138 multiplicity, 26 type; hand classes
+69/74/21); q1473 is EQUAL and read 1 on more files now that every statement runs without parallel
+workers; and q707 of `meta-llama-3-70b` leaves the compared set as a timeout under its serial plan,
+so the errors are 1,722. The numbers above are left as they were measured: they are the record of
+the run at `41621c0`. The rerun and its comparison are in
+`plans/reports/session-260904-autonomous-run/remeasure-at-cf0b033/`.

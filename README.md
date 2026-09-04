@@ -188,15 +188,21 @@ measured over all 498 Mini-Dev statements and every fired row was classified by 
 [the measurement report](plans/reports/measurement-260902-2226-gold-only-probes-mini-dev.md)
 gives the precision per probe, including the one that is only 17 % and is therefore off by
 default. Prediction mode was run on BIRD's own nine PostgreSQL prediction files for Mini-Dev
-(4,482 predictions, the Hugging Face gold), with BIRD's own evaluator run beside it as the check:
-the two readings of EX agree on 4,473 of 4,482. Of the 1,240 predictions BIRD scores 1, 170
-(13.7 %) are NOT_EQUAL under the typed comparison: 138 return the gold's rows with other
-multiplicities, 32 the same values under another declared type, none differ only in order. Read by
-hand, 69 of those 170 (40.6 %; 5.6 % of everything BIRD credits) are wrong answers the benchmark
-credited, 74 are duplicated rows a reader would forgive, and 27 are the typed rule and not the
+(4,482 predictions, the Hugging Face gold), with BIRD's own evaluator run beside it as the check;
+the numbers below are that run repeated at the commit `cf0b033`. The two readings of EX agree on
+4,478 of 4,482, five more than the first run because the tool's reading of BIRD's EX now loads
+float columns as psycopg2 hands them over; what disagrees is q1473, a `SUM` over `float8` whose
+last digits depend on the order its partial sums are added in. Of the 1,239 predictions BIRD scores
+1, 164 (13.2 %) are NOT_EQUAL under the typed comparison: 138 return the gold's rows with other
+multiplicities, 26 the same values under another declared type, none differ only in order. Read by
+hand, 69 of those 164 (42.1 %; 5.6 % of everything BIRD credits) are wrong answers the benchmark
+credited, 74 are duplicated rows a reader would forgive, and 21 are the typed rule and not the
 question. Of the 1,521 predictions BIRD scores 0, 4 are right against a corrected gold, counted only
 where a correction exists (q1029, q207); the reverse, a 1 earned by reproducing a wrong gold, occurs
-6 times on the GitHub zip's golds and 2 on the Hugging Face file's.
+6 times on the GitHub zip's golds and 2 on the Hugging Face file's. Against the first run the count
+BIRD credits moved by one and the loose rows by six: those six float rows are no longer read as 1,
+q1473 is EQUAL now that every statement runs without parallel workers, and q707 of
+`meta-llama-3-70b` times out under its serial plan.
 [The prediction-mode report](plans/reports/measurement-260904-0046-prediction-mode-on-real-predictions.md)
 holds the per-file table, the hand classification and the two tool defects the run found.
 [The claims register](docs/claims-register.md) lists every claim with its owning

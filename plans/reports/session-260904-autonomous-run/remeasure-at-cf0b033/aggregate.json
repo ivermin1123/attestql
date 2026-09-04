@@ -1,0 +1,814 @@
+{
+ "zip": {
+  "audited": 4482,
+  "compared": 2760,
+  "ex1": 1240,
+  "ex0": 1520,
+  "errors": 1722,
+  "official_ex": 1241,
+  "agree": 4473,
+  "disagree": 9,
+  "ex1_not_equal": 164,
+  "class_multiplicity": 138,
+  "class_type": 26,
+  "not_equal_names_differ": 1030,
+  "errstep_execute": 1261,
+  "errstep_statement": 444,
+  "errstep_row_counts": 17
+ },
+ "hf": {
+  "audited": 4500,
+  "compared": 2760,
+  "ex1": 1239,
+  "ex0": 1521,
+  "errors": 1722,
+  "official_ex": 1241,
+  "agree": 4478,
+  "disagree": 4,
+  "ex1_not_equal": 164,
+  "class_multiplicity": 138,
+  "class_type": 26,
+  "not_equal_names_differ": 1025,
+  "errstep_execute": 1261,
+  "errstep_statement": 444,
+  "errstep_row_counts": 17
+ },
+ "classes": {
+  "A": 69,
+  "B": 74,
+  "C": 21,
+  "total": 164,
+  "A_over_all": 0.421,
+  "AB_over_all": 0.872,
+  "A_over_AB": 0.483
+ },
+ "distinct_questions": 52,
+ "distinct_questions_by_class": {
+  "C": 8,
+  "A": 24,
+  "B": 20
+ },
+ "names_on_equal_rows": {
+  "equal": 1075,
+  "differ": 168
+ },
+ "unjust_zero": [
+  [
+   "gpt-4-turbo",
+   1029,
+   "zip",
+   "EQUAL"
+  ],
+  [
+   "gpt-4-turbo",
+   1029,
+   "hf",
+   "EQUAL"
+  ],
+  [
+   "gpt-4-turbo",
+   207,
+   "zip",
+   "NOT_EQUAL"
+  ],
+  [
+   "gpt-4-turbo",
+   207,
+   "hf",
+   "NOT_EQUAL"
+  ],
+  [
+   "gpt-4",
+   1029,
+   "zip",
+   "EQUAL"
+  ],
+  [
+   "gpt-4",
+   1029,
+   "hf",
+   "EQUAL"
+  ],
+  [
+   "gpt-4",
+   207,
+   "zip",
+   "EQUAL"
+  ],
+  [
+   "gpt-4",
+   207,
+   "hf",
+   "EQUAL"
+  ]
+ ],
+ "unjust_one": [
+  [
+   "gpt-35-turbo-instruct",
+   207,
+   "zip"
+  ],
+  [
+   "gpt-35-turbo-instruct",
+   207,
+   "hf"
+  ],
+  [
+   "gpt-35-turbo-instruct",
+   879,
+   "zip"
+  ],
+  [
+   "gpt-35-turbo",
+   207,
+   "zip"
+  ],
+  [
+   "gpt-35-turbo",
+   207,
+   "hf"
+  ],
+  [
+   "gpt-35-turbo",
+   879,
+   "zip"
+  ],
+  [
+   "gpt-4-32k",
+   879,
+   "zip"
+  ],
+  [
+   "meta-llama-3-70b-instruct-2",
+   879,
+   "zip"
+  ]
+ ],
+ "unjust_table": {
+  "gpt-35-turbo-instruct": [
+   {
+    "question_id": 1029,
+    "zip": [
+     "ERROR",
+     0
+    ],
+    "hf": [
+     "ERROR",
+     0
+    ],
+    "corrected": [
+     "ERROR",
+     null
+    ]
+   },
+   {
+    "question_id": 207,
+    "zip": [
+     "EQUAL",
+     1
+    ],
+    "hf": [
+     "EQUAL",
+     1
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   },
+   {
+    "question_id": 879,
+    "zip": [
+     "EQUAL",
+     1
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   }
+  ],
+  "gpt-35-turbo": [
+   {
+    "question_id": 1029,
+    "zip": [
+     "ERROR",
+     0
+    ],
+    "hf": [
+     "ERROR",
+     0
+    ],
+    "corrected": [
+     "ERROR",
+     null
+    ]
+   },
+   {
+    "question_id": 207,
+    "zip": [
+     "NOT_EQUAL",
+     1
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     1
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   },
+   {
+    "question_id": 879,
+    "zip": [
+     "EQUAL",
+     1
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   }
+  ],
+  "gpt-4-32k": [
+   {
+    "question_id": 1029,
+    "zip": [
+     "ERROR",
+     0
+    ],
+    "hf": [
+     "ERROR",
+     0
+    ],
+    "corrected": [
+     "ERROR",
+     null
+    ]
+   },
+   {
+    "question_id": 207,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   },
+   {
+    "question_id": 879,
+    "zip": [
+     "EQUAL",
+     1
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   }
+  ],
+  "gpt-4-turbo": [
+   {
+    "question_id": 1029,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "EQUAL",
+     1
+    ]
+   },
+   {
+    "question_id": 207,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     1
+    ]
+   },
+   {
+    "question_id": 879,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   }
+  ],
+  "gpt-4": [
+   {
+    "question_id": 1029,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "EQUAL",
+     1
+    ]
+   },
+   {
+    "question_id": 207,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "EQUAL",
+     1
+    ]
+   },
+   {
+    "question_id": 879,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   }
+  ],
+  "meta-llama-3-70b-instruct-2": [
+   {
+    "question_id": 1029,
+    "zip": [
+     "ERROR",
+     0
+    ],
+    "hf": [
+     "ERROR",
+     0
+    ],
+    "corrected": [
+     "ERROR",
+     null
+    ]
+   },
+   {
+    "question_id": 207,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   },
+   {
+    "question_id": 879,
+    "zip": [
+     "EQUAL",
+     1
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   }
+  ],
+  "meta-llama-3-8b-instruct-2": [
+   {
+    "question_id": 1029,
+    "zip": [
+     "ERROR",
+     0
+    ],
+    "hf": [
+     "ERROR",
+     0
+    ],
+    "corrected": [
+     "ERROR",
+     null
+    ]
+   },
+   {
+    "question_id": 207,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   },
+   {
+    "question_id": 879,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   }
+  ],
+  "mistralai-mixtral-8x7b-instru-4": [
+   {
+    "question_id": 1029,
+    "zip": [
+     "ERROR",
+     0
+    ],
+    "hf": [
+     "ERROR",
+     0
+    ],
+    "corrected": [
+     "ERROR",
+     null
+    ]
+   },
+   {
+    "question_id": 207,
+    "zip": [
+     "ERROR",
+     0
+    ],
+    "hf": [
+     "ERROR",
+     0
+    ],
+    "corrected": [
+     "ERROR",
+     null
+    ]
+   },
+   {
+    "question_id": 879,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   }
+  ],
+  "phi-3-medium-128k-instruct-1": [
+   {
+    "question_id": 1029,
+    "zip": [
+     "ERROR",
+     0
+    ],
+    "hf": [
+     "ERROR",
+     0
+    ],
+    "corrected": [
+     "ERROR",
+     null
+    ]
+   },
+   {
+    "question_id": 207,
+    "zip": [
+     "NOT_EQUAL",
+     0
+    ],
+    "hf": [
+     "NOT_EQUAL",
+     0
+    ],
+    "corrected": [
+     "NOT_EQUAL",
+     0
+    ]
+   },
+   {
+    "question_id": 879,
+    "zip": [
+     "ERROR",
+     0
+    ],
+    "hf": [
+     "ERROR",
+     0
+    ],
+    "corrected": [
+     "ERROR",
+     null
+    ]
+   }
+  ]
+ },
+ "zip_against_hf": {
+  "gpt-35-turbo-instruct": [
+   [
+    "119",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "120",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "879",
+    [
+     "EQUAL",
+     1
+    ],
+    [
+     "NOT_EQUAL",
+     0
+    ]
+   ]
+  ],
+  "gpt-35-turbo": [
+   [
+    "119",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "120",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "879",
+    [
+     "EQUAL",
+     1
+    ],
+    [
+     "NOT_EQUAL",
+     0
+    ]
+   ]
+  ],
+  "gpt-4-32k": [
+   [
+    "119",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "120",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "879",
+    [
+     "EQUAL",
+     1
+    ],
+    [
+     "NOT_EQUAL",
+     0
+    ]
+   ]
+  ],
+  "gpt-4-turbo": [
+   [
+    "119",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "120",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "1322",
+    [
+     "NOT_EQUAL",
+     0
+    ],
+    [
+     "EQUAL",
+     1
+    ]
+   ]
+  ],
+  "gpt-4": [
+   [
+    "119",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "120",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "1322",
+    [
+     "NOT_EQUAL",
+     0
+    ],
+    [
+     "EQUAL",
+     1
+    ]
+   ]
+  ],
+  "meta-llama-3-70b-instruct-2": [
+   [
+    "119",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "120",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "879",
+    [
+     "EQUAL",
+     1
+    ],
+    [
+     "NOT_EQUAL",
+     0
+    ]
+   ]
+  ],
+  "meta-llama-3-8b-instruct-2": [
+   [
+    "119",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "120",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ]
+  ],
+  "mistralai-mixtral-8x7b-instru-4": [
+   [
+    "119",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "120",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ]
+  ],
+  "phi-3-medium-128k-instruct-1": [
+   [
+    "119",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "120",
+    null,
+    [
+     "GOLD-ONLY",
+     null
+    ]
+   ],
+   [
+    "1322",
+    [
+     "NOT_EQUAL",
+     0
+    ],
+    [
+     "EQUAL",
+     1
+    ]
+   ]
+  ]
+ },
+ "position_keying_equals_id_keying_on_zip": true
+}

@@ -1,0 +1,23 @@
+BIRD's evaluator (evaluation_utils.execute_sql + calculate_ex, psycopg2) scored with SIX processes at once against the
+container (max_parallel_workers = 8): plans lost their workers, the q707-class predictions ran serially past func_timeout's
+30 s, and the orphaned server queries slowed everything after them. Against the committed run at 41621c0 that scoring
+flipped 110 EX values, in runs of consecutive question ids per file, almost all 1 to 0. Discarded; the committed
+comparison.json is the rescoring with three processes, which flips 10 (q1473 x7, q212 x2, q1476 x1).
+flips per (gold, file) under six lanes:
+  hf gpt-35-turbo: 9
+  hf gpt-35-turbo-instruct: 2
+  hf gpt-4: 6
+  hf gpt-4-32k: 1
+  hf gpt-4-turbo: 9
+  hf meta-llama-3-70b-instruct-2: 6
+  hf meta-llama-3-8b-instruct-2: 4
+  hf mistralai-mixtral-8x7b-instru-4: 4
+  hf phi-3-medium-128k-instruct-1: 9
+  zip gpt-35-turbo-instruct: 1
+  zip gpt-4: 1
+  zip gpt-4-32k: 21
+  zip gpt-4-turbo: 15
+  zip meta-llama-3-70b-instruct-2: 9
+  zip meta-llama-3-8b-instruct-2: 2
+  zip mistralai-mixtral-8x7b-instru-4: 5
+  zip phi-3-medium-128k-instruct-1: 6
