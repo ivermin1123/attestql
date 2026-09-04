@@ -1,0 +1,86 @@
+{
+ "bird_ex": {
+  "A": {
+   "forgiven": 69,
+   "refused": 0
+  },
+  "B": {
+   "forgiven": 74,
+   "refused": 0
+  },
+  "C": {
+   "forgiven": 21,
+   "refused": 6
+  }
+ },
+ "test_suite": {
+  "A": {
+   "forgiven": 52,
+   "refused": 17
+  },
+  "B": {
+   "forgiven": 60,
+   "refused": 14
+  },
+  "C": {
+   "forgiven": 21,
+   "refused": 6
+  }
+ },
+ "bird_critic": {
+  "A": {
+   "forgiven": 64,
+   "refused": 5
+  },
+  "B": {
+   "forgiven": 74,
+   "refused": 0
+  },
+  "C": {
+   "forgiven": 21,
+   "refused": 6
+  }
+ },
+ "livesqlbench": {
+  "A": {
+   "forgiven": 64,
+   "refused": 5
+  },
+  "B": {
+   "forgiven": 72,
+   "refused": 2
+  },
+  "C": {
+   "forgiven": 27,
+   "refused": 0
+  }
+ },
+ "defog": {
+  "A": {
+   "forgiven": 67,
+   "refused": 2
+  },
+  "B": {
+   "forgiven": 74,
+   "refused": 0
+  },
+  "C": {
+   "forgiven": 21,
+   "refused": 6
+  }
+ },
+ "spider2": {
+  "A": {
+   "forgiven": 0,
+   "refused": 69
+  },
+  "B": {
+   "forgiven": 0,
+   "refused": 74
+  },
+  "C": {
+   "forgiven": 27,
+   "refused": 0
+  }
+ }
+}
