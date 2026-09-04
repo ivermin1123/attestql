@@ -107,6 +107,13 @@ from attestql.evidence.types import (
 
 PROGRAM = "attestql"
 SUMMARY_FILE = "summary.json"
+MARKER_FILE = ".attestql-run"
+"""What says an output directory is an audit's own and may be cleared by the next run."""
+MARKER_TEXT = (
+    "written by attestql audit: every rerun into this directory removes summary.json "
+    "and the q<id>/ directories\n"
+)
+"""The one line the marker holds, so a reader who opens it learns why it is there."""
 QUESTION_DIRECTORY = re.compile(r"q\d+")
 """The name of a directory this tool writes a question's evidence to."""
 SUMMARY_FORMAT = "attestql/audit/summary/1"
@@ -582,8 +589,9 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
 
     Raises ``ToolError`` when the run cannot start: an unreadable file, a question file
     that states two different questions under one id, an output directory that cannot be
-    made or cleared of the run before it, or a backend that will not say what it is.
-    Everything a single question can fail at is that question's error line.
+    made, that holds files no audit wrote, or that cannot be cleared of the run before it,
+    or a backend that will not say what it is. Everything a single question can fail at is
+    that question's error line.
     """
     phases = Phases()
     run_id = f"audit-{uuid.uuid4()}"
@@ -684,14 +692,32 @@ def _clear_previous_run(out: Path) -> None:
     cache is keyed by the server and the schema digest and is a speed decision, so it stays,
     and so does anything a reader put here that this tool does not write.
 
-    Raises ``ToolError`` when something cannot be removed: the run would otherwise write its
-    evidence beside evidence it did not produce.
+    Only a directory this tool wrote to is cleared, which is what ``MARKER_FILE`` says. One
+    that is empty is taken over and marked, one that holds the marker is cleared and keeps
+    it, and one that holds anything else is refused untouched: ``--out`` named a directory
+    of the reader's own, and deleting from it would cost them files this tool never wrote.
+
+    Raises ``ToolError`` when the directory holds files no audit wrote, and when something
+    cannot be read or removed: the run would otherwise write its evidence beside evidence
+    it did not produce.
     """
     try:
+        entries = sorted(out.iterdir())
+    except OSError as unreadable:
+        raise ToolError(f"the output directory {out} cannot be read: {unreadable}") from unreadable
+    if entries and not (out / MARKER_FILE).is_file():
+        raise ToolError(
+            f"the output directory {out} is not empty and holds no {MARKER_FILE}, the file "
+            f"an audit leaves in a directory of its own: nothing in it was removed. A run "
+            f"writes into a directory that is empty, that is not there yet, or that an "
+            f"earlier audit wrote to."
+        )
+    try:
         (out / SUMMARY_FILE).unlink(missing_ok=True)
-        for child in out.iterdir():
+        for child in entries:
             if child.is_dir() and QUESTION_DIRECTORY.fullmatch(child.name):
                 shutil.rmtree(child)
+        (out / MARKER_FILE).write_text(MARKER_TEXT, encoding="utf-8")
     except OSError as unwritable:
         raise ToolError(
             f"the output directory {out} cannot be cleared of the run before it: {unwritable}"
@@ -1411,6 +1437,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 __all__ = [
     "ERROR",
     "GOLD_ONLY",
+    "MARKER_FILE",
+    "MARKER_TEXT",
     "POSITION_KEYING",
     "PROGRAM",
     "QUESTION_ID_KEYING",

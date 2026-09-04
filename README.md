@@ -99,13 +99,14 @@ makes a fired probe exit 1 too. Every `audit/q<id>/` holds `counterexample.json`
 records (`evidence-gold.json`, `evidence-second.json`) and `smells.json`; `audit/summary.json`
 holds the counts, the fixture digest, whether the shuffle ran, the session the run was made in
 (the server's version string beside its number) and the parser that judged every statement (the
-validator, the `postgast` release and the libpg_query grammar version). A rerun into the same
-`--out` clears the previous run's `q<id>/` directories and `summary.json` before it writes anything,
-so what is in there is one run's evidence and not two; `fixture.json`, the fixture cache keyed by
-the server and the schema digest, stays, and so does anything else you put there. A cached
-measurement is used only when the server's own per-table counters still say what they said when it
-was taken, so data reloaded or edited under an unchanged schema is measured again rather than read
-back from the file.
+validator, the `postgast` release and the libpg_query grammar version). The first run into a
+directory leaves a `.attestql-run` marker in it; a rerun into a directory that has the marker clears
+that run's `q<id>/` directories and `summary.json` before it writes anything, so what is in there is
+one run's evidence and not two, and a non-empty directory without the marker is refused with nothing
+in it touched. `fixture.json`, the fixture cache keyed by the server and the schema digest, stays,
+and so does anything else you put there. A cached measurement is used only when the server's own
+per-table counters still say what they said when it was taken, so data reloaded or edited under an
+unchanged schema is measured again rather than read back from the file.
 
 ## What it does
 

@@ -26,6 +26,7 @@ import pytest
 from attestql.audit import cli
 from attestql.audit.backend import BackendRefused, TableName, TextCensus
 from attestql.audit.cli import (
+    MARKER_FILE,
     SMELLS_FILE,
     SUMMARY_FILE,
     AuditOptions,
@@ -457,6 +458,7 @@ def test_a_rerun_into_the_same_out_does_not_leave_the_run_before_it_to_be_read(
     out = tmp_path / "audit"
     assert first.exit_status == 1
     assert (out / "q207" / COUNTEREXAMPLE_FILE).is_file()
+    assert (out / MARKER_FILE).is_file(), "the run left nothing saying the directory is its own"
     schema_reads = len(backend.schema_digest_calls)
 
     notes = out / "notes.md"
@@ -472,10 +474,55 @@ def test_a_rerun_into_the_same_out_does_not_leave_the_run_before_it_to_be_read(
     assert notes.read_text(encoding="utf-8") == "a reader's own"
     assert (out / "questions").is_dir()
     assert (out / CACHE_FILE).is_file()
+    assert (out / MARKER_FILE).is_file(), "the marker is gone after a rerun cleared the directory"
     assert backend.row_count_calls == [(ATOM_TABLE,)], "the data was measured twice"
     assert len(backend.schema_digest_calls) > schema_reads, (
         "the schema is read from the server every run"
     )
+
+
+def test_a_directory_this_tool_never_wrote_to_is_refused_with_nothing_removed(
+    tmp_path: Path,
+) -> None:
+    """A reader who points ``--out`` at a directory of their own keeps every file in it: the
+    run is refused before anything is read, written or printed, and not after."""
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    out = tmp_path / "audit"
+    (out / "q1").mkdir(parents=True)
+    theirs = out / "q1" / "notes.txt"
+    theirs.write_text("a reader's own working notes", encoding="utf-8")
+    summary = write(out / SUMMARY_FILE, {"run_id": "not-this-tool's"})
+    before = (theirs.read_bytes(), summary.read_bytes())
+
+    backend = _quiet_backend()
+    lines = Lines()
+    with pytest.raises(ToolError) as refused:
+        run_audit(options(tmp_path), backend, lines)
+
+    assert str(out) in str(refused.value)
+    assert MARKER_FILE in str(refused.value)
+    assert (theirs.read_bytes(), summary.read_bytes()) == before
+    assert sorted(child.name for child in out.iterdir()) == ["q1", SUMMARY_FILE]
+    assert not (out / MARKER_FILE).exists()
+    assert not (out / CACHE_FILE).exists()
+    assert backend.executed == [], "the run reached the backend before it refused"
+    assert lines.written == [], "the run printed a line before it refused"
+
+
+def test_an_empty_directory_is_taken_over_and_marked_as_this_tool_s(tmp_path: Path) -> None:
+    """An empty directory is as safe to write to as one that is not there yet, and the run
+    leaves the marker that lets the next run clear it."""
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    out = tmp_path / "audit"
+    out.mkdir()
+
+    summary = run_audit(options(tmp_path), _quiet_backend(), Lines())
+
+    assert summary.exit_status == 0
+    assert summary_of(tmp_path)["verdicts"] == {"GOLD-ONLY": 1}
+    marker = (out / MARKER_FILE).read_text(encoding="utf-8")
+    assert marker.strip().splitlines() == [marker.strip()], "the marker is more than one line"
+    assert SUMMARY_FILE in marker
 
 
 class Watching(Lines):
@@ -503,6 +550,7 @@ def test_the_summary_of_the_run_before_is_gone_before_this_one_prints_a_line(
     write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
     out = tmp_path / "audit"
     out.mkdir()
+    (out / MARKER_FILE).write_text("written by an earlier audit\n", encoding="utf-8")
     write(out / SUMMARY_FILE, {"run_id": "audit-the-one-before"})
     writer = Watching(out / SUMMARY_FILE)
     run_audit(options(tmp_path), _quiet_backend(), writer)
