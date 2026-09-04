@@ -1,0 +1,98 @@
+{
+ "groupby_text:1531": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "groupby_text:1322": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "groupby_text:1381": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "groupby_text:1404": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "groupby_text:1405": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "eq_text:1471": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "eq_text:1472": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "eq_text:1473": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "eq_text:1476": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "eq_text:1479": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "like_text:1482": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "like_text:1338": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "like_text:1105": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "like_text:1110": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "like_text:1113": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ },
+ "ord_cmp_text:1133": {
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true
+ }
+}

@@ -1,0 +1,6 @@
+=== bird ===
+bird|c|en_US.utf8|en_US.utf8||2.41
+=== bird_c ===
+bird_c|c|C|C||
+=== bird_icu ===
+bird_icu|i|en_US.utf8|en_US.utf8|en-US|153.128

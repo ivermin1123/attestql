@@ -1,0 +1,6 @@
+{
+ "array_nulls=on": [
+  "[1, None, 3]"
+ ],
+ "array_nulls=off": "InvalidTextRepresentation: invalid input syntax for type integer: \"NULL\"\nLINE 1: SELECT '{1,NULL,3}'::int[]\n               ^"
+}

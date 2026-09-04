@@ -1,0 +1,6 @@
+{
+ "IntervalStyle=postgres": [
+  "428 days, 0:00:00"
+ ],
+ "IntervalStyle=iso_8601": "NotImplementedError: can't parse interval with IntervalStyle 'iso_8601': 'P1Y2M3D'"
+}

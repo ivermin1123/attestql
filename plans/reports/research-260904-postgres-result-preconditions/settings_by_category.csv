@@ -1,0 +1,42 @@
+Autovacuum,13
+Client Connection Defaults / Locale and Formatting,12
+Client Connection Defaults / Other Defaults,2
+Client Connection Defaults / Shared Library Preloading,4
+Client Connection Defaults / Statement Behavior,31
+Connections and Authentication / Authentication,7
+Connections and Authentication / Connection Settings,10
+Connections and Authentication / SSL,14
+Connections and Authentication / TCP Settings,5
+Developer Options,25
+Error Handling,4
+File Locations,6
+Lock Management,5
+Preset Options,18
+Query Tuning / Genetic Query Optimizer,7
+Query Tuning / Other Planner Options,8
+Query Tuning / Planner Cost Constants,13
+Query Tuning / Planner Method Configuration,21
+Replication / Primary Server,1
+Replication / Sending Servers,7
+Replication / Standby Servers,11
+Replication / Subscribers,3
+Reporting and Logging / Process Title,2
+Reporting and Logging / What to Log,21
+Reporting and Logging / When to Log,7
+Reporting and Logging / Where to Log,13
+Resource Usage / Asynchronous Behavior,9
+Resource Usage / Background Writer,4
+Resource Usage / Cost-Based Vacuum Delay,5
+Resource Usage / Disk,2
+Resource Usage / Kernel Resources,1
+Resource Usage / Memory,15
+Statistics / Cumulative Query and Index Statistics,7
+Statistics / Monitoring,5
+Version and Platform Compatibility / Other Platforms and Clients,1
+Version and Platform Compatibility / Previous PostgreSQL Versions,7
+Write-Ahead Log / Archive Recovery,3
+Write-Ahead Log / Archiving,4
+Write-Ahead Log / Checkpoints,6
+Write-Ahead Log / Recovery,2
+Write-Ahead Log / Recovery Target,8
+Write-Ahead Log / Settings,15
