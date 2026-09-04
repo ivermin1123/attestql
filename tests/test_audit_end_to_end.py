@@ -48,6 +48,7 @@ from attestql.audit.postgres import (
     _lock_key,  # pyright: ignore[reportPrivateUsage]  # the key the backend locks on, so the test cannot name another
 )
 from attestql.audit.statements import VALIDATOR_VERSION
+from attestql.evidence.replay import ComparabilityResult
 
 pytestmark = pytest.mark.sandbox
 
@@ -70,8 +71,8 @@ describes the data every record here is about."""
 DEFECTS = ("1029", "879", "207")
 """The three questions whose shipped gold and correction disagree on this data."""
 
-SUMMARY_LINE = "8 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 6 smells fired"
-EXPERIMENTAL_SUMMARY_LINE = "8 questions: 3 NOT_EQUAL, 0 NOT_COMPARABLE, 7 smells fired"
+SUMMARY_LINE = "8 questions: 3 NOT_EQUAL, 6 smells fired"
+EXPERIMENTAL_SUMMARY_LINE = "8 questions: 3 NOT_EQUAL, 7 smells fired"
 """The same run with the experimental smell asked for: q1029 fires it and nothing else moves."""
 
 COPIED_TABLES = [
@@ -238,7 +239,7 @@ def test_a_disagreement_is_exit_status_one(audited: Run) -> None:
     """ADR-0013 point 2: the counts live in the summary and never in the exit code."""
     assert audited.summary.exit_status == 1
     assert audited.summary.not_equal == 3
-    assert audited.summary.not_comparable == 0
+    assert ComparabilityResult.NOT_COMPARABLE.name not in audited.summary.verdicts
     assert audited.summary_document()["exit_status"] == 1
 
 

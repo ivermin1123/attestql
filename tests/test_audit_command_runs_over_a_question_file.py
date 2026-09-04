@@ -212,7 +212,7 @@ def test_a_gold_only_run_with_nothing_to_report_writes_no_directory(tmp_path: Pa
     lines = Lines()
     summary = run_audit(options(tmp_path), _quiet_backend(), lines)
     assert lines.written[0] == "q207  toxicology  R-SET  GOLD-ONLY  smells=none"
-    assert lines.written[1] == "1 questions: 0 NOT_EQUAL, 0 NOT_COMPARABLE, 0 smells fired"
+    assert lines.written[1] == "1 questions: 0 NOT_EQUAL, 0 smells fired"
     assert summary.exit_status == 0
     assert not (tmp_path / "audit" / "q207").exists()
     written = summary_of(tmp_path)
@@ -342,7 +342,10 @@ def test_the_line_of_a_disagreement_is_the_one_the_adr_writes_down(
     assert lines.written[0] == (
         "q879  formula_1   R-ORD  NOT_EQUAL  smells=ordering-over-numeric-text  audit/q879/"
     )
-    assert lines.written[1] == "1 questions: 1 NOT_EQUAL, 0 NOT_COMPARABLE, 1 smells fired"
+    assert lines.written[1] == "1 questions: 1 NOT_EQUAL, 1 smells fired"
+    # Both records of a comparison are built from one session and one fixture, so no run
+    # reaches NOT_COMPARABLE and the line does not count what cannot happen.
+    assert "NOT_COMPARABLE" not in lines.written[1]
     assert summary.exit_status == 1
 
 

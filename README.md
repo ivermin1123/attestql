@@ -84,7 +84,7 @@ line (the whole output is in `plans/reports/audit-260902-minidev-gold-only/`):
 q1380 student_club R-SET  GOLD-ONLY  smells=float-aggregate-order  audit/q1380/
 q1389 student_club R-ORD  GOLD-ONLY  smells=arbitrary-cut  audit/q1389/
 q879  formula_1   R-ORD  GOLD-ONLY  smells=ordering-over-numeric-text  audit/q879/
-498 questions: 0 NOT_EQUAL, 0 NOT_COMPARABLE, 39 smells fired
+498 questions: 0 NOT_EQUAL, 39 smells fired
 ```
 
 Two copies of the Mini-Dev question set exist and they differ: the `minidev.zip` linked from the
@@ -124,7 +124,10 @@ back from the file.
   R-SET otherwise; a NaN is one value there, equal to a NaN and to nothing else, as PostgreSQL
   groups and orders it; EQUAL, NOT_EQUAL, or
   NOT_COMPARABLE with the mismatched preconditions named (fixture digest, serialization, rule,
-  ordering, and the five session settings that change rendered bytes).
+  ordering, and the five session settings that change rendered bytes). Within one run both
+  records are built under the same preconditions, so that verdict does not occur there; it is
+  for comparing two records from two runs, and a record carries everything that comparison
+  reads.
 - An evidence record per execution, twenty-one required fields, no defaults: what ran, as what role,
   on which server, under which settings, with which result and hash, and how to re-run it.
 - Gold-only probes, all heuristics and labelled so: ordering over numeric-looking text; an

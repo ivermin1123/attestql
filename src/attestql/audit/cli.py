@@ -265,10 +265,6 @@ class Summary:
         return self.verdicts.get(ComparabilityResult.NOT_EQUAL.name, 0)
 
     @property
-    def not_comparable(self) -> int:
-        return self.verdicts.get(ComparabilityResult.NOT_COMPARABLE.name, 0)
-
-    @property
     def smells_fired(self) -> int:
         return sum(self.smells.values())
 
@@ -658,7 +654,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
     summary = _summarise(options, counted, run_id=run_id, elapsed=phases.rounded())
     writer.line(
         f"{summary.questions} questions: {summary.not_equal} NOT_EQUAL, "
-        f"{summary.not_comparable} NOT_COMPARABLE, {summary.smells_fired} smells fired"
+        f"{summary.smells_fired} smells fired"
     )
     write_json(
         options.out / SUMMARY_FILE,
