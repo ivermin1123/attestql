@@ -3,7 +3,8 @@
 **Status:** Accepted. **Date:** 2026-08-25. **Supersedes:** the earlier "byte-identical result"
 wording in the Slice 1 brief. **Amended:** 2026-08-30, the Open question below is answered by
 ADR-0009 (in the private history before publication), which fixes Q13's result grain at
-one row per segment; 2026-09-04, what a NaN is under R-SET is stated at the end.
+one row per segment; 2026-09-04, what a NaN is under R-SET is stated at the end, and what a
+type is under R-SET is stated at the end of the decision.
 
 ## Context
 
@@ -38,6 +39,15 @@ Both rules apply only when fixture version, schema version, metric-definition ve
 version, validator version, execution limits and evaluation clock all match the recorded values. A
 mismatch yields **not comparable**, which is a third outcome and is not a failure. A record that does
 not declare its rule is not a valid evidence record.
+
+**Storage class is type, amended 2026-09-04.** Under R-SET a value only meets a value of its own
+storage class, and which classes an engine has is the engine's to say. On PostgreSQL that is what
+this rule has always applied: an `int8` and a `numeric` both holding 1 are two values, and a result
+that returns one where the other was recorded is not equal. On SQLite, where a column has no
+declared type and every value carries its own class, an INTEGER `1` and a REAL `1.0` are two values
+for the same reason and by the same rule. The rule is therefore engine-neutral and needs no second
+form: a comparator reads the class the engine returned a value at, never a class of its own making.
+ADR-0014 records where the second engine goes and what the record states about it.
 
 ## Alternatives considered
 

@@ -1,8 +1,10 @@
 # ADR-0014: A SQLite backend behind the same evidence record
 
-**Status:** Proposed. **Date:** 2026-09-04. Drafted without the owner during the autonomous
-run of that day (`plans/reports/session-260904-autonomous-run.md`); nothing here is built, and
-the estimate below is a reading of the code as it stands at `9e4627d`, not a plan.
+**Status:** Accepted, 2026-09-04, by the owner. The sentence this record was drafted under is
+kept as history: drafted without the owner during the autonomous run of that day
+(`plans/reports/session-260904-autonomous-run.md`); nothing here is built, and the estimate
+below is a reading of the code as it stands at `9e4627d`, not a plan. What the owner accepted,
+the same day, is the decision below and the three answers under Resolved.
 
 ## Context
 
@@ -45,19 +47,27 @@ grammar: BIRD's SQLite golds use double-quoted string literals, backtick identif
 `IIF`, `strftime`, `CAST(x AS REAL)`; libpg_query rejects the backticks and reads a
 double-quoted literal as an identifier, silently, which is worse than a refusal.
 
-## Decision (proposed)
+## Decision
 
 1. One evidence record, one comparator. R-ORD and R-SET (ADR-0004), the canonical
    serialization, the fixed clock and the record builder stay engine-neutral and are not
    forked. What a SQLite result cannot state is stated as such, not faked: the column's type
    field carries the value's storage class per cell when the column has no declared type, and
    the comparator treats a column whose storage class varies across rows as typed per cell.
-   This needs a schema amendment (`ColumnType.pg_type` becomes an engine-qualified
-   `declared_type`, the session settings block gains an `engine` and allows the five
-   PostgreSQL settings to be absent for SQLite), with a `SCHEMA_VERSION` bump and the compat
-   rule ADR-0013 point 7 sets.
+   Two public contracts carry this and are amended before anything else is written.
+   `ColumnType.pg_type` becomes `declared_type`: the engine's own name for the type, read in
+   the namespace of the `engine` the session settings block names once per record, so no
+   column carries an engine prefix of its own and a PostgreSQL record's canonical bytes do not
+   change. And the session settings block gains that `engine`, which is what allows the five
+   PostgreSQL settings to be absent for SQLite. The record's producer `version` and the
+   summary, counterexample and smells format strings are each bumped when their own layout
+   changes, and the canonical serialization's format identity when a rendering's bytes change:
+   a version a reader compares two documents under states that both were written to one
+   layout, so it moves with the layout and with nothing else. ADR-0013 renamed the record's
+   `schema_version` away without leaving a rule for the strings that replaced it; this is that
+   rule.
 2. One backend per engine behind the `Backend` protocol in `audit/backend.py`, which already
-   names no engine. `audit/sqlite.py` would implement: a read-only file connection; `existing_tables`
+   names no engine. `audit/sqlite.py` implements: a read-only file connection; `existing_tables`
    and `column_types` from `sqlite_master` and `pragma_table_info`; row counts as today; content
    digests computed in Python over rows fetched in a stated order (SQLite has no `md5`, no
    `string_agg` with ordering); shuffled copies as `CREATE TABLE ... AS SELECT` into an attached
@@ -66,9 +76,9 @@ double-quoted literal as an identifier, silently, which is worse than a refusal.
    `PRAGMA query_only`.
 3. One parser per engine behind a small `ParsedStatement` protocol that `statements.py`
    already shapes (tables, replay rule, sort keys, placeholders, the allowlist verdict). The
-   SQLite parser would be sqlglot's SQLite dialect (MIT) rather than libpg_query, and the
-   allowlist would be re-stated over its tree. The validator version string names which parser
-   judged the statement, as the summary's `parser` block does since `efd9d00`.
+   SQLite parser is sqlglot's SQLite dialect (MIT) rather than libpg_query, and the allowlist
+   is re-stated over its tree. The validator version string names which parser judged the
+   statement, as the summary's `parser` block does since `efd9d00`.
 4. The smells split by what they read: the ones that read the tree and the result (limit
    ties, nulls-first, float order) move unchanged; the ones that read the catalogue (numeric
    text, column types) go through the backend and get a SQLite answer where one exists.
@@ -90,9 +100,9 @@ README stay PostgreSQL numbers; a SQLite run gets its own report and register ro
 - Fork the record into a SQLite family. Rejected: two records would need two comparators, two
   serializations and two sets of claims, and the point of the tool is one reading of one
   evidence format.
-- Do nothing until a PostgreSQL set beyond Mini-Dev is public. Kept as the default until the
-  owner accepts this ADR: nothing here is built, and the 60-day window of ADR-0013 point 10
-  has not closed.
+- Do nothing until a PostgreSQL set beyond Mini-Dev is public. This was the default until the
+  owner accepted this record on 2026-09-04, and nothing was built before that; the 60-day
+  window of ADR-0013 point 10 has still not closed, and a SQLite run does not close it.
 
 ## Consequences
 
@@ -104,12 +114,19 @@ README stay PostgreSQL numbers; a SQLite run gets its own report and register ro
 - The gate grows a second sandbox with no container: a SQLite file built from the fixture SQL
   in the test run.
 
-## Open questions
+## Resolved
 
-- Whether per-cell typing under R-SET keeps the property ADR-0004 states, that a value only
-  meets a value of its own type, when SQLite returns `1` in one row and `1.0` in the next
-  from the same expression.
-- Whether BIRD's own SQLite evaluator, `set(predicted) == set(gold)` over `fetchall()`, is the
-  reading to compute beside the verdicts, as `bird_ex` is for PostgreSQL, or whether its
-  Python-level equality (where `1 == 1.0 == True`) needs its own note in the record.
-- Which of Spider 1.0 and BIRD dev to run first; the research report did not survey SQLite sets.
+The three questions this record was drafted with, answered by the owner on 2026-09-04.
+
+- **Storage class is type.** Under R-SET a value only meets a value of its own storage class,
+  so a SQLite `1` (INTEGER) and a `1.0` (REAL) are two values, because that is the rule the
+  comparator already applies on PostgreSQL, where an `int8` and a `numeric` holding the same
+  amount are two values; ADR-0004 now states it engine-neutrally.
+- **`bird_ex` on SQLite is BIRD's own SQLite scorer, imported verbatim:**
+  `set(predicted) == set(gold)` over `fetchall()` with Python equality, where
+  `1 == 1.0 == True`, computed beside the verdict as it is on PostgreSQL and with the record
+  noting that Python equality is part of that reading, because a reading of the benchmark that
+  is not the benchmark's own answers for nobody.
+- **BIRD dev (1,534 questions) is the first SQLite set to run,** Spider 1.0 after it, because
+  BIRD is the set whose gold this tool has already audited on PostgreSQL and the two runs can
+  then be read against each other.
