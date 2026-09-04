@@ -761,6 +761,12 @@ class PostgresBackend:
         A name the catalogue answers nothing for gets the empty string rather than an
         invented number: a view has no file and no tuple counters, and a table that is not
         there is about to be refused by whatever asks for its rows.
+
+        The tuple counters are cumulative statistics the server publishes after the writing
+        transaction ended and at most about once a second rather than at commit, and
+        ``relfilenode`` does not move on an UPDATE or a DELETE, so a run that starts inside
+        that window reads the counters from before another session's write and sees a signal
+        that did not move.
         """
         wanted = _qualified(tables)
         if not wanted:

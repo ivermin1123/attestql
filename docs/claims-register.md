@@ -61,6 +61,7 @@ re-ran or re-derived independently; **OWNER** the owner by hand.
 | The validator admits no wrong statement for this tool | The AST allowlist validator in `kernel/` is off the product path, bound to the retired synthetic schema, and its claim is not re-asserted here |
 | Any security, privacy or production property | The tool runs as the role you give it; use a read-only role |
 | Proof of correctness | "Attest" means a typed replay with the preconditions named, nothing more |
+| The fixture cache never serves a measurement of data that has since changed | The signal it keys on is the server's tuple counters, which are published after the writing transaction ended and up to about a second later, and an UPDATE or a DELETE leaves `relfilenode` as it was. A run that starts inside that window can take a cached entry for rows that already differ. The digests recorded in the evidence are measured on the server whenever the signal missed, and are what a reader checks |
 
 ## 4. History
 

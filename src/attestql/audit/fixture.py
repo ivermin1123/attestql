@@ -22,8 +22,11 @@ reads from the server is a miss. What the signal is: the counters the server alr
 per table, taken fresh on every run at the cost of one question. What it is not: evidence,
 or a proof that the data is the same. Counters can be reset and a database of the same
 name can be made again, and then a signal that did not move is a signal that missed a
-reload. The evidence is the digests, which are measured on the server whenever the signal
-does not vouch for what the file holds.
+reload. The counters are also published after the writing transaction ended and at most
+about once a second rather than at commit, and an UPDATE or a DELETE leaves relfilenode
+where it was, so a run that starts inside that window can take an entry measured on rows
+that already differ. The evidence is the digests, which are measured on the server whenever the
+signal does not vouch for what the file holds.
 
 A cache file this module cannot read is replaced rather than obeyed. It is not evidence:
 everything in it can be recomputed from the server, which is the only thing here that is.
