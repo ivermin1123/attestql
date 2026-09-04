@@ -22,7 +22,7 @@ import psycopg2
 sys.path.insert(0, os.path.dirname(__file__))
 import readings as R
 
-DSN = "host=127.0.0.1 port=5499 dbname=bird user=auditor password=auditor"
+DSN = "host=127.0.0.1 port=5499 dbname=bird user=auditor"
 HERE = os.path.dirname(__file__)
 W = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/work-ra"
 SQL_DIR = f"{W}/sql"
