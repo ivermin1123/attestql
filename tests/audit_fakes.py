@@ -96,13 +96,19 @@ def fake_result(
     *,
     identity: str = IDENTITY,
     truncated: bool = False,
+    timeout_ms: int = TIMEOUT_MS,
 ) -> ExecutionResult:
-    """One result as a backend would return it: typed columns and every row it fetched."""
+    """One result as a backend would return it: typed columns and every row it fetched.
+
+    ``timeout_ms`` is what the execution ran under, which a real backend reads back inside
+    the transaction rather than repeating from the request. It is stated here for a test
+    about what a record says the statement ran under, and is the default everywhere else.
+    """
     return ExecutionResult(
         columns=tuple(ColumnType(name, pg_type) for name, pg_type in columns),
         rows=tuple(rows),
         backend_identity=identity,
-        limits_in_force=ExecutionLimits(statement_timeout_ms=TIMEOUT_MS),
+        limits_in_force=ExecutionLimits(statement_timeout_ms=timeout_ms),
         truncated=truncated,
     )
 

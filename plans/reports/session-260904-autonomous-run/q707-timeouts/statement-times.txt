@@ -1,0 +1,17 @@
+cold, serial
+gold gather=0: Planning Time: 0.350 ms
+gold gather=0: Execution Time: 50.839 ms
+pred gather=0: Planning Time: 0.341 ms
+pred gather=0: Execution Time: 104969.788 ms
+warm, serial
+gold gather=0: Planning Time: 0.747 ms
+gold gather=0: Execution Time: 67.093 ms
+pred gather=0: Planning Time: 0.498 ms
+pred gather=0: Execution Time: 40993.528 ms
+warm, parallel (gather=2)
+gold gather=2:         Workers Launched: 2
+gold gather=2: Planning Time: 0.724 ms
+gold gather=2: Execution Time: 30.098 ms
+pred gather=2:               Workers Launched: 2
+pred gather=2: Planning Time: 0.993 ms
+pred gather=2: Execution Time: 220.634 ms

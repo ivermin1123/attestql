@@ -706,6 +706,42 @@ def test_a_fixture_the_run_cannot_measure_names_the_run_and_not_either_statement
 DISTINCT_ELEMENTS = "SELECT DISTINCT element FROM atom"
 
 
+def test_a_record_states_the_timeout_its_statement_ran_under_and_the_summary_the_run_s(
+    tmp_path: Path,
+) -> None:
+    """Two statements of one bound, and a question that ended in a cancellation needs both.
+
+    The summary states what the run was given on the command line. Each record states what
+    its own statement ran under, taken from the execution: the PostgreSQL backend reads that
+    back inside the transaction and refuses to return rows when it is not what it set, which
+    is why the two are one number here and why a record is worth reading for it.
+    """
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    write(tmp_path / "predictions.json", {"207": DISTINCT_ELEMENTS})
+    backend = FakeBackend(
+        {
+            ELEMENTS: fake_result(ELEMENT, (("c",), ("c",), ("o",)), timeout_ms=45_000),
+            DISTINCT_ELEMENTS: fake_result(ELEMENT, (("c",), ("o",)), timeout_ms=45_000),
+        },
+        row_counts={"atom": 3},
+    )
+    run_audit(
+        options(
+            tmp_path,
+            predictions=tmp_path / "predictions.json",
+            statement_timeout_seconds=45,
+        ),
+        backend,
+        Lines(),
+    )
+
+    for name in (GOLD_RECORD_FILE, SECOND_RECORD_FILE):
+        record = json.loads((tmp_path / "audit" / "q207" / name).read_text(encoding="utf-8"))
+        assert record["result"]["statement_timeout_ms"] == 45_000, name
+    assert summary_of(tmp_path)["settings"]["statement_timeout_seconds"] == 45
+    assert backend.executed[0] == (ELEMENTS, 45), "the bound the run was given is what was set"
+
+
 def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism(
     tmp_path: Path,
 ) -> None:

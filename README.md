@@ -122,6 +122,18 @@ does anything else you put there. A cached measurement is used only when the ser
 counters still say what they said when it was taken, so data reloaded or edited under an unchanged
 schema is measured again rather than read back from the file.
 
+`--statement-timeout SECONDS`, 30 by default, bounds every statement the run sends, gold and
+prediction alike. A statement that reaches it is that question's ERROR line, naming the side that
+failed before the server's message; the record of the execution carries the timeout it actually ran
+under and `summary.json` the one the run was given. Every statement runs with the server's parallel
+gather off, so that a float sum is added in one order and two runs of one statement cannot differ in
+a late digit, and that makes some plans slower here than on the same server at its own defaults.
+q707 of Mini-Dev is the worked example: its gold runs in 50 ms, and the `meta-llama-3-70b-instruct`
+prediction for it runs in 0.22 s with two parallel workers and in 41 s warm to 105 s cold without
+them, so it needs `--statement-timeout 120` to be compared at all. Four of the 4,482 prediction
+slots of the committed prediction-mode measurement time out at the default, on two questions; the
+timings behind this paragraph are in `plans/reports/session-260904-autonomous-run/q707-timeouts/`.
+
 ## What it does
 
 - Typed replay comparison: a type tag per cell, declared numeric scale, NULL rendering, a hash per

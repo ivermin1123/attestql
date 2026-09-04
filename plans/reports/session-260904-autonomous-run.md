@@ -160,6 +160,15 @@ của BIRD nhập nguyên văn; BIRD dev trước, Spider sau). Luật push: mai
 | `ed40955` | Script đo: mở stdout.txt sau khi tool chạy (luật marker mới từ chối thư mục có file lạ) | không đổi test | 15:57 |
 | `824e98b` | A3: NOT_EQUAL có lớp cơ chế (multiplicity/type/order/truncation/other) trong counterexample; summary đếm "BIRD cho 1 mà NOT_EQUAL" theo lớp; dòng ERROR nêu bên lỗi (gold/prediction/run) | test 597 + 29 sandbox | 16:03 |
 | `f141734` | A2: bird_ex đọc float4/float8 thành float Python như psycopg2 (numeric giữ Decimal); typed verdict không đổi | test 601 + 29 sandbox | 16:10 |
+| `cf0b033` | A4: backend.planner_statistics (last_analyze, last_autoanalyze, n_mod_since_analyze) vào evidence của smell shuffle, vào tín hiệu cache (fixture-cache/3) và khối planner_statistics của summary; register thêm non-claim | test 604 + 30 sandbox | 20:02 |
+
+Quyết định A5 (coordinator, từ số đo): giữ mặc định 30 s. q707: gold 50 ms; prediction của
+meta-llama-3-70b 0,22 s khi có 2 worker song song, 41 s (cache ấm) đến 105 s (cache lạnh) khi
+chạy tuần tự như tool đang chạy từ `efd9d00`; toàn bộ phép đo ở `7c2a5f5` chỉ có 4/4,482 slot
+timeout (q707 và q694, mỗi câu hai gold). Nâng mặc định lên 120 s để cứu 4 slot thì mọi
+prediction chạy hỏng của mọi người dùng chờ gấp bốn; dòng ERROR đã nêu bên và record đã ghi
+timeout, nên README chỉ cách đặt `--statement-timeout`, q707 là ví dụ. Số đo trong
+`plans/reports/session-260904-autonomous-run/q707-timeouts/`.
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).

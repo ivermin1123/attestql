@@ -1,0 +1,10 @@
+# attestql audit on q707 (meta-llama-3-70b-instruct-2) at 994f08a, one run per --statement-timeout, on the HF and the zip gold.
+# Wall time is the whole run (fixture measurement, gold, prediction). Cold cache on the first line of each gold.
+hf timeout=30 exit_elapsed=36s: q707  codebase_community        ERROR      smells=none  execute: canceling statement due to statement timeout
+hf timeout=60 exit_elapsed=61s: q707  codebase_community        ERROR      smells=none  execute: canceling statement due to statement timeout
+hf timeout=120 exit_elapsed=41s: q707  codebase_community R-ORD  NOT_EQUAL  smells=none <out-dir>
+hf timeout=600 exit_elapsed=41s: q707  codebase_community R-ORD  NOT_EQUAL  smells=none <out-dir>
+zip timeout=30 exit_elapsed=31s: q707  codebase_community        ERROR      smells=none  execute: canceling statement due to statement timeout
+zip timeout=60 exit_elapsed=51s: q707  codebase_community R-ORD  NOT_EQUAL  smells=none <out-dir>
+zip timeout=120 exit_elapsed=44s: q707  codebase_community R-ORD  NOT_EQUAL  smells=none <out-dir>
+zip timeout=600 exit_elapsed=46s: q707  codebase_community R-ORD  NOT_EQUAL  smells=none <out-dir>
