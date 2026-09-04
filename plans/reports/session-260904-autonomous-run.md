@@ -162,6 +162,8 @@ của BIRD nhập nguyên văn; BIRD dev trước, Spider sau). Luật push: mai
 | `f141734` | A2: bird_ex đọc float4/float8 thành float Python như psycopg2 (numeric giữ Decimal); typed verdict không đổi | test 601 + 29 sandbox | 16:10 |
 | `cf0b033` | A4: backend.planner_statistics (last_analyze, last_autoanalyze, n_mod_since_analyze) vào evidence của smell shuffle, vào tín hiệu cache (fixture-cache/3) và khối planner_statistics của summary; register thêm non-claim | test 604 + 30 sandbox | 20:02 |
 | `6456bc7` | A5: README nêu `--statement-timeout`, timeout trong record và summary có test; giữ mặc định 30 s; artifact `q707-timeouts/` | test 605 + 30 sandbox | 20:07 |
+| `1e5927a` | A6: README ghi số đo ở `cf0b033` (4.478/4.482; 1.239; 164 = 138 + 26; 69/74/21); register A16, A17, A19, A23 và header; ghi chú ngày trong report đo; version 0.1.3 (không tag); artifact `remeasure-at-cf0b033/` | test 605 + 30 sandbox | 20:38 |
+| commit chứa dòng này | A7: draft upstream thứ năm `plans/reports/upstream-drafts-260904.md` (script chấm BIRD không ổn định ở q1473: 5 lần chạy gold cho 3 giá trị với gather = 2, 1 giá trị với gather = 0; đề xuất SET trong evaluation_utils); chủ gửi | docs | sau A6 |
 
 Quyết định A5 (coordinator, từ số đo): giữ mặc định 30 s. q707: gold 50 ms; prediction của
 meta-llama-3-70b 0,22 s khi có 2 worker song song, 41 s (cache ấm) đến 105 s (cache lạnh) khi
