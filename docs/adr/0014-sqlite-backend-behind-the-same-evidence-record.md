@@ -113,6 +113,12 @@ README stay PostgreSQL numbers; a SQLite run gets its own report and register ro
   because SQLite arrived.
 - The gate grows a second sandbox with no container: a SQLite file built from the fixture SQL
   in the test run.
+- The two seams above are joined by one record, `Engine` in `audit/engines.py`, holding an
+  engine's name, its way of connecting and its parse; a run chooses it once from `--engine`
+  and nothing below the options asks which engine is running. The parse protocol went into a
+  sibling of `backend.py` rather than into it, since a parse reaches no database, and what
+  names the parser travels on the parsed statement, so a record and the summary above it
+  cannot name two parsers for one statement.
 
 ## Resolved
 

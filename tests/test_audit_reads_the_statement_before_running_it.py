@@ -18,11 +18,11 @@ from __future__ import annotations
 import pytest
 
 from attestql.audit.backend import TableName
+from attestql.audit.parse import StatementRefused
 from attestql.audit.statements import (
     CHECKS_PASSED,
     VALIDATOR_VERSION,
-    ParsedStatement,
-    StatementRefused,
+    PostgresStatement,
     parse_statement,
 )
 from attestql.evidence.types import ReplayRule, SortKey
@@ -199,4 +199,4 @@ def test_a_parsed_statement_is_frozen() -> None:
     parsed = parse_statement(Q1029_GOLD)
     with pytest.raises(AttributeError):
         parsed.sql = "SELECT 1"  # pyright: ignore[reportAttributeAccessIssue]  # frozen by design
-    assert isinstance(parsed, ParsedStatement)
+    assert isinstance(parsed, PostgresStatement)

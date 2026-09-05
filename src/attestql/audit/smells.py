@@ -58,7 +58,7 @@ from attestql.audit.backend import (
     TextCensus,
     planner_statistics_json,
 )
-from attestql.audit.statements import ORDERING_KEY_PREFIX, OrderingKey, ParsedStatement
+from attestql.audit.parse import ORDERING_KEY_PREFIX, OrderingKey, ParsedStatement
 from attestql.evidence.render import Json, json_row, result_digest, result_json
 from attestql.evidence.replay import ComparabilityResult, ReplayRule, compare_results
 from attestql.evidence.serialize import SerializationDescriptor, typed_row, typed_value

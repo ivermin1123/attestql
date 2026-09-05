@@ -1,0 +1,690 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-106d64cc-29cd-44e4-beb7-bd4c4b37bea7",
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "effective_database_role": "auditor",
+  "session_settings": {
+    "engine": "postgresql",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2"
+    }
+  },
+  "parser": {
+    "validator": "audit:libpg_query-parse",
+    "postgast": "0.1.0",
+    "grammar_version": 170007
+  },
+  "question_set": {
+    "path": "<data>/hf/mini_dev_pg-00000-of-00001.json",
+    "digest": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-04)",
+    "date": "2026-01-18T08:44:25Z",
+    "entries": 500,
+    "audited": 500,
+    "duplicate_ids": [],
+    "ids": []
+  },
+  "predictions": null,
+  "verdicts": {
+    "GOLD-ONLY": 500
+  },
+  "smells": {
+    "ordering-over-numeric-text": 1,
+    "arbitrary-cut": 16,
+    "not-a-function-of-the-data": 18,
+    "float-aggregate-order": 6,
+    "direction-against-question": 0
+  },
+  "smells_fired": 41,
+  "credited_but_not_equal": null,
+  "fixture": {
+    "depth": "counts",
+    "cache": "<work>/after/fixture.json",
+    "source": null,
+    "schema_digest": "sha256:25aabd5763d7a18135a8741194c4a704141761bd0c7fdbfbf3f7c2bc9e0bf08c",
+    "row_counts": {
+      "public.account": 4500,
+      "public.alignment": 4,
+      "public.atom": 9111,
+      "public.attendance": 326,
+      "public.attribute": 6,
+      "public.badges": 79851,
+      "public.bond": 9156,
+      "public.budget": 52,
+      "public.card": 892,
+      "public.cards": 56822,
+      "public.circuits": 72,
+      "public.client": 5369,
+      "public.colour": 35,
+      "public.comments": 174285,
+      "public.connected": 18312,
+      "public.constructorresults": 11082,
+      "public.constructors": 208,
+      "public.constructorstandings": 11836,
+      "public.country": 11,
+      "public.customers": 32461,
+      "public.disp": 5369,
+      "public.district": 77,
+      "public.drivers": 840,
+      "public.driverstandings": 31578,
+      "public.event": 42,
+      "public.examination": 106,
+      "public.expense": 32,
+      "public.foreign_data": 229186,
+      "public.frpm": 9986,
+      "public.gasstations": 5716,
+      "public.gender": 3,
+      "public.hero_attribute": 3738,
+      "public.hero_power": 5825,
+      "public.income": 36,
+      "public.laboratory": 13908,
+      "public.laptimes": 400524,
+      "public.league": 11,
+      "public.legalities": 427907,
+      "public.loan": 682,
+      "public.major": 113,
+      "public.match": 25979,
+      "public.member": 33,
+      "public.molecule": 343,
+      "public.order": 6471,
+      "public.patient": 1238,
+      "public.pitstops": 5815,
+      "public.player": 11060,
+      "public.player_attributes": 183978,
+      "public.posthistory": 303155,
+      "public.postlinks": 11102,
+      "public.posts": 91966,
+      "public.products": 591,
+      "public.publisher": 25,
+      "public.qualifying": 6967,
+      "public.race": 61,
+      "public.races": 954,
+      "public.results": 23179,
+      "public.rulings": 87769,
+      "public.satscores": 2269,
+      "public.schools": 17686,
+      "public.seasons": 68,
+      "public.set_translations": 1210,
+      "public.sets": 551,
+      "public.status": 134,
+      "public.superhero": 750,
+      "public.superpower": 167,
+      "public.tags": 1032,
+      "public.team": 299,
+      "public.team_attributes": 1458,
+      "public.trans": 1056320,
+      "public.transactions_1k": 1000,
+      "public.users": 40325,
+      "public.votes": 38930,
+      "public.yearmonth": 383282,
+      "public.zip_code": 41877
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "customers",
+      "yearmonth",
+      "gasstations",
+      "products",
+      "transactions_1k",
+      "member",
+      "major",
+      "event",
+      "attendance",
+      "income",
+      "zip_code",
+      "expense",
+      "budget",
+      "patient",
+      "laboratory",
+      "examination",
+      "match",
+      "league",
+      "team",
+      "team_attributes",
+      "player_attributes",
+      "player",
+      "country",
+      "qualifying",
+      "drivers",
+      "circuits",
+      "races",
+      "results",
+      "laptimes",
+      "constructorresults",
+      "constructors",
+      "seasons",
+      "driverstandings",
+      "constructorstandings",
+      "pitstops",
+      "superpower",
+      "superhero",
+      "hero_power",
+      "status",
+      "colour",
+      "publisher",
+      "attribute",
+      "hero_attribute",
+      "race",
+      "gender",
+      "alignment",
+      "users",
+      "posts",
+      "tags",
+      "comments",
+      "votes",
+      "posthistory",
+      "badges",
+      "postlinks",
+      "cards",
+      "legalities",
+      "rulings",
+      "foreign_data",
+      "sets",
+      "set_translations",
+      "bond",
+      "atom",
+      "molecule",
+      "connected",
+      "satscores",
+      "schools",
+      "frpm",
+      "district",
+      "account",
+      "client",
+      "disp",
+      "loan",
+      "trans",
+      "order",
+      "card"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {
+    "customers": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:04.916135+00",
+      "n_mod_since_analyze": 0
+    },
+    "yearmonth": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:44.282582+00",
+      "n_mod_since_analyze": 0
+    },
+    "gasstations": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:16.055462+00",
+      "n_mod_since_analyze": 0
+    },
+    "products": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:33.949415+00",
+      "n_mod_since_analyze": 0
+    },
+    "transactions_1k": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:42.813239+00",
+      "n_mod_since_analyze": 0
+    },
+    "member": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 33
+    },
+    "major": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:45.246174+00",
+      "n_mod_since_analyze": 0
+    },
+    "event": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 42
+    },
+    "attendance": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:04.984151+00",
+      "n_mod_since_analyze": 0
+    },
+    "income": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 36
+    },
+    "zip_code": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:44.592492+00",
+      "n_mod_since_analyze": 0
+    },
+    "expense": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 32
+    },
+    "budget": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 52
+    },
+    "patient": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:19.410614+00",
+      "n_mod_since_analyze": 0
+    },
+    "laboratory": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:16.115677+00",
+      "n_mod_since_analyze": 0
+    },
+    "examination": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:08.997706+00",
+      "n_mod_since_analyze": 0
+    },
+    "match": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:21.774585+00",
+      "n_mod_since_analyze": 0
+    },
+    "league": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 11
+    },
+    "team": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:42.810237+00",
+      "n_mod_since_analyze": 0
+    },
+    "team_attributes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:38.461679+00",
+      "n_mod_since_analyze": 0
+    },
+    "player_attributes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:38.434764+00",
+      "n_mod_since_analyze": 0
+    },
+    "player": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:34.195911+00",
+      "n_mod_since_analyze": 0
+    },
+    "country": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 11
+    },
+    "qualifying": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:33.948495+00",
+      "n_mod_since_analyze": 0
+    },
+    "drivers": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:08.997215+00",
+      "n_mod_since_analyze": 0
+    },
+    "circuits": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:05.033178+00",
+      "n_mod_since_analyze": 0
+    },
+    "races": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:35.248053+00",
+      "n_mod_since_analyze": 0
+    },
+    "results": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:34.122913+00",
+      "n_mod_since_analyze": 0
+    },
+    "laptimes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:17.618201+00",
+      "n_mod_since_analyze": 0
+    },
+    "constructorresults": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:45.050334+00",
+      "n_mod_since_analyze": 0
+    },
+    "constructors": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:02.220373+00",
+      "n_mod_since_analyze": 0
+    },
+    "seasons": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:42.811685+00",
+      "n_mod_since_analyze": 0
+    },
+    "driverstandings": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:45.245405+00",
+      "n_mod_since_analyze": 0
+    },
+    "constructorstandings": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:45.105838+00",
+      "n_mod_since_analyze": 0
+    },
+    "pitstops": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:22.489944+00",
+      "n_mod_since_analyze": 0
+    },
+    "superpower": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:42.80964+00",
+      "n_mod_since_analyze": 0
+    },
+    "superhero": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:04.983755+00",
+      "n_mod_since_analyze": 0
+    },
+    "hero_power": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:19.406159+00",
+      "n_mod_since_analyze": 0
+    },
+    "status": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:38.436315+00",
+      "n_mod_since_analyze": 0
+    },
+    "colour": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 35
+    },
+    "publisher": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 25
+    },
+    "attribute": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 6
+    },
+    "hero_attribute": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:19.387274+00",
+      "n_mod_since_analyze": 0
+    },
+    "race": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:33.949638+00",
+      "n_mod_since_analyze": 0
+    },
+    "gender": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 3
+    },
+    "alignment": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 4
+    },
+    "users": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:45.014017+00",
+      "n_mod_since_analyze": 0
+    },
+    "posts": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:33.86641+00",
+      "n_mod_since_analyze": 0
+    },
+    "tags": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:42.811286+00",
+      "n_mod_since_analyze": 0
+    },
+    "comments": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:04.891831+00",
+      "n_mod_since_analyze": 0
+    },
+    "votes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:44.385993+00",
+      "n_mod_since_analyze": 0
+    },
+    "posthistory": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:29.937839+00",
+      "n_mod_since_analyze": 0
+    },
+    "badges": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:05.032365+00",
+      "n_mod_since_analyze": 0
+    },
+    "postlinks": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:33.905745+00",
+      "n_mod_since_analyze": 0
+    },
+    "cards": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:08.92313+00",
+      "n_mod_since_analyze": 0
+    },
+    "legalities": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:19.280245+00",
+      "n_mod_since_analyze": 0
+    },
+    "rulings": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:35.242671+00",
+      "n_mod_since_analyze": 0
+    },
+    "foreign_data": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:16.048804+00",
+      "n_mod_since_analyze": 0
+    },
+    "sets": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:43.406045+00",
+      "n_mod_since_analyze": 0
+    },
+    "set_translations": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:45.248389+00",
+      "n_mod_since_analyze": 0
+    },
+    "bond": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:05.064874+00",
+      "n_mod_since_analyze": 0
+    },
+    "atom": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:02.217853+00",
+      "n_mod_since_analyze": 0
+    },
+    "molecule": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:21.779239+00",
+      "n_mod_since_analyze": 0
+    },
+    "connected": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:08.993177+00",
+      "n_mod_since_analyze": 0
+    },
+    "satscores": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:42.809143+00",
+      "n_mod_since_analyze": 0
+    },
+    "schools": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:43.402992+00",
+      "n_mod_since_analyze": 0
+    },
+    "frpm": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:19.371009+00",
+      "n_mod_since_analyze": 0
+    },
+    "district": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:16.049547+00",
+      "n_mod_since_analyze": 0
+    },
+    "account": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:08.930556+00",
+      "n_mod_since_analyze": 0
+    },
+    "client": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:05.072568+00",
+      "n_mod_since_analyze": 0
+    },
+    "disp": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:09.004079+00",
+      "n_mod_since_analyze": 0
+    },
+    "loan": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:19.408481+00",
+      "n_mod_since_analyze": 0
+    },
+    "trans": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:42.784499+00",
+      "n_mod_since_analyze": 0
+    },
+    "order": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:04.981952+00",
+      "n_mod_since_analyze": 0
+    },
+    "card": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-05 04:15:05.065432+00",
+      "n_mod_since_analyze": 0
+    }
+  },
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "attestql_scratch",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "account",
+      "alignment",
+      "atom",
+      "attendance",
+      "attribute",
+      "badges",
+      "bond",
+      "budget",
+      "card",
+      "cards",
+      "circuits",
+      "client",
+      "colour",
+      "comments",
+      "connected",
+      "constructorresults",
+      "constructors",
+      "constructorstandings",
+      "country",
+      "customers",
+      "disp",
+      "district",
+      "drivers",
+      "driverstandings",
+      "event",
+      "examination",
+      "expense",
+      "foreign_data",
+      "frpm",
+      "gasstations",
+      "gender",
+      "hero_attribute",
+      "hero_power",
+      "income",
+      "laboratory",
+      "league",
+      "loan",
+      "major",
+      "match",
+      "member",
+      "molecule",
+      "order",
+      "patient",
+      "pitstops",
+      "player",
+      "player_attributes",
+      "postlinks",
+      "posts",
+      "products",
+      "publisher",
+      "qualifying",
+      "race",
+      "races",
+      "results",
+      "rulings",
+      "satscores",
+      "schools",
+      "seasons",
+      "set_translations",
+      "sets",
+      "status",
+      "superhero",
+      "superpower",
+      "tags",
+      "team",
+      "team_attributes",
+      "transactions_1k",
+      "users",
+      "votes",
+      "zip_code"
+    ],
+    "skipped": {
+      "laptimes": 400524,
+      "legalities": 427907,
+      "posthistory": 303155,
+      "trans": 1056320,
+      "yearmonth": 383282
+    },
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 30,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "<work>/after",
+    "serialization": "attestql/audit/2"
+  },
+  "data_as_of": "2026-09-05T04:17:36.196758+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.216,
+    "questions": 26.473,
+    "shuffle": 4.593
+  },
+  "errors": [],
+  "exit_status": 0
+}

@@ -15,6 +15,7 @@ connection, which is the only way those two are reachable without a server.
 
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 import json
 import re
@@ -23,7 +24,6 @@ from typing import Any, cast
 
 import pytest
 
-from attestql.audit import cli
 from attestql.audit.backend import BackendRefused, PlannerStatistics, TableName, TextCensus
 from attestql.audit.cli import (
     MARKER_FILE,
@@ -39,13 +39,14 @@ from attestql.audit.cli import (
     run_audit,
 )
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
+from attestql.audit.engines import POSTGRESQL
 from attestql.audit.fixture import CACHE_FILE
+from attestql.audit.parse import ParsedStatement
 from attestql.audit.smells import DEFAULT_SHUFFLE_ROW_LIMIT, NUMERIC_TEXT
 from attestql.audit.statements import (
     GRAMMAR_VERSION,
     POSTGAST_VERSION,
     VALIDATOR_VERSION,
-    ParsedStatement,
     parse_statement,
 )
 from attestql.kernel.types import ExecutionResult
@@ -441,23 +442,32 @@ def test_the_session_is_read_from_the_server_once_for_a_whole_run(tmp_path: Path
     assert backend.settings_calls == 1, "the session was read again for every statement"
 
 
-def test_every_statement_of_a_run_is_parsed_once(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_every_statement_of_a_run_is_parsed_once_by_the_engine_the_run_chose(
+    tmp_path: Path,
 ) -> None:
     """A parse is a function of its text, so a second one is not a second opinion.
 
     The golds are parsed before the data is measured, because the tables to measure are
     read off those parses, and each prediction is parsed where its comparison is asked for.
+    Counted through an engine of the test's own, which is the seam a second engine arrives
+    on: nothing below the options asks which engine is running.
     """
     parses: dict[str, int] = {}
 
-    def counting(sql: str) -> ParsedStatement:
+    def counting(sql: str, /) -> ParsedStatement:
         parses[sql] = parses.get(sql, 0) + 1
         return parse_statement(sql)
 
-    monkeypatch.setattr(cli, "parse_statement", counting)
     backend = _two_questions_with_predictions(tmp_path)
-    run_audit(options(tmp_path, predictions=tmp_path / "predictions.json"), backend, Lines())
+    run_audit(
+        options(
+            tmp_path,
+            predictions=tmp_path / "predictions.json",
+            engine=dataclasses.replace(POSTGRESQL, parse=counting),
+        ),
+        backend,
+        Lines(),
+    )
     assert parses == {FASTEST_LAP: 1, NUMERIC: 1, ELEMENTS: 1, ELEMENTS_ONE_ROW: 1}
 
 

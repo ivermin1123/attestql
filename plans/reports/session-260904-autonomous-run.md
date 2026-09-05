@@ -185,6 +185,7 @@ Nhánh `sqlite-backend` (Batch B):
 | Hash | Việc | Số liệu | Giờ |
 |---|---|---|--- |
 | `eacc778` | B0: ADR-0014 Accepted với ba chốt; ADR-0004 thêm luật storage class; index | docs; CI <https://github.com/ivermin1123/attestql/actions/runs/33883811118> | 21:24 |
+| `930f165` | B1: ColumnType.declared_type; SessionSettings.engine, năm setting PostgreSQL vắng khi sqlite; version record/summary/counterexample/smells lên 2; bytes canonical không đổi (451 byte, sha256 ef5615ef… ghim bằng test) | test 637 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33943458181> | 11:01 |
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).

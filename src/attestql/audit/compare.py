@@ -49,13 +49,7 @@ from pathlib import Path
 
 from attestql.audit.backend import Backend, BackendRefused
 from attestql.audit.fixture import fixture_digest
-from attestql.audit.statements import (
-    CHECKS_PASSED,
-    VALIDATOR_VERSION,
-    OrderingKey,
-    ParsedStatement,
-    StatementRefused,
-)
+from attestql.audit.parse import OrderingKey, ParsedStatement, StatementRefused
 from attestql.evidence.build import ExecutionIdentity, build_evidence_record
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import (
@@ -430,8 +424,9 @@ def _widest(result: ExecutionResult, index: int, serialization: SerializationDes
 def _admitted(
     parsed: ParsedStatement, result: ExecutionResult, serialization: SerializationDescriptor
 ) -> ValidatedStatement:
+    parser = parsed.parser
     return admit(
-        parsed.sql, (), VALIDATOR_VERSION, CHECKS_PASSED, width_proof(result, serialization)
+        parsed.sql, (), parser.validator, parser.checks, width_proof(result, serialization)
     )
 
 

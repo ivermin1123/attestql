@@ -91,8 +91,10 @@ from attestql.audit.compare import (
     sided,
     write_comparison,
 )
+from attestql.audit.engines import DEFAULT_ENGINE, ENGINES, Engine, Parse, engine_named
 from attestql.audit.fixture import CACHE_FILE, file_digest, fixture_digest
-from attestql.audit.postgres import DEFAULT_SCRATCH_SCHEMA, PostgresBackend
+from attestql.audit.parse import ParsedStatement, StatementRefused
+from attestql.audit.postgres import DEFAULT_SCRATCH_SCHEMA
 from attestql.audit.smells import (
     DEFAULT_SHUFFLE_ROW_LIMIT,
     DEFAULT_SHUFFLE_SEED,
@@ -102,14 +104,6 @@ from attestql.audit.smells import (
     SmellSettings,
     all_smells,
     smells_json,
-)
-from attestql.audit.statements import (
-    GRAMMAR_VERSION,
-    POSTGAST_VERSION,
-    VALIDATOR_VERSION,
-    ParsedStatement,
-    StatementRefused,
-    parse_statement,
 )
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import Json, record_json, write_json
@@ -235,6 +229,7 @@ class AuditOptions:
     scratch_schema: str = DEFAULT_SCRATCH_SCHEMA
     statement_timeout_seconds: int = DEFAULT_STATEMENT_TIMEOUT_SECONDS
     data_as_of: datetime | None = None
+    engine: Engine = DEFAULT_ENGINE
 
     @property
     def with_content_digests(self) -> bool:
@@ -594,8 +589,10 @@ def _prepare_shuffle(
         return None, _refusal(refused)
 
 
-def _parsed_golds(questions: Sequence[Question]) -> tuple[ParsedStatement | StatementRefused, ...]:
-    """Every gold read once, in the order the questions are asked.
+def _parsed_golds(
+    questions: Sequence[Question], parse: Parse
+) -> tuple[ParsedStatement | StatementRefused, ...]:
+    """Every gold read once, by the engine's parser, in the order the questions are asked.
 
     The tables this run measures are read off these parses and so is every record written
     from them, and a parse is a function of its text: asking for a second one buys nothing
@@ -605,7 +602,7 @@ def _parsed_golds(questions: Sequence[Question]) -> tuple[ParsedStatement | Stat
     parsed: list[ParsedStatement | StatementRefused] = []
     for question in questions:
         try:
-            parsed.append(parse_statement(question.sql))
+            parsed.append(parse(question.sql))
         except StatementRefused as refused:
             parsed.append(refused)
     return tuple(parsed)
@@ -674,7 +671,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         settings = backend.session_settings()
     except BackendRefused as refused:
         raise ToolError(f"the backend will not state what it is: {refused}") from refused
-    golds = _parsed_golds(question_set.questions)
+    golds = _parsed_golds(question_set.questions, options.engine.parse)
     tables = _referenced_tables(golds)
     with phases.timed("fixture"):
         measured = _run_fixture(backend, tables, options)
@@ -1027,7 +1024,7 @@ def _audit_one(
         verdict = GOLD_ONLY
     else:
         with sided(SIDE_PREDICTION):
-            second_parsed = parse_statement(prediction.sql)
+            second_parsed = options.engine.parse(prediction.sql)
         comparison = compare_statements(
             question=metadata,
             question_set_version=question_set.digest,
@@ -1186,11 +1183,7 @@ def _summary_json(
             "engine": settings.engine,
             "recorded": dict(settings.recorded),
         },
-        "parser": {
-            "validator": VALIDATOR_VERSION,
-            "postgast": POSTGAST_VERSION,
-            "grammar_version": GRAMMAR_VERSION,
-        },
+        "parser": options.engine.parser.json(),
         "question_set": {
             "path": str(question_set.path),
             "digest": question_set.digest,
@@ -1391,6 +1384,12 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     audit.add_argument(
+        "--engine",
+        choices=sorted(ENGINES),
+        default=DEFAULT_ENGINE.name,
+        help="which database engine to audit on; it decides the backend and the parser",
+    )
+    audit.add_argument(
         "--dsn",
         required=True,
         type=_dsn,
@@ -1541,6 +1540,7 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
         shuffle_row_limit=cast("int", parsed.shuffle_row_limit),
         statement_timeout_seconds=cast("int", parsed.statement_timeout),
         data_as_of=cast("datetime | None", parsed.data_as_of),
+        engine=engine_named(cast("str", parsed.engine)),
     )
 
 
@@ -1558,15 +1558,24 @@ def audit(options: AuditOptions, backend: Backend, writer: Writer) -> int:
         return 2
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    """Build the PostgreSQL backend and run the audit. The exit status is the answer."""
-    options = parse_arguments(argv)
+def connect_and_audit(options: AuditOptions, writer: Writer) -> int:
+    """Open the engine the options name and audit through it. The exit status is the answer.
+
+    The engine brings both halves: the backend opened here and the parser every statement
+    of the run is read by. Nothing below this line asks which engine it is, so a second
+    engine is a second entry in the registry and a branch nowhere.
+    """
     try:
-        backend = PostgresBackend.connect(options.dsn, scratch_schema=options.scratch_schema)
+        backend = options.engine.connect(options.dsn, scratch=options.scratch_schema)
     except BackendRefused as refused:
         print(f"{PROGRAM}: the database could not be reached: {refused}", file=sys.stderr)
         return 2
-    return audit(options, backend, ConsoleWriter(sys.stdout))
+    return audit(options, backend, writer)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """The command line, and then the audit it asked for. The exit status is the answer."""
+    return connect_and_audit(parse_arguments(argv), ConsoleWriter(sys.stdout))
 
 
 __all__ = [
@@ -1594,6 +1603,7 @@ __all__ = [
     "Writer",
     "audit",
     "build_parser",
+    "connect_and_audit",
     "main",
     "parse_arguments",
     "read_predictions",
