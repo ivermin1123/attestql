@@ -14,12 +14,7 @@ wrong, and the issue is open with no reply as of 2026-09-04 21:25 (Asia/Saigon).
 ## Comment text
 
 ```text
-Correction from the reporter: I misread the LICENSE file, sorry for the noise. Its first
-sentence reserves all rights, but the paragraph that follows grants the right to study, modify
-and redistribute the code under the modified BSD licence reproduced below it (commit fbf5460,
-unchanged). So the file does state a licence, and my question is answered by the file itself.
-Closing. If you want to spare other readers the same misreading, a `license` field in the package
-metadata pointing at that file would make it explicit.
+Correction from the reporter: I misread the LICENSE file, sorry for the noise. Its first sentence reserves all rights, but the paragraph that follows grants the right to study, modify and redistribute the code under the modified BSD licence reproduced below it (commit fbf5460, unchanged). So the file does state a licence, and my question is answered by the file itself. Closing. If you want to spare other readers the same misreading, a `license` field in the package metadata pointing at that file would make it explicit.
 ```
 
 ## How to post, as the owner
@@ -33,4 +28,6 @@ gh auth status
 gh issue close 1 --repo ai-ar-research/SpotIt-plus --comment "$(sed -n '/^```text$/,/^```$/p' plans/reports/upstream-260904-2125-u4-licence-correction.md | sed '1d;$d')"
 ```
 
-Then record the date in `docs/claims-register.md`, row U4, under "Replies received".
+Posted text is one line per paragraph: GitHub renders every newline as a line break, so a
+draft wrapped at 100 columns must be unwrapped before it is posted (this one was edited after
+posting, 2026-09-05 03:54 UTC). Then record the date in `docs/claims-register.md`, row U4.
