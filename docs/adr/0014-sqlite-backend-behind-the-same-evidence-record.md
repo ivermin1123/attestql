@@ -43,9 +43,18 @@ columns, and `typeof()` can differ from row to row within one column. (2) There 
 session to precondition: no `TimeZone`, `DateStyle`, `IntervalStyle`, `extra_float_digits`;
 the collation is per column or per expression. (3) There is no server, no role, no read-only
 transaction to read back; a file opened with `mode=ro` is what read-only means. (4) The
-grammar: BIRD's SQLite golds use double-quoted string literals, backtick identifiers and
-`IIF`, `strftime`, `CAST(x AS REAL)`; libpg_query rejects the backticks and reads a
-double-quoted literal as an identifier, silently, which is worse than a refusal.
+grammar: BIRD's SQLite golds use double-quoted tokens, backtick identifiers and `IIF`,
+`strftime`, `CAST(x AS REAL)`. Measured since
+(`plans/reports/research-260904-sqlite-before-backend.md` section 1): sqlglot 30.18.0 parses
+100 % of BIRD dev (1,534) and of both Mini-Dev SQLite copies (500 each), while libpg_query
+refuses 127, 45 and 46 of the same golds, every refusal a backtick identifier or a
+`LIMIT offset, count`. The double-quoted case is the one neither parser reads as SQLite
+does, and it is rarer than this record assumed: 1 of the 2,534 golds carries a
+double-quoted token at all (bird_dev q1101, the table `"Match"`) and none carries one as a
+string literal. The rule the parser is written under is option 2 of
+`plans/reports/parser-260905-sqlglot-sqlite-reading.md`: refuse only a bare double-quoted
+token that is a top-level `ORDER BY` key, which is the single path by which the wrong
+reading reaches an answer.
 
 ## Decision
 
@@ -58,27 +67,48 @@ double-quoted literal as an identifier, silently, which is worse than a refusal.
    `ColumnType.pg_type` becomes `declared_type`: the engine's own name for the type, read in
    the namespace of the `engine` the session settings block names once per record, so no
    column carries an engine prefix of its own and a PostgreSQL record's canonical bytes do not
-   change. And the session settings block gains that `engine`, which is what allows the five
-   PostgreSQL settings to be absent for SQLite. The record's producer `version` and the
+   change. And the session settings block gains that `engine`, which is what allows the
+   seven PostgreSQL settings to be absent for SQLite. The record's producer `version` and the
    summary, counterexample and smells format strings are each bumped when their own layout
    changes, and the canonical serialization's format identity when a rendering's bytes change:
    a version a reader compares two documents under states that both were written to one
    layout, so it moves with the layout and with nothing else. ADR-0013 renamed the record's
    `schema_version` away without leaving a rule for the strings that replaced it; this is that
-   rule.
+   rule. The typing rule itself stays and has never been needed on real data: none of the 806
+   stored columns of the 11 shipped databases and none of the 2,034 result columns of the two
+   gold sets hold more than one storage class
+   (`plans/reports/research-260904-sqlite-before-backend.md` section 4a and 4b). The live risk
+   is at expression level, where a `/`, an `IIF` or a date function decides the class of a
+   value no column declared, so this record states the rule as unexercised rather than
+   dropping it.
 2. One backend per engine behind the `Backend` protocol in `audit/backend.py`, which already
    names no engine. `audit/sqlite.py` implements: a read-only file connection; `existing_tables`
    and `column_types` from `sqlite_master` and `pragma_table_info`; row counts as today; content
    digests computed in Python over rows fetched in a stated order (SQLite has no `md5`, no
    `string_agg` with ordering); shuffled copies as `CREATE TABLE ... AS SELECT` into an attached
    scratch database ordered by a Python-side hash of the row and the seed; the census regex
-   through a registered `REGEXP` function; no lock (one process, one file), no envelope beyond
-   `PRAGMA query_only`.
+   through a registered `REGEXP` function; no lock (one process, one file). The session it
+   records is `sqlite_version`, `encoding`, `compile_options`, `collation_list`,
+   `case_sensitive_like`, `reverse_unordered_selects`, `query_only`, `journal_mode` and
+   `data_version`; none of them is a precondition, because a SQLite record states no session
+   setting that decides comparability. `PRAGMA query_only = 1` is the envelope and is read
+   back on every statement, as the PostgreSQL `SET LOCAL`s are, and `mode=ro` is the
+   file-level guarantee under it: both refuse a write with the same
+   `attempt to write a readonly database`
+   (`plans/reports/research-260904-sqlite-before-backend.md` section 4e and 4f). Of the 11
+   shipped databases `card_games` ships in WAL mode, and `mode=ro` opens and reads it
+   correctly with the `-wal` and `-shm` files present, removed, or under `immutable=1`
+   (section 4d).
 3. One parser per engine behind a small `ParsedStatement` protocol that `statements.py`
    already shapes (tables, replay rule, sort keys, placeholders, the allowlist verdict). The
    SQLite parser is sqlglot's SQLite dialect (MIT) rather than libpg_query, and the allowlist
-   is re-stated over its tree. The validator version string names which parser judged the
-   statement, as the summary's `parser` block does since `efd9d00`.
+   is re-stated over its tree. sqlglot holds no schema and so reads every double-quoted token
+   as an identifier, where SQLite reads one as a string literal wherever it resolves to no
+   column: the parser refuses a statement whose top-level `ORDER BY` key is a bare
+   double-quoted token, and reads every other one as the identifier a BIRD gold almost always
+   means, which keeps the correct golds that double-quote a column name holding spaces. The
+   validator version string names which parser judged the statement, as the summary's
+   `parser` block does since `efd9d00`.
 4. The smells split by what they read: the ones that read the tree and the result (limit
    ties, nulls-first, float order) move unchanged; the ones that read the catalogue (numeric
    text, column types) go through the backend and get a SQLite answer where one exists.
@@ -113,6 +143,9 @@ README stay PostgreSQL numbers; a SQLite run gets its own report and register ro
   because SQLite arrived.
 - The gate grows a second sandbox with no container: a SQLite file built from the fixture SQL
   in the test run.
+- The session settings block is defined once for both engines rather than per engine, and the
+  summary's `parser` block names sqlglot's version and the dialect it read the statement in,
+  so a reader of a SQLite run is told which reading produced it.
 - The two seams above are joined by one record, `Engine` in `audit/engines.py`, holding an
   engine's name, its way of connecting and its parse; a run chooses it once from `--engine`
   and nothing below the options asks which engine is running. The parse protocol went into a
@@ -127,12 +160,19 @@ The three questions this record was drafted with, answered by the owner on 2026-
 - **Storage class is type.** Under R-SET a value only meets a value of its own storage class,
   so a SQLite `1` (INTEGER) and a `1.0` (REAL) are two values, because that is the rule the
   comparator already applies on PostgreSQL, where an `int8` and a `numeric` holding the same
-  amount are two values; ADR-0004 now states it engine-neutrally.
+  amount are two values; ADR-0004 now states it engine-neutrally. Measured since: nothing in
+  the shipped data or in either gold set exercises it, 0 of 806 stored columns and 0 of 2,034
+  result columns mixing a storage class, so the rule is carried and unexercised rather than
+  load-bearing.
 - **`bird_ex` on SQLite is BIRD's own SQLite scorer, imported verbatim:**
   `set(predicted) == set(gold)` over `fetchall()` with Python equality, where
   `1 == 1.0 == True`, computed beside the verdict as it is on PostgreSQL and with the record
   noting that Python equality is part of that reading, because a reading of the benchmark that
-  is not the benchmark's own answers for nobody.
+  is not the benchmark's own answers for nobody. What that reading costs is now measured
+  (`plans/reports/research-260904-sqlite-before-backend.md` section 5): `1 == 1.0 == True`
+  merges no gold's own rows, and SQLite's `x/0` is `NULL` rather than NaN, so this reading and
+  a typed R-SET diverge on neither; what is left between them is a case like q1279, whose
+  unguarded integer division truncates the ratio the two readings then read differently.
 - **BIRD dev (1,534 questions) is the first SQLite set to run,** Spider 1.0 after it, because
   BIRD is the set whose gold this tool has already audited on PostgreSQL and the two runs can
   then be read against each other.
