@@ -86,6 +86,7 @@ runs kept in the session scratchpad, not in the repository.
 
 - Licence: the LICENSE file is "all rights reserved" with no grant of use; the paper's "open
   source" is not what the file says. Nothing of it can be vendored or depended on.
+  Corrected 2026-09-04: the file's second paragraph grants use under modified-BSD; see N3.
 - All three modes run without an API key; the "LLM" mode is a precomputed constraints file.
 - Purely symbolic over a bundled schema file in MySQL dialect; never reads the data; ignores the
   question text; cannot say which statement is wrong; overwrites its two output files on every

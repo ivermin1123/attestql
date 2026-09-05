@@ -199,3 +199,41 @@ sửa một checkout thì không.
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).
+
+## Phiên 3 (2026-09-05, 11:29 đến 12:45): merge nghiên cứu, C0 đến C5 trên main
+
+Lệnh chủ 11:29: dừng Batch B, làm C0 đến C5 trên main, B tiếp tục trên `sqlite-backend` sau khi
+merge main vào. Lệnh đến phiên điều phối nghiên cứu (`attestql-fa`); phiên Batch B (`attestql-c5`,
+Orca run `run_17d55b8a90b4`) dừng B ở `8bd168f` (đã push; B1 và B2 hoàn tất; worker B3 dừng trước
+khi commit; không có stash) và giữ B: sau khi main có tag, `c5` merge main vào `sqlite-backend` làm
+bước đầu của B1'. C làm trong worktree `../attestql-research` chuyển sang main (checkout chính đang
+ở `sqlite-backend`), C3 trong worktree `../attestql-c3` để hai worker Opus không đụng file; cả hai
+worktree gỡ sau khi tag, nhánh `research-260904` giữ, nhánh `c3-test-suite-ex` xoá.
+
+| Giờ | Hash | Việc | Số liệu |
+|---|---|---|--- |
+| 11:33 | `2ded756` | C0: merge `research-260904` (`--no-ff`, không squash); không xung đột vì nhánh đã rebase lên `c4eb03d` tối 04/09 | gate docs và repocheck xanh |
+| 12:02 | `160e905` | C1: envelope giữ `work_mem = '4MB'` và `hash_mem_multiplier = 2` cạnh gather = 0, read-back trong giao dịch, hai giá trị thành tiền đề (bảy tiền đề); ADR-0013 điểm 6 ghi chú ngày; A9, A2a; chứng minh trên 9 gold float dưới role 4MB và role 64kB: 9/9 EQUAL, cùng `result_hash` và bytes; control không envelope lệch 3/9 (q1473, q1476, q1482) | test 605 -> 613, sandbox 30; artifact `work-mem-precondition/` |
+| 12:06 | `7b91a3f` | C2: `datlocprovider`, `daticulocale` (đọc hàng `pg_database` dạng JSON nên chịu cả `datlocale` của PG17), `datcollversion`, `server_encoding` vào recorded, không chặn; A2a; hàng non-claim drift collation | test 617, sandbox 30 |
+| 12:08 | `0963374` | C3: `test_suite_ex` cạnh `bird_ex` (multiset, dung hoán vị cột, giữ thứ tự khi gold có ORDER BY, không strip DISTINCT, ô đọc như psycopg2); `summary.json` có `by_test_suite_ex`; A17 thêm vế tương đối `bird_ex`, N2 thêm câu bốn hệ thống, A24; cherry-pick từ `c3-test-suite-ex` | test 625, sandbox 30; worker đối chiếu vi sai 40.000 cặp với `exec_eval.py` gốc, 0 lệch; full gate ở commit này xanh |
+| 12:09 | `ceaa598` | C4: draft 5 thêm đoạn `work_mem` (459.95626421124274 ở 4MB, 459.956264211243 ở 64kB, gather = 0), đề xuất ba SET; body mỗi đoạn một dòng | docs |
+| 12:45 | commit chứa mục này | C5: đo lại toàn bộ bằng `reproduce.sh` tại `0963374` (12:09 đến 12:26, cổng 5498, container xoá); README và register ghi số; A25; A24 có số | artifact `remeasure-at-0963374/` |
+
+Số đo lại tại `0963374`, so với run đã commit ở `41621c0`: 25 move giống hệt lần đo ở `cf0b033`;
+164 = 138 + 26 hàng "BIRD cho 1 mà NOT_EQUAL" trên cả hai gold; lớp tay 69/74/21; 52 câu riêng; 4
+"0 oan" giữ. Tool và script BIRD khớp 4.476/4.482 (HF) và 4.479 (zip); toàn bộ bất đồng là q1473
+(9 cặp), script BIRD tự lệch 4 cặp so với lần chấm đã commit, còn verdict và bytes q1473 của tool
+giống nhau ở mọi cặp. `test_suite_ex`: từ chối 138/164 (đúng 138 hàng multiplicity), nhận 26 hàng
+type; trên 170 cặp của R-A: 144 bị từ chối (A 64, B 74, C 6) so với 37 khi R-A strip DISTINCT rồi
+chạy lại. Tức phần strip DISTINCT mới là thứ làm test-suite tha hàng trùng, không phải luật multiset.
+
+Quyết định tự đưa: C chạy trong worktree research thay vì checkout chính (`c5` đang giữ), gỡ
+worktree sau C5 thay vì ngay sau C0; merge `--no-ff` để lịch sử có điểm merge; hai worker Opus song
+song, worker C3 bỏ sandbox (cổng 5497 do worker C1 dùng) và điều phối chạy full gate ở `0963374`;
+không nâng format version khi thêm khoá (tiền lệ `824e98b`, `a3bac13`; `record_hash` đổi nhưng
+không có test ghim); draft 5 body một dòng mỗi đoạn (bài học U4); hàng non-claim glibc 2.28 có link
+wiki PostgreSQL. Sau commit này: push main, CI, tag `v0.1.3`, báo `c5`, gỡ hai worktree, xoá
+container `attestql-research-pg` (cổng 5499).
+
+Chưa làm, chờ chủ: gửi draft 5 (chủ đăng); B0', B1', B2 đến B6' do `c5` tiếp tục; drift collation
+giữa hai host chưa đo.

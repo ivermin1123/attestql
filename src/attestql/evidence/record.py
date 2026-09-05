@@ -15,7 +15,7 @@ counterpart in a benchmark row, and a field carrying a marker that says so state
 nothing a reader can rely on.
 
 What replaced them says what a comparison needs. ``session_settings_in_force`` names
-the five settings that change rendered bytes or row order and records the rest.
+the seven settings that change rendered bytes or row order and records the rest.
 ``fixture`` is a digest of the data the statement actually read, taken from the server
 rather than from a constant beside it, which is what the retired ``schema_version``
 could never honestly hold. ``question_set_version`` is the one version a benchmark row

@@ -1,0 +1,20 @@
+[
+    {
+        "type": "file",
+        "oid": "517575820ba4c7f8453c3a5537ac9dd0b5fae614",
+        "size": 306581,
+        "path": "data/mini_dev_mysql-00000-of-00001.json"
+    },
+    {
+        "type": "file",
+        "oid": "7a94a461ecbc08b5ab1e74f26d35c4ee6895c941",
+        "size": 283551,
+        "path": "data/mini_dev_pg-00000-of-00001.json"
+    },
+    {
+        "type": "file",
+        "oid": "f1ee766b3e438395cd3f8282adc10d483f6d91de",
+        "size": 278513,
+        "path": "data/mini_dev_sqlite-00000-of-00001.json"
+    }
+]

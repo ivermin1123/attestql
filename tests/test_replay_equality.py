@@ -7,8 +7,10 @@ every field naming the rule the comparison would have been performed under, is m
 to differ one at a time on records whose results also differ, and the verdict stays
 ``NOT_COMPARABLE`` and names the field.
 
-ADR-0013 narrowed the preconditions to what point 6 names: the fixture digest and the
-five session settings that change rendered bytes or row order. The validator, the
+ADR-0013 narrowed the preconditions to what point 6 names, and the two memory settings
+the executor holds every statement to were added beside them once a hash aggregate that
+spilled was measured changing a float aggregate: the fixture digest and the
+seven session settings that change rendered bytes or row order. The validator, the
 question set and the server version are recorded and never block, because a record whose
 validator differs is still a record of the same data and calling that pair incomparable
 would hide the disagreement an audit exists to report.
@@ -77,6 +79,8 @@ SETTINGS = SessionSettings(
     interval_style="postgres",
     extra_float_digits="1",
     database_collation="en_US.UTF-8",
+    work_mem="4096",
+    hash_mem_multiplier="2",
     recorded={"statement_timeout": "5000", "server_version_num": "160004"},
 )
 FIXTURE = FixtureDigest(
@@ -199,9 +203,11 @@ ANOTHER_ENGINE = SessionSettings(
     interval_style=None,
     extra_float_digits=None,
     database_collation=None,
+    work_mem=None,
+    hash_mem_multiplier=None,
     recorded={"journal_mode": "delete"},
 )
-"""The same run on the other engine: a file has no session, so the five are absent there
+"""The same run on the other engine: a file has no session, so the seven are absent there
 and cannot be varied one at a time the way the settings of one engine can."""
 
 
@@ -589,9 +595,10 @@ def test_two_engines_are_never_comparable_and_the_verdict_names_the_engine_alone
 
 
 def test_the_precondition_fields_and_the_rule_fields_are_disjoint() -> None:
-    """The seven are what must match before equality is required; the rule fields are what
-    equality would be required under. ADR-0013 point 6 is the whole of the list, and
-    ADR-0014 puts the engine those settings are read in ahead of it."""
+    """The nine are what must match before equality is required; the rule fields are what
+    equality would be required under. ADR-0013 point 6 names five of them, the two memory
+    settings the executor holds every statement to are two more, and ADR-0014 puts the
+    engine they are all read in ahead of the list."""
     assert set(PRECONDITION_FIELDS).isdisjoint(RULE_FIELDS)
     assert PRECONDITION_FIELDS == (
         "fixture",
@@ -601,6 +608,8 @@ def test_the_precondition_fields_and_the_rule_fields_are_disjoint() -> None:
         "session_settings_in_force.interval_style",
         "session_settings_in_force.extra_float_digits",
         "session_settings_in_force.database_collation",
+        "session_settings_in_force.work_mem",
+        "session_settings_in_force.hash_mem_multiplier",
     )
 
 

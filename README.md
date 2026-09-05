@@ -110,6 +110,8 @@ scores 1 and the typed comparison calls NOT_EQUAL, by what makes them: `multipli
 distinct rows at other counts), `type` (the same values at other declared types), `order`,
 `truncation` (one result the first rows of the other) and `other` for a disagreement that is none of
 those; a gold-only run compared nothing against that reading and states null.
+`credited_but_not_equal.by_test_suite_ex` counts the same comparisons under the test-suite reading,
+`1` for the ones it credits with BIRD and `0` for the ones it refuses with this tool.
 `predictions.positions_unused` is empty unless `--predictions-keyed-by position` is given, where it
 names every position of the prediction file that lost to a lower position naming the same question:
 the question file holds one entry twice, the lowest position is the prediction that is compared, and
@@ -126,8 +128,14 @@ schema is measured again rather than read back from the file.
 prediction alike. A statement that reaches it is that question's ERROR line, naming the side that
 failed before the server's message; the record of the execution carries the timeout it actually ran
 under and `summary.json` the one the run was given. Every statement runs with the server's parallel
-gather off, so that a float sum is added in one order and two runs of one statement cannot differ in
-a late digit, and that makes some plans slower here than on the same server at its own defaults.
+gather off and with `work_mem` at 4 MB and `hash_mem_multiplier` at 2, PostgreSQL 16's own defaults
+written out rather than inherited, so that a float sum is added in one order and two runs of one
+statement cannot differ in a late digit: a gather adds the partial sums in whatever order the
+workers returned them, and a hash aggregate that outgrows the memory bound spills and adds them per
+spilled batch, which moves three of the nine summation-order-sensitive Mini-Dev golds between 64 kB
+and 4 MB. All three are read back inside the statement's own transaction and the execution is
+refused if the session does not hold them, and holding them makes some plans slower here than on the
+same server at its own defaults.
 q707 of Mini-Dev is the worked example: its gold runs in 50 ms, and the `meta-llama-3-70b-instruct`
 prediction for it runs in 0.22 s with two parallel workers and in 41 s warm to 105 s cold without
 them, so it needs `--statement-timeout 120` to be compared at all. Four of the 4,482 prediction
@@ -142,7 +150,9 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   R-SET otherwise; a NaN is one value there, equal to a NaN and to nothing else, as PostgreSQL
   groups and orders it; EQUAL, NOT_EQUAL, or
   NOT_COMPARABLE with the mismatched preconditions named (fixture digest, serialization, rule,
-  ordering, and the five session settings that change rendered bytes). Within one run both
+  ordering, and the seven session settings that change rendered bytes or the order a float sum is
+  added in: `TimeZone`, `DateStyle`, `IntervalStyle`, `extra_float_digits`, the database's default
+  collation, `work_mem` and `hash_mem_multiplier`). Within one run both
   records are built under the same preconditions, so that verdict does not occur there; it is
   for comparing two records from two runs, and a record carries everything that comparison
   reads.
@@ -163,7 +173,12 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   ANALYZE. A probe that fires on one run and is quiet on the next over the same data is that, and
   the two records show it.
 - BIRD's own set-equality reading is computed beside every verdict, so a counterexample states
-  what the benchmark would have said.
+  what the benchmark would have said. The test-suite reading of Zhong, Yu and Klein 2020
+  (`result_eq` of `ruiqi-zhong/test-suite-sql-eval`) is recorded beside it as `test_suite_ex`: it
+  keeps duplicate rows, keeps row order when the gold's text holds ORDER BY, and still admits a
+  projection whose columns came back in another order. Its DISTINCT strip is not mirrored, because
+  that evaluator rewrites both statements and runs them again and these rows are already fetched,
+  so it stands for that evaluator's answer only where neither statement holds a DISTINCT.
 
 ## What it does not do
 
@@ -189,29 +204,33 @@ records and hashes, are in `plans/reports/spike-260902-three-gold-defects/`. The
 measured over all 498 Mini-Dev statements and every fired row was classified by hand:
 [the measurement report](plans/reports/measurement-260902-2226-gold-only-probes-mini-dev.md)
 gives the precision per probe, including the one that is only 17 % and is therefore off by
-default. Prediction mode was run on BIRD's own nine PostgreSQL prediction files for Mini-Dev
-(4,482 predictions, the Hugging Face gold), with BIRD's own evaluator run beside it as the check;
-the numbers below are that run repeated at the commit `cf0b033`. The two readings of EX agree on
-4,478 of 4,482, five more than the first run because the tool's reading of BIRD's EX now loads
-float columns as psycopg2 hands them over; what disagrees is q1473, a `SUM` over `float8` whose
-last digits depend on the order its partial sums are added in. Of the 1,239 predictions BIRD scores
-1, 164 (13.2 %) are NOT_EQUAL under the typed comparison: 138 return the gold's rows with other
-multiplicities, 26 the same values under another declared type, none differ only in order. Read by
-hand, 69 of those 164 (42.1 %; 5.6 % of everything BIRD credits) are wrong answers the benchmark
-credited, 74 are duplicated rows a reader would forgive, and 21 are the typed rule and not the
-question. Of the 1,521 predictions BIRD scores 0, 4 are right against a corrected gold, counted only
+default. Prediction mode was run on BIRD's own nine PostgreSQL prediction files for Mini-Dev (4,482
+predictions, the Hugging Face gold), with BIRD's own evaluator run beside it as the check; the
+numbers below are that run repeated at the commit `0963374`. The two readings of EX agree on 4,476
+of 4,482 (4,479 against the GitHub zip's gold), and every disagreement is q1473, a `SUM` over
+`float8` whose last digits depend on the order its partial sums are added in: this tool holds that
+order (no parallel gather, `work_mem` and `hash_mem_multiplier` at stated values), while BIRD's
+evaluator runs at the server's own settings and scores q1473 differently from run to run. Of the
+1,239 predictions BIRD scores 1, 164 (13.2 %) are NOT_EQUAL under the typed comparison: 138 return
+the gold's rows with other multiplicities, 26 the same values under another declared type, none
+differ only in order. Read by hand, 69 of those 164 (42.1 %; 5.6 % of everything BIRD credits) are
+wrong answers the benchmark credited, 74 are duplicated rows a reader would forgive, and 21 are the
+typed rule and not the question. The test-suite reading recorded beside BIRD's (`test_suite_ex`)
+refuses 138 of those 164, every row with other multiplicities, and admits the 26; with the DISTINCT
+strip that evaluator performs and this tool does not, the research run found it refusing 37 of the
+170 such rows of the first run, so the strip is what makes that evaluator forgiving of a duplicated
+row here. Of the 1,521 predictions BIRD scores 0, 4 are right against a corrected gold, counted only
 where a correction exists (q1029, q207); the reverse, a 1 earned by reproducing a wrong gold, occurs
 6 times on the GitHub zip's golds and 2 on the Hugging Face file's. Against the first run the count
 BIRD credits moved by one and the loose rows by six: those six float rows are no longer read as 1,
 q1473 is EQUAL now that every statement runs without parallel workers, and q707 of
-`meta-llama-3-70b` times out under its serial plan.
-[The prediction-mode report](plans/reports/measurement-260904-0046-prediction-mode-on-real-predictions.md)
-holds the per-file table, the hand classification and the two tool defects the run found.
-[The claims register](docs/claims-register.md) lists every claim with its owning
-artifact, and every negative claim there carries the date it was measured, because negative
-claims decay. [ADR-0013](docs/adr/0013-audit-text-to-sql-gold-with-typed-replay-evidence.md)
-records the decision this tool implements and the date by which it is reconsidered if nobody
-uses it.
+`meta-llama-3-70b` times out under its serial plan. [The prediction-mode
+report](plans/reports/measurement-260904-0046-prediction-mode-on-real-predictions.md) holds the
+per-file table, the hand classification and the two tool defects the run found. [The claims
+register](docs/claims-register.md) lists every claim with its owning artifact, and every negative
+claim there carries the date it was measured, because negative claims decay.
+[ADR-0013](docs/adr/0013-audit-text-to-sql-gold-with-typed-replay-evidence.md) records the decision
+this tool implements and the date by which it is reconsidered if nobody uses it.
 
 The history is short and stated: this repository was developed privately from 2026-08-25 under a
 different product direction, a governed data agent over a synthetic schema; it was reoriented on

@@ -1,0 +1,8 @@
+{
+ "bytea_output=hex": [
+  "b'\\xde\\xad\\xbe\\xef'"
+ ],
+ "bytea_output=escape": [
+  "b'\\xde\\xad\\xbe\\xef'"
+ ]
+}

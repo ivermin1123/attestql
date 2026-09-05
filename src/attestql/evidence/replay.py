@@ -12,7 +12,7 @@ them. Carrying them in the same value is what makes them impossible to drop.
 What blocks a comparison is now what ADR-0013 point 6 names, and nothing else. The
 fixture digest, because two answers about different data are not evidence about each
 other; the engine the session ran on, since a setting name, a type name and a value each
-mean what their own engine says they mean (ADR-0014); and the five session settings that
+mean what their own engine says they mean (ADR-0014); and the seven session settings that
 change rendered bytes or row order. Every
 other field is recorded and never blocks: a record whose validator, question set or
 server version differs is still a record of the same data, and calling that pair
@@ -90,12 +90,17 @@ SESSION_PRECONDITIONS: tuple[str, ...] = (
     "interval_style",
     "extra_float_digits",
     "database_collation",
+    "work_mem",
+    "hash_mem_multiplier",
 )
 """The settings of ``session_settings_in_force`` that must match, by their field names.
 
-The engine first (ADR-0014), then exactly the five ADR-0013 point 6 names: the ones that
-change rendered bytes or row order. Everything else the session reported lives in
-``recorded`` and blocks nothing."""
+The engine first (ADR-0014), then the five ADR-0013 point 6 names and the two the executor
+holds itself: the ones that change rendered bytes or row order. The last two are there
+because a hash aggregate that spills adds each spilled batch's partial sums where the batch
+ended, so two records made under two memory bounds can disagree in a float's last digits
+over the same rows, and that disagreement is about the plan and not about the statements.
+Everything else the session reported lives in ``recorded`` and blocks nothing."""
 
 PRECONDITION_FIELDS: tuple[str, ...] = (
     "fixture",
@@ -148,7 +153,7 @@ def precondition_mismatches(a: EvidenceRecord, b: EvidenceRecord) -> tuple[str, 
         if left != right:
             mismatched.append(f"session_settings_in_force.{setting}")
             if setting == "engine":
-                # Two engines are never comparable, and the five settings after this one
+                # Two engines are never comparable, and the seven settings after this one
                 # are one engine's own: naming them beside the engine would report the
                 # absence of a setting the other engine does not have as a disagreement.
                 break
@@ -156,7 +161,7 @@ def precondition_mismatches(a: EvidenceRecord, b: EvidenceRecord) -> tuple[str, 
 
 
 def preconditions_match(a: EvidenceRecord, b: EvidenceRecord) -> bool:
-    """True only when the fixture digest, the engine and the five named settings all match."""
+    """True only when the fixture digest, the engine and the seven named settings all match."""
     return not precondition_mismatches(a, b)
 
 

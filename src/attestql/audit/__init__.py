@@ -26,10 +26,12 @@ from attestql.audit.compare import (
     BirdEx,
     Comparison,
     RecordedStatement,
+    TestSuiteEx,
     bird_ex,
     compare_statements,
     counterexample_json,
     record_statement,
+    test_suite_ex,
     write_comparison,
 )
 from attestql.audit.fixture import fixture_digest
@@ -63,6 +65,7 @@ __all__ = [
     "Smell",
     "SmellSettings",
     "StatementRefused",
+    "TestSuiteEx",
     "TextCensus",
     "all_smells",
     "bird_ex",
@@ -72,5 +75,6 @@ __all__ = [
     "parse_statement",
     "record_statement",
     "smells_json",
+    "test_suite_ex",
     "write_comparison",
 ]

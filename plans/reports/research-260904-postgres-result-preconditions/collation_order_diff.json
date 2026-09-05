@@ -1,0 +1,602 @@
+{
+ "1392": {
+  "db_id": "student_club",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "source"
+    ],
+    "rows": [
+     [
+      "School Appropration"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "source"
+    ],
+    "rows": [
+     [
+      "School Appropration"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "source"
+    ],
+    "rows": [
+     [
+      "School Appropration"
+     ]
+    ]
+   }
+  }
+ },
+ "1078": {
+  "db_id": "european_football_2",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "player_name"
+    ],
+    "rows": [
+     [
+      "Aaron Lennon"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "player_name"
+    ],
+    "rows": [
+     [
+      "Aaron Lennon"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "player_name"
+    ],
+    "rows": [
+     [
+      "Aaron Lennon"
+     ]
+    ]
+   }
+  }
+ },
+ "1102": {
+  "db_id": "european_football_2",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "player_name"
+    ],
+    "rows": [
+     [
+      "Laurent Ciman"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "player_name"
+    ],
+    "rows": [
+     [
+      "Laurent Ciman"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "player_name"
+    ],
+    "rows": [
+     [
+      "Laurent Ciman"
+     ]
+    ]
+   }
+  }
+ },
+ "846": {
+  "db_id": "formula_1",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "driverref"
+    ],
+    "rows": [
+     [
+      "sato"
+     ],
+     [
+      "davidson"
+     ],
+     [
+      "vettel"
+     ],
+     [
+      "sutil"
+     ],
+     [
+      "fisichella"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "driverref"
+    ],
+    "rows": [
+     [
+      "sato"
+     ],
+     [
+      "davidson"
+     ],
+     [
+      "vettel"
+     ],
+     [
+      "sutil"
+     ],
+     [
+      "fisichella"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "driverref"
+    ],
+    "rows": [
+     [
+      "sato"
+     ],
+     [
+      "davidson"
+     ],
+     [
+      "vettel"
+     ],
+     [
+      "sutil"
+     ],
+     [
+      "fisichella"
+     ]
+    ]
+   }
+  }
+ },
+ "847": {
+  "db_id": "formula_1",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "surname"
+    ],
+    "rows": [
+     [
+      "Fisichella"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "surname"
+    ],
+    "rows": [
+     [
+      "Fisichella"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "surname"
+    ],
+    "rows": [
+     [
+      "Fisichella"
+     ]
+    ]
+   }
+  }
+ },
+ "931": {
+  "db_id": "formula_1",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "fastestlapspeed"
+    ],
+    "rows": [
+     [
+      "202.484"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "fastestlapspeed"
+    ],
+    "rows": [
+     [
+      "202.484"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "fastestlapspeed"
+    ],
+    "rows": [
+     [
+      "202.484"
+     ]
+    ]
+   }
+  }
+ },
+ "824": {
+  "db_id": "superhero",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "superhero_name"
+    ],
+    "rows": [
+     [
+      "Crystal"
+     ],
+     [
+      "Red Tornado"
+     ],
+     [
+      "Tempest"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "superhero_name"
+    ],
+    "rows": [
+     [
+      "Crystal"
+     ],
+     [
+      "Red Tornado"
+     ],
+     [
+      "Tempest"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "superhero_name"
+    ],
+    "rows": [
+     [
+      "Crystal"
+     ],
+     [
+      "Red Tornado"
+     ],
+     [
+      "Tempest"
+     ]
+    ]
+   }
+  }
+ },
+ "220": {
+  "db_id": "toxicology",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "element"
+    ],
+    "rows": [
+     [
+      "c"
+     ],
+     [
+      "cl"
+     ],
+     [
+      "h"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "element"
+    ],
+    "rows": [
+     [
+      "c"
+     ],
+     [
+      "cl"
+     ],
+     [
+      "h"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "element"
+    ],
+    "rows": [
+     [
+      "c"
+     ],
+     [
+      "cl"
+     ],
+     [
+      "h"
+     ]
+    ]
+   }
+  }
+ },
+ "232": {
+  "db_id": "toxicology",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "molecule_id"
+    ],
+    "rows": [
+     [
+      "TR002"
+     ],
+     [
+      "TR004"
+     ],
+     [
+      "TR007"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "molecule_id"
+    ],
+    "rows": [
+     [
+      "TR002"
+     ],
+     [
+      "TR004"
+     ],
+     [
+      "TR007"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "molecule_id"
+    ],
+    "rows": [
+     [
+      "TR002"
+     ],
+     [
+      "TR004"
+     ],
+     [
+      "TR007"
+     ]
+    ]
+   }
+  }
+ },
+ "115": {
+  "db_id": "financial",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "?column?"
+    ],
+    "rows": [
+     [
+      "44.26229508196721"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "?column?"
+    ],
+    "rows": [
+     [
+      "44.26229508196721"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "?column?"
+    ],
+    "rows": [
+     [
+      "44.26229508196721"
+     ]
+    ]
+   }
+  }
+ },
+ "129": {
+  "db_id": "financial",
+  "order_same_bird_vs_c": true,
+  "order_same_bird_vs_icu": true,
+  "rowset_same_bird_vs_c": true,
+  "rowset_same_bird_vs_icu": true,
+  "per_db": {
+   "bird": {
+    "cols": [
+     "a2"
+    ],
+    "rows": [
+     [
+      "Benesov"
+     ],
+     [
+      "Beroun"
+     ],
+     [
+      "Blansko"
+     ],
+     [
+      "Breclav"
+     ],
+     [
+      "Brno - mesto"
+     ],
+     [
+      "Brno - venkov"
+     ],
+     [
+      "Bruntal"
+     ],
+     [
+      "Ceska Lipa"
+     ],
+     [
+      "Ceske Budejovice"
+     ],
+     [
+      "Cesky Krumlov"
+     ]
+    ]
+   },
+   "bird_c": {
+    "cols": [
+     "a2"
+    ],
+    "rows": [
+     [
+      "Benesov"
+     ],
+     [
+      "Beroun"
+     ],
+     [
+      "Blansko"
+     ],
+     [
+      "Breclav"
+     ],
+     [
+      "Brno - mesto"
+     ],
+     [
+      "Brno - venkov"
+     ],
+     [
+      "Bruntal"
+     ],
+     [
+      "Ceska Lipa"
+     ],
+     [
+      "Ceske Budejovice"
+     ],
+     [
+      "Cesky Krumlov"
+     ]
+    ]
+   },
+   "bird_icu": {
+    "cols": [
+     "a2"
+    ],
+    "rows": [
+     [
+      "Benesov"
+     ],
+     [
+      "Beroun"
+     ],
+     [
+      "Blansko"
+     ],
+     [
+      "Breclav"
+     ],
+     [
+      "Brno - mesto"
+     ],
+     [
+      "Brno - venkov"
+     ],
+     [
+      "Bruntal"
+     ],
+     [
+      "Ceska Lipa"
+     ],
+     [
+      "Ceske Budejovice"
+     ],
+     [
+      "Cesky Krumlov"
+     ]
+    ]
+   }
+  }
+ }
+}

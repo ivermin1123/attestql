@@ -23,7 +23,7 @@ settings that change rendered bytes or row order are named fields, everything el
 session reported is recorded beside them and blocks nothing. ``SessionSettings`` names
 the engine first, because that is the namespace the settings and every declared type of
 the result are read in, and it is what lets an engine with no session state that it has
-none rather than fill the five fields with something (ADR-0014).
+none rather than fill the seven fields with something (ADR-0014).
 """
 
 from __future__ import annotations
@@ -137,7 +137,7 @@ def read_only_counts(name: str, value: Mapping[str, int]) -> Mapping[str, int]:
 
 
 ENGINE_POSTGRESQL = "postgresql"
-"""The engine whose session states the five settings below."""
+"""The engine whose session states the seven settings below."""
 
 ENGINE_SQLITE = "sqlite"
 """The engine that has none of them: a file has no session to precondition."""
@@ -150,7 +150,7 @@ setting the engine has and nobody read back."""
 
 @dataclass(frozen=True)
 class SessionSettings:
-    """The engine, and the settings that session held, with the five that decide
+    """The engine, and the settings that session held, with the seven that decide
     comparability named.
 
     ``engine`` is the namespace everything else here and every column's declared type is
@@ -158,14 +158,20 @@ class SessionSettings:
     that name two engines are two experiments: the same setting name, the same type name
     and the same value mean what their own engine says they mean.
 
-    The five named fields are the settings that change rendered bytes or row order, so two
+    The seven named fields are the settings that change rendered bytes or row order, so two
     executions that disagree on any of them are two experiments and not one comparison:
     the time zone and the timestamp and interval styles decide how an instant renders, the
-    float digits decide how many of a number's digits are returned at all, and the
-    database's default collation decides what ``ORDER BY`` on text means. They are
-    PostgreSQL's, and a SQLite record states all five as absent rather than inventing a
-    value for a session that does not exist: no time zone, no styles, no float digits, and
-    a collation that belongs to a column or an expression and not to the database.
+    float digits decide how many of a number's digits are returned at all, the database's
+    default collation decides what ``ORDER BY`` on text means, and the two memory settings
+    decide where a hash aggregate spills and therefore in what order a float sum is added.
+    They are PostgreSQL's, and a SQLite record states all seven as absent rather than
+    inventing a value for a session that does not exist: no time zone, no styles, no float
+    digits, no memory bound, and a collation that belongs to a column or an expression and
+    not to the database.
+
+    The two memory settings are what a statement ran under rather than what the session was
+    found holding: the executor sets both on every execution's own transaction, so a record
+    that repeated the session's own values would name a bound no statement of it reached.
 
     ``recorded`` holds everything else the session reported: the statement timeout, the
     search path, the server version and whether the transaction was read only, at least.
@@ -186,6 +192,8 @@ class SessionSettings:
     interval_style: str | None
     extra_float_digits: str | None
     database_collation: str | None
+    work_mem: str | None
+    hash_mem_multiplier: str | None
     recorded: Mapping[str, str]
 
     def __post_init__(self) -> None:
@@ -199,6 +207,8 @@ class SessionSettings:
                 "interval_style",
                 "extra_float_digits",
                 "database_collation",
+                "work_mem",
+                "hash_mem_multiplier",
             )
         }
         if self.engine == ENGINE_POSTGRESQL:

@@ -1,0 +1,8 @@
+{
+ "search_path=attestql_scratch, public": [
+  "from scratch1"
+ ],
+ "search_path=attestql_scratch2, public": [
+  "from scratch2"
+ ]
+}

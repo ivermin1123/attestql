@@ -1,0 +1,8 @@
+{
+ "standard_conforming_strings=on": [
+  "a\\nb"
+ ],
+ "standard_conforming_strings=off": [
+  "a\nb"
+ ]
+}

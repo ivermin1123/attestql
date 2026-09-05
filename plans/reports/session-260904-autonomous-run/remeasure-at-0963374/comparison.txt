@@ -1,0 +1,7 @@
+verdict or BIRD-reading moves: 25 (q1057 x2, q1473 x11, q168 x2, q707 x2, q800 x4, q960 x4)
+BIRD's evaluator flips between the two runs: 4
+zip: credited by BIRD but NOT_EQUAL {'total': 164, 'multiplicity': 138, 'type': 26, 'order': 0, 'truncation': 0, 'other': 0}
+hf: credited by BIRD but NOT_EQUAL {'total': 164, 'multiplicity': 138, 'type': 26, 'order': 0, 'truncation': 0, 'other': 0}
+zip: ex1 1240 -> 1240, ex0 1521 -> 1520, errors 1721 -> 1722, official_ex 1245 -> 1243, agree 4471 -> 4479, disagree 11 -> 3, ex1_not_equal 170 -> 164
+hf: ex1 1240 -> 1239, ex0 1521 -> 1521, errors 1721 -> 1722, official_ex 1241 -> 1239, agree 4473 -> 4476, disagree 9 -> 6, ex1_not_equal 170 -> 164
+classes: {'A': 69, 'B': 74, 'C': 27, 'total': 170, 'A_over_all': 0.406, 'AB_over_all': 0.841, 'A_over_AB': 0.483} -> {'A': 69, 'B': 74, 'C': 21, 'total': 164, 'A_over_all': 0.421, 'AB_over_all': 0.872, 'A_over_AB': 0.483}

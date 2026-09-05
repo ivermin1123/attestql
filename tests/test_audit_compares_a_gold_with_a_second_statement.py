@@ -17,6 +17,11 @@ The names go into the counterexample instead.
 The mechanism of a NOT_EQUAL is tested class by class on two results and nothing else,
 because that is all it is read off: one class per test, one test for two classes holding at
 once, and one for a disagreement that is none of them and says so.
+
+The second published reading, ``test_suite_ex``, is tested rule by rule against the same
+kind of results, because what is being asserted is that this is that evaluator's rule and
+not this tool's: what it counts, what it forgives, and what its own reading of the gold's
+text turns on.
 """
 
 from __future__ import annotations
@@ -29,6 +34,10 @@ from pathlib import Path
 
 import pytest
 
+# ``test_suite_ex`` is reached through its module rather than imported by name: pytest
+# collects every module-level name beginning with ``test`` in a test file, and a function
+# imported into one is collected the same as a function written in it.
+from attestql.audit import compare
 from attestql.audit.compare import (
     COUNTEREXAMPLE_FILE,
     GOLD_RECORD_FILE,
@@ -39,6 +48,8 @@ from attestql.audit.compare import (
     MECHANISM_TYPE,
     PROJECTION_NAMES_READING,
     SECOND_RECORD_FILE,
+    TEST_SUITE_EX_METHOD,
+    TEST_SUITE_EX_SOURCE,
     VERDICT_READING,
     Comparison,
     bird_ex,
@@ -555,3 +566,140 @@ def test_an_empty_result_against_a_full_one_is_not_a_truncation() -> None:
     )
     assert found.classification == MECHANISM_OTHER
     assert not found.shorter_result_is_a_prefix
+
+
+# the test-suite evaluator's reading, beside BIRD's
+
+
+GOLD_SET_ORDERED = "SELECT element FROM atom ORDER BY element"
+GOLD_COUNTED = "SELECT element, count(*) FROM atom GROUP BY element"
+GOLD_COUNTED_ORDERED = GOLD_COUNTED + " ORDER BY element"
+
+ELEMENT_AND_TOTAL = (("element", "text"), ("total", "int8"))
+TOTAL_AND_ELEMENT = (("total", "int8"), ("element", "text"))
+"""The same two values projected in the two orders: what the evaluator's column permutation
+is for, and what a comparison by position calls a disagreement."""
+
+
+def test_two_results_that_are_both_empty_are_equal_under_the_test_suite_reading() -> None:
+    """The evaluator's first line: two statements that both returned nothing agree, before
+    anything is read off a row that is not there."""
+    measured = compare.test_suite_ex(fake_result(ELEMENT, ()), fake_result(ELEMENT, ()), GOLD_SET)
+    assert measured.value == 1
+    assert measured.equal
+    assert (measured.gold_rows, measured.second_rows) == (0, 0)
+
+
+def test_two_results_of_different_row_counts_are_not_equal_under_the_test_suite_reading() -> None:
+    """Row counts are compared before values are, so a result that is the other one cut is
+    refused without a permutation being built."""
+    measured = compare.test_suite_ex(
+        fake_result(ELEMENT, (("c",), ("o",))), fake_result(ELEMENT, (("c",),)), GOLD_SET
+    )
+    assert measured.value == 0
+    assert (measured.gold_rows, measured.second_rows) == (2, 1)
+
+
+def test_a_projection_of_another_width_is_not_equal_under_the_test_suite_reading() -> None:
+    """A projection of another width is refused whatever its values are: the permutation the
+    evaluator searches for is a permutation and never a projection onto fewer columns."""
+    measured = compare.test_suite_ex(
+        fake_result(ELEMENT, (("c",),)), fake_result(ELEMENT_AND_TOTAL, (("c", 2),)), GOLD_SET
+    )
+    assert measured.value == 0
+    assert (measured.gold_columns, measured.second_columns) == (1, 2)
+
+
+def test_the_same_rows_in_another_order_turn_on_the_gold_s_own_text() -> None:
+    """The evaluator reads the gold's text for ``order by`` and nothing else, so one pair of
+    results is equal under a gold that does not order and unequal under one that does. That
+    reading is not this tool's rule: a gold that orders inside a subquery is R-SET here and
+    ordered there, which is why the field is recorded beside the value."""
+    gold = fake_result(ELEMENT, (("c",), ("o",)))
+    second = fake_result(ELEMENT, (("o",), ("c",)))
+
+    unordered = compare.test_suite_ex(gold, second, GOLD_SET)
+    ordered = compare.test_suite_ex(gold, second, GOLD_SET_ORDERED)
+
+    assert (unordered.value, unordered.order_matters) == (1, False)
+    assert (ordered.value, ordered.order_matters) == (0, True)
+
+
+def test_columns_that_came_back_in_another_order_are_equal_under_the_test_suite_reading() -> None:
+    """What separates this reading from BIRD's in the other direction: the evaluator searches
+    the column permutations and finds the one that makes these two results the same, where
+    ``set(predicted) == set(gold)`` compares the tuples as they came back and does not."""
+    gold = fake_result(ELEMENT_AND_TOTAL, (("c", 2), ("o", 1)))
+    second = fake_result(TOTAL_AND_ELEMENT, ((2, "c"), (1, "o")))
+
+    assert compare.test_suite_ex(gold, second, GOLD_COUNTED).value == 1
+    assert compare.test_suite_ex(gold, second, GOLD_COUNTED_ORDERED).value == 1, (
+        "the rows are in the gold's order under the permutation, so ordering it changes nothing"
+    )
+    assert bird_ex(gold, second).value == 0
+
+
+def test_a_duplicate_row_bird_forgives_is_refused_by_the_test_suite_reading(
+    tmp_path: Path,
+) -> None:
+    """The class this tool was written for, read by all three: the gold holds one row twice
+    and the prediction holds it once. BIRD's set drops the duplicate and credits the pair,
+    the typed multiset calls it NOT_EQUAL, and the test-suite reading refuses it on the row
+    count. Where the evaluator itself would strip the prediction's DISTINCT and run it again,
+    which is what would make the two the same rows, these rows are already fetched and
+    nothing recovers what DISTINCT removed."""
+    backend = FakeBackend(
+        {
+            GOLD_SET: fake_result(ELEMENT, (("c",), ("c",), ("o",))),
+            SECOND_SET: fake_result(ELEMENT, (("c",), ("o",))),
+        },
+        row_counts={"atom": 3},
+    )
+    comparison = _compare(backend, tmp_path, gold_sql=GOLD_SET, second_sql=SECOND_SET)
+
+    assert comparison.verdict.result is ComparabilityResult.NOT_EQUAL
+    assert comparison.bird_ex.value == 1
+    assert comparison.test_suite_ex.value == 0
+    assert comparison.test_suite_ex.gold_rows == 3
+    assert comparison.test_suite_ex.second_rows == 2
+    assert not comparison.test_suite_ex.order_matters
+
+
+def test_a_float_column_is_read_as_psycopg2_returns_it_on_both_sides() -> None:
+    """The two readings differ in their rule and never in their cells: a float column is the
+    Python float psycopg2 builds here as it is under ``bird_ex``. Two float columns holding
+    the decimal the server printed are equal, and the same value declared ``numeric`` on one
+    side is not, because a double that does not hold 0.1 exactly is not the decimal 0.1."""
+    as_float = fake_result(AVERAGE_FLOAT8, ((Decimal("0.1"),),))
+
+    assert compare.test_suite_ex(as_float, as_float, GOLD_AVERAGE).value == 1
+    against_numeric = compare.test_suite_ex(
+        as_float, fake_result(AVERAGE_NUMERIC, ((Decimal("0.1"),),)), GOLD_AVERAGE
+    )
+    assert against_numeric.value == 0
+    assert bird_ex(as_float, fake_result(AVERAGE_NUMERIC, ((Decimal("0.1"),),))).value == 0
+
+
+def test_the_counterexample_states_the_second_reading_beside_the_first(tmp_path: Path) -> None:
+    """A reader who holds one of the two published readings against a verdict finds both in
+    the document, each saying what it is and where it comes from."""
+    backend = FakeBackend(
+        {
+            GOLD_SET: fake_result(ELEMENT, (("c",), ("c",), ("o",))),
+            SECOND_SET: fake_result(ELEMENT, (("c",), ("o",))),
+        },
+        row_counts={"atom": 3},
+    )
+    document = counterexample_json(
+        _compare(backend, tmp_path, gold_sql=GOLD_SET, second_sql=SECOND_SET)
+    )
+    block = document["test_suite_ex"]
+
+    assert isinstance(block, dict)
+    assert block["value"] == 0
+    assert block["equal"] is False
+    assert block["method"] == TEST_SUITE_EX_METHOD
+    assert block["source"] == TEST_SUITE_EX_SOURCE
+    assert block["order_matters"] is False
+    keys = list(document)
+    assert keys.index("test_suite_ex") == keys.index("bird_ex") + 1

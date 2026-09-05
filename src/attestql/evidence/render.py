@@ -219,6 +219,8 @@ def record_json(record: EvidenceRecord) -> Json:
             "interval_style": settings.interval_style,
             "extra_float_digits": settings.extra_float_digits,
             "database_collation": settings.database_collation,
+            "work_mem": settings.work_mem,
+            "hash_mem_multiplier": settings.hash_mem_multiplier,
             "recorded": dict(settings.recorded),
         },
         "result": {
