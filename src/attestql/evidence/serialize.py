@@ -243,7 +243,7 @@ def canonical_serialize(result: ExecutionResult, descriptor: SerializationDescri
         _cell("columns", str(len(result.columns))),
     ]
     lines.extend(
-        _CELL.join(("column", _escape(column.name), _escape(column.pg_type)))
+        _CELL.join(("column", _escape(column.name), _escape(column.declared_type)))
         for column in result.columns
     )
     lines.append(_cell("rows", str(len(result.rows))))

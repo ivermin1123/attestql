@@ -40,7 +40,7 @@ from attestql.audit.backend import (
     TextCensus,
 )
 from attestql.evidence.serialize import SerializationDescriptor
-from attestql.evidence.types import SessionSettings, StatementSource
+from attestql.evidence.types import ENGINE_POSTGRESQL, SessionSettings, StatementSource
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 IDENTITY = "FakeSQL 1.0 | server=memory:0 | database=fake"
@@ -72,6 +72,7 @@ a scripted backend runs statements this suite writes, and what a record states a
 they came from is the test's to say."""
 
 SETTINGS = SessionSettings(
+    engine=ENGINE_POSTGRESQL,
     time_zone="UTC",
     date_style="ISO, MDY",
     interval_style="postgres",
@@ -105,7 +106,7 @@ def fake_result(
     about what a record says the statement ran under, and is the default everywhere else.
     """
     return ExecutionResult(
-        columns=tuple(ColumnType(name, pg_type) for name, pg_type in columns),
+        columns=tuple(ColumnType(name, declared_type) for name, declared_type in columns),
         rows=tuple(rows),
         backend_identity=identity,
         limits_in_force=ExecutionLimits(statement_timeout_ms=timeout_ms),
@@ -182,7 +183,11 @@ class FakeBackend:
         return self._settings
 
     def default_collation(self) -> str:
-        return self._settings.database_collation
+        """What this fake's session states, which on PostgreSQL is never absent."""
+        collation = self._settings.database_collation
+        if collation is None:
+            raise AssertionError(f"a fake on {self._settings.engine} states no default collation")
+        return collation
 
     def _refuse_if_the_server_went_away(self, step: str) -> None:
         """Every call after ``refusing`` was set, named the way this backend names failures."""

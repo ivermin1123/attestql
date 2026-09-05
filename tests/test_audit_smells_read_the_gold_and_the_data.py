@@ -548,7 +548,7 @@ def test_a_float_that_only_differs_in_its_last_digits_is_reported_as_summation_o
         shuffled=SHUFFLED,
     )
     assert _smell(found) == (FLOAT_AGGREGATE_ORDER, True, True)
-    assert found.evidence["float_cells"][0]["pg_type"] == "float8"
+    assert found.evidence["float_cells"][0]["declared_type"] == "float8"
     assert found.evidence["float_cells"][0]["baseline"] == "1.5000000001"
     assert found.evidence["significant_digits"] == 6
 

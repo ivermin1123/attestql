@@ -180,5 +180,11 @@ script BIRD tự đổi 10 EX so với lần chấm đã commit (q1473 ×7, q212
 song song bị bỏ: server hết worker, 110 EX đổi thành cụm id liên tiếp; lần dùng là 3 file song song.
 Mục mở mới: q212 gold có `LIMIT 1` trên COUNT hoà trong derived table mà probe cắt tuỳ ý không bật.
 
+Nhánh `sqlite-backend` (Batch B):
+
+| Hash | Việc | Số liệu | Giờ |
+|---|---|---|--- |
+| `eacc778` | B0: ADR-0014 Accepted với ba chốt; ADR-0004 thêm luật storage class; index | docs; CI <https://github.com/ivermin1123/attestql/actions/runs/33883811118> | 21:24 |
+
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).

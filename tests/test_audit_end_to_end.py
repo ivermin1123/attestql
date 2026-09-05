@@ -49,6 +49,7 @@ from attestql.audit.postgres import (
 )
 from attestql.audit.statements import VALIDATOR_VERSION
 from attestql.evidence.replay import ComparabilityResult
+from attestql.evidence.types import ENGINE_POSTGRESQL
 
 pytestmark = pytest.mark.sandbox
 
@@ -270,10 +271,12 @@ def test_the_summary_names_the_server_and_the_grammar_that_judged_this_run(
     transaction and a value that survived the run would mean one of those rollbacks did
     not."""
     written = audited.summary_document()
-    recorded = written["session_settings_recorded"]
+    settings = written["session_settings"]
+    recorded = settings["recorded"]
     major = str(int(recorded["server_version_num"]) // 10_000)
     afterwards = sandbox_backend.session_settings().recorded["max_parallel_workers_per_gather"]
 
+    assert settings["engine"] == ENGINE_POSTGRESQL
     assert recorded["server_version"].startswith(major)
     assert recorded["max_parallel_workers_per_gather"] == afterwards
     assert written["parser"]["validator"] == VALIDATOR_VERSION

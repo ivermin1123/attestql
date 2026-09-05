@@ -13,6 +13,7 @@ so the test that separates them is the one that shows the rendering is typed.
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 from datetime import UTC, date, datetime, timedelta, timezone
 from decimal import Decimal
 
@@ -38,7 +39,7 @@ def _result(
     truncated: bool = False,
 ) -> ExecutionResult:
     return ExecutionResult(
-        columns=tuple(ColumnType(name, pg_type) for name, pg_type in columns),
+        columns=tuple(ColumnType(name, declared_type) for name, declared_type in columns),
         rows=rows,
         backend_identity="backend-under-test",
         limits_in_force=limits,
@@ -46,8 +47,8 @@ def _result(
     )
 
 
-def _one_value(limits: ExecutionLimits, pg_type: str, value: object) -> ExecutionResult:
-    return _result(limits, (("cell", pg_type),), ((value,),))
+def _one_value(limits: ExecutionLimits, declared_type: str, value: object) -> ExecutionResult:
+    return _result(limits, (("cell", declared_type),), ((value,),))
 
 
 def _rendered(result: ExecutionResult, descriptor: SerializationDescriptor) -> str:
@@ -72,6 +73,56 @@ def test_the_same_result_under_the_same_descriptor_renders_to_the_same_bytes(
     second = canonical_serialize(_result(execution_limits, columns, rows), serialization_descriptor)
     assert first == second
     assert first.decode("utf-8").startswith(FORMAT_IDENTITY)
+
+
+POSTGRESQL_COLUMNS = (
+    ("n", "int8"),
+    ("share", "numeric"),
+    ("day", "date"),
+    ("label", "text"),
+    ("at", "timestamptz"),
+)
+POSTGRESQL_ROWS: tuple[tuple[object, ...], ...] = (
+    (1, Decimal("0.5"), date(2026, 7, 15), "alpha", datetime(2026, 7, 15, tzinfo=UTC)),
+    (2, None, date(2026, 7, 16), "beta", datetime(2026, 7, 16, 3, 4, 5, tzinfo=UTC)),
+)
+POSTGRESQL_DOCUMENT = (
+    "attestql/canonical-serialization/1\n"
+    "serialization\tserialization-test\n"
+    "numeric-scale\t6\n"
+    "timestamp-format\t%Y-%m-%dT%H:%M:%S.%fZ\n"
+    "timezone\tUTC\n"
+    "null-rendering\tNULL\n"
+    "encoding\tutf-8\n"
+    "truncated\tfalse\n"
+    "columns\t5\n"
+    "column\tn\tint8\n"
+    "column\tshare\tnumeric\n"
+    "column\tday\tdate\n"
+    "column\tlabel\ttext\n"
+    "column\tat\ttimestamptz\n"
+    "rows\t2\n"
+    "row\tint:1\tdec:0.500000\tdate:2026-07-15\tstr:alpha\tts:2026-07-15T00:00:00.000000Z\n"
+    "row\tint:2\tnull:NULL\tdate:2026-07-16\tstr:beta\tts:2026-07-16T03:04:05.000000Z\n"
+)
+POSTGRESQL_DIGEST = "sha256:ef5615efcb8c5ee7d74e6bdf588505be50e86ba6c7d6abde08b4481c0c02b9d3"
+
+
+def test_a_postgresql_result_renders_to_the_bytes_it_always_rendered_to(
+    execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
+) -> None:
+    """The document a column line writes is the type's value, never the field it is held in.
+
+    The literals here were taken from the rendering this serializer produced before a
+    column's ``pg_type`` became its ``declared_type``, so the contract that moved is
+    observed leaving every byte and the digest over them where they were. That is why the
+    format identity is still ``/1``: nothing a reader of two documents compares changed.
+    """
+    result = _result(execution_limits, POSTGRESQL_COLUMNS, POSTGRESQL_ROWS)
+    rendered = canonical_serialize(result, serialization_descriptor)
+
+    assert rendered == POSTGRESQL_DOCUMENT.encode("utf-8")
+    assert f"sha256:{hashlib.sha256(rendered).hexdigest()}" == POSTGRESQL_DIGEST
 
 
 def test_a_change_of_numeric_scale_changes_the_rendering_of_a_numeric(

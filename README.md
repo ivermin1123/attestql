@@ -147,7 +147,9 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   for comparing two records from two runs, and a record carries everything that comparison
   reads.
 - An evidence record per execution, twenty-one required fields, no defaults: what ran, as what role,
-  on which server, under which settings, with which result and hash, and how to re-run it.
+  on which server, under which settings, with which result and hash, and how to re-run it. The
+  record names the engine it ran on, once, in its session settings, and each column of the result
+  carries that engine's own declared type for it.
 - Gold-only probes, all heuristics and labelled so: ordering over numeric-looking text; an
   arbitrary or null-first cut that changes the answer; a result that is not a function of the data
   (a seeded shuffle of the referenced tables, copied into the scratch schema, changes it), with

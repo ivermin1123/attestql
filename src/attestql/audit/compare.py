@@ -105,7 +105,7 @@ record does not carry this: ADR-0013 dropped ``policy_version`` because a versio
 measurement taken after the fact states nothing a reader can rely on. It exists because
 ``admit`` requires a proof, and it is named so that nothing here reads as one."""
 
-COUNTEREXAMPLE_FORMAT = "attestql/audit/counterexample/1"
+COUNTEREXAMPLE_FORMAT = "attestql/audit/counterexample/2"
 COUNTEREXAMPLE_FILE = "counterexample.json"
 GOLD_RECORD_FILE = "evidence-gold.json"
 SECOND_RECORD_FILE = "evidence-second.json"
@@ -300,7 +300,7 @@ def _as_psycopg2_returns_them(result: ExecutionResult) -> list[tuple[object, ...
     which is what typed replay needs and what a reading of the benchmark has to undo before
     it answers for the benchmark. Every other declared type is left as it came back.
     """
-    floats = tuple(column.pg_type in PSYCOPG2_FLOAT_TYPES for column in result.columns)
+    floats = tuple(column.declared_type in PSYCOPG2_FLOAT_TYPES for column in result.columns)
     if not any(floats):
         return list(result.rows)
     return [
@@ -357,8 +357,8 @@ def _is_a_prefix(gold: Sequence[object], second: Sequence[object]) -> bool:
 
 def mechanism(gold: ExecutionResult, second: ExecutionResult, rule: ReplayRule) -> Mechanism:
     """Why these two results are not equal under this rule, read off the two of them."""
-    gold_types = tuple(column.pg_type for column in gold.columns)
-    second_types = tuple(column.pg_type for column in second.columns)
+    gold_types = tuple(column.declared_type for column in gold.columns)
+    second_types = tuple(column.declared_type for column in second.columns)
     gold_rows = [typed_row(row) for row in gold.rows]
     second_rows = [typed_row(row) for row in second.rows]
     multiset_equal = Counter(gold_rows) == Counter(second_rows)
@@ -411,7 +411,7 @@ def width_proof(
         widths.append(
             ProjectedColumnWidth(
                 name=column.name,
-                pg_type=column.pg_type,
+                declared_type=column.declared_type,
                 max_encoded_bytes=widest,
                 max_decoded_bytes=widest,
             )

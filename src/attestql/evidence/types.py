@@ -20,7 +20,10 @@ statement came from would leave a reader with a statement and no way back to its
 agree on before an inequality between them means anything (ADR-0013 point 6). Both are
 read from the server rather than configured beside it, and both are stated in full: the
 settings that change rendered bytes or row order are named fields, everything else the
-session reported is recorded beside them and blocks nothing.
+session reported is recorded beside them and blocks nothing. ``SessionSettings`` names
+the engine first, because that is the namespace the settings and every declared type of
+the result are read in, and it is what lets an engine with no session state that it has
+none rather than fill the five fields with something (ADR-0014).
 """
 
 from __future__ import annotations
@@ -133,15 +136,36 @@ def read_only_counts(name: str, value: Mapping[str, int]) -> Mapping[str, int]:
     return MappingProxyType(snapshot)
 
 
+ENGINE_POSTGRESQL = "postgresql"
+"""The engine whose session states the five settings below."""
+
+ENGINE_SQLITE = "sqlite"
+"""The engine that has none of them: a file has no session to precondition."""
+
+ENGINES: tuple[str, ...] = (ENGINE_POSTGRESQL, ENGINE_SQLITE)
+"""Every engine a record may name. A record of an engine nobody stated the settings rule
+for is not constructible, because a reader of it could not tell an absent setting from a
+setting the engine has and nobody read back."""
+
+
 @dataclass(frozen=True)
 class SessionSettings:
-    """The settings the session held, with the five that decide comparability named.
+    """The engine, and the settings that session held, with the five that decide
+    comparability named.
+
+    ``engine`` is the namespace everything else here and every column's declared type is
+    read in, and it is stated once per record rather than on each of them. Two records
+    that name two engines are two experiments: the same setting name, the same type name
+    and the same value mean what their own engine says they mean.
 
     The five named fields are the settings that change rendered bytes or row order, so two
     executions that disagree on any of them are two experiments and not one comparison:
     the time zone and the timestamp and interval styles decide how an instant renders, the
     float digits decide how many of a number's digits are returned at all, and the
-    database's default collation decides what ``ORDER BY`` on text means.
+    database's default collation decides what ``ORDER BY`` on text means. They are
+    PostgreSQL's, and a SQLite record states all five as absent rather than inventing a
+    value for a session that does not exist: no time zone, no styles, no float digits, and
+    a collation that belongs to a column or an expression and not to the database.
 
     ``recorded`` holds everything else the session reported: the statement timeout, the
     search path, the server version and whether the transaction was read only, at least.
@@ -156,23 +180,41 @@ class SessionSettings:
     record says which is which rather than letting one stand for the other.
     """
 
-    time_zone: str
-    date_style: str
-    interval_style: str
-    extra_float_digits: str
-    database_collation: str
+    engine: str
+    time_zone: str | None
+    date_style: str | None
+    interval_style: str | None
+    extra_float_digits: str | None
+    database_collation: str | None
     recorded: Mapping[str, str]
 
     def __post_init__(self) -> None:
-        for name in (
-            "time_zone",
-            "date_style",
-            "interval_style",
-            "extra_float_digits",
-            "database_collation",
-        ):
-            if not getattr(self, name):
-                raise ValueError(f"{name} is required; a setting nobody read back is not a value")
+        if self.engine not in ENGINES:
+            raise ValueError(f"engine must be one of {ENGINES}; got {self.engine!r}")
+        stated = {
+            name: getattr(self, name)
+            for name in (
+                "time_zone",
+                "date_style",
+                "interval_style",
+                "extra_float_digits",
+                "database_collation",
+            )
+        }
+        if self.engine == ENGINE_POSTGRESQL:
+            for name, value in stated.items():
+                if not value:
+                    raise ValueError(
+                        f"{name} is required on {self.engine}; "
+                        "a setting nobody read back is not a value"
+                    )
+        else:
+            named = sorted(name for name, value in stated.items() if value is not None)
+            if named:
+                raise ValueError(
+                    f"{self.engine} has no session to precondition, so {named} state "
+                    "settings this engine does not hold"
+                )
         object.__setattr__(self, "recorded", read_only_text("recorded", self.recorded))
         if not self.recorded:
             raise ValueError(
@@ -223,6 +265,9 @@ class FixtureDigest:
 
 
 __all__ = [
+    "ENGINES",
+    "ENGINE_POSTGRESQL",
+    "ENGINE_SQLITE",
     "FixtureDigest",
     "QuestionMetadata",
     "ReplayRule",

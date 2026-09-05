@@ -266,8 +266,10 @@ def test_the_summary_names_the_session_and_the_grammar_the_run_was_judged_by(
     write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
     run_audit(options(tmp_path), _quiet_backend(), Lines())
     written = summary_of(tmp_path)
-    recorded = written["session_settings_recorded"]
+    settings = written["session_settings"]
+    recorded = settings["recorded"]
 
+    assert settings["engine"] == SETTINGS.engine
     assert recorded == dict(SETTINGS.recorded)
     assert recorded["max_parallel_workers_per_gather"] == "2"
     assert recorded["server_version"].startswith("16.4")

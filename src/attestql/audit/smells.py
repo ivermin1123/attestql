@@ -748,7 +748,9 @@ def _float_order_only(
     """
     cells: list[Json] = []
     floats = {
-        index for index, column in enumerate(baseline.columns) if column.pg_type in FLOAT_TYPES
+        index
+        for index, column in enumerate(baseline.columns)
+        if column.declared_type in FLOAT_TYPES
     }
     if not floats:
         return None
@@ -773,7 +775,7 @@ def _float_order_only(
                     {
                         "row": position,
                         "column": baseline.columns[index].name,
-                        "pg_type": baseline.columns[index].pg_type,
+                        "declared_type": baseline.columns[index].declared_type,
                         "baseline": format(one, "f"),
                         "rerun": format(other, "f"),
                     }
@@ -884,7 +886,7 @@ def smells_json(found: Sequence[Smell]) -> Json:
     }
 
 
-SMELLS_FORMAT = "attestql/audit/smells/1"
+SMELLS_FORMAT = "attestql/audit/smells/2"
 SMELLS_READING = (
     "A smell is a mechanical reason to read this gold statement again. It is a heuristic: "
     "it does not state that the statement is wrong, and a maintainer decides."

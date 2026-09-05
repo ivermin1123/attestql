@@ -78,7 +78,7 @@ from attestql.audit.backend import (
     TableName,
     TextCensus,
 )
-from attestql.evidence.types import SessionSettings
+from attestql.evidence.types import ENGINE_POSTGRESQL, SessionSettings
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 DRIVER_ERROR: type[Exception] = psycopg.Error
@@ -342,6 +342,7 @@ class PostgresBackend:
                     "session_settings", f"the session reported no value for {missing}"
                 )
             self._session_settings = SessionSettings(
+                engine=ENGINE_POSTGRESQL,
                 time_zone=read_back["TimeZone"],
                 date_style=read_back["DateStyle"],
                 interval_style=read_back["IntervalStyle"],
@@ -881,7 +882,8 @@ class PostgresBackend:
             )
             names = {int(row[0]): str(row[1]) for row in rows}
         return tuple(
-            ColumnType(name=name, pg_type=names.get(oid, f"oid:{oid}")) for name, oid in described
+            ColumnType(name=name, declared_type=names.get(oid, f"oid:{oid}"))
+            for name, oid in described
         )
 
     def _settings(self, names: Sequence[str]) -> dict[str, str]:

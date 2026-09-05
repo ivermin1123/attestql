@@ -133,7 +133,7 @@ MARKER_TEXT = (
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 QUESTION_DIRECTORY = re.compile(r"q\d+")
 """The name of a directory this tool writes a question's evidence to."""
-SUMMARY_FORMAT = "attestql/audit/summary/1"
+SUMMARY_FORMAT = "attestql/audit/summary/2"
 SMELLS_FILE = "smells.json"
 
 GOLD_ONLY = "GOLD-ONLY"
@@ -145,7 +145,7 @@ ERROR = "ERROR"
 NO_SMELL = "none"
 
 SERIALIZATION = SerializationDescriptor(
-    version="attestql/audit/1",
+    version="attestql/audit/2",
     numeric_scale=6,
     timestamp_format="%Y-%m-%dT%H:%M:%S.%fZ",
     timezone="UTC",
@@ -156,7 +156,12 @@ SERIALIZATION = SerializationDescriptor(
 
 One descriptor for the whole tool: two records rendered under different rules are not
 comparable, and a run that let its rendering be configured would produce records that
-cannot be compared with anyone else's."""
+cannot be compared with anyone else's.
+
+``version`` is what a reader compares two records' layout under, so it moves with the
+layout and with nothing else (ADR-0014). It reads ``2`` since the session settings a
+record states gained the engine and a column's type became its declared type; the
+rendering rules below, and the bytes the serializer makes of them, did not change."""
 
 BIRD_PREDICTION_SUFFIX = "\t----- bird -----\t"
 """What BIRD's own ``predict_dev.json`` appends to each statement: a tab, a marker and
@@ -709,7 +714,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
             positions_unused=resolved.positions_unused,
             identity=identity,
             role=role,
-            settings_recorded=dict(settings.recorded),
+            settings=settings,
             measured=measured,
             shuffled=shuffled,
             no_shuffle=no_shuffle,
@@ -1158,7 +1163,7 @@ def _summary_json(
     positions_unused: tuple[int, ...],
     identity: str,
     role: str,
-    settings_recorded: Mapping[str, str],
+    settings: SessionSettings,
     measured: _Measured,
     shuffled: ShuffledCopies | None,
     no_shuffle: str,
@@ -1177,7 +1182,10 @@ def _summary_json(
         "run_id": summary.run_id,
         "backend_identity": identity,
         "effective_database_role": role,
-        "session_settings_recorded": dict(settings_recorded),
+        "session_settings": {
+            "engine": settings.engine,
+            "recorded": dict(settings.recorded),
+        },
         "parser": {
             "validator": VALIDATOR_VERSION,
             "postgast": POSTGAST_VERSION,
