@@ -20,8 +20,10 @@ from attestql.audit.backend import Backend
 from attestql.audit.cli import SUMMARY_FILE, AuditOptions, connect_and_audit
 from attestql.audit.engines import DEFAULT_ENGINE, ENGINES, Engine, engine_named
 from attestql.audit.parse import ParsedStatement, ParserIdentity
+from attestql.audit.sqlite_statements import PARSER as SQLITE_PARSER
+from attestql.audit.sqlite_statements import parse_statement as parse_sqlite_statement
 from attestql.audit.statements import PARSER, parse_statement
-from attestql.evidence.types import ENGINE_POSTGRESQL
+from attestql.evidence.types import ENGINE_POSTGRESQL, ENGINE_SQLITE
 from tests.audit_fakes import FakeBackend, fake_result
 
 ELEMENTS = "SELECT DISTINCT element FROM atom"
@@ -73,16 +75,24 @@ def test_the_postgresql_backend_and_parser_fill_the_two_protocols_in() -> None:
 def test_the_registry_holds_the_engines_the_flag_offers() -> None:
     assert DEFAULT_ENGINE.name == ENGINE_POSTGRESQL
     assert engine_named(ENGINE_POSTGRESQL) is DEFAULT_ENGINE
-    assert set(ENGINES) == {ENGINE_POSTGRESQL}
+    assert set(ENGINES) == {ENGINE_POSTGRESQL, ENGINE_SQLITE}
     assert DEFAULT_ENGINE.parse is parse_statement
     assert DEFAULT_ENGINE.parser is PARSER, (
         "the summary and every record of a run name one parser, not two"
     )
 
 
+def test_each_engine_brings_its_own_parser_and_never_the_other_one_s() -> None:
+    """The two seams are filled in per engine, so a run reads its statements with the
+    grammar of the engine it is running on and a record cannot name the other parser."""
+    assert engine_named(ENGINE_SQLITE).parser is SQLITE_PARSER
+    assert engine_named(ENGINE_SQLITE).parse is parse_sqlite_statement
+    assert SQLITE_PARSER.validator != PARSER.validator
+
+
 def test_an_engine_nobody_registered_is_refused_by_name() -> None:
-    with pytest.raises(KeyError, match="no engine named 'sqlite'"):
-        engine_named("sqlite")
+    with pytest.raises(KeyError, match="no engine named 'duckdb'"):
+        engine_named("duckdb")
 
 
 def test_a_whole_audit_runs_through_an_engine_the_test_built(tmp_path: Path) -> None:

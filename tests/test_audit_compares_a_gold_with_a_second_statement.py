@@ -60,7 +60,13 @@ from attestql.audit.compare import (
 )
 from attestql.audit.statements import StatementRefused, parse_statement
 from attestql.evidence.replay import ComparabilityResult, compare_r_ord, compare_r_set
-from attestql.evidence.types import FixtureDigest, QuestionMetadata, ReplayRule, SortKey
+from attestql.evidence.types import (
+    ENGINE_POSTGRESQL,
+    FixtureDigest,
+    QuestionMetadata,
+    ReplayRule,
+    SortKey,
+)
 from tests.audit_fakes import (
     DESCRIPTOR,
     IDENTITY,
@@ -290,6 +296,7 @@ def test_a_nan_in_a_float_column_is_unequal_to_itself_under_bird_s_reading() -> 
     measured = bird_ex(
         fake_result(AVERAGE_FLOAT8, ((Decimal("NaN"),),)),
         fake_result(AVERAGE_FLOAT8, ((Decimal("NaN"),),)),
+        engine=ENGINE_POSTGRESQL,
     )
     assert measured.value == 0
 
@@ -584,7 +591,9 @@ is for, and what a comparison by position calls a disagreement."""
 def test_two_results_that_are_both_empty_are_equal_under_the_test_suite_reading() -> None:
     """The evaluator's first line: two statements that both returned nothing agree, before
     anything is read off a row that is not there."""
-    measured = compare.test_suite_ex(fake_result(ELEMENT, ()), fake_result(ELEMENT, ()), GOLD_SET)
+    measured = compare.test_suite_ex(
+        fake_result(ELEMENT, ()), fake_result(ELEMENT, ()), GOLD_SET, engine=ENGINE_POSTGRESQL
+    )
     assert measured.value == 1
     assert measured.equal
     assert (measured.gold_rows, measured.second_rows) == (0, 0)
@@ -594,7 +603,10 @@ def test_two_results_of_different_row_counts_are_not_equal_under_the_test_suite_
     """Row counts are compared before values are, so a result that is the other one cut is
     refused without a permutation being built."""
     measured = compare.test_suite_ex(
-        fake_result(ELEMENT, (("c",), ("o",))), fake_result(ELEMENT, (("c",),)), GOLD_SET
+        fake_result(ELEMENT, (("c",), ("o",))),
+        fake_result(ELEMENT, (("c",),)),
+        GOLD_SET,
+        engine=ENGINE_POSTGRESQL,
     )
     assert measured.value == 0
     assert (measured.gold_rows, measured.second_rows) == (2, 1)
@@ -604,7 +616,10 @@ def test_a_projection_of_another_width_is_not_equal_under_the_test_suite_reading
     """A projection of another width is refused whatever its values are: the permutation the
     evaluator searches for is a permutation and never a projection onto fewer columns."""
     measured = compare.test_suite_ex(
-        fake_result(ELEMENT, (("c",),)), fake_result(ELEMENT_AND_TOTAL, (("c", 2),)), GOLD_SET
+        fake_result(ELEMENT, (("c",),)),
+        fake_result(ELEMENT_AND_TOTAL, (("c", 2),)),
+        GOLD_SET,
+        engine=ENGINE_POSTGRESQL,
     )
     assert measured.value == 0
     assert (measured.gold_columns, measured.second_columns) == (1, 2)
@@ -618,8 +633,8 @@ def test_the_same_rows_in_another_order_turn_on_the_gold_s_own_text() -> None:
     gold = fake_result(ELEMENT, (("c",), ("o",)))
     second = fake_result(ELEMENT, (("o",), ("c",)))
 
-    unordered = compare.test_suite_ex(gold, second, GOLD_SET)
-    ordered = compare.test_suite_ex(gold, second, GOLD_SET_ORDERED)
+    unordered = compare.test_suite_ex(gold, second, GOLD_SET, engine=ENGINE_POSTGRESQL)
+    ordered = compare.test_suite_ex(gold, second, GOLD_SET_ORDERED, engine=ENGINE_POSTGRESQL)
 
     assert (unordered.value, unordered.order_matters) == (1, False)
     assert (ordered.value, ordered.order_matters) == (0, True)
@@ -632,11 +647,12 @@ def test_columns_that_came_back_in_another_order_are_equal_under_the_test_suite_
     gold = fake_result(ELEMENT_AND_TOTAL, (("c", 2), ("o", 1)))
     second = fake_result(TOTAL_AND_ELEMENT, ((2, "c"), (1, "o")))
 
-    assert compare.test_suite_ex(gold, second, GOLD_COUNTED).value == 1
-    assert compare.test_suite_ex(gold, second, GOLD_COUNTED_ORDERED).value == 1, (
-        "the rows are in the gold's order under the permutation, so ordering it changes nothing"
-    )
-    assert bird_ex(gold, second).value == 0
+    assert compare.test_suite_ex(gold, second, GOLD_COUNTED, engine=ENGINE_POSTGRESQL).value == 1
+    assert (
+        compare.test_suite_ex(gold, second, GOLD_COUNTED_ORDERED, engine=ENGINE_POSTGRESQL).value
+        == 1
+    ), "the rows are in the gold's order under the permutation, so ordering it changes nothing"
+    assert bird_ex(gold, second, engine=ENGINE_POSTGRESQL).value == 0
 
 
 def test_a_duplicate_row_bird_forgives_is_refused_by_the_test_suite_reading(
@@ -672,12 +688,24 @@ def test_a_float_column_is_read_as_psycopg2_returns_it_on_both_sides() -> None:
     side is not, because a double that does not hold 0.1 exactly is not the decimal 0.1."""
     as_float = fake_result(AVERAGE_FLOAT8, ((Decimal("0.1"),),))
 
-    assert compare.test_suite_ex(as_float, as_float, GOLD_AVERAGE).value == 1
+    assert (
+        compare.test_suite_ex(as_float, as_float, GOLD_AVERAGE, engine=ENGINE_POSTGRESQL).value == 1
+    )
     against_numeric = compare.test_suite_ex(
-        as_float, fake_result(AVERAGE_NUMERIC, ((Decimal("0.1"),),)), GOLD_AVERAGE
+        as_float,
+        fake_result(AVERAGE_NUMERIC, ((Decimal("0.1"),),)),
+        GOLD_AVERAGE,
+        engine=ENGINE_POSTGRESQL,
     )
     assert against_numeric.value == 0
-    assert bird_ex(as_float, fake_result(AVERAGE_NUMERIC, ((Decimal("0.1"),),))).value == 0
+    assert (
+        bird_ex(
+            as_float,
+            fake_result(AVERAGE_NUMERIC, ((Decimal("0.1"),),)),
+            engine=ENGINE_POSTGRESQL,
+        ).value
+        == 0
+    )
 
 
 def test_the_counterexample_states_the_second_reading_beside_the_first(tmp_path: Path) -> None:
@@ -698,7 +726,7 @@ def test_the_counterexample_states_the_second_reading_beside_the_first(tmp_path:
     assert isinstance(block, dict)
     assert block["value"] == 0
     assert block["equal"] is False
-    assert block["method"] == TEST_SUITE_EX_METHOD
+    assert block["method"] == TEST_SUITE_EX_METHOD[ENGINE_POSTGRESQL]
     assert block["source"] == TEST_SUITE_EX_SOURCE
     assert block["order_matters"] is False
     keys = list(document)

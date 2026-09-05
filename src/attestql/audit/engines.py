@@ -22,8 +22,11 @@ from typing import Protocol
 from attestql.audit.backend import Backend
 from attestql.audit.parse import ParsedStatement, ParserIdentity
 from attestql.audit.postgres import PostgresBackend
+from attestql.audit.sqlite import SqliteBackend
+from attestql.audit.sqlite_statements import PARSER as SQLITE_PARSER
+from attestql.audit.sqlite_statements import parse_statement as parse_sqlite_statement
 from attestql.audit.statements import PARSER, parse_statement
-from attestql.evidence.types import ENGINE_POSTGRESQL
+from attestql.evidence.types import ENGINE_POSTGRESQL, ENGINE_SQLITE
 
 
 class Connect(Protocol):
@@ -66,6 +69,15 @@ def _connect_postgresql(target: str, /, *, scratch: str) -> Backend:
     return PostgresBackend.connect(target, scratch_schema=scratch)
 
 
+def _connect_sqlite(target: str, /, *, scratch: str) -> Backend:
+    """The SQLite backend under the neutral names: a file, and a place to write copies in.
+
+    The scratch name is accepted and names nothing that has to be arranged here: a SQLite
+    copy goes into the connection's own TEMP database, which every connection has.
+    """
+    return SqliteBackend.connect(target, scratch=scratch)
+
+
 POSTGRESQL = Engine(
     name=ENGINE_POSTGRESQL,
     connect=_connect_postgresql,
@@ -74,7 +86,16 @@ POSTGRESQL = Engine(
 )
 """PostgreSQL: psycopg over a DSN, and libpg_query over the statement."""
 
-ENGINES: Mapping[str, Engine] = {POSTGRESQL.name: POSTGRESQL}
+SQLITE = Engine(
+    name=ENGINE_SQLITE,
+    connect=_connect_sqlite,
+    parse=parse_sqlite_statement,
+    parser=SQLITE_PARSER,
+)
+"""SQLite: the standard library's driver over a file, and sqlglot's SQLite dialect over the
+statement (ADR-0014 points 2 and 3). The target is the path to the file."""
+
+ENGINES: Mapping[str, Engine] = {POSTGRESQL.name: POSTGRESQL, SQLITE.name: SQLITE}
 """Every engine an audit can run on, by the name the flag takes."""
 
 DEFAULT_ENGINE = POSTGRESQL
@@ -93,6 +114,7 @@ __all__ = [
     "DEFAULT_ENGINE",
     "ENGINES",
     "POSTGRESQL",
+    "SQLITE",
     "Connect",
     "Engine",
     "Parse",

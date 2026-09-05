@@ -246,5 +246,6 @@ vouches for it.
 ## Licence
 
 Apache-2.0 for this repository (`LICENSE`). The material excerpted from BIRD Mini-Dev, listed in
-`NOTICE`, keeps its own CC BY-SA 4.0 licence. The SQL parser, `postgast`, is a BSD binding to
-`libpg_query`, PostgreSQL's own grammar as a library; the driver, `psycopg`, is LGPL.
+`NOTICE`, keeps its own CC BY-SA 4.0 licence. The PostgreSQL parser, `postgast`, is a BSD binding
+to `libpg_query`, PostgreSQL's own grammar as a library, and the PostgreSQL driver, `psycopg`, is
+LGPL. The SQLite parser, `sqlglot`, is MIT, and the SQLite driver is the standard library's.

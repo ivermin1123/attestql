@@ -46,7 +46,7 @@ being recorded stays the run's.
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Generator, Iterator, Sequence
+from collections.abc import Generator, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -77,6 +77,8 @@ from attestql.evidence.replay import (
 )
 from attestql.evidence.serialize import SerializationDescriptor, UnsupportedValue, typed_row
 from attestql.evidence.types import (
+    ENGINE_POSTGRESQL,
+    ENGINE_SQLITE,
     FixtureDigest,
     QuestionMetadata,
     ReplayRule,
@@ -118,18 +120,39 @@ COUNTEREXAMPLE_FILE = "counterexample.json"
 GOLD_RECORD_FILE = "evidence-gold.json"
 SECOND_RECORD_FILE = "evidence-second.json"
 
-BIRD_EX_METHOD = (
-    "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 "
-    "returns them, numeric as Decimal"
-)
+BIRD_EX_METHOD: Mapping[str, str] = {
+    ENGINE_POSTGRESQL: (
+        "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 "
+        "returns them, numeric as Decimal"
+    ),
+    ENGINE_SQLITE: (
+        "set(second_rows) == set(gold_rows), REAL cells as Python float as sqlite3 returns "
+        "them, so Python equality holds 1 == 1.0 == True as the benchmark's own scorer does"
+    ),
+}
+"""How the benchmark's own check was read, per engine, because the cells it reads are the
+ones its driver builds and BIRD runs a different driver per engine. The rule is one rule;
+what differs is which Python type a number reaches the set as, and that is what decides
+whether two of them are one value."""
+
 BIRD_EX_SOURCE = "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py"
 
-TEST_SUITE_EX_METHOD = (
-    "result_eq: equal row counts and equal column counts, each row unordered as a quick "
-    "rejection, then the two equal as a list when the gold text holds ORDER BY and as a "
-    "multiset otherwise, under some permutation of the columns; DISTINCT is not stripped "
-    "and re-executed, and the cells are PostgreSQL's as psycopg2 returns them"
-)
+TEST_SUITE_EX_METHOD: Mapping[str, str] = {
+    ENGINE_POSTGRESQL: (
+        "result_eq: equal row counts and equal column counts, each row unordered as a quick "
+        "rejection, then the two equal as a list when the gold text holds ORDER BY and as a "
+        "multiset otherwise, under some permutation of the columns; DISTINCT is not stripped "
+        "and re-executed, and the cells are PostgreSQL's as psycopg2 returns them"
+    ),
+    ENGINE_SQLITE: (
+        "result_eq: equal row counts and equal column counts, each row unordered as a quick "
+        "rejection, then the two equal as a list when the gold text holds ORDER BY and as a "
+        "multiset otherwise, under some permutation of the columns; DISTINCT is not stripped "
+        "and re-executed, and the cells are SQLite's as sqlite3 returns them"
+    ),
+}
+"""The same rule read on the same cells as ``BIRD_EX_METHOD``'s, per engine and for the same
+reason. On SQLite the cells are the evaluator's own: that evaluator runs on SQLite."""
 TEST_SUITE_EX_SOURCE = (
     "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: "
     "https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/"
@@ -200,6 +223,7 @@ class BirdEx:
 
     value: int
     equal: bool
+    method: str
     gold_rows: int
     second_rows: int
     gold_distinct_rows: int
@@ -234,6 +258,7 @@ class TestSuiteEx:
 
     value: int
     equal: bool
+    method: str
     order_matters: bool
     gold_rows: int
     second_rows: int
@@ -348,7 +373,7 @@ def _as_a_driver_float(value: object) -> object:
 
 
 def _as_psycopg2_returns_them(result: ExecutionResult) -> list[tuple[object, ...]]:
-    """One result's rows as the driver BIRD runs would have handed them over.
+    """One result's rows as the driver BIRD runs on PostgreSQL would have handed them over.
 
     psycopg2 builds a Python float for a ``float4`` or a ``float8`` and a Decimal for a
     ``numeric``, and Python compares the two exactly, so 0.1 the double is not 0.1 the
@@ -368,14 +393,45 @@ def _as_psycopg2_returns_them(result: ExecutionResult) -> list[tuple[object, ...
     ]
 
 
-def bird_ex(gold: ExecutionResult, second: ExecutionResult) -> BirdEx:
-    """BIRD's execution-accuracy check over the two results, read as its own driver reads them."""
-    gold_rows = _as_psycopg2_returns_them(gold)
-    second_rows = _as_psycopg2_returns_them(second)
+def _as_sqlite3_returns_them(result: ExecutionResult) -> list[tuple[object, ...]]:
+    """One result's rows as the driver BIRD runs on SQLite would have handed them over.
+
+    ``sqlite3`` builds a Python float for every REAL cell and leaves the other four storage
+    classes as int, str, bytes and None. The SQLite backend loads a REAL as the decimal that
+    round-trips it, because a float has no canonical rendering and because a typed R-SET has
+    to keep a REAL and an INTEGER apart, and this undoes exactly that: a decimal here only
+    ever came from a REAL. What comes back is what the benchmark's own scorer sets over, and
+    Python equality there holds ``1 == 1.0 == True``, which is part of that reading and not
+    of this tool's.
+
+    The conversion is per cell and not per column, because a SQLite column is typed per cell:
+    a result column whose rows hold an INTEGER and a REAL is one column and two classes, and
+    a rule that asked the column would have to answer one of them for both.
+    """
+    return [tuple(_as_a_driver_float(value) for value in row) for row in result.rows]
+
+
+def _as_the_driver_returns_them(result: ExecutionResult, engine: str) -> list[tuple[object, ...]]:
+    """One result's rows as the driver the benchmark runs on that engine would build them."""
+    if engine == ENGINE_SQLITE:
+        return _as_sqlite3_returns_them(result)
+    return _as_psycopg2_returns_them(result)
+
+
+def bird_ex(gold: ExecutionResult, second: ExecutionResult, *, engine: str) -> BirdEx:
+    """BIRD's execution-accuracy check over the two results, read as its own driver reads them.
+
+    The engine is required and never defaulted: the rule is one rule and the cells it reads
+    are the ones the benchmark's driver for that engine builds, so a reading taken under the
+    wrong engine would answer for a benchmark run nobody made.
+    """
+    gold_rows = _as_the_driver_returns_them(gold, engine)
+    second_rows = _as_the_driver_returns_them(second, engine)
     equal = set(second_rows) == set(gold_rows)
     return BirdEx(
         value=1 if equal else 0,
         equal=equal,
+        method=BIRD_EX_METHOD[engine],
         gold_rows=len(gold_rows),
         second_rows=len(second_rows),
         gold_distinct_rows=len(set(gold_rows)),
@@ -387,7 +443,7 @@ def bird_ex_json(measured: BirdEx) -> Json:
     return {
         "value": measured.value,
         "equal": measured.equal,
-        "method": BIRD_EX_METHOD,
+        "method": measured.method,
         "source": BIRD_EX_SOURCE,
         "gold_rows": measured.gold_rows,
         "second_rows": measured.second_rows,
@@ -496,21 +552,24 @@ def _result_eq(
     )
 
 
-def test_suite_ex(gold: ExecutionResult, second: ExecutionResult, gold_sql: str) -> TestSuiteEx:
+def test_suite_ex(
+    gold: ExecutionResult, second: ExecutionResult, gold_sql: str, *, engine: str
+) -> TestSuiteEx:
     """The test-suite evaluator's check over the two results, on the cells BIRD's driver builds.
 
     The gold's text is read for one thing and by the evaluator's own test for it: ``order
     by`` anywhere in it, lowercased, is what makes the two results compared in order. The
     cells are ``bird_ex``'s, so the two readings recorded beside a verdict differ in their
-    rule alone.
+    rule alone, and the engine is required here for the reason it is required there.
     """
-    gold_rows = _as_psycopg2_returns_them(gold)
-    second_rows = _as_psycopg2_returns_them(second)
+    gold_rows = _as_the_driver_returns_them(gold, engine)
+    second_rows = _as_the_driver_returns_them(second, engine)
     order_matters = "order by" in gold_sql.lower()
     equal = _result_eq(gold_rows, second_rows, order_matters=order_matters)
     return TestSuiteEx(
         value=1 if equal else 0,
         equal=equal,
+        method=TEST_SUITE_EX_METHOD[engine],
         order_matters=order_matters,
         gold_rows=len(gold_rows),
         second_rows=len(second_rows),
@@ -523,7 +582,7 @@ def test_suite_ex_json(measured: TestSuiteEx) -> Json:
     return {
         "value": measured.value,
         "equal": measured.equal,
-        "method": TEST_SUITE_EX_METHOD,
+        "method": measured.method,
         "source": TEST_SUITE_EX_SOURCE,
         "order_matters": measured.order_matters,
         "gold_rows": measured.gold_rows,
@@ -832,8 +891,13 @@ def compare_statements(
         differing_rows=row_difference(gold_record.result.rows, second_record.result.rows),
         gold_ordering=gold_parsed.ordering,
         second_ordering=second_parsed.ordering,
-        bird_ex=bird_ex(gold_record.result, second_record.result),
-        test_suite_ex=test_suite_ex(gold_record.result, second_record.result, gold_parsed.sql),
+        bird_ex=bird_ex(gold_record.result, second_record.result, engine=session_settings.engine),
+        test_suite_ex=test_suite_ex(
+            gold_record.result,
+            second_record.result,
+            gold_parsed.sql,
+            engine=session_settings.engine,
+        ),
         mechanism=(
             mechanism(gold_record.result, second_record.result, rule)
             if verdict.result is ComparabilityResult.NOT_EQUAL

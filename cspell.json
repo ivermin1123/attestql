@@ -125,6 +125,7 @@
     "RUNID",
     "SLSA",
     "SOTA",
+    "sqlglot",
     "sqlmesh",
     "SQLSTATE",
     "stlouisfed",

@@ -86,9 +86,17 @@ NUMERIC_TEXT = r"^-?[0-9]+(\.[0-9]+)?$"
 """What counts as a numeric-looking text value. A form this rejects is counted
 non-numeric and the smell stays quiet, which is the conservative direction."""
 
-TEXT_TYPES: frozenset[str] = frozenset({"text", "character varying", "character"})
-"""The declared types the first smell applies to, as a catalogue names them. These are
-PostgreSQL's ``information_schema`` names; a second engine adds its own here."""
+TEXT_TYPES: frozenset[str] = frozenset(
+    {"text", "character varying", "character", "TEXT", "VARCHAR", "CHAR", "CLOB"}
+)
+"""The declared types the first smell applies to, as a catalogue names them.
+
+The lowercase four are PostgreSQL's ``information_schema`` names, which that catalogue
+always renders in lowercase. The uppercase four are SQLite's, and they are the text of the
+CREATE statement rather than a catalogue's rendering of it: SQLite keeps a column's declared
+type verbatim, so what is matched is what the file was written with. A declared type this
+set does not hold is not text as far as this smell is concerned, which is the conservative
+direction: the smell stays quiet."""
 
 FLOAT_TYPES: frozenset[str] = frozenset({"float4", "float8"})
 """The result types whose summation order the fourth smell forgives, by their server

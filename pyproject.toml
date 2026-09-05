@@ -31,6 +31,13 @@ dependencies = [
     # it. The licence is the reason the previous parser was replaced: the audit parses on
     # the product path, and a GPL parser there sets the terms of everything that embeds it.
     "postgast==0.1.0",
+    # The SQLite parser: sqlglot's SQLite dialect (MIT, no runtime dependency of its own).
+    # SQLite ships no grammar as a library, so the tool reads a SQLite statement with a
+    # parser rather than with the engine that will run it, and R-D measured this one
+    # reading every gold of BIRD dev and of both Mini-Dev SQLite copies. Pinned exactly for
+    # the reason the parser above is: the parse decides the replay rule and the ordering a
+    # record states, and a parser that changed under a rerun would change the record.
+    "sqlglot==30.18.0",
 ]
 
 [project.urls]

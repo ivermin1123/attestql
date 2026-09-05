@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+from collections.abc import Mapping
 from pathlib import Path
 
 import pytest
@@ -10,29 +11,47 @@ import pytest
 SRC = Path(__file__).resolve().parents[1] / "src" / "attestql"
 TESTS = Path(__file__).resolve().parent
 
-AUDIT_PARSER = SRC / "audit" / "statements.py"
-"""The one module permitted to import a SQL parser.
+AUDIT_PARSERS: tuple[Path, ...] = (
+    SRC / "audit" / "statements.py",
+    SRC / "audit" / "sqlite_statements.py",
+)
+"""The modules permitted to import a SQL parser: one per engine and no more.
 
 ADR-0013 point 2 makes a parse part of the audit itself: the replay rule is read off the
 gold's ORDER BY and the smells are read off its AST, so the tool cannot run without one.
-Point 8 is where the parser's licence is declared, and the licence is why the parser this
-allowlist names is a BSD binding to libpg_query and no longer a GPL one. The permission is
-an exact path and not a directory, so a second module that started parsing would be a diff
+Point 8 is where the parser's licence is declared, and the licence is why the parsers this
+allowlist names are a BSD binding to libpg_query and an MIT one, and no longer a GPL one.
+ADR-0014 point 3 is why there are two: a second engine reads another grammar, and two
+parsers over one engine would be a second opinion about the same statement. The permissions
+are exact paths and not a directory, so a third module that started parsing would be a diff
 in this file."""
 
-DRIVER_MODULE = SRC / "audit" / "postgres.py"
-"""The one module permitted to import the database driver.
+DRIVER_MODULES: Mapping[str, Path] = {
+    "psycopg": SRC / "audit" / "postgres.py",
+    "sqlite3": SRC / "audit" / "sqlite.py",
+}
+"""Each database driver, and the one module under ``src`` permitted to import it.
 
 ADR-0013 point 4 makes the executor interface engine-neutral from the first commit, and
-this is what that means in the source: everything above it speaks to
-``audit.backend.Backend``, and the driver is reachable from one file. An exact path again,
-for the same reason the allowlist above is one."""
+this is what that means in the source: everything above a backend speaks to
+``audit.backend.Backend``, and each driver is reachable from one file. Exact paths again,
+for the same reason the allowlist above is one.
 
-PARSER_TOP_LEVEL = frozenset({"postgast"})
-"""The binding to libpg_query, and the whole of what ``statements.py`` may parse with.
+``sqlite3`` is in the standard library and is therefore confined under ``src`` rather than
+everywhere: a test builds the file it then audits, and building one is what the read-only
+backend cannot do."""
 
-A second parser anywhere would be a second opinion about the same statement, and the two
-would disagree on the day it mattered."""
+DRIVER_MODULE = DRIVER_MODULES["psycopg"]
+"""The one module permitted to import the database driver anywhere, tests included. The
+prohibition is repository-wide because product tests reach the server through the backend's
+own API, so a driver import cannot spread through the suite either."""
+
+PARSER_TOP_LEVEL = frozenset({"postgast", "sqlglot"})
+"""The binding to libpg_query and sqlglot: the whole of what the two parser modules may
+parse with.
+
+A second parser over one engine would be a second opinion about the same statement, and the
+two would disagree on the day it mattered; a parser per engine is one opinion each."""
 
 # Anything that looks like the V2.9 harness: its package names (lib/, sql/) and its
 # bundle root (eda-v29). ADR-0006 confined these to kernel/adapters/; ADR-0013 deleted
@@ -78,15 +97,15 @@ PACKAGE_METADATA = "importlib.metadata"
 exemption below. It reads what a package manager wrote and imports no code, which is the
 reason ``importlib`` is in the set above."""
 
-METADATA_READER = SRC / "audit" / "statements.py"
-"""The one file permitted to read installed package metadata, and permitted
-``importlib.metadata`` alone.
+METADATA_READERS: tuple[Path, ...] = AUDIT_PARSERS
+"""The files permitted to read installed package metadata, permitted ``importlib.metadata``
+alone, and the parser modules for the same reason in both cases.
 
-A summary states which parser judged its statements, and half of that is the binding's own
-release, which the binding does not carry as an attribute. An exact path, as the driver's
-and the parser's are, and exercised by the test below, so the day it stops being used is
-the day it stops being granted. Every other primitive in the set is forbidden there too,
-including the rest of ``importlib``."""
+A summary states which parser judged its statements, and half of that is the parser's own
+release, which the distribution states and the package does not carry as a public
+attribute. Exact paths, as the drivers' and the parsers' are, and exercised by the test
+below, so the day one stops being used is the day it stops being granted. Every other
+primitive in the set is forbidden there too, including the rest of ``importlib``."""
 
 CONSOLE_SCRIPT_TEST = TESTS / "test_audit_end_to_end.py"
 """The one file permitted to start a process, and permitted ``subprocess`` alone.
@@ -223,29 +242,43 @@ def test_nothing_imports_the_v29_harness(path: Path) -> None:
 
 @pytest.mark.parametrize(
     "path",
-    [path for path in scanned_files() if path != AUDIT_PARSER],
+    [path for path in scanned_files() if path not in AUDIT_PARSERS],
     ids=lambda p: str(p.relative_to(SRC.parent.parent)),
 )
-def test_no_file_but_the_audit_parser_imports_a_parser(path: Path) -> None:
+def test_no_file_but_an_audit_parser_imports_a_parser(path: Path) -> None:
     offenders = [name for name in imported_modules(path) if looks_like_a_parser(name)]
     assert not offenders, f"{path} imports the parser: {offenders}"
 
 
-def test_the_audit_parser_really_imports_the_parser() -> None:
+@pytest.mark.parametrize("path", AUDIT_PARSERS, ids=lambda p: p.name)
+def test_each_audit_parser_really_imports_a_parser(path: Path) -> None:
     """The positive case of the allowlist, on the same ground as the driver's: a permission
     nobody uses is a permission whose widening nobody notices."""
-    reached = [name for name in imported_modules(AUDIT_PARSER) if looks_like_a_parser(name)]
-    assert reached, "the audit parser is the allowed parser importer but imports no parser"
+    reached = [name for name in imported_modules(path) if looks_like_a_parser(name)]
+    assert reached, f"{path.name} is an allowed parser importer but imports no parser"
 
 
-def test_the_parser_is_reachable_from_exactly_one_module_under_src() -> None:
-    """One parse per statement, and one module that can make one."""
+def test_a_parser_is_reachable_from_exactly_the_parser_modules_under_src() -> None:
+    """One parse per statement, and one module per engine that can make one."""
     importers = [
         path
         for path in python_files(SRC)
         if any(looks_like_a_parser(name) for name in imported_modules(path))
     ]
-    assert importers == [AUDIT_PARSER]
+    assert sorted(importers) == sorted(AUDIT_PARSERS)
+
+
+@pytest.mark.parametrize("driver", sorted(DRIVER_MODULES), ids=lambda name: name)
+def test_each_driver_is_reachable_from_exactly_one_module_under_src(driver: str) -> None:
+    """Stated per driver as well as per file: everything above a backend speaks to the
+    interface, so a second importer of either driver would be an interface that had stopped
+    being the way to a database."""
+    importers = [
+        path
+        for path in python_files(SRC)
+        if any(name.split(".")[0] == driver for name in imported_modules(path))
+    ]
+    assert importers == [DRIVER_MODULES[driver]]
 
 
 def forbidden_primitives(path: Path) -> list[str]:
@@ -256,7 +289,7 @@ def forbidden_primitives(path: Path) -> list[str]:
     for node in ast.walk(parse(path)):
         if isinstance(node, (ast.Import, ast.ImportFrom)):
             for name in imported_modules_of(node):
-                if path == METADATA_READER and name == PACKAGE_METADATA:
+                if path in METADATA_READERS and name == PACKAGE_METADATA:
                     continue
                 if name.split(".")[0] in forbidden_imports:
                     found.append(f"line {node.lineno}: import {name}")
@@ -289,10 +322,11 @@ def test_no_dynamic_code_execution_or_network_primitives(path: Path) -> None:
     assert not found, f"{path}: {found}"
 
 
-def test_the_metadata_reader_really_reads_the_metadata_it_is_allowed_to() -> None:
-    """The positive case of the one metadata permission, on the same ground as the rest."""
-    assert PACKAGE_METADATA in imported_modules(METADATA_READER), (
-        f"{METADATA_READER.name} is the allowed metadata reader and reads none"
+@pytest.mark.parametrize("path", METADATA_READERS, ids=lambda p: p.name)
+def test_each_metadata_reader_really_reads_the_metadata_it_is_allowed_to(path: Path) -> None:
+    """The positive case of the metadata permissions, on the same ground as the rest."""
+    assert PACKAGE_METADATA in imported_modules(path), (
+        f"{path.name} is an allowed metadata reader and reads none"
     )
 
 

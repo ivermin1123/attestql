@@ -1,0 +1,644 @@
+"""The SQLite backend against real files, and one whole audit over one of them.
+
+Every other backend test in this suite either scripts a connection or needs the container
+the PostgreSQL sandbox starts. This one needs neither: a SQLite file is built in
+``tmp_path``, audited through the real backend, and thrown away with the directory, so what
+is observed here is the engine's own answers and not a fake's.
+
+What the file cannot state is what most of this is about. A column has no declared result
+type, so the type a record carries is the storage class the cells came back at; there is no
+session to precondition, so the seven settings are absent and nine readings are recorded
+instead; there is no role and no grant, so read-only is the file and the envelope over it;
+and there is no scratch schema to be given, so the shuffled copies are TEMP tables on a
+second connection that the audited one cannot see.
+"""
+
+from __future__ import annotations
+
+import json
+import sqlite3
+from collections.abc import Sequence
+from datetime import UTC, datetime
+from decimal import Decimal
+from pathlib import Path
+from typing import Any, cast
+
+import pytest
+
+from attestql.audit.backend import BackendRefused, ReadBackDrift, TableName
+from attestql.audit.cli import SUMMARY_FILE, AuditOptions, connect_and_audit
+from attestql.audit.compare import bird_ex
+from attestql.audit.engines import SQLITE
+from attestql.audit.smells import NUMERIC_TEXT
+from attestql.audit.sqlite import (
+    QUALIFIED_NAME_IS_NOT_REACHED,
+    UNOBSERVED,
+    WITHOUT_A_ROW_IDENTITY,
+    SqliteBackend,
+)
+from attestql.audit.sqlite_statements import PARSER as SQLITE_PARSER
+from attestql.audit.sqlite_statements import parse_statement
+from attestql.evidence.serialize import UnsupportedValue, canonical_type_tag, typed_row
+from attestql.evidence.types import ENGINE_SQLITE
+from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
+
+TIMEOUT_SECONDS = 10
+
+FIXTURE = """
+CREATE TABLE drivers (driverid INTEGER PRIMARY KEY, nationality TEXT);
+INSERT INTO drivers VALUES (1, 'Norwegian'), (2, 'Peruvian'), (3, 'Kenyan');
+
+CREATE TABLE results (
+    resultid INTEGER PRIMARY KEY,
+    driverid INTEGER,
+    fastestlapspeed TEXT,
+    points REAL,
+    untyped
+);
+INSERT INTO results VALUES
+    (1, 2, '259.870', 1.5, 'a'),
+    (2, 1, '93.175', 0.5, 'b'),
+    (3, 3, NULL, 2.0, 'c');
+
+CREATE TABLE mixed (value);
+INSERT INTO mixed VALUES (1), (1.0), ('1'), (NULL);
+
+CREATE TABLE keyed (code TEXT PRIMARY KEY, label TEXT) WITHOUT ROWID;
+INSERT INTO keyed VALUES ('a', 'Alpha'), ('b', 'Beta');
+
+CREATE VIEW fast AS SELECT driverid, fastestlapspeed FROM results;
+"""
+"""One file with everything the readings below need: a text column of numerals, a REAL
+column, a column declared with no type at all, a column holding four storage classes, a
+relation with no rowid and a view."""
+
+
+def _build(path: Path, statements: str = FIXTURE) -> Path:
+    connection = sqlite3.connect(path)
+    with connection:
+        connection.executescript(statements)
+    connection.close()
+    return path
+
+
+@pytest.fixture
+def audited_file(tmp_path: Path) -> Path:
+    return _build(tmp_path / "audit.sqlite")
+
+
+@pytest.fixture
+def backend(audited_file: Path) -> SqliteBackend:
+    return SqliteBackend.connect(str(audited_file))
+
+
+def _rows(backend: SqliteBackend, sql: str) -> tuple[tuple[object, ...], ...]:
+    return backend.execute(sql, statement_timeout_seconds=TIMEOUT_SECONDS).rows
+
+
+def _types(backend: SqliteBackend, sql: str) -> list[str]:
+    result = backend.execute(sql, statement_timeout_seconds=TIMEOUT_SECONDS)
+    return [column.declared_type for column in result.columns]
+
+
+def _result(columns: Sequence[ColumnType], rows: Sequence[tuple[object, ...]]) -> ExecutionResult:
+    """One result as the SQLite backend would have built it, for a reading asked directly."""
+    return ExecutionResult(
+        columns=tuple(columns),
+        rows=tuple(rows),
+        backend_identity="SQLite | file=nowhere | size=0",
+        limits_in_force=ExecutionLimits(statement_timeout_ms=1000),
+        truncated=False,
+    )
+
+
+def test_a_file_that_is_not_there_is_a_refusal_and_not_an_empty_database(tmp_path: Path) -> None:
+    """SQLite would create the file rather than refuse, and an audit over a database it just
+    made would measure nothing and say every table is missing."""
+    with pytest.raises(BackendRefused, match="there is no SQLite file"):
+        SqliteBackend.connect(str(tmp_path / "absent.sqlite"))
+
+
+def test_the_identity_names_the_version_the_file_and_its_size(
+    backend: SqliteBackend, audited_file: Path
+) -> None:
+    identity = backend.identity()
+
+    assert identity.startswith("SQLite ")
+    assert f"file={audited_file.resolve()}" in identity
+    assert f"size={audited_file.stat().st_size}" in identity
+    assert backend.effective_database_role() == "file"
+
+
+def test_the_session_states_the_nine_readings_and_none_of_the_seven_preconditions(
+    backend: SqliteBackend,
+) -> None:
+    """A SQLite record states no session setting that decides comparability, so the seven are
+    absent rather than filled with a value the engine does not hold, and what the file can be
+    asked about itself is recorded instead (ADR-0014 point 2)."""
+    settings = backend.session_settings()
+
+    assert settings.engine == ENGINE_SQLITE
+    assert settings.database_collation is None
+    assert (settings.time_zone, settings.date_style, settings.interval_style) == (None, None, None)
+    assert (settings.extra_float_digits, settings.work_mem, settings.hash_mem_multiplier) == (
+        None,
+        None,
+        None,
+    )
+    assert set(settings.recorded) == {
+        "sqlite_version",
+        "encoding",
+        "compile_options",
+        "collation_list",
+        "case_sensitive_like",
+        "reverse_unordered_selects",
+        "query_only",
+        "journal_mode",
+        "data_version",
+    }
+    assert settings.recorded["query_only"] == "1", "the envelope is what the run held"
+    assert "BINARY" in settings.recorded["collation_list"]
+    assert settings.recorded["case_sensitive_like"] == "0", (
+        "LIKE is case insensitive by default, and the pragma can be set and never read, so "
+        "what is recorded is what the file was observed doing"
+    )
+    assert backend.session_settings() is settings, "read once for a whole run"
+
+
+def test_each_storage_class_comes_back_as_the_python_type_a_record_can_render(
+    backend: SqliteBackend,
+) -> None:
+    """A REAL becomes the shortest decimal that round-trips it, because the canonical
+    serialization states no rendering for a float and because R-SET has to keep a REAL and an
+    INTEGER apart."""
+    rows = _rows(
+        backend,
+        "SELECT d.driverid, d.nationality, r.points, r.fastestlapspeed FROM results r "
+        "JOIN drivers d ON d.driverid = r.driverid WHERE r.resultid = 3",
+    )
+
+    assert rows == ((3, "Kenyan", Decimal("2.0"), None),)
+    assert [canonical_type_tag(value) for value in rows[0]] == ["int", "str", "dec", "null"]
+
+
+def test_a_real_and_an_integer_holding_one_amount_stay_two_values(backend: SqliteBackend) -> None:
+    """ADR-0004's storage-class rule, read off the engine rather than asserted about it: the
+    file holds ``1`` and ``1.0`` in one column and the comparator keys them apart."""
+    rows = _rows(backend, "SELECT value FROM mixed ORDER BY rowid")
+
+    assert rows == ((1,), (Decimal("1.0"),), ("1",), (None,))
+    assert len({typed_row(row) for row in rows}) == 4
+
+
+def test_a_real_keeps_the_digits_the_double_holds_and_no_more(tmp_path: Path) -> None:
+    """``repr`` of a Python float is the shortest text that round-trips the double, so the
+    decimal built from it is the number the file holds: no digit invented, none lost."""
+    path = _build(tmp_path / "reals.sqlite", "CREATE TABLE r (x REAL); INSERT INTO r VALUES (0.1);")
+    backend = SqliteBackend.connect(str(path))
+
+    assert _rows(backend, "SELECT x FROM r") == ((Decimal("0.1"),),)
+    assert float(Decimal("0.1")) == 0.1
+
+
+def test_a_blob_is_refused_at_the_value_rather_than_carried_into_a_record(
+    tmp_path: Path,
+) -> None:
+    """The canonical serialization states no rendering for bytes, so a result holding one is
+    refused where the value is read, the way the PostgreSQL backend refuses a float its
+    server printed unreadably."""
+    path = _build(
+        tmp_path / "blob.sqlite", "CREATE TABLE b (x BLOB); INSERT INTO b VALUES (x'00');"
+    )
+    backend = SqliteBackend.connect(str(path))
+
+    with pytest.raises(BackendRefused, match="no rendering"):
+        backend.execute("SELECT x FROM b", statement_timeout_seconds=TIMEOUT_SECONDS)
+    with pytest.raises(UnsupportedValue):
+        canonical_type_tag(b"\x00")
+
+
+def test_a_column_is_typed_by_the_storage_classes_its_cells_came_back_at(
+    backend: SqliteBackend,
+) -> None:
+    """SQLite types values and not columns, so what a record states about a result column is
+    what its cells were observed at: one class name when they agree, the sorted classes
+    joined when they do not, and never nothing."""
+    assert _types(backend, "SELECT driverid, nationality FROM drivers") == ["INTEGER", "TEXT"]
+    assert _types(backend, "SELECT value FROM mixed") == ["INTEGER|NULL|REAL|TEXT"]
+    assert _types(backend, "SELECT fastestlapspeed FROM results WHERE resultid = 3") == ["NULL"]
+
+
+def test_a_result_with_no_rows_says_its_column_was_observed_at_no_class(
+    backend: SqliteBackend,
+) -> None:
+    """A storage class is a property of a value, so a column that returned none was observed
+    at none. The field is never empty: a reader has to be told this was measured and came
+    back with nothing rather than left out."""
+    assert _types(backend, "SELECT nationality FROM drivers WHERE 0") == [UNOBSERVED]
+
+
+def test_a_write_is_refused_by_the_file_and_by_the_envelope_over_it(
+    backend: SqliteBackend,
+) -> None:
+    """Read-only twice over: ``mode=ro`` is the file-level guarantee and ``query_only`` is the
+    envelope, and both refuse with SQLite's own words."""
+    for sql in (
+        "INSERT INTO drivers VALUES (9, 'Probe')",
+        "UPDATE drivers SET nationality = 'Probe'",
+        "CREATE TABLE probe (x INTEGER)",
+    ):
+        with pytest.raises(BackendRefused, match="readonly database"):
+            backend.execute(sql, statement_timeout_seconds=TIMEOUT_SECONDS)
+
+
+def test_a_connection_that_lost_the_envelope_is_refused_rather_than_read(
+    audited_file: Path,
+) -> None:
+    """Rows returned by a session that is not the session the record would describe are not
+    evidence. The envelope is read back before every statement, as the PostgreSQL backend
+    reads its SET LOCALs back, and drift is refused the same way."""
+    connection = sqlite3.connect(f"file:{audited_file}?mode=ro", uri=True, isolation_level=None)
+    backend = SqliteBackend(connection, path=audited_file)
+    connection.execute("PRAGMA query_only = 0")
+
+    with pytest.raises(ReadBackDrift, match="query_only was set to 1"):
+        backend.execute("SELECT 1", statement_timeout_seconds=TIMEOUT_SECONDS)
+
+
+def test_a_statement_that_runs_past_its_bound_is_stopped_and_named(
+    backend: SqliteBackend,
+) -> None:
+    """SQLite has no statement timeout to set and read back, so the bound is enforced by this
+    process and what the record states as in force is what was enforced."""
+    with pytest.raises(BackendRefused, match="past its 1s timeout"):
+        backend.execute(
+            "WITH RECURSIVE forever(x) AS (SELECT 1 UNION ALL SELECT x + 1 FROM forever) "
+            "SELECT count(*) FROM forever",
+            statement_timeout_seconds=1,
+        )
+
+
+def test_the_bound_the_result_states_is_the_one_the_statement_ran_under(
+    backend: SqliteBackend,
+) -> None:
+    result = backend.execute("SELECT 1", statement_timeout_seconds=7)
+
+    assert result.limits_in_force == ExecutionLimits(statement_timeout_ms=7000)
+    assert not result.truncated
+
+
+def test_the_lookup_answers_for_tables_and_views_and_never_for_a_grant(
+    backend: SqliteBackend,
+) -> None:
+    """A file has no grants: whoever opens it reads everything in it, so the second of the two
+    ways a name can fail to be measurable does not arise here and the caller is told so rather
+    than given a word that means something else on this engine."""
+    lookup = backend.existing_tables(
+        (
+            TableName("", "drivers"),
+            TableName("main", "results"),
+            TableName("", "fast"),
+            TableName("", "seasons"),
+            TableName("other", "drivers"),
+        )
+    )
+
+    assert lookup.present == (
+        TableName("", "drivers"),
+        TableName("main", "results"),
+        TableName("", "fast"),
+    )
+    assert lookup.unreadable == ()
+
+
+def test_the_counts_and_the_schema_digest_are_read_under_the_one_schema_a_file_has(
+    backend: SqliteBackend,
+) -> None:
+    """``main.drivers`` and ``drivers`` are one table, so the two spellings are counted once
+    and the digest covers the relation once."""
+    counts = backend.row_counts((TableName("", "drivers"), TableName("main", "drivers")))
+
+    assert dict(counts) == {"main.drivers": 3}
+    assert backend.schema_digest((TableName("", "drivers"),)).startswith("sha256:")
+    assert backend.schema_digest((TableName("", "drivers"),)) != backend.schema_digest(
+        (TableName("", "results"),)
+    )
+
+
+def test_the_content_digest_is_the_rows_and_not_the_order_they_are_stored_in(
+    tmp_path: Path,
+) -> None:
+    """Taken Python-side and over the rows sorted by what they render to, because SQLite has
+    no ``md5`` and no ordered ``string_agg``, and because a shuffled copy of a table holds the
+    same rows in another physical order and has to digest the same."""
+    one = SqliteBackend.connect(
+        str(
+            _build(
+                tmp_path / "one.sqlite",
+                "CREATE TABLE t (a INTEGER, b TEXT); INSERT INTO t VALUES (1,'x'),(2,'y');",
+            )
+        )
+    )
+    other = SqliteBackend.connect(
+        str(
+            _build(
+                tmp_path / "other.sqlite",
+                "CREATE TABLE t (a INTEGER, b TEXT); INSERT INTO t VALUES (2,'y'),(1,'x');",
+            )
+        )
+    )
+    changed = SqliteBackend.connect(
+        str(
+            _build(
+                tmp_path / "changed.sqlite",
+                "CREATE TABLE t (a INTEGER, b TEXT); INSERT INTO t VALUES (1,'x'),(2,'z');",
+            )
+        )
+    )
+    asked = (TableName("", "t"),)
+
+    assert dict(one.content_digests(asked)) == dict(other.content_digests(asked))
+    assert dict(one.content_digests(asked)) != dict(changed.content_digests(asked))
+    assert one.content_digests(asked)["main.t"].startswith("sha256:")
+
+
+def test_a_text_one_and_an_integer_one_are_two_rows_to_the_content_digest(
+    tmp_path: Path,
+) -> None:
+    """The digest is typed for the reason the canonical serialization is: a digest that
+    rendered both as ``1`` would call two tables one."""
+    integers = SqliteBackend.connect(
+        str(_build(tmp_path / "i.sqlite", "CREATE TABLE t (v); INSERT INTO t VALUES (1);"))
+    )
+    strings = SqliteBackend.connect(
+        str(_build(tmp_path / "s.sqlite", "CREATE TABLE t (v); INSERT INTO t VALUES ('1');"))
+    )
+    asked = (TableName("", "t"),)
+
+    assert dict(integers.content_digests(asked)) != dict(strings.content_digests(asked))
+
+
+def test_the_content_signal_moves_when_the_file_does_and_is_the_file_s_own(
+    backend: SqliteBackend, audited_file: Path
+) -> None:
+    """The signal is the file's size, its modification time and its two version counters, so
+    every table of one file carries the same one. That is stated rather than worked around: it
+    is not a digest, it never reaches a record, and it still tells a cached measurement of this
+    file from one taken before it changed."""
+    asked = (TableName("", "drivers"), TableName("", "results"))
+    before = dict(backend.content_signal(asked))
+
+    assert set(before) == {"main.drivers", "main.results"}
+    assert len(set(before.values())) == 1
+
+    writing = sqlite3.connect(audited_file)
+    with writing:
+        writing.execute("INSERT INTO drivers VALUES (4, 'Icelandic')")
+    writing.close()
+
+    assert dict(SqliteBackend.connect(str(audited_file)).content_signal(asked)) != before
+
+
+def test_the_planner_keeps_nothing_an_audit_could_record(backend: SqliteBackend) -> None:
+    """SQLite's planner reads ``sqlite_stat1``, which exists only after an ANALYZE, and an
+    audit reads. An engine that counts nothing of the kind answers with nothing at all rather
+    than with an invented zero."""
+    assert backend.planner_statistics((TableName("", "drivers"),)) == {}
+
+
+def test_the_declared_types_are_the_catalogue_s_own_text_empty_one_included(
+    backend: SqliteBackend,
+) -> None:
+    """SQLite lets a column be declared with no type at all, and an empty declaration IS what
+    the catalogue holds for one, so it is kept rather than filled in."""
+    types = backend.column_types((TableName("", "results"), TableName("other", "results")))
+
+    assert types[TableName("", "results")] == {
+        "resultid": "INTEGER",
+        "driverid": "INTEGER",
+        "fastestlapspeed": "TEXT",
+        "points": "REAL",
+        "untyped": "",
+    }
+    assert TableName("other", "results") not in types
+
+
+def test_the_census_counts_a_text_column_through_a_regexp_the_file_does_not_define(
+    backend: SqliteBackend,
+) -> None:
+    """SQLite defines the ``REGEXP`` operator and no function behind it, so one is registered
+    from Python and the census asks the same question here that it asks of PostgreSQL's
+    ``!~``."""
+    numeric = backend.numeric_text_census(TableName("", "results"), "fastestlapspeed", NUMERIC_TEXT)
+    words = backend.numeric_text_census(TableName("", "drivers"), "nationality", NUMERIC_TEXT)
+
+    assert (numeric.rows, numeric.nulls, numeric.empty_strings, numeric.non_numeric) == (3, 1, 0, 0)
+    assert numeric.pattern == NUMERIC_TEXT
+    assert (words.rows, words.non_numeric) == (3, 3)
+
+
+def test_a_rerun_over_the_copies_reads_the_copies_and_the_audited_one_never_does(
+    backend: SqliteBackend,
+) -> None:
+    """SQLite resolves an unqualified name in ``temp`` before ``main``, which is what the
+    PostgreSQL scratch schema on the search path achieves. The copies are on a second
+    connection, so the audited one goes on reading the file: a statement sent to ``execute``
+    after the copies exist is answered by the table and not by a copy of it."""
+    unordered = "SELECT driverid FROM drivers"
+    before = _rows(backend, unordered)
+    prepared = backend.prepare_shuffled_copies(
+        (TableName("", "drivers"),), seed="a-seed", row_limit=1000
+    )
+    try:
+        shuffled = backend.execute_shuffled(unordered, statement_timeout_seconds=TIMEOUT_SECONDS)
+
+        assert prepared.copied == (TableName("", "drivers"),)
+        assert set(shuffled.rows) == set(before), "a copy holds the same rows"
+        assert _rows(backend, unordered) == before, "the audited connection sees no copy"
+        assert _rows(backend, "SELECT driverid FROM main.drivers") == before
+    finally:
+        backend.drop_shuffled_copies()
+
+    with pytest.raises(BackendRefused, match="no shuffled copies"):
+        backend.execute_shuffled(unordered, statement_timeout_seconds=TIMEOUT_SECONDS)
+
+
+def test_the_copies_are_written_in_the_order_the_seed_fixes(backend: SqliteBackend) -> None:
+    """Seeded rather than random, so a run reproduces; over the source row's rowid rather than
+    over its values, so two identical rows still land in two places."""
+    order = "SELECT driverid FROM drivers"
+    first = backend.prepare_shuffled_copies(
+        (TableName("", "drivers"),), seed="a-seed", row_limit=1000
+    )
+    once = backend.execute_shuffled(order, statement_timeout_seconds=TIMEOUT_SECONDS).rows
+    backend.drop_shuffled_copies()
+    backend.prepare_shuffled_copies((TableName("", "drivers"),), seed="a-seed", row_limit=1000)
+    twice = backend.execute_shuffled(order, statement_timeout_seconds=TIMEOUT_SECONDS).rows
+    backend.drop_shuffled_copies()
+
+    assert first.seed == "a-seed"
+    assert once == twice
+
+
+def test_the_copies_name_what_they_did_not_cover_and_why(backend: SqliteBackend) -> None:
+    """A smell that reruns a statement says which part of the data it did not shuffle: a
+    qualified name a rerun would read in place whatever was copied, a relation with no rowid
+    to order a copy by, and a table with more rows than the limit."""
+    prepared = backend.prepare_shuffled_copies(
+        (
+            TableName("", "drivers"),
+            TableName("main", "results"),
+            TableName("", "keyed"),
+            TableName("", "fast"),
+        ),
+        seed="a-seed",
+        row_limit=2,
+    )
+    try:
+        assert prepared.copied == (), "nothing here was both small enough and copyable"
+        assert prepared.skipped == {TableName("", "drivers"): 3}
+        assert prepared.unreachable[TableName("main", "results")] == QUALIFIED_NAME_IS_NOT_REACHED
+        assert prepared.unreachable[TableName("", "keyed")] == WITHOUT_A_ROW_IDENTITY
+        assert prepared.unreachable[TableName("", "fast")] == WITHOUT_A_ROW_IDENTITY
+    finally:
+        backend.drop_shuffled_copies()
+
+
+def test_dropping_the_copies_is_safe_when_the_run_made_none(backend: SqliteBackend) -> None:
+    backend.drop_shuffled_copies()
+    backend.drop_shuffled_copies()
+
+
+def test_the_plan_variant_reads_the_same_rows_and_gives_the_control_back(
+    backend: SqliteBackend,
+) -> None:
+    """SQLite exposes one plan control to a reader: the transient index it builds for a join
+    it has no index for. It is a connection setting, so it is turned back on whatever the
+    statement did, and a later execution of the run is not left reading its tables another
+    way."""
+    join = (
+        "SELECT d.nationality FROM drivers d JOIN results r ON r.driverid = d.driverid "
+        "ORDER BY r.resultid"
+    )
+    variant = backend.execute_plan_variant(join, statement_timeout_seconds=TIMEOUT_SECONDS)
+
+    assert variant.rows == _rows(backend, join)
+    assert _rows(backend, "SELECT 1") == ((1,),), "the connection still answers"
+
+
+def test_the_benchmark_s_own_reading_of_a_sqlite_result_is_its_own_driver_s(
+    backend: SqliteBackend,
+) -> None:
+    """BIRD's SQLite scorer sets over the rows ``sqlite3`` returns, where a REAL is a Python
+    float and Python equality holds ``1 == 1.0 == True``. This backend loads a REAL as the
+    decimal that round-trips it, which typed replay needs and which the reading has to undo
+    before it answers for the benchmark: under it the two are one value, and under the typed
+    comparison they are two."""
+    integers = _result((ColumnType("v", "INTEGER"),), ((1,),))
+    reals = _result((ColumnType("v", "REAL"),), ((Decimal("1.0"),),))
+
+    reading = bird_ex(integers, reals, engine=ENGINE_SQLITE)
+
+    assert reading.value == 1
+    assert "sqlite3" in reading.method
+    assert typed_row((1,)) != typed_row((Decimal("1.0"),)), "the typed rule keeps them apart"
+    assert bird_ex(integers, reals, engine=ENGINE_SQLITE).equal
+    assert not bird_ex(
+        reals, _result((ColumnType("v", "REAL"),), ((Decimal("2.0"),),)), engine=ENGINE_SQLITE
+    ).equal
+
+
+class Lines:
+    """A writer that keeps what was written instead of printing it."""
+
+    def __init__(self) -> None:
+        self.written: list[str] = []
+
+    def line(self, text: str) -> None:
+        self.written.append(text)
+
+
+def _question_files(tmp_path: Path) -> tuple[Path, Path]:
+    """One gold that orders a numeric-looking text column as text, and its correction."""
+    questions = tmp_path / "questions.json"
+    questions.write_text(
+        json.dumps(
+            {
+                "questions": [
+                    {
+                        "question_id": 879,
+                        "db_id": "formula_1",
+                        "question": "For the driver who set the fastest lap speed, "
+                        "what is his nationality?",
+                        "evidence": "the fastest lap speed refers to (MAX) fastestLapSpeed",
+                        "SQL": "SELECT d.nationality FROM drivers AS d "
+                        "JOIN results AS r ON r.driverid = d.driverid "
+                        "ORDER BY r.fastestlapspeed DESC LIMIT 1",
+                        "difficulty": "moderate",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    predictions = tmp_path / "predictions.json"
+    predictions.write_text(
+        json.dumps(
+            {
+                "879": "SELECT d.nationality FROM drivers AS d "
+                "JOIN results AS r ON r.driverid = d.driverid "
+                "ORDER BY CAST(r.fastestlapspeed AS REAL) DESC LIMIT 1"
+            }
+        ),
+        encoding="utf-8",
+    )
+    return questions, predictions
+
+
+def test_a_whole_audit_runs_on_a_sqlite_file_and_the_summary_says_which_engine(
+    tmp_path: Path, audited_file: Path
+) -> None:
+    """The command's own path, end to end and without a container: connect to the file, read
+    the gold with sqlglot, run both statements read-only, compare under the gold's own rule,
+    and write the summary a maintainer reads.
+
+    The disagreement is the shape of BIRD Mini-Dev's q879: '93.175' is the largest string and
+    259.870 the largest number, so the two statements land on two drivers.
+    """
+    questions, predictions = _question_files(tmp_path)
+    options = AuditOptions(
+        dsn=str(audited_file),
+        questions=questions,
+        predictions=predictions,
+        out=tmp_path / "audit",
+        engine=SQLITE,
+        data_as_of=datetime(2026, 9, 5, tzinfo=UTC),
+    )
+    writer = Lines()
+
+    assert connect_and_audit(options, writer) == 1, "a disagreement is exit status one"
+    assert writer.written[-1].startswith("1 questions: 1 NOT_EQUAL")
+
+    document = cast(
+        "dict[str, Any]",
+        json.loads((tmp_path / "audit" / SUMMARY_FILE).read_text(encoding="utf-8")),
+    )
+    assert document["session_settings"]["engine"] == ENGINE_SQLITE
+    assert document["parser"] == SQLITE_PARSER.json()
+    assert document["planner_statistics"] == {}
+    assert document["fixture"]["row_counts"] == {"main.drivers": 3, "main.results": 3}
+    assert document["backend_identity"].startswith("SQLite ")
+    assert document["effective_database_role"] == "file"
+
+
+def test_the_gold_and_its_correction_land_on_two_drivers_over_this_file(
+    backend: SqliteBackend,
+) -> None:
+    """What the audit above compared, read directly so the disagreement is visible without
+    opening the counterexample: ordering the speeds as text is not ordering them as numbers.
+    """
+    gold = "SELECT d.nationality FROM drivers AS d JOIN results AS r ON r.driverid = d.driverid ORDER BY r.fastestlapspeed DESC LIMIT 1"
+    corrected = parse_statement(gold).with_ordering_key_cast_to_numeric(0)
+
+    assert _rows(backend, gold) == (("Norwegian",),), "'93.175' is the largest string"
+    assert _rows(backend, corrected) == (("Peruvian",),), "259.870 is the largest number"
