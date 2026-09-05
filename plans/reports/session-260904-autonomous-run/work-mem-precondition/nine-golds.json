@@ -1,0 +1,74 @@
+[
+ {
+  "question_id": 1473,
+  "db_id": "debit_card_specializing",
+  "question": "What was the average monthly consumption of customers in SME for the year 2013?",
+  "evidence": "Average Monthly consumption = AVG(Consumption) / 12; Year 2013 can be presented as Between 201301 And 201312; The first 4 strings of the Date values in the yearmonth table can represent year.",
+  "SQL": "SELECT AVG(T2.Consumption) / NULLIF(12, 0) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME'",
+  "difficulty": "moderate"
+ },
+ {
+  "question_id": 1476,
+  "db_id": "debit_card_specializing",
+  "question": "What was the difference in gas consumption between CZK-paying customers and EUR-paying customers in 2012?",
+  "evidence": "cast the consumption into float when perform calculation; Year 2012 can be presented as Between 201201 And 201212; The first 4 strings of the Date values in the yearmonth table can represent year; Difference in Consumption = CZK customers consumption in 2012 - EUR customers consumption in 2012",
+  "SQL": "SELECT SUM(CASE WHEN T1.Currency = 'CZK' THEN CAST(T2.Consumption AS float) ELSE 0 END) -SUM(CASE WHEN T1.Currency = 'EUR' THEN CAST(T2.Consumption AS float) ELSE 0 END) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE substring(T2.Date, 1, 4) = '2012'",
+  "difficulty": "challenging"
+ },
+ {
+  "question_id": 1482,
+  "db_id": "debit_card_specializing",
+  "question": "Which of the three segments\u2014SME, LAM and KAM\u2014has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?",
+  "evidence": "Increase or Decrease = consumption for 2013 - consumption for 2012; Percentage of Increase = (Increase or Decrease / consumption for 2013) * 100%; The first 4 strings of the Date values in the yearmonth table can represent year",
+  "SQL": "SELECT CAST((SUM(CASE WHEN T1.Segment = 'SME' AND T2.Date LIKE '2013%' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN T1.Segment = 'SME' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END)) AS REAL) * 100 / NULLIF(SUM(CASE WHEN T1.Segment = 'SME' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END), 0), CAST(SUM(CASE WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2013%' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END) AS REAL) * 100 / NULLIF(SUM(CASE WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END), 0), CAST(SUM(CASE WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2013%' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END) AS REAL) * 100 / NULLIF(SUM(CASE WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END), 0) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID",
+  "difficulty": "challenging"
+ },
+ {
+  "question_id": 1529,
+  "db_id": "debit_card_specializing",
+  "question": "What is the amount spent by customer \"38508\" at the gas stations? How much had the customer spent in January 2012?",
+  "evidence": "January 2012 refers to the Date value = '201201'",
+  "SQL": "SELECT SUM(T1.Price ), SUM(CASE WHEN T3.Date = '201201' THEN T1.Price ELSE 0 END) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN yearmonth AS T3 ON T1.CustomerID = T3.CustomerID WHERE T1.CustomerID = '38508'",
+  "difficulty": "moderate"
+ },
+ {
+  "question_id": 1531,
+  "db_id": "debit_card_specializing",
+  "question": "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?",
+  "evidence": "average price per single item = Total(price) / Total(amount)",
+  "SQL": "SELECT T2.CustomerID, SUM(T2.Price / NULLIF(T2.Amount, 0)), T1.Currency FROM customers AS T1 INNER JOIN transactions_1k AS T2 ON T1.CustomerID = T2.CustomerID WHERE T2.CustomerID = (SELECT CustomerID FROM yearmonth ORDER BY Consumption DESC NULLS LAST LIMIT 1) GROUP BY T2.CustomerID, T1.Currency",
+  "difficulty": "moderate"
+ },
+ {
+  "question_id": 1380,
+  "db_id": "student_club",
+  "question": "What is the total amount of money spent for food?",
+  "evidence": "total amount of money spent refers to SUM(spent); spent for food refers to category = 'Food'",
+  "SQL": "SELECT SUM(spent) FROM budget WHERE category = 'Food'",
+  "difficulty": "simple"
+ },
+ {
+  "question_id": 1390,
+  "db_id": "student_club",
+  "question": "Based on the total cost for all event, what is the percentage of cost for Yearly Kickoff event?",
+  "evidence": "percentage = DIVIDE(SUM(cost where event_name = 'Yearly Kickoff'), SUM(cost)) * 100",
+  "SQL": "SELECT CAST(SUM(CASE WHEN T1.event_name = 'Yearly Kickoff' THEN T3.cost ELSE 0 END) AS REAL) * 100 / NULLIF(SUM(T3.cost), 0) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget",
+  "difficulty": "moderate"
+ },
+ {
+  "question_id": 1410,
+  "db_id": "student_club",
+  "question": "List out the full name and total cost that member id \"rec4BLdZHS2Blfp4v\" incurred?",
+  "evidence": "full name refers to first_name, last name",
+  "SQL": "SELECT T1.first_name, T1.last_name, SUM(T2.cost) FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.member_id = 'rec4BLdZHS2Blfp4v' GROUP BY T1.first_name, T1.last_name",
+  "difficulty": "simple"
+ },
+ {
+  "question_id": 955,
+  "db_id": "formula_1",
+  "question": "What is the average time in seconds of champion for each year, before year 1975?",
+  "evidence": "only champion's finished time is represented by 'HH:MM:SS.mmm'; finished the game refers to time is not null; before year 1975 refers to year < 1975;",
+  "SQL": "WITH time_in_seconds AS (SELECT T2.year, T2.raceId, T1.positionOrder, CASE WHEN T1.positionOrder = 1 THEN (CASE WHEN SPLIT_PART(T1.time, ':', 1) <> '' AND SPLIT_PART(T1.time, ':', 2) <> '' AND SPLIT_PART(SPLIT_PART(T1.time, ':', 3), '.', 1) <> '' THEN (CAST(SPLIT_PART(T1.time, ':', 1) AS REAL) * 3600) + (CAST(SPLIT_PART(T1.time, ':', 2) AS REAL) * 60) + CAST(SPLIT_PART(SPLIT_PART(T1.time, ':', 3), '.', 1) AS REAL) + CAST(SPLIT_PART(SPLIT_PART(T1.time, ':', 3), '.', 2) AS REAL)/1000   ELSE 0 END) ELSE (CASE WHEN SUBSTRING(T1.time FROM 2) <> '' THEN CAST(SUBSTRING(T1.time FROM 2) AS REAL) ELSE 0 END) END AS time_seconds FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE T1.time IS NOT NULL AND T1.time != ''), champion_time AS (SELECT year, raceId, time_seconds FROM time_in_seconds WHERE positionOrder = 1)  SELECT year, AVG(time_seconds) FROM champion_time WHERE year < 1975 GROUP BY year HAVING AVG(time_seconds) IS NOT NULL",
+  "difficulty": "challenging"
+ }
+]

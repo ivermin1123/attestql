@@ -2,14 +2,17 @@
 
 The one property ADR-0013 point 7 carried over from the deleted product executor lives
 here. Every statement runs inside ``BEGIN READ ONLY`` with a ``SET LOCAL
-statement_timeout`` and with the gather turned off, and before the statement is sent the
-session is asked what it actually holds. If it does not hold all three, the execution is
+statement_timeout``, with the gather turned off and with the two memory settings a hash
+aggregate spills at held at PostgreSQL 16's defaults, and before the statement is sent the
+session is asked what it actually holds. If it does not hold all five, the execution is
 refused: rows returned by a session that is not the session the record would describe are
 not evidence, and a record that stated the timeout it asked for rather than the one in
-force would be stating an intention as a fact. The gather is the third because a float sum
-a server split across workers is added in whatever order the partial sums came back, so
-two executions of one statement over one table can disagree in a late digit; a comparison
-that showed that difference would be reporting the plan and calling it the statement.
+force would be stating an intention as a fact. The last three are there because a float
+sum is added in the order the plan produced its parts: a gather adds the partial sums in
+whatever order the workers returned them, and a hash aggregate that outgrew ``work_mem``
+adds them per spilled batch. Either way two executions of one statement over one table can
+disagree in a late digit, and a comparison that showed that difference would be reporting
+the plan and calling it the statement.
 
 This is the only module in the project that imports the driver, which ``tests/
 test_boundary.py`` asserts by walking the AST of every source file. Everything above it
@@ -89,14 +92,64 @@ to name the step that met it and refuse. It is stated here because no other file
 the driver (``tests/test_boundary.py``), and a test that has to prove a lost connection
 becomes a refusal rather than an exception has to be able to raise what one raises."""
 
+NO_PARALLEL_AGGREGATION = "SET LOCAL max_parallel_workers_per_gather = 0"
+"""One worker, so that a float sum is added in one order.
+
+A gather splits an aggregate across workers and adds the partial sums in whatever order
+they came back, so the same statement over the same rows can return a different last digit
+on two executions, and a comparison of the two would blame the statement for the plan. It
+is ``SET LOCAL``, so it holds for the statement's own transaction and is gone with the
+rollback: what the session was found holding is what a summary records."""
+
+WORK_MEM = "SET LOCAL work_mem = '4MB'"
+"""The memory a sort or a hash may use before it spills, stated rather than inherited.
+
+One worker is not enough to fix the order a float sum is added in. A hash aggregate that
+outgrows this bound spills its groups to disk in batches and adds each batch's partial sums
+where the batch was finished, so the same statement over the same rows returns other last
+digits: measured on three of the nine summation-order-sensitive Mini-Dev golds (q1473,
+q1476, q1482) between 64 kB and this value with the gather already off
+(``plans/reports/research-260904-postgres-result-preconditions/hashagg_workmem_demo.json``).
+Four megabytes is PostgreSQL 16's own default, written out here so that the bytes a record
+states depend on this tool and not on what the server or the role happened to be
+configured with."""
+
+HASH_MEM_MULTIPLIER = "SET LOCAL hash_mem_multiplier = 2"
+"""What a hash may use, as a multiple of ``work_mem``. The other half of the same bound.
+
+A hash aggregate spills at ``work_mem`` times this, so a server holding another multiplier
+spills where this one does not and the two settings decide the summation order together.
+Two is PostgreSQL 16's own default and is stated for the same reason as the value above."""
+
+MEMORY_SETTINGS: tuple[tuple[str, str, str], ...] = (
+    ("work_mem", WORK_MEM, "4096"),
+    ("hash_mem_multiplier", HASH_MEM_MULTIPLIER, "2"),
+)
+"""The two memory settings the envelope holds: each one's name, the statement that sets it,
+and what ``pg_settings`` reports when it is held.
+
+``work_mem`` reads back as 4096 rather than as ``4MB`` because that view renders a memory
+setting in kilobytes, and a read-back that compared the text that was sent would compare
+the spelling instead of the value. Both are set on every execution's own transaction and
+read back there, and ``session_settings`` sets and reads them on a transaction of its own,
+so what a record states is what its statement ran with."""
+
 PRECONDITION_SETTINGS: tuple[str, ...] = (
     "TimeZone",
     "DateStyle",
     "IntervalStyle",
     "extra_float_digits",
+    *(name for name, _, _ in MEMORY_SETTINGS),
 )
-"""The four session settings ADR-0013 point 6 makes preconditions. The fifth, the
-database's default collation, is a property of the database and is read separately."""
+"""The six session settings that are preconditions. The seventh, the database's default
+collation, is a property of the database and is read separately.
+
+The first four are ADR-0013 point 6's own and are read from the session as it was found.
+The two memory settings are not: this tool sets them on every execution, so the session's
+values would state a bound no statement ran under, and they are read back from inside a
+transaction that set them. Both are asked of the session here as well, so that a server
+which reports no value for one at all is refused where the settings are read rather than
+at the first execution."""
 
 RECORDED_SETTINGS: tuple[str, ...] = (
     "statement_timeout",
@@ -148,15 +201,6 @@ set twice at once would see the second command sitting there saying nothing. A m
 long enough to outlast the copies of a run that is finishing and short enough that what
 comes back is an answer: the shuffle was not run because the schema is held, and every
 other measurement of that run still is."""
-
-NO_PARALLEL_AGGREGATION = "SET LOCAL max_parallel_workers_per_gather = 0"
-"""One worker, so that a float sum is added in one order.
-
-A gather splits an aggregate across workers and adds the partial sums in whatever order
-they came back, so the same statement over the same rows can return a different last digit
-on two executions, and a comparison of the two would blame the statement for the plan. It
-is ``SET LOCAL``, so it holds for the statement's own transaction and is gone with the
-rollback: what the session was found holding is what a summary records."""
 
 PLAN_CONTROLS: tuple[sql_builder.SQL, ...] = (
     sql_builder.SQL("SET LOCAL enable_seqscan = off"),
@@ -326,13 +370,17 @@ class PostgresBackend:
         )
 
     def session_settings(self) -> SessionSettings:
-        """The five settings that decide comparability, and the six recorded beside them.
+        """The seven settings that decide comparability, and the six recorded beside them.
 
-        Read once and repeated after that, the way the identity is. Nothing here sets any
-        of them, so a second read of this session could only say what the first one said at
-        the cost of two more round trips. What an execution does set it sets on its own
-        transaction, and reads back there: a session that did not hold it stops that
-        statement, and none of that reaches these values.
+        Read once and repeated after that, the way the identity is. Five of the seven the
+        session was found holding and nothing here sets, so a second read of them could
+        only say what the first one said at the cost of two more round trips.
+
+        The two memory settings are the exception, and they are read from inside a
+        transaction that set them to what every execution sets them to. The session's own
+        values would state a bound no statement ran under, and a record whose settings
+        block did not say what its statement ran with is where a comparison between two
+        records would go wrong silently.
         """
         if self._session_settings is None:
             read_back = self._settings((*PRECONDITION_SETTINGS, *RECORDED_SETTINGS))
@@ -341,15 +389,44 @@ class PostgresBackend:
                 raise BackendRefused(
                     "session_settings", f"the session reported no value for {missing}"
                 )
+            held = self._memory_in_force()
             self._session_settings = SessionSettings(
                 time_zone=read_back["TimeZone"],
                 date_style=read_back["DateStyle"],
                 interval_style=read_back["IntervalStyle"],
                 extra_float_digits=read_back["extra_float_digits"],
                 database_collation=self.default_collation(),
+                work_mem=held["work_mem"],
+                hash_mem_multiplier=held["hash_mem_multiplier"],
                 recorded={name: read_back[name] for name in RECORDED_SETTINGS if name in read_back},
             )
         return self._session_settings
+
+    def _memory_in_force(self) -> Mapping[str, str]:
+        """What ``MEMORY_SETTINGS`` holds, measured where an execution would hold it.
+
+        One read-only transaction, the same two statements every execution sends, the same
+        read-back, and a rollback. The read-back is not a formality here either: a server
+        that refused one of the two would otherwise put a value into a record that no
+        statement of the run could reach, and every execution would then refuse anyway.
+        """
+        cursor = self._cursor("memory_settings")
+        try:
+            try:
+                cursor.execute("BEGIN READ ONLY")
+                for _, statement, _ in MEMORY_SETTINGS:
+                    cursor.execute(statement)
+                cursor.execute(
+                    "SELECT name, setting FROM pg_settings WHERE name = ANY(%s)",
+                    [[name for name, _, _ in MEMORY_SETTINGS]],
+                )
+                held = {str(row[0]): str(row[1]) for row in cursor.fetchall()}
+            except psycopg.Error as failed:
+                raise BackendRefused("memory_settings", str(failed).strip()) from failed
+            _require_the_memory("memory_settings", held)
+        finally:
+            _roll_back(cursor)
+        return held
 
     def execute(self, sql: str, *, statement_timeout_seconds: int) -> ExecutionResult:
         """One statement, read-only, with the envelope read back before it is sent."""
@@ -387,10 +464,10 @@ class PostgresBackend:
 
         ``before`` runs inside the same transaction and after the read-back, so anything
         it sets is ``SET LOCAL`` and is gone with the rollback. It never carries the
-        statement itself and never changes what read-only means. The gather is turned off
-        ahead of the read-back rather than in ``before``, because it is not a variant of
-        this execution: every way in runs one statement over one plan whose aggregate is
-        summed in one order.
+        statement itself and never changes what read-only means. The gather and the two
+        memory settings are held ahead of the read-back rather than in ``before``, because
+        they are not a variant of this execution: every way in runs one statement over one
+        plan whose aggregate is summed in one order.
         """
         if statement_timeout_seconds < 1:
             raise BackendRefused("timeout", "a statement timeout is a whole number of seconds")
@@ -404,6 +481,8 @@ class PostgresBackend:
                 )
                 cursor.fetchall()
                 cursor.execute(NO_PARALLEL_AGGREGATION)
+                for _, statement, _ in MEMORY_SETTINGS:
+                    cursor.execute(statement)
             except psycopg.Error as failed:
                 # The envelope itself, which is where a connection that went away between
                 # two questions surfaces. Named like every other refusal, so the audit
@@ -846,6 +925,7 @@ class PostgresBackend:
                         "statement_timeout",
                         "transaction_read_only",
                         "max_parallel_workers_per_gather",
+                        *(name for name, _, _ in MEMORY_SETTINGS),
                     ]
                 ],
             )
@@ -870,6 +950,7 @@ class PostgresBackend:
                 "max_parallel_workers_per_gather was set to 0 and the session holds "
                 f"{held.get('max_parallel_workers_per_gather', 'nothing')}",
             )
+        _require_the_memory("read_back", held)
 
     def _columns(self, described: Sequence[tuple[str, int]]) -> tuple[ColumnType, ...]:
         """The projection, with the server's own name for each result type oid."""
@@ -926,6 +1007,22 @@ class PostgresBackend:
                 step, "the server returned no row for a question it always answers"
             )
         return rows[0]
+
+
+def _require_the_memory(step: str, held: Mapping[str, str]) -> None:
+    """Refuse unless the transaction holds both memory settings the envelope sets.
+
+    One rule for the two places that set them: before a statement is sent, and where the
+    settings a record states are measured. The value compared is what ``pg_settings``
+    reports, so ``work_mem`` is named in the kilobytes that view renders it in and not in
+    the ``4MB`` the statement spelled.
+    """
+    for name, _, expected in MEMORY_SETTINGS:
+        if held.get(name) != expected:
+            raise ReadBackDrift(
+                step,
+                f"{name} was set to {expected} and the session holds {held.get(name, 'nothing')}",
+            )
 
 
 def _undo(cursor: Cursor) -> None:

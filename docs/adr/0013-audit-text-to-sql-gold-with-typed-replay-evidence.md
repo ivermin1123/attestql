@@ -105,6 +105,15 @@ that look wrong, each with a counterexample and an evidence record.
    rows) took 14.4 s for the whole dump and is optional (`--fixture-digest full`); whichever is
    used is computed once per run and cached in `audit/fixture.json`. The dump file's sha256 (2.6 s
    for 1.0 GB) is recorded when the file is given and is never a precondition.
+   Amended 2026-09-05: two settings join the five. Turning the gather off does not fix the order a
+   float sum is added in, because a hash aggregate that outgrows `work_mem` spills and adds each
+   spilled batch's partial sums where the batch ended: 3 of the 9 summation-order-sensitive
+   Mini-Dev golds return other last digits at `work_mem = '64kB'` than at 4 MB with the gather
+   already off
+   (`plans/reports/research-260904-postgres-result-preconditions/hashagg_workmem_demo.json`).
+   The executor therefore holds `work_mem` at 4 MB and `hash_mem_multiplier` at 2, PostgreSQL 16's
+   own defaults, on every execution, reads both back and refuses on drift, and a record states what
+   its statement ran under rather than what the session was configured with.
 7. **Retired, in two commits after the tag `slice1-final` on the last commit before deletion
    (both, and the tag, in the private history before publication).**
    First a refactor commit: the record stops depending on the catalogue (point 5). Then one pure

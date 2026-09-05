@@ -126,8 +126,14 @@ schema is measured again rather than read back from the file.
 prediction alike. A statement that reaches it is that question's ERROR line, naming the side that
 failed before the server's message; the record of the execution carries the timeout it actually ran
 under and `summary.json` the one the run was given. Every statement runs with the server's parallel
-gather off, so that a float sum is added in one order and two runs of one statement cannot differ in
-a late digit, and that makes some plans slower here than on the same server at its own defaults.
+gather off and with `work_mem` at 4 MB and `hash_mem_multiplier` at 2, PostgreSQL 16's own defaults
+written out rather than inherited, so that a float sum is added in one order and two runs of one
+statement cannot differ in a late digit: a gather adds the partial sums in whatever order the
+workers returned them, and a hash aggregate that outgrows the memory bound spills and adds them per
+spilled batch, which moves three of the nine summation-order-sensitive Mini-Dev golds between 64 kB
+and 4 MB. All three are read back inside the statement's own transaction and the execution is
+refused if the session does not hold them, and holding them makes some plans slower here than on the
+same server at its own defaults.
 q707 of Mini-Dev is the worked example: its gold runs in 50 ms, and the `meta-llama-3-70b-instruct`
 prediction for it runs in 0.22 s with two parallel workers and in 41 s warm to 105 s cold without
 them, so it needs `--statement-timeout 120` to be compared at all. Four of the 4,482 prediction
@@ -142,7 +148,9 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   R-SET otherwise; a NaN is one value there, equal to a NaN and to nothing else, as PostgreSQL
   groups and orders it; EQUAL, NOT_EQUAL, or
   NOT_COMPARABLE with the mismatched preconditions named (fixture digest, serialization, rule,
-  ordering, and the five session settings that change rendered bytes). Within one run both
+  ordering, and the seven session settings that change rendered bytes or the order a float sum is
+  added in: `TimeZone`, `DateStyle`, `IntervalStyle`, `extra_float_digits`, the database's default
+  collation, `work_mem` and `hash_mem_multiplier`). Within one run both
   records are built under the same preconditions, so that verdict does not occur there; it is
   for comparing two records from two runs, and a record carries everything that comparison
   reads.

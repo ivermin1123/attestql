@@ -77,6 +77,8 @@ SETTINGS = SessionSettings(
     interval_style="postgres",
     extra_float_digits="1",
     database_collation="en_US.UTF-8",
+    work_mem="4096",
+    hash_mem_multiplier="2",
     recorded={
         "statement_timeout": "30000",
         "search_path": '"$user", public',
@@ -87,7 +89,9 @@ SETTINGS = SessionSettings(
     },
 )
 """The session a scripted run states it held. The gather is on, as it is on a server nobody
-configured: what each execution sets on its own transaction is not this."""
+configured: what each execution sets on its own transaction is not this. The two memory
+settings are the exception and state what the executions ran under, in the kilobytes and
+the bare multiple ``pg_settings`` reports them in."""
 
 
 def fake_result(

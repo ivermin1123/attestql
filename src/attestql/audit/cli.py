@@ -709,7 +709,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
             positions_unused=resolved.positions_unused,
             identity=identity,
             role=role,
-            settings_recorded=dict(settings.recorded),
+            session_settings=settings,
             measured=measured,
             shuffled=shuffled,
             no_shuffle=no_shuffle,
@@ -1158,7 +1158,7 @@ def _summary_json(
     positions_unused: tuple[int, ...],
     identity: str,
     role: str,
-    settings_recorded: Mapping[str, str],
+    session_settings: SessionSettings,
     measured: _Measured,
     shuffled: ShuffledCopies | None,
     no_shuffle: str,
@@ -1170,6 +1170,11 @@ def _summary_json(
     The ``out`` it states is this run's directory and holds this run's evidence: the
     question directories and the summary of the run before it were removed before this
     one wrote anything.
+
+    ``session_settings_recorded`` is the session as it was found, and blocks nothing. The
+    two memory settings are under ``settings`` beside the serialization instead, because
+    they are what this run held every statement to rather than what it found: a reader
+    comparing two summaries reads them where the rest of this run's own choices are.
     """
     digest = measured.digest
     return {
@@ -1177,7 +1182,7 @@ def _summary_json(
         "run_id": summary.run_id,
         "backend_identity": identity,
         "effective_database_role": role,
-        "session_settings_recorded": dict(settings_recorded),
+        "session_settings_recorded": dict(session_settings.recorded),
         "parser": {
             "validator": VALIDATOR_VERSION,
             "postgast": POSTGAST_VERSION,
@@ -1264,6 +1269,8 @@ def _summary_json(
             "plan_variant": options.plan_variant,
             "out": options.out.as_posix(),
             "serialization": SERIALIZATION.version,
+            "work_mem": session_settings.work_mem,
+            "hash_mem_multiplier": session_settings.hash_mem_multiplier,
         },
         "data_as_of": data_as_of.isoformat(),
         "data_as_of_source": (

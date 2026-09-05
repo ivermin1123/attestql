@@ -135,13 +135,18 @@ def read_only_counts(name: str, value: Mapping[str, int]) -> Mapping[str, int]:
 
 @dataclass(frozen=True)
 class SessionSettings:
-    """The settings the session held, with the five that decide comparability named.
+    """The settings the session held, with the seven that decide comparability named.
 
-    The five named fields are the settings that change rendered bytes or row order, so two
+    The seven named fields are the settings that change rendered bytes or row order, so two
     executions that disagree on any of them are two experiments and not one comparison:
     the time zone and the timestamp and interval styles decide how an instant renders, the
-    float digits decide how many of a number's digits are returned at all, and the
-    database's default collation decides what ``ORDER BY`` on text means.
+    float digits decide how many of a number's digits are returned at all, the database's
+    default collation decides what ``ORDER BY`` on text means, and the two memory settings
+    decide where a hash aggregate spills and therefore in what order a float sum is added.
+
+    The last two are what a statement ran under rather than what the session was found
+    holding: the executor sets both on every execution's own transaction, so a record that
+    repeated the session's own values would name a bound no statement of it reached.
 
     ``recorded`` holds everything else the session reported: the statement timeout, the
     search path, the server version and whether the transaction was read only, at least.
@@ -161,6 +166,8 @@ class SessionSettings:
     interval_style: str
     extra_float_digits: str
     database_collation: str
+    work_mem: str
+    hash_mem_multiplier: str
     recorded: Mapping[str, str]
 
     def __post_init__(self) -> None:
@@ -170,6 +177,8 @@ class SessionSettings:
             "interval_style",
             "extra_float_digits",
             "database_collation",
+            "work_mem",
+            "hash_mem_multiplier",
         ):
             if not getattr(self, name):
                 raise ValueError(f"{name} is required; a setting nobody read back is not a value")

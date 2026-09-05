@@ -1,0 +1,299 @@
+{
+ "questions": {
+  "1473": {
+   "replay_rule": "R-SET",
+   "compare_results": "EQUAL",
+   "compare_r_set": "EQUAL",
+   "result_hash_default": "sha256:a5b7363207263467222a95e4127f170414d7e6aa83b46577a4625a3456e07d16",
+   "result_hash_role_at_64kb": "sha256:a5b7363207263467222a95e4127f170414d7e6aa83b46577a4625a3456e07d16",
+   "result_hash_matches": true,
+   "result_hash_recomputed_here": [
+    true,
+    true
+   ],
+   "canonical_bytes_match": true,
+   "canonical_byte_length": 244,
+   "work_mem_stated": [
+    "4096",
+    "4096"
+   ],
+   "hash_mem_multiplier_stated": [
+    "2",
+    "2"
+   ],
+   "gold_only_run_agrees": [
+    null,
+    null
+   ]
+  },
+  "1476": {
+   "replay_rule": "R-SET",
+   "compare_results": "EQUAL",
+   "compare_r_set": "EQUAL",
+   "result_hash_default": "sha256:fd22131fa931653078ec32b956412567f8136d3717efb18d8a70f8d4f73e9c0e",
+   "result_hash_role_at_64kb": "sha256:fd22131fa931653078ec32b956412567f8136d3717efb18d8a70f8d4f73e9c0e",
+   "result_hash_matches": true,
+   "result_hash_recomputed_here": [
+    true,
+    true
+   ],
+   "canonical_bytes_match": true,
+   "canonical_byte_length": 250,
+   "work_mem_stated": [
+    "4096",
+    "4096"
+   ],
+   "hash_mem_multiplier_stated": [
+    "2",
+    "2"
+   ],
+   "gold_only_run_agrees": [
+    null,
+    null
+   ]
+  },
+  "1482": {
+   "replay_rule": "R-SET",
+   "compare_results": "EQUAL",
+   "compare_r_set": "EQUAL",
+   "result_hash_default": "sha256:e547174f4a83b118330b0988ccecda0defe6c819fca79e49a3a0550c1b8e9d37",
+   "result_hash_role_at_64kb": "sha256:e547174f4a83b118330b0988ccecda0defe6c819fca79e49a3a0550c1b8e9d37",
+   "result_hash_matches": true,
+   "result_hash_recomputed_here": [
+    true,
+    true
+   ],
+   "canonical_bytes_match": true,
+   "canonical_byte_length": 320,
+   "work_mem_stated": [
+    "4096",
+    "4096"
+   ],
+   "hash_mem_multiplier_stated": [
+    "2",
+    "2"
+   ],
+   "gold_only_run_agrees": [
+    true,
+    true
+   ]
+  },
+  "1529": {
+   "replay_rule": "R-SET",
+   "compare_results": "EQUAL",
+   "compare_r_set": "EQUAL",
+   "result_hash_default": "sha256:2794f0e7dec21c360f001c5b37af36ca0745e67b838cbfa36904bed34d5d7574",
+   "result_hash_role_at_64kb": "sha256:2794f0e7dec21c360f001c5b37af36ca0745e67b838cbfa36904bed34d5d7574",
+   "result_hash_matches": true,
+   "result_hash_recomputed_here": [
+    true,
+    true
+   ],
+   "canonical_bytes_match": true,
+   "canonical_byte_length": 275,
+   "work_mem_stated": [
+    "4096",
+    "4096"
+   ],
+   "hash_mem_multiplier_stated": [
+    "2",
+    "2"
+   ],
+   "gold_only_run_agrees": [
+    true,
+    true
+   ]
+  },
+  "1531": {
+   "replay_rule": "R-SET",
+   "compare_results": "EQUAL",
+   "compare_r_set": "EQUAL",
+   "result_hash_default": "sha256:c57ceedd75b3ea3bd483de6378df8222504a60ca89516ae9e72af127b87debac",
+   "result_hash_role_at_64kb": "sha256:c57ceedd75b3ea3bd483de6378df8222504a60ca89516ae9e72af127b87debac",
+   "result_hash_matches": true,
+   "result_hash_recomputed_here": [
+    true,
+    true
+   ],
+   "canonical_bytes_match": true,
+   "canonical_byte_length": 301,
+   "work_mem_stated": [
+    "4096",
+    "4096"
+   ],
+   "hash_mem_multiplier_stated": [
+    "2",
+    "2"
+   ],
+   "gold_only_run_agrees": [
+    true,
+    true
+   ]
+  },
+  "1380": {
+   "replay_rule": "R-SET",
+   "compare_results": "EQUAL",
+   "compare_r_set": "EQUAL",
+   "result_hash_default": "sha256:c69bb4abd177bca416576905b2c1040da3a0fcf84a0ffbb6b70c8e3aba9a1b2c",
+   "result_hash_role_at_64kb": "sha256:c69bb4abd177bca416576905b2c1040da3a0fcf84a0ffbb6b70c8e3aba9a1b2c",
+   "result_hash_matches": true,
+   "result_hash_recomputed_here": [
+    true,
+    true
+   ],
+   "canonical_bytes_match": true,
+   "canonical_byte_length": 240,
+   "work_mem_stated": [
+    "4096",
+    "4096"
+   ],
+   "hash_mem_multiplier_stated": [
+    "2",
+    "2"
+   ],
+   "gold_only_run_agrees": [
+    true,
+    true
+   ]
+  },
+  "1390": {
+   "replay_rule": "R-SET",
+   "compare_results": "EQUAL",
+   "compare_r_set": "EQUAL",
+   "result_hash_default": "sha256:fba1ca5b4fc1acdf63ef5b991b3303f52e0025c2f26249811b6ac1b05aa3d4d3",
+   "result_hash_role_at_64kb": "sha256:fba1ca5b4fc1acdf63ef5b991b3303f52e0025c2f26249811b6ac1b05aa3d4d3",
+   "result_hash_matches": true,
+   "result_hash_recomputed_here": [
+    true,
+    true
+   ],
+   "canonical_bytes_match": true,
+   "canonical_byte_length": 243,
+   "work_mem_stated": [
+    "4096",
+    "4096"
+   ],
+   "hash_mem_multiplier_stated": [
+    "2",
+    "2"
+   ],
+   "gold_only_run_agrees": [
+    null,
+    null
+   ]
+  },
+  "1410": {
+   "replay_rule": "R-SET",
+   "compare_results": "EQUAL",
+   "compare_r_set": "EQUAL",
+   "result_hash_default": "sha256:a05a3060c0e7466c3a9070ce8567c731e71c0927d37630d5d0c4924221db8688",
+   "result_hash_role_at_64kb": "sha256:a05a3060c0e7466c3a9070ce8567c731e71c0927d37630d5d0c4924221db8688",
+   "result_hash_matches": true,
+   "result_hash_recomputed_here": [
+    true,
+    true
+   ],
+   "canonical_bytes_match": true,
+   "canonical_byte_length": 307,
+   "work_mem_stated": [
+    "4096",
+    "4096"
+   ],
+   "hash_mem_multiplier_stated": [
+    "2",
+    "2"
+   ],
+   "gold_only_run_agrees": [
+    true,
+    true
+   ]
+  },
+  "955": {
+   "replay_rule": "R-SET",
+   "compare_results": "EQUAL",
+   "compare_r_set": "EQUAL",
+   "result_hash_default": "sha256:3e84819ec890035899ea36eeab19f029a5170de7bdb348833babbc06718206b4",
+   "result_hash_role_at_64kb": "sha256:3e84819ec890035899ea36eeab19f029a5170de7bdb348833babbc06718206b4",
+   "result_hash_matches": true,
+   "result_hash_recomputed_here": [
+    true,
+    true
+   ],
+   "canonical_bytes_match": true,
+   "canonical_byte_length": 970,
+   "work_mem_stated": [
+    "4096",
+    "4096"
+   ],
+   "hash_mem_multiplier_stated": [
+    "2",
+    "2"
+   ],
+   "gold_only_run_agrees": [
+    true,
+    true
+   ]
+  }
+ },
+ "verdicts": [
+  "EQUAL"
+ ],
+ "canonical_bytes_match_everywhere": true,
+ "control_without_the_envelope": {
+  "work_mem_the_role_gave_each_session": [
+   "4MB",
+   "64kB"
+  ],
+  "differs": [
+   1473,
+   1476,
+   1482
+  ],
+  "same": [
+   955,
+   1380,
+   1390,
+   1410,
+   1529,
+   1531
+  ]
+ },
+ "settings_each_run_states": {
+  "default-work-mem": {
+   "statement_timeout_seconds": 120,
+   "fail_on_smell": false,
+   "experimental_s2": false,
+   "plan_variant": false,
+   "serialization": "attestql/audit/1",
+   "work_mem": "4096",
+   "hash_mem_multiplier": "2"
+  },
+  "role-at-64kb": {
+   "statement_timeout_seconds": 120,
+   "fail_on_smell": false,
+   "experimental_s2": false,
+   "plan_variant": false,
+   "serialization": "attestql/audit/1",
+   "work_mem": "4096",
+   "hash_mem_multiplier": "2"
+  }
+ },
+ "questions_the_gold_only_runs_wrote": {
+  "default-work-mem": [
+   955,
+   1380,
+   1410,
+   1482,
+   1529,
+   1531
+  ],
+  "role-at-64kb": [
+   955,
+   1380,
+   1410,
+   1482,
+   1529,
+   1531
+  ]
+ }
+}

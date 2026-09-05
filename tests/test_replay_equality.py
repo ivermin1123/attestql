@@ -7,8 +7,10 @@ every field naming the rule the comparison would have been performed under, is m
 to differ one at a time on records whose results also differ, and the verdict stays
 ``NOT_COMPARABLE`` and names the field.
 
-ADR-0013 narrowed the preconditions to what point 6 names: the fixture digest and the
-five session settings that change rendered bytes or row order. The validator, the
+ADR-0013 narrowed the preconditions to what point 6 names, and the two memory settings
+the executor holds every statement to were added beside them once a hash aggregate that
+spilled was measured changing a float aggregate: the fixture digest and the
+seven session settings that change rendered bytes or row order. The validator, the
 question set and the server version are recorded and never block, because a record whose
 validator differs is still a record of the same data and calling that pair incomparable
 would hide the disagreement an audit exists to report.
@@ -74,6 +76,8 @@ SETTINGS = SessionSettings(
     interval_style="postgres",
     extra_float_digits="1",
     database_collation="en_US.UTF-8",
+    work_mem="4096",
+    hash_mem_multiplier="2",
     recorded={"statement_timeout": "5000", "server_version_num": "160004"},
 )
 FIXTURE = FixtureDigest(
@@ -545,8 +549,9 @@ def test_a_verdict_names_what_differed_when_and_only_when_it_is_not_comparable()
 
 
 def test_the_precondition_fields_and_the_rule_fields_are_disjoint() -> None:
-    """The six are what must match before equality is required; the rule fields are what
-    equality would be required under. ADR-0013 point 6 is the whole of the list."""
+    """The eight are what must match before equality is required; the rule fields are what
+    equality would be required under. ADR-0013 point 6 names the first six, and the two
+    memory settings the executor holds every statement to are the rest of the list."""
     assert set(PRECONDITION_FIELDS).isdisjoint(RULE_FIELDS)
     assert PRECONDITION_FIELDS == (
         "fixture",
@@ -555,6 +560,8 @@ def test_the_precondition_fields_and_the_rule_fields_are_disjoint() -> None:
         "session_settings_in_force.interval_style",
         "session_settings_in_force.extra_float_digits",
         "session_settings_in_force.database_collation",
+        "session_settings_in_force.work_mem",
+        "session_settings_in_force.hash_mem_multiplier",
     )
 
 

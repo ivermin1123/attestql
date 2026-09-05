@@ -37,9 +37,12 @@ from attestql.audit.backend import (
 from attestql.audit.postgres import (
     DEFAULT_SCRATCH_SCHEMA,
     DRIVER_ERROR,
+    HASH_MEM_MULTIPLIER,
     LOCK_WAIT_SECONDS,
+    MEMORY_SETTINGS,
     NO_PARALLEL_AGGREGATION,
     QUALIFIED_NAME_IS_NOT_REACHED,
+    WORK_MEM,
     NumericFromFloatText,
     PostgresBackend,
     TextFromInterval,
@@ -80,10 +83,14 @@ HEALTHY_SETTINGS: Mapping[str, str] = {
     "server_version": "16.4 (Debian 16.4-1.pgdg120+1)",
     "server_version_num": "160004",
     "max_parallel_workers_per_gather": "2",
+    "work_mem": "65536",
+    "hash_mem_multiplier": "1",
 }
 """What the session holds outside any transaction, which is what a run records. The gather
 is on here, as it is on a server nobody configured, so that the value each execution sets
-inside its own transaction is visibly not the value the session was found with."""
+inside its own transaction is visibly not the value the session was found with. The two
+memory settings are the session's own for the same reason: 64 MB and a multiplier of 1 are
+what a configured server can hold, and neither is what a record of this session states."""
 
 
 @dataclass(frozen=True)
@@ -161,6 +168,7 @@ class FakeConnection:
         scratch_exists: bool = True,
         scratch_writable: bool = True,
         keeps_its_gather: bool = False,
+        keeps_its_own: str = "",
         refuses_the_lock: bool = False,
     ) -> None:
         self.settings = dict(settings)
@@ -169,6 +177,9 @@ class FakeConnection:
         self.keeps_its_gather = keeps_its_gather
         """A session that reports its own value however the transaction set it, which is the
         drift the read-back is there to catch."""
+        self.keeps_its_own = keeps_its_own
+        """The memory setting this session reports its own value for however a transaction
+        set it, named because the two are refused one at a time."""
         self.scratch_exists = scratch_exists
         self.scratch_writable = scratch_writable
         self.refuses_the_lock = refuses_the_lock
@@ -206,6 +217,14 @@ class FakeConnection:
             if not self.keeps_its_gather:
                 self.local["max_parallel_workers_per_gather"] = text.rsplit("=", 1)[1].strip()
             return (), None
+        for name, statement, held in MEMORY_SETTINGS:
+            if text == statement:
+                # What the server reports for a memory setting is not what the statement
+                # spelled: pg_settings renders work_mem in kilobytes, so the transaction
+                # holds what a read-back would find and not '4MB'.
+                if name != self.keeps_its_own:
+                    self.local[name] = held
+                return (), None
         if "pg_advisory_unlock" in text:
             return ((True,),), None
         if "pg_advisory_lock" in text:
@@ -370,6 +389,56 @@ def test_a_session_that_kept_its_gather_stops_the_execution() -> None:
     assert connection.log[-1] == "ROLLBACK"
 
 
+def test_every_execution_bounds_the_memory_a_hash_aggregate_may_spill_at() -> None:
+    """One worker is not enough to fix the order a float sum is added in: a hash aggregate
+    that outgrows work_mem spills and adds each batch's partial sums where the batch ended,
+    which moved three of the nine summation-order-sensitive Mini-Dev golds between 64 kB and
+    4 MB with the gather already off. Both settings are held on every way in, ahead of the
+    read-back that has to see them and before the statement is sent."""
+    connection = FakeConnection(counts={"drivers": 100})
+    backend = _backend(connection)
+    backend.prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
+
+    for run in (backend.execute, backend.execute_shuffled, backend.execute_plan_variant):
+        connection.log.clear()
+        run(STATEMENT, statement_timeout_seconds=30)
+        read_back = next(i for i, line in enumerate(connection.log) if "pg_settings" in line)
+        for _, statement, _ in MEMORY_SETTINGS:
+            assert connection.log.index("BEGIN READ ONLY") < connection.log.index(statement)
+            assert connection.log.index(statement) < read_back
+        assert read_back < connection.log.index(STATEMENT)
+
+
+@pytest.mark.parametrize(
+    ("setting", "refused"),
+    [(WORK_MEM, "work_mem was set to 4096"), (HASH_MEM_MULTIPLIER, "hash_mem_multiplier")],
+)
+def test_a_session_that_kept_its_own_memory_bound_stops_the_execution(
+    setting: str, refused: str
+) -> None:
+    """Each of the two on its own: a transaction that reports the session's 64 MB or its own
+    multiplier is a transaction whose hash aggregate spills somewhere else, and a float sum
+    it added is not the sum a record of this run would describe."""
+    name = next(name for name, statement, _ in MEMORY_SETTINGS if statement == setting)
+    connection = FakeConnection(keeps_its_own=name)
+    with pytest.raises(ReadBackDrift, match=refused) as drift:
+        _backend(connection).execute(STATEMENT, statement_timeout_seconds=30)
+    assert drift.value.step == "read_back"
+    assert STATEMENT not in connection.log
+    assert connection.log[-1] == "ROLLBACK"
+
+
+def test_settings_a_session_would_not_hold_are_refused_where_they_are_read() -> None:
+    """The same refusal in the other place the two are set: the read that decides what a
+    record states. A value put there without the read-back would name a bound no statement
+    of the run could reach, and every execution would then refuse anyway."""
+    connection = FakeConnection(keeps_its_own="work_mem")
+    with pytest.raises(ReadBackDrift, match="work_mem was set to 4096") as drift:
+        _backend(connection).session_settings()
+    assert drift.value.step == "memory_settings"
+    assert connection.log[-1] == "ROLLBACK"
+
+
 def test_a_session_that_reports_nothing_at_all_stops_the_execution() -> None:
     connection = FakeConnection(settings={})
     with pytest.raises(ReadBackDrift, match="reports nothing"):
@@ -383,17 +452,24 @@ def test_a_timeout_that_is_not_a_whole_second_is_refused_before_a_transaction_op
     assert connection.log == []
 
 
-def test_the_session_settings_name_the_five_and_record_the_rest() -> None:
+def test_the_session_settings_name_the_seven_and_record_the_rest() -> None:
     """The recorded gather is the session's own, read before any transaction set it to 0:
     the two are different scopes, and a summary stating 0 here would say the server runs no
     parallel plan at all. ``server_version`` is beside the number because a reader of a
-    summary sees the build the rows came from and not only its integer."""
+    summary sees the build the rows came from and not only its integer.
+
+    The two memory settings go the other way. This session holds 64 MB and a multiplier of
+    1, and the record states 4096 and 2, because those are what every statement of the run
+    is held to and a record naming the session's own would name a bound none of them ran
+    under. They are not in ``recorded`` beside that: one value per name."""
     settings = _backend(FakeConnection()).session_settings()
     assert settings.time_zone == "UTC"
     assert settings.date_style == "ISO, MDY"
     assert settings.interval_style == "postgres"
     assert settings.extra_float_digits == "1"
     assert settings.database_collation == "en_US.UTF-8"
+    assert settings.work_mem == "4096"
+    assert settings.hash_mem_multiplier == "2"
     assert dict(settings.recorded) == {
         "statement_timeout": "30000",
         "search_path": '"$user", public',
@@ -407,15 +483,19 @@ def test_the_session_settings_name_the_five_and_record_the_rest() -> None:
 def test_the_session_settings_are_read_once_and_repeated_after_that() -> None:
     """Two questions about the session are two round trips and one answer.
 
-    Nothing here sets any of these, so the second read can only say what the first one
-    said: what an execution sets is put on its own transaction and read back there.
+    Nothing here sets the settings the session was found holding, so the second read can
+    only say what the first one said. The two memory settings are read on a transaction of
+    their own, which is a second read of ``pg_settings`` in the first call and no read at
+    all in the second.
     """
     connection = FakeConnection()
     backend = _backend(connection)
     settings = backend.session_settings()
+    asked = list(connection.log)
     assert backend.session_settings() is settings
-    assert sum(1 for asked in connection.log if "pg_settings" in asked) == 1
-    assert sum(1 for asked in connection.log if "datcollate" in asked) == 1
+    assert connection.log == asked, "the second question asked the server something"
+    assert sum(1 for line in asked if "pg_settings" in line) == 2
+    assert sum(1 for line in asked if "datcollate" in line) == 1
 
 
 def test_a_session_that_cannot_report_a_precondition_setting_is_refused() -> None:
@@ -433,16 +513,17 @@ def test_a_connection_that_died_in_the_envelope_is_a_refusal_naming_that_step() 
 
 
 def test_a_connection_that_died_before_the_read_back_is_a_refusal_naming_that_step() -> None:
-    """The envelope was set and the session cannot be asked what it holds. Three statements
-    make that envelope: the read-only begin, the timeout, and the gather turned off."""
+    """The envelope was set and the session cannot be asked what it holds. Five statements
+    make that envelope: the read-only begin, the timeout, the gather turned off, and the two
+    memory settings a hash aggregate spills at."""
     with pytest.raises(BackendRefused) as refused:
-        _backend(DeadConnection(kill_after=3)).execute(STATEMENT, statement_timeout_seconds=30)
+        _backend(DeadConnection(kill_after=5)).execute(STATEMENT, statement_timeout_seconds=30)
     assert refused.value.step == "read_back"
 
 
 def test_a_connection_that_died_at_the_statement_is_a_refusal_naming_that_step() -> None:
     with pytest.raises(BackendRefused) as refused:
-        _backend(DeadConnection(kill_after=4)).execute(STATEMENT, statement_timeout_seconds=30)
+        _backend(DeadConnection(kill_after=6)).execute(STATEMENT, statement_timeout_seconds=30)
     assert refused.value.step == "execute"
 
 

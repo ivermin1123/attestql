@@ -152,6 +152,13 @@
     "birdsql",
     "mixtral",
     "livesqlbench",
-    "sqls"
+    "sqls",
+    "workmem",
+    "hashagg",
+    "datlocprovider",
+    "daticulocale",
+    "datcollversion",
+    "datlocale",
+    "libc"
   ]
 }

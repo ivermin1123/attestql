@@ -79,6 +79,8 @@ SETTINGS = SessionSettings(
     interval_style="postgres",
     extra_float_digits="1",
     database_collation="en_US.UTF-8",
+    work_mem="4096",
+    hash_mem_multiplier="2",
     recorded={"statement_timeout": "5000", "server_version_num": "160004"},
 )
 SOURCE = StatementSource(
@@ -363,6 +365,10 @@ def test_a_record_states_the_session_it_ran_under_and_the_data_it_read(make_reco
         make_record(session_settings_in_force=dataclasses.replace(SETTINGS, time_zone=""))
     with pytest.raises(ValueError, match="database_collation is required"):
         make_record(session_settings_in_force=dataclasses.replace(SETTINGS, database_collation=""))
+    with pytest.raises(ValueError, match="work_mem is required"):
+        make_record(session_settings_in_force=dataclasses.replace(SETTINGS, work_mem=""))
+    with pytest.raises(ValueError, match="hash_mem_multiplier is required"):
+        make_record(session_settings_in_force=dataclasses.replace(SETTINGS, hash_mem_multiplier=""))
     with pytest.raises(ValueError, match="recorded must state"):
         make_record(session_settings_in_force=dataclasses.replace(SETTINGS, recorded={}))
     with pytest.raises(ValueError, match="schema_digest is required"):

@@ -268,7 +268,12 @@ def test_the_summary_names_the_server_and_the_grammar_that_judged_this_run(
     statement was one SELECT. The gather is read from the server twice, once before the
     questions and once after them, because every execution sets it to 0 on its own
     transaction and a value that survived the run would mean one of those rollbacks did
-    not."""
+    not.
+
+    The two memory settings are stated the other way round, beside this run's own choices
+    rather than among the session's: they are what every statement was held to, in the
+    kilobytes and the bare multiple ``pg_settings`` reports, and a real server answered
+    the read-back that produced them."""
     written = audited.summary_document()
     recorded = written["session_settings_recorded"]
     major = str(int(recorded["server_version_num"]) // 10_000)
@@ -276,6 +281,8 @@ def test_the_summary_names_the_server_and_the_grammar_that_judged_this_run(
 
     assert recorded["server_version"].startswith(major)
     assert recorded["max_parallel_workers_per_gather"] == afterwards
+    assert written["settings"]["work_mem"] == "4096"
+    assert written["settings"]["hash_mem_multiplier"] == "2"
     assert written["parser"]["validator"] == VALIDATOR_VERSION
     assert written["parser"]["postgast"]
     assert isinstance(written["parser"]["grammar_version"], int)
