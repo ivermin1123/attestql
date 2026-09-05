@@ -76,6 +76,17 @@ def test_sqlite_refuses_a_setting_it_has_no_session_to_hold(stated: str) -> None
         SessionSettings(engine=ENGINE_SQLITE, recorded=RECORDED, **absent)
 
 
+@pytest.mark.parametrize("engine", [ENGINE_POSTGRESQL, ENGINE_SQLITE])
+def test_either_engine_states_what_its_session_reported(engine: str) -> None:
+    """An engine that preconditions nothing still says what it is, so an empty mapping is
+    refused on both: a session nobody asked anything else about is one nobody looked at."""
+    stated: dict[str, str | None] = dict.fromkeys(THE_SEVEN)
+    if engine == ENGINE_POSTGRESQL:
+        stated.update(POSTGRESQL_VALUES)
+    with pytest.raises(ValueError, match="recorded must state the other settings"):
+        SessionSettings(engine=engine, recorded={}, **stated)
+
+
 @pytest.mark.parametrize("engine", ["", "postgres", "PostgreSQL", "duckdb", "mysql"])
 def test_an_engine_nobody_stated_a_rule_for_is_refused(engine: str) -> None:
     """Including a spelling of an engine that is here: the name is read, not guessed at."""

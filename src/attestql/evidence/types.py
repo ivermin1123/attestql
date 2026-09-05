@@ -23,7 +23,9 @@ settings that change rendered bytes or row order are named fields, everything el
 session reported is recorded beside them and blocks nothing. ``SessionSettings`` names
 the engine first, because that is the namespace the settings and every declared type of
 the result are read in, and it is what lets an engine with no session state that it has
-none rather than fill the seven fields with something (ADR-0014).
+none rather than fill the seven fields with something (ADR-0014). One block states either
+engine, so a reader of any record reads one shape: the engine, then the seven settings that
+decide comparability, then what that session reported.
 """
 
 from __future__ import annotations
@@ -140,7 +142,8 @@ ENGINE_POSTGRESQL = "postgresql"
 """The engine whose session states the seven settings below."""
 
 ENGINE_SQLITE = "sqlite"
-"""The engine that has none of them: a file has no session to precondition."""
+"""The engine that has none of them: a file has no session to precondition, and what it can
+be asked about itself is recorded instead."""
 
 ENGINES: tuple[str, ...] = (ENGINE_POSTGRESQL, ENGINE_SQLITE)
 """Every engine a record may name. A record of an engine nobody stated the settings rule
@@ -173,10 +176,16 @@ class SessionSettings:
     found holding: the executor sets both on every execution's own transaction, so a record
     that repeated the session's own values would name a bound no statement of it reached.
 
-    ``recorded`` holds everything else the session reported: the statement timeout, the
-    search path, the server version and whether the transaction was read only, at least.
-    None of it blocks a comparison, and all of it is in the record so a reader can see the
-    session that produced the result.
+    ``recorded`` holds everything else the session reported, and is required and non-empty
+    on either engine: an engine that preconditions nothing still states what it is. On
+    PostgreSQL that is the statement timeout, the search path, the server version, whether
+    the transaction was read only, what the gather was free to do, the server encoding, and
+    the provider, ICU locale and version of the collation that sorted the text. On SQLite it
+    is the nine a file can be asked for: ``sqlite_version``, ``encoding``,
+    ``compile_options``, ``collation_list``, ``case_sensitive_like``,
+    ``reverse_unordered_selects``, ``query_only``, ``journal_mode`` and ``data_version``
+    (ADR-0014). None of it blocks a comparison, and all of it is in the record so a reader
+    can see the session that produced the result.
 
     ``recorded`` states the session outside any one statement's own transaction. The
     timeout a statement actually ran under is on that statement's result, in

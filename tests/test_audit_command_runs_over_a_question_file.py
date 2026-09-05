@@ -271,6 +271,12 @@ def test_the_summary_names_the_session_and_the_grammar_the_run_was_judged_by(
     recorded = settings["recorded"]
 
     assert settings["engine"] == SETTINGS.engine
+    assert set(settings) == {"engine", "recorded"}, (
+        "the seven that decide comparability are on each record, under the engine that "
+        "holds them; the summary states the session this run found and the engine it found it on"
+    )
+    assert written["settings"]["work_mem"] == SETTINGS.work_mem
+    assert written["settings"]["hash_mem_multiplier"] == SETTINGS.hash_mem_multiplier
     assert recorded == dict(SETTINGS.recorded)
     assert recorded["max_parallel_workers_per_gather"] == "2"
     assert recorded["server_version"].startswith("16.4")

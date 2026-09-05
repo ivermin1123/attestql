@@ -204,6 +204,10 @@ class Backend(Protocol):
         Asked once for a whole run, like ``existing_tables``: the summary and every record
         state one read of the session, so that two records of one run cannot say the
         statements behind them ran under two different sessions.
+
+        One block answers for either engine. A backend whose engine has no session states
+        the seven as absent and records what its engine can be asked about itself, so a
+        reader of the record reads the same shape whichever backend produced it.
         """
         raise NotImplementedError
 

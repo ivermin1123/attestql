@@ -217,7 +217,7 @@ def _differing(field: str) -> dict[str, Any]:
     A session setting is named through the field that holds it, so the override has to
     reach inside ``session_settings_in_force`` rather than replace a field of the record.
     The engine is the one that cannot be varied on its own: changing it changes which of
-    the five settings a record may state at all, so the override is the other engine's
+    the seven settings a record may state at all, so the override is the other engine's
     whole settings block.
     """
     if field == "fixture":
@@ -574,11 +574,11 @@ def test_a_verdict_names_what_differed_when_and_only_when_it_is_not_comparable()
 def test_two_engines_are_never_comparable_and_the_verdict_names_the_engine_alone(
     make_evidence_record: Any, execution_limits: ExecutionLimits
 ) -> None:
-    """The five settings the other engine does not hold are not five disagreements.
+    """The seven settings the other engine does not hold are not seven disagreements.
 
     A SQLite record states none of them because there is no session to read them from,
     so listing them beside the engine would report an absence this tool already knows
-    the reason for as five separate findings a reader has to dismiss one by one.
+    the reason for as seven separate findings a reader has to dismiss one by one.
     """
     on_postgresql = make_evidence_record(result=_result(execution_limits, TWO_ROWS))
     on_sqlite = make_evidence_record(

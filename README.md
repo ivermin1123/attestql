@@ -159,7 +159,11 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
 - An evidence record per execution, twenty-one required fields, no defaults: what ran, as what role,
   on which server, under which settings, with which result and hash, and how to re-run it. The
   record names the engine it ran on, once, in its session settings, and each column of the result
-  carries that engine's own declared type for it.
+  carries that engine's own declared type for it. Those settings are one block whichever engine
+  wrote the record: the engine, then the seven PostgreSQL preconditions (`TimeZone`, `DateStyle`,
+  `IntervalStyle`, `extra_float_digits`, the database's default collation, `work_mem` and
+  `hash_mem_multiplier`), stated in full on PostgreSQL and absent on an engine that has no session
+  to read them from, then everything else that session reported.
 - Gold-only probes, all heuristics and labelled so: ordering over numeric-looking text; an
   arbitrary or null-first cut that changes the answer; a result that is not a function of the data
   (a seeded shuffle of the referenced tables, copied into the scratch schema, changes it), with

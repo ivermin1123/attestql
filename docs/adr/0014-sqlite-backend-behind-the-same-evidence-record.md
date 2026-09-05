@@ -146,6 +146,9 @@ README stay PostgreSQL numbers; a SQLite run gets its own report and register ro
 - The session settings block is defined once for both engines rather than per engine, and the
   summary's `parser` block names sqlglot's version and the dialect it read the statement in,
   so a reader of a SQLite run is told which reading produced it.
+- The settings that decide comparability are seven, not the five ADR-0013 point 6 named:
+  `work_mem` and `hash_mem_multiplier` joined them when the executor took the memory a hash
+  aggregate spills at, and a SQLite record states all seven as absent.
 - The two seams above are joined by one record, `Engine` in `audit/engines.py`, holding an
   engine's name, its way of connecting and its parse; a run chooses it once from `--engine`
   and nothing below the options asks which engine is running. The parse protocol went into a
