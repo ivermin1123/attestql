@@ -41,7 +41,11 @@ data; found the q207 join defect at bound 2, called q1029 "Equivalent" at the su
 (the bound must exceed the LIMIT), and cannot detect q879 because it strips CAST inside ORDER BY.
 It cannot say which statement is wrong, writes no record, and its LICENSE is all rights reserved
 with no grant of use. Research-grade; not reused now, and not built on later even if the licence
-changes.
+changes. Amended 2026-09-04: the LICENSE was misread. Its first sentence reserves all rights and
+its second grants use, modification and redistribution under the modified-BSD text it reproduces
+(one commit, `fbf5460`, 2026-02-15, unchanged at `abee2ba`; the repository now lives at
+`ai-ar-research/SpotIt-plus`). The decision not to reuse or build on it stands on the grounds
+above, not on the licence; the register's N3 and U4 carry the correction.
 
 **The user.** The owner, grading model-generated SQL against golden statements, which is the M6
 task; and anyone who maintains or evaluates against a text-to-SQL benchmark. One sentence: a
