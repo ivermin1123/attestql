@@ -2,7 +2,8 @@
 
 <!-- cspell:ignore atremante ivermin -->
 
-Written 2026-09-04 by the coordinating session; not posted. ADR-0013 point 9: sessions draft,
+Written 2026-09-04 by the coordinating session; posted by the owner on 2026-09-05, 03:52 UTC, as
+the closing comment of the issue. ADR-0013 point 9: sessions draft,
 the owner reviews and files under their own identity. Evidence: the raw LICENSE of the
 repository (only commit `fbf5460`, 2026-02-15, unchanged at HEAD `abee2ba`, sha256 `687ee88a…`),
 re-read from both URLs, which are one repository (`atremante26/SpotItPlus` redirects). Its first
