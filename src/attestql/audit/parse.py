@@ -183,6 +183,25 @@ class ParsedStatement(Protocol):
         ...
 
     @property
+    def unresolved_ordering_keys(self) -> tuple[str, ...]:
+        """The top-level ORDER BY keys this parse read as columns and cannot prove are ones.
+
+        A grammar whose sort keys are never ambiguous answers with nothing, and most do: a
+        token in a sort key is a column or it is a syntax error. One does not. SQLite
+        resolves a double-quoted token against the schema at prepare time and reads it as a
+        string literal wherever it names no column, and a parse holds no schema, so the
+        parser reads it as the column a gold almost always means and names it here instead
+        of guessing.
+
+        What is named here is the key's own name, and a caller that holds the catalogue
+        resolves it before the statement runs: a key that names a column of the statement's
+        tables is that column, and a key that names none is a sort key over a literal and is
+        refused. That is where the resolution belongs, because a parse reaches no database
+        and this one still must not.
+        """
+        ...
+
+    @property
     def parser(self) -> ParserIdentity:
         """What judged this statement, which its record states and its summary reports."""
         ...

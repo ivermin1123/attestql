@@ -130,6 +130,16 @@ class PostgresStatement:
     from_has_subquery: bool
 
     @property
+    def unresolved_ordering_keys(self) -> tuple[str, ...]:
+        """None: in this grammar a sort key that is a token is a column or a syntax error.
+
+        A double-quoted token is an identifier to PostgreSQL wherever it appears, and the
+        server refuses one that names no column rather than reading it as a string, so there
+        is nothing here for a caller to resolve against the catalogue.
+        """
+        return ()
+
+    @property
     def parser(self) -> ParserIdentity:
         """This module's parser, which is the one that read every statement it returns."""
         return PARSER

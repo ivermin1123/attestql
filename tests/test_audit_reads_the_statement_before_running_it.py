@@ -200,3 +200,12 @@ def test_a_parsed_statement_is_frozen() -> None:
     with pytest.raises(AttributeError):
         parsed.sql = "SELECT 1"  # pyright: ignore[reportAttributeAccessIssue]  # frozen by design
     assert isinstance(parsed, PostgresStatement)
+
+
+def test_this_grammar_leaves_no_ordering_key_for_a_caller_to_resolve() -> None:
+    """A double-quoted token is an identifier to PostgreSQL wherever it stands, and the server
+    refuses one that names no column rather than reading it as a string, so a sort key here is
+    a column or the statement does not run. Nothing is handed on to be resolved against the
+    catalogue, which is what keeps that resolution out of the comparison for this engine."""
+    assert parse_statement(Q1029_GOLD).unresolved_ordering_keys == ()
+    assert parse_statement('SELECT id FROM t ORDER BY "a name" DESC').unresolved_ordering_keys == ()

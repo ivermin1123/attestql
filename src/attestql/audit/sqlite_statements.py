@@ -12,21 +12,29 @@ it reading every gold of BIRD dev (1,534) and of both Mini-Dev SQLite copies (50
 where libpg_query refuses 127, 45 and 46 of the same golds over backtick identifiers and
 ``LIMIT offset, count`` (``plans/reports/research-260904-sqlite-before-backend.md``).
 
-**The one thing it reads differently, and the one place that is refused.** SQLite resolves
-a bare double-quoted token against the schema at prepare time: it is an identifier where it
+**The one thing it reads differently, and what is done about it.** SQLite resolves a bare
+double-quoted token against the schema at prepare time: it is an identifier where it
 resolves to a column and falls back to a string literal where it does not. sqlglot holds no
-schema, so it reads every double-quoted token as an identifier. The exposure is small and
-is measured: 1 of those 2,534 golds carries a double-quoted token at all and none carries
-one as a string literal. It is also confined. A double-quoted token never becomes a table
-name here, never becomes an output alias, and both rewrites below keep it verbatim, so an
+schema, so it reads every double-quoted token as an identifier. The exposure is small and is
+measured: 1 of those 2,534 golds carries a double-quoted token at all and none carries one
+as a string literal. It is also confined. A double-quoted token never becomes a table name
+here, never becomes an output alias, and both rewrites below keep it verbatim, so an
 executed variant still means to SQLite what the statement meant. The single path by which
 the wrong reading would reach an answer is a top-level ``ORDER BY`` key that is a bare
 double-quoted token, where the parse would state a sort key over a column that may not
-exist, and that one shape is refused with the token and the rule named (ADR-0014 point 3,
-option 2 of ``plans/reports/parser-260905-sqlglot-sqlite-reading.md``). Which quote
-character a token was written with is read off the tokenizer's offsets: the tree records
-that an identifier was quoted and not which quote did it, so a backtick identifier and a
-double-quoted one are one node and two tokens.
+exist.
+
+Such a key is therefore not refused here and not read as settled either: it is named in
+``unresolved_ordering_keys``, and whoever executes the statement resolves it against the
+columns the backend reports for the statement's tables, which is what SQLite itself does and
+what a parse must not do. A key that names a column is that column; a key that names none is
+a sort key over a string literal and is refused there, with the token and the rule. That
+keeps the correct golds which double-quote a column name holding spaces, and still refuses
+the one shape whose two readings reach two answers (ADR-0014 point 3).
+
+Which quote character a token was written with is read off the tokenizer's offsets: the tree
+records that an identifier was quoted and not which quote did it, so a backtick identifier
+and a double-quoted one are one node and two tokens.
 
 Two things sqlglot normalises on the way back out, and both are meaning-preserving on
 SQLite: ``LIMIT 3, 2`` is written as ``LIMIT 2 OFFSET 3``, and a backtick identifier is
@@ -83,11 +91,10 @@ CHECKS_PASSED: tuple[str, ...] = (
     "parses_as_exactly_one_statement",
     "the_one_statement_is_a_select",
     "no_placeholder_without_a_bound_parameter",
-    "no_ordering_key_is_a_bare_double_quoted_token",
 )
-"""The four checks ``parse_statement`` runs, in the order it runs them. The fourth is this
-grammar's own and is the whole of what this parser refuses that the PostgreSQL one does
-not."""
+"""The three checks ``parse_statement`` runs, in the order it runs them. The same three the
+PostgreSQL parse runs: the ambiguous sort key this grammar has to deal with is named rather
+than judged here, because judging it needs the catalogue and a parse reaches no database."""
 
 PARSER = ParserIdentity(
     validator=VALIDATOR_VERSION,
@@ -112,14 +119,6 @@ be calling it."""
 DOUBLE_QUOTE = '"'
 """The character SQLite reads two ways and sqlglot reads one way."""
 
-BARE_DOUBLE_QUOTED_KEY = (
-    "the top level ORDER BY key {token} is a bare double-quoted token; SQLite reads such a "
-    "token as a column where one of that name is in scope and as a string literal where "
-    "none is, this parse holds no schema and cannot tell the two apart, and a sort key is "
-    "the one place where reading it the wrong way would reach the answer"
-)
-"""Why the one refusal this grammar adds is refused, with the token named."""
-
 
 @dataclass(frozen=True)
 class SqliteStatement:
@@ -143,6 +142,7 @@ class SqliteStatement:
     output_names: tuple[str, ...]
     set_operation: bool
     from_has_subquery: bool
+    unresolved_ordering_keys: tuple[str, ...]
 
     @property
     def parser(self) -> ParserIdentity:
@@ -436,13 +436,18 @@ def _is_a_bare_double_quoted_token(sql: str, tokens: Sequence[Token], position: 
     )
 
 
-def _require_no_bare_double_quoted_key(sql: str, ordering: Sequence[exp.Ordered]) -> None:
-    """Refuse the one shape whose two readings would reach two different answers."""
+def _unresolved_ordering_keys(sql: str, ordering: Sequence[exp.Ordered]) -> tuple[str, ...]:
+    """The sort keys whose token this grammar cannot tell from a string literal, by name.
+
+    Each once and in the order the statement wrote them. Whoever runs the statement resolves
+    them against the catalogue; nothing is decided here.
+    """
     if not ordering:
-        return
+        return ()
     written = _bare_double_quoted_names(sql)
     if not written:
-        return
+        return ()
+    named: list[str] = []
     for element in ordering:
         key = element.this
         if not isinstance(key, exp.Column) or len(key.parts) != 1:
@@ -453,7 +458,8 @@ def _require_no_bare_double_quoted_key(sql: str, ordering: Sequence[exp.Ordered]
             and identifier.quoted
             and identifier.name in written
         ):
-            raise StatementRefused(BARE_DOUBLE_QUOTED_KEY.format(token=f'"{identifier.name}"'))
+            named.append(identifier.name)
+    return tuple(dict.fromkeys(named))
 
 
 def parse_statement(sql: str) -> ParsedStatement:
@@ -465,7 +471,6 @@ def parse_statement(sql: str) -> ParsedStatement:
         # values are somewhere else, and a record of it could not be replayed.
         raise StatementRefused(f"placeholders {placeholders} and the audit binds no parameters")
     ordered = _ordered_elements(root)
-    _require_no_bare_double_quoted_key(sql, ordered)
     select = root if isinstance(root, exp.Select) else None
     aliases, from_has_subquery = (
         _collect_aliases(select) if select is not None else (NO_ALIASES, False)
@@ -488,11 +493,11 @@ def parse_statement(sql: str) -> ParsedStatement:
         ),
         set_operation=select is None,
         from_has_subquery=from_has_subquery,
+        unresolved_ordering_keys=_unresolved_ordering_keys(sql, ordered),
     )
 
 
 __all__ = [
-    "BARE_DOUBLE_QUOTED_KEY",
     "CHECKS_PASSED",
     "DIALECT",
     "PARSER",

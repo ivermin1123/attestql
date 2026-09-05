@@ -688,6 +688,42 @@ def _admitted(
     )
 
 
+ORDERING_KEY_NAMES_NO_COLUMN = (
+    "the top level ORDER BY key {token} names no column of {tables}; this engine's grammar "
+    "reads such a token as a column where one of that name is in scope and as a string "
+    "literal where none is, the catalogue says there is none, and a sort key over a literal "
+    "is not an ordering this audit can state"
+)
+"""Why a sort key the parse could not place is refused once the catalogue has been asked.
+
+The parse names such a key and decides nothing about it, because deciding needs the columns
+and a parse reaches no database. This is where the database is at hand, so this is where the
+key is resolved: a key that names a column is that column and the statement runs, and a key
+that names none is refused before it runs, with the token and the rule. A grammar whose sort
+keys are never ambiguous names none and never reaches this."""
+
+
+def _require_the_ordering_keys_name_columns(parsed: ParsedStatement, backend: Backend) -> None:
+    """Resolve the sort keys the parse could not place, against the tables the statement reads.
+
+    Case-insensitively, because that is how the engines that produce such a key resolve a
+    name. The columns of every table the statement names are one set here rather than one set
+    per table: which table a bare key belongs to is the engine's resolution and not this
+    one's, and what is being decided is only whether the token is a column at all.
+    """
+    keys = parsed.unresolved_ordering_keys
+    if not keys:
+        return
+    catalogue = backend.column_types(parsed.tables)
+    held = {column.casefold() for columns in catalogue.values() for column in columns}
+    named = ", ".join(table.text for table in parsed.tables) or "any table"
+    for key in keys:
+        if key.casefold() not in held:
+            raise StatementRefused(
+                ORDERING_KEY_NAMES_NO_COLUMN.format(token=f'"{key}"', tables=named)
+            )
+
+
 def _execute_and_record(
     parsed: ParsedStatement,
     *,
@@ -710,7 +746,11 @@ def _execute_and_record(
     The rule and the ordering are arguments and not read off ``parsed``, because the two
     sides of a comparison are recorded under the gold's rule and the gold's ordering; a
     record that stated its own would make the comparison a comparison of rules.
+
+    Both ways into a record come through here, so the one thing a parse could not settle on
+    its own is settled here, once, before the statement runs.
     """
+    _require_the_ordering_keys_name_columns(parsed, backend)
     result = backend.execute(parsed.sql, statement_timeout_seconds=statement_timeout_seconds)
     if not result.columns:
         # PostgreSQL accepts a bare SELECT and answers it with one row of no columns, which
@@ -1030,6 +1070,7 @@ __all__ = [
     "MECHANISM_READING",
     "MECHANISM_TRUNCATION",
     "MECHANISM_TYPE",
+    "ORDERING_KEY_NAMES_NO_COLUMN",
     "PROJECTION_NAMES_READING",
     "SECOND_RECORD_FILE",
     "SIDE_GOLD",

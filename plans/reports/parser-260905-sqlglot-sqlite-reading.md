@@ -85,6 +85,13 @@ Three options, for whoever owns the decision:
 
 ## Unresolved
 
-- Which of the three options above the SQLite parser is written under.
+- ~~Which of the three options above the SQLite parser is written under.~~ Resolved
+  2026-09-05: option 3, with the resolution moved out of the parser. The parse names a bare
+  double-quoted top-level `ORDER BY` key and decides nothing about it, and the executor
+  resolves it against the columns the backend reports for the statement's tables, refusing
+  only a key that names none. Option 3's objection was that resolving against the schema
+  breaks the rule in `audit/parse.py` that a parse reaches no database; doing it where the
+  backend is already open keeps that rule and keeps the correct golds that option 2 would
+  have refused.
 - How many BIRD dev golds option 1 would refuse. Not measured; it needs the gold files R-D
   already has open.

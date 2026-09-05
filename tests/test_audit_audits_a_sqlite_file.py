@@ -27,8 +27,9 @@ import pytest
 
 from attestql.audit.backend import BackendRefused, ReadBackDrift, TableName
 from attestql.audit.cli import SUMMARY_FILE, AuditOptions, connect_and_audit
-from attestql.audit.compare import bird_ex
+from attestql.audit.compare import ORDERING_KEY_NAMES_NO_COLUMN, bird_ex, record_statement
 from attestql.audit.engines import SQLITE
+from attestql.audit.parse import StatementRefused
 from attestql.audit.smells import NUMERIC_TEXT
 from attestql.audit.sqlite import (
     QUALIFIED_NAME_IS_NOT_REACHED,
@@ -38,8 +39,13 @@ from attestql.audit.sqlite import (
 )
 from attestql.audit.sqlite_statements import PARSER as SQLITE_PARSER
 from attestql.audit.sqlite_statements import parse_statement
-from attestql.evidence.serialize import UnsupportedValue, canonical_type_tag, typed_row
-from attestql.evidence.types import ENGINE_SQLITE
+from attestql.evidence.serialize import (
+    SerializationDescriptor,
+    UnsupportedValue,
+    canonical_type_tag,
+    typed_row,
+)
+from attestql.evidence.types import ENGINE_SQLITE, QuestionMetadata, StatementSource
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 TIMEOUT_SECONDS = 10
@@ -546,6 +552,78 @@ def test_the_benchmark_s_own_reading_of_a_sqlite_result_is_its_own_driver_s(
     assert not bird_ex(
         reals, _result((ColumnType("v", "REAL"),), ((Decimal("2.0"),),)), engine=ENGINE_SQLITE
     ).equal
+
+
+WIDE_COLUMN_FIXTURE = """
+CREATE TABLE schools (id INTEGER PRIMARY KEY, name TEXT, "Free Meal Count (K-12)" INTEGER);
+INSERT INTO schools VALUES (1, 'Alder', 30), (2, 'Birch', 200), (3, 'Cedar', 7);
+"""
+"""A real column whose name holds spaces and punctuation, which only double quotes can name.
+The shape a BIRD SQLite gold writes, and the one the ambiguous sort key is about."""
+
+DESCRIPTOR = SerializationDescriptor(
+    version="sqlite-backend-test/1",
+    numeric_scale=6,
+    timestamp_format="%Y-%m-%dT%H:%M:%SZ",
+    timezone="UTC",
+    null_rendering="NULL",
+    encoding="utf-8",
+)
+
+
+def _record(backend: SqliteBackend, directory: Path, sql: str) -> tuple[object, ...]:
+    """One statement recorded through the path the command takes, and the rows it recorded."""
+    recorded = record_statement(
+        question=QuestionMetadata(
+            question_id="1",
+            question_set="a-test",
+            question_text="which school?",
+            evidence_text="",
+        ),
+        question_set_version="sha256:test",
+        statement_source=StatementSource(
+            path="questions.json", digest="sha256:test", origin=None, date=None
+        ),
+        parsed=parse_statement(sql),
+        backend=backend,
+        serialization=DESCRIPTOR,
+        session_settings=backend.session_settings(),
+        run_id="a-test-run",
+        directory=directory,
+        data_as_of=datetime(2026, 9, 5, tzinfo=UTC),
+    )
+    return recorded.record.result.rows
+
+
+def test_a_double_quoted_sort_key_that_names_a_column_is_read_as_that_column(
+    tmp_path: Path,
+) -> None:
+    """BIRD's own shape. The parse names the key without deciding it, the catalogue says it is
+    a column of the statement's table, and the statement is recorded and run as written."""
+    backend = SqliteBackend.connect(str(_build(tmp_path / "wide.sqlite", WIDE_COLUMN_FIXTURE)))
+    sql = 'SELECT name FROM schools ORDER BY "Free Meal Count (K-12)" DESC LIMIT 1'
+
+    assert parse_statement(sql).unresolved_ordering_keys == ("Free Meal Count (K-12)",)
+    assert _record(backend, tmp_path / "recorded", sql) == (("Birch",),)
+
+
+def test_a_double_quoted_sort_key_that_names_no_column_is_refused_before_it_runs(
+    tmp_path: Path,
+) -> None:
+    """SQLite would run this happily and sort every row by the constant string, which is an
+    ordering the record cannot state and the parse cannot tell from a column. The catalogue is
+    what settles it, so the refusal is the audit's own and names the token and the rule."""
+    path = _build(tmp_path / "wide.sqlite", WIDE_COLUMN_FIXTURE)
+    backend = SqliteBackend.connect(str(path))
+    sql = 'SELECT name FROM schools ORDER BY "a name no column has" DESC LIMIT 1'
+
+    with pytest.raises(StatementRefused, match='"a name no column has" names no column'):
+        _record(backend, tmp_path / "recorded", sql)
+
+    assert _rows(backend, sql) == (("Alder",),), (
+        "the engine runs it; what is refused is the audit's reading of it as an ordering"
+    )
+    assert "string literal" in ORDERING_KEY_NAMES_NO_COLUMN
 
 
 class Lines:

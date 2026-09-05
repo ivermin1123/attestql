@@ -78,7 +78,11 @@ def test_the_parser_names_itself_by_the_release_and_the_dialect_that_read_the_te
         "sqlglot": SQLGLOT_VERSION,
         "dialect": DIALECT,
     }
-    assert PARSER.checks[-1] == "no_ordering_key_is_a_bare_double_quoted_token"
+    assert PARSER.checks == (
+        "parses_as_exactly_one_statement",
+        "the_one_statement_is_a_select",
+        "no_placeholder_without_a_bound_parameter",
+    ), "the ambiguous sort key is named rather than judged here; judging it needs a catalogue"
 
 
 def test_a_statement_that_orders_itself_is_replayed_under_the_ordered_rule() -> None:
@@ -328,26 +332,41 @@ def test_a_double_quoted_ordering_key_the_statement_qualified_is_read_and_runs(
     assert _run(path, sql) == [("Birch",)], "'200' is the smallest string"
 
 
-def test_a_bare_double_quoted_ordering_key_is_refused_with_the_token_and_the_rule() -> None:
-    """The one path by which the wrong reading would reach an answer, and the whole of what
-    this grammar refuses that the PostgreSQL one does not (ADR-0014 point 3). The refusal
-    names the token, so a maintainer reading a run's error line is told which one it was.
+def test_a_bare_double_quoted_ordering_key_is_named_rather_than_judged() -> None:
+    """The one path by which the wrong reading would reach an answer (ADR-0014 point 3). The
+    parse cannot tell that token from a string literal without a schema and must not hold one,
+    so it names the key and decides nothing; whoever runs the statement resolves it against
+    the columns the backend reports, and refuses only a key that names none.
 
-    ADR-0014 is what this follows and it is stricter than a reader might expect: a BIRD gold
-    that both projects and orders by such a column is refused here too, because the parse
-    cannot tell that token from a string literal without the schema it is forbidden to hold.
+    Both the BIRD shape and a key no column could match are named here. What separates them
+    is the catalogue, and the catalogue is not this module's to ask.
     """
-    with pytest.raises(StatementRefused, match='"a name no column has"'):
-        parse_statement(f'{SCHOOLS} ORDER BY "a name no column has" DESC')
+    bird_shape = parse_statement(
+        'SELECT "Free Meal Count (K-12)" FROM schools ORDER BY "Free Meal Count (K-12)" DESC'
+    )
+    no_column = parse_statement(f'{SCHOOLS} ORDER BY "a name no column has" DESC')
 
-    with pytest.raises(StatementRefused, match="bare double-quoted token"):
-        parse_statement(
-            'SELECT "Free Meal Count (K-12)" FROM schools ORDER BY "Free Meal Count (K-12)" DESC'
-        )
+    assert bird_shape.unresolved_ordering_keys == (WIDE_COLUMN,)
+    assert no_column.unresolved_ordering_keys == ("a name no column has",)
+    assert bird_shape.replay_rule is ReplayRule.R_ORD
+
+
+def test_a_qualified_or_backtick_ordering_key_is_never_one_to_resolve() -> None:
+    """SQLite allows no string literal after a table qualifier and none in backticks, so a key
+    written either way is a column under both readings and there is nothing to ask about."""
+    qualified = parse_statement(
+        'SELECT name FROM schools ORDER BY schools."Free Meal Count (K-12)" DESC'
+    )
+    backticked = parse_statement("SELECT name FROM schools ORDER BY `name` DESC")
+    plain = parse_statement(f"{SCHOOLS} ORDER BY name DESC")
+
+    assert qualified.unresolved_ordering_keys == ()
+    assert backticked.unresolved_ordering_keys == ()
+    assert plain.unresolved_ordering_keys == ()
 
 
 def test_a_double_quoted_ordering_key_inside_a_subquery_is_not_the_statement_s_own() -> None:
-    """The refusal is about the top-level ORDER BY, which is the only one whose keys a record
+    """What is named is the top-level ORDER BY, which is the only one whose keys a record
     states. An ORDER BY inside a subquery states nothing about the answer's order."""
     parsed = parse_statement(
         'SELECT name FROM (SELECT name FROM schools ORDER BY "Free Meal Count (K-12)") '
@@ -356,6 +375,7 @@ def test_a_double_quoted_ordering_key_inside_a_subquery_is_not_the_statement_s_o
 
     assert parsed.replay_rule is ReplayRule.R_ORD
     assert parsed.ordering[0].expression == "name"
+    assert parsed.unresolved_ordering_keys == ()
 
 
 def test_a_double_quoted_string_in_a_where_clause_is_kept_and_means_what_sqlite_means(

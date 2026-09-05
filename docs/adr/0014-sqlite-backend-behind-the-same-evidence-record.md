@@ -51,10 +51,11 @@ refuses 127, 45 and 46 of the same golds, every refusal a backtick identifier or
 `LIMIT offset, count`. The double-quoted case is the one neither parser reads as SQLite
 does, and it is rarer than this record assumed: 1 of the 2,534 golds carries a
 double-quoted token at all (bird_dev q1101, the table `"Match"`) and none carries one as a
-string literal. The rule the parser is written under is option 2 of
-`plans/reports/parser-260905-sqlglot-sqlite-reading.md`: refuse only a bare double-quoted
-token that is a top-level `ORDER BY` key, which is the single path by which the wrong
-reading reaches an answer.
+string literal. The single path by which the wrong reading reaches an answer is a bare
+double-quoted token that is a top-level `ORDER BY` key, and the rule the parser is written
+under resolves that key against the columns the backend reports for the statement's tables,
+where the backend is at hand and the parse is not: a key that names a column is read as that
+column, and only a key that names none is refused.
 
 ## Decision
 
@@ -104,11 +105,14 @@ reading reaches an answer.
    SQLite parser is sqlglot's SQLite dialect (MIT) rather than libpg_query, and the allowlist
    is re-stated over its tree. sqlglot holds no schema and so reads every double-quoted token
    as an identifier, where SQLite reads one as a string literal wherever it resolves to no
-   column: the parser refuses a statement whose top-level `ORDER BY` key is a bare
-   double-quoted token, and reads every other one as the identifier a BIRD gold almost always
-   means, which keeps the correct golds that double-quote a column name holding spaces. The
-   validator version string names which parser judged the statement, as the summary's
-   `parser` block does since `efd9d00`.
+   column: the parse names such a top-level `ORDER BY` key rather than judging it, and the
+   key is resolved where the backend is at hand, against the columns it reports for the
+   statement's tables, so a key that names one is read as that column and only a key that
+   names none is refused, with the token and the rule. That keeps the correct golds which
+   double-quote a column name holding spaces, refuses the one shape whose two readings reach
+   two answers, and leaves intact the rule that a parse reaches no database. The validator
+   version string names which parser judged the statement, as the summary's `parser` block
+   does since `efd9d00`.
 4. The smells split by what they read: the ones that read the tree and the result (limit
    ties, nulls-first, float order) move unchanged; the ones that read the catalogue (numeric
    text, column types) go through the backend and get a SQLite answer where one exists.
