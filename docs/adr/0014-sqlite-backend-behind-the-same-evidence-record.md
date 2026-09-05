@@ -159,6 +159,11 @@ README stay PostgreSQL numbers; a SQLite run gets its own report and register ro
 - The settings that decide comparability are seven, not the five ADR-0013 point 6 named:
   `work_mem` and `hash_mem_multiplier` joined them when the executor took the memory a hash
   aggregate spills at, and a SQLite record states all seven as absent.
+- Which result types hold an aggregate whose last digits are its summation order is asked of the
+  backend rather than listed in the probe: PostgreSQL answers `float4` and `float8`, SQLite
+  answers nothing, because `sum`, `total` and `avg` there carry a Kahan-Babuska-Neumaier
+  correction (SQLite 3.43.0) and a REAL cell that moves under a shuffled copy moved for some
+  other reason, which is the stronger finding and is reported as one.
 - The two seams above are joined by one record, `Engine` in `audit/engines.py`, holding an
   engine's name, its way of connecting and its parse; a run chooses it once from `--engine`
   and nothing below the options asks which engine is running. The parse protocol went into a

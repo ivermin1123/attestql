@@ -287,6 +287,23 @@ class Backend(Protocol):
         """
         raise NotImplementedError
 
+    def order_sensitive_aggregate_types(self) -> frozenset[str]:
+        """The result column types whose aggregates depend on the order the rows were read.
+
+        Asked because a probe that reruns a gold over the same rows in another physical
+        order has to decide what a changed cell means, and for one class of value it means
+        nothing: a floating type whose aggregate is added up value by value gives another
+        last digit when the values arrive in another order, and that is arithmetic and not
+        a property of the statement. Every other changed cell is the statement depending on
+        the storage order, which is the finding.
+
+        Which types those are is the engine's answer and not the probe's, because it is a
+        property of how the engine adds: an engine that sums with a compensation gives the
+        same total whatever order it reads in, and answers with the empty set. The empty set
+        is the conservative one: every changed cell is then reported under the stronger name.
+        """
+        raise NotImplementedError
+
     def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         """Count that column's rows, nulls, empties and values the pattern rejects.
 

@@ -200,6 +200,14 @@ making them block would refuse every comparison made across two hosts, including
 ones where the sort did not change, and this repository has measured no cross-host drift
 of its own (`docs/claims-register.md`, section 3)."""
 
+ORDER_SENSITIVE_AGGREGATE_TYPES: frozenset[str] = frozenset({"float4", "float8"})
+"""The result types whose aggregates depend on the order their rows were added in.
+
+What a probe forgives a rerun for changing, named here because which types they are is a
+property of how this engine adds and not of the probe. A result column carries the server's
+own type name, which is what these are spelled as.
+"""
+
 DEFAULT_SCHEMA = "public"
 """Where a table named without a schema is looked for. BIRD's gold names bare tables and
 the dump loads them into one schema, so an unqualified name means this one, stated here
@@ -665,6 +673,16 @@ class PostgresBackend:
             if columns is not None:
                 types[name] = columns
         return types
+
+    def order_sensitive_aggregate_types(self) -> frozenset[str]:
+        """The two floating types PostgreSQL adds up value by value, by their server names.
+
+        ``float4`` and ``float8`` are the ones whose aggregate moves with the order the rows
+        arrive in: an ``AVG`` or a ``SUM`` over them is a running double, and a gather that
+        returns its partials in another order or a hash aggregate that spilled into another
+        set of batches gives another last digit. ``numeric`` is exact and is not one of them.
+        """
+        return ORDER_SENSITIVE_AGGREGATE_TYPES
 
     def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         """The four counts, taken in one pass over the column the caller named."""
@@ -1178,6 +1196,7 @@ __all__ = [
     "DEFAULT_SCHEMA",
     "DEFAULT_SCRATCH_SCHEMA",
     "DRIVER_ERROR",
+    "ORDER_SENSITIVE_AGGREGATE_TYPES",
     "PLAN_CONTROLS",
     "PRECONDITION_SETTINGS",
     "QUALIFIED_NAME_IS_NOT_REACHED",

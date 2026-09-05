@@ -166,12 +166,20 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   to read them from, then everything else that session reported.
 - Gold-only probes, all heuristics and labelled so: ordering over numeric-looking text; an
   arbitrary or null-first cut that changes the answer; a result that is not a function of the data
-  (a seeded shuffle of the referenced tables, copied into the scratch schema, changes it), with
+  (a seeded shuffle of the referenced tables, copied into scratch storage, changes it), with
   float aggregates whose value depends on summation order reported under their own name; and,
-  off by default behind `--experimental-s2`, direction against the question. The copies are
-  reached by the search path, which a name that states its own schema never consults, so a gold
-  that writes `public.x` or `"Other".x` is reported as not covered by the shuffle rather than
-  rerun against a copy of it. Which answer a copy gives depends on the plan it is read with, and
+  off by default behind `--experimental-s2`, direction against the question. All five run on
+  either engine and read the engine's own rules rather than PostgreSQL's: where the nulls of an
+  ordering key go without a `NULLS FIRST` or `NULLS LAST` to say (last under `ASC` on PostgreSQL,
+  first on SQLite), what a numeric cast of an ordering key is written as, and which result types
+  hold an aggregate whose last digits are its summation order. On SQLite that last set is empty,
+  because the engine adds a REAL aggregate with a compensation, so a float cell that moves under
+  the shuffle there is reported as depending on the storage order rather than forgiven as
+  arithmetic. The copies are reached by the search path on PostgreSQL and by SQLite resolving an
+  unqualified name in `temp` first, and neither consults a name that states its own schema, so a
+  gold that writes `public.x`, `"Other".x` or `main.x` is reported as not covered by the shuffle
+  rather than rerun against a copy of it. Which answer a copy gives depends on the plan it is read
+  with, and
   the plan on the planner's statistics: the run records `last_analyze`, `last_autoanalyze` and
   `n_mod_since_analyze` per table, in the probe's own evidence and in the summary, and never runs
   ANALYZE. A probe that fires on one run and is quiet on the next over the same data is that, and
@@ -197,7 +205,8 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   it, no session setting is a precondition because a file has no session, there is no role and no
   grant, and the parser is sqlglot's SQLite dialect rather than the engine's own grammar. No
   benchmark run on SQLite has been measured yet; the sandbox in `tools/audit-sandbox-sqlite/` is
-  what exists, and it runs in the gate.
+  what exists, and it runs in the gate, with every probe asked there on a statement that fires it
+  and one that keeps it quiet.
 - It proves nothing about correctness, security, or production use. It runs as the role you give
   it; give it a read-only one.
 - Its parser is PostgreSQL 17's grammar (`libpg_query`), so a statement that only PostgreSQL 17

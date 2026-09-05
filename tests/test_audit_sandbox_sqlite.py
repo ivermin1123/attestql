@@ -16,11 +16,21 @@ The golds are Mini-Dev's own SQLite copy rather than translations of the Postgre
 and one of them is a shape the PostgreSQL sandbox cannot show: q879's SQLite gold states no
 NULLS placement, because SQLite puts a null last under DESC without being told, and the parse
 says so rather than reporting the placement as the statement's own.
+
+Every probe is then asked twice over the same file, on a statement that fires it and one that
+keeps it quiet, because a probe that has never been seen quiet is a probe nobody has shown to
+be answering the question rather than always saying yes. Three of the five fire on the golds
+above and the quiet halves are beside them; the two the golds do not reach, a cut over the
+nulls this engine puts first and the experimental one, fire on statements written here. The
+fifth is the one this engine does not have: SQLite adds a REAL aggregate with a compensation,
+so a float total does not move with the order its rows were read in, the sums below are quiet
+and a REAL that does move is reported as the storage-order finding it is.
 """
 
 from __future__ import annotations
 
 import json
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
@@ -28,8 +38,10 @@ from typing import Any, cast
 import pytest
 from build import PREDICTIONS_FILE, QUESTIONS_FILE, build_fixture
 
+from attestql.audit.backend import Backend, ShuffledCopies, TableName
 from attestql.audit.cli import (
     MARKER_FILE,
+    SERIALIZATION,
     SMELLS_FILE,
     SUMMARY_FILE,
     AuditOptions,
@@ -41,8 +53,15 @@ from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND
 from attestql.audit.engines import SQLITE
 from attestql.audit.smells import (
     ARBITRARY_CUT,
+    DEFAULT_SHUFFLE_ROW_LIMIT,
+    DIRECTION_AGAINST_QUESTION,
+    FLOAT_AGGREGATE_ORDER,
     NOT_A_FUNCTION_OF_THE_DATA,
     ORDERING_OVER_NUMERIC_TEXT,
+    QuestionText,
+    Smell,
+    SmellSettings,
+    all_smells,
 )
 from attestql.audit.sqlite import QUALIFIED_NAME_IS_NOT_REACHED
 from attestql.audit.sqlite_statements import PARSER, VALIDATOR_VERSION
@@ -295,6 +314,188 @@ def test_a_prediction_that_answers_the_same_question_another_way_is_equal(
         "'10' sorts below '200.5' and both below '9.5', which is the smell's case and not the "
         "disagreement: both statements order the mass as text and agree"
     )
+
+
+PROBE_TABLES: tuple[TableName, ...] = tuple(
+    TableName("", name) for name in ("drivers", "results", "scores", "spend", "team_attributes")
+)
+"""The tables the statements below read, copied once so that every rerun reads a copy."""
+
+PROBE_SETTINGS = SmellSettings(
+    serialization=SERIALIZATION,
+    statement_timeout_seconds=30,
+    experimental_s2=True,
+)
+"""The command's own settings with the experimental probe asked for, so all five run."""
+
+
+@pytest.fixture(scope="module")
+def sandbox(tmp_path_factory: pytest.TempPathFactory) -> Iterator[Backend]:
+    """The built file, open read-only, with one shuffled copy of each table the probes read.
+
+    The probes are asked here rather than through the command because a probe that stays
+    quiet writes no directory: the command records the questions that fired something, and
+    both halves of each pair have to be readable for a pair to say anything.
+    """
+    tmp_path = tmp_path_factory.mktemp("probes")
+    backend = SQLITE.connect(str(build_fixture(tmp_path / "sandbox")), scratch="temp")
+    try:
+        backend.prepare_shuffled_copies(PROBE_TABLES, seed="1", row_limit=DEFAULT_SHUFFLE_ROW_LIMIT)
+        yield backend
+    finally:
+        backend.drop_shuffled_copies()
+
+
+def _probes(backend: Backend, sql: str, *, question: str = "") -> dict[str, Smell]:
+    """Every probe on one statement over the file, by the name each answered under."""
+    parsed = SQLITE.parse(sql)
+    baseline = backend.execute(sql, statement_timeout_seconds=30)
+    found = all_smells(
+        parsed,
+        backend,
+        baseline,
+        settings=PROBE_SETTINGS,
+        question=QuestionText(question),
+        shuffled=ShuffledCopies(
+            copied=PROBE_TABLES,
+            skipped={},
+            unreachable={},
+            seed="1",
+            row_limit=DEFAULT_SHUFFLE_ROW_LIMIT,
+        ),
+    )
+    return {smell.name: smell for smell in found}
+
+
+def test_an_ordering_over_numeric_text_fires_over_numbers_and_is_quiet_over_words(
+    sandbox: Backend,
+) -> None:
+    """The two halves of the probe q879 fires. The key is a text column in both, and the
+    census is what separates them: three masses that are all numbers reorder under the cast
+    and the probe fires; nationalities are not numbers, so the cast is never run and the
+    probe answers no rather than never having asked."""
+    fires = _probes(sandbox, "SELECT tag FROM y ORDER BY mass ASC")[ORDERING_OVER_NUMERIC_TEXT]
+    quiet = _probes(sandbox, "SELECT nationality FROM drivers ORDER BY nationality ASC")[
+        ORDERING_OVER_NUMERIC_TEXT
+    ]
+
+    assert (fires.fired, fires.applicable) == (True, True)
+    assert cast("list[dict[str, Any]]", fires.evidence["keys"])[0]["cast_sql"] == (
+        "SELECT tag FROM y ORDER BY CAST(mass AS REAL) ASC"
+    )
+    assert (quiet.fired, quiet.applicable) == (False, True)
+    key = cast("list[dict[str, Any]]", quiet.evidence["keys"])[0]
+    assert key["column"] == "drivers.nationality"
+    assert key["every_value_is_numeric"] is False
+
+
+def test_an_ordered_cut_fires_inside_a_tie_and_is_quiet_where_the_ordering_decided_it(
+    sandbox: Backend,
+) -> None:
+    """Three names tied at 99 bounded to one is a cut this statement did not make; one lowest
+    score bounded to one is a cut the ordering made, and the probe says which it read."""
+    fires = _probes(sandbox, "SELECT name FROM scores ORDER BY score DESC LIMIT 1")[ARBITRARY_CUT]
+    quiet = _probes(sandbox, "SELECT name FROM scores ORDER BY score ASC LIMIT 1")[ARBITRARY_CUT]
+
+    assert (fires.fired, fires.evidence["case"]) == (True, "tie-at-the-cut")
+    assert cast("dict[str, Any]", fires.evidence["tied_at_the_cut"])["tied_rows"] == 3
+    assert (quiet.fired, quiet.applicable, quiet.evidence["case"]) == (False, True, None)
+
+
+def test_a_cut_fires_on_the_nulls_this_engine_puts_first_and_is_quiet_where_it_puts_them_last(
+    sandbox: Backend,
+) -> None:
+    """The engine's own rule, and the place a probe written for PostgreSQL reads it backwards.
+    SQLite sorts a null below every value, so an ascending key puts its nulls first and the two
+    rows this bound returns are the two that hold no speed at all; the same key descending puts
+    them last and the bound returns two speeds. On PostgreSQL the two statements swap places,
+    and neither the probe nor the parse asks which engine it is on: the parse fills the
+    placement in per key under its own grammar's rule and the probe reads what it filled in."""
+    fires = _probes(
+        sandbox, "SELECT fastestLapSpeed FROM results ORDER BY fastestLapSpeed ASC LIMIT 2"
+    )[ARBITRARY_CUT]
+    quiet = _probes(
+        sandbox, "SELECT fastestLapSpeed FROM results ORDER BY fastestLapSpeed DESC LIMIT 2"
+    )[ARBITRARY_CUT]
+
+    assert (fires.fired, fires.evidence["case"]) == (True, "null-first")
+    assert cast("list[dict[str, Any]]", fires.evidence["ordering_keys"])[0]["nulls"] == "first"
+    assert fires.evidence["returned_rows_with_a_null_key"] == [
+        [{"type": "null", "value": None}],
+        [{"type": "null", "value": None}],
+    ]
+    assert (quiet.fired, quiet.applicable, quiet.evidence["case"]) == (False, True, None)
+    assert cast("list[dict[str, Any]]", quiet.evidence["ordering_keys"])[0]["nulls"] == "last"
+
+
+def test_a_result_that_moves_with_the_storage_order_fires_and_a_count_does_not(
+    sandbox: Backend,
+) -> None:
+    """``group_concat`` writes its parts in the order it read them, so the same rows in another
+    physical order give another answer. A count of the same table is a function of the rows and
+    of nothing else, and the probe is quiet having asked rather than quiet for want of asking."""
+    fires = _probes(
+        sandbox,
+        "SELECT category, group_concat(spent) FROM spend GROUP BY category ORDER BY category ASC",
+    )[NOT_A_FUNCTION_OF_THE_DATA]
+    quiet = _probes(sandbox, "SELECT count(*) FROM spend")[NOT_A_FUNCTION_OF_THE_DATA]
+
+    assert (fires.fired, fires.applicable) == (True, True)
+    assert cast("dict[str, Any]", fires.evidence["shuffled_copies"])["differs"] is True
+    assert (quiet.fired, quiet.applicable) == (False, True)
+    assert cast("dict[str, Any]", quiet.evidence["shuffled_copies"])["verdict"] == "equal"
+
+
+def test_a_real_total_does_not_move_with_the_order_its_rows_were_read_in(
+    sandbox: Backend,
+) -> None:
+    """The fifth probe, and the one this engine does not reach. SQLite adds a REAL aggregate
+    with a Kahan-Babuska-Neumaier compensation, so the same fifteen amounts summed in another
+    physical order give the same total to the last digit, whole and per category, and no
+    ``float-aggregate-order`` arises from a sum here.
+
+    The backend therefore names no type whose aggregate is order-sensitive, which is what makes
+    a REAL cell that does move under a shuffle the storage-order finding rather than arithmetic
+    the probe forgives; that rule is asked of the smell itself in
+    ``tests/test_audit_smells_read_the_gold_and_the_data.py``."""
+    assert sandbox.order_sensitive_aggregate_types() == frozenset()
+    for sql in (
+        "SELECT sum(spent) FROM spend",
+        "SELECT category, sum(spent) FROM spend GROUP BY category ORDER BY category ASC",
+    ):
+        found = _probes(sandbox, sql)
+        assert FLOAT_AGGREGATE_ORDER not in found
+        quiet = found[NOT_A_FUNCTION_OF_THE_DATA]
+        assert (quiet.fired, quiet.applicable) == (False, True)
+        assert cast("dict[str, Any]", quiet.evidence["shuffled_copies"])["verdict"] == "equal"
+
+
+def test_the_experimental_probe_fires_against_the_question_and_runs_only_when_asked_for(
+    sandbox: Backend, gold_only: tuple[Summary, Lines, Path]
+) -> None:
+    """A question asking for the highest four against a statement that orders ascending fires
+    it; the same question against a descending key does not. It is absent from a run that did
+    not ask for it, which is what keeps an experiment at 17 % precision out of a summary."""
+    _, _, out = gold_only
+    highest = "What are the speeds of the four teams with the highest build up play speed?"
+    fires = _probes(
+        sandbox,
+        "SELECT buildUpPlaySpeed FROM team_attributes ORDER BY buildUpPlaySpeed ASC LIMIT 4",
+        question=highest,
+    )[DIRECTION_AGAINST_QUESTION]
+    quiet = _probes(
+        sandbox,
+        "SELECT buildUpPlaySpeed FROM team_attributes ORDER BY buildUpPlaySpeed DESC LIMIT 4",
+        question=highest,
+    )[DIRECTION_AGAINST_QUESTION]
+
+    assert (fires.fired, fires.evidence["contradiction"]) == (
+        True,
+        "maximum intent with an ascending first key",
+    )
+    assert (quiet.fired, quiet.applicable, quiet.evidence["contradiction"]) == (False, True, None)
+    ran = cast("list[dict[str, Any]]", _document(out / "q900002" / SMELLS_FILE)["smells"])
+    assert DIRECTION_AGAINST_QUESTION not in {str(smell["name"]) for smell in ran}
 
 
 def test_a_write_in_a_gold_is_that_question_s_error_line_and_not_the_end_of_the_run(

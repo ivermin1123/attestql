@@ -12,7 +12,8 @@ that project different answers are and do.
 Where the nulls of an ordering key go is PostgreSQL's rule and not this file's: a written
 NULLS FIRST or NULLS LAST decides it, and left to the default a null sorts above every
 value, so a descending key is null-first and an ascending one is not. The four cases are
-below, each saying which of the two decided it.
+below, each saying which of the two decided it. SQLite's mirror of the same rule is on the
+SQLite sandbox, where a statement runs against a file that holds it.
 """
 
 from __future__ import annotations
@@ -39,7 +40,12 @@ from attestql.audit.smells import (
     smells_json,
 )
 from attestql.audit.statements import parse_statement
-from tests.audit_fakes import DESCRIPTOR, FakeBackend, fake_result
+from tests.audit_fakes import (
+    DESCRIPTOR,
+    POSTGRESQL_FLOAT_TYPES,
+    FakeBackend,
+    fake_result,
+)
 
 SETTINGS = SmellSettings(serialization=DESCRIPTOR, statement_timeout_seconds=30)
 
@@ -553,6 +559,27 @@ def test_a_float_that_only_differs_in_its_last_digits_is_reported_as_summation_o
     assert found.evidence["significant_digits"] == 6
 
 
+def test_an_engine_that_compensates_its_sums_forgives_no_changed_float() -> None:
+    """The same two values, on a backend whose engine adds a floating aggregate with a
+    compensation and therefore names no order-sensitive type. Nothing about those digits is
+    summation order there, so the cell is the statement depending on the storage order and
+    the stronger name is the one reported."""
+    backend = FakeBackend(
+        {TOTAL: fake_result(TOTAL_FLOAT, ((Decimal("1.5000000001"),),))},
+        shuffled_results={TOTAL: fake_result(TOTAL_FLOAT, ((Decimal("1.5000000002"),),))},
+        order_sensitive_aggregate_types=frozenset(),
+    )
+    found = not_a_function_of_the_data(
+        parse_statement(TOTAL),
+        backend,
+        backend.execute(TOTAL, statement_timeout_seconds=30),
+        settings=SETTINGS,
+        shuffled=SHUFFLED,
+    )
+    assert _smell(found) == (NOT_A_FUNCTION_OF_THE_DATA, True, True)
+    assert "float_cells" not in found.evidence
+
+
 def test_a_float_that_differs_in_the_digits_that_were_compared_keeps_the_other_name() -> None:
     backend = FakeBackend(
         {TOTAL: fake_result(TOTAL_FLOAT, ((Decimal("1.5"),),))},
@@ -578,7 +605,7 @@ def test_a_float_that_is_not_a_number_on_both_sides_is_the_same_cell() -> None:
     is one value on both sides, and what differed is the cell beside it."""
     baseline = fake_result(A_SUM_AND_A_SHARE, ((Decimal("1.5000000001"), _not_a_number()),))
     rerun = fake_result(A_SUM_AND_A_SHARE, ((Decimal("1.5000000002"), _not_a_number()),))
-    cells = _float_order_only(baseline, [rerun])
+    cells = _float_order_only(baseline, [rerun], POSTGRESQL_FLOAT_TYPES)
     assert cells is not None
     assert [cell["column"] for cell in cells] == ["sum"]
 
@@ -588,7 +615,7 @@ def test_a_float_that_is_not_a_number_on_one_side_only_is_a_difference() -> None
     order, so the check gives the difference back to be reported under its own name."""
     baseline = fake_result(A_SUM_AND_A_SHARE, ((Decimal("1.5"), _not_a_number()),))
     rerun = fake_result(A_SUM_AND_A_SHARE, ((Decimal("1.5"), Decimal("2.5")),))
-    assert _float_order_only(baseline, [rerun]) is None
+    assert _float_order_only(baseline, [rerun], POSTGRESQL_FLOAT_TYPES) is None
 
 
 def test_the_plan_variant_runs_only_when_it_was_asked_for() -> None:

@@ -48,6 +48,13 @@ ROLE = "fake_reader"
 TIMEOUT_MS = 30_000
 SCHEMA_DIGEST = "sha256:fake-schema-digest"
 
+POSTGRESQL_FLOAT_TYPES: frozenset[str] = frozenset({"float4", "float8"})
+"""What this fake answers as the types whose aggregates depend on the order they were added.
+
+PostgreSQL's two, because these statements are written in PostgreSQL's type names, and
+spelled here rather than imported so that a change to that backend's answer is a change a
+test notices rather than one it follows."""
+
 NOT_REACHED = "the statement names this table's schema, so the rerun reads it and not a copy"
 """Why a copy of a table a statement qualified is not what its rerun reads, in this fake's
 words. A real backend states its own, because how the copies are reached is the engine's."""
@@ -144,6 +151,7 @@ class FakeBackend:
         plan_results: Mapping[str, ExecutionResult] | None = None,
         skipped_tables: Mapping[TableName, int] | None = None,
         scratch_refusal: str | None = None,
+        order_sensitive_aggregate_types: frozenset[str] = POSTGRESQL_FLOAT_TYPES,
         missing_tables: Sequence[TableName] = (),
         unreadable_tables: Sequence[TableName] = (),
         refusing: str | None = None,
@@ -162,6 +170,7 @@ class FakeBackend:
         self._plan_results = dict(plan_results or {})
         self._skipped_tables = dict(skipped_tables or {})
         self._scratch_refusal = scratch_refusal
+        self._order_sensitive_aggregate_types = order_sensitive_aggregate_types
         self._missing_tables = set(missing_tables)
         self._unreadable_tables = set(unreadable_tables)
         self.refusing = refusing
@@ -285,6 +294,14 @@ class FakeBackend:
             for name in dict.fromkeys(tables)
             if name in self._planner_statistics
         }
+
+    def order_sensitive_aggregate_types(self) -> frozenset[str]:
+        """What this fake's engine adds up value by value, PostgreSQL's two by default.
+
+        A test about an engine that compensates its sums builds the fake with the empty set,
+        which is SQLite's answer and the one that forgives nothing.
+        """
+        return self._order_sensitive_aggregate_types
 
     def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         self.census_calls.append((table, column, pattern))

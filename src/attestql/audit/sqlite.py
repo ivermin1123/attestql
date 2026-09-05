@@ -105,6 +105,14 @@ The mapping is exact and not by subclass: it is what the driver returns for a ce
 whole of what a SQLite value can be, so a type that is not here is a driver that has been
 told to adapt something and a value this module cannot say the storage class of."""
 
+ORDER_SENSITIVE_AGGREGATE_TYPES: frozenset[str] = frozenset()
+"""The result types whose aggregates depend on the order their rows were added in: none.
+
+SQLite has one floating type and adds it with a compensated summation, so no aggregate over
+it moves with the order the rows arrive in. The set is empty rather than absent because the
+question is asked of every engine and the empty answer is this engine's own.
+"""
+
 MIXED_CLASSES = "|"
 """What joins the storage classes of a column whose cells do not agree on one."""
 
@@ -656,6 +664,21 @@ class SqliteBackend:
                 types[name] = {str(row[0]): str(row[1]) for row in rows}
         return types
 
+    def order_sensitive_aggregate_types(self) -> frozenset[str]:
+        """Nothing: SQLite adds a REAL aggregate with a compensation, so its order cannot show.
+
+        ``sum``, ``total`` and ``avg`` carry a Kahan-Babuska-Neumaier correction beside the
+        running double and add it back at the end (SQLite 3.43.0), so the same REALs read in
+        another physical order give the same total. Measured over 28,000 multisets and on the
+        sandbox in ``plans/reports/session-260904-autonomous-run/b4-sqlite-float-sums/``.
+
+        The consequence is the answer: a REAL cell that does change under a shuffled copy on
+        this engine changed for some other order-dependent reason, and that is the statement
+        depending on the storage order rather than arithmetic. It is therefore reported under
+        the stronger name, which is what the empty set makes the probe do.
+        """
+        return ORDER_SENSITIVE_AGGREGATE_TYPES
+
     def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         """The four counts, taken in one pass over the column the caller named.
 
@@ -942,6 +965,7 @@ __all__ = [
     "DRIVER_ERROR",
     "MIXED_CLASSES",
     "NOT_IN_THIS_FILE",
+    "ORDER_SENSITIVE_AGGREGATE_TYPES",
     "PROGRESS_INSTRUCTIONS",
     "QUALIFIED_NAME_IS_NOT_REACHED",
     "QUERY_ONLY",
