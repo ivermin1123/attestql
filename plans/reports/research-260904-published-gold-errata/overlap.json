@@ -1,0 +1,229 @@
+{
+ "overlap_counts": {
+  "attestql_classification_56 x attestql_corrected_golds_3": 1,
+  "attestql_classification_56 x bird_dev1106_sql_diff_399": 14,
+  "attestql_classification_56 x bird_dev1106_text_only_diff_172": 7,
+  "attestql_classification_56 x cidr2026_jin_minidev_table2_18": 1,
+  "attestql_classification_56 x minidev_github_issues_ids": 2,
+  "attestql_classification_56 x wretblad_financial_flagged_52": 3,
+  "attestql_corrected_golds_3 x bird_dev1106_sql_diff_399": 2,
+  "attestql_corrected_golds_3 x minidev_github_issues_ids": 3,
+  "attestql_measurement_A_11 x attestql_corrected_golds_3": 2,
+  "attestql_measurement_A_11 x bird_dev1106_sql_diff_399": 4,
+  "attestql_measurement_A_11 x bird_dev1106_text_only_diff_172": 1,
+  "attestql_measurement_A_11 x minidev_github_issues_ids": 2,
+  "attestql_measurement_A_11 x wretblad_financial_flagged_52": 2,
+  "attestql_measurement_B_22 x bird_dev1106_sql_diff_399": 13,
+  "attestql_measurement_B_22 x bird_dev1106_text_only_diff_172": 1,
+  "attestql_measurement_B_22 x minidev_hf_vs_devjson_text_diff_4": 1,
+  "attestql_measurement_B_22 x wretblad_financial_flagged_52": 1,
+  "attestql_measurement_X_3 x bird_dev1106_text_only_diff_172": 1,
+  "cidr2026_jin_minidev_table2_18 x bird_dev1106_sql_diff_399": 8,
+  "cidr2026_jin_minidev_table2_18 x bird_dev1106_text_only_diff_172": 1,
+  "minidev_github_issues_ids x bird_dev1106_sql_diff_399": 5,
+  "minidev_github_issues_ids x bird_dev1106_text_only_diff_172": 1,
+  "minidev_hf_vs_devjson_text_diff_4 x bird_dev1106_sql_diff_399": 2,
+  "wretblad_financial_flagged_52 x bird_dev1106_sql_diff_399": 25,
+  "wretblad_financial_flagged_52 x bird_dev1106_text_only_diff_172": 2,
+  "wretblad_financial_flagged_52 x cidr2026_jin_minidev_table2_18": 1,
+  "wretblad_financial_flagged_52 x minidev_github_issues_ids": 1,
+  "wretblad_sampled_flagged_27 x bird_dev1106_sql_diff_399": 9,
+  "wretblad_sampled_flagged_27 x bird_dev1106_text_only_diff_172": 2,
+  "wretblad_sampled_flagged_27 x cidr2026_jin_minidev_table2_18": 1
+ },
+ "overlap_ids": {
+  "attestql_classification_56 x attestql_corrected_golds_3": [
+   207
+  ],
+  "attestql_classification_56 x bird_dev1106_sql_diff_399": [
+   45,
+   112,
+   149,
+   200,
+   207,
+   245,
+   249,
+   253,
+   281,
+   462,
+   477,
+   1122,
+   1147,
+   1501
+  ],
+  "attestql_classification_56 x bird_dev1106_text_only_diff_172": [
+   230,
+   255,
+   345,
+   487,
+   790,
+   800,
+   978
+  ],
+  "attestql_classification_56 x cidr2026_jin_minidev_table2_18": [
+   149
+  ],
+  "attestql_classification_56 x minidev_github_issues_ids": [
+   207,
+   565
+  ],
+  "attestql_classification_56 x wretblad_financial_flagged_52": [
+   112,
+   149,
+   173
+  ],
+  "attestql_corrected_golds_3 x bird_dev1106_sql_diff_399": [
+   207,
+   1029
+  ],
+  "attestql_corrected_golds_3 x minidev_github_issues_ids": [
+   207,
+   879,
+   1029
+  ],
+  "attestql_measurement_A_11 x attestql_corrected_golds_3": [
+   879,
+   1029
+  ],
+  "attestql_measurement_A_11 x bird_dev1106_sql_diff_399": [
+   115,
+   129,
+   694,
+   1029
+  ],
+  "attestql_measurement_A_11 x bird_dev1106_text_only_diff_172": [
+   37
+  ],
+  "attestql_measurement_A_11 x minidev_github_issues_ids": [
+   879,
+   1029
+  ],
+  "attestql_measurement_A_11 x wretblad_financial_flagged_52": [
+   115,
+   129
+  ],
+  "attestql_measurement_B_22 x bird_dev1106_sql_diff_399": [
+   31,
+   94,
+   349,
+   671,
+   736,
+   794,
+   955,
+   1028,
+   1135,
+   1168,
+   1482,
+   1529,
+   1531
+  ],
+  "attestql_measurement_B_22 x bird_dev1106_text_only_diff_172": [
+   1390
+  ],
+  "attestql_measurement_B_22 x minidev_hf_vs_devjson_text_diff_4": [
+   1135
+  ],
+  "attestql_measurement_B_22 x wretblad_financial_flagged_52": [
+   94
+  ],
+  "attestql_measurement_X_3 x bird_dev1106_text_only_diff_172": [
+   340
+  ],
+  "cidr2026_jin_minidev_table2_18 x bird_dev1106_sql_diff_399": [
+   12,
+   32,
+   46,
+   62,
+   92,
+   149,
+   862,
+   1175
+  ],
+  "cidr2026_jin_minidev_table2_18 x bird_dev1106_text_only_diff_172": [
+   877
+  ],
+  "minidev_github_issues_ids x bird_dev1106_sql_diff_399": [
+   137,
+   138,
+   207,
+   1029,
+   1322
+  ],
+  "minidev_github_issues_ids x bird_dev1106_text_only_diff_172": [
+   180
+  ],
+  "minidev_hf_vs_devjson_text_diff_4 x bird_dev1106_sql_diff_399": [
+   581,
+   1135
+  ],
+  "wretblad_financial_flagged_52 x bird_dev1106_sql_diff_399": [
+   94,
+   95,
+   96,
+   101,
+   106,
+   112,
+   113,
+   115,
+   117,
+   125,
+   126,
+   129,
+   133,
+   141,
+   149,
+   152,
+   153,
+   155,
+   162,
+   164,
+   171,
+   179,
+   181,
+   186,
+   188
+  ],
+  "wretblad_financial_flagged_52 x bird_dev1106_text_only_diff_172": [
+   180,
+   185
+  ],
+  "wretblad_financial_flagged_52 x cidr2026_jin_minidev_table2_18": [
+   149
+  ],
+  "wretblad_financial_flagged_52 x minidev_github_issues_ids": [
+   180
+  ],
+  "wretblad_sampled_flagged_27 x bird_dev1106_sql_diff_399": [
+   2,
+   20,
+   25,
+   35,
+   46,
+   317,
+   767,
+   1274,
+   1286
+  ],
+  "wretblad_sampled_flagged_27 x bird_dev1106_text_only_diff_172": [
+   297,
+   764
+  ],
+  "wretblad_sampled_flagged_27 x cidr2026_jin_minidev_table2_18": [
+   46
+  ]
+ },
+ "sizes": {
+  "attestql_classification_56": 56,
+  "attestql_corrected_golds_3": 3,
+  "attestql_measurement_A_11": 11,
+  "attestql_measurement_B_22": 22,
+  "attestql_measurement_X_3": 3,
+  "bird_dev1106_sql_diff_399": 399,
+  "bird_dev1106_text_only_diff_172": 172,
+  "cidr2026_jin_minidev_table2_18": 18,
+  "minidev_github_issues_ids": 10,
+  "minidev_hf_vs_devjson_text_diff_4": 4,
+  "wretblad_financial_flagged_52": 52,
+  "wretblad_sampled_flagged_27": 27
+ }
+}

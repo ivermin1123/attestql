@@ -1,0 +1,278 @@
+[
+ {
+  "question_id": 1164,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1168,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1171,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1179,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1185,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1189,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"Pattern\"",
+  "shape": "the text does not parse: syntax error at or near \"Pattern\""
+ },
+ {
+  "question_id": 1192,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1225,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1227,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1232,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1254,
+  "db_id": "thrombosis_prediction",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1031,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1036,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1039,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1040,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1068,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1091,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1102,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1103,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1105,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1107,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"FROM\"",
+  "shape": "the text does not parse: syntax error at or near \"FROM\""
+ },
+ {
+  "question_id": 1110,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1113,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1114,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1115,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 1139,
+  "db_id": "european_football_2",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 671,
+  "db_id": "codebase_community",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 11,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 12,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 23,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 24,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 25,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 26,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 28,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 31,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"Meal\"",
+  "shape": "the text does not parse: syntax error at or near \"Meal\""
+ },
+ {
+  "question_id": 32,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 46,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 50,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: LIMIT #,# syntax is not supported",
+  "shape": "the text does not parse: LIMIT #,# syntax is not supported"
+ },
+ {
+  "question_id": 62,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 72,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 77,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 83,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 85,
+  "db_id": "california_schools",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ },
+ {
+  "question_id": 138,
+  "db_id": "financial",
+  "reason": "the text does not parse: LIMIT #,# syntax is not supported",
+  "shape": "the text does not parse: LIMIT #,# syntax is not supported"
+ },
+ {
+  "question_id": 138,
+  "db_id": "financial",
+  "reason": "the text does not parse: LIMIT #,# syntax is not supported",
+  "shape": "the text does not parse: LIMIT #,# syntax is not supported"
+ },
+ {
+  "question_id": 173,
+  "db_id": "financial",
+  "reason": "the text does not parse: syntax error at or near \"`\"",
+  "shape": "the text does not parse: syntax error at or near \"`\""
+ }
+]

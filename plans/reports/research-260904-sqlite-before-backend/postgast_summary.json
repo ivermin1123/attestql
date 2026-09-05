@@ -1,0 +1,17 @@
+{
+ "bird_dev": {
+  "total": 1534,
+  "parsed": 1407,
+  "failed": 127
+ },
+ "minidev_hf": {
+  "total": 500,
+  "parsed": 455,
+  "failed": 45
+ },
+ "minidev_zip": {
+  "total": 500,
+  "parsed": 454,
+  "failed": 46
+ }
+}

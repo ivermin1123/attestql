@@ -1,0 +1,1532 @@
+[
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 45,
+  "db_id": "california_schools",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 230,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 345,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 358,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 414,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 850,
+  "db_id": "formula_1",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 854,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 857,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 978,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1035,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1057,
+  "db_id": "european_football_2",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1088,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1122,
+  "db_id": "european_football_2",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1124,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1147,
+  "db_id": "european_football_2",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1435,
+  "db_id": "student_club",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1457,
+  "db_id": "student_club",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1506,
+  "db_id": "debit_card_specializing",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo-instruct",
+  "question_id": 1514,
+  "db_id": "debit_card_specializing",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 149,
+  "db_id": "financial",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 206,
+  "db_id": "toxicology",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 207,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 240,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 281,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 345,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 358,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 391,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 462,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 477,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 483,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 528,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 565,
+  "db_id": "codebase_community",
+  "class": "A",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 850,
+  "db_id": "formula_1",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 854,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 857,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 1035,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 1134,
+  "db_id": "european_football_2",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 1331,
+  "db_id": "student_club",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 1435,
+  "db_id": "student_club",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 1501,
+  "db_id": "debit_card_specializing",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 1506,
+  "db_id": "debit_card_specializing",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-35-turbo",
+  "question_id": 1507,
+  "db_id": "debit_card_specializing",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 45,
+  "db_id": "california_schools",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 149,
+  "db_id": "financial",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 168,
+  "db_id": "financial",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 173,
+  "db_id": "financial",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 206,
+  "db_id": "toxicology",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 240,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 245,
+  "db_id": "toxicology",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 249,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 255,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 268,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 440,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 462,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 477,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 487,
+  "db_id": "card_games",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 790,
+  "db_id": "superhero",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 800,
+  "db_id": "superhero",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 850,
+  "db_id": "formula_1",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 857,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 1035,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 1130,
+  "db_id": "european_football_2",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 1432,
+  "db_id": "student_club",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 1435,
+  "db_id": "student_club",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 1457,
+  "db_id": "student_club",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 1506,
+  "db_id": "debit_card_specializing",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-32k",
+  "question_id": 1514,
+  "db_id": "debit_card_specializing",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 112,
+  "db_id": "financial",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 206,
+  "db_id": "toxicology",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 240,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 245,
+  "db_id": "toxicology",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 358,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 440,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 462,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 477,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 522,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 528,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 565,
+  "db_id": "codebase_community",
+  "class": "A",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 790,
+  "db_id": "superhero",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 850,
+  "db_id": "formula_1",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 854,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 857,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 960,
+  "db_id": "formula_1",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 978,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1035,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1088,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1122,
+  "db_id": "european_football_2",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1124,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1130,
+  "db_id": "european_football_2",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1141,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1331,
+  "db_id": "student_club",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1432,
+  "db_id": "student_club",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1435,
+  "db_id": "student_club",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1506,
+  "db_id": "debit_card_specializing",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4-turbo",
+  "question_id": 1514,
+  "db_id": "debit_card_specializing",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 45,
+  "db_id": "california_schools",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 249,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 345,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 358,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 459,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-ORD",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 462,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 522,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 800,
+  "db_id": "superhero",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 850,
+  "db_id": "formula_1",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 854,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 857,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 960,
+  "db_id": "formula_1",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 1035,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 1130,
+  "db_id": "european_football_2",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 1141,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 1331,
+  "db_id": "student_club",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 1432,
+  "db_id": "student_club",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 1435,
+  "db_id": "student_club",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "gpt-4",
+  "question_id": 1514,
+  "db_id": "debit_card_specializing",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 240,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 253,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 345,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 358,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 440,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 459,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-ORD",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 462,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 487,
+  "db_id": "card_games",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 522,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 528,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 565,
+  "db_id": "codebase_community",
+  "class": "A",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 850,
+  "db_id": "formula_1",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 857,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 868,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 1134,
+  "db_id": "european_football_2",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 1435,
+  "db_id": "student_club",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 1457,
+  "db_id": "student_club",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 1506,
+  "db_id": "debit_card_specializing",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-70b-instruct-2",
+  "question_id": 1514,
+  "db_id": "debit_card_specializing",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 249,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 345,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 358,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 440,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 565,
+  "db_id": "codebase_community",
+  "class": "A",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 850,
+  "db_id": "formula_1",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 868,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 1035,
+  "db_id": "european_football_2",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 1331,
+  "db_id": "student_club",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 1422,
+  "db_id": "student_club",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 1457,
+  "db_id": "student_club",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "meta-llama-3-8b-instruct-2",
+  "question_id": 1506,
+  "db_id": "debit_card_specializing",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 200,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 206,
+  "db_id": "toxicology",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 230,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 268,
+  "db_id": "toxicology",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 371,
+  "db_id": "card_games",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 565,
+  "db_id": "codebase_community",
+  "class": "A",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 850,
+  "db_id": "formula_1",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 854,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 857,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 868,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 1331,
+  "db_id": "student_club",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 1435,
+  "db_id": "student_club",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 1506,
+  "db_id": "debit_card_specializing",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 1507,
+  "db_id": "debit_card_specializing",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 206,
+  "db_id": "toxicology",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 345,
+  "db_id": "card_games",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 358,
+  "db_id": "card_games",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 790,
+  "db_id": "superhero",
+  "class": "C",
+  "mechanism": "type",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 850,
+  "db_id": "formula_1",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 854,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 868,
+  "db_id": "formula_1",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 1435,
+  "db_id": "student_club",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 1457,
+  "db_id": "student_club",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 1506,
+  "db_id": "debit_card_specializing",
+  "class": "A",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ },
+ {
+  "model": "phi-3-medium-128k-instruct-1",
+  "question_id": 1514,
+  "db_id": "debit_card_specializing",
+  "class": "B",
+  "mechanism": "multiplicity",
+  "rule": "R-SET",
+  "bird_ex": 1
+ }
+]

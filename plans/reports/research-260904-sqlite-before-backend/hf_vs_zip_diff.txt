@@ -1,0 +1,6 @@
+len a raw 500 len b raw 500
+a dups []
+b dups [137, 138]
+num field-diffs among common 2
+(879, ['SQL'])
+(1322, ['SQL'])

@@ -45,7 +45,7 @@ re-ran or re-derived independently; **OWNER** the owner by hand.
 |---|---|---|---|
 | N1 | BIRD's evaluator is `set(predicted_res) == set(ground_truth_res)` over `fetchall()` | [evaluation_ex.py](https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py), read 2026-09-02 | COORD |
 | N2 | No installable tool takes a gold, a prediction and a PostgreSQL database and reports where they differ | `plans/reports/discovery-260902-1856-real-problem-candidates.md`, searched 2026-09-02 | COORD |
-| N3 | SpotIt+ runs without a key, is symbolic in MySQL dialect, found q207 at bound 2, missed q1029 at bound 2, cannot detect q879 (strips CAST in ORDER BY); its LICENSE is all rights reserved | trial 2026-09-02 at commit `abee2ba`, `plans/reports/mechanism-260902-2055-gold-audit-detection.md` | IMPL, COORD |
+| N3 | SpotIt+ runs without a key, is symbolic in MySQL dialect, found q207 at bound 2, missed q1029 at bound 2, cannot detect q879 (strips CAST in ORDER BY). Its LICENSE opens "All rights reserved" and then grants use, modification and redistribution under the modified-BSD text it reproduces; the reading "no grant of use" recorded here until 2026-09-04 was wrong | trial 2026-09-02 at commit `abee2ba`, `plans/reports/mechanism-260902-2055-gold-audit-detection.md`; the LICENSE re-read 2026-09-04 from the raw file (its only commit `fbf5460`, 2026-02-15, unchanged at `abee2ba`, sha256 `687ee88a…`; the repository moved to `ai-ar-research/SpotIt-plus`), `plans/reports/research-260904-published-gold-errata.md` | IMPL, COORD; the licence correction COORD, for the OWNER to confirm |
 | N4 | Nobody outside this repository has used the tool | measured at the tag; the falsification date is 60 days after it (ADR-0013 point 10) | OWNER |
 | N5 | The package is not published on PyPI and the repository has no public remote | measured 2026-09-03, at the tag; publication is the owner's step after it | COORD |
 
@@ -83,6 +83,8 @@ a corrected gold is recorded here when it happens, with its date, and not before
 | U1 | `bird-bench/mini_dev` issue 38, comment | q1029 orders `ASC NULLS FIRST` for "highest"; both copies of the question set carry it | [comment](https://github.com/bird-bench/mini_dev/issues/38#issuecomment-5529732756) |
 | U2 | `bird-bench/mini_dev` issue 39 | q207 joins `bond` on `molecule_id` and returns 13 elements instead of 5; same defect as DAMO-ConvAI 227 | [issue 39](https://github.com/bird-bench/mini_dev/issues/39) |
 | U3 | `bird-bench/mini_dev` issue 40 | the GitHub zip and the Hugging Face dataset differ: ids 137 and 138 duplicated and 119 and 120 missing in the zip, q879 and q1322 with different golds | [issue 40](https://github.com/bird-bench/mini_dev/issues/40) |
-| U4 | `ai-ar-research/SpotIt-plus` issue 1 | the paper calls SpotIt+ open source while its LICENSE reserves all rights; asks which licence applies | [issue 1](https://github.com/ai-ar-research/SpotIt-plus/issues/1) |
+| U4 | `ai-ar-research/SpotIt-plus` issue 1 | the paper calls SpotIt+ open source while its LICENSE reserves all rights; asks which licence applies. Corrected 2026-09-04: the LICENSE does grant use after its first sentence (N3), so the report rests on a misreading; withdrawn by the owner on 2026-09-05 with the correction in `plans/reports/upstream-260904-2125-u4-licence-correction.md`, the issue closed by its reporter | [issue 1](https://github.com/ai-ar-research/SpotIt-plus/issues/1) |
 
-Replies received: none yet (checked 2026-09-04).
+Replies received: none yet (checked 2026-09-05). U4 was withdrawn and closed by the owner on 2026-09-05,
+03:52 UTC, with the correction as its only comment; it no longer counts toward the falsification
+criterion.
