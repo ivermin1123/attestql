@@ -53,9 +53,13 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src", "tools"]
+# The third entry is the SQLite sandbox's builder, whose directory name is not an identifier
+# and is therefore not reachable as a package. It is on the path so that the tests and the
+# command line build the fixture through one function rather than through two copies of it.
+pythonpath = ["src", "tools", "tools/audit-sandbox-sqlite"]
 markers = [
     "sandbox: needs the audit sandbox (tools/audit-sandbox/run.sh); skipped when ATTESTQL_AUDIT_SANDBOX is absent",
+    "sandbox_sqlite: the SQLite audit sandbox (tools/audit-sandbox-sqlite/); needs no container and is never skipped",
 ]
 
 [dependency-groups]
@@ -86,4 +90,4 @@ ignore = ["E501"]
 typeCheckingMode = "strict"
 pythonVersion = "3.11"
 include = ["src", "tests", "tools"]
-extraPaths = ["src", "tools"]
+extraPaths = ["src", "tools", "tools/audit-sandbox-sqlite"]

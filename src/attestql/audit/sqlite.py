@@ -176,6 +176,13 @@ WITHOUT_A_ROW_IDENTITY = (
 """Why a view and a WITHOUT ROWID table are not copied. Both answer the same way to the same
 probe, and both are read in place by a rerun, which is what the caller states."""
 
+NOT_IN_THIS_FILE = (
+    "this file holds no relation of that name, so there is nothing to copy and the rerun "
+    "meets the same missing relation the statement itself does"
+)
+"""Why a name nobody loaded is not shuffled. The run says so rather than stopping: a table
+the data does not hold is one question's error line."""
+
 QUALIFIED_NAME_IS_NOT_REACHED = (
     "the statement names this table's schema, and a name that states its schema is read from "
     "that schema whatever TEMP holds, so the rerun reads this table and not a copy of it"
@@ -214,13 +221,23 @@ def _qualify(table: TableName) -> TableName:
     return table if table.schema else TableName(DEFAULT_SCHEMA, table.name)
 
 
-def _qualified(tables: Sequence[TableName]) -> tuple[TableName, ...]:
-    """The table names, each under a schema, deduplicated and in a fixed order.
+def _in_this_file(table: TableName, held: Mapping[str, str]) -> TableName | None:
+    """That name as the file spells it, or ``None`` when the file holds no such relation.
 
-    Two spellings of one table are one name here: a gold that writes ``main.x`` and one that
-    writes ``x`` name the same rows, and measuring both would count them twice.
+    SQLite matches a relation name without regard to case, so a gold that writes
+    ``Team_Attributes`` reads the table the file created as ``team_attributes``. The file's
+    own spelling is what every statement of this module then writes and what every
+    measurement is keyed by, so two spellings of one table are one table here rather than one
+    that is measured and one that is reported missing.
+
+    A name that states a schema other than ``main`` is held by nothing: a file that has
+    attached nothing has one schema.
     """
-    return tuple(sorted({_qualify(name) for name in tables}))
+    if table.schema not in ("", DEFAULT_SCHEMA):
+        return None
+    folded = {name.casefold(): name for name in held}
+    found = folded.get(table.name.casefold())
+    return None if found is None else TableName(DEFAULT_SCHEMA, found)
 
 
 def _storage_class(value: object) -> str:
@@ -507,10 +524,7 @@ class SqliteBackend:
             return TableLookup((), ())
         held = self._relations()
         return TableLookup(
-            tuple(
-                name for name in wanted if name.schema in ("", DEFAULT_SCHEMA) and name.name in held
-            ),
-            (),
+            tuple(name for name in wanted if _in_this_file(name, held) is not None), ()
         )
 
     def _relations(self) -> Mapping[str, str]:
@@ -527,6 +541,16 @@ class SqliteBackend:
         )
         return {str(row[0]): str(row[1]) for row in rows}
 
+    def _measured(self, tables: Sequence[TableName]) -> tuple[TableName, ...]:
+        """Those names as the file spells them, deduplicated and in a fixed order.
+
+        A name the file does not hold keeps the caller's spelling, so whatever asks for its
+        rows meets the engine's own message about a relation that is not there rather than a
+        silence this module invented.
+        """
+        held = self._relations()
+        return tuple(sorted({_in_this_file(name, held) or _qualify(name) for name in tables}))
+
     def schema_digest(self, tables: Sequence[TableName]) -> str:
         """One digest over the DDL of those tables, in name order.
 
@@ -538,7 +562,7 @@ class SqliteBackend:
         """
         held = self._relations()
         payload = json.dumps(
-            [[name.text, held.get(name.name, "")] for name in _qualified(tables)],
+            [[name.text, held.get(name.name, "")] for name in self._measured(tables)],
             separators=(",", ":"),
         )
         return f"sha256:{hashlib.sha256(payload.encode('utf-8')).hexdigest()}"
@@ -552,7 +576,7 @@ class SqliteBackend:
                     step="row_counts",
                 )[0]
             )
-            for name in _qualified(tables)
+            for name in self._measured(tables)
         }
 
     def content_digests(self, tables: Sequence[TableName]) -> Mapping[str, str]:
@@ -563,7 +587,7 @@ class SqliteBackend:
         rows in another physical order and digest the same.
         """
         digests: dict[str, str] = {}
-        for name in _qualified(tables):
+        for name in self._measured(tables):
             rows = self._all(
                 _sql("SELECT * FROM {schema}.{table}", **_over(name)), step="content_digests"
             )
@@ -585,7 +609,7 @@ class SqliteBackend:
         that is the same for every table of one file still tells a cached measurement of
         that file from one taken since it changed.
         """
-        wanted = _qualified(tables)
+        wanted = self._measured(tables)
         if not wanted:
             return {}
         try:
@@ -622,10 +646,11 @@ class SqliteBackend:
         types: dict[TableName, Mapping[str, str]] = {}
         held = self._relations()
         for name in dict.fromkeys(tables):
-            if name.schema not in ("", DEFAULT_SCHEMA) or name.name not in held:
+            found = _in_this_file(name, held)
+            if found is None:
                 continue
             rows = self._all(
-                "SELECT name, type FROM pragma_table_info(?)", (name.name,), step="column_types"
+                "SELECT name, type FROM pragma_table_info(?)", (found.name,), step="column_types"
             )
             if rows:
                 types[name] = {str(row[0]): str(row[1]) for row in rows}
@@ -638,8 +663,9 @@ class SqliteBackend:
         registered from Python, because SQLite defines the operator and no function behind
         it. ``sum`` over no rows is NULL in SQLite and is read here as the zero it means.
         """
+        found = _in_this_file(table, self._relations()) or _qualify(table)
         counted = self._one(
-            _sql(CENSUS_SQL, column=column, **_over(table)),
+            _sql(CENSUS_SQL, column=column, **_over(found)),
             (pattern,),
             step="numeric_text_census",
         )
@@ -678,24 +704,35 @@ class SqliteBackend:
         reachable = tuple(sorted(name for name in wanted if not name.schema))
         unreachable = {name: QUALIFIED_NAME_IS_NOT_REACHED for name in wanted if name.schema}
         counts = self.row_counts(reachable)
+        held = self._relations()
         copied: list[TableName] = []
         skipped: dict[TableName, int] = {}
+        made: set[TableName] = set()
         self._shuffled = None
         connection = self._writing_connection()
         for name in reachable:
-            if not self._has_a_row_identity(connection, name):
+            found = _in_this_file(name, held)
+            if found is None:
+                unreachable[name] = NOT_IN_THIS_FILE
+                continue
+            if not self._has_a_row_identity(connection, found):
                 unreachable[name] = WITHOUT_A_ROW_IDENTITY
                 continue
-            rows = counts[_qualify(name).text]
+            rows = counts[found.text]
             if rows > row_limit:
                 skipped[name] = rows
                 continue
-            _run(
-                connection,
-                _sql(SHUFFLED_COPY, copy=name.name, **_over(name)),
-                (seed,),
-                step="prepare_shuffled_copies",
-            )
+            if found not in made:
+                # One copy per relation and not per spelling: SQLite matches a name without
+                # regard to case, so the copy a rerun reaches under one spelling is the copy
+                # it reaches under the other, and making it twice would drop the first.
+                _run(
+                    connection,
+                    _sql(SHUFFLED_COPY, copy=found.name, **_over(found)),
+                    (seed,),
+                    step="prepare_shuffled_copies",
+                )
+                made.add(found)
             copied.append(name)
         _run(connection, f"{QUERY_ONLY} = 1", step="prepare_shuffled_copies")
         prepared = ShuffledCopies(
@@ -754,7 +791,7 @@ class SqliteBackend:
             if prepared is not None:
                 with suppress(BackendRefused):
                     _run(connection, f"{QUERY_ONLY} = 0", step="drop_shuffled_copies")
-                    for name in prepared.copied:
+                    for name in {copy.name.casefold(): copy for copy in prepared.copied}.values():
                         _run(
                             connection,
                             _sql(
@@ -904,6 +941,7 @@ __all__ = [
     "DEFAULT_SCHEMA",
     "DRIVER_ERROR",
     "MIXED_CLASSES",
+    "NOT_IN_THIS_FILE",
     "PROGRESS_INSTRUCTIONS",
     "QUALIFIED_NAME_IS_NOT_REACHED",
     "QUERY_ONLY",

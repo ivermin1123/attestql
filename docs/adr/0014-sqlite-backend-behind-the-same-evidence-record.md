@@ -150,6 +150,12 @@ README stay PostgreSQL numbers; a SQLite run gets its own report and register ro
 - The session settings block is defined once for both engines rather than per engine, and the
   summary's `parser` block names sqlglot's version and the dialect it read the statement in,
   so a reader of a SQLite run is told which reading produced it.
+- A SQLite REAL reaches a record as `Decimal(repr(value))`, the shortest decimal that
+  round-trips the double the file holds, and never as a Python float: the canonical
+  serialization states no rendering for a float, so one would be refused rather than written,
+  and under the storage-class rule below a REAL `1.0` and an INTEGER `1` have to stay two
+  values, which they do when one is tagged `dec` and the other `int`. A BLOB has no rendering
+  and no decimal to become, so a result holding one is refused at the value.
 - The settings that decide comparability are seven, not the five ADR-0013 point 6 named:
   `work_mem` and `hash_mem_multiplier` joined them when the executor took the memory a hash
   aggregate spills at, and a SQLite record states all seven as absent.

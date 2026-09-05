@@ -607,6 +607,24 @@ def test_a_double_quoted_sort_key_that_names_a_column_is_read_as_that_column(
     assert _record(backend, tmp_path / "recorded", sql) == (("Birch",),)
 
 
+def test_a_double_quoted_sort_key_that_names_a_projected_column_is_read_as_that_one(
+    tmp_path: Path,
+) -> None:
+    """A key may name a column of the result rather than one of the data. An aliased
+    expression is what a select list makes available to an ORDER BY, and such a key is as
+    much a column as any other, so the output names are in the set the key is resolved
+    against."""
+    backend = SqliteBackend.connect(str(_build(tmp_path / "wide.sqlite", WIDE_COLUMN_FIXTURE)))
+    sql = 'SELECT name, count(*) AS "how many" FROM schools GROUP BY name ORDER BY "how many", name'
+
+    assert parse_statement(sql).unresolved_ordering_keys == ("how many",)
+    assert _record(backend, tmp_path / "recorded", sql) == (
+        ("Alder", 1),
+        ("Birch", 1),
+        ("Cedar", 1),
+    )
+
+
 def test_a_double_quoted_sort_key_that_names_no_column_is_refused_before_it_runs(
     tmp_path: Path,
 ) -> None:

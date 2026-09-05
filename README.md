@@ -190,8 +190,14 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   prediction, an upstream correction, a human's fix.
 - It does not generate differentiating data. Two statements that agree on the shipped rows but
   differ semantically are found only by the shuffle probe, not by search.
-- It runs on PostgreSQL only. SQLite, where BIRD originally lives, is the first expansion candidate
-  and is not built; the executor interface is engine-neutral so that it can be.
+- Its measured numbers are PostgreSQL's. SQLite, where BIRD originally lives, is available behind
+  the same evidence record (`--engine sqlite --dsn <path to the file>`), and what differs is stated
+  in the record rather than hidden: a column carries the storage class its cells came back at
+  because SQLite types values and not columns, a REAL comes back as the decimal that round-trips
+  it, no session setting is a precondition because a file has no session, there is no role and no
+  grant, and the parser is sqlglot's SQLite dialect rather than the engine's own grammar. No
+  benchmark run on SQLite has been measured yet; the sandbox in `tools/audit-sandbox-sqlite/` is
+  what exists, and it runs in the gate.
 - It proves nothing about correctness, security, or production use. It runs as the role you give
   it; give it a read-only one.
 - Its parser is PostgreSQL 17's grammar (`libpg_query`), so a statement that only PostgreSQL 17

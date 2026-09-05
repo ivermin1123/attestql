@@ -14,6 +14,10 @@ Apache License and keeps its own licence and attribution:
       the question text, evidence text, gold SQL and difficulty of Mini-Dev questions 1029, 879
       and 207, reproduced because the defect the sandbox replays is in that shipped gold; the rows
       those statements run against are this repository's own synthetic fixture.
+  tools/audit-sandbox-sqlite/questions.json
+      the question text, evidence text, gold SQL and difficulty of the same three questions as
+      they are written in Mini-Dev's SQLite copy, reproduced for the same reason; the rows those
+      statements run against are this repository's own synthetic fixture.
   plans/reports/spike-260902-three-gold-defects/
       evidence records and counterexamples for the same three questions, holding their gold SQL
       and a few result rows from the Mini-Dev PostgreSQL databases.

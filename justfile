@@ -35,7 +35,9 @@ docs:
     npx --yes markdownlint-cli2@{{markdownlint_version}} {{markdown_files}}
     npx --yes cspell@{{cspell_version}} --no-progress {{markdown_files}}
 
-# The test suite. The sandbox-marked tests skip themselves here; `just sandbox` is where they run.
+# The test suite. The `sandbox`-marked tests skip themselves here; `just sandbox` is where they
+# run. The `sandbox_sqlite`-marked ones do not skip: they need no container, so they run here as
+# well, and `just sandbox-sqlite` is where their count is stated beside the other sandbox's.
 test:
     uv run pytest
 
@@ -46,5 +48,13 @@ test:
 sandbox:
     tools/audit-sandbox/run.sh "${TMPDIR:-/tmp}/attestql-audit-sandbox" -- uv run pytest -q -m sandbox
 
-# Every gate in order: lint, typecheck, repocheck, docs, test, sandbox. Stops at the first failure.
-check: lint typecheck repocheck docs test sandbox
+# The SQLite audit sandbox: build the fixture where a person can open it with `sqlite3`, then run
+# the tests that audit it. No container, no port, no login and no credential, because a SQLite
+# database is a file; the tests build their own throwaway copy through the same builder.
+sandbox-sqlite:
+    uv run python tools/audit-sandbox-sqlite/build.py "${TMPDIR:-/tmp}/attestql-audit-sandbox-sqlite"
+    uv run pytest -q -m sandbox_sqlite
+
+# Every gate in order: lint, typecheck, repocheck, docs, test, both sandboxes. Stops at the first
+# failure.
+check: lint typecheck repocheck docs test sandbox sandbox-sqlite

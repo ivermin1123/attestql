@@ -689,10 +689,10 @@ def _admitted(
 
 
 ORDERING_KEY_NAMES_NO_COLUMN = (
-    "the top level ORDER BY key {token} names no column of {tables}; this engine's grammar "
-    "reads such a token as a column where one of that name is in scope and as a string "
-    "literal where none is, the catalogue says there is none, and a sort key over a literal "
-    "is not an ordering this audit can state"
+    "the top level ORDER BY key {token} names no column of {tables} and no column this "
+    "statement projects; this engine's grammar reads such a token as a column where one of "
+    "that name is in scope and as a string literal where none is, the catalogue says there "
+    "is none, and a sort key over a literal is not an ordering this audit can state"
 )
 """Why a sort key the parse could not place is refused once the catalogue has been asked.
 
@@ -710,12 +710,18 @@ def _require_the_ordering_keys_name_columns(parsed: ParsedStatement, backend: Ba
     name. The columns of every table the statement names are one set here rather than one set
     per table: which table a bare key belongs to is the engine's resolution and not this
     one's, and what is being decided is only whether the token is a column at all.
+
+    The statement's own output names are in that set beside the tables' columns. A key may
+    name a column of the result rather than one of the data, which is what a select list that
+    aliases an expression makes available to an ORDER BY, and such a key is as much a column
+    as any other.
     """
     keys = parsed.unresolved_ordering_keys
     if not keys:
         return
     catalogue = backend.column_types(parsed.tables)
     held = {column.casefold() for columns in catalogue.values() for column in columns}
+    held |= {name.casefold() for name in parsed.output_names}
     named = ", ".join(table.text for table in parsed.tables) or "any table"
     for key in keys:
         if key.casefold() not in held:
