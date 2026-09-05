@@ -134,6 +134,13 @@ MARKER_TEXT = (
 QUESTION_DIRECTORY = re.compile(r"q\d+")
 """The name of a directory this tool writes a question's evidence to."""
 SUMMARY_FORMAT = "attestql/audit/summary/1"
+"""What the layout of ``summary.json`` is, for a reader who opens one.
+
+It moves when a key a reader was reading changes meaning or leaves, and not when one is
+added, for the reason ``COUNTEREXAMPLE_FORMAT`` states: every key written under this
+version still means what it meant when ``credited_but_not_equal`` gained
+``by_test_suite_ex`` beside ``by_mechanism``."""
+
 SMELLS_FILE = "smells.json"
 
 GOLD_ONLY = "GOLD-ONLY"
@@ -286,10 +293,16 @@ class Credited:
     two answers unequal, so this number is the size of the gap between the two readings on
     one run, and ``by_mechanism`` is what the gap is made of. A run given no predictions
     compared nothing and has none of this at all.
+
+    ``by_test_suite_ex`` splits the same comparisons by the other published reading, the
+    test-suite evaluator's: ``1`` counts the ones it credits with BIRD and ``0`` the ones it
+    refuses with this tool, which is how much of the gap that reading closes on this run.
+    The two always add up to ``total``.
     """
 
     total: int
     by_mechanism: Mapping[str, int]
+    by_test_suite_ex: Mapping[str, int]
 
 
 @dataclass(frozen=True)
@@ -907,6 +920,9 @@ class _Counted:
     questions: int = 0
     credited: int = 0
     credited_by_mechanism: dict[str, int] = field(default_factory=dict[str, int])
+    credited_and_test_suite_ex: int = 0
+    """How many of the credited comparisons the test-suite reading credits too. The rest of
+    them are the ones it refuses, which is why one number carries both."""
 
 
 def _audit_questions(
@@ -1077,9 +1093,10 @@ def _audit_one(
 def _count_credited(counted: _Counted, comparison: Comparison) -> None:
     """One comparison BIRD's own evaluator credits and this tool calls NOT_EQUAL, by mechanism.
 
-    Counted here because this is where both readings of one pair of results exist at once.
+    Counted here because this is where every reading of one pair of results exists at once.
     A comparison carries a mechanism when and only when it is a NOT_EQUAL, so the two
-    conditions the count is over are the two tests below.
+    conditions the count is over are the two tests below, and the test-suite reading of the
+    same pair is added up beside them rather than read off the files afterwards.
     """
     found = comparison.mechanism
     if found is None or comparison.bird_ex.value != 1:
@@ -1088,6 +1105,7 @@ def _count_credited(counted: _Counted, comparison: Comparison) -> None:
     counted.credited_by_mechanism[found.classification] = (
         counted.credited_by_mechanism.get(found.classification, 0) + 1
     )
+    counted.credited_and_test_suite_ex += comparison.test_suite_ex.value
 
 
 def _write_question(
@@ -1139,6 +1157,10 @@ def _summarise(
                 total=counted.credited,
                 by_mechanism={
                     name: counted.credited_by_mechanism.get(name, 0) for name in MECHANISM_CLASSES
+                },
+                by_test_suite_ex={
+                    "1": counted.credited_and_test_suite_ex,
+                    "0": counted.credited - counted.credited_and_test_suite_ex,
                 },
             )
         ),
@@ -1220,6 +1242,7 @@ def _summary_json(
             else {
                 "total": summary.credited_but_not_equal.total,
                 "by_mechanism": dict(summary.credited_but_not_equal.by_mechanism),
+                "by_test_suite_ex": dict(summary.credited_but_not_equal.by_test_suite_ex),
             }
         ),
         "fixture": {

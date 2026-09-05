@@ -110,6 +110,8 @@ scores 1 and the typed comparison calls NOT_EQUAL, by what makes them: `multipli
 distinct rows at other counts), `type` (the same values at other declared types), `order`,
 `truncation` (one result the first rows of the other) and `other` for a disagreement that is none of
 those; a gold-only run compared nothing against that reading and states null.
+`credited_but_not_equal.by_test_suite_ex` counts the same comparisons under the test-suite reading,
+`1` for the ones it credits with BIRD and `0` for the ones it refuses with this tool.
 `predictions.positions_unused` is empty unless `--predictions-keyed-by position` is given, where it
 names every position of the prediction file that lost to a lower position naming the same question:
 the question file holds one entry twice, the lowest position is the prediction that is compared, and
@@ -169,7 +171,12 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   ANALYZE. A probe that fires on one run and is quiet on the next over the same data is that, and
   the two records show it.
 - BIRD's own set-equality reading is computed beside every verdict, so a counterexample states
-  what the benchmark would have said.
+  what the benchmark would have said. The test-suite reading of Zhong, Yu and Klein 2020
+  (`result_eq` of `ruiqi-zhong/test-suite-sql-eval`) is recorded beside it as `test_suite_ex`: it
+  keeps duplicate rows, keeps row order when the gold's text holds ORDER BY, and still admits a
+  projection whose columns came back in another order. Its DISTINCT strip is not mirrored, because
+  that evaluator rewrites both statements and runs them again and these rows are already fetched,
+  so it stands for that evaluator's answer only where neither statement holds a DISTINCT.
 
 ## What it does not do
 

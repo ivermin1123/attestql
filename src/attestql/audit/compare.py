@@ -30,6 +30,12 @@ same distinct rows at different counts, the same values at different declared ty
 same multiset in another order, or one result a cut of the other. A NOT_EQUAL that is none
 of those is ``other`` and is never guessed at.
 
+``test_suite_ex`` is the second public reading of the same two results, recorded beside
+``bird_ex`` for the reason ``bird_ex`` is recorded beside the verdict: a reader comparing
+readings should not have to run one. It keeps row multiplicity, keeps row order when the
+gold orders, and still admits a projection whose columns are in another order, so it
+refuses rows the benchmark credits without refusing every one of them.
+
 Which side failed is carried out of here rather than reconstructed. A question that ends in
 an error ended in the gold, in the prediction, or in the run around both, and a reader told
 only the server's message cannot tell those apart; ``sided`` names the side of every refusal
@@ -40,7 +46,7 @@ being recorded stays the run's.
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Generator, Sequence
+from collections.abc import Generator, Iterator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -106,6 +112,14 @@ measurement taken after the fact states nothing a reader can rely on. It exists 
 ``admit`` requires a proof, and it is named so that nothing here reads as one."""
 
 COUNTEREXAMPLE_FORMAT = "attestql/audit/counterexample/1"
+"""What the layout below is, for a reader who opens one of these files.
+
+It moves when a key a reader was reading changes meaning or leaves, and not when one is
+added: everything written under this version so far is still there and still means what it
+meant, and a document that gained a field is not one an existing reader has to be told
+about. That is what was done when ``mechanism`` was added beside ``bird_ex`` and it is what
+is done here for ``test_suite_ex``."""
+
 COUNTEREXAMPLE_FILE = "counterexample.json"
 GOLD_RECORD_FILE = "evidence-gold.json"
 SECOND_RECORD_FILE = "evidence-second.json"
@@ -115,6 +129,18 @@ BIRD_EX_METHOD = (
     "returns them, numeric as Decimal"
 )
 BIRD_EX_SOURCE = "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py"
+
+TEST_SUITE_EX_METHOD = (
+    "result_eq: equal row counts and equal column counts, each row unordered as a quick "
+    "rejection, then the two equal as a list when the gold text holds ORDER BY and as a "
+    "multiset otherwise, under some permutation of the columns; DISTINCT is not stripped "
+    "and re-executed, and the cells are PostgreSQL's as psycopg2 returns them"
+)
+TEST_SUITE_EX_SOURCE = (
+    "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: "
+    "https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/"
+    "48cb78ecf7f610620206283846c76751b18a1326/exec_eval.py"
+)
 
 PSYCOPG2_FLOAT_TYPES = ("float4", "float8")
 """The declared types psycopg2 hands BIRD as a Python float rather than as a Decimal."""
@@ -187,6 +213,41 @@ class BirdEx:
 
 
 @dataclass(frozen=True)
+class TestSuiteEx:
+    """What the test-suite evaluator would say about the same two results.
+
+    ``result_eq`` of Zhong, Yu and Klein 2020 is the other reading a benchmark reader is
+    likely to hold against a verdict, and the one that refuses part of what BIRD credits
+    rather than all of it or none: it keeps row multiplicity, it keeps row order when the
+    gold orders, and it still admits a projection whose columns came back in another order.
+    It is computed here rather than imported for the reason ``bird_ex`` is, and recorded
+    beside it so that a reader sees the three answers at once.
+
+    Two things the evaluator does are not mirrored, and they are why this is a reading of
+    that rule and not that rule. It strips DISTINCT from both statements' texts and
+    re-executes them, which is what exposes a join's raw fanout; these rows are already
+    fetched and no fetched result recovers what DISTINCT removed, so DISTINCT stays applied
+    here and this answers for the evaluator only where neither statement holds one. And it
+    runs on SQLite, while these rows come from PostgreSQL through this tool's loader, so
+    the cells are the ones ``bird_ex`` reads: what psycopg2 would have handed the benchmark
+    over. The two readings recorded here differ in their rule and never in their cells.
+
+    ``order_matters`` is the evaluator's own test for an ordered gold, ``order by`` anywhere
+    in the lowercased gold text, which is not this tool's R-ORD: a gold that orders inside a
+    subquery is ordered there and R-SET here, and the field is recorded because that is a
+    difference a reader of two disagreeing readings will want to see.
+    """
+
+    value: int
+    equal: bool
+    order_matters: bool
+    gold_rows: int
+    second_rows: int
+    gold_columns: int
+    second_columns: int
+
+
+@dataclass(frozen=True)
 class Mechanism:
     """What makes a NOT_EQUAL a NOT_EQUAL, in one class and the observations behind it.
 
@@ -242,6 +303,7 @@ class Comparison:
     gold_ordering: tuple[OrderingKey, ...]
     second_ordering: tuple[OrderingKey, ...]
     bird_ex: BirdEx
+    test_suite_ex: TestSuiteEx
     mechanism: Mechanism | None
     """Why the two disagree, on a NOT_EQUAL and on nothing else: an EQUAL has no
     disagreement to explain and a NOT_COMPARABLE names its own preconditions."""
@@ -337,6 +399,143 @@ def bird_ex_json(measured: BirdEx) -> Json:
         "second_rows": measured.second_rows,
         "gold_distinct_rows": measured.gold_distinct_rows,
         "second_distinct_rows": measured.second_distinct_rows,
+    }
+
+
+def _unordered_row(row: tuple[object, ...]) -> tuple[object, ...]:
+    """One row with its cells sorted, under the evaluator's own key and its own ties.
+
+    ``str(x) + str(type(x))`` sorts cells of any two types against each other and keeps a
+    string apart from the number that prints the same way. It is the evaluator's key and
+    it is reproduced rather than improved: what is being answered is what that rule says.
+    """
+    return tuple(sorted(row, key=lambda cell: str(cell) + str(type(cell))))
+
+
+def _quick_rejection(
+    gold: list[tuple[object, ...]], second: list[tuple[object, ...]], *, order_matters: bool
+) -> bool:
+    """Whether the two results still might be equal once every row is unordered.
+
+    Two results equal under some permutation of the columns hold the same bag of unordered
+    rows, so a pair that fails this cannot be saved by any permutation and is rejected
+    before one is built. Under an ordering gold the two lists have to agree row by row;
+    otherwise the evaluator compares them as sets here, having already counted the rows,
+    and leaves the multiplicities to the multiset comparison under a permutation.
+    """
+    left = [_unordered_row(row) for row in gold]
+    right = [_unordered_row(row) for row in second]
+    return left == right if order_matters else set(left) == set(right)
+
+
+def _admitted_column_permutations(
+    gold: list[tuple[object, ...]], second: list[tuple[object, ...]], columns: int
+) -> Iterator[tuple[int, ...]]:
+    """Every column order of the second result the evaluator's constraint lets it try.
+
+    A column of the second result can stand where a column of the gold stands only if every
+    value it holds is a value that gold column holds: under a permutation that makes the two
+    results equal, every permuted row is a gold row, so every cell of it is. A permutation
+    the constraint drops could not have made them equal, which is why dropping it costs
+    nothing and is what keeps a wide result from being a search over every column order.
+
+    The evaluator builds the same constraint from twenty rows drawn at random, and skips it
+    entirely at three columns or fewer. Every row is read here instead: it is deterministic,
+    where a random draw is not, and it can only remove permutations that could not have made
+    the two results equal, so what the search answers is still the evaluator's answer.
+
+    An order that takes one column twice is not built at all, where the evaluator builds it
+    and drops it on the next line. That is its own rule applied one column earlier, and it
+    is what keeps a wide result from being a walk over every column raised to itself: eight
+    columns are forty thousand orders here and sixteen million there.
+    """
+    gold_holds = [{row[column] for row in gold} for column in range(columns)]
+    second_holds = [{row[column] for row in second} for column in range(columns)]
+    admitted = [
+        tuple(
+            candidate
+            for candidate in range(columns)
+            if second_holds[candidate] <= gold_holds[column]
+        )
+        for column in range(columns)
+    ]
+
+    def extend(taken: tuple[int, ...]) -> Iterator[tuple[int, ...]]:
+        if len(taken) == columns:
+            yield taken
+            return
+        for candidate in admitted[len(taken)]:
+            if candidate not in taken:
+                yield from extend((*taken, candidate))
+
+    return extend(())
+
+
+def _result_eq(
+    gold: list[tuple[object, ...]], second: list[tuple[object, ...]], *, order_matters: bool
+) -> bool:
+    """``result_eq`` over two results already fetched, its early exits and its search kept.
+
+    Both empty is equal. Then the row counts have to agree, which is where multiplicity is
+    kept and where a prediction that dropped a duplicate row is refused, and the column
+    counts have to agree. The unordered rows are the quick rejection, and what survives it
+    goes to the search: the two are equal if under some admitted column order they are the
+    same list, when the gold orders, or the same multiset otherwise.
+    """
+    if not gold and not second:
+        return True
+    if len(gold) != len(second):
+        return False
+    columns = len(gold[0])
+    if len(second[0]) != columns:
+        return False
+    if not _quick_rejection(gold, second, order_matters=order_matters):
+        return False
+    counted = Counter(gold)
+
+    def agrees(permutation: tuple[int, ...]) -> bool:
+        permuted = [tuple(row[at] for at in permutation) for row in second]
+        return permuted == gold if order_matters else Counter(permuted) == counted
+
+    return any(
+        agrees(permutation) for permutation in _admitted_column_permutations(gold, second, columns)
+    )
+
+
+def test_suite_ex(gold: ExecutionResult, second: ExecutionResult, gold_sql: str) -> TestSuiteEx:
+    """The test-suite evaluator's check over the two results, on the cells BIRD's driver builds.
+
+    The gold's text is read for one thing and by the evaluator's own test for it: ``order
+    by`` anywhere in it, lowercased, is what makes the two results compared in order. The
+    cells are ``bird_ex``'s, so the two readings recorded beside a verdict differ in their
+    rule alone.
+    """
+    gold_rows = _as_psycopg2_returns_them(gold)
+    second_rows = _as_psycopg2_returns_them(second)
+    order_matters = "order by" in gold_sql.lower()
+    equal = _result_eq(gold_rows, second_rows, order_matters=order_matters)
+    return TestSuiteEx(
+        value=1 if equal else 0,
+        equal=equal,
+        order_matters=order_matters,
+        gold_rows=len(gold_rows),
+        second_rows=len(second_rows),
+        gold_columns=len(gold.columns),
+        second_columns=len(second.columns),
+    )
+
+
+def test_suite_ex_json(measured: TestSuiteEx) -> Json:
+    return {
+        "value": measured.value,
+        "equal": measured.equal,
+        "method": TEST_SUITE_EX_METHOD,
+        "source": TEST_SUITE_EX_SOURCE,
+        "order_matters": measured.order_matters,
+        "gold_rows": measured.gold_rows,
+        "second_rows": measured.second_rows,
+        "gold_columns": measured.gold_columns,
+        "second_columns": measured.second_columns,
     }
 
 
@@ -639,6 +838,7 @@ def compare_statements(
         gold_ordering=gold_parsed.ordering,
         second_ordering=second_parsed.ordering,
         bird_ex=bird_ex(gold_record.result, second_record.result),
+        test_suite_ex=test_suite_ex(gold_record.result, second_record.result, gold_parsed.sql),
         mechanism=(
             mechanism(gold_record.result, second_record.result, rule)
             if verdict.result is ComparabilityResult.NOT_EQUAL
@@ -716,6 +916,7 @@ def counterexample_json(comparison: Comparison) -> Json:
         },
         **_projection_names_note(comparison),
         "bird_ex": bird_ex_json(comparison.bird_ex),
+        "test_suite_ex": test_suite_ex_json(comparison.test_suite_ex),
         "mechanism": (
             None if comparison.mechanism is None else mechanism_json(comparison.mechanism)
         ),
@@ -775,6 +976,8 @@ __all__ = [
     "SIDE_GOLD",
     "SIDE_PREDICTION",
     "SIDE_RUN",
+    "TEST_SUITE_EX_METHOD",
+    "TEST_SUITE_EX_SOURCE",
     "VERDICT_READING",
     "WIDTH_POLICY_VERSION",
     "BirdEx",
@@ -782,6 +985,7 @@ __all__ = [
     "Mechanism",
     "RecordedStatement",
     "SideFailed",
+    "TestSuiteEx",
     "bird_ex",
     "bird_ex_json",
     "compare_statements",
@@ -790,6 +994,8 @@ __all__ = [
     "mechanism_json",
     "record_statement",
     "sided",
+    "test_suite_ex",
+    "test_suite_ex_json",
     "width_proof",
     "write_comparison",
 ]

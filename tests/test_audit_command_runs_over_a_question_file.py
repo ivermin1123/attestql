@@ -748,7 +748,9 @@ def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism
     """``set(predicted) == set(gold)`` scores this pair 1 and the typed multiset does not:
     the gold holds one row twice and the prediction holds it once. The line and the file say
     how many of those a run found and what makes them, which is the whole point of running
-    both readings over one pair of results."""
+    both readings over one pair of results. The file also says what the third reading makes
+    of the same pair: the test-suite evaluator counts rows, so it refuses this one with the
+    tool rather than crediting it with the benchmark."""
     write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
     write(tmp_path / "predictions.json", {"207": DISTINCT_ELEMENTS})
     backend = FakeBackend(
@@ -782,9 +784,11 @@ def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism
             "truncation": 0,
             "other": 0,
         },
+        "by_test_suite_ex": {"1": 0, "0": 1},
     }
     assert counterexample["mechanism"]["class"] == "multiplicity"
     assert counterexample["bird_ex"]["value"] == 1
+    assert counterexample["test_suite_ex"]["value"] == 0
 
 
 class RefusingBackend(FakeBackend):
