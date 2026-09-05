@@ -86,12 +86,18 @@ SETTINGS = SessionSettings(
         "server_version_num": "160004",
         "transaction_read_only": "off",
         "max_parallel_workers_per_gather": "2",
+        "server_encoding": "UTF8",
+        "datlocprovider": "c",
+        "daticulocale": "",
+        "datcollversion": "2.41",
     },
 )
 """The session a scripted run states it held. The gather is on, as it is on a server nobody
 configured: what each execution sets on its own transaction is not this. The two memory
 settings are the exception and state what the executions ran under, in the kilobytes and
-the bare multiple ``pg_settings`` reports them in."""
+the bare multiple ``pg_settings`` reports them in. The three catalogue values beside the
+collation are what a libc database answers: a provider, no ICU locale, and the version of
+the locale data that sorted the text."""
 
 
 def fake_result(

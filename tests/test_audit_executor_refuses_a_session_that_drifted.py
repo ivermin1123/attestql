@@ -72,6 +72,17 @@ FLOAT_STATEMENT = "SELECT avg(fastestlapspeed), sum(duration) FROM results"
 FLOAT_COLUMNS: tuple[tuple[str, int], ...] = (("avg", 701), ("sum", 1186))
 FLOAT_ROWS: tuple[tuple[object, ...], ...] = ((Decimal("257.32"), "1 day 02:00:00"),)
 
+LIBC_DATABASE: Mapping[str, object] = {
+    "datcollate": "en_US.UTF-8",
+    "datlocprovider": "c",
+    "daticulocale": None,
+    "datcollversion": "2.41",
+}
+"""What PostgreSQL 16 answers for a database made on the libc provider: a collation name, a
+provider, no ICU locale, and the version of the locale data that sorted its text. The ICU
+locale's column is ``daticulocale`` here and ``datlocale`` on PostgreSQL 17, which is why
+the backend reads the row as JSON rather than naming the column."""
+
 HEALTHY_SETTINGS: Mapping[str, str] = {
     "statement_timeout": "30000",
     "transaction_read_only": "on",
@@ -85,6 +96,7 @@ HEALTHY_SETTINGS: Mapping[str, str] = {
     "max_parallel_workers_per_gather": "2",
     "work_mem": "65536",
     "hash_mem_multiplier": "1",
+    "server_encoding": "UTF8",
 }
 """What the session holds outside any transaction, which is what a run records. The gather
 is on here, as it is on a server nobody configured, so that the value each execution sets
@@ -159,6 +171,7 @@ class FakeConnection:
         rows: Sequence[tuple[object, ...]] = ROWS,
         columns: tuple[tuple[str, int], ...] = COLUMNS,
         collation: str = "en_US.UTF-8",
+        database_row: Mapping[str, object] | None = None,
         schema: Sequence[tuple[str, ...]] = (),
         tables: Sequence[TableName] = (),
         unreadable_tables: Sequence[TableName] = (),
@@ -194,6 +207,11 @@ class FakeConnection:
         self.rows = rows
         self.columns = columns
         self.collation = collation
+        self.database_row: Mapping[str, object] = (
+            {**LIBC_DATABASE, "datcollate": collation} if database_row is None else database_row
+        )
+        """The row of ``pg_database`` this server answers with, whole, because the backend
+        reads it as JSON and picks the ICU locale's column by whichever name is there."""
         self.schema = schema
         self.tables = tuple(tables)
         self.unreadable_tables = tuple(unreadable_tables)
@@ -262,8 +280,8 @@ class FakeConnection:
             return ((VERSION, "local", 0, "bird"),), None
         if "current_user" in text:
             return (("bird_reader",),), None
-        if "datcollate" in text:
-            return ((self.collation,),), None
+        if "pg_database" in text:
+            return ((self.database_row,),), None
         if "pg_type" in text:
             return tuple((oid, name) for oid, name in TYPES.items()), None
         if "information_schema.columns" in text:
@@ -477,7 +495,66 @@ def test_the_session_settings_name_the_seven_and_record_the_rest() -> None:
         "server_version_num": "160004",
         "transaction_read_only": "on",
         "max_parallel_workers_per_gather": "2",
+        "server_encoding": "UTF8",
+        "datlocprovider": "c",
+        "daticulocale": "",
+        "datcollversion": "2.41",
     }
+
+
+def test_what_sorted_the_text_is_recorded_beside_the_collation_that_blocks() -> None:
+    """``datcollate`` is the precondition and is the only one of the four that is. The
+    provider, the ICU locale and the collation version are recorded because the same
+    ``en_US.utf8`` on another glibc or ICU build can order text differently and a reader of
+    two records has to be able to see that it could have; blocking on them would refuse
+    every comparison across two hosts, including the ones where the sort did not change."""
+    settings = _backend(FakeConnection()).session_settings()
+    assert settings.database_collation == "en_US.UTF-8"
+    assert [settings.recorded[name] for name in ("datlocprovider", "daticulocale")] == ["c", ""]
+    assert settings.recorded["datcollversion"] == "2.41"
+    assert "datcollate" not in settings.recorded, "one value per name"
+
+
+def test_a_null_the_database_catalogue_holds_is_recorded_as_the_empty_string() -> None:
+    """A ``C`` collation has no version and a libc database has no ICU locale. Absence is a
+    value a record states, not a key it leaves out: a reader of two records is then told
+    the same thing was measured on both sides."""
+    connection = FakeConnection(
+        database_row={
+            "datcollate": "C",
+            "datlocprovider": "c",
+            "daticulocale": None,
+            "datcollversion": None,
+        }
+    )
+    settings = _backend(connection).session_settings()
+    assert settings.database_collation == "C"
+    assert settings.recorded["daticulocale"] == ""
+    assert settings.recorded["datcollversion"] == ""
+
+
+def test_the_icu_locale_is_read_under_whichever_name_the_server_holds() -> None:
+    """PostgreSQL 16 calls the column ``daticulocale`` and 17 calls it ``datlocale``. Both
+    are read, and a record states either under the first name, so that a reader is not made
+    to look for two keys for one thing."""
+    for column in ("daticulocale", "datlocale"):
+        connection = FakeConnection(
+            database_row={
+                "datcollate": "en_US.utf8",
+                "datlocprovider": "i",
+                column: "en-US",
+                "datcollversion": "153.128",
+            }
+        )
+        settings = _backend(connection).session_settings()
+        assert settings.recorded["daticulocale"] == "en-US", column
+        assert settings.recorded["datlocprovider"] == "i"
+
+
+def test_a_server_that_answers_no_database_row_is_refused() -> None:
+    connection = FakeConnection(database_row={"datlocprovider": "c"})
+    with pytest.raises(BackendRefused, match="states no default collation"):
+        _backend(connection).session_settings()
 
 
 def test_the_session_settings_are_read_once_and_repeated_after_that() -> None:
@@ -495,7 +572,7 @@ def test_the_session_settings_are_read_once_and_repeated_after_that() -> None:
     assert backend.session_settings() is settings
     assert connection.log == asked, "the second question asked the server something"
     assert sum(1 for line in asked if "pg_settings" in line) == 2
-    assert sum(1 for line in asked if "datcollate" in line) == 1
+    assert sum(1 for line in asked if "pg_database" in line) == 1
 
 
 def test_a_session_that_cannot_report_a_precondition_setting_is_refused() -> None:

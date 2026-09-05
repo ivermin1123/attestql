@@ -273,7 +273,13 @@ def test_the_summary_names_the_server_and_the_grammar_that_judged_this_run(
     The two memory settings are stated the other way round, beside this run's own choices
     rather than among the session's: they are what every statement was held to, in the
     kilobytes and the bare multiple ``pg_settings`` reports, and a real server answered
-    the read-back that produced them."""
+    the read-back that produced them.
+
+    The four the recorded block gained are asserted present rather than equal to a value:
+    the encoding, the provider, the ICU locale and the collation version are whatever the
+    container's own database holds, and what a record has to state is that they were read.
+    ``datcollversion`` and ``daticulocale`` are empty on a database that has none, so their
+    presence is the assertion and not their content."""
     written = audited.summary_document()
     recorded = written["session_settings_recorded"]
     major = str(int(recorded["server_version_num"]) // 10_000)
@@ -283,6 +289,9 @@ def test_the_summary_names_the_server_and_the_grammar_that_judged_this_run(
     assert recorded["max_parallel_workers_per_gather"] == afterwards
     assert written["settings"]["work_mem"] == "4096"
     assert written["settings"]["hash_mem_multiplier"] == "2"
+    assert recorded["server_encoding"]
+    assert recorded["datlocprovider"] in {"c", "i"}
+    assert set(recorded) >= {"server_encoding", "datlocprovider", "daticulocale", "datcollversion"}
     assert written["parser"]["validator"] == VALIDATOR_VERSION
     assert written["parser"]["postgast"]
     assert isinstance(written["parser"]["grammar_version"], int)

@@ -158,6 +158,7 @@ RECORDED_SETTINGS: tuple[str, ...] = (
     "server_version_num",
     "transaction_read_only",
     "max_parallel_workers_per_gather",
+    "server_encoding",
 )
 """What is read back beside the preconditions, recorded and never blocking.
 
@@ -165,7 +166,39 @@ RECORDED_SETTINGS: tuple[str, ...] = (
 string says which PostgreSQL that was, which is what a reader of two summaries compares.
 ``max_parallel_workers_per_gather`` is the session's own, read before anything is set on
 it: every execution turns the gather off on its own transaction, so this says what the
-server would otherwise have been free to do rather than what any statement ran with."""
+server would otherwise have been free to do rather than what any statement ran with.
+``server_encoding`` is the database's own and cannot be set on a session; it is what every
+text value the server rendered was rendered in, and two records made on two databases that
+disagree on it are comparing bytes produced under two encodings."""
+
+DATABASE_LOCALE = (
+    "SELECT to_jsonb(d) FROM pg_catalog.pg_database AS d WHERE d.datname = current_database()"
+)
+"""The database's own row, read as JSON so that one query serves two servers.
+
+The ICU locale's column was renamed: PostgreSQL 16 calls it ``daticulocale`` and 17 calls
+it ``datlocale``, so a query naming either fails on the other. A row read as JSON carries
+whichever key its server holds, and the reader below takes the one that is there."""
+
+ICU_LOCALE_COLUMNS: tuple[str, ...] = ("daticulocale", "datlocale")
+"""What the ICU locale is called, PostgreSQL 16's name first and 17's second. A record
+states it under the first of the two whichever server answered, because a key that changed
+with the server would make a reader of two records look for two names for one thing."""
+
+RECORDED_DATABASE_LOCALE: tuple[str, ...] = (
+    "datlocprovider",
+    "daticulocale",
+    "datcollversion",
+)
+"""What is recorded beside the database's collation, and never blocks a comparison.
+
+``database_collation`` is the precondition it always was. These three say which library
+sorted the text and which version of its data: the same ``en_US.utf8`` on another glibc or
+ICU build can order text differently, and a reader of two records needs the provider and
+the version to see that it could have. They are recorded and not preconditions because
+making them block would refuse every comparison made across two hosts, including all the
+ones where the sort did not change, and this repository has measured no cross-host drift
+of its own (`docs/claims-register.md`, section 3)."""
 
 DEFAULT_SCHEMA = "public"
 """Where a table named without a schema is looked for. BIRD's gold names bare tables and
@@ -309,6 +342,7 @@ class PostgresBackend:
         self._connection = connection
         self._identity: str | None = None
         self._session_settings: SessionSettings | None = None
+        self._database_locale_read: Mapping[str, str] | None = None
         self._shuffled: ShuffledCopies | None = None
         self._scratch_schema = scratch_schema
         self._holds_the_scratch_schema = False
@@ -362,12 +396,36 @@ class PostgresBackend:
         return str(self._one("SELECT current_user", step="role")[0])
 
     def default_collation(self) -> str:
-        return str(
-            self._one(
-                "SELECT datcollate FROM pg_database WHERE datname = current_database()",
-                step="collation",
-            )[0]
-        )
+        """The database's ``datcollate``, which is the precondition of the four read here."""
+        return self._database_locale()["datcollate"]
+
+    def _database_locale(self) -> Mapping[str, str]:
+        """The collation the database was made with, and what a reader needs to place it.
+
+        One question, asked once and repeated after that, because the collation is a
+        precondition and the three beside it are recorded, and two round trips for one row
+        of the catalogue would be one too many.
+
+        A NULL is the empty string here. A database on the libc provider has no ICU locale
+        and a ``C`` collation has no version, and a record states that absence as a value
+        rather than leaving the key out: a reader comparing two records is then told what
+        was measured on both sides.
+        """
+        if self._database_locale_read is None:
+            answered = self._one(DATABASE_LOCALE, step="collation")[0]
+            if not isinstance(answered, Mapping):
+                raise BackendRefused(
+                    "collation", "the server did not answer with a row of its database catalogue"
+                )
+            row = cast("Mapping[str, object]", answered)
+            icu = next((row[name] for name in ICU_LOCALE_COLUMNS if name in row), None)
+            read = {name: _as_text(row.get(name)) for name in RECORDED_DATABASE_LOCALE}
+            read["datcollate"] = _as_text(row.get("datcollate"))
+            read["daticulocale"] = _as_text(icu)
+            if not read["datcollate"]:
+                raise BackendRefused("collation", "the database states no default collation")
+            self._database_locale_read = read
+        return self._database_locale_read
 
     def session_settings(self) -> SessionSettings:
         """The seven settings that decide comparability, and the six recorded beside them.
@@ -381,6 +439,10 @@ class PostgresBackend:
         values would state a bound no statement ran under, and a record whose settings
         block did not say what its statement ran with is where a comparison between two
         records would go wrong silently.
+
+        ``recorded`` holds what the session reported and, beside the collation that blocks,
+        the provider, ICU locale and collation version of the database that sorted the
+        text.
         """
         if self._session_settings is None:
             read_back = self._settings((*PRECONDITION_SETTINGS, *RECORDED_SETTINGS))
@@ -390,15 +452,19 @@ class PostgresBackend:
                     "session_settings", f"the session reported no value for {missing}"
                 )
             held = self._memory_in_force()
+            locale = self._database_locale()
             self._session_settings = SessionSettings(
                 time_zone=read_back["TimeZone"],
                 date_style=read_back["DateStyle"],
                 interval_style=read_back["IntervalStyle"],
                 extra_float_digits=read_back["extra_float_digits"],
-                database_collation=self.default_collation(),
+                database_collation=locale["datcollate"],
                 work_mem=held["work_mem"],
                 hash_mem_multiplier=held["hash_mem_multiplier"],
-                recorded={name: read_back[name] for name in RECORDED_SETTINGS if name in read_back},
+                recorded={
+                    **{name: read_back[name] for name in RECORDED_SETTINGS if name in read_back},
+                    **{name: locale[name] for name in RECORDED_DATABASE_LOCALE},
+                },
             )
         return self._session_settings
 
@@ -1007,6 +1073,11 @@ class PostgresBackend:
                 step, "the server returned no row for a question it always answers"
             )
         return rows[0]
+
+
+def _as_text(value: object) -> str:
+    """One catalogue value as a record states it, with a NULL as the empty string."""
+    return "" if value is None else str(value)
 
 
 def _require_the_memory(step: str, held: Mapping[str, str]) -> None:
