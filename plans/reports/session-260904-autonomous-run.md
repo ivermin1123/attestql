@@ -185,7 +185,17 @@ Nhánh `sqlite-backend` (Batch B):
 | Hash | Việc | Số liệu | Giờ |
 |---|---|---|--- |
 | `eacc778` | B0: ADR-0014 Accepted với ba chốt; ADR-0004 thêm luật storage class; index | docs; CI <https://github.com/ivermin1123/attestql/actions/runs/33883811118> | 21:24 |
+| `930f165` | B1: `ColumnType.declared_type`; `SessionSettings.engine`, năm setting PostgreSQL vắng khi sqlite; version record/summary/counterexample/smells lên 2; bytes canonical không đổi (451 byte, sha256 ef5615ef… ghim bằng test) | test 637 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33943458181> | 11:01 |
+| `befbe9e` | B2: ParsedStatement thành protocol (`audit/parse.py`), `PostgresStatement`; `Engine(name, connect, parse, parser)` trong `audit/engines.py`, cờ `--engine`; bằng chứng PostgreSQL không đổi (`b2-postgres-unchanged/`: 501 dòng chỉ lệch q94 do probe shuffle, đối chứng cùng lệch; 30 record giống nhau trừ run_id) | test 659 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33944486978> | 11:24 |
+| commit chứa dòng này | Dừng Batch B tại `befbe9e` theo chỉ thị của chủ 11:29 (05/09, chuyển qua session attestql-fa): B3 chưa commit gì, cây sạch, không stash; report `parser-260905-sqlglot-sqlite-reading.md` của worker B3 ghi lại điều đã kiểm (sqlglot 30.18.0 MIT; đọc backtick đúng; token trong dấu nháy kép luôn thành identifier, khác SQLite; ba phương án) | docs | 05/09 12:xx |
 | `930f165` | B1: ColumnType.declared_type; SessionSettings.engine, năm setting PostgreSQL vắng khi sqlite; version record/summary/counterexample/smells lên 2; bytes canonical không đổi (451 byte, sha256 ef5615ef… ghim bằng test) | test 637 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33943458181> | 11:01 |
+
+Điểm dừng Batch B (05/09): B0, B1, B2 đã lên nhánh `sqlite-backend` và CI xanh; B3 dừng trước khi
+commit theo chỉ thị mới của chủ (làm C0 đến C5 trên `main` trước, rồi B0', B1', B2 đến B5, B6'). Brief B2
+và B3 nằm trong scratchpad của phiên (`specs/batch-b2.md`, `specs/batch-b3.md`); đầu vào cho B5/B6
+(11 database SQLite của Mini-Dev, 9 file dự đoán SQLite, BIRD dev.zip 346 MB) đã tải về scratchpad.
+Quyết định tự đưa: dừng theo chỉ thị chuyển qua session khác vì dừng là đảo được, còn hai session cùng
+sửa một checkout thì không.
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).
