@@ -32,11 +32,31 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from string import ascii_lowercase, ascii_uppercase
 from typing import Protocol
 
 from attestql.evidence.render import Json
 from attestql.evidence.types import SessionSettings
 from attestql.kernel.types import ExecutionResult
+
+ASCII_LETTERS_FOLDED = str.maketrans(ascii_uppercase, ascii_lowercase)
+"""The 26 letters and nothing else, which is the whole of the rule below."""
+
+
+def folded(name: str) -> str:
+    """One name as an engine matches two spellings of it: the ASCII letters, and no more.
+
+    Both engines fold exactly that much. SQLite compares an identifier with an ASCII
+    case-insensitive comparison and leaves every other character as it is, so ``STRASSE`` and
+    ``straße`` are two names there; PostgreSQL downcases an unquoted identifier and leaves a
+    multibyte character alone.
+
+    Python's ``casefold`` is the Unicode rule and is wider than either: it folds ``ß`` to
+    ``ss``. Matching a name with it makes this tool read a statement the way no engine does,
+    which is how a sort key that names no column comes to be read as naming one, and how a
+    table the file does not hold comes to be measured as one it does.
+    """
+    return name.translate(ASCII_LETTERS_FOLDED)
 
 
 @dataclass(frozen=True, order=True)
@@ -185,6 +205,18 @@ class ShuffledCopies:
 class Backend(Protocol):
     """One database, read-only, for the length of an audit."""
 
+    @property
+    def scratch(self) -> str:
+        """Where the shuffled copies of this run live, in the engine's own words.
+
+        Read off the backend and not off the options, because the option is what the run
+        asked for and this is what the engine made of it: a schema the login already holds
+        on one engine, and the connection's own TEMP database on one that needs nothing
+        arranged. A summary states it beside the seed and the row limit, so a reader is told
+        where a rerun's rows came from rather than what the command line said.
+        """
+        raise NotImplementedError
+
     def identity(self) -> str:
         """Engine, version, host or path, and database, as one line.
 
@@ -204,6 +236,10 @@ class Backend(Protocol):
         Asked once for a whole run, like ``existing_tables``: the summary and every record
         state one read of the session, so that two records of one run cannot say the
         statements behind them ran under two different sessions.
+
+        One block answers for either engine. A backend whose engine has no session states
+        the seven as absent and records what its engine can be asked about itself, so a
+        reader of the record reads the same shape whichever backend produced it.
         """
         raise NotImplementedError
 
@@ -283,6 +319,37 @@ class Backend(Protocol):
         """
         raise NotImplementedError
 
+    def declared_type_is_text(self, declared_type: str) -> bool:
+        """Whether a column declared that way holds text, as this engine reads a declaration.
+
+        Asked beside ``column_types`` and answered by the engine, because a declaration is
+        read by the engine's own rule and not by the word it is spelled with: one catalogue
+        renders a fixed set of type names and settles it by the name, and another keeps the
+        text of the CREATE statement and settles it by what that text contains, so ``VARCHAR
+        (50)`` is a text column there and matches no name at all.
+
+        A declaration this cannot place is not text, which is the conservative direction: a
+        smell that reads it stays quiet rather than claiming an ordering over numbers.
+        """
+        raise NotImplementedError
+
+    def order_sensitive_aggregate_types(self) -> frozenset[str]:
+        """The result column types whose aggregates depend on the order the rows were read.
+
+        Asked because a probe that reruns a gold over the same rows in another physical
+        order has to decide what a changed cell means, and for one class of value it means
+        nothing: a floating type whose aggregate is added up value by value gives another
+        last digit when the values arrive in another order, and that is arithmetic and not
+        a property of the statement. Every other changed cell is the statement depending on
+        the storage order, which is the finding.
+
+        Which types those are is the engine's answer and not the probe's, because it is a
+        property of how the engine adds: an engine that sums with a compensation gives the
+        same total whatever order it reads in, and answers with the empty set. The empty set
+        is the conservative one: every changed cell is then reported under the stronger name.
+        """
+        raise NotImplementedError
+
     def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         """Count that column's rows, nulls, empties and values the pattern rejects.
 
@@ -349,6 +416,7 @@ class Backend(Protocol):
 
 
 __all__ = [
+    "ASCII_LETTERS_FOLDED",
     "Backend",
     "BackendRefused",
     "PlannerStatistics",
@@ -357,5 +425,6 @@ __all__ = [
     "TableLookup",
     "TableName",
     "TextCensus",
+    "folded",
     "planner_statistics_json",
 ]

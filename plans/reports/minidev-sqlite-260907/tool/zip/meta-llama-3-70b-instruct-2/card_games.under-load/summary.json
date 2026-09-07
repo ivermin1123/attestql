@@ -1,0 +1,218 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-54e2f7ba-69eb-4ec8-a4b1-db4a34977f31",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/minidev-sqlite/data/zip/minidev/MINIDEV/dev_databases/card_games/card_games.sqlite | size=261820416",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "wal",
+   "data_version": "2",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/zip/minidev/MINIDEV/mini_dev_sqlite.json",
+  "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+  "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+  "date": "2024-06-19",
+  "entries": 500,
+  "audited": 52,
+  "duplicate_ids": [
+   137,
+   138
+  ],
+  "ids": [
+   340,
+   341,
+   344,
+   345,
+   346,
+   347,
+   349,
+   352,
+   356,
+   358,
+   366,
+   368,
+   371,
+   377,
+   379,
+   383,
+   391,
+   397,
+   402,
+   405,
+   407,
+   408,
+   409,
+   412,
+   414,
+   415,
+   416,
+   422,
+   424,
+   427,
+   440,
+   459,
+   462,
+   465,
+   466,
+   468,
+   469,
+   472,
+   473,
+   474,
+   477,
+   479,
+   480,
+   483,
+   484,
+   486,
+   487,
+   518,
+   522,
+   528,
+   529,
+   530
+  ]
+ },
+ "predictions": {
+  "path": "data/preds/predict_mini_dev_meta-llama-3-70b-instruct-2_sqlite.json",
+  "digest": "sha256:d4e0efbafaa26435c2110559b7a24c91efa272ce82b6ec6d2a7176019582e1ae",
+  "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_meta-llama-3-70b-instruct-2_sqlite.json",
+  "date": "2024-06-19",
+  "keyed_by": "position",
+  "statements": 500,
+  "positions_unused": [
+   487,
+   488
+  ]
+ },
+ "verdicts": {
+  "NOT_EQUAL": 36,
+  "EQUAL": 13,
+  "ERROR": 3
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 1,
+  "not-a-function-of-the-data": 2,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 3,
+ "credited_but_not_equal": {
+  "total": 6,
+  "by_mechanism": {
+   "multiplicity": 6,
+   "type": 0,
+   "order": 0,
+   "truncation": 0,
+   "other": 0
+  },
+  "by_test_suite_ex": {
+   "1": 0,
+   "0": 6
+  }
+ },
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool/zip/meta-llama-3-70b-instruct-2/card_games/fixture.json",
+  "source": {
+   "path": "data/zip/minidev/MINIDEV/dev_databases/card_games/card_games.sqlite",
+   "digest": "sha256:c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227",
+   "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV/dev_databases, card_games/card_games.sqlite",
+   "date": "2024-06-13"
+  },
+  "schema_digest": "sha256:0654f2e002e823f47f4f1299e259b9557e98f1e388ac16be7a3fa11284be1030",
+  "row_counts": {
+   "main.cards": 56822,
+   "main.foreign_data": 229186,
+   "main.legalities": 427907,
+   "main.rulings": 87769,
+   "main.set_translations": 1210,
+   "main.sets": 551
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "cards",
+   "legalities",
+   "rulings",
+   "foreign_data",
+   "sets",
+   "set_translations"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "attestql_scratch",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "cards",
+   "foreign_data",
+   "rulings",
+   "set_translations",
+   "sets"
+  ],
+  "skipped": {
+   "legalities": 427907
+  },
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool/zip/meta-llama-3-70b-instruct-2/card_games",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T04:21:41.412890+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.038,
+  "questions": 52.321,
+  "shuffle": 1.128
+ },
+ "errors": [
+  {
+   "question_id": 371,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: language"
+  },
+  {
+   "question_id": 377,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: subtype"
+  },
+  {
+   "question_id": 518,
+   "side": "gold",
+   "step": "execute",
+   "message": "execute: the statement ran past its 30s timeout"
+  }
+ ],
+ "exit_status": 1
+}

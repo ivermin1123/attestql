@@ -1,0 +1,19 @@
+sqlite 3.53.4, python 3.13.7
+compensated summation is SQLite 3.43.0 and later: True
+the sandbox's fifteen amounts, four read orders:
+  sum(spent)     whole ['1000006.45']
+  sum(spent)     per category ["'0.84000000000000008,1000003.96,1.6500000000000001'"]
+  total(spent)   whole ['1000006.45']
+  total(spent)   per category ["'0.84000000000000008,1000003.96,1.6500000000000001'"]
+  avg(spent)     whole ['66667.09666666666']
+  avg(spent)     per category ["'0.28,111111.55111111111,0.55'"]
+random multisets:
+  seed 7: 20000 multisets of (4, 5, 6) over 1e-3..1e18, 4 read orders each, 0 gave more than one answer
+  seed 11: 8000 multisets of (8, 16, 32) over 1e-20..1e20, 6 read orders each, 0 gave more than one answer
+the integer accumulator:
+  an integer above 2^53 with a fraction after it: ['9007199254740994.0 real']
+  two halves of 2^53 and a fraction: ['9007199254740994.0 real']
+  a fraction between two large integers: ['1.0000000000000004e+16 real']
+  integers whose running total overflows int64: ['4 integer', 'error: integer overflow']
+  the same overflow with a REAL in the multiset: ['1.5 real']
+multisets whose total depended on the read order: 0 of 28000

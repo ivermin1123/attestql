@@ -1,0 +1,145 @@
+Two gold-only audits of the same 500 Hugging Face Mini-Dev questions on one throwaway
+Mini-Dev server, one from a worktree at 930f165 (before) and one from the working tree
+(after). The control is two runs of the 930f165 worktree, made against the same server
+after the same questions, so that a difference between before and after can be read
+against a difference the same code makes with itself.
+
+produced by:
+  compare_gold_only.py <work>/before <work>/after \
+    --control <work>/control-a <work>/control-b \
+    --released plans/reports/audit-260903-minidev-hf-gold-only/stdout.txt
+
+Absolute paths are masked: <work> is the run directory outside the repository and
+<data> the directory the question file was read from.
+
+before: <work>/before
+after:  <work>/after
+
+the two runs:
+  stdout: line 472
+    before: q94   financial   R-ORD  GOLD-ONLY  smells=arbitrary-cut  OUT/q94/
+    after:  q94   financial   R-ORD  GOLD-ONLY  smells=arbitrary-cut,not-a-function-of-the-data  OUT/q94/
+  stdout: line 501
+    before: 500 questions: 0 NOT_EQUAL, 40 smells fired
+    after:  500 questions: 0 NOT_EQUAL, 41 smells fired
+  stdout: 501 lines against 501, 2 differ
+  summary: smells.not-a-function-of-the-data
+    before: 17
+    after:  18
+  summary: smells_fired
+    before: 40
+    after:  41
+  summary: 363 leaves, 2 differ, 7 run-owned
+  q1002/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q1002/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1011/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q1011/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1028/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q1028/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1135/evidence-gold.json: 53 leaves, 0 differ, 4 run-owned
+  q1135/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1144/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q1144/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1145/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q1145/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q115/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q115/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1168/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q1168/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1340/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q1340/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1361/evidence-gold.json: 53 leaves, 0 differ, 4 run-owned
+  q1361/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1380/evidence-gold.json: 53 leaves, 0 differ, 4 run-owned
+  q1380/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1389/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q1389/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1410/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q1410/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1482/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q1482/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1529/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q1529/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q1531/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q1531/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q349/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q349/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q37/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q37/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q484/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q484/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q671/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q671/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q694/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q694/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q736/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q736/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q751/evidence-gold.json: 56 leaves, 0 differ, 4 run-owned
+  q751/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q766/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q766/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q794/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q794/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q82/evidence-gold.json: 53 leaves, 0 differ, 4 run-owned
+  q82/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q847/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q847/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q906/evidence-gold.json: 55 leaves, 0 differ, 4 run-owned
+  q906/smells.json: 3 leaves, 0 differ, 0 run-owned
+  q94/evidence-gold.json: 56 leaves, 0 differ, 4 run-owned
+  q94/smells.json: smells
+    before: 3 entries, fired: arbitrary-cut
+    after:  3 entries, fired: arbitrary-cut, not-a-function-of-the-data
+  q94/smells.json: 3 leaves, 1 differ, 0 run-owned
+  q955/evidence-gold.json: 54 leaves, 0 differ, 4 run-owned
+  q955/smells.json: 3 leaves, 0 differ, 0 run-owned
+  questions: 30 directories in both, 1 differ
+  questions: 30 documents state one result_hash for both
+
+the control, two runs of control-a and control-b:
+  stdout: line 472
+    before: q94   financial   R-ORD  GOLD-ONLY  smells=arbitrary-cut,not-a-function-of-the-data  OUT/q94/
+    after:  q94   financial   R-ORD  GOLD-ONLY  smells=arbitrary-cut  OUT/q94/
+  stdout: line 501
+    before: 500 questions: 0 NOT_EQUAL, 41 smells fired
+    after:  500 questions: 0 NOT_EQUAL, 40 smells fired
+  stdout: 501 lines against 501, 2 differ
+
+against the released run at plans/reports/audit-260903-minidev-hf-gold-only/stdout.txt:
+  released against before: q1011
+    released: q1011 formula_1 R-ORD GOLD-ONLY smells=none
+    before: q1011 formula_1 R-ORD GOLD-ONLY smells=not-a-function-of-the-data
+  released against before: q1145
+    released: q1145 european_football_2 R-ORD GOLD-ONLY smells=none
+    before: q1145 european_football_2 R-ORD GOLD-ONLY smells=not-a-function-of-the-data
+  released against before: q1473
+    released: q1473 debit_card_specializing R-SET GOLD-ONLY smells=float-aggregate-order
+    before: q1473 debit_card_specializing R-SET GOLD-ONLY smells=none
+  released against before: q1529
+    released: q1529 debit_card_specializing R-SET GOLD-ONLY smells=float-aggregate-order
+    before: q1529 debit_card_specializing R-SET GOLD-ONLY smells=not-a-function-of-the-data
+  released against before: q847
+    released: q847 formula_1 R-ORD GOLD-ONLY smells=arbitrary-cut
+    before: q847 formula_1 R-ORD GOLD-ONLY smells=arbitrary-cut,not-a-function-of-the-data
+  released against before: q94
+    released: q94 financial R-ORD GOLD-ONLY smells=arbitrary-cut,not-a-function-of-the-data
+    before: q94 financial R-ORD GOLD-ONLY smells=arbitrary-cut
+  released against before: 500 question lines, 6 differ
+  released against after: q1011
+    released: q1011 formula_1 R-ORD GOLD-ONLY smells=none
+    after: q1011 formula_1 R-ORD GOLD-ONLY smells=not-a-function-of-the-data
+  released against after: q1145
+    released: q1145 european_football_2 R-ORD GOLD-ONLY smells=none
+    after: q1145 european_football_2 R-ORD GOLD-ONLY smells=not-a-function-of-the-data
+  released against after: q1473
+    released: q1473 debit_card_specializing R-SET GOLD-ONLY smells=float-aggregate-order
+    after: q1473 debit_card_specializing R-SET GOLD-ONLY smells=none
+  released against after: q1529
+    released: q1529 debit_card_specializing R-SET GOLD-ONLY smells=float-aggregate-order
+    after: q1529 debit_card_specializing R-SET GOLD-ONLY smells=not-a-function-of-the-data
+  released against after: q847
+    released: q847 formula_1 R-ORD GOLD-ONLY smells=arbitrary-cut
+    after: q847 formula_1 R-ORD GOLD-ONLY smells=arbitrary-cut,not-a-function-of-the-data
+  released against after: 500 question lines, 5 differ
+
+total differences between the two runs, run identity excluded: 5

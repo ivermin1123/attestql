@@ -1,0 +1,271 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-879b8e1a-e1a9-434c-b511-3a0aa4f39372",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/minidev-sqlite/data/zip/minidev/MINIDEV/dev_databases/formula_1/formula_1.sqlite | size=22360064",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "delete",
+   "data_version": "1",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/zip/minidev/MINIDEV/mini_dev_sqlite.json",
+  "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+  "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+  "date": "2024-06-19",
+  "entries": 500,
+  "audited": 66,
+  "duplicate_ids": [
+   137,
+   138
+  ],
+  "ids": [
+   846,
+   847,
+   850,
+   854,
+   857,
+   859,
+   861,
+   862,
+   865,
+   866,
+   868,
+   869,
+   872,
+   875,
+   877,
+   879,
+   880,
+   881,
+   884,
+   892,
+   894,
+   895,
+   896,
+   897,
+   898,
+   901,
+   902,
+   904,
+   906,
+   909,
+   910,
+   912,
+   915,
+   928,
+   930,
+   931,
+   933,
+   937,
+   940,
+   944,
+   945,
+   948,
+   950,
+   951,
+   954,
+   955,
+   959,
+   960,
+   962,
+   963,
+   964,
+   967,
+   971,
+   972,
+   977,
+   978,
+   981,
+   988,
+   989,
+   990,
+   994,
+   1001,
+   1002,
+   1003,
+   1011,
+   1014
+  ]
+ },
+ "predictions": {
+  "path": "data/preds/predict_mini_dev_gpt-4-32k_sqlite.json",
+  "digest": "sha256:7ee53fcc67b9eaca363efb53ddb94dabd61526dafc09d835d832989e4911a1ca",
+  "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4-32k_sqlite.json",
+  "date": "2024-06-19",
+  "keyed_by": "position",
+  "statements": 500,
+  "positions_unused": [
+   487,
+   488
+  ]
+ },
+ "verdicts": {
+  "EQUAL": 25,
+  "NOT_EQUAL": 35,
+  "ERROR": 6
+ },
+ "smells": {
+  "ordering-over-numeric-text": 1,
+  "arbitrary-cut": 3,
+  "not-a-function-of-the-data": 0,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 4,
+ "credited_but_not_equal": {
+  "total": 4,
+  "by_mechanism": {
+   "multiplicity": 4,
+   "type": 0,
+   "order": 0,
+   "truncation": 0,
+   "other": 0
+  },
+  "by_test_suite_ex": {
+   "1": 0,
+   "0": 4
+  }
+ },
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool/zip/gpt-4-32k/formula_1/fixture.json",
+  "source": {
+   "path": "data/zip/minidev/MINIDEV/dev_databases/formula_1/formula_1.sqlite",
+   "digest": "sha256:79770caf966707e35516fa566e24b40ae515c74ec1ec4631235245645b87b24d",
+   "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV/dev_databases, formula_1/formula_1.sqlite",
+   "date": "2024-06-13"
+  },
+  "schema_digest": "sha256:ebbf75002e22243ac49c5a2445ec90cc64863fb33473b2bec8cd22238acff523",
+  "row_counts": {
+   "main.circuits": 72,
+   "main.constructorResults": 11082,
+   "main.constructorStandings": 11836,
+   "main.constructors": 208,
+   "main.driverStandings": 31578,
+   "main.drivers": 840,
+   "main.lapTimes": 400524,
+   "main.pitStops": 5815,
+   "main.qualifying": 6967,
+   "main.races": 954,
+   "main.results": 23179,
+   "main.seasons": 68,
+   "main.status": 134
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "qualifying",
+   "drivers",
+   "circuits",
+   "races",
+   "results",
+   "lapTimes",
+   "constructorResults",
+   "constructors",
+   "seasons",
+   "driverStandings",
+   "constructorStandings",
+   "pitStops",
+   "status"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "attestql_scratch",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "circuits",
+   "constructorResults",
+   "constructorStandings",
+   "constructors",
+   "driverStandings",
+   "drivers",
+   "pitStops",
+   "qualifying",
+   "races",
+   "results",
+   "seasons",
+   "status"
+  ],
+  "skipped": {
+   "lapTimes": 400524
+  },
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool/zip/gpt-4-32k/formula_1",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T04:26:11.859903+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.003,
+  "questions": 4.058,
+  "shuffle": 0.107
+ },
+ "errors": [
+  {
+   "question_id": 861,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: ambiguous column name: number"
+  },
+  {
+   "question_id": 880,
+   "side": "prediction",
+   "step": "statement",
+   "message": "the text does not parse: Expecting ). Line 1, Col: 38."
+  },
+  {
+   "question_id": 909,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: country"
+  },
+  {
+   "question_id": 937,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: ambiguous column name: time"
+  },
+  {
+   "question_id": 948,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: points"
+  },
+  {
+   "question_id": 954,
+   "side": "prediction",
+   "step": "statement",
+   "message": "the text does not parse: Expecting ). Line 1, Col: 36."
+  }
+ ],
+ "exit_status": 1
+}

@@ -1,0 +1,197 @@
+{
+  "format": "attestql/audit/counterexample/2",
+  "question": {
+    "question_id": "846",
+    "question_set": "mini_dev_sqlite-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_sqlite-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-07)",
+    "question_text": "Please list the reference names of the drivers who are eliminated in the first period in race number 20.",
+    "evidence_text": "driver reference name refers to driverRef; first qualifying period refers to q1; drivers who are eliminated in the first qualifying period refers to 5 drivers with MAX(q1); race number refers to raceId;"
+  },
+  "question_set_version": "sha256:88ceb0710163cae46a256ecea8f0a8c98286599530b60587fda5c3cfe57d45d2",
+  "sources": {
+    "gold": {
+      "path": "data/hf/mini_dev_sqlite-00000-of-00001.json",
+      "digest": "sha256:88ceb0710163cae46a256ecea8f0a8c98286599530b60587fda5c3cfe57d45d2",
+      "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_sqlite-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-07)",
+      "date": "2026-01-18T08:44:25Z"
+    },
+    "second": {
+      "path": "data/preds-by-id/predict_mini_dev_gpt-4_sqlite.json",
+      "digest": "sha256:f077d3046a6129788d830507f1fc8a5c1ccd1ff618260d12cbc023c5faaddd57",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4_sqlite.json, re-keyed by question id with predictions_by_question_id.py",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-ORD",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "bird_ex": {
+    "value": 1,
+    "equal": true,
+    "method": "set(second_rows) == set(gold_rows), REAL cells as Python float as sqlite3 returns them, so Python equality holds 1 == 1.0 == True as the benchmark's own scorer does",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 5,
+    "second_rows": 5,
+    "gold_distinct_rows": 5,
+    "second_distinct_rows": 5
+  },
+  "test_suite_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "result_eq: equal row counts and equal column counts, each row unordered as a quick rejection, then the two equal as a list when the gold text holds ORDER BY and as a multiset otherwise, under some permutation of the columns; DISTINCT is not stripped and re-executed, and the cells are SQLite's as sqlite3 returns them",
+    "source": "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/48cb78ecf7f610620206283846c76751b18a1326/exec_eval.py",
+    "order_matters": true,
+    "gold_rows": 5,
+    "second_rows": 5,
+    "gold_columns": 1,
+    "second_columns": 1
+  },
+  "mechanism": {
+    "class": "order",
+    "gold_types": [
+      "TEXT"
+    ],
+    "second_types": [
+      "TEXT"
+    ],
+    "multiset_equal": true,
+    "set_equal": true,
+    "order_equal": false,
+    "shorter_result_is_a_prefix": false,
+    "reading": "The class states what makes these two results unequal under this rule, read off the two results and nothing else. It does not state which of the two statements is wrong."
+  },
+  "gold": {
+    "executed_sql": "SELECT T2.driverRef FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 20 ORDER BY T1.q1 DESC LIMIT 5",
+    "own_ordering": [
+      {
+        "expression": "T1.q1",
+        "descending": true,
+        "nulls": "last"
+      }
+    ],
+    "result": {
+      "columns": [
+        {
+          "name": "driverRef",
+          "declared_type": "TEXT"
+        }
+      ],
+      "row_count": 5,
+      "truncated": false,
+      "rows_shown": 5,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "sato"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "davidson"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "vettel"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "sutil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "fisichella"
+          }
+        ]
+      ],
+      "result_hash": "sha256:37d6cde39c7d2ea6944e832ef3297f2e4598ed9520f5d2155f2a3c7f2b1d49b1"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT d.driverRef\nFROM drivers d\nJOIN qualifying q ON d.driverId = q.driverId\nWHERE q.raceId = 20 AND q.q1 IN (\n    SELECT q1\n    FROM qualifying\n    WHERE raceId = 20 AND q1 IS NOT NULL\n    ORDER BY q1 DESC\n    LIMIT 5\n)",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "driverRef",
+          "declared_type": "TEXT"
+        }
+      ],
+      "row_count": 5,
+      "truncated": false,
+      "rows_shown": 5,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "fisichella"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "vettel"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "sutil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "davidson"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "sato"
+          }
+        ]
+      ],
+      "result_hash": "sha256:8f87b619ea2ba347fcbe7554d3cc7ad42ff553caef26f50b9bcddd81782fed51"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [
+    {
+      "column": "T1.q1",
+      "descending": true
+    }
+  ],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [],
+    "in_second_not_in_gold_total": 0,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:37d6cde39c7d2ea6944e832ef3297f2e4598ed9520f5d2155f2a3c7f2b1d49b1",
+    "second": "sha256:8f87b619ea2ba347fcbe7554d3cc7ad42ff553caef26f50b9bcddd81782fed51"
+  },
+  "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/minidev-sqlite/data/zip/minidev/MINIDEV/dev_databases/formula_1/formula_1.sqlite | size=22360064",
+  "fixture": {
+    "schema_digest": "sha256:08256dce10cc1d388e2e8ce44e5bb2b3bcd7e6afd13ad5f0e1d9b3a168990d9d",
+    "row_counts": {
+      "main.drivers": 840,
+      "main.qualifying": 6967
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:79770caf966707e35516fa566e24b40ae515c74ec1ec4631235245645b87b24d"
+  },
+  "run_id": "audit-25e279f3-fcf7-4a9a-9fe7-d1c3997bb96c"
+}

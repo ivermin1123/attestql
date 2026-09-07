@@ -20,7 +20,12 @@ statement came from would leave a reader with a statement and no way back to its
 agree on before an inequality between them means anything (ADR-0013 point 6). Both are
 read from the server rather than configured beside it, and both are stated in full: the
 settings that change rendered bytes or row order are named fields, everything else the
-session reported is recorded beside them and blocks nothing.
+session reported is recorded beside them and blocks nothing. ``SessionSettings`` names
+the engine first, because that is the namespace the settings and every declared type of
+the result are read in, and it is what lets an engine with no session state that it has
+none rather than fill the seven fields with something (ADR-0014). One block states either
+engine, so a reader of any record reads one shape: the engine, then the seven settings that
+decide comparability, then what that session reported.
 """
 
 from __future__ import annotations
@@ -133,9 +138,28 @@ def read_only_counts(name: str, value: Mapping[str, int]) -> Mapping[str, int]:
     return MappingProxyType(snapshot)
 
 
+ENGINE_POSTGRESQL = "postgresql"
+"""The engine whose session states the seven settings below."""
+
+ENGINE_SQLITE = "sqlite"
+"""The engine that has none of them: a file has no session to precondition, and what it can
+be asked about itself is recorded instead."""
+
+ENGINES: tuple[str, ...] = (ENGINE_POSTGRESQL, ENGINE_SQLITE)
+"""Every engine a record may name. A record of an engine nobody stated the settings rule
+for is not constructible, because a reader of it could not tell an absent setting from a
+setting the engine has and nobody read back."""
+
+
 @dataclass(frozen=True)
 class SessionSettings:
-    """The settings the session held, with the seven that decide comparability named.
+    """The engine, and the settings that session held, with the seven that decide
+    comparability named.
+
+    ``engine`` is the namespace everything else here and every column's declared type is
+    read in, and it is stated once per record rather than on each of them. Two records
+    that name two engines are two experiments: the same setting name, the same type name
+    and the same value mean what their own engine says they mean.
 
     The seven named fields are the settings that change rendered bytes or row order, so two
     executions that disagree on any of them are two experiments and not one comparison:
@@ -143,15 +167,25 @@ class SessionSettings:
     float digits decide how many of a number's digits are returned at all, the database's
     default collation decides what ``ORDER BY`` on text means, and the two memory settings
     decide where a hash aggregate spills and therefore in what order a float sum is added.
+    They are PostgreSQL's, and a SQLite record states all seven as absent rather than
+    inventing a value for a session that does not exist: no time zone, no styles, no float
+    digits, no memory bound, and a collation that belongs to a column or an expression and
+    not to the database.
 
-    The last two are what a statement ran under rather than what the session was found
-    holding: the executor sets both on every execution's own transaction, so a record that
-    repeated the session's own values would name a bound no statement of it reached.
+    The two memory settings are what a statement ran under rather than what the session was
+    found holding: the executor sets both on every execution's own transaction, so a record
+    that repeated the session's own values would name a bound no statement of it reached.
 
-    ``recorded`` holds everything else the session reported: the statement timeout, the
-    search path, the server version and whether the transaction was read only, at least.
-    None of it blocks a comparison, and all of it is in the record so a reader can see the
-    session that produced the result.
+    ``recorded`` holds everything else the session reported, and is required and non-empty
+    on either engine: an engine that preconditions nothing still states what it is. On
+    PostgreSQL that is the statement timeout, the search path, the server version, whether
+    the transaction was read only, what the gather was free to do, the server encoding, and
+    the provider, ICU locale and version of the collation that sorted the text. On SQLite it
+    is the nine a file can be asked for: ``sqlite_version``, ``encoding``,
+    ``compile_options``, ``collation_list``, ``case_sensitive_like``,
+    ``reverse_unordered_selects``, ``query_only``, ``journal_mode`` and ``data_version``
+    (ADR-0014). None of it blocks a comparison, and all of it is in the record so a reader
+    can see the session that produced the result.
 
     ``recorded`` states the session outside any one statement's own transaction. The
     timeout a statement actually ran under is on that statement's result, in
@@ -161,27 +195,45 @@ class SessionSettings:
     record says which is which rather than letting one stand for the other.
     """
 
-    time_zone: str
-    date_style: str
-    interval_style: str
-    extra_float_digits: str
-    database_collation: str
-    work_mem: str
-    hash_mem_multiplier: str
+    engine: str
+    time_zone: str | None
+    date_style: str | None
+    interval_style: str | None
+    extra_float_digits: str | None
+    database_collation: str | None
+    work_mem: str | None
+    hash_mem_multiplier: str | None
     recorded: Mapping[str, str]
 
     def __post_init__(self) -> None:
-        for name in (
-            "time_zone",
-            "date_style",
-            "interval_style",
-            "extra_float_digits",
-            "database_collation",
-            "work_mem",
-            "hash_mem_multiplier",
-        ):
-            if not getattr(self, name):
-                raise ValueError(f"{name} is required; a setting nobody read back is not a value")
+        if self.engine not in ENGINES:
+            raise ValueError(f"engine must be one of {ENGINES}; got {self.engine!r}")
+        stated = {
+            name: getattr(self, name)
+            for name in (
+                "time_zone",
+                "date_style",
+                "interval_style",
+                "extra_float_digits",
+                "database_collation",
+                "work_mem",
+                "hash_mem_multiplier",
+            )
+        }
+        if self.engine == ENGINE_POSTGRESQL:
+            for name, value in stated.items():
+                if not value:
+                    raise ValueError(
+                        f"{name} is required on {self.engine}; "
+                        "a setting nobody read back is not a value"
+                    )
+        else:
+            named = sorted(name for name, value in stated.items() if value is not None)
+            if named:
+                raise ValueError(
+                    f"{self.engine} has no session to precondition, so {named} state "
+                    "settings this engine does not hold"
+                )
         object.__setattr__(self, "recorded", read_only_text("recorded", self.recorded))
         if not self.recorded:
             raise ValueError(
@@ -232,6 +284,9 @@ class FixtureDigest:
 
 
 __all__ = [
+    "ENGINES",
+    "ENGINE_POSTGRESQL",
+    "ENGINE_SQLITE",
     "FixtureDigest",
     "QuestionMetadata",
     "ReplayRule",

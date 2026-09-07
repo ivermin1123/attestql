@@ -1,0 +1,266 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-22f0c54d-5953-4251-bb5e-e4a6f23a0b9c",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/minidev-sqlite/data/zip/minidev/MINIDEV/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite | size=7327744",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "delete",
+   "data_version": "1",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/zip/minidev/MINIDEV/mini_dev_sqlite.json",
+  "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+  "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+  "date": "2024-06-19",
+  "entries": 500,
+  "audited": 50,
+  "duplicate_ids": [
+   137,
+   138
+  ],
+  "ids": [
+   1149,
+   1150,
+   1152,
+   1153,
+   1155,
+   1156,
+   1157,
+   1162,
+   1164,
+   1166,
+   1168,
+   1169,
+   1171,
+   1175,
+   1179,
+   1185,
+   1187,
+   1189,
+   1192,
+   1195,
+   1198,
+   1201,
+   1205,
+   1208,
+   1209,
+   1220,
+   1225,
+   1227,
+   1229,
+   1231,
+   1232,
+   1235,
+   1238,
+   1239,
+   1241,
+   1242,
+   1243,
+   1247,
+   1251,
+   1252,
+   1254,
+   1255,
+   1256,
+   1257,
+   1265,
+   1267,
+   1270,
+   1275,
+   1281,
+   1302
+  ]
+ },
+ "predictions": {
+  "path": "data/preds/predict_mini_dev_meta-llama-3-70b-instruct-2_sqlite.json",
+  "digest": "sha256:d4e0efbafaa26435c2110559b7a24c91efa272ce82b6ec6d2a7176019582e1ae",
+  "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_meta-llama-3-70b-instruct-2_sqlite.json",
+  "date": "2024-06-19",
+  "keyed_by": "position",
+  "statements": 500,
+  "positions_unused": [
+   487,
+   488
+  ]
+ },
+ "verdicts": {
+  "NOT_EQUAL": 28,
+  "ERROR": 13,
+  "EQUAL": 9
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 0,
+  "not-a-function-of-the-data": 1,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 1,
+ "credited_but_not_equal": {
+  "total": 5,
+  "by_mechanism": {
+   "multiplicity": 5,
+   "type": 0,
+   "order": 0,
+   "truncation": 0,
+   "other": 0
+  },
+  "by_test_suite_ex": {
+   "1": 0,
+   "0": 5
+  }
+ },
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool/zip/meta-llama-3-70b-instruct-2/thrombosis_prediction/fixture.json",
+  "source": {
+   "path": "data/zip/minidev/MINIDEV/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite",
+   "digest": "sha256:87583183c3dc472fba04de702965560a9d7c0a548836613f242317e0eeb83f00",
+   "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV/dev_databases, thrombosis_prediction/thrombosis_prediction.sqlite",
+   "date": "2024-06-13"
+  },
+  "schema_digest": "sha256:298ea928481863c7fc307a09fb41749798d78f06fce1aecfdb6b4aaef3ed6d54",
+  "row_counts": {
+   "main.Examination": 106,
+   "main.Laboratory": 13908,
+   "main.Patient": 1238
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "Patient",
+   "Laboratory",
+   "Examination"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "attestql_scratch",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "Examination",
+   "Laboratory",
+   "Patient"
+  ],
+  "skipped": {},
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool/zip/meta-llama-3-70b-instruct-2/thrombosis_prediction",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T04:23:46.302125+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.001,
+  "questions": 0.206,
+  "shuffle": 0.036
+ },
+ "errors": [
+  {
+   "question_id": 1150,
+   "side": "prediction",
+   "step": "statement",
+   "message": "the text does not parse: Expecting ). Line 1, Col: 142."
+  },
+  {
+   "question_id": 1156,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: year"
+  },
+  {
+   "question_id": 1162,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: year"
+  },
+  {
+   "question_id": 1168,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: year"
+  },
+  {
+   "question_id": 1171,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: year"
+  },
+  {
+   "question_id": 1175,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: year"
+  },
+  {
+   "question_id": 1185,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: Birthday"
+  },
+  {
+   "question_id": 1201,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: YEAR"
+  },
+  {
+   "question_id": 1229,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: YEAR"
+  },
+  {
+   "question_id": 1231,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: year"
+  },
+  {
+   "question_id": 1239,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: year"
+  },
+  {
+   "question_id": 1242,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: YEAR"
+  },
+  {
+   "question_id": 1254,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: YEAR"
+  }
+ ],
+ "exit_status": 1
+}

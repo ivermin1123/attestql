@@ -40,13 +40,28 @@ from attestql.audit.backend import (
     TextCensus,
 )
 from attestql.evidence.serialize import SerializationDescriptor
-from attestql.evidence.types import SessionSettings, StatementSource
+from attestql.evidence.types import ENGINE_POSTGRESQL, SessionSettings, StatementSource
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 IDENTITY = "FakeSQL 1.0 | server=memory:0 | database=fake"
 ROLE = "fake_reader"
+SCRATCH = "attestql_scratch"
 TIMEOUT_MS = 30_000
 SCHEMA_DIGEST = "sha256:fake-schema-digest"
+
+POSTGRESQL_TEXT_TYPES: frozenset[str] = frozenset({"text", "character varying", "character"})
+"""What this fake answers as the declared types that hold text, matched whole.
+
+PostgreSQL's three, for the reason its float types are below: these statements are written
+in that engine's type names, and spelling them here rather than importing them makes a change
+to that backend's reading a change a test notices."""
+
+POSTGRESQL_FLOAT_TYPES: frozenset[str] = frozenset({"float4", "float8"})
+"""What this fake answers as the types whose aggregates depend on the order they were added.
+
+PostgreSQL's two, because these statements are written in PostgreSQL's type names, and
+spelled here rather than imported so that a change to that backend's answer is a change a
+test notices rather than one it follows."""
 
 NOT_REACHED = "the statement names this table's schema, so the rerun reads it and not a copy"
 """Why a copy of a table a statement qualified is not what its rerun reads, in this fake's
@@ -72,6 +87,7 @@ a scripted backend runs statements this suite writes, and what a record states a
 they came from is the test's to say."""
 
 SETTINGS = SessionSettings(
+    engine=ENGINE_POSTGRESQL,
     time_zone="UTC",
     date_style="ISO, MDY",
     interval_style="postgres",
@@ -115,7 +131,7 @@ def fake_result(
     about what a record says the statement ran under, and is the default everywhere else.
     """
     return ExecutionResult(
-        columns=tuple(ColumnType(name, pg_type) for name, pg_type in columns),
+        columns=tuple(ColumnType(name, declared_type) for name, declared_type in columns),
         rows=tuple(rows),
         backend_identity=identity,
         limits_in_force=ExecutionLimits(statement_timeout_ms=timeout_ms),
@@ -143,6 +159,7 @@ class FakeBackend:
         plan_results: Mapping[str, ExecutionResult] | None = None,
         skipped_tables: Mapping[TableName, int] | None = None,
         scratch_refusal: str | None = None,
+        order_sensitive_aggregate_types: frozenset[str] = POSTGRESQL_FLOAT_TYPES,
         missing_tables: Sequence[TableName] = (),
         unreadable_tables: Sequence[TableName] = (),
         refusing: str | None = None,
@@ -161,6 +178,7 @@ class FakeBackend:
         self._plan_results = dict(plan_results or {})
         self._skipped_tables = dict(skipped_tables or {})
         self._scratch_refusal = scratch_refusal
+        self._order_sensitive_aggregate_types = order_sensitive_aggregate_types
         self._missing_tables = set(missing_tables)
         self._unreadable_tables = set(unreadable_tables)
         self.refusing = refusing
@@ -181,6 +199,13 @@ class FakeBackend:
         self.prepared: list[tuple[tuple[TableName, ...], str, int]] = []
         self.dropped = 0
 
+    @property
+    def scratch(self) -> str:
+        """Where this fake would make its copies, in PostgreSQL's words like the rest of it,
+        and spelled here rather than imported so that a change to that backend's default is
+        a change a test notices rather than one it follows."""
+        return SCRATCH
+
     def identity(self) -> str:
         return self._identity
 
@@ -192,7 +217,11 @@ class FakeBackend:
         return self._settings
 
     def default_collation(self) -> str:
-        return self._settings.database_collation
+        """What this fake's session states, which on PostgreSQL is never absent."""
+        collation = self._settings.database_collation
+        if collation is None:
+            raise AssertionError(f"a fake on {self._settings.engine} states no default collation")
+        return collation
 
     def _refuse_if_the_server_went_away(self, step: str) -> None:
         """Every call after ``refusing`` was set, named the way this backend names failures."""
@@ -280,6 +309,18 @@ class FakeBackend:
             for name in dict.fromkeys(tables)
             if name in self._planner_statistics
         }
+
+    def declared_type_is_text(self, declared_type: str) -> bool:
+        """PostgreSQL's reading of a declaration: one of three names, matched whole."""
+        return declared_type in POSTGRESQL_TEXT_TYPES
+
+    def order_sensitive_aggregate_types(self) -> frozenset[str]:
+        """What this fake's engine adds up value by value, PostgreSQL's two by default.
+
+        A test about an engine that compensates its sums builds the fake with the empty set,
+        which is SQLite's answer and the one that forgives nothing.
+        """
+        return self._order_sensitive_aggregate_types
 
     def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         self.census_calls.append((table, column, pattern))

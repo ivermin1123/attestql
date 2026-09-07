@@ -33,6 +33,9 @@ from attestql.evidence.serialize import (
     typed_value,
 )
 from attestql.evidence.types import (
+    ENGINE_POSTGRESQL,
+    ENGINE_SQLITE,
+    ENGINES,
     FixtureDigest,
     QuestionMetadata,
     ReplayRule,
@@ -42,6 +45,9 @@ from attestql.evidence.types import (
 )
 
 __all__ = [
+    "ENGINES",
+    "ENGINE_POSTGRESQL",
+    "ENGINE_SQLITE",
     "PRECONDITION_FIELDS",
     "RULE_FIELDS",
     "SESSION_PRECONDITIONS",

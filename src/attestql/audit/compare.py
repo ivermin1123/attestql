@@ -46,22 +46,16 @@ being recorded stays the run's.
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Generator, Iterator, Sequence
+from collections.abc import Generator, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 
-from attestql.audit.backend import Backend, BackendRefused
+from attestql.audit.backend import Backend, BackendRefused, folded
 from attestql.audit.fixture import fixture_digest
-from attestql.audit.statements import (
-    CHECKS_PASSED,
-    VALIDATOR_VERSION,
-    OrderingKey,
-    ParsedStatement,
-    StatementRefused,
-)
+from attestql.audit.parse import OrderingKey, ParsedStatement, StatementRefused
 from attestql.evidence.build import ExecutionIdentity, build_evidence_record
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import (
@@ -83,6 +77,8 @@ from attestql.evidence.replay import (
 )
 from attestql.evidence.serialize import SerializationDescriptor, UnsupportedValue, typed_row
 from attestql.evidence.types import (
+    ENGINE_POSTGRESQL,
+    ENGINE_SQLITE,
     FixtureDigest,
     QuestionMetadata,
     ReplayRule,
@@ -111,31 +107,52 @@ record does not carry this: ADR-0013 dropped ``policy_version`` because a versio
 measurement taken after the fact states nothing a reader can rely on. It exists because
 ``admit`` requires a proof, and it is named so that nothing here reads as one."""
 
-COUNTEREXAMPLE_FORMAT = "attestql/audit/counterexample/1"
+COUNTEREXAMPLE_FORMAT = "attestql/audit/counterexample/2"
 """What the layout below is, for a reader who opens one of these files.
 
 It moves when a key a reader was reading changes meaning or leaves, and not when one is
-added: everything written under this version so far is still there and still means what it
-meant, and a document that gained a field is not one an existing reader has to be told
-about. That is what was done when ``mechanism`` was added beside ``bird_ex`` and it is what
-is done here for ``test_suite_ex``."""
+added: a document that gained a field is not one an existing reader has to be told about,
+which is why ``mechanism`` beside ``bird_ex`` and ``test_suite_ex`` beside both left this
+where it was. It reads ``2`` because a column's PostgreSQL type became its declared type,
+which is a key a reader was reading, under another name."""
 
 COUNTEREXAMPLE_FILE = "counterexample.json"
 GOLD_RECORD_FILE = "evidence-gold.json"
 SECOND_RECORD_FILE = "evidence-second.json"
 
-BIRD_EX_METHOD = (
-    "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 "
-    "returns them, numeric as Decimal"
-)
+BIRD_EX_METHOD: Mapping[str, str] = {
+    ENGINE_POSTGRESQL: (
+        "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 "
+        "returns them, numeric as Decimal"
+    ),
+    ENGINE_SQLITE: (
+        "set(second_rows) == set(gold_rows), REAL cells as Python float as sqlite3 returns "
+        "them, so Python equality holds 1 == 1.0 == True as the benchmark's own scorer does"
+    ),
+}
+"""How the benchmark's own check was read, per engine, because the cells it reads are the
+ones its driver builds and BIRD runs a different driver per engine. The rule is one rule;
+what differs is which Python type a number reaches the set as, and that is what decides
+whether two of them are one value."""
+
 BIRD_EX_SOURCE = "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py"
 
-TEST_SUITE_EX_METHOD = (
-    "result_eq: equal row counts and equal column counts, each row unordered as a quick "
-    "rejection, then the two equal as a list when the gold text holds ORDER BY and as a "
-    "multiset otherwise, under some permutation of the columns; DISTINCT is not stripped "
-    "and re-executed, and the cells are PostgreSQL's as psycopg2 returns them"
-)
+TEST_SUITE_EX_METHOD: Mapping[str, str] = {
+    ENGINE_POSTGRESQL: (
+        "result_eq: equal row counts and equal column counts, each row unordered as a quick "
+        "rejection, then the two equal as a list when the gold text holds ORDER BY and as a "
+        "multiset otherwise, under some permutation of the columns; DISTINCT is not stripped "
+        "and re-executed, and the cells are PostgreSQL's as psycopg2 returns them"
+    ),
+    ENGINE_SQLITE: (
+        "result_eq: equal row counts and equal column counts, each row unordered as a quick "
+        "rejection, then the two equal as a list when the gold text holds ORDER BY and as a "
+        "multiset otherwise, under some permutation of the columns; DISTINCT is not stripped "
+        "and re-executed, and the cells are SQLite's as sqlite3 returns them"
+    ),
+}
+"""The same rule read on the same cells as ``BIRD_EX_METHOD``'s, per engine and for the same
+reason. On SQLite the cells are the evaluator's own: that evaluator runs on SQLite."""
 TEST_SUITE_EX_SOURCE = (
     "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: "
     "https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/"
@@ -206,6 +223,7 @@ class BirdEx:
 
     value: int
     equal: bool
+    method: str
     gold_rows: int
     second_rows: int
     gold_distinct_rows: int
@@ -240,6 +258,7 @@ class TestSuiteEx:
 
     value: int
     equal: bool
+    method: str
     order_matters: bool
     gold_rows: int
     second_rows: int
@@ -354,7 +373,7 @@ def _as_a_driver_float(value: object) -> object:
 
 
 def _as_psycopg2_returns_them(result: ExecutionResult) -> list[tuple[object, ...]]:
-    """One result's rows as the driver BIRD runs would have handed them over.
+    """One result's rows as the driver BIRD runs on PostgreSQL would have handed them over.
 
     psycopg2 builds a Python float for a ``float4`` or a ``float8`` and a Decimal for a
     ``numeric``, and Python compares the two exactly, so 0.1 the double is not 0.1 the
@@ -362,7 +381,7 @@ def _as_psycopg2_returns_them(result: ExecutionResult) -> list[tuple[object, ...
     which is what typed replay needs and what a reading of the benchmark has to undo before
     it answers for the benchmark. Every other declared type is left as it came back.
     """
-    floats = tuple(column.pg_type in PSYCOPG2_FLOAT_TYPES for column in result.columns)
+    floats = tuple(column.declared_type in PSYCOPG2_FLOAT_TYPES for column in result.columns)
     if not any(floats):
         return list(result.rows)
     return [
@@ -374,14 +393,45 @@ def _as_psycopg2_returns_them(result: ExecutionResult) -> list[tuple[object, ...
     ]
 
 
-def bird_ex(gold: ExecutionResult, second: ExecutionResult) -> BirdEx:
-    """BIRD's execution-accuracy check over the two results, read as its own driver reads them."""
-    gold_rows = _as_psycopg2_returns_them(gold)
-    second_rows = _as_psycopg2_returns_them(second)
+def _as_sqlite3_returns_them(result: ExecutionResult) -> list[tuple[object, ...]]:
+    """One result's rows as the driver BIRD runs on SQLite would have handed them over.
+
+    ``sqlite3`` builds a Python float for every REAL cell and leaves the other four storage
+    classes as int, str, bytes and None. The SQLite backend loads a REAL as the decimal that
+    round-trips it, because a float has no canonical rendering and because a typed R-SET has
+    to keep a REAL and an INTEGER apart, and this undoes exactly that: a decimal here only
+    ever came from a REAL. What comes back is what the benchmark's own scorer sets over, and
+    Python equality there holds ``1 == 1.0 == True``, which is part of that reading and not
+    of this tool's.
+
+    The conversion is per cell and not per column, because a SQLite column is typed per cell:
+    a result column whose rows hold an INTEGER and a REAL is one column and two classes, and
+    a rule that asked the column would have to answer one of them for both.
+    """
+    return [tuple(_as_a_driver_float(value) for value in row) for row in result.rows]
+
+
+def _as_the_driver_returns_them(result: ExecutionResult, engine: str) -> list[tuple[object, ...]]:
+    """One result's rows as the driver the benchmark runs on that engine would build them."""
+    if engine == ENGINE_SQLITE:
+        return _as_sqlite3_returns_them(result)
+    return _as_psycopg2_returns_them(result)
+
+
+def bird_ex(gold: ExecutionResult, second: ExecutionResult, *, engine: str) -> BirdEx:
+    """BIRD's execution-accuracy check over the two results, read as its own driver reads them.
+
+    The engine is required and never defaulted: the rule is one rule and the cells it reads
+    are the ones the benchmark's driver for that engine builds, so a reading taken under the
+    wrong engine would answer for a benchmark run nobody made.
+    """
+    gold_rows = _as_the_driver_returns_them(gold, engine)
+    second_rows = _as_the_driver_returns_them(second, engine)
     equal = set(second_rows) == set(gold_rows)
     return BirdEx(
         value=1 if equal else 0,
         equal=equal,
+        method=BIRD_EX_METHOD[engine],
         gold_rows=len(gold_rows),
         second_rows=len(second_rows),
         gold_distinct_rows=len(set(gold_rows)),
@@ -393,7 +443,7 @@ def bird_ex_json(measured: BirdEx) -> Json:
     return {
         "value": measured.value,
         "equal": measured.equal,
-        "method": BIRD_EX_METHOD,
+        "method": measured.method,
         "source": BIRD_EX_SOURCE,
         "gold_rows": measured.gold_rows,
         "second_rows": measured.second_rows,
@@ -502,21 +552,24 @@ def _result_eq(
     )
 
 
-def test_suite_ex(gold: ExecutionResult, second: ExecutionResult, gold_sql: str) -> TestSuiteEx:
+def test_suite_ex(
+    gold: ExecutionResult, second: ExecutionResult, gold_sql: str, *, engine: str
+) -> TestSuiteEx:
     """The test-suite evaluator's check over the two results, on the cells BIRD's driver builds.
 
     The gold's text is read for one thing and by the evaluator's own test for it: ``order
     by`` anywhere in it, lowercased, is what makes the two results compared in order. The
     cells are ``bird_ex``'s, so the two readings recorded beside a verdict differ in their
-    rule alone.
+    rule alone, and the engine is required here for the reason it is required there.
     """
-    gold_rows = _as_psycopg2_returns_them(gold)
-    second_rows = _as_psycopg2_returns_them(second)
+    gold_rows = _as_the_driver_returns_them(gold, engine)
+    second_rows = _as_the_driver_returns_them(second, engine)
     order_matters = "order by" in gold_sql.lower()
     equal = _result_eq(gold_rows, second_rows, order_matters=order_matters)
     return TestSuiteEx(
         value=1 if equal else 0,
         equal=equal,
+        method=TEST_SUITE_EX_METHOD[engine],
         order_matters=order_matters,
         gold_rows=len(gold_rows),
         second_rows=len(second_rows),
@@ -529,7 +582,7 @@ def test_suite_ex_json(measured: TestSuiteEx) -> Json:
     return {
         "value": measured.value,
         "equal": measured.equal,
-        "method": TEST_SUITE_EX_METHOD,
+        "method": measured.method,
         "source": TEST_SUITE_EX_SOURCE,
         "order_matters": measured.order_matters,
         "gold_rows": measured.gold_rows,
@@ -556,8 +609,8 @@ def _is_a_prefix(gold: Sequence[object], second: Sequence[object]) -> bool:
 
 def mechanism(gold: ExecutionResult, second: ExecutionResult, rule: ReplayRule) -> Mechanism:
     """Why these two results are not equal under this rule, read off the two of them."""
-    gold_types = tuple(column.pg_type for column in gold.columns)
-    second_types = tuple(column.pg_type for column in second.columns)
+    gold_types = tuple(column.declared_type for column in gold.columns)
+    second_types = tuple(column.declared_type for column in second.columns)
     gold_rows = [typed_row(row) for row in gold.rows]
     second_rows = [typed_row(row) for row in second.rows]
     multiset_equal = Counter(gold_rows) == Counter(second_rows)
@@ -610,7 +663,7 @@ def width_proof(
         widths.append(
             ProjectedColumnWidth(
                 name=column.name,
-                pg_type=column.pg_type,
+                declared_type=column.declared_type,
                 max_encoded_bytes=widest,
                 max_decoded_bytes=widest,
             )
@@ -629,9 +682,52 @@ def _widest(result: ExecutionResult, index: int, serialization: SerializationDes
 def _admitted(
     parsed: ParsedStatement, result: ExecutionResult, serialization: SerializationDescriptor
 ) -> ValidatedStatement:
+    parser = parsed.parser
     return admit(
-        parsed.sql, (), VALIDATOR_VERSION, CHECKS_PASSED, width_proof(result, serialization)
+        parsed.sql, (), parser.validator, parser.checks, width_proof(result, serialization)
     )
+
+
+ORDERING_KEY_NAMES_NO_COLUMN = (
+    "the top level ORDER BY key {token} names no column of {tables} and no column this "
+    "statement projects; this engine's grammar reads such a token as a column where one of "
+    "that name is in scope and as a string literal where none is, the catalogue says there "
+    "is none, and a sort key over a literal is not an ordering this audit can state"
+)
+"""Why a sort key the parse could not place is refused once the catalogue has been asked.
+
+The parse names such a key and decides nothing about it, because deciding needs the columns
+and a parse reaches no database. This is where the database is at hand, so this is where the
+key is resolved: a key that names a column is that column and the statement runs, and a key
+that names none is refused before it runs, with the token and the rule. A grammar whose sort
+keys are never ambiguous names none and never reaches this."""
+
+
+def _require_the_ordering_keys_name_columns(parsed: ParsedStatement, backend: Backend) -> None:
+    """Resolve the sort keys the parse could not place, against the tables the statement reads.
+
+    Case-insensitively over the ASCII letters, because that is how the engines that produce
+    such a key resolve a name. The columns of every table the statement names are one set here rather than one set
+    per table: which table a bare key belongs to is the engine's resolution and not this
+    one's, and what is being decided is only whether the token is a column at all.
+
+    The statement's own output names are in that set beside the tables' columns. A key may
+    name a column of the result rather than one of the data, which is what a select list that
+    aliases an expression makes available to an ORDER BY, and such a key is as much a column
+    as any other.
+    """
+    keys = parsed.unresolved_ordering_keys
+    if not keys:
+        return
+    catalogue = backend.column_types(parsed.tables)
+    held = {folded(column) for columns in catalogue.values() for column in columns}
+    held |= {folded(name) for name in parsed.output_names}
+    named = ", ".join(table.text for table in parsed.tables) or "any table"
+    for key in keys:
+        if folded(key) not in held:
+            raise StatementRefused(
+                ORDERING_KEY_NAMES_NO_COLUMN.format(token=f'"{key}"', tables=named)
+            )
 
 
 def _execute_and_record(
@@ -656,7 +752,11 @@ def _execute_and_record(
     The rule and the ordering are arguments and not read off ``parsed``, because the two
     sides of a comparison are recorded under the gold's rule and the gold's ordering; a
     record that stated its own would make the comparison a comparison of rules.
+
+    Both ways into a record come through here, so the one thing a parse could not settle on
+    its own is settled here, once, before the statement runs.
     """
+    _require_the_ordering_keys_name_columns(parsed, backend)
     result = backend.execute(parsed.sql, statement_timeout_seconds=statement_timeout_seconds)
     if not result.columns:
         # PostgreSQL accepts a bare SELECT and answers it with one row of no columns, which
@@ -837,8 +937,13 @@ def compare_statements(
         differing_rows=row_difference(gold_record.result.rows, second_record.result.rows),
         gold_ordering=gold_parsed.ordering,
         second_ordering=second_parsed.ordering,
-        bird_ex=bird_ex(gold_record.result, second_record.result),
-        test_suite_ex=test_suite_ex(gold_record.result, second_record.result, gold_parsed.sql),
+        bird_ex=bird_ex(gold_record.result, second_record.result, engine=session_settings.engine),
+        test_suite_ex=test_suite_ex(
+            gold_record.result,
+            second_record.result,
+            gold_parsed.sql,
+            engine=session_settings.engine,
+        ),
         mechanism=(
             mechanism(gold_record.result, second_record.result, rule)
             if verdict.result is ComparabilityResult.NOT_EQUAL
@@ -971,6 +1076,7 @@ __all__ = [
     "MECHANISM_READING",
     "MECHANISM_TRUNCATION",
     "MECHANISM_TYPE",
+    "ORDERING_KEY_NAMES_NO_COLUMN",
     "PROJECTION_NAMES_READING",
     "SECOND_RECORD_FILE",
     "SIDE_GOLD",

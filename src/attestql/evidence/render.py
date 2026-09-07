@@ -86,7 +86,7 @@ def result_json(
 ) -> Json:
     """A bounded view of a result, with the hash taken over all of it."""
     return {
-        "columns": [{"name": c.name, "pg_type": c.pg_type} for c in result.columns],
+        "columns": [{"name": c.name, "declared_type": c.declared_type} for c in result.columns],
         "row_count": len(result.rows),
         "truncated": result.truncated,
         "rows_shown": min(bound, len(result.rows)),
@@ -213,6 +213,7 @@ def record_json(record: EvidenceRecord) -> Json:
         "effective_database_role": record.effective_database_role,
         "backend_identity_at_checkout": record.backend_identity_at_checkout,
         "session_settings_in_force": {
+            "engine": settings.engine,
             "time_zone": settings.time_zone,
             "date_style": settings.date_style,
             "interval_style": settings.interval_style,
@@ -223,7 +224,9 @@ def record_json(record: EvidenceRecord) -> Json:
             "recorded": dict(settings.recorded),
         },
         "result": {
-            "columns": [{"name": c.name, "pg_type": c.pg_type} for c in record.result.columns],
+            "columns": [
+                {"name": c.name, "declared_type": c.declared_type} for c in record.result.columns
+            ],
             "row_count": len(record.result.rows),
             "truncated": record.result.truncated,
             "rows": [json_row(row) for row in record.result.rows],
