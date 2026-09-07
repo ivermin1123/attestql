@@ -88,6 +88,17 @@ a corrected gold is recorded here when it happens, with its date, and not before
 | U3 | `bird-bench/mini_dev` issue 40 | the GitHub zip and the Hugging Face dataset differ: ids 137 and 138 duplicated and 119 and 120 missing in the zip, q879 and q1322 with different golds | [issue 40](https://github.com/bird-bench/mini_dev/issues/40) |
 | U4 | `ai-ar-research/SpotIt-plus` issue 1 | the paper calls SpotIt+ open source while its LICENSE reserves all rights; asks which licence applies. Corrected 2026-09-04: the LICENSE does grant use after its first sentence (N3), so the report rests on a misreading; withdrawn by the owner on 2026-09-05 with the correction in `plans/reports/upstream-260904-2125-u4-licence-correction.md`, the issue closed by its reporter | [issue 1](https://github.com/ai-ar-research/SpotIt-plus/issues/1) |
 
-Replies received: none yet (checked 2026-09-05). U4 was withdrawn and closed by the owner on 2026-09-05,
-03:52 UTC, with the correction as its only comment; it no longer counts toward the falsification
-criterion.
+Replies received, checked 2026-09-07. The BIRD team (GitHub `BlackSoi1`) answered all three Mini-Dev
+reports on 2026-09-05 between 21:35 and 21:37 UTC and closed them:
+
+| # | Reply, quoted | Upstream change |
+|---|---|---|
+| U1 | "We will review and correct this issue in the next patch." | none yet: the Hugging Face dataset is unchanged (`lastModified` 2026-01-18, sha `f65faf4a`, checked 2026-09-07) |
+| U2 | "We will review and correct this issue in the next patch." | none yet, as U1 |
+| U3 | "We have updated the README to explicitly recommend new users download BIRD Mini-Dev from Hugging Face" | `bird-bench/mini_dev` commit `abd11b6`, 2026-09-05 21:32 UTC, the only commit since the report: the README's "For New Users" section now names the Hugging Face dataset "the canonical version", which is what U3 asked for |
+
+The criterion of ADR-0013 point 10 is therefore met on 2026-09-05 by acknowledgement: two gold rows
+(q1029, q207) acknowledged as wrong in reply to reports that cite our counterexamples, and one
+upstream document changed on our report. No gold row is corrected yet; the patch is theirs to ship,
+and this section is updated when it lands. U4 was withdrawn and closed by the owner on 2026-09-05,
+03:52 UTC, with the correction as its only comment; it does not count toward the criterion.

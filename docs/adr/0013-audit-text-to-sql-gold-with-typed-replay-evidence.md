@@ -147,6 +147,10 @@ that look wrong, each with a counterexample and an evidence record.
     that first named this window is in the private history before publication)**.** At least one of: an upstream gold row
     corrected or acknowledged as wrong with our counterexample cited; a person outside this
     repository uses the tool and leaves an issue or a pull request. Neither means reconsider.
+    Met on 2026-09-05, by acknowledgement: the BIRD team answered the q1029 and q207 reports
+    with "we will review and correct this issue in the next patch" and changed the Mini-Dev
+    README on the zip-versus-Hugging-Face report; no gold row is corrected yet (register,
+    section 5).
 11. **Size of release 1.** About 900 new source lines and 600 test lines. The merge gate gains an
     end-to-end run on a small PostgreSQL fixture reproducing the three defects.
 
