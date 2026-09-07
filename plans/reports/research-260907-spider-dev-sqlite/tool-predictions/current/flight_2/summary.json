@@ -1,0 +1,238 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-7f580a51-4933-40f4-9180-d5849bfdad35",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/l4/data/spider/spider_data/database/flight_2/flight_2.sqlite | size=77824",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "delete",
+   "data_version": "1",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/questions-current.json",
+  "digest": "sha256:a27e1f404c28a4aacc9933cf5197afa6ee2cc3eb0cfd3be949e354f57cb4f91e",
+  "origin": "https://drive.google.com/file/d/1403EGqzIDoHMdQF4c9Bkyl7dZLZ5Wt6J/view (spider_data.zip sha256 00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b, CC BY-SA 4.0), member spider_data/dev.json",
+  "date": "2020-08-03",
+  "entries": 1034,
+  "audited": 80,
+  "duplicate_ids": [],
+  "ids": [
+   179,
+   180,
+   181,
+   182,
+   183,
+   184,
+   185,
+   186,
+   187,
+   188,
+   189,
+   190,
+   191,
+   192,
+   193,
+   194,
+   195,
+   196,
+   197,
+   198,
+   199,
+   200,
+   201,
+   202,
+   203,
+   204,
+   205,
+   206,
+   207,
+   208,
+   209,
+   210,
+   211,
+   212,
+   213,
+   214,
+   215,
+   216,
+   217,
+   218,
+   219,
+   220,
+   221,
+   222,
+   223,
+   224,
+   225,
+   226,
+   227,
+   228,
+   229,
+   230,
+   231,
+   232,
+   233,
+   234,
+   235,
+   236,
+   237,
+   238,
+   239,
+   240,
+   241,
+   242,
+   243,
+   244,
+   245,
+   246,
+   247,
+   248,
+   249,
+   250,
+   251,
+   252,
+   253,
+   254,
+   255,
+   256,
+   257,
+   258
+  ]
+ },
+ "predictions": {
+  "path": "data/predictions-codes.json",
+  "digest": "sha256:6772038e43f83b8a9202d8b92dd91ddbe97566e7257e5a534c0d81a359220f69",
+  "origin": "https://github.com/RUCKBReasoning/codes/blob/e203386173eecf6fbe8b14cf233611a2fb7c994e/results/pred_sqls-codes-1b-spider.txt (Apache-2.0, sha256 913576f655c6ca9a00762c83acf05234006fae164826e9577cbd1373d07274d2)",
+  "date": "2024-08-21",
+  "keyed_by": "question-id",
+  "statements": 1034,
+  "positions_unused": []
+ },
+ "verdicts": {
+  "EQUAL": 63,
+  "NOT_EQUAL": 14,
+  "ERROR": 3
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 4,
+  "not-a-function-of-the-data": 0,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 4,
+ "credited_but_not_equal": {
+  "total": 0,
+  "by_mechanism": {
+   "multiplicity": 0,
+   "type": 0,
+   "order": 0,
+   "truncation": 0,
+   "other": 0
+  },
+  "by_test_suite_ex": {
+   "1": 0,
+   "0": 0
+  }
+ },
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool-predictions/current/flight_2/fixture.json",
+  "source": {
+   "path": "data/spider/spider_data/database/flight_2/flight_2.sqlite",
+   "digest": "sha256:db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+   "origin": "https://drive.google.com/file/d/1403EGqzIDoHMdQF4c9Bkyl7dZLZ5Wt6J/view (spider_data.zip sha256 00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b, CC BY-SA 4.0), member spider_data/database/flight_2/flight_2.sqlite",
+   "date": "2018-09-24"
+  },
+  "schema_digest": "sha256:399b872f49d65906b71729e9985afee2948f26e2ad42301f4c595995d41b025c",
+  "row_counts": {
+   "main.airlines": 12,
+   "main.airports": 100,
+   "main.flights": 1200
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "AIRLINES",
+   "AIRPORTS",
+   "FLIGHTS",
+   "Flights",
+   "Airports"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "temp",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "AIRLINES",
+   "AIRPORTS",
+   "Airports",
+   "FLIGHTS",
+   "Flights"
+  ],
+  "skipped": {},
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool-predictions/current/flight_2",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T13:04:43.644197+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.0,
+  "questions": 0.132,
+  "shuffle": 0.001
+ },
+ "errors": [
+  {
+   "question_id": 215,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: airlines.airline"
+  },
+  {
+   "question_id": 216,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: airlines.airline"
+  },
+  {
+   "question_id": 218,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: airlines.airline"
+  }
+ ],
+ "timed_out": {
+  "gold": [],
+  "prediction": []
+ },
+ "exit_status": 1
+}
