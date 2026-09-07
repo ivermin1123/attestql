@@ -685,6 +685,36 @@ def test_a_double_quoted_sort_key_that_names_no_column_is_refused_before_it_runs
     assert "string literal" in ORDERING_KEY_NAMES_NO_COLUMN
 
 
+ASCII_FOLD_FIXTURE = """
+CREATE TABLE "straße" (name TEXT, "straße" TEXT);
+INSERT INTO "straße" VALUES ('Alder', '1'), ('Birch', '2');
+"""
+"""A table and a column whose name holds the one character the two folding rules disagree
+about. Nothing else in the file is unusual: what is being read is how a name is matched."""
+
+
+def test_a_name_is_matched_over_the_ascii_letters_and_no_further(tmp_path: Path) -> None:
+    """SQLite folds A to Z and leaves every other character as it is, so ``STRASSE`` is not
+    the column ``straße`` to it and a sort key naming it names no column. Python's
+    ``casefold`` is the Unicode rule and folds ``ß`` to ``ss``: under it this tool would
+    read a key the engine sorts by a string literal as an ordering over a column, and would
+    measure a table the file does not hold under the name of one it does."""
+    backend = SqliteBackend.connect(str(_build(tmp_path / "folding.sqlite", ASCII_FOLD_FIXTURE)))
+    sql = 'SELECT name FROM "straße" ORDER BY "STRASSE"'
+
+    assert parse_statement(sql).unresolved_ordering_keys == ("STRASSE",)
+    with pytest.raises(StatementRefused, match='"STRASSE" names no column'):
+        _record(backend, tmp_path / "recorded", sql)
+
+    held = TableName("", "straße")
+    folded_case = TableName("", "STRAßE")
+    assert backend.existing_tables((held,)).present == (held,), "its own spelling is the table"
+    assert backend.existing_tables((TableName("", "STRASSE"),)).present == ()
+    assert backend.existing_tables((folded_case,)).present == (folded_case,), (
+        "the ASCII letters are folded, which is what the engine does with them"
+    )
+
+
 class Lines:
     """A writer that keeps what was written instead of printing it."""
 

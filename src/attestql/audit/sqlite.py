@@ -67,6 +67,7 @@ from attestql.audit.backend import (
     TableLookup,
     TableName,
     TextCensus,
+    folded,
 )
 from attestql.evidence.types import ENGINE_SQLITE, SessionSettings
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
@@ -233,8 +234,9 @@ def _qualify(table: TableName) -> TableName:
 def _in_this_file(table: TableName, held: Mapping[str, str]) -> TableName | None:
     """That name as the file spells it, or ``None`` when the file holds no such relation.
 
-    SQLite matches a relation name without regard to case, so a gold that writes
-    ``Team_Attributes`` reads the table the file created as ``team_attributes``. The file's
+    SQLite matches a relation name without regard to the case of its ASCII letters, so a
+    gold that writes ``Team_Attributes`` reads the table the file created as
+    ``team_attributes``. The file's
     own spelling is what every statement of this module then writes and what every
     measurement is keyed by, so two spellings of one table are one table here rather than one
     that is measured and one that is reported missing.
@@ -244,8 +246,8 @@ def _in_this_file(table: TableName, held: Mapping[str, str]) -> TableName | None
     """
     if table.schema not in ("", DEFAULT_SCHEMA):
         return None
-    folded = {name.casefold(): name for name in held}
-    found = folded.get(table.name.casefold())
+    by_folded_name = {folded(name): name for name in held}
+    found = by_folded_name.get(folded(table.name))
     return None if found is None else TableName(DEFAULT_SCHEMA, found)
 
 
@@ -827,7 +829,7 @@ class SqliteBackend:
             if prepared is not None:
                 with suppress(BackendRefused):
                     _run(connection, f"{QUERY_ONLY} = 0", step="drop_shuffled_copies")
-                    for name in {copy.name.casefold(): copy for copy in prepared.copied}.values():
+                    for name in {folded(copy.name): copy for copy in prepared.copied}.values():
                         _run(
                             connection,
                             _sql(
