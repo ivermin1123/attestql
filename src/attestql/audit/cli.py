@@ -54,6 +54,7 @@ rather than a captured stream.
 from __future__ import annotations
 
 import argparse
+import importlib.metadata
 import json
 import re
 import shutil
@@ -1488,9 +1489,22 @@ def _positive(value: str) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """The command line, as ADR-0013 point 2 states it."""
+    """The command line, as ADR-0013 point 2 states it.
+
+    ``--version`` is on this parser and not on the subcommand, because what a reader asks
+    for when they type it is which release is installed and not what one of its commands
+    does. The number is read off the installed distribution here, once per invocation, so it
+    is the release the code being run came from rather than a string this file states about
+    itself and could be wrong about.
+    """
     parser = argparse.ArgumentParser(
         prog=PROGRAM, description="Audit text-to-SQL gold statements and predictions."
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"{PROGRAM} {importlib.metadata.version(PROGRAM)}",
+        help="print the installed release and exit",
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
     audit = subcommands.add_parser(
@@ -1629,7 +1643,12 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
-    """The command line as options, or an argparse exit for anything it refuses."""
+    """The command line as options, or an argparse exit for anything it refuses.
+
+    ``--version`` exits here too, with status 0 and the release on stdout: it is what the
+    command was asked to do and not a refusal, and letting argparse end the process is what
+    keeps the two apart without this function having a second kind of answer to return.
+    """
     parser = build_parser()
     parsed = parser.parse_args(argv)
     engine = engine_named(cast("str", parsed.engine))
