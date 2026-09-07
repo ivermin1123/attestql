@@ -77,12 +77,22 @@ from attestql.audit.backend import (
     PlannerStatistics,
     ReadBackDrift,
     ShuffledCopies,
+    StatementTimedOut,
     TableLookup,
     TableName,
     TextCensus,
 )
 from attestql.evidence.types import ENGINE_POSTGRESQL, SessionSettings
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
+
+CANCELLED_BY_THE_STATEMENT_TIMEOUT = "statement timeout"
+"""The reason the server names when the bound this run set is what stopped a statement.
+
+A cancellation is not one event. The server writes ``canceling statement due to statement
+timeout`` for this one, ``due to user request`` for a cancel somebody asked for from another
+session, and ``due to lock timeout`` for a bound on waiting rather than on running; all three
+arrive as the same class, and only the first is the budget an audit gave itself. So the reason
+is read out of the message the server wrote rather than inferred from the class."""
 
 DRIVER_ERROR: type[Exception] = psycopg.Error
 """The one failure this module translates, named so that it can be raised from outside.
@@ -582,8 +592,14 @@ class PostgresBackend:
                 rows = tuple(tuple(row) for row in cursor.fetchall())
             except psycopg.Error as failed:
                 # The driver's own error, named the way this interface names failures, so
-                # a caller of Backend never has to know which driver refused.
-                raise BackendRefused("execute", str(failed).strip()) from failed
+                # a caller of Backend never has to know which driver refused. The bound this
+                # run set is the one failure named apart, because it is the run's own budget
+                # and not the server's answer about the statement; the message is the
+                # server's either way, so no line a reader reads moves for it.
+                message = str(failed).strip()
+                if _the_bound_ran_out(failed):
+                    raise StatementTimedOut(statement_timeout_seconds, message) from failed
+                raise BackendRefused("execute", message) from failed
         finally:
             _roll_back(cursor)
         return ExecutionResult(
@@ -1105,6 +1121,20 @@ class PostgresBackend:
                 step, "the server returned no row for a question it always answers"
             )
         return rows[0]
+
+
+def _the_bound_ran_out(failed: psycopg.Error) -> bool:
+    """Whether that failure is the statement timeout this run set and not another refusal.
+
+    Two tests, because neither alone is the question. The class alone covers every
+    cancellation the server makes, including one a person asked for from another session,
+    and a run that counted those as its own would report a bound that was never reached.
+    The message alone is a string a statement's own error could carry. So the class narrows
+    it to a cancellation and the reason the server wrote says which one it was.
+    """
+    if not isinstance(failed, psycopg.errors.QueryCanceled):
+        return False
+    return CANCELLED_BY_THE_STATEMENT_TIMEOUT in str(failed)
 
 
 def _as_text(value: object) -> str:

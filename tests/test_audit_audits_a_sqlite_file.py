@@ -26,7 +26,12 @@ from typing import Any, cast
 
 import pytest
 
-from attestql.audit.backend import BackendRefused, ReadBackDrift, TableName
+from attestql.audit.backend import (
+    BackendRefused,
+    ReadBackDrift,
+    StatementTimedOut,
+    TableName,
+)
 from attestql.audit.cli import SUMMARY_FILE, AuditOptions, connect_and_audit
 from attestql.audit.compare import ORDERING_KEY_NAMES_NO_COLUMN, bird_ex, record_statement
 from attestql.audit.engines import SQLITE
@@ -314,13 +319,20 @@ def test_a_statement_that_runs_past_its_bound_is_stopped_and_named(
     backend: SqliteBackend,
 ) -> None:
     """SQLite has no statement timeout to set and read back, so the bound is enforced by this
-    process and what the record states as in force is what was enforced."""
-    with pytest.raises(BackendRefused, match="past its 1s timeout"):
+    process and what the record states as in force is what was enforced.
+
+    It is refused under its own type, because a summary counts the questions the bound stopped
+    apart from the ones the file refused: the same statement under a longer bound would have
+    been recorded, and one naming a table this file does not hold would not."""
+    with pytest.raises(StatementTimedOut, match="past its 1s timeout") as stopped:
         backend.execute(
             "WITH RECURSIVE forever(x) AS (SELECT 1 UNION ALL SELECT x + 1 FROM forever) "
             "SELECT count(*) FROM forever",
             statement_timeout_seconds=1,
         )
+
+    assert stopped.value.seconds == 1
+    assert stopped.value.step == "execute"
 
 
 def _a_clock_past(deadline_seconds: float) -> Callable[[], float]:

@@ -73,10 +73,15 @@ pytestmark = pytest.mark.sandbox_sqlite
 DEFECTS = ("1029", "879", "207")
 """The three questions whose shipped gold and correction disagree on this data."""
 
-GOLD_ONLY_LINE = "6 questions: 0 NOT_EQUAL, 5 smells fired"
+NOTHING_TIMED_OUT = ", 0 timed out (0 gold, 0 prediction)"
+"""The bound is the default 30 seconds over a file of a few rows a table, so nothing
+here reaches it and both lines end with the zero that says the run counted."""
+
+GOLD_ONLY_LINE = f"6 questions: 0 NOT_EQUAL, 5 smells fired{NOTHING_TIMED_OUT}"
 PREDICTION_LINE = (
     "6 questions: 3 NOT_EQUAL, 5 smells fired, "
     "0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation)"
+    f"{NOTHING_TIMED_OUT}"
 )
 """The whole of what a run prints last, stated here so that a change to the fixture, the
 questions or a probe is a change to this file too. None of the three disagreements is one
@@ -545,6 +550,71 @@ def test_a_write_in_a_gold_is_that_question_s_error_line_and_not_the_end_of_the_
     assert [error.question_id for error in summary.errors] == [900102]
     assert "not a SELECT" in summary.errors[0].message
     assert any("q900101" in line and "GOLD-ONLY" in line for line in writer.written)
+
+
+PAST_THE_BOUND = (
+    "WITH RECURSIVE forever(x) AS (SELECT 1 UNION ALL SELECT x + 1 FROM forever) "
+    "SELECT count(*) FROM forever, scores"
+)
+"""A gold that cannot finish: the recursion has no base case to stop at, so the statement
+runs until this process interrupts it. It reads a table of the fixture so that the run
+measures the data for it the way it does for every other question."""
+
+
+def test_a_gold_the_bound_stops_is_that_question_s_error_line_and_is_counted_as_one(
+    tmp_path: Path,
+) -> None:
+    """SQLite has no statement timeout of its own, so the bound is this process's progress
+    handler, and what it stops is reported apart from what the file refuses: a longer bound
+    would have recorded this statement, where one naming a table the file does not hold
+    would have failed at any bound. The message stays the engine's own; the count is new."""
+    questions = tmp_path / "questions.json"
+    questions.write_text(
+        json.dumps(
+            {
+                "questions": [
+                    {
+                        "question_id": 900201,
+                        "db_id": "synthetic",
+                        "question": "How long is forever?",
+                        "evidence": "",
+                        "SQL": PAST_THE_BOUND,
+                        "difficulty": "simple",
+                    },
+                    {
+                        "question_id": 900202,
+                        "db_id": "synthetic",
+                        "question": "Who holds the highest score?",
+                        "evidence": "",
+                        "SQL": "SELECT name FROM scores ORDER BY score DESC LIMIT 1",
+                        "difficulty": "simple",
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    options = AuditOptions(
+        dsn=str(build_fixture(tmp_path / "sandbox")),
+        questions=questions,
+        out=tmp_path / "audit",
+        engine=SQLITE,
+        data_as_of=DATA_AS_OF,
+        statement_timeout_seconds=1,
+    )
+    writer = Lines()
+
+    summary = run_audit(options, SQLITE.connect(options.dsn, scratch="temp"), writer)
+    document = _document(options.out / SUMMARY_FILE)
+
+    assert summary.timed_out == {"gold": (900201,), "prediction": ()}
+    assert document["timed_out"] == {"gold": [900201], "prediction": []}
+    assert writer.written[-1].endswith(", 1 timed out (1 gold, 0 prediction)")
+    line = next(found for found in writer.written if found.startswith("q900201 "))
+    assert "ERROR" in line
+    assert "gold: execute: the statement ran past its 1s timeout" in line
+    assert [error.question_id for error in summary.errors] == [900201]
+    assert summary.exit_status == 0, "the question that was audited decided it alone"
 
 
 def test_a_rerun_clears_the_run_before_it_and_a_directory_nobody_audited_is_refused(

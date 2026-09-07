@@ -127,7 +127,10 @@ schema is measured again rather than read back from the file.
 `--statement-timeout SECONDS`, 30 by default, bounds every statement the run sends, gold and
 prediction alike. A statement that reaches it is that question's ERROR line, naming the side that
 failed before the server's message; the record of the execution carries the timeout it actually ran
-under and `summary.json` the one the run was given. Every statement runs with the server's parallel
+under and `summary.json` the one the run was given. The summary line ends with how many statements
+reached the bound, the golds counted apart from the predictions, and `summary.json` lists their
+question ids under `timed_out`; a run where nothing reached it says so with two zeroes rather than
+leaving the reader to count the error list. Every statement runs with the server's parallel
 gather off and with `work_mem` at 4 MB and `hash_mem_multiplier` at 2, PostgreSQL 16's own defaults
 written out rather than inherited, so that a float sum is added in one order and two runs of one
 statement cannot differ in a late digit: a gather adds the partial sums in whatever order the

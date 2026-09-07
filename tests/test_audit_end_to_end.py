@@ -76,8 +76,14 @@ NO_CREDIT = " credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0
 """What the run given predictions states about the gap between the two readings: none of
 the three disagreements here is one BIRD's own check would have scored 1."""
 
-SUMMARY_LINE = f"8 questions: 3 NOT_EQUAL, 6 smells fired, 0{NO_CREDIT}"
-EXPERIMENTAL_SUMMARY_LINE = f"8 questions: 3 NOT_EQUAL, 7 smells fired, 0{NO_CREDIT}"
+NOTHING_TIMED_OUT = ", 0 timed out (0 gold, 0 prediction)"
+"""What every run in this file states about the bound: 30 seconds over a fixture of a
+few rows a table, so nothing here reaches it and the clause is the zero that says so."""
+
+SUMMARY_LINE = f"8 questions: 3 NOT_EQUAL, 6 smells fired, 0{NO_CREDIT}{NOTHING_TIMED_OUT}"
+EXPERIMENTAL_SUMMARY_LINE = (
+    f"8 questions: 3 NOT_EQUAL, 7 smells fired, 0{NO_CREDIT}{NOTHING_TIMED_OUT}"
+)
 """The same run with the experimental smell asked for: q1029 fires it and nothing else moves."""
 
 COPIED_TABLES = [
@@ -448,6 +454,58 @@ def test_the_experimental_smell_reads_the_question_against_the_gold(
         "q1029 european_football_2 R-ORD  GOLD-ONLY  smells=direction-against-question  "
         f"{asked.out.as_posix()}/q1029/"
     )
+
+
+PAST_THE_BOUND = "SELECT count(*) FROM scores WHERE pg_sleep(2) IS NULL"
+"""A gold no one-second bound can answer: ``pg_sleep`` is volatile, so the server runs it
+once a row rather than folding it away, and the cancellation arrives long before the count.
+It names a table of the fixture and projects a column, so the run measures the data and
+parses the statement the way it does for every other question, and the bound is the only
+thing that stops it."""
+
+
+def test_a_gold_the_bound_stops_is_counted_as_a_timeout_and_keeps_the_server_s_words(
+    sandbox_backend: PostgresBackend, tmp_path: Path
+) -> None:
+    """The one question of this file that reaches ``--statement-timeout``, on a real server.
+
+    What is observed is the whole path: the server cancels the statement with its own reason,
+    the driver's error keeps that reason, and the run reports it as this question's error line
+    under the side that ran it and counts it apart on the last line and in ``summary.json``.
+    A refusal counted there would be a bound nobody reached; a timeout left out of it would be
+    a run that could not say a longer bound was worth trying.
+    """
+    questions = tmp_path / "questions.json"
+    questions.write_text(
+        json.dumps(
+            [
+                {
+                    "question_id": 900201,
+                    "db_id": "synthetic",
+                    "question": "How many scores are there?",
+                    "evidence": "",
+                    "SQL": PAST_THE_BOUND,
+                    "difficulty": "simple",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    stopped = audit(
+        sandbox_backend,
+        tmp_path / "audit",
+        questions=questions,
+        statement_timeout_seconds=1,
+    )
+    line = stopped.line_of("900201")
+
+    assert "ERROR" in line
+    assert "gold: execute: " in line
+    assert "canceling statement due to statement timeout" in line
+    assert stopped.summary.timed_out == {"gold": (900201,), "prediction": ()}
+    assert stopped.summary_document()["timed_out"] == {"gold": [900201], "prediction": []}
+    assert stopped.lines[-1].endswith(", 1 timed out (1 gold, 0 prediction)")
+    assert stopped.summary.exit_status == 2, "this run answered no question at all"
 
 
 def test_the_console_script_runs_the_same_audit_as_its_own_process(tmp_path: Path) -> None:

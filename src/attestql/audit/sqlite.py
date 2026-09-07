@@ -64,6 +64,7 @@ from attestql.audit.backend import (
     PlannerStatistics,
     ReadBackDrift,
     ShuffledCopies,
+    StatementTimedOut,
     TableLookup,
     TableName,
     TextCensus,
@@ -961,8 +962,9 @@ def _fetch(
     except sqlite3.Error as failed:
         message = str(failed).strip()
         if INTERRUPT_MESSAGE in message and time.monotonic() > deadline:
-            raise BackendRefused(
-                "execute", f"the statement ran past its {statement_timeout_seconds}s timeout"
+            raise StatementTimedOut(
+                statement_timeout_seconds,
+                f"the statement ran past its {statement_timeout_seconds}s timeout",
             ) from failed
         # The driver's own error, named the way this interface names failures, so a caller
         # of Backend never has to know which driver refused.

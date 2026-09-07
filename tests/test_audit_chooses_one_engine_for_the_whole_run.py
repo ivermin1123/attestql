@@ -123,7 +123,9 @@ def test_a_whole_audit_runs_through_an_engine_the_test_built(tmp_path: Path) -> 
     assert connect_and_audit(options, writer) == 0
     assert opened == [("host=nowhere dbname=none", options.scratch_schema)]
     assert parsed == [ELEMENTS]
-    assert writer.written[-1] == "1 questions: 0 NOT_EQUAL, 0 smells fired"
+    assert writer.written[-1] == (
+        "1 questions: 0 NOT_EQUAL, 0 smells fired, 0 timed out (0 gold, 0 prediction)"
+    )
 
     document = cast(
         "dict[str, Any]",

@@ -2,9 +2,11 @@
 
 ADR-0013 point 2. A stranger loads the BIRD Mini-Dev PostgreSQL dump, runs this against
 it, and gets one line per question, a directory per disagreement or fired smell, a
-summary line and ``summary.json``. With ``--predictions`` each prediction is compared
-with its gold under the gold's own replay rule; without them the gold-only smells run
-alone.
+summary line and ``summary.json``. The line and the file also count the statements that
+ran past ``--statement-timeout``, the gold's apart from the prediction's, so that a run
+whose bound was too short says so rather than leaving it in the error list. With
+``--predictions`` each prediction is compared with its gold under the gold's own replay
+rule; without them the gold-only smells run alone.
 
 **Which prediction answers which question.** A predictions file written for this tool is
 keyed by question id. BIRD's own ``predict_*.json`` is keyed by the position of an entry
@@ -70,6 +72,7 @@ from attestql.audit.backend import (
     BackendRefused,
     PlannerStatistics,
     ShuffledCopies,
+    StatementTimedOut,
     TableName,
     planner_statistics_json,
 )
@@ -132,7 +135,8 @@ SUMMARY_FORMAT = "attestql/audit/summary/2"
 
 It moves when a key a reader was reading changes meaning or leaves, and not when one is
 added, for the reason ``COUNTEREXAMPLE_FORMAT`` states: ``credited_but_not_equal`` gaining
-``by_test_suite_ex`` beside ``by_mechanism`` left it where it was. It reads ``2`` because
+``by_test_suite_ex`` beside ``by_mechanism`` left it where it was, and so did the run
+gaining ``timed_out`` beside ``errors``. It reads ``2`` because
 what the session reported moved under ``session_settings`` beside the engine that reported
 it."""
 
@@ -316,6 +320,17 @@ class Summary:
     smells: Mapping[str, int]
     credited_but_not_equal: Credited | None
     errors: tuple[QuestionError, ...]
+    timed_out: Mapping[str, tuple[int, ...]]
+    """The questions whose statement ran past the run's bound, by the side it ran on.
+
+    A subset of ``errors``, counted apart because it is a different finding: every other
+    error is the database's or the parser's answer about a statement, and this one is the
+    budget this run gave itself running out over a statement that was still going. The same
+    questions under a longer ``--statement-timeout`` would have been compared.
+
+    ``gold`` and ``prediction`` are always keys, with an empty tuple where nothing timed out,
+    because a run that timed nothing out measured that and did not fail to measure it.
+    """
     elapsed_seconds: Mapping[str, float]
     exit_status: int
 
@@ -326,6 +341,10 @@ class Summary:
     @property
     def smells_fired(self) -> int:
         return sum(self.smells.values())
+
+    @property
+    def timed_out_total(self) -> int:
+        return sum(len(found) for found in self.timed_out.values())
 
 
 class Writer(Protocol):
@@ -738,24 +757,33 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
 
 
 def _summary_line(summary: Summary) -> str:
-    """The last line of a run: what was audited, what disagreed, and what fired.
+    """The last line of a run: what was audited, what disagreed, what fired, what timed out.
 
     The credited count is on the line only where there is something to count it over: a
     gold-only run compared nothing against BIRD's reading, and a zero there would read as
     a measurement rather than as the absence of one.
+
+    The timeouts are on it always, a gold-only run included. A zero there is the opposite
+    case: the bound was in force over every statement the run sent, so nothing having
+    reached it is something this run measured, and two runs at two bounds are compared by
+    reading this clause off both.
     """
     line = (
         f"{summary.questions} questions: {summary.not_equal} NOT_EQUAL, "
         f"{summary.smells_fired} smells fired"
     )
     credited = summary.credited_but_not_equal
-    if credited is None:
-        return line
-    counted = credited.by_mechanism
+    if credited is not None:
+        counted = credited.by_mechanism
+        line += (
+            f", {credited.total} credited by BIRD but NOT_EQUAL "
+            f"({counted[MECHANISM_MULTIPLICITY]} multiplicity, {counted[MECHANISM_TYPE]} type, "
+            f"{counted[MECHANISM_ORDER]} order, {counted[MECHANISM_TRUNCATION]} truncation)"
+        )
     return line + (
-        f", {credited.total} credited by BIRD but NOT_EQUAL "
-        f"({counted[MECHANISM_MULTIPLICITY]} multiplicity, {counted[MECHANISM_TYPE]} type, "
-        f"{counted[MECHANISM_ORDER]} order, {counted[MECHANISM_TRUNCATION]} truncation)"
+        f", {summary.timed_out_total} timed out "
+        f"({len(summary.timed_out.get(SIDE_GOLD, ()))} gold, "
+        f"{len(summary.timed_out.get(SIDE_PREDICTION, ()))} prediction)"
     )
 
 
@@ -921,6 +949,10 @@ class _Counted:
     verdicts: dict[str, int] = field(default_factory=dict[str, int])
     smells: dict[str, int] = field(default_factory=dict[str, int])
     errors: list[QuestionError] = field(default_factory=list[QuestionError])
+    timed_out: dict[str, list[int]] = field(default_factory=dict[str, list[int]])
+    """The questions the run's bound stopped, by side, in the order they were asked. Kept
+    beside ``errors`` rather than read back out of them, because what makes one of them a
+    timeout is the type the backend raised and not a phrase in a message an engine wrote."""
     questions: int = 0
     credited: int = 0
     credited_by_mechanism: dict[str, int] = field(default_factory=dict[str, int])
@@ -989,6 +1021,8 @@ def _audit_questions(
             refusal = failed.failed
             step = refusal.step if isinstance(refusal, BackendRefused) else "statement"
             message = " ".join(str(refusal).split())
+            if isinstance(refusal, StatementTimedOut):
+                counted.timed_out.setdefault(failed.side, []).append(question.question_id)
             counted.errors.append(QuestionError(question.question_id, failed.side, step, message))
             counted.verdicts[ERROR] = counted.verdicts.get(ERROR, 0) + 1
             writer.line(_line(question, "", ERROR, (), None) + f"  {failed.side}: {message}")
@@ -1169,9 +1203,22 @@ def _summarise(
             )
         ),
         errors=tuple(counted.errors),
+        timed_out=_timed_out(counted),
         elapsed_seconds=elapsed,
         exit_status=status,
     )
+
+
+def _timed_out(counted: _Counted) -> Mapping[str, tuple[int, ...]]:
+    """The questions the bound stopped, by side, with both statements' sides always named.
+
+    A run that stopped nothing states two empty lists rather than an empty block, because a
+    reader of one summary has to be able to tell a run whose golds all finished from a run
+    that never counted. A side neither statement is, which is the measurement around the
+    two, is named only when something there did reach the bound.
+    """
+    sides = dict.fromkeys((SIDE_GOLD, SIDE_PREDICTION, *counted.timed_out))
+    return {side: tuple(counted.timed_out.get(side, ())) for side in sides}
 
 
 def _summary_json(
@@ -1314,6 +1361,7 @@ def _summary_json(
             }
             for error in summary.errors
         ],
+        "timed_out": {side: list(found) for side, found in summary.timed_out.items()},
         "exit_status": summary.exit_status,
     }
 
