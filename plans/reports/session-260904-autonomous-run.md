@@ -200,6 +200,7 @@ Nhánh `sqlite-backend` (Batch B):
 | `74594d0` | B5b: report SQLite về 118 dòng, danh sách id chuyển sang `differences.json`, hàng B5 ghi hash và CI thật | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/34089573285> | 13:09 |
 | `246a354` | B5c: report wrap lại 100 cột, 119 dòng, giữ mọi bảng và số | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/34090142899> | 13:17 |
 | `a227ae4` | B6': BIRD dev 1.534 câu trên SQLite, hai bản gold (dev.json 2024-06-27 và bản rà 2025-11-06 của BIRD), 22 run gold-only + 44 run dự đoán, cap 3 tiến trình; 18/66 run có dòng timeout, chạy lại đơn lẻ giữ nguyên cả 18 (q518 38 s, q701 192 s, và bản viết lại của q1131 quá 30 s trong khi bản 2024 chạy 0,3 s). Số dẫn: **probe bắt 31/399 gold BIRD tự sửa (7,8 %)**, gấp ba mức nền 25/963 (2,6 %) trên gold BIRD không đụng, và 29 trong 31 tắt khi bản 2025-11-06 thay bản 2024. 25 gold BIRD để nguyên mà probe kêu: đọc tay cả 25, 23 sai / 1 vô hại / 1 luật của tool. Prediction mode trên hai file dự đoán dev của chính BIRD (DAMO-ConvAI, MIT): khớp evaluator dev của BIRD 6.136/6.136, 90/899 (10,0 %) EX=1 mà NOT_EQUAL. Phát hiện thêm: 5 trong 11 database khác nhau giữa `dev.zip` và `minidev.zip`, không tài liệu nào nói. Report + artifact + register A34-A38 + README | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/34096837188> | 14:42 |
+| `f143e13` | B6'b: hàng B6' trong run report ghi hash và CI thật | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/34097167059> | 14:46 |
 
 Điểm dừng Batch B (05/09): B0, B1, B2 đã lên nhánh `sqlite-backend` và CI xanh; B3 dừng trước khi
 commit theo chỉ thị mới của chủ (làm C0 đến C5 trên `main` trước, rồi B0', B1', B2 đến B5, B6'). Brief B2
@@ -207,6 +208,20 @@ và B3 nằm trong scratchpad của phiên (`specs/batch-b2.md`, `specs/batch-b3
 (11 database SQLite của Mini-Dev, 9 file dự đoán SQLite, BIRD dev.zip 346 MB) đã tải về scratchpad.
 Quyết định tự đưa: dừng theo chỉ thị chuyển qua session khác vì dừng là đảo được, còn hai session cùng
 sửa một checkout thì không.
+
+Kết thúc Batch B (07/09, 11:00 đến 16:00, session này, worker Opus viết, Fable duyệt): nhánh
+`sqlite-backend` từ `c4eb03d` (main lúc tách) đến `f143e13`, 17 commit, CI xanh từng commit; test 605 + 30
+sandbox lúc tách thành 807 + 30 sandbox + 17 sandbox_sqlite. Không merge vào main, không push main, không
+đăng gì upstream. Đọc lại bốn thread upstream (chỉ đọc, 07/09 12:00): `mini_dev` #38, #39, #40 mở, chưa ai
+trả lời; SpotIt-plus #1 chủ đã đóng 05/09. Không container sót, không tiến trình sót; Docker Desktop đang
+chạy (worker bật cho gate). Thư mục đo `~/.cache/attestql-measure/minidev-sqlite` (6,7 GB) và
+`bird-dev-sqlite` (4,1 GB) để lại, xoá được. Chờ chủ quyết: (1) merge `sqlite-backend` vào main và push;
+(2) REAL render sáu chữ số thập phân làm q31 EQUAL trong khi BIRD cho 0 (hằng serialize dùng chung với
+PostgreSQL, đổi là đổi mọi digest); (3) timeout không được đếm trong dòng tổng kết và `summary.json`, ba
+gold BIRD dev (q518, q701, q1131 bản 2025) quá 30 s; (4) file dự đoán BIRD dev ghi số 0 cho câu thiếu và
+tool từ chối cả file; (5) 5/11 database của dev.zip khác minidev.zip (A38, 211 mã CDS mất số 0 đầu); (6)
+q879 vẫn sai trong bản dev 2025-11-06, q207 sửa join nhưng thêm `LIMIT` ngoài `GROUP_CONCAT`: chỉ ghi,
+không gửi. Status Batch B: DONE (B0', B1', B2 đến B5, B6' đủ; B5 đo hai lần vì máy khởi động lại).
 
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).
