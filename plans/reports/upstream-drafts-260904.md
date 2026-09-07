@@ -41,8 +41,8 @@ maintainer uses (the Q336 fix of 2026-01-25 was opened and closed there), with o
 linking it from `AlibabaResearch/DAMO-ConvAI` issue 39, the standing panel of annotation issues.
 Evidence: register rows A34 to A36 and
 `plans/reports/bird-dev-sqlite-260907/classification.json` (every reason), measured at the
-commit `plans/reports/measurement-260907-1435-bird-dev-sqlite.md` names. Sent by the owner
-after the merge that put that directory on `main`.
+commit `plans/reports/measurement-260907-1435-bird-dev-sqlite.md` names. Sent 2026-09-07 after the merge that put that directory on `main`, as `bird-bench/mini_dev` issue 49
+with a link comment on DAMO-ConvAI issue 39 (no Hugging Face login on this machine); register U6.
 
 Title: 23 golds in this pass still cut at a tie, sort NULL first, or sort numbers as text
 
