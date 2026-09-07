@@ -64,10 +64,11 @@ where = ["src"]
 # fail on every machine that installed the package rather than in the gate.
 [tool.setuptools.package-data]
 "attestql.demo" = ["*.sql", "*.json"]
-# The renderer's templates and its stylesheet. They are found beside the module that renders
-# them (`Path(__file__)`), so a wheel without them would hold a command that fails on the
-# machine that installed it rather than in the gate.
-"attestql.report" = ["templates/*.html", "static/*"]
+# The renderer's templates, its stylesheet, its script, the method figure and the fonts. They
+# are found beside the module that renders them (`Path(__file__)`), so a wheel without them
+# would hold a command that fails on the machine that installed it rather than in the gate.
+# `static/*` does not reach into a directory, which is why the fonts are named separately.
+"attestql.report" = ["templates/*.html", "static/*", "static/fonts/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
