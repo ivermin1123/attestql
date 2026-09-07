@@ -26,11 +26,10 @@ under this rule; here are the rows; decide.
 
 ## Try it in ten minutes
 
-You need PostgreSQL 16 (Docker is fine), Python 3.11 or later, and `uv`. The package is not on
-PyPI yet, so install it from a checkout:
+You need PostgreSQL 16 (Docker is fine) and Python 3.11 or later. Install the package from PyPI:
 
 ```text
-uv tool install .            # or: uv sync, then prefix every command with uv run
+uv tool install attestql     # or: pip install attestql
 ```
 
 Load BIRD Mini-Dev, the public benchmark this tool is demonstrated on
