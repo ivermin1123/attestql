@@ -441,7 +441,28 @@ def _question(entry: object, path: Path, index: int) -> Question:
         raise ToolError(f"{path} entry {index} is not a question: {incomplete}") from incomplete
 
 
-def read_predictions(path: Path) -> Mapping[int, str]:
+@dataclass(frozen=True)
+class NoStatement:
+    """An entry of a predictions file that holds no statement, and what it holds instead.
+
+    BIRD dev's own ``predict_dev.json`` writes the number ``0`` where the model it was
+    generated from produced nothing for a question, and an empty string is the other shape of
+    the same thing. Neither is a defect in the file and neither is SQL: it is one question the
+    model did not answer, so it is that question's error line rather than a refusal of the
+    whole file, which would leave every question the file did answer unaudited.
+
+    ``held`` is what the file has there, in words, because the error line names it: a file
+    full of zeroes and a file full of empty strings are two different things to go and look
+    at, and a message that spelled them the same way sent a reader to neither.
+
+    A question the file does not name at all is not this. Nothing was predicted for it, and it
+    is audited gold-only the way every question is in a run given no predictions file.
+    """
+
+    held: str
+
+
+def read_predictions(path: Path) -> Mapping[int, str | NoStatement]:
     """The predictions by the number the file keys them under, whatever that number is.
 
     A key is a whole number written as a string or as a number. Which question it names is
@@ -450,11 +471,22 @@ def read_predictions(path: Path) -> Mapping[int, str]:
     before it has run anything. A value is the statement, and BIRD's own
     ``predict_dev.json`` appends a tab, a marker and the database name to it, which is
     stripped here so that one file works in both forms.
+
+    The number ``0`` and a value that is empty once that suffix is off are the two ways that
+    same file says the model produced nothing for a question, and they are read as
+    ``NoStatement`` rather than refused: the file is a run of a model over a benchmark, and a
+    run that stopped at the first question the model skipped would audit none of the rest.
+    Every other value that is not a string is still refused, because it is a file this tool
+    has no reading for at all.
+
+    Raises ``ToolError`` for a file that is not an object, a key that is no whole number and a
+    value of any other type: each is the file itself being something else, which is a run that
+    cannot start rather than one question that cannot be answered.
     """
     document = _read_json(path, "the predictions file")
     if not isinstance(document, dict):
         raise ToolError(f"{path} holds {type(document).__name__} and predictions are an object")
-    predictions: dict[int, str] = {}
+    predictions: dict[int, str | NoStatement] = {}
     for key, value in cast("dict[object, object]", document).items():
         try:
             keyed_under = int(cast("int | str", key))
@@ -462,17 +494,36 @@ def read_predictions(path: Path) -> Mapping[int, str]:
             raise ToolError(
                 f"{path} has the key {key!r}, which is neither a question id nor a position"
             ) from unreadable
+        if _is_the_number_zero(value):
+            predictions[keyed_under] = NoStatement("the number 0")
+            continue
         if not isinstance(value, str):
             raise ToolError(f"{path}[{key}] is {type(value).__name__} and a prediction is SQL")
-        predictions[keyed_under] = value.partition(BIRD_PREDICTION_SUFFIX)[0].strip()
+        statement = value.partition(BIRD_PREDICTION_SUFFIX)[0].strip()
+        predictions[keyed_under] = statement or NoStatement("an empty string")
     return predictions
+
+
+def _is_the_number_zero(value: object) -> bool:
+    """Whether the file wrote the JSON number ``0`` there and not something that resembles it.
+
+    A boolean is not it. Python counts one as a whole number and ``False == 0``, so a file
+    that wrote ``false`` there wrote a value this tool has no reading for, and it is refused
+    with every other value that is not SQL rather than read as a prediction nobody made.
+    """
+    return isinstance(value, int) and not isinstance(value, bool) and value == 0
 
 
 @dataclass(frozen=True)
 class Prediction:
-    """One prediction: the statement to compare a gold with, and where its text came from."""
+    """One prediction: the statement to compare a gold with, and where its text came from.
 
-    sql: str
+    ``sql`` is what the file held for this question, which is a statement or the record that
+    it held none: what makes a question with no prediction different from a question the file
+    named and left empty is that this one is the file's answer, and a reader is told so on
+    that question's line."""
+
+    sql: str | NoStatement
     source: StatementSource
 
 
@@ -487,12 +538,12 @@ class ResolvedPredictions:
     left out by ``--ids`` is not listed; it was not compared, but nothing displaced it.
     """
 
-    by_id: Mapping[int, str]
+    by_id: Mapping[int, str | NoStatement]
     positions_unused: tuple[int, ...]
 
 
 def resolve_predictions(
-    predictions: Mapping[int, str], question_set: QuestionSet, keyed_by: str
+    predictions: Mapping[int, str | NoStatement], question_set: QuestionSet, keyed_by: str
 ) -> ResolvedPredictions:
     """The predictions by question id, from a file keyed by question id or by position.
 
@@ -508,7 +559,7 @@ def resolve_predictions(
     if keyed_by == QUESTION_ID_KEYING:
         _refuse_positions_read_as_ids(predictions, question_set)
         return ResolvedPredictions(by_id=dict(predictions), positions_unused=())
-    by_id: dict[int, str] = {}
+    by_id: dict[int, str | NoStatement] = {}
     unused: list[int] = []
     for position in sorted(predictions):
         if not 0 <= position < question_set.entries:
@@ -526,7 +577,7 @@ def resolve_predictions(
 
 
 def _refuse_positions_read_as_ids(
-    predictions: Mapping[int, str], question_set: QuestionSet
+    predictions: Mapping[int, str | NoStatement], question_set: QuestionSet
 ) -> None:
     """Refuse a file whose keys are the positions of a question file that is not keyed by
     them, which is what BIRD's own prediction files are and what reading them as question
@@ -679,7 +730,9 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         origin=options.questions_origin,
         date=options.questions_date,
     )
-    keyed: Mapping[int, str] = read_predictions(options.predictions) if options.predictions else {}
+    keyed: Mapping[int, str | NoStatement] = (
+        read_predictions(options.predictions) if options.predictions else {}
+    )
     resolved = resolve_predictions(keyed, question_set, options.predictions_keyed_by)
     predictions_source = _predictions_source(options)
     data_digest = _data_digest(options)
@@ -1076,6 +1129,14 @@ def _audit_one(
         verdict = GOLD_ONLY
     else:
         with sided(SIDE_PREDICTION):
+            if isinstance(prediction.sql, NoStatement):
+                # The file named this question and held no statement for it, which is this
+                # question's error under the side the file answers for, exactly like a
+                # prediction that does not parse.
+                raise StatementRefused(
+                    f"the predictions file holds {prediction.sql.held} "
+                    "and no statement for this question"
+                )
             second_parsed = options.engine.parse(prediction.sql)
         comparison = compare_statements(
             question=metadata,
@@ -1661,6 +1722,7 @@ __all__ = [
     "AuditOptions",
     "ConsoleWriter",
     "Credited",
+    "NoStatement",
     "Prediction",
     "Question",
     "QuestionError",
