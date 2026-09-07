@@ -1,0 +1,773 @@
+{
+ "reading": "Rewrite-399 only. Result equal includes EQUAL and NOT_EQUAL rows whose multiset is equal; error is q1131. Each cell also counts the ids whose old gold fired a probe.",
+ "sample_rule": "sorted ids, every ceil(size/8)-th from the first, at most 8 per class",
+ "result_totals": {
+  "equal": 129,
+  "error": 1,
+  "multiplicity": 16,
+  "other": 115,
+  "same_multiset_other_order": 1,
+  "truncation": 8,
+  "type": 129
+ },
+ "sql_class_totals": {
+  "aggregate_function": 1,
+  "distinct": 25,
+  "group_by": 6,
+  "join_condition": 5,
+  "limit_or_offset": 2,
+  "order_by_direction_only": 3,
+  "order_by_key": 43,
+  "projection": 79,
+  "where": 32,
+  "whole_rewrite": 203
+ },
+ "sql_class_probe_fires": {
+  "distinct": 1,
+  "join_condition": 1,
+  "order_by_direction_only": 1,
+  "order_by_key": 10,
+  "whole_rewrite": 18
+ },
+ "crosstab": {
+  "equal": {
+   "order_by_key": {
+    "count": 37,
+    "probe_fired": 8,
+    "ids": [
+     35,
+     46,
+     51,
+     80,
+     84,
+     88,
+     250,
+     329,
+     513,
+     559,
+     590,
+     658,
+     668,
+     671,
+     736,
+     769,
+     794,
+     832,
+     865,
+     958,
+     971,
+     984,
+     1026,
+     1055,
+     1079,
+     1083,
+     1112,
+     1173,
+     1178,
+     1253,
+     1292,
+     1358,
+     1398,
+     1407,
+     1472,
+     1474,
+     1512
+    ]
+   },
+   "where": {
+    "count": 17,
+    "probe_fired": 0,
+    "ids": [
+     43,
+     239,
+     350,
+     359,
+     396,
+     499,
+     652,
+     682,
+     1047,
+     1109,
+     1170,
+     1180,
+     1266,
+     1294,
+     1332,
+     1335,
+     1406
+    ]
+   },
+   "projection": {
+    "count": 26,
+    "probe_fired": 0,
+    "ids": [
+     48,
+     85,
+     91,
+     245,
+     403,
+     591,
+     629,
+     641,
+     695,
+     801,
+     856,
+     880,
+     890,
+     909,
+     939,
+     998,
+     1019,
+     1039,
+     1095,
+     1156,
+     1181,
+     1200,
+     1276,
+     1317,
+     1384,
+     1504
+    ]
+   },
+   "whole_rewrite": {
+    "count": 36,
+    "probe_fired": 1,
+    "ids": [
+     87,
+     94,
+     95,
+     108,
+     133,
+     141,
+     179,
+     186,
+     248,
+     253,
+     282,
+     501,
+     516,
+     543,
+     561,
+     633,
+     862,
+     926,
+     944,
+     955,
+     981,
+     999,
+     1036,
+     1066,
+     1069,
+     1092,
+     1147,
+     1175,
+     1183,
+     1293,
+     1296,
+     1323,
+     1464,
+     1481,
+     1501,
+     1511
+    ]
+   },
+   "distinct": {
+    "count": 5,
+    "probe_fired": 0,
+    "ids": [
+     249,
+     277,
+     280,
+     430,
+     477
+    ]
+   },
+   "limit_or_offset": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     272
+    ]
+   },
+   "group_by": {
+    "count": 4,
+    "probe_fired": 0,
+    "ids": [
+     435,
+     436,
+     554,
+     1367
+    ]
+   },
+   "aggregate_function": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     940
+    ]
+   },
+   "join_condition": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     1128
+    ]
+   },
+   "order_by_direction_only": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     1513
+    ]
+   }
+  },
+  "error": {
+   "whole_rewrite": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     1131
+    ]
+   }
+  },
+  "multiplicity": {
+   "distinct": {
+    "count": 15,
+    "probe_fired": 0,
+    "ids": [
+     71,
+     145,
+     149,
+     213,
+     328,
+     351,
+     357,
+     546,
+     606,
+     622,
+     715,
+     972,
+     1228,
+     1244,
+     1363
+    ]
+   },
+   "whole_rewrite": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     365
+    ]
+   }
+  },
+  "other": {
+   "where": {
+    "count": 14,
+    "probe_fired": 0,
+    "ids": [
+     16,
+     26,
+     110,
+     281,
+     341,
+     386,
+     429,
+     710,
+     1161,
+     1190,
+     1250,
+     1269,
+     1273,
+     1274
+    ]
+   },
+   "projection": {
+    "count": 37,
+    "probe_fired": 0,
+    "ids": [
+     53,
+     171,
+     273,
+     286,
+     310,
+     363,
+     383,
+     444,
+     454,
+     517,
+     649,
+     683,
+     686,
+     709,
+     711,
+     716,
+     957,
+     963,
+     1037,
+     1080,
+     1113,
+     1152,
+     1199,
+     1222,
+     1243,
+     1254,
+     1256,
+     1283,
+     1286,
+     1287,
+     1289,
+     1298,
+     1299,
+     1304,
+     1482,
+     1505,
+     1525
+    ]
+   },
+   "whole_rewrite": {
+    "count": 48,
+    "probe_fired": 9,
+    "ids": [
+     68,
+     109,
+     152,
+     311,
+     342,
+     360,
+     406,
+     416,
+     442,
+     443,
+     451,
+     476,
+     507,
+     530,
+     571,
+     593,
+     631,
+     635,
+     639,
+     640,
+     656,
+     687,
+     767,
+     810,
+     959,
+     974,
+     996,
+     1000,
+     1006,
+     1024,
+     1027,
+     1028,
+     1120,
+     1121,
+     1122,
+     1126,
+     1168,
+     1234,
+     1247,
+     1260,
+     1278,
+     1282,
+     1404,
+     1418,
+     1442,
+     1456,
+     1499,
+     1531
+    ]
+   },
+   "distinct": {
+    "count": 3,
+    "probe_fired": 1,
+    "ids": [
+     220,
+     376,
+     580
+    ]
+   },
+   "order_by_key": {
+    "count": 5,
+    "probe_fired": 2,
+    "ids": [
+     514,
+     913,
+     979,
+     1010,
+     1029
+    ]
+   },
+   "join_condition": {
+    "count": 4,
+    "probe_fired": 1,
+    "ids": [
+     581,
+     582,
+     694,
+     835
+    ]
+   },
+   "group_by": {
+    "count": 2,
+    "probe_fired": 0,
+    "ids": [
+     949,
+     1496
+    ]
+   },
+   "order_by_direction_only": {
+    "count": 2,
+    "probe_fired": 1,
+    "ids": [
+     1135,
+     1284
+    ]
+   }
+  },
+  "same_multiset_other_order": {
+   "whole_rewrite": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     988
+    ]
+   }
+  },
+  "truncation": {
+   "whole_rewrite": {
+    "count": 5,
+    "probe_fired": 4,
+    "ids": [
+     101,
+     251,
+     515,
+     596,
+     610
+    ]
+   },
+   "limit_or_offset": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     462
+    ]
+   },
+   "projection": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     469
+    ]
+   },
+   "order_by_key": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     1140
+    ]
+   }
+  },
+  "type": {
+   "whole_rewrite": {
+    "count": 111,
+    "probe_fired": 4,
+    "ids": [
+     0,
+     2,
+     3,
+     5,
+     6,
+     8,
+     10,
+     11,
+     12,
+     13,
+     15,
+     18,
+     19,
+     20,
+     21,
+     31,
+     32,
+     45,
+     55,
+     60,
+     61,
+     62,
+     66,
+     69,
+     77,
+     78,
+     79,
+     92,
+     96,
+     97,
+     100,
+     103,
+     104,
+     105,
+     106,
+     111,
+     112,
+     113,
+     115,
+     117,
+     118,
+     119,
+     121,
+     122,
+     123,
+     124,
+     125,
+     126,
+     127,
+     129,
+     134,
+     135,
+     137,
+     138,
+     139,
+     140,
+     143,
+     144,
+     146,
+     147,
+     148,
+     151,
+     153,
+     154,
+     155,
+     156,
+     157,
+     158,
+     161,
+     162,
+     164,
+     166,
+     175,
+     178,
+     181,
+     183,
+     187,
+     188,
+     190,
+     191,
+     195,
+     196,
+     200,
+     203,
+     204,
+     205,
+     207,
+     208,
+     209,
+     218,
+     224,
+     229,
+     231,
+     349,
+     387,
+     388,
+     402,
+     432,
+     594,
+     600,
+     763,
+     908,
+     967,
+     970,
+     1009,
+     1014,
+     1322,
+     1391,
+     1450,
+     1491,
+     1529
+    ]
+   },
+   "projection": {
+    "count": 15,
+    "probe_fired": 0,
+    "ids": [
+     25,
+     271,
+     309,
+     317,
+     445,
+     456,
+     693,
+     928,
+     993,
+     1021,
+     1204,
+     1241,
+     1279,
+     1399,
+     1503
+    ]
+   },
+   "where": {
+    "count": 1,
+    "probe_fired": 0,
+    "ids": [
+     618
+    ]
+   },
+   "distinct": {
+    "count": 2,
+    "probe_fired": 0,
+    "ids": [
+     637,
+     646
+    ]
+   }
+  }
+ },
+ "sample_ids": {
+  "aggregate_function": [
+   940
+  ],
+  "distinct": [
+   71,
+   220,
+   328,
+   430,
+   606,
+   715,
+   1363
+  ],
+  "group_by": [
+   435,
+   436,
+   554,
+   949,
+   1367,
+   1496
+  ],
+  "join_condition": [
+   581,
+   582,
+   694,
+   835,
+   1128
+  ],
+  "limit_or_offset": [
+   272,
+   462
+  ],
+  "order_by_direction_only": [
+   1135,
+   1284,
+   1513
+  ],
+  "order_by_key": [
+   35,
+   250,
+   658,
+   832,
+   984,
+   1083,
+   1292,
+   1512
+  ],
+  "projection": [
+   25,
+   309,
+   469,
+   709,
+   957,
+   1113,
+   1254,
+   1304
+  ],
+  "where": [
+   16,
+   239,
+   359,
+   499,
+   710,
+   1170,
+   1266,
+   1294
+  ],
+  "whole_rewrite": [
+   0,
+   78,
+   124,
+   161,
+   231,
+   561,
+   981,
+   1260
+  ]
+ },
+ "candidate_checks": {
+  "current_gold_only_probes": {
+   "count": 31,
+   "needs_question": false
+  },
+  "duplicate_rows_fixed_by_distinct": {
+   "count": 23,
+   "needs_question": false,
+   "ids": [
+    71,
+    125,
+    145,
+    149,
+    213,
+    328,
+    357,
+    376,
+    406,
+    546,
+    580,
+    600,
+    606,
+    622,
+    637,
+    646,
+    715,
+    972,
+    1126,
+    1228,
+    1244,
+    1260,
+    1363
+   ]
+  },
+  "bare_aggregate_mixed_projection": {
+   "count": 1,
+   "needs_question": false,
+   "ids": [
+    1404
+   ]
+  },
+  "direction_against_question": {
+   "count": 2,
+   "needs_question": true,
+   "ids": [
+    1135,
+    1284
+   ]
+  },
+  "projection_contract": {
+   "count": 53,
+   "needs_question": true
+  },
+  "gold_only_candidates_combined": {
+   "count": 54,
+   "current_count": 31,
+   "distinct_increment": 22,
+   "bare_aggregate_increment": 1,
+   "overlaps": {
+    "current_and_distinct": [
+     580
+    ],
+    "current_and_bare_aggregate": [],
+    "distinct_and_bare_aggregate": []
+   },
+   "needs_question": false
+  }
+ }
+}

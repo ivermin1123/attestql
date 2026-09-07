@@ -1,0 +1,318 @@
+{
+ "reading": "Hand readings of the fixed sample, one class per id, with an estimate per SQL class of the share a check reading only the old gold and the data could catch.",
+ "sample_rule": "the ids in crosstab.json sample_ids: sorted, every ceil(size/8)-th from the first, at most 8",
+ "classes": {
+  "aggregate_function": {
+   "estimated_gold_only_share": 0.0,
+   "estimate_reason": "The sampled rewrite only removes a redundant HAVING and the answer is unchanged, so there is nothing for a gold-only check to catch."
+  },
+  "distinct": {
+   "estimated_gold_only_share": 0.71,
+   "estimate_reason": "Five of seven old answers repeat whole rows where BIRD adds DISTINCT, which the old result itself shows; q220 removes DISTINCT and q430 changes nothing."
+  },
+  "group_by": {
+   "estimated_gold_only_share": 0.0,
+   "estimate_reason": "The two semantic grain fixes need the requested entity, and the other four rewrites leave the same rows."
+  },
+  "join_condition": {
+   "estimated_gold_only_share": 0.2,
+   "estimate_reason": "Only q694 also fired not-a-function-of-the-data; owner against last editor and intended denominators need the question."
+  },
+  "limit_or_offset": {
+   "estimated_gold_only_share": 0.0,
+   "estimate_reason": "The old q462 has no cut to inspect and q272 changes no row on this data."
+  },
+  "order_by_direction_only": {
+   "estimated_gold_only_share": 0.33,
+   "estimate_reason": "Direction needs the question, but q1135 independently fired not-a-function-of-the-data, one of three sampled ids."
+  },
+  "order_by_key": {
+   "estimated_gold_only_share": 0.125,
+   "estimate_reason": "Mostly added deterministic tie keys with the same answer; only q832 fired arbitrary-cut, one of eight."
+  },
+  "projection": {
+   "estimated_gold_only_share": 0.125,
+   "estimate_reason": "Every sampled change needs the requested column or entity, except q469 whose old result repeats the yes answer 13 times."
+  },
+  "where": {
+   "estimated_gold_only_share": 0.0,
+   "estimate_reason": "Wrong constants, wrong table columns and date semantics need the question, while the equivalent rewrites change no answer."
+  },
+  "whole_rewrite": {
+   "estimated_gold_only_share": 0.125,
+   "estimate_reason": "Seven of eight change what is asked, and only q1260 also exposes duplicate old rows a data-only check could see."
+  }
+ },
+ "questions": {
+  "940": {
+   "class": "cosmetic",
+   "reason": "Dropping the redundant HAVING leaves the same 14 finishers."
+  },
+  "71": {
+   "class": "structural",
+   "reason": "The missing DISTINCT turns 14 district codes into 151 repeated rows."
+  },
+  "220": {
+   "class": "structural",
+   "reason": "Removing DISTINCT makes the alphabetical top three c, cl, cl rather than c, cl, h."
+  },
+  "328": {
+   "class": "structural",
+   "reason": "The missing DISTINCT repeats elements from every matching double bond."
+  },
+  "430": {
+   "class": "cosmetic",
+   "reason": "DISTINCT and a name order leave the same two sets on this data."
+  },
+  "606": {
+   "class": "structural",
+   "reason": "The missing DISTINCT repeats badge names for every recipient."
+  },
+  "715": {
+   "class": "structural",
+   "reason": "The missing DISTINCT repeats each display name once per qualifying comment."
+  },
+  "1363": {
+   "class": "structural",
+   "reason": "The missing DISTINCT repeats majors once per degree program row."
+  },
+  "435": {
+   "class": "cosmetic",
+   "reason": "GROUP BY on the unique id removes no row."
+  },
+  "436": {
+   "class": "cosmetic",
+   "reason": "GROUP BY on the unique id removes no row."
+  },
+  "554": {
+   "class": "cosmetic",
+   "reason": "Grouping and tie-breaking by ids still names whuber."
+  },
+  "949": {
+   "class": "semantic",
+   "reason": "The rewrite fixes highest points from one standing row to the constructor's SUM."
+  },
+  "1367": {
+   "class": "cosmetic",
+   "reason": "Grouping by major or college returns the same college here."
+  },
+  "1496": {
+   "class": "semantic",
+   "reason": "Least consumption must be aggregated by segment, not by individual customer."
+  },
+  "581": {
+   "class": "semantic",
+   "reason": "Editor means LastEditorUserId, not the post owner."
+  },
+  "582": {
+   "class": "semantic",
+   "reason": "Edited by must join on LastEditorUserId, not OwnerUserId."
+  },
+  "694": {
+   "class": "semantic",
+   "reason": "Latest comments must order by comment creation date and join each comment to its author."
+  },
+  "835": {
+   "class": "semantic",
+   "reason": "The denominator includes Marvel heroes whose alignment is unknown only under the LEFT JOIN."
+  },
+  "1128": {
+   "class": "semantic",
+   "reason": "The new question and join expand the average from one home player to all 22 match players."
+  },
+  "272": {
+   "class": "cosmetic",
+   "reason": "Adding LIMIT 2 changes nothing because only TR377 qualifies."
+  },
+  "462": {
+   "class": "structural",
+   "reason": "The rewrite adds LIMIT 1 with no order while two Italian translations exist."
+  },
+  "1135": {
+   "class": "semantic",
+   "reason": "Lowest potential must order ASC, not DESC."
+  },
+  "1284": {
+   "class": "semantic",
+   "reason": "Highest LDH under 500 must order DESC, not ASC."
+  },
+  "1513": {
+   "class": "semantic",
+   "reason": "First paid customer must order time ASC, and the same country hid the old direction."
+  },
+  "35": {
+   "class": "cosmetic",
+   "reason": "The added CDSCode tie key selects the same email."
+  },
+  "250": {
+   "class": "cosmetic",
+   "reason": "The added molecule-id tie key selects TR430 again."
+  },
+  "658": {
+   "class": "cosmetic",
+   "reason": "The added Id tie key leaves the same five titles."
+  },
+  "832": {
+   "class": "cosmetic",
+   "reason": "The added name tie key still selects Surtur."
+  },
+  "984": {
+   "class": "cosmetic",
+   "reason": "The added constructor tie key still selects Mercedes."
+  },
+  "1083": {
+   "class": "cosmetic",
+   "reason": "The added player-id tie key still selects Lionel Messi."
+  },
+  "1292": {
+   "class": "semantic",
+   "reason": "The question changes the condition from normal range to UA above 6.5, although this row is unchanged."
+  },
+  "1512": {
+   "class": "semantic",
+   "reason": "The question adds an explicit rule for choosing one customer at a tie."
+  },
+  "25": {
+   "class": "semantic",
+   "reason": "The requested second column changes from charter funding to educational option."
+  },
+  "309": {
+   "class": "semantic",
+   "reason": "The rewrite fixes the molecule constant and removes the unrequested molecule column."
+  },
+  "469": {
+   "class": "semantic",
+   "reason": "A yes-or-no question must return one existential answer, not one row per printing."
+  },
+  "709": {
+   "class": "semantic",
+   "reason": "Score belongs to the comment and the count is of distinct posts."
+  },
+  "957": {
+   "class": "semantic",
+   "reason": "How many drivers requires COUNT(DISTINCT driverId)."
+  },
+  "1113": {
+   "class": "semantic",
+   "reason": "The question asks defence aggression class, not chance creation shooting class."
+  },
+  "1254": {
+   "class": "semantic",
+   "reason": "Patients must be counted distinctly and the boundary is strict on both ends."
+  },
+  "1304": {
+   "class": "semantic",
+   "reason": "How many patients requires COUNT(DISTINCT patient id)."
+  },
+  "16": {
+   "class": "semantic",
+   "reason": "The county condition must be Alameda, not Lake."
+  },
+  "239": {
+   "class": "cosmetic",
+   "reason": "SUBSTR and LIKE express the same atom-19 predicate here."
+  },
+  "359": {
+   "class": "cosmetic",
+   "reason": "Only the string quoting changes."
+  },
+  "499": {
+   "class": "cosmetic",
+   "reason": "Dropping the redundant translation IS NOT NULL leaves nine."
+  },
+  "710": {
+   "class": "semantic",
+   "reason": "Score zero describes the comment, not the post."
+  },
+  "1170": {
+   "class": "semantic",
+   "reason": "At least a year is measured as 365 days rather than a calendar-year difference."
+  },
+  "1266": {
+   "class": "semantic",
+   "reason": "NOT IN replaces a malformed OR whose constant operand happened to give the same winner."
+  },
+  "1294": {
+   "class": "cosmetic",
+   "reason": "Excluding NULL leaves the same highest aCL IgA row."
+  },
+  "0": {
+   "class": "semantic",
+   "reason": "The new question asks a ten-column school profile rather than one rate."
+  },
+  "78": {
+   "class": "semantic",
+   "reason": "The new question adds enrollment, poverty and SAT statistics for the common grade span."
+  },
+  "124": {
+   "class": "semantic",
+   "reason": "The new question asks the largest three loans per district with clients, transactions and interest."
+  },
+  "161": {
+   "class": "semantic",
+   "reason": "The new question replaces one card type with a full customer profile."
+  },
+  "231": {
+   "class": "semantic",
+   "reason": "The rewrite adds the carcinogenic label the question had always asked for."
+  },
+  "561": {
+   "class": "semantic",
+   "reason": "The question changes from one arbitrary top-score post to all posts tied at the top score."
+  },
+  "981": {
+   "class": "cosmetic",
+   "reason": "The added ids only make the youngest driver and first race deterministic."
+  },
+  "1260": {
+   "class": "semantic",
+   "reason": "Age moves to the laboratory date and prefixed RF values are read numerically, with DISTINCT removing repeats."
+  }
+ },
+ "summary": {
+  "read": 56,
+  "by_reading_class": {
+   "cosmetic": 18,
+   "semantic": 31,
+   "structural": 7
+  },
+  "by_sql_class": {
+   "aggregate_function": {
+    "cosmetic": 1
+   },
+   "distinct": {
+    "cosmetic": 1,
+    "structural": 6
+   },
+   "group_by": {
+    "cosmetic": 4,
+    "semantic": 2
+   },
+   "join_condition": {
+    "semantic": 5
+   },
+   "limit_or_offset": {
+    "cosmetic": 1,
+    "structural": 1
+   },
+   "order_by_direction_only": {
+    "semantic": 3
+   },
+   "order_by_key": {
+    "cosmetic": 6,
+    "semantic": 2
+   },
+   "projection": {
+    "semantic": 8
+   },
+   "where": {
+    "cosmetic": 4,
+    "semantic": 4
+   },
+   "whole_rewrite": {
+    "cosmetic": 1,
+    "semantic": 7
+   }
+  }
+ }
+}
