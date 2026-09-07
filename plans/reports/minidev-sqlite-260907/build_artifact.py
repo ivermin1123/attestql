@@ -106,6 +106,42 @@ for name in (
     "gold-only-hf.json",
 ):
     write(HERE / name, sanitized(json.loads((OUT / name).read_text())))
+# The lists the report points at instead of printing: which questions each gold-only probe
+# fired on, per copy, and which questions differ between the two engines, per class. The
+# report states the counts and links here for the ids.
+aggregate = json.loads((OUT / "aggregate.json").read_text())
+moves = aggregate["smells_against_postgresql"]["hf"]["moves"]
+by_question = {row["question_id"]: row for row in moves}
+CLASSES: dict[str, list[int]] = {
+    "float_aggregate_order_never_arises": [955, 1340, 1361, 1380, 1410, 1473, 1529, 1531],
+    "the_shuffled_copies_no_longer_move_the_answer": [94, 751, 1482, 671],
+    "the_sqlite_gold_leaves_null_placement_to_the_engine": [736, 766, 794, 906],
+    "the_translation_says_something_else": [37, 1168, 1209],
+}
+if sorted(q for ids in CLASSES.values() for q in ids) != sorted(by_question):
+    raise SystemExit(
+        "every question the comparison found must sit in exactly one class: "
+        f"{sorted(by_question)} against {sorted(q for ids in CLASSES.values() for q in ids)}"
+    )
+write(
+    HERE / "differences.json",
+    {
+        "reading": (
+            "The ids behind the counts the report states. gold_only_by_probe is which questions "
+            "each probe fired on, per copy of the question set, on SQLite; against_postgresql is "
+            "the questions whose gold-only probes differ between the two engines over the Hugging "
+            "Face copy, grouped by the class the report's table names, each with the probes that "
+            "fired on either engine."
+        ),
+        "gold_only_by_probe": {
+            gold: aggregate["gold_only"][gold]["by_probe"] for gold in ("zip", "hf")
+        },
+        "gold_only_delta_zip_to_hf": aggregate["gold_only"]["delta_zip_to_hf"],
+        "against_postgresql": {
+            name: [by_question[qid] for qid in ids] for name, ids in CLASSES.items()
+        },
+    },
+)
 for gold, model, qid in EXAMPLES:
     target = HERE / "examples" / f"{gold}-{model}-q{qid}"
     target.mkdir(parents=True, exist_ok=True)
