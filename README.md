@@ -206,6 +206,8 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   sqlglot's SQLite dialect rather than the engine's own grammar. The sandbox in
   `tools/audit-sandbox-sqlite/` runs in the gate, with every probe asked there on a statement that
   fires it and one that keeps it quiet, and Mini-Dev has now been measured on SQLite as well.
+  Extension loading is never enabled on the connection, so a statement that calls
+  `load_extension` is refused by the engine when it runs and loads nothing.
 - It proves nothing about correctness, security, or production use. It runs as the role you give
   it; give it a read-only one.
 - Its parser is PostgreSQL 17's grammar (`libpg_query`), so a statement that only PostgreSQL 17
