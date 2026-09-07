@@ -20,6 +20,7 @@ from attestql.audit.backend import (
     BackendRefused,
     ReadBackDrift,
     ShuffledCopies,
+    StatementTimedOut,
     TextCensus,
 )
 from attestql.audit.compare import (
@@ -65,6 +66,7 @@ __all__ = [
     "Smell",
     "SmellSettings",
     "StatementRefused",
+    "StatementTimedOut",
     "TestSuiteEx",
     "TextCensus",
     "all_smells",

@@ -100,6 +100,28 @@ class BackendRefused(RuntimeError):
         super().__init__(f"{step}: {detail}")
 
 
+class StatementTimedOut(BackendRefused):
+    """The statement ran past the bound this run put on it, and nothing else refused it.
+
+    Its own type because it is a different finding from every other refusal and the summary
+    counts it apart: a refusal is the database's answer about the statement, and this is the
+    run's own budget running out over one that was still running, which says as much about
+    the bound the operator chose as about the statement. A reader who sees the count on the
+    summary line knows a longer ``--statement-timeout`` would have compared those questions,
+    where a refused statement would have been refused at any bound.
+
+    ``step`` is always ``execute``, because reaching the bound is the statement running, and
+    ``detail`` is the backend's own words unchanged, so the line a reader is shown is what
+    the engine said and no error message moves for this distinction existing. ``seconds`` is
+    the bound that ran out, kept so that whoever reports it need not read it back out of a
+    message an engine wrote.
+    """
+
+    def __init__(self, seconds: int, detail: str) -> None:
+        self.seconds = seconds
+        super().__init__("execute", detail)
+
+
 class ReadBackDrift(BackendRefused):
     """The session did not hold what the executor set on it.
 
@@ -422,6 +444,7 @@ __all__ = [
     "PlannerStatistics",
     "ReadBackDrift",
     "ShuffledCopies",
+    "StatementTimedOut",
     "TableLookup",
     "TableName",
     "TextCensus",

@@ -24,7 +24,13 @@ from typing import Any, cast
 
 import pytest
 
-from attestql.audit.backend import BackendRefused, PlannerStatistics, TableName, TextCensus
+from attestql.audit.backend import (
+    BackendRefused,
+    PlannerStatistics,
+    StatementTimedOut,
+    TableName,
+    TextCensus,
+)
 from attestql.audit.cli import (
     MARKER_FILE,
     SMELLS_FILE,
@@ -65,6 +71,7 @@ TWO_ROWS = "SELECT name FROM players LIMIT 2"
 SEASONS = "SELECT year FROM seasons"
 SEALED = "SELECT secret FROM sealed"
 DRIVERS = "SELECT nationality FROM drivers"
+DRIVERS_ORDERED = "SELECT nationality FROM drivers ORDER BY nationality ASC"
 BARE_SELECT = "SELECT"
 
 NATIONALITY = (("nationality", "text"),)
@@ -213,7 +220,9 @@ def test_a_gold_only_run_with_nothing_to_report_writes_no_directory(tmp_path: Pa
     lines = Lines()
     summary = run_audit(options(tmp_path), _quiet_backend(), lines)
     assert lines.written[0] == "q207  toxicology  R-SET  GOLD-ONLY  smells=none"
-    assert lines.written[1] == "1 questions: 0 NOT_EQUAL, 0 smells fired"
+    assert lines.written[1] == (
+        "1 questions: 0 NOT_EQUAL, 0 smells fired, 0 timed out (0 gold, 0 prediction)"
+    )
     assert summary.exit_status == 0
     assert not (tmp_path / "audit" / "q207").exists()
     written = summary_of(tmp_path)
@@ -222,6 +231,9 @@ def test_a_gold_only_run_with_nothing_to_report_writes_no_directory(tmp_path: Pa
     assert written["data_as_of_source"] == "the instant the run started"
     assert written["fixture"]["row_counts"] == {"atom": 2}
     assert written["shuffle"]["prepared"] is True
+    assert written["timed_out"] == {"gold": [], "prediction": []}, (
+        "the bound was in force over the one statement this run sent, and nothing reached it"
+    )
 
 
 def test_the_summary_states_the_planner_statistics_the_run_s_plans_were_chosen_from(
@@ -387,7 +399,7 @@ def test_the_line_of_a_disagreement_is_the_one_the_adr_writes_down(
     )
     assert lines.written[1] == (
         "1 questions: 1 NOT_EQUAL, 1 smells fired, 0 credited by BIRD but NOT_EQUAL "
-        "(0 multiplicity, 0 type, 0 order, 0 truncation)"
+        "(0 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)"
     )
     # Both records of a comparison are built from one session and one fixture, so no run
     # reaches NOT_COMPARABLE and the line does not count what cannot happen.
@@ -789,7 +801,7 @@ def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism
 
     assert lines.written[1] == (
         "1 questions: 1 NOT_EQUAL, 0 smells fired, 1 credited by BIRD but NOT_EQUAL "
-        "(1 multiplicity, 0 type, 0 order, 0 truncation)"
+        "(1 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)"
     )
     assert summary.credited_but_not_equal is not None
     assert summary.credited_but_not_equal.total == 1
@@ -846,6 +858,76 @@ def test_a_statement_the_backend_refuses_is_recorded_and_the_run_goes_on(
     assert summary.errors[0].step == "execute"
     assert summary.exit_status == 0
     assert summary_of(tmp_path)["errors"][0]["question_id"] == 1
+
+
+PAST_THE_BOUND = "execute: the statement ran past its 30s timeout"
+"""The step and the message a statement the bound stopped reaches the line under, in the
+words the SQLite backend writes; PostgreSQL writes the server's own. Neither moves for the
+count below: what the summary counts it by is the type the backend raised."""
+
+
+class BackendPastItsBound(FakeBackend):
+    """A backend whose bound runs out on the statements a test names, and on no other."""
+
+    def __init__(self, past_the_bound: tuple[str, ...], **stated: Any) -> None:
+        super().__init__(**stated)
+        self._past_the_bound = set(past_the_bound)
+
+    def execute(self, sql: str, *, statement_timeout_seconds: int) -> ExecutionResult:
+        if sql in self._past_the_bound:
+            raise StatementTimedOut(
+                statement_timeout_seconds,
+                f"the statement ran past its {statement_timeout_seconds}s timeout",
+            )
+        return super().execute(sql, statement_timeout_seconds=statement_timeout_seconds)
+
+
+def test_a_statement_the_bound_stopped_is_counted_under_the_side_that_ran_it(
+    tmp_path: Path,
+) -> None:
+    """A benchmark whose golds do not finish in the time given and one whose predictions do
+    not are two findings, so the count is kept by side the way the error line is. Both are
+    still error lines with the engine's own message: what a longer bound would have changed
+    is which questions were compared, and that is what the last line now states."""
+    write(
+        tmp_path / "questions.json",
+        [
+            question(1, "formula_1", SEASONS),
+            question(207, "toxicology", ELEMENTS),
+            question(3, "formula_1", DRIVERS),
+        ],
+    )
+    write(
+        tmp_path / "predictions.json",
+        {"1": SEASONS, "207": DISTINCT_ELEMENTS, "3": DRIVERS_ORDERED},
+    )
+    backend = BackendPastItsBound(
+        (SEASONS, DISTINCT_ELEMENTS),
+        results={
+            ELEMENTS: fake_result(ELEMENT, (("c",), ("o",))),
+            DRIVERS: fake_result(NATIONALITY, (("Italian",), ("Kenyan",))),
+            DRIVERS_ORDERED: fake_result(NATIONALITY, (("Italian",), ("Kenyan",))),
+        },
+        row_counts={"atom": 2, "drivers": 2, "seasons": 0},
+    )
+    lines = Lines()
+    summary = run_audit(
+        options(tmp_path, predictions=tmp_path / "predictions.json"), backend, lines
+    )
+    written = summary_of(tmp_path)
+
+    assert f"gold: {PAST_THE_BOUND}" in lines.written[0]
+    assert f"prediction: {PAST_THE_BOUND}" in lines.written[1]
+    assert summary.timed_out == {"gold": (1,), "prediction": (207,)}
+    assert summary.timed_out_total == 2
+    assert lines.written[-1].endswith(", 2 timed out (1 gold, 1 prediction)")
+    assert written["timed_out"] == {"gold": [1], "prediction": [207]}
+    assert written["errors"] == [
+        {"question_id": 1, "side": "gold", "step": "execute", "message": PAST_THE_BOUND},
+        {"question_id": 207, "side": "prediction", "step": "execute", "message": PAST_THE_BOUND},
+    ], "a question the bound stopped is an error line like any other, and says so twice"
+    assert summary.verdicts == {"ERROR": 2, "EQUAL": 1}
+    assert summary.exit_status == 0, "the question that was compared decided it alone"
 
 
 class LinesThatTakeTheServerAway(Lines):
