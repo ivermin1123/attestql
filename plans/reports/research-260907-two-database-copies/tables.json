@@ -1,0 +1,233 @@
+{
+ "reading": "All 22 database files were digested. Six pairs are byte-identical and the five named pairs differ; every table of each differing pair is counted on both copies.",
+ "databases": {
+  "california_schools": {
+   "sha256_dev": "986817d793479801ed55133e55aa27e335422c0cd3866b54a3d6317b7c5f09c1",
+   "sha256_minidev": "c0903eec662e63068fd1d14403d3d6c1d473287fc10c4356333ea58f878db983",
+   "identical": false,
+   "tables": {
+    "frpm": {
+     "dev": 9986,
+     "minidev": 9986
+    },
+    "satscores": {
+     "dev": 2269,
+     "minidev": 2269
+    },
+    "schools": {
+     "dev": 17686,
+     "minidev": 17686
+    }
+   }
+  },
+  "card_games": {
+   "sha256_dev": "c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227",
+   "sha256_minidev": "c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227",
+   "identical": true
+  },
+  "codebase_community": {
+   "sha256_dev": "92101be6d2a9f6adceea59d38f6d1c556087f9eea1432432a21268cb1348036d",
+   "sha256_minidev": "92101be6d2a9f6adceea59d38f6d1c556087f9eea1432432a21268cb1348036d",
+   "identical": true
+  },
+  "debit_card_specializing": {
+   "sha256_dev": "b3d149ad05746dbbe5116e229e17e18f09c39db43cf117d9ef3441753608b691",
+   "sha256_minidev": "b3d149ad05746dbbe5116e229e17e18f09c39db43cf117d9ef3441753608b691",
+   "identical": true
+  },
+  "european_football_2": {
+   "sha256_dev": "e4d361dbeec6591a4b315877c0c481da05c8ff5a3d389b34d6e17b6f15bee4e0",
+   "sha256_minidev": "f72f5c9b990371417288a67b27a02e601ef904d45525c2c9f7931fb01001c536",
+   "identical": false,
+   "tables": {
+    "Country": {
+     "dev": 11,
+     "minidev": 11
+    },
+    "League": {
+     "dev": 11,
+     "minidev": 11
+    },
+    "Match": {
+     "dev": 25979,
+     "minidev": 25979
+    },
+    "Player": {
+     "dev": 11060,
+     "minidev": 11060
+    },
+    "Player_Attributes": {
+     "dev": 183978,
+     "minidev": 183978
+    },
+    "Team": {
+     "dev": 299,
+     "minidev": 299
+    },
+    "Team_Attributes": {
+     "dev": 1458,
+     "minidev": 1458
+    },
+    "sqlite_sequence": {
+     "dev": 7,
+     "minidev": 7
+    }
+   }
+  },
+  "financial": {
+   "sha256_dev": "d15d89cdb068a202b6f2b99342af44dffc1d52545b39ceaf62efdc0ba570101e",
+   "sha256_minidev": "d15d89cdb068a202b6f2b99342af44dffc1d52545b39ceaf62efdc0ba570101e",
+   "identical": true
+  },
+  "formula_1": {
+   "sha256_dev": "17185981cd747f6cdc374cb02a6096db3130e6ec2ddc582fe1686a28fb4c4c8a",
+   "sha256_minidev": "79770caf966707e35516fa566e24b40ae515c74ec1ec4631235245645b87b24d",
+   "identical": false,
+   "tables": {
+    "circuits": {
+     "dev": 72,
+     "minidev": 72
+    },
+    "constructorResults": {
+     "dev": 11082,
+     "minidev": 11082
+    },
+    "constructorStandings": {
+     "dev": 11836,
+     "minidev": 11836
+    },
+    "constructors": {
+     "dev": 208,
+     "minidev": 208
+    },
+    "driverStandings": {
+     "dev": 31578,
+     "minidev": 31578
+    },
+    "drivers": {
+     "dev": 840,
+     "minidev": 840
+    },
+    "lapTimes": {
+     "dev": 420369,
+     "minidev": 400524
+    },
+    "pitStops": {
+     "dev": 6070,
+     "minidev": 5815
+    },
+    "qualifying": {
+     "dev": 7397,
+     "minidev": 6967
+    },
+    "races": {
+     "dev": 976,
+     "minidev": 954
+    },
+    "results": {
+     "dev": 23657,
+     "minidev": 23179
+    },
+    "seasons": {
+     "dev": 68,
+     "minidev": 68
+    },
+    "sqlite_sequence": {
+     "dev": 10,
+     "minidev": 10
+    },
+    "status": {
+     "dev": 134,
+     "minidev": 134
+    }
+   }
+  },
+  "student_club": {
+   "sha256_dev": "eb89bcfe97eefa386a27904ec5aa15159811a7eac894ec659a36e48fa9f76b77",
+   "sha256_minidev": "eb89bcfe97eefa386a27904ec5aa15159811a7eac894ec659a36e48fa9f76b77",
+   "identical": true
+  },
+  "superhero": {
+   "sha256_dev": "75e94a2c3236ee3bb2c01fb97a1c4b4c1c269bcefd4eab1d04be323d2d0825b1",
+   "sha256_minidev": "75e94a2c3236ee3bb2c01fb97a1c4b4c1c269bcefd4eab1d04be323d2d0825b1",
+   "identical": true
+  },
+  "thrombosis_prediction": {
+   "sha256_dev": "e7e16d74b4731b4b8d33fdbe8c29cd5622620788ce8d1f335631f65fc7cf1db9",
+   "sha256_minidev": "87583183c3dc472fba04de702965560a9d7c0a548836613f242317e0eeb83f00",
+   "identical": false,
+   "tables": {
+    "Examination": {
+     "dev": 806,
+     "minidev": 106
+    },
+    "Laboratory": {
+     "dev": 13908,
+     "minidev": 13908
+    },
+    "Patient": {
+     "dev": 1238,
+     "minidev": 1238
+    }
+   }
+  },
+  "toxicology": {
+   "sha256_dev": "f5fa7f21af1ad878ff8fef1b0582b8cb2d7ed63dbac65ff16d2ba05667650c5b",
+   "sha256_minidev": "35ef27ae6bdfda530e125ed369666ac0abb8bc8c0bcc0ad09407f547ecb61a93",
+   "identical": false,
+   "tables": {
+    "atom": {
+     "dev": 12333,
+     "minidev": 9111
+    },
+    "bond": {
+     "dev": 12379,
+     "minidev": 9156
+    },
+    "connected": {
+     "dev": 24758,
+     "minidev": 18312
+    },
+    "molecule": {
+     "dev": 343,
+     "minidev": 343
+    }
+   }
+  }
+ },
+ "identical": [
+  "card_games",
+  "codebase_community",
+  "debit_card_specializing",
+  "financial",
+  "student_club",
+  "superhero"
+ ],
+ "different": [
+  "california_schools",
+  "european_football_2",
+  "formula_1",
+  "thrombosis_prediction",
+  "toxicology"
+ ],
+ "gold_sets": {
+  "dev-20240627": {
+   "path": "/Users/hoangle/.cache/attestql-measure/l2/data/dev/dev_20240627/dev.json",
+   "sha256": "630272f2b1c44d8cef2c3b246f623355cf0bbc1e832c81061df895530dfc2f06",
+   "entries": 1534,
+   "on_differing_databases": 700
+  },
+  "dev-20251106": {
+   "path": "/Users/hoangle/.cache/attestql-measure/l2/data/hf/dev_20251106-00000-of-00001.json",
+   "sha256": "ffd8018378ddb1a8794753e0a31cfc81862ff7318a5184c22f3dc4ce03a03feb",
+   "entries": 1534,
+   "on_differing_databases": 700
+  },
+  "minidev-hf": {
+   "path": "/Users/hoangle/.cache/attestql-measure/l2/data/hf/mini_dev_sqlite-00000-of-00001.json",
+   "sha256": "88ceb0710163cae46a256ecea8f0a8c98286599530b60587fda5c3cfe57d45d2",
+   "entries": 500,
+   "on_differing_databases": 237
+  }
+ }
+}
