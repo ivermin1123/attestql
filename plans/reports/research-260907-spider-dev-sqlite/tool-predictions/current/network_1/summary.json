@@ -1,0 +1,190 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-5a15cc9f-6970-425c-9a6f-0900f6a5fa12",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/l4/data/spider/spider_data/database/network_1/network_1.sqlite | size=28672",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "delete",
+   "data_version": "1",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/questions-current.json",
+  "digest": "sha256:a27e1f404c28a4aacc9933cf5197afa6ee2cc3eb0cfd3be949e354f57cb4f91e",
+  "origin": "https://drive.google.com/file/d/1403EGqzIDoHMdQF4c9Bkyl7dZLZ5Wt6J/view (spider_data.zip sha256 00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b, CC BY-SA 4.0), member spider_data/dev.json",
+  "date": "2020-08-03",
+  "entries": 1034,
+  "audited": 56,
+  "duplicate_ids": [],
+  "ids": [
+   862,
+   863,
+   864,
+   865,
+   866,
+   867,
+   868,
+   869,
+   870,
+   871,
+   872,
+   873,
+   874,
+   875,
+   876,
+   877,
+   878,
+   879,
+   880,
+   881,
+   882,
+   883,
+   884,
+   885,
+   886,
+   887,
+   888,
+   889,
+   890,
+   891,
+   892,
+   893,
+   894,
+   895,
+   896,
+   897,
+   898,
+   899,
+   900,
+   901,
+   902,
+   903,
+   904,
+   905,
+   906,
+   907,
+   908,
+   909,
+   910,
+   911,
+   912,
+   913,
+   914,
+   915,
+   916,
+   917
+  ]
+ },
+ "predictions": {
+  "path": "data/predictions-codes.json",
+  "digest": "sha256:6772038e43f83b8a9202d8b92dd91ddbe97566e7257e5a534c0d81a359220f69",
+  "origin": "https://github.com/RUCKBReasoning/codes/blob/e203386173eecf6fbe8b14cf233611a2fb7c994e/results/pred_sqls-codes-1b-spider.txt (Apache-2.0, sha256 913576f655c6ca9a00762c83acf05234006fae164826e9577cbd1373d07274d2)",
+  "date": "2024-08-21",
+  "keyed_by": "question-id",
+  "statements": 1034,
+  "positions_unused": []
+ },
+ "verdicts": {
+  "EQUAL": 43,
+  "NOT_EQUAL": 13
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 4,
+  "not-a-function-of-the-data": 2,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 6,
+ "credited_but_not_equal": {
+  "total": 1,
+  "by_mechanism": {
+   "multiplicity": 1,
+   "type": 0,
+   "order": 0,
+   "truncation": 0,
+   "other": 0
+  },
+  "by_test_suite_ex": {
+   "1": 0,
+   "0": 1
+  }
+ },
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool-predictions/current/network_1/fixture.json",
+  "source": {
+   "path": "data/spider/spider_data/database/network_1/network_1.sqlite",
+   "digest": "sha256:bec92cd9a68d6f23469a0df246429299f44caaf75eab12275784e0bb7d0aa9ca",
+   "origin": "https://drive.google.com/file/d/1403EGqzIDoHMdQF4c9Bkyl7dZLZ5Wt6J/view (spider_data.zip sha256 00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b, CC BY-SA 4.0), member spider_data/database/network_1/network_1.sqlite",
+   "date": "2018-09-24"
+  },
+  "schema_digest": "sha256:cc67d50bab82aae61a806af4a2ae89acd93a059e5de62abd3bb4ce5cf937d797",
+  "row_counts": {
+   "main.Friend": 20,
+   "main.Highschooler": 16,
+   "main.Likes": 10
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "Highschooler",
+   "Friend",
+   "Likes"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "temp",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "Friend",
+   "Highschooler",
+   "Likes"
+  ],
+  "skipped": {},
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool-predictions/current/network_1",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T13:04:44.326299+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.001,
+  "questions": 0.054,
+  "shuffle": 0.0
+ },
+ "errors": [],
+ "timed_out": {
+  "gold": [],
+  "prediction": []
+ },
+ "exit_status": 1
+}

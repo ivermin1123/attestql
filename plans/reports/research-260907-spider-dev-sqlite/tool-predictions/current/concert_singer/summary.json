@@ -1,0 +1,182 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-083e0712-e0f6-49c6-a172-f279b161480a",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/l4/data/spider/spider_data/database/concert_singer/concert_singer.sqlite | size=36864",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "delete",
+   "data_version": "1",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/questions-current.json",
+  "digest": "sha256:a27e1f404c28a4aacc9933cf5197afa6ee2cc3eb0cfd3be949e354f57cb4f91e",
+  "origin": "https://drive.google.com/file/d/1403EGqzIDoHMdQF4c9Bkyl7dZLZ5Wt6J/view (spider_data.zip sha256 00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b, CC BY-SA 4.0), member spider_data/dev.json",
+  "date": "2020-08-03",
+  "entries": 1034,
+  "audited": 45,
+  "duplicate_ids": [],
+  "ids": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44
+  ]
+ },
+ "predictions": {
+  "path": "data/predictions-codes.json",
+  "digest": "sha256:6772038e43f83b8a9202d8b92dd91ddbe97566e7257e5a534c0d81a359220f69",
+  "origin": "https://github.com/RUCKBReasoning/codes/blob/e203386173eecf6fbe8b14cf233611a2fb7c994e/results/pred_sqls-codes-1b-spider.txt (Apache-2.0, sha256 913576f655c6ca9a00762c83acf05234006fae164826e9577cbd1373d07274d2)",
+  "date": "2024-08-21",
+  "keyed_by": "question-id",
+  "statements": 1034,
+  "positions_unused": []
+ },
+ "verdicts": {
+  "EQUAL": 41,
+  "NOT_EQUAL": 4
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 2,
+  "not-a-function-of-the-data": 0,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 2,
+ "credited_but_not_equal": {
+  "total": 0,
+  "by_mechanism": {
+   "multiplicity": 0,
+   "type": 0,
+   "order": 0,
+   "truncation": 0,
+   "other": 0
+  },
+  "by_test_suite_ex": {
+   "1": 0,
+   "0": 0
+  }
+ },
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool-predictions/current/concert_singer/fixture.json",
+  "source": {
+   "path": "data/spider/spider_data/database/concert_singer/concert_singer.sqlite",
+   "digest": "sha256:4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+   "origin": "https://drive.google.com/file/d/1403EGqzIDoHMdQF4c9Bkyl7dZLZ5Wt6J/view (spider_data.zip sha256 00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b, CC BY-SA 4.0), member spider_data/database/concert_singer/concert_singer.sqlite",
+   "date": "2018-09-24"
+  },
+  "schema_digest": "sha256:07b13be8de95b939907e6ef69a9cec1306faa7d289accf65c1709addd1122455",
+  "row_counts": {
+   "main.concert": 6,
+   "main.singer": 6,
+   "main.singer_in_concert": 10,
+   "main.stadium": 9
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "singer",
+   "stadium",
+   "concert",
+   "singer_in_concert"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "temp",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "concert",
+   "singer",
+   "singer_in_concert",
+   "stadium"
+  ],
+  "skipped": {},
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool-predictions/current/concert_singer",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T13:04:44.395367+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.001,
+  "questions": 0.037,
+  "shuffle": 0.0
+ },
+ "errors": [],
+ "timed_out": {
+  "gold": [],
+  "prediction": []
+ },
+ "exit_status": 1
+}

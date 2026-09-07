@@ -1,0 +1,289 @@
+{
+ "reading": "A hand reading against the question and shipped data. wrong: the gold does not answer its question on this data. harmless: the detected move is real but every produced answer satisfies the question. rule: only this tool's replay rule cares.",
+ "population": "fires on golds whose SQL Spider did not correct",
+ "population_size": 60,
+ "sample_rule": "every second id in ascending order",
+ "sampled": true,
+ "counts": {
+  "harmless": 6,
+  "wrong": 24
+ },
+ "rows": [
+  {
+   "question_id": 26,
+   "db": "concert_singer",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "2015 and 2014 tie for the most concerts, so the year returned is arbitrary."
+  },
+  {
+   "question_id": 95,
+   "db": "car_1",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "17 car-name rows share minimum horsepower across seven model names, and a shuffle moves the answer from amc to mazda."
+  },
+  {
+   "question_id": 133,
+   "db": "car_1",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "eight car-name rows share maximum mpg across seven model names, and a shuffle moves the answer from citroen to saab."
+  },
+  {
+   "question_id": 165,
+   "db": "car_1",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "five rows share the largest four-cylinder horsepower across three model names."
+  },
+  {
+   "question_id": 229,
+   "db": "flight_2",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "12 airlines tie for the most flights, so the named airline is arbitrary."
+  },
+  {
+   "question_id": 231,
+   "db": "flight_2",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "12 airlines tie for the fewest flights, so the abbreviation returned is arbitrary."
+  },
+  {
+   "question_id": 261,
+   "db": "employee_hire_evaluation",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "harmless",
+   "why": "two employees tied on age swap positions, but the names are still in ascending age order."
+  },
+  {
+   "question_id": 311,
+   "db": "cre_Doc_Template_Mgt",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "templates 25/PP, 14/AD and 11/BK tie for the most documents."
+  },
+  {
+   "question_id": 331,
+   "db": "cre_Doc_Template_Mgt",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "template types PP and BK tie for the most templates."
+  },
+  {
+   "question_id": 375,
+   "db": "cre_Doc_Template_Mgt",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "six documents tie at the least paragraph count, so the returned document id is arbitrary."
+  },
+  {
+   "question_id": 395,
+   "db": "course_teach",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "seven hometowns have one teacher each, so the most common hometown is not decided."
+  },
+  {
+   "question_id": 421,
+   "db": "museum_visit",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "museums 2 and 4 tie for the most visits and carry different names."
+  },
+  {
+   "question_id": 458,
+   "db": "wta_1",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "harmless",
+   "why": "left-handed players tied on birth date can swap, while the result remains ordered by birth date."
+  },
+  {
+   "question_id": 484,
+   "db": "wta_1",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "all three rows name Madison Keys with different ranks, and the third rank moves between 16 and 12 under a shuffle."
+  },
+  {
+   "question_id": 541,
+   "db": "student_transcripts_tracking",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "students 7 and 6 tie at three enrolments, so the row returned is arbitrary."
+  },
+  {
+   "question_id": 547,
+   "db": "student_transcripts_tracking",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "five course codes tie for the most enrolments, so the course name is arbitrary."
+  },
+  {
+   "question_id": 573,
+   "db": "student_transcripts_tracking",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "six transcripts tie at the least result count and carry six dates."
+  },
+  {
+   "question_id": 613,
+   "db": "tvshow",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "harmless",
+   "why": "episodes tied on rating swap positions, but the list is still ordered by rating."
+  },
+  {
+   "question_id": 641,
+   "db": "tvshow",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "grouping tv_channel by country returns one arbitrary channel id per qualifying country, and a shuffle moves 700 to 714."
+  },
+  {
+   "question_id": 695,
+   "db": "voter_1",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "contestants 2 and 5 tie for the fewest votes and have different names."
+  },
+  {
+   "question_id": 740,
+   "db": "world_1",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "five countries tie for the largest language count, so the country name is arbitrary."
+  },
+  {
+   "question_id": 788,
+   "db": "world_1",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "seven countries tie at population zero, so the smallest-population country is arbitrary."
+  },
+  {
+   "question_id": 804,
+   "db": "world_1",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "seven countries tie at population zero and the query cuts that tie to three."
+  },
+  {
+   "question_id": 816,
+   "db": "world_1",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "eight countries tie at a top percentage of 0.0 between two languages each, and the bare max picks one language arbitrarily."
+  },
+  {
+   "question_id": 824,
+   "db": "orchestra",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "harmless",
+   "why": "conductors tied on age swap positions, while the list remains ascending by age."
+  },
+  {
+   "question_id": 828,
+   "db": "orchestra",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "harmless",
+   "why": "orchestras tied on founding year reorder, and the query asks only for a descending year order."
+  },
+  {
+   "question_id": 836,
+   "db": "orchestra",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "harmless",
+   "why": "conductors tied on years of work reorder, while the list remains descending by that key."
+  },
+  {
+   "question_id": 844,
+   "db": "orchestra",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "12 conductors tie at one orchestra each, so the most prolific conductor is arbitrary."
+  },
+  {
+   "question_id": 878,
+   "db": "network_1",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "grades 9 to 12 tie in highschooler count, so the returned grade is arbitrary."
+  },
+  {
+   "question_id": 906,
+   "db": "network_1",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "10 highschooler rows tie at the largest like count across nine names, and a shuffle moves John to Kyle."
+  }
+ ]
+}
