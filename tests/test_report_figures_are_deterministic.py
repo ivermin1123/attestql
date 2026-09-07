@@ -146,6 +146,7 @@ def run_page() -> RunPage:
         verdict_counts=(("EQUAL", 1), ("NOT_EQUAL", 8), ("ERROR", 3), ("GOLD-ONLY", 1)),
         mechanism_counts=(("other", 3), ("order", 2), ("multiplicity", 1), ("truncation", 1)),
         probe_counts=(Fact("arbitrary-cut", "1"), Fact("float-aggregate-order", "0")),
+        probe_fired=(("arbitrary-cut", 1), ("float-aggregate-order", 0)),
         credited=(),
         made_of=(),
         session=(),
@@ -228,6 +229,35 @@ def test_the_slope_chart_draws_one_line_per_row_of_a_known_counterexample() -> N
     assert len(lines) == len(MOVED)
     assert moved == sum(1 for place, value in enumerate(MOVED, start=1) if value != place)
     assert "9 are somewhere else in the prediction" in figure.alternative
+
+
+def test_the_slope_chart_says_which_rows_the_prediction_does_not_hold() -> None:
+    """A row that is nowhere in the second result is drawn as an absence and named as one.
+
+    The drawing marks it "not in the prediction"; the sentence under the drawing has to
+    say so too, or the figure is the only carrier of the fact. Three rows of the gold
+    against one row of the prediction: one moved and two are not there.
+    """
+    figure = question_figure(page("order", (1, 2, 3), (2,)))
+
+    assert figure is not None
+    assert "1 is somewhere else in the prediction" in figure.alternative
+    assert "2 are not in the prediction at all" in figure.alternative
+    assert figure.svg.count("not in the prediction") == 2
+
+
+def test_a_slope_chart_of_rows_the_prediction_holds_none_of_says_so() -> None:
+    """The end of the same rule: nothing to draw a line to, and a sentence that says it.
+
+    Without this, the empty ``moved`` list read as "the same places in the prediction"
+    over three marks stating the opposite.
+    """
+    figure = question_figure(page("order", (1, 2, 3), ()))
+
+    assert figure is not None
+    assert figure.alternative == "None of the first 3 rows of the gold, of 3, is in the prediction."
+    assert figure.svg.count("not in the prediction") == 3
+    assert "figure__line--moved" not in figure.svg
 
 
 def test_the_class_the_table_already_states_gets_no_figure() -> None:

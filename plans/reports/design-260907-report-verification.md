@@ -97,12 +97,13 @@ which is the perceptibility the spec asks of them and is asserted separately.
 takes the gold tint as its fill instead, which is 4.58:1. The rule and the reason are in the
 stylesheet beside the declaration.
 
-**One spec value moved.** The dark tints of `design-spec.md` are `#2e2416` and `#16252b`, which
-are 1.21:1 and 1.17:1 against the dark paper; the light pair is 1.29 and 1.30, and a tint under
-about 1.2:1 marks nothing a reader sees. They are `#352a19` and `#1b2e35` in `report.css`, the
-same hues lifted to 1.31:1, with every text pair on them recomputed above 5.7:1. Moved together
-with the test that holds them there, per the plan's constraint. `design-spec.md` is not in this
-phase's edit list, so its table still states the old pair: that is an owner edit.
+**One spec value moved.** The dark tints the spec first fixed were `#2e2416` and `#16252b`,
+which are 1.21:1 and 1.17:1 against the dark paper; the light pair is 1.29 and 1.30, and a tint
+under about 1.2:1 marks nothing a reader sees. They are `#352a19` and `#1b2e35` in `report.css`,
+the same hues lifted to 1.31:1, with every text pair on them recomputed above 5.7:1. Moved
+together with the test that holds them there, per the plan's constraint, and `design-spec.md`
+was brought to the same pair in review (2026-09-07), with the reason and the numbers in the
+paragraph under its colour table.
 
 ### Line length
 
@@ -274,6 +275,49 @@ not from memory.
 | z-index collisions | one `z-index` in the file, on the strip |
 | mobile safe-area insets | **not covered.** The gutter is a fixed 16px at 360 and does not add `env(safe-area-inset-*)`. On a notched phone in landscape the gutter would sit under the inset. Recorded |
 | print appearance | rendered to PDF and read |
+
+## The defect this phase's own pass missed, found in review
+
+One defect reached the commits and was found by the coordinator's review rather than by the
+pass above, so it is recorded separately: the pass measured whether a page overflowed and
+never measured whether two elements on it lined up.
+
+**The sticky strip started one gutter left of the prose under it.** Measured in Chromium on
+the stress report, before the repair: `.strip__title` left against the first `.page h2` left,
+32 against 64 at 1280, 112 against 144 at 1440, 384 against 416 at 1920. It is visible on the
+`order-1280-light.png` and `multiplicity-1280-light.png` of the first pass. The cause is that
+`.strip > *` took `width: min(100%, var(--content))` while `.page` takes that same width with
+the gutter as padding inside its border box, so once `--content` binds the two content boxes
+differ by one gutter on each side; below 1280 nothing binds and the two agree, which is why
+the earlier renders at 360 and 768 showed nothing.
+
+The repair is `width: min(100%, calc(var(--content) - 2 * var(--gutter)))` on `.strip > *`.
+Applying it moved the title and left the two lines under it where they were, because
+`.strip__facts` and `.strip__set` restate `margin` as a shorthand and dropped the auto inline
+margins that do the centring; that half was found by measuring all three children rather than
+the title alone. Both were repaired: the two rules keep their auto inline margins, and
+`.strip__set` no longer clamps itself to the 66ch prose measure, which would otherwise have
+centred a 634px line inside a 1152px box and started it 319px right of the title at 1280.
+
+Measured again after the repair, on the run page and on the order and multiplicity question
+pages, at five widths, reading `getBoundingClientRect().left` off each of the strip's three
+children and off the first heading of the page under them:
+
+| Width | Title | Chips | Set line | First `h2` | Page overflow |
+| --- | --- | --- | --- | --- | --- |
+| 360 | 16 | 16 | 16 | 16 | none |
+| 768 | 24 | 24 | 24 | 24 | none |
+| 1280 | 64 | 64 | 64 | 64 | none |
+| 1440 | 144 | 144 | 144 | 144 | none |
+| 1920 | 384 | 384 | 384 | 384 | none |
+
+`--content` also gained the comment it lacked: 1216 is on no scale of the spec, and it is
+1280 less the two 32px gutters that breakpoint fixes, which is the width the widest
+breakpoint is designed at.
+
+`run-1280-light.png`, `order-1280-light.png`, `multiplicity-1280-light.png`, their dark pairs
+and the 768 pair for the order page were re-shot after the repair and are the ones in this
+directory. The 768 pair shows no change, and was re-shot for the record.
 
 ## Acceptance
 

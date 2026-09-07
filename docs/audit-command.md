@@ -259,9 +259,9 @@ compares. A record whose bytes changed after the audit wrote it says so on the p
 
 Where a table cannot say the thing, the page draws it: an SVG built in Python from the same
 numbers the tables state, with its data source in its `<title>` and the same numbers in words
-under it. The run page draws its verdicts and its probes; a question drawn only where its class
-has a shape, which is the rows that moved, the rows one result holds more of, and the result that
-is the first rows of the other.
+under it. The run page draws its verdicts and its probes; a question is drawn only where its
+class has a shape, which is the rows that moved, the rows one result holds more of, and the
+result that is the first rows of the other.
 
 The pages print. The sticky line at the top becomes an ordinary heading, every disclosure opens
 so paper holds what the screen would have held after you opened them all, every link prints where

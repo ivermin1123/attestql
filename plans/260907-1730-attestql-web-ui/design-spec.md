@@ -22,8 +22,8 @@ against these values, so the values may move, but only together with the test.
 | `--rule` | `#DAD7CF` | `#33312C` | borders, table rules |
 | `--accent` | `#1F5F7A` | `#7FB6CF` | links, focus ring, the one emphasis |
 | `--warn` | `#9A4B00` | `#E8A24C` | NOT_EQUAL, a fired probe, a timed-out or errored side |
-| `--gold-tint` | `#F3DBA6` | `#2E2416` | rows in gold, not in second |
-| `--second-tint` | `#CCDFEA` | `#16252B` | rows in second, not in gold |
+| `--gold-tint` | `#F3DBA6` | `#352A19` | rows in gold, not in second |
+| `--second-tint` | `#CCDFEA` | `#1B2E35` | rows in second, not in gold |
 | `--null` | `--ink-2` on a dotted underline | same | a NULL cell, a state not a string |
 
 Rules: `--accent` is the only colour that says "look here". `--warn` marks a state, never a
@@ -31,8 +31,10 @@ judgement, and is always paired with a word. No green anywhere. The two tints ne
 without their label column ("gold" or "second") and their glyph (a left-pointing and a
 right-pointing triangle), so the difference survives grayscale and colour blindness. The light
 tints sit at 1.29:1 and 1.30:1 against the paper, perceptible; every text colour on them stays
-above 4.5:1, the tightest being `--warn` at 4.58:1 and 4.53:1 (computed 2026-09-07). Chips
-carry a fill, not only a `--rule` border.
+above 4.5:1, the tightest being `--warn` at 4.58:1 and 4.53:1 (computed 2026-09-07). The dark
+tints were deepened on 2026-09-07 from #2E2416 and #16252B, which sat at 1.21:1 and 1.17:1
+against the dark paper, to 1.31:1; every text colour on them stays above 5.7:1, computed by
+tests/test_report_tokens_meet_contrast.py. Chips carry a fill, not only a `--rule` border.
 
 ## Typography
 
