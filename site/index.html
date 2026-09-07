@@ -27,34 +27,35 @@
 
 <p>You have a text-to-SQL prediction file and a benchmark that scored it. Run one command and get, per question, whether the prediction and the gold disagree on the shipped data, the rows that differ, and what the benchmark's own scorer would have said: for a question scored 0, the rows that decided it, and for one scored 1, whether a comparison that keeps duplicates, order and types agrees with the set comparison that credited it.</p>
 
-<pre>attestql audit --engine sqlite --dsn sandbox/fixture.sqlite \
-    --questions tools/audit-sandbox-sqlite/questions.json \
-    --predictions tools/audit-sandbox-sqlite/predictions.json --out audit</pre>
+<pre>uv tool install attestql        # or: pip install attestql
+attestql demo --out demo</pre>
 
-<p>That run is the repository's own sandbox: the three BIRD Mini-Dev golds that upstream reports found wrong (q1029, q879, q207) on a fixture of a few rows, each paired with a corrected statement as its prediction, plus three synthetic questions. Its output, unedited:</p>
+<p>The second command runs the sandbox the package carries: the three BIRD Mini-Dev golds that upstream reports found wrong (q1029, q879, q207) on a fixture of a few rows, each paired with a corrected statement as its prediction, plus three synthetic questions. It writes the fixture, the question file and the prediction file into <code>demo/</code>, audits them into <code>demo/audit/</code>, and ends with the plain <code>attestql audit</code> command that made the run. Its output, unedited:</p>
 
-<pre>q1029 european_football_2 R-ORD  NOT_EQUAL  smells=none  audit/q1029/
-q879  formula_1   R-ORD  NOT_EQUAL  smells=ordering-over-numeric-text  audit/q879/
-q207  toxicology  R-SET  NOT_EQUAL  smells=none  audit/q207/
-q900001 synthetic   R-ORD  GOLD-ONLY  smells=not-a-function-of-the-data  audit/q900001/
-q900002 synthetic   R-ORD  GOLD-ONLY  smells=arbitrary-cut,not-a-function-of-the-data  audit/q900002/
-q900005 synthetic   R-ORD  EQUAL      smells=ordering-over-numeric-text  audit/q900005/
-6 questions: 3 NOT_EQUAL, 5 smells fired, 0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)</pre>
+<pre>q1029 european_football_2 R-ORD  NOT_EQUAL  smells=none  demo/audit/q1029/
+q879  formula_1   R-ORD  NOT_EQUAL  smells=ordering-over-numeric-text  demo/audit/q879/
+q207  toxicology  R-SET  NOT_EQUAL  smells=none  demo/audit/q207/
+q900001 synthetic   R-ORD  GOLD-ONLY  smells=not-a-function-of-the-data  demo/audit/q900001/
+q900002 synthetic   R-ORD  GOLD-ONLY  smells=arbitrary-cut,not-a-function-of-the-data  demo/audit/q900002/
+q900005 synthetic   R-ORD  EQUAL      smells=ordering-over-numeric-text  demo/audit/q900005/
+6 questions: 3 NOT_EQUAL, 5 smells fired, 0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)
+rerun: attestql audit --engine sqlite --dsn demo/fixture.sqlite --questions demo/questions.json --predictions demo/predictions.json --out demo/audit</pre>
 
-<p>Every <code>NOT_EQUAL</code> line has a directory. <code>audit/q879/counterexample.json</code> says why that one disagrees, trimmed here to the fields a reader opens first:</p>
+<p>Every <code>NOT_EQUAL</code> line has a directory. <code>demo/audit/q879/counterexample.json</code> says why that one disagrees, trimmed here to the fields a reader opens first:</p>
 
 <pre>"gold":   "... ORDER BY T2.fastestLapSpeed DESC LIMIT 1"                -&gt; "Norwegian"
 "second": "... ORDER BY CAST(T2.fastestLapSpeed AS REAL) DESC LIMIT 1"  -&gt; "Peruvian"
 "bird_ex": {"value": 0, "method": "set(second_rows) == set(gold_rows), ..."}
 "differing_rows": {"in_gold_not_in_second": [["Norwegian"]], "in_second_not_in_gold": [["Peruvian"]]}</pre>
 
-<p>and <code>audit/q879/smells.json</code> names the mechanism: <code>fastestLapSpeed</code> is a text column holding only numbers, so the gold sorts <code>9.5</code> above <code>10</code> and the fastest lap is not the one it returns. The same directory holds the two evidence records, each with the statement, the role, the engine, the session settings, the result and its hash, and how to run it again.</p>
+<p>and <code>demo/audit/q879/smells.json</code> names the mechanism: <code>fastestLapSpeed</code> is a text column holding only numbers, so the gold sorts <code>9.5</code> above <code>10</code> and the fastest lap is not the one it returns. The same directory holds the two evidence records, each with the statement, the role, the engine, the session settings, the result and its hash, and how to run it again.</p>
 
 <p><strong>NOT_EQUAL never means the gold is wrong.</strong> It means these two statements disagree on this data under this rule; here are the rows; decide.</p>
 
 <h2>Install</h2>
-<p>Python 3.11 or later. SQLite needs nothing else; PostgreSQL 16 needs a server.</p>
-<pre>uv tool install attestql        # or: pip install attestql</pre>
+<p>Python 3.11 or later. SQLite needs nothing else; PostgreSQL 16 needs a server. The demo exits 1, because three golds disagree with their corrections, which is what it is there to show. From a checkout:</p>
+<pre>git clone https://github.com/ivermin1123/attestql &amp;&amp; cd attestql
+uv run attestql demo --out demo</pre>
 
 <h2>Read on</h2>
 <p>The <a href="https://github.com/ivermin1123/attestql#readme">README</a> has the three measurements on BIRD's own files, the six upstream reports and their replies, and how to run the command on your own files. Every number has an owning artifact in the <a href="https://github.com/ivermin1123/attestql/blob/main/docs/claims-register.md">claims register</a>.</p>
