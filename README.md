@@ -63,6 +63,9 @@ BIRD's own prediction files under `llm/exp_result/` are keyed by the position of
 question file rather than by question id, because its evaluation pairs prediction `i` with gold
 line `i`; read one with `--predictions-keyed-by position`, and under the default keying a file of
 that shape is refused rather than paired with whichever questions happen to carry those numbers.
+An entry that is the number `0` or an empty string, which is how BIRD dev's own
+`predict_dev.json` marks a prediction the model did not produce, is that question's error line and
+not a refusal of the file; a question the file does not name at all is audited gold-only.
 `--questions-origin`, `--questions-date`, `--predictions-origin` and `--predictions-date` record
 where each of the two files came from and what date its origin states, beside the sha256 this tool
 computes for it, in `summary.json` and in every evidence record. The data the server holds came

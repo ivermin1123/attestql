@@ -36,6 +36,7 @@ from attestql.audit.cli import (
     SMELLS_FILE,
     SUMMARY_FILE,
     AuditOptions,
+    NoStatement,
     ToolError,
     audit,
     main,
@@ -206,6 +207,38 @@ def test_a_prediction_that_is_not_a_statement_is_refused(tmp_path: Path) -> None
     path = write(tmp_path / "predictions.json", {"879": 12})
     with pytest.raises(ToolError, match="a prediction is SQL"):
         read_predictions(path)
+
+
+def test_an_entry_that_holds_no_statement_is_read_as_one_and_does_not_refuse_the_file(
+    tmp_path: Path,
+) -> None:
+    """BIRD dev's own ``predict_dev.json`` writes the number 0 where the model produced
+    nothing, and an empty string where it produced only the marker it appends. Both are
+    questions the model did not answer and neither is a defect in the file, so the file is
+    read and the two entries carry what they held.
+
+    ``false`` is not the number 0, though Python counts a boolean as one: a file that wrote
+    it wrote something this tool has no reading for, and it is refused with everything else
+    that is not SQL."""
+    path = write(
+        tmp_path / "predictions.json",
+        {
+            "1481": 0,
+            "879": "",
+            "900": "\t----- bird -----\ttoxicology",
+            "207": f"{ELEMENTS}\t----- bird -----\ttoxicology",
+        },
+    )
+
+    assert dict(read_predictions(path)) == {
+        1481: NoStatement("the number 0"),
+        879: NoStatement("an empty string"),
+        900: NoStatement("an empty string"),
+        207: ELEMENTS,
+    }
+    refused = write(tmp_path / "boolean.json", {"879": False})
+    with pytest.raises(ToolError, match="bool and a prediction is SQL"):
+        read_predictions(refused)
 
 
 # gold only
@@ -706,6 +739,68 @@ def test_a_gold_that_projects_no_column_is_that_question_s_error_line(tmp_path: 
         {"question_id": 1, "side": "gold", "step": "statement", "message": NO_COLUMNS}
     ]
     assert summary.exit_status == 0, "an error is not a disagreement"
+
+
+HELD_NOTHING = "the predictions file holds {held} and no statement for this question"
+
+
+def test_a_prediction_entry_that_holds_no_statement_is_that_question_s_error_line(
+    tmp_path: Path,
+) -> None:
+    """The shape of BIRD dev's own ``predict_dev.json``: the number 0 where the model
+    produced nothing, an empty string, and an entry that is the marker it appends and
+    nothing before it. Each of those questions is one error line naming the side the file
+    answers for and what it held there, and the question the file did predict for is
+    compared and decides the status on its own.
+
+    The whole file is not refused for any of them. A prediction file is a run of a model
+    over a benchmark, and a tool that stopped at the first question the model skipped would
+    report nothing about the ones it answered."""
+    write(
+        tmp_path / "questions.json",
+        [
+            question(1481, "toxicology", ELEMENTS_ONE_ROW),
+            question(879, "formula_1", DRIVERS),
+            question(900, "formula_1", SEASONS),
+            question(207, "toxicology", ELEMENTS),
+        ],
+    )
+    write(
+        tmp_path / "predictions.json",
+        {
+            "1481": 0,
+            "879": "",
+            "900": "\t----- bird -----\ttoxicology",
+            "207": DISTINCT_ELEMENTS,
+        },
+    )
+    backend = FakeBackend(
+        {
+            ELEMENTS: fake_result(ELEMENT, (("c",), ("c",), ("o",))),
+            DISTINCT_ELEMENTS: fake_result(ELEMENT, (("c",), ("o",))),
+        },
+        row_counts={"atom": 3},
+    )
+    lines = Lines()
+    summary = run_audit(
+        options(tmp_path, predictions=tmp_path / "predictions.json"), backend, lines
+    )
+    written = summary_of(tmp_path)
+    zero = HELD_NOTHING.format(held="the number 0")
+    empty = HELD_NOTHING.format(held="an empty string")
+
+    assert f"prediction: {zero}" in lines.written[0]
+    assert [f"prediction: {empty}" in line for line in lines.written[1:3]] == [True, True]
+    assert all("ERROR" in line for line in lines.written[:3])
+    assert "NOT_EQUAL" in lines.written[3]
+    assert summary.verdicts == {"ERROR": 3, "NOT_EQUAL": 1}
+    assert written["errors"] == [
+        {"question_id": 1481, "side": "prediction", "step": "statement", "message": zero},
+        {"question_id": 879, "side": "prediction", "step": "statement", "message": empty},
+        {"question_id": 900, "side": "prediction", "step": "statement", "message": empty},
+    ]
+    assert written["predictions"]["statements"] == 4, "every entry of the file was read"
+    assert summary.exit_status == 1, "the question that was compared decided it alone"
 
 
 def test_a_fixture_the_run_cannot_measure_names_the_run_and_not_either_statement(
@@ -1601,6 +1696,31 @@ def test_a_prediction_file_keyed_by_position_is_paired_by_position(tmp_path: Pat
         (tmp_path / "audit" / "q207" / SECOND_RECORD_FILE).read_text(encoding="utf-8")
     )
     assert second["executed_sql"] == ELEMENTS_ONE_ROW, "position 0's prediction was compared"
+
+
+def test_a_position_keyed_entry_that_holds_no_statement_errors_the_question_at_that_position(
+    tmp_path: Path,
+) -> None:
+    """BIRD's own files are keyed by position and are the files that hold the number 0, so
+    the pairing and the reading of an entry that holds nothing have to meet: position 0 is
+    question 207 here, and it is that question's error line rather than the file's."""
+    _duplicated_question_file(tmp_path)
+    write(tmp_path / "preds.json", {"0": 0, "1": TWO_ROWS})
+    lines = Lines()
+    summary = run_audit(
+        options(
+            tmp_path,
+            predictions=tmp_path / "preds.json",
+            predictions_keyed_by="position",
+        ),
+        _two_question_backend(),
+        lines,
+    )
+
+    assert summary.verdicts == {"ERROR": 1, "EQUAL": 1}
+    assert [error.question_id for error in summary.errors] == [207]
+    assert summary.errors[0].side == "prediction"
+    assert "the predictions file holds the number 0" in lines.written[0]
 
 
 def test_a_position_no_entry_of_the_question_file_has_stops_the_run(tmp_path: Path) -> None:
