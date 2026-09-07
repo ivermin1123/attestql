@@ -263,3 +263,31 @@ container `attestql-research-pg` (cổng 5499).
 
 Chưa làm, chờ chủ: gửi draft 5 (chủ đăng); B0', B1', B2 đến B6' do `c5` tiếp tục; drift collation
 giữa hai host chưa đo.
+
+## Review fixes before the merge, 2026-09-07
+
+Ten review findings on `sqlite-backend`, one commit each, `just check` green before every commit
+and the branch pushed after each. Tests before: 807 passed and 30 skipped under `just test`, 30
+under `just sandbox`, 17 under `just sandbox-sqlite`. After: 821 passed and 30 skipped, both
+sandboxes unchanged at 30 and 17. No measurement was rerun and no PostgreSQL number moved.
+
+| Hash | What it did |
+|---|---|
+| `a8ef0bb` | S1: the SQLite file URI percent-escapes the path, so a `?`, `#` or `%` in it no longer ends the filename early and drops `mode=ro`; `urllib.parse` granted to that one module by exact path in the boundary test |
+| `a2c6203` | S2: the two credential refusals on `--dsn` move onto the engine record, so they are asked of PostgreSQL alone and a SQLite path holding `password` or `://` is accepted; the empty value is still refused for either engine |
+| `500997d` | S3: `summary.json` states where the shuffled copies were made, read off a new `Backend.scratch` property (the schema on PostgreSQL, `temp` on SQLite) instead of echoing `--scratch-schema` |
+| `89d13fb` | S4: `prepare_shuffled_copies` asks which names the file holds before counting rows, so one missing table is reported under `NOT_IN_THIS_FILE` and the others are still copied |
+| `98d09e8` | S5: identifiers are folded over the ASCII letters through one helper beside the backend protocol, so `STRASSE` no longer resolves to a column or table named `straße` |
+| `24edc46` | S6: only SQLite's `interrupted` is reported as the statement timeout; every other driver error keeps the engine's own message however far the clock has moved |
+| `9a02004` | S7: whether a declaration is text is the backend's answer, so SQLite applies the affinity rule (CHAR, CLOB, TEXT) and `VARCHAR(50)` fires `ordering-over-numeric-text`; PostgreSQL still matches its three catalogue names whole |
+| `eabcbf1` | S8: a test that `SELECT load_extension(...)` is refused when it runs, and one README sentence saying extension loading is never enabled |
+| `765577b` | S9: the R-ORD and R-SET asymmetry over one pair of numbers recorded as a non-claim and as an ADR-0004 amendment; the README sentence about Mini-Dev q31 names the rule and the rendering |
+| `960cb7b` | S10: version `0.1.3` to `0.2.0` with `uv lock`, because two `feat!` commits behind this branch changed the record layout; no tag cut |
+
+Decisions taken here: `urllib.parse` is permitted in `audit/sqlite.py` alone, with the positive
+test the other exact-path permissions of `tests/test_boundary.py` carry, because the URI is how
+`mode=ro` is stated and `urllib.request` stays forbidden; the `--dsn` rule became a field on
+`Engine` rather than a branch on the engine name in `cli.py`, which that module's own rule forbids;
+`PostgresBackend.scratch_schema` was renamed `scratch` so both engines answer the protocol under
+one name (`connect(scratch_schema=...)` unchanged). Still open, seen while reading and not touched:
+the register's non-claim "Any engine but PostgreSQL" still reads "nothing is built".
