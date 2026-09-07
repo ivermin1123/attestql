@@ -1,0 +1,8825 @@
+{
+ "copies": {
+  "dev": {
+   "databases": {
+    "california_schools": {
+     "audited": 89,
+     "smells": {
+      "ordering-over-numeric-text": 0,
+      "arbitrary-cut": 7,
+      "not-a-function-of-the-data": 4,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:986817d793479801ed55133e55aa27e335422c0cd3866b54a3d6317b7c5f09c1",
+     "run_id": "audit-f7645f0f-5c8c-4d6c-81e9-2b9fba4d705e"
+    },
+    "european_football_2": {
+     "audited": 129,
+     "smells": {
+      "ordering-over-numeric-text": 0,
+      "arbitrary-cut": 8,
+      "not-a-function-of-the-data": 8,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:e4d361dbeec6591a4b315877c0c481da05c8ff5a3d389b34d6e17b6f15bee4e0",
+     "run_id": "audit-555b7934-a5fb-4280-949c-930eae66f2c8"
+    },
+    "formula_1": {
+     "audited": 174,
+     "smells": {
+      "ordering-over-numeric-text": 2,
+      "arbitrary-cut": 5,
+      "not-a-function-of-the-data": 4,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:17185981cd747f6cdc374cb02a6096db3130e6ec2ddc582fe1686a28fb4c4c8a",
+     "run_id": "audit-0c3b12e4-8849-4f5d-ace3-dc28cf5dc5e5"
+    },
+    "thrombosis_prediction": {
+     "audited": 163,
+     "smells": {
+      "ordering-over-numeric-text": 0,
+      "arbitrary-cut": 4,
+      "not-a-function-of-the-data": 3,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:e7e16d74b4731b4b8d33fdbe8c29cd5622620788ce8d1f335631f65fc7cf1db9",
+     "run_id": "audit-8b8b0aff-cace-4f3a-bcd1-b2923b05471b"
+    },
+    "toxicology": {
+     "audited": 145,
+     "smells": {
+      "ordering-over-numeric-text": 0,
+      "arbitrary-cut": 0,
+      "not-a-function-of-the-data": 0,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:f5fa7f21af1ad878ff8fef1b0582b8cb2d7ed63dbac65ff16d2ba05667650c5b",
+     "run_id": "audit-b00cc7fa-ba13-4f95-9c57-b28b5229ec74"
+    }
+   },
+   "questions": {
+    "0": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "2": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "3": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "4": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "5": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "6": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "7": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "8": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "9": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "10": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "11": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "12": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "13": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "14": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "15": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "16": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "17": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "18": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "19": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "20": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "21": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "22": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "23": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "24": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "25": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "26": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "27": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "28": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "29": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "30": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "31": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "32": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "33": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "34": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "35": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "36": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "37": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "38": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "39": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "40": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "41": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "42": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "43": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "44": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "45": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "46": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "47": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "48": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "49": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "50": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "51": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "52": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "53": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "54": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "55": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "56": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "57": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "58": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "59": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "60": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "61": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "62": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "63": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "64": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "65": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "66": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "67": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "68": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "69": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "70": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "71": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "72": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "73": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "74": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "75": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "76": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "77": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "78": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "79": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "80": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "81": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "82": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "83": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "84": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "85": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "86": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "87": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "88": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1020": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1021": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1022": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1023": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1024": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1025": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1026": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1027": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1028": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1029": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1030": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1031": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1032": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1033": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1034": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1035": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1036": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1037": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1038": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1039": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1040": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1041": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1042": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1043": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1044": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1045": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1046": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1047": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1048": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1049": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1050": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1051": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1052": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1053": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1054": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1055": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1056": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1057": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1058": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1059": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1060": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1061": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1062": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1063": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1064": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1065": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1066": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1067": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1068": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1069": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1070": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1071": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1072": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1073": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1074": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1075": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1076": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1077": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1078": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1079": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1080": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1081": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1082": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1083": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1084": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1085": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1086": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1087": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1088": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1089": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1090": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1091": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1092": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1093": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1094": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1095": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1096": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1097": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1098": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1099": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1100": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1101": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1102": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1103": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1104": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1105": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1106": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1107": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1108": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1109": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1110": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1111": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1112": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1113": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1114": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1115": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1116": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1117": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1118": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1119": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1120": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1121": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1122": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1123": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1124": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1125": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1126": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1127": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1128": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1129": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1130": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1131": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1132": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1133": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1134": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1135": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1136": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1137": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1138": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1139": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1140": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1141": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1142": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1143": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1144": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1145": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1146": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1147": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1148": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "846": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "847": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "848": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "849": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "850": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "851": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "852": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "853": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "854": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "855": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "856": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "857": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "858": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "859": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "860": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "861": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "862": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "863": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "864": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "865": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "866": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "867": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "868": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "869": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "870": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "871": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "872": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "873": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "874": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "875": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "876": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "877": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "878": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "879": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "ordering-over-numeric-text"
+     ]
+    },
+    "880": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "881": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "882": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "883": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "884": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "885": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "886": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "887": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "888": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "889": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "890": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "891": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "892": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "893": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "894": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "895": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "896": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "897": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "898": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "899": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "900": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "901": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "902": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "903": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "904": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "905": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "906": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "907": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "908": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "909": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "910": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "911": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "912": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "913": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "914": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "915": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "916": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "917": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "918": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "919": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "920": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "921": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "922": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "923": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "924": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "925": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "926": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "927": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "ordering-over-numeric-text"
+     ]
+    },
+    "928": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "929": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "930": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "931": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "932": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "933": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "934": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "935": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "936": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "937": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "938": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "939": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "940": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "941": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "942": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "943": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "944": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "945": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "946": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "947": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "948": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "949": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "950": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "951": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "952": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "953": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "954": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "955": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "956": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "957": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "958": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "959": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "960": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "961": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "962": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "963": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "964": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "965": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "966": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "967": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "968": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "969": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "970": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "971": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "972": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "973": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "974": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "975": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "976": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "977": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "978": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "979": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "980": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "981": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "982": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "983": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "984": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "985": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "986": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "987": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "988": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "989": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "990": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "991": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "992": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "993": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "994": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "995": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "996": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "997": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "998": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "999": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1000": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1001": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1002": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1003": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1004": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1005": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1006": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1007": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1008": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1009": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1010": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1011": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1012": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1013": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1014": {
+     "db": "formula_1",
+     "rule": "",
+     "verdict": "ERROR",
+     "smells": []
+    },
+    "1015": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1016": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1017": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1018": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1019": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1149": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1150": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1151": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1152": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1153": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1154": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1155": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1156": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1157": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1158": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1159": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1160": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1161": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1162": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1163": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1164": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1165": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1166": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1167": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1168": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1169": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1170": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1171": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1172": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1173": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1174": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1175": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1176": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1177": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1178": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1179": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1180": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1181": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1182": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1183": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1184": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1185": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1186": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1187": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1188": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1189": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1190": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1191": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1192": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1193": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1194": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1195": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1196": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1197": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1198": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1199": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1200": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1201": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1202": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1203": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1204": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1205": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1206": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1207": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1208": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1209": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1210": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1211": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1212": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1213": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1214": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1215": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1216": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1217": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1218": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1219": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1220": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1221": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1222": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1223": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1224": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1225": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1226": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1227": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1228": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1229": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1230": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1231": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1232": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1233": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1234": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1235": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1236": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1237": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1238": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1239": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1240": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1241": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1242": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1243": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1244": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1245": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1246": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1247": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1248": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1249": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1250": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1251": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1252": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1253": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1254": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1255": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1256": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1257": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1258": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1259": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1260": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1261": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1262": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1263": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1264": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1265": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1266": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1267": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1268": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1269": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1270": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1271": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1272": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1273": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1274": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1275": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1276": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1277": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1278": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1279": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1280": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1281": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1282": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1283": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1284": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1285": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1286": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1287": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1288": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1289": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1290": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1291": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1292": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1293": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1294": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1295": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1296": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1297": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1298": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1299": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1300": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1301": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1302": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1303": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1304": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1305": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1306": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1307": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1308": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1309": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1310": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1311": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "195": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "196": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "197": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "198": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "199": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "200": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "201": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "202": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "203": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "204": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "205": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "206": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "207": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "208": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "209": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "210": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "211": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "212": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "213": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "214": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "215": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "216": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "217": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "218": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "219": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "220": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "221": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "222": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "223": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "224": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "225": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "226": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "227": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "228": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "229": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "230": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "231": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "232": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "233": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "234": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "235": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "236": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "237": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "238": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "239": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "240": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "241": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "242": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "243": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "244": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "245": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "246": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "247": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "248": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "249": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "250": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "251": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "252": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "253": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "254": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "255": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "256": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "257": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "258": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "259": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "260": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "261": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "262": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "263": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "264": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "265": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "266": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "267": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "268": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "269": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "270": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "271": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "272": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "273": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "274": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "275": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "276": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "277": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "278": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "279": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "280": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "281": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "282": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "283": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "284": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "285": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "286": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "287": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "288": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "289": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "290": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "291": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "292": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "293": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "294": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "295": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "296": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "297": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "298": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "299": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "300": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "301": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "302": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "303": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "304": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "305": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "306": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "307": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "308": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "309": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "310": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "311": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "312": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "313": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "314": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "315": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "316": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "317": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "318": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "319": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "320": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "321": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "322": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "323": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "324": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "325": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "326": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "327": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "328": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "329": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "330": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "331": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "332": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "333": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "334": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "335": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "336": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "337": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "338": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "339": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    }
+   },
+   "by_probe": {
+    "arbitrary-cut": 24,
+    "not-a-function-of-the-data": 19,
+    "ordering-over-numeric-text": 2
+   },
+   "questions_with_a_smell": [
+    30,
+    37,
+    57,
+    68,
+    80,
+    81,
+    82,
+    847,
+    879,
+    893,
+    906,
+    908,
+    913,
+    927,
+    1002,
+    1004,
+    1024,
+    1026,
+    1027,
+    1028,
+    1034,
+    1041,
+    1090,
+    1117,
+    1135,
+    1144,
+    1168,
+    1209,
+    1253,
+    1282,
+    1290
+   ],
+   "timeout_lines": [
+    {
+     "db": "california_schools",
+     "line": "89 questions: 0 NOT_EQUAL, 11 smells fired, 0 timed out (0 gold, 0 prediction)"
+    },
+    {
+     "db": "european_football_2",
+     "line": "129 questions: 0 NOT_EQUAL, 16 smells fired, 0 timed out (0 gold, 0 prediction)"
+    },
+    {
+     "db": "formula_1",
+     "line": "174 questions: 0 NOT_EQUAL, 11 smells fired, 0 timed out (0 gold, 0 prediction)"
+    },
+    {
+     "db": "thrombosis_prediction",
+     "line": "163 questions: 0 NOT_EQUAL, 7 smells fired, 0 timed out (0 gold, 0 prediction)"
+    },
+    {
+     "db": "toxicology",
+     "line": "145 questions: 0 NOT_EQUAL, 0 smells fired, 0 timed out (0 gold, 0 prediction)"
+    }
+   ]
+  },
+  "minidev": {
+   "databases": {
+    "california_schools": {
+     "audited": 89,
+     "smells": {
+      "ordering-over-numeric-text": 0,
+      "arbitrary-cut": 7,
+      "not-a-function-of-the-data": 4,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:c0903eec662e63068fd1d14403d3d6c1d473287fc10c4356333ea58f878db983",
+     "run_id": "audit-d9e4146a-f246-431e-ab9f-4a0edcde07c6"
+    },
+    "european_football_2": {
+     "audited": 129,
+     "smells": {
+      "ordering-over-numeric-text": 0,
+      "arbitrary-cut": 8,
+      "not-a-function-of-the-data": 8,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:f72f5c9b990371417288a67b27a02e601ef904d45525c2c9f7931fb01001c536",
+     "run_id": "audit-d12e9487-59b0-47bf-b3de-76feb86bf3a6"
+    },
+    "formula_1": {
+     "audited": 174,
+     "smells": {
+      "ordering-over-numeric-text": 2,
+      "arbitrary-cut": 5,
+      "not-a-function-of-the-data": 4,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:79770caf966707e35516fa566e24b40ae515c74ec1ec4631235245645b87b24d",
+     "run_id": "audit-5ee95c84-532a-489a-bd16-3e3addc305c3"
+    },
+    "thrombosis_prediction": {
+     "audited": 163,
+     "smells": {
+      "ordering-over-numeric-text": 0,
+      "arbitrary-cut": 5,
+      "not-a-function-of-the-data": 3,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:87583183c3dc472fba04de702965560a9d7c0a548836613f242317e0eeb83f00",
+     "run_id": "audit-50705922-85c5-4170-9a5a-0cbaae435655"
+    },
+    "toxicology": {
+     "audited": 145,
+     "smells": {
+      "ordering-over-numeric-text": 0,
+      "arbitrary-cut": 0,
+      "not-a-function-of-the-data": 0,
+      "float-aggregate-order": 0,
+      "direction-against-question": 0
+     },
+     "fixture_digest": "sha256:35ef27ae6bdfda530e125ed369666ac0abb8bc8c0bcc0ad09407f547ecb61a93",
+     "run_id": "audit-452b6cc5-abdc-48e2-8d56-f90ea025cdf5"
+    }
+   },
+   "questions": {
+    "0": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "2": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "3": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "4": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "5": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "6": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "7": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "8": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "9": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "10": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "11": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "12": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "13": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "14": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "15": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "16": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "17": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "18": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "19": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "20": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "21": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "22": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "23": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "24": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "25": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "26": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "27": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "28": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "29": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "30": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "31": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "32": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "33": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "34": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "35": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "36": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "37": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "38": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "39": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "40": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "41": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "42": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "43": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "44": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "45": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "46": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "47": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "48": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "49": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "50": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "51": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "52": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "53": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "54": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "55": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "56": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "57": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "58": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "59": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "60": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "61": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "62": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "63": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "64": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "65": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "66": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "67": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "68": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "69": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "70": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "71": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "72": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "73": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "74": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "75": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "76": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "77": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "78": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "79": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "80": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "81": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "82": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "83": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "84": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "85": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "86": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "87": {
+     "db": "california_schools",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "88": {
+     "db": "california_schools",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1020": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1021": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1022": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1023": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1024": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1025": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1026": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1027": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1028": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1029": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1030": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1031": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1032": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1033": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1034": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1035": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1036": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1037": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1038": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1039": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1040": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1041": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1042": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1043": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1044": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1045": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1046": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1047": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1048": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1049": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1050": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1051": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1052": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1053": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1054": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1055": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1056": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1057": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1058": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1059": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1060": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1061": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1062": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1063": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1064": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1065": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1066": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1067": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1068": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1069": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1070": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1071": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1072": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1073": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1074": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1075": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1076": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1077": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1078": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1079": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1080": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1081": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1082": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1083": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1084": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1085": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1086": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1087": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1088": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1089": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1090": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1091": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1092": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1093": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1094": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1095": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1096": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1097": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1098": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1099": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1100": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1101": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1102": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1103": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1104": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1105": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1106": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1107": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1108": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1109": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1110": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1111": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1112": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1113": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1114": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1115": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1116": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1117": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1118": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1119": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1120": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1121": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1122": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1123": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1124": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1125": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1126": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1127": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1128": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1129": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1130": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1131": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1132": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1133": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1134": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1135": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1136": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1137": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1138": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1139": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1140": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1141": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1142": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1143": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1144": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1145": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1146": {
+     "db": "european_football_2",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1147": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1148": {
+     "db": "european_football_2",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "846": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "847": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "848": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "849": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "850": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "851": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "852": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "853": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "854": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "855": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "856": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "857": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "858": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "859": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "860": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "861": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "862": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "863": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "864": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "865": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "866": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "867": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "868": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "869": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "870": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "871": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "872": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "873": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "874": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "875": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "876": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "877": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "878": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "879": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "ordering-over-numeric-text"
+     ]
+    },
+    "880": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "881": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "882": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "883": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "884": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "885": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "886": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "887": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "888": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "889": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "890": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "891": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "892": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "893": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "894": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "895": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "896": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "897": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "898": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "899": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "900": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "901": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "902": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "903": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "904": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "905": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "906": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "907": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "908": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "909": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "910": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "911": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "912": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "913": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "914": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "915": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "916": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "917": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "918": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "919": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "920": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "921": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "922": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "923": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "924": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "925": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "926": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "927": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "ordering-over-numeric-text"
+     ]
+    },
+    "928": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "929": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "930": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "931": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "932": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "933": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "934": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "935": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "936": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "937": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "938": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "939": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "940": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "941": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "942": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "943": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "944": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "945": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "946": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "947": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "948": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "949": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "950": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "951": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "952": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "953": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "954": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "955": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "956": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "957": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "958": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "959": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "960": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "961": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "962": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "963": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "964": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "965": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "966": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "967": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "968": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "969": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "970": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "971": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "972": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "973": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "974": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "975": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "976": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "977": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "978": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "979": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "980": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "981": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "982": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "983": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "984": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "985": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "986": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "987": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "988": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "989": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "990": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "991": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "992": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "993": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "994": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "995": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "996": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "997": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "998": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "999": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1000": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1001": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1002": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1003": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1004": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1005": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1006": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1007": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1008": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1009": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1010": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1011": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1012": {
+     "db": "formula_1",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1013": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1014": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1015": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1016": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1017": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1018": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1019": {
+     "db": "formula_1",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1149": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1150": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1151": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1152": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1153": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1154": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1155": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1156": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1157": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1158": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1159": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1160": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1161": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1162": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1163": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1164": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1165": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1166": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1167": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1168": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1169": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1170": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1171": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1172": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1173": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1174": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1175": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1176": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1177": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1178": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1179": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1180": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1181": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1182": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1183": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1184": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1185": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1186": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1187": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1188": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1189": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1190": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1191": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1192": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1193": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1194": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1195": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1196": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1197": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1198": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1199": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1200": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1201": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1202": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1203": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1204": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1205": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1206": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1207": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1208": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1209": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1210": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1211": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1212": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1213": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1214": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1215": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1216": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1217": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1218": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1219": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1220": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1221": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1222": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1223": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1224": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1225": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1226": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1227": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1228": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1229": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1230": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1231": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1232": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1233": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1234": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1235": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1236": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1237": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1238": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1239": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1240": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1241": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1242": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1243": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1244": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1245": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1246": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1247": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1248": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1249": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1250": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1251": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1252": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1253": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1254": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1255": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1256": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1257": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1258": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1259": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1260": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1261": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1262": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1263": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1264": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1265": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1266": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1267": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1268": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1269": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1270": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1271": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1272": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1273": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1274": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1275": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1276": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1277": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1278": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1279": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1280": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1281": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1282": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut",
+      "not-a-function-of-the-data"
+     ]
+    },
+    "1283": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1284": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1285": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1286": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1287": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1288": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1289": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1290": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": [
+      "arbitrary-cut"
+     ]
+    },
+    "1291": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1292": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1293": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1294": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1295": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1296": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1297": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1298": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1299": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1300": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1301": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1302": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1303": {
+     "db": "thrombosis_prediction",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1304": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1305": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1306": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1307": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1308": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1309": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1310": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "1311": {
+     "db": "thrombosis_prediction",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "195": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "196": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "197": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "198": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "199": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "200": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "201": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "202": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "203": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "204": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "205": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "206": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "207": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "208": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "209": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "210": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "211": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "212": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "213": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "214": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "215": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "216": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "217": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "218": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "219": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "220": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "221": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "222": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "223": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "224": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "225": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "226": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "227": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "228": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "229": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "230": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "231": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "232": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "233": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "234": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "235": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "236": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "237": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "238": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "239": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "240": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "241": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "242": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "243": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "244": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "245": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "246": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "247": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "248": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "249": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "250": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "251": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "252": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "253": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "254": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "255": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "256": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "257": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "258": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "259": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "260": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "261": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "262": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "263": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "264": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "265": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "266": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "267": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "268": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "269": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "270": {
+     "db": "toxicology",
+     "rule": "R-ORD",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "271": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "272": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "273": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "274": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "275": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "276": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "277": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "278": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "279": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "280": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "281": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "282": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "283": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "284": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "285": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "286": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "287": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "288": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "289": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "290": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "291": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "292": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "293": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "294": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "295": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "296": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "297": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "298": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "299": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "300": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "301": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "302": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "303": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "304": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "305": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "306": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "307": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "308": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "309": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "310": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "311": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "312": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "313": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "314": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "315": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "316": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "317": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "318": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "319": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "320": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "321": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "322": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "323": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "324": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "325": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "326": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "327": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "328": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "329": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "330": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "331": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "332": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "333": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "334": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "335": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "336": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "337": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "338": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    },
+    "339": {
+     "db": "toxicology",
+     "rule": "R-SET",
+     "verdict": "GOLD-ONLY",
+     "smells": []
+    }
+   },
+   "by_probe": {
+    "arbitrary-cut": 25,
+    "not-a-function-of-the-data": 19,
+    "ordering-over-numeric-text": 2
+   },
+   "questions_with_a_smell": [
+    30,
+    37,
+    57,
+    68,
+    80,
+    81,
+    82,
+    847,
+    879,
+    893,
+    906,
+    908,
+    913,
+    927,
+    1002,
+    1004,
+    1024,
+    1026,
+    1027,
+    1028,
+    1034,
+    1041,
+    1090,
+    1117,
+    1135,
+    1144,
+    1168,
+    1196,
+    1209,
+    1253,
+    1282,
+    1290
+   ],
+   "timeout_lines": [
+    {
+     "db": "california_schools",
+     "line": "89 questions: 0 NOT_EQUAL, 11 smells fired, 0 timed out (0 gold, 0 prediction)"
+    },
+    {
+     "db": "european_football_2",
+     "line": "129 questions: 0 NOT_EQUAL, 16 smells fired, 0 timed out (0 gold, 0 prediction)"
+    },
+    {
+     "db": "formula_1",
+     "line": "174 questions: 0 NOT_EQUAL, 11 smells fired, 0 timed out (0 gold, 0 prediction)"
+    },
+    {
+     "db": "thrombosis_prediction",
+     "line": "163 questions: 0 NOT_EQUAL, 8 smells fired, 0 timed out (0 gold, 0 prediction)"
+    },
+    {
+     "db": "toxicology",
+     "line": "145 questions: 0 NOT_EQUAL, 0 smells fired, 0 timed out (0 gold, 0 prediction)"
+    }
+   ]
+  }
+ },
+ "fired_on_one_copy_only": [
+  {
+   "question_id": 1196,
+   "db": "thrombosis_prediction",
+   "dev": [],
+   "minidev": [
+    "arbitrary-cut"
+   ]
+  }
+ ],
+ "crosscheck_against_246a354": {
+  "source": "plans/reports/bird-dev-sqlite-260907/gold-only-old.json",
+  "differences": []
+ }
+}
