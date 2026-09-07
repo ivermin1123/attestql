@@ -1,12 +1,16 @@
 {# The line that stays at the top: which question, under which rule, and what came of it.
 
    Nothing here is a chip that does something except the mechanism, which switches the
-   token marking below on and off; the rest state what they state and are not focusable. #}
+   token marking below on and off; the rest state what they state and are not focusable.
+
+   The verdict comes first and the question set last: the set is named by its file and, when
+   the run was told one, by the origin that file came from, which can be a URL of any length,
+   and a chip of two hundred characters would have been the loudest thing on the page. It is
+   a line of secondary text under the chips instead. #}
 {% macro strip(page) %}
 <header class="strip" data-verdict="{{ page.verdict }}">
   <h1 class="strip__title">q{{ page.question_id }}</h1>
   <p class="strip__facts">
-    <span class="chip chip--set">{{ page.question_set }}</span>
     <span class="chip chip--rule">{{ page.replay_rule }}</span>
     <span class="chip chip--verdict chip--{{ page.verdict|lower }}">{{ page.verdict }}</span>
     {% if page.mechanism %}
@@ -16,5 +20,6 @@
     <span class="chip chip--warn chip--probe">{{ probe.name }}</span>
     {% endfor %}
   </p>
+  <p class="strip__set ink-2">{{ page.question_set }}</p>
 </header>
 {% endmacro %}

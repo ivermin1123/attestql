@@ -40,5 +40,12 @@ Apache License and keeps its own licence and attribution:
       llm/exp_result/sql_output_kg files, and the rows both returned from the Mini-Dev SQLite
       databases.
 
+The three woff2 files under src/attestql/report/static/fonts/ are Latin subsets of IBM Plex
+Sans and IBM Plex Mono, Copyright 2017 IBM Corp. with Reserved Font Name "Plex", licensed
+under the SIL Open Font License, Version 1.1. That licence is not the Apache License: its
+text is beside the fonts as src/attestql/report/static/fonts/OFL.txt, and
+src/attestql/report/static/fonts/provenance.txt names the release each file came from and
+its sha256.
+
 Every other file, including the run outputs that carry only question ids, verdicts, hashes and
 counts, is this repository's own work under the Apache License.
