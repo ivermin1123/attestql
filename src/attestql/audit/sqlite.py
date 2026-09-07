@@ -375,7 +375,11 @@ class SqliteBackend:
 
     @property
     def scratch(self) -> str:
-        """Where the shuffled copies are made. Named so a summary can state it."""
+        """``temp``, whatever the run was told, because that is where the copies go.
+
+        The name a run is given is accepted and names nothing that has to be arranged on
+        this engine, so a summary that echoed it would state a place no copy was made in.
+        """
         return TEMP_SCHEMA
 
     def identity(self) -> str:

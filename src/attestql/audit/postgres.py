@@ -385,8 +385,8 @@ class PostgresBackend:
         return cls(cast("Connection", connection), scratch_schema=scratch_schema)
 
     @property
-    def scratch_schema(self) -> str:
-        """Where the shuffled copies are made. Named so a summary can state it."""
+    def scratch(self) -> str:
+        """The schema the copies are made in: the one this login was given for them."""
         return self._scratch_schema
 
     def identity(self) -> str:
