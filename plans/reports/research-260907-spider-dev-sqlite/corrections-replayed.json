@@ -1,0 +1,633 @@
+{
+ "reading": "Each before/after SQL pair replayed sequentially on its own database, in a fresh read-only query-only connection with a 30 s deadline. same_rows compares SQLite's ordered values exactly.",
+ "counts": {
+  "pairs": 28,
+  "both_executed": 28,
+  "before_only_executed": 0,
+  "after_only_executed": 0,
+  "neither_executed": 0,
+  "same_rows": 15,
+  "different_rows": 13
+ },
+ "rows": [
+  {
+   "question_id": 16,
+   "db_id": "concert_singer",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "avg(capacity)",
+     "max(capacity)"
+    ],
+    "elapsed_seconds": 0.001
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "max(capacity)",
+     "Average"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 25,
+   "db_id": "concert_singer",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "Name",
+     "Capacity"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "Name",
+     "Capacity"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 43,
+   "db_id": "concert_singer",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "count(*)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "count(*)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 44,
+   "db_id": "concert_singer",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "count(*)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "count(*)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 85,
+   "db_id": "pets_1",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "avg(age)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "avg(age)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 86,
+   "db_id": "pets_1",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "avg(age)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "avg(age)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 109,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 22,
+    "columns": [
+     "count(*)",
+     "FullName",
+     "Id"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 22,
+    "columns": [
+     "count(*)",
+     "FullName"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 119,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "Weight"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "min(weight)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 120,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "Weight"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "min(weight)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 153,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 13,
+    "columns": [
+     "Year"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 13,
+    "columns": [
+     "Year"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 154,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 13,
+    "columns": [
+     "Year"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 13,
+    "columns": [
+     "Year"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 161,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "count(*)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 4,
+    "columns": [
+     "count(*)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 162,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "count(*)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 4,
+    "columns": [
+     "count(*)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 168,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 3,
+    "columns": [
+     "MakeId",
+     "Make"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 3,
+    "columns": [
+     "MakeId",
+     "Make"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 169,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "MPG"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "max(mpg)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 170,
+   "db_id": "car_1",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "MPG"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "max(mpg)"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 361,
+   "db_id": "cre_Doc_Template_Mgt",
+   "before": {
+    "ok": true,
+    "row_count": 0,
+    "columns": [
+     "Other_Details"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 2,
+    "columns": [
+     "Other_Details"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 362,
+   "db_id": "cre_Doc_Template_Mgt",
+   "before": {
+    "ok": true,
+    "row_count": 0,
+    "columns": [
+     "Other_Details"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 2,
+    "columns": [
+     "Other_Details"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 387,
+   "db_id": "course_teach",
+   "before": {
+    "ok": true,
+    "row_count": 7,
+    "columns": [
+     "Name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 7,
+    "columns": [
+     "Name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 388,
+   "db_id": "course_teach",
+   "before": {
+    "ok": true,
+    "row_count": 7,
+    "columns": [
+     "Name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 7,
+    "columns": [
+     "Name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 583,
+   "db_id": "student_transcripts_tracking",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "first_name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "first_name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 584,
+   "db_id": "student_transcripts_tracking",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "first_name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "first_name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 629,
+   "db_id": "tvshow",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "Production_code",
+     "Channel"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "Production_code",
+     "Channel"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 630,
+   "db_id": "tvshow",
+   "before": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "Production_code",
+     "Channel"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1,
+    "columns": [
+     "Production_code",
+     "Channel"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 754,
+   "db_id": "world_1",
+   "before": {
+    "ok": true,
+    "row_count": 0,
+    "columns": [
+     "Code",
+     "Name",
+     "Continent",
+     "Region",
+     "SurfaceArea",
+     "IndepYear",
+     "Population",
+     "LifeExpectancy",
+     "GNP",
+     "GNPOld",
+     "LocalName",
+     "GovernmentForm",
+     "HeadOfState",
+     "Capital",
+     "Code2",
+     "CountryCode",
+     "Language",
+     "IsOfficial",
+     "Percentage"
+    ],
+    "elapsed_seconds": 0.001
+   },
+   "after": {
+    "ok": true,
+    "row_count": 0,
+    "columns": [
+     "Name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 813,
+   "db_id": "world_1",
+   "before": {
+    "ok": true,
+    "row_count": 0,
+    "columns": [
+     "Name"
+    ],
+    "elapsed_seconds": 0.001
+   },
+   "after": {
+    "ok": true,
+    "row_count": 1860,
+    "columns": [
+     "Name"
+    ],
+    "elapsed_seconds": 0.001
+   },
+   "same_rows": false
+  },
+  {
+   "question_id": 924,
+   "db_id": "dog_kennels",
+   "before": {
+    "ok": true,
+    "row_count": 12,
+    "columns": [
+     "name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 12,
+    "columns": [
+     "name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  },
+  {
+   "question_id": 925,
+   "db_id": "dog_kennels",
+   "before": {
+    "ok": true,
+    "row_count": 12,
+    "columns": [
+     "name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "after": {
+    "ok": true,
+    "row_count": 12,
+    "columns": [
+     "name"
+    ],
+    "elapsed_seconds": 0.0
+   },
+   "same_rows": true
+  }
+ ]
+}

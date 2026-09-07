@@ -1,0 +1,6 @@
+{
+ "rule": "one serial rerun per run whose summary holds a timed-out statement; a survivor is final",
+ "runs_with_a_timed_out_statement": 0,
+ "survivors": 0,
+ "rows": []
+}
