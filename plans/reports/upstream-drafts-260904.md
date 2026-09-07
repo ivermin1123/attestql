@@ -42,7 +42,8 @@ linking it from `AlibabaResearch/DAMO-ConvAI` issue 39, the standing panel of an
 Evidence: register rows A34 to A36 and
 `plans/reports/bird-dev-sqlite-260907/classification.json` (every reason), measured at the
 commit `plans/reports/measurement-260907-1435-bird-dev-sqlite.md` names. Sent 2026-09-07 after the merge that put that directory on `main`, as `bird-bench/mini_dev` issue 49
-with a link comment on DAMO-ConvAI issue 39 (no Hugging Face login on this machine); register U6.
+with a link comment on DAMO-ConvAI issue 39, then as discussion 3 on the Hugging Face dataset once a
+login existed; register U6.
 
 Title: 23 golds in this pass still cut at a tie, sort NULL first, or sort numbers as text
 
