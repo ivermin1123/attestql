@@ -26,22 +26,29 @@ parsers over one engine would be a second opinion about the same statement. The 
 are exact paths and not a directory, so a third module that started parsing would be a diff
 in this file."""
 
-DRIVER_MODULES: Mapping[str, Path] = {
-    "psycopg": SRC / "audit" / "postgres.py",
-    "sqlite3": SRC / "audit" / "sqlite.py",
+POSTGRES_BACKEND = SRC / "audit" / "postgres.py"
+SQLITE_BACKEND = SRC / "audit" / "sqlite.py"
+FIXTURE_BUILDER = SRC / "demo" / "__init__.py"
+"""The packaged sandbox: the builder that writes the file the read-only backend then audits."""
+
+DRIVER_MODULES: Mapping[str, tuple[Path, ...]] = {
+    "psycopg": (POSTGRES_BACKEND,),
+    "sqlite3": (SQLITE_BACKEND, FIXTURE_BUILDER),
 }
-"""Each database driver, and the one module under ``src`` permitted to import it.
+"""Each database driver, and the modules under ``src`` permitted to import it.
 
 ADR-0013 point 4 makes the executor interface engine-neutral from the first commit, and
 this is what that means in the source: everything above a backend speaks to
-``audit.backend.Backend``, and each driver is reachable from one file. Exact paths again,
-for the same reason the allowlist above is one.
+``audit.backend.Backend``, and a driver is reachable from the files named here and nowhere
+else. Exact paths again, for the same reason the allowlist above is one.
 
 ``sqlite3`` is in the standard library and is therefore confined under ``src`` rather than
-everywhere: a test builds the file it then audits, and building one is what the read-only
-backend cannot do."""
+everywhere, and it is the one driver with a second importer. The sandbox ``attestql demo``
+audits is a file that has to be written before it can be read, and writing it is exactly what
+the read-only backend cannot do: the builder holds the connection that runs ``fixture.sql``
+and nothing that audits, and the backend that opens the result holds nothing that writes."""
 
-DRIVER_MODULE = DRIVER_MODULES["psycopg"]
+DRIVER_MODULE = POSTGRES_BACKEND
 """The one module permitted to import the database driver anywhere, tests included. The
 prohibition is repository-wide because product tests reach the server through the backend's
 own API, so a driver import cannot spread through the suite either."""
@@ -124,7 +131,7 @@ URI_ESCAPE = "urllib.parse"
 text and takes it apart again; what puts ``urllib`` in the set above is ``urllib.request``,
 which opens a connection, and that half stays forbidden here as everywhere else."""
 
-URI_ESCAPERS: tuple[Path, ...] = (DRIVER_MODULES["sqlite3"],)
+URI_ESCAPERS: tuple[Path, ...] = (SQLITE_BACKEND,)
 """The files permitted ``urllib.parse``, permitted that module alone, and the backend that
 opens a file through a URI for the same reason it is the file's own driver's importer.
 
@@ -296,16 +303,18 @@ def test_a_parser_is_reachable_from_exactly_the_parser_modules_under_src() -> No
 
 
 @pytest.mark.parametrize("driver", sorted(DRIVER_MODULES), ids=lambda name: name)
-def test_each_driver_is_reachable_from_exactly_one_module_under_src(driver: str) -> None:
+def test_each_driver_is_reachable_from_exactly_the_modules_it_is_allowed_in_under_src(
+    driver: str,
+) -> None:
     """Stated per driver as well as per file: everything above a backend speaks to the
-    interface, so a second importer of either driver would be an interface that had stopped
-    being the way to a database."""
+    interface, so an importer of either driver that is not listed above would be an interface
+    that had stopped being the way to a database."""
     importers = [
         path
         for path in python_files(SRC)
         if any(name.split(".")[0] == driver for name in imported_modules(path))
     ]
-    assert importers == [DRIVER_MODULES[driver]]
+    assert sorted(importers) == sorted(DRIVER_MODULES[driver])
 
 
 def forbidden_primitives(path: Path) -> list[str]:

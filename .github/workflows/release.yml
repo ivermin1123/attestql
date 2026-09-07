@@ -34,12 +34,23 @@ jobs:
         with:
           python-version: "3.13"
       - run: uv build
-      - name: The wheel installs on its own and states the tag
+      # The demo is run here because it is the one command that reads the package's own data
+      # files: a wheel that carried the code and not fixture.sql, questions.json and
+      # predictions.json would install, state its version and then fail on the first command
+      # a reader is given. It exits 1 over this sandbox, which is the finding and not an
+      # error, so the status is kept rather than ending the step.
+      - name: The wheel installs on its own, states the tag and runs the demo
         run: |
           uv tool install dist/attestql-*.whl
           installed="$("$(uv tool dir --bin)/attestql" --version)"
           echo "$installed"
           test "$installed" = "attestql ${GITHUB_REF_NAME#v}"
+          status=0
+          demo="$("$(uv tool dir --bin)/attestql" demo --out "$RUNNER_TEMP/demo")" || status=$?
+          echo "$demo"
+          test "$status" -eq 1
+          echo "$demo" | grep -q "6 questions: 3 NOT_EQUAL"
+          grep -q '"NOT_EQUAL": 3' "$RUNNER_TEMP/demo/audit/summary.json"
       - uses: actions/upload-artifact@v7
         with:
           name: dist

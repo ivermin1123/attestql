@@ -36,7 +36,6 @@ from pathlib import Path
 from typing import Any, cast
 
 import pytest
-from build import PREDICTIONS_FILE, QUESTIONS_FILE, build_fixture
 
 from attestql.audit.backend import Backend, ShuffledCopies, TableName
 from attestql.audit.cli import (
@@ -65,6 +64,7 @@ from attestql.audit.smells import (
 )
 from attestql.audit.sqlite import QUALIFIED_NAME_IS_NOT_REACHED
 from attestql.audit.sqlite_statements import PARSER, VALIDATOR_VERSION
+from attestql.demo import PREDICTIONS_FILE, QUESTIONS_FILE, build_fixture
 from attestql.evidence.replay import ComparabilityResult
 from attestql.evidence.types import ENGINE_SQLITE
 
