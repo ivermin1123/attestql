@@ -124,6 +124,9 @@
 
   --gutter: var(--space-4);
   --measure: 66ch;
+  /* The widest a page's content box gets: 1280 less the two 32px gutters the spec fixes
+     for that breakpoint, which is the width the widest breakpoint is designed at. Not a
+     value off a scale of its own; it is read off the gutter rule above. */
   --content: 1216px;
 
   color-scheme: light dark;
@@ -285,8 +288,12 @@ a:hover {
   transition: padding var(--slow) var(--easing);
 }
 
+/* The strip's own padding is outside this box while `.page` carries its gutter inside its
+   border box, so the two share a left edge only if this width takes the gutters off. Without
+   the subtraction the strip's title starts one gutter left of the first heading under it once
+   `--content` binds, which is 32px against 64px at 1280 and 384 against 416 at 1920. */
 .strip > * {
-  width: min(100%, var(--content));
+  width: min(100%, calc(var(--content) - 2 * var(--gutter)));
   margin: 0 auto;
 }
 
@@ -313,12 +320,15 @@ a:hover {
   font-size: var(--text-head);
 }
 
+/* The auto inline margins are `.strip > *`'s and are restated here rather than dropped: a
+   `margin: 0` shorthand would centre the title and leave the chips under it at the padding
+   edge, which is the misalignment one gutter wide that this pair of rules is here to avoid. */
 .strip__facts {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
   align-items: center;
-  margin: 0;
+  margin: 0 auto;
   max-width: none;
 }
 
@@ -348,11 +358,14 @@ a:hover {
 
 /* The line under the chips: which question set, and where the run was told it came from.
    Secondary text and not a chip, because its length is a benchmark's to decide. */
+/* The strip's children are all one width, which is what puts their left edges on the page's
+   own. The 66ch measure is the prose column's and is not applied here: clamped to it, this
+   line would be a 634px box centred inside a 1152px one and would start 319px right of the
+   title above it at 1280. */
 .strip__set {
-  margin: var(--space-2) 0 0;
+  margin: var(--space-2) auto 0;
   font-size: var(--text-cell);
   line-height: var(--leading-cell);
-  max-width: var(--measure);
 }
 
 .chip--verdict {

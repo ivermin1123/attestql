@@ -353,6 +353,7 @@ class RunPage:
     verdict_counts: tuple[tuple[str, int], ...]
     mechanism_counts: tuple[tuple[str, int], ...]
     probe_counts: tuple[Fact, ...]
+    probe_fired: tuple[tuple[str, int], ...]
     credited: tuple[Fact, ...]
     made_of: tuple[Fact, ...]
     session: tuple[Fact, ...]
@@ -363,9 +364,11 @@ class RunPage:
     probe_figure: Figure | None = None
     """The verdicts and the probes drawn, filled in after the page is built. ``counts``
     and ``probe_counts`` are the same numbers as the tables state them, and
-    ``verdict_counts`` and ``mechanism_counts`` are those numbers as numbers, which is what
-    a bar is drawn from: the classes are counted from the question directories this run
-    wrote, because ``summary.json`` counts a mechanism only for the credited rows."""
+    ``verdict_counts``, ``mechanism_counts`` and ``probe_fired`` are those numbers as
+    numbers, which is what a bar is drawn from: the classes are counted from the question
+    directories this run wrote, because ``summary.json`` counts a mechanism only for the
+    credited rows. A count that is not a whole number is refused where it is read, the way
+    every other number on this page is, rather than drawn as a zero nobody was told about."""
 
     @property
     def title(self) -> str:
@@ -1035,6 +1038,7 @@ def _run_page(
         ),
         mechanism_counts=_mechanism_counts(questions),
         probe_counts=_facts(_object(summary, "smells")),
+        probe_fired=_probe_fired(_object(summary, "smells")),
         credited=_credited(_object_or_none(summary, "credited_but_not_equal")),
         made_of=(
             Fact("run", _text(summary, "run_id")),
@@ -1081,6 +1085,17 @@ def _run_page(
         entries=_entries(summary, questions, directories),
         files=(Fact(SUMMARY_FILE, _text(summary, "format")),),
     )
+
+
+def _probe_fired(smells: Json) -> tuple[tuple[str, int], ...]:
+    """Each probe and how many golds it fired on, as numbers, in the summary's own order.
+
+    Read through ``_integer``, which is what every other number a page states goes through:
+    a ``smells`` value that is not a whole number is a document this command cannot render,
+    and refusing it names the key, where drawing it as a zero would state a count no file
+    holds.
+    """
+    return tuple((name, _integer(smells, name)) for name in smells)
 
 
 def _mechanism_counts(questions: Sequence[QuestionPage]) -> tuple[tuple[str, int], ...]:

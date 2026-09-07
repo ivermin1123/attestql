@@ -43,8 +43,13 @@ are, which is why they carry no legend."""
 BAR_HEIGHT = 24
 BAR_GAP = 12
 SLOPE_STEP = 18
-"""One bar, the space under it, and one row of the slope chart. All three are on the
-spacing scale of the design spec, which is what keeps a figure aligned with the text."""
+"""One bar, the space under it, and one row of the slope chart.
+
+The first two are on the spacing scale of the design spec, which is what keeps a bar
+aligned with the text beside it. The third is not on it: 24 would make a twenty-five row
+chart taller than a phone screen and 16 leaves a 13px numeral no room, because ``_room``
+asks for 14px between two numbers it writes. 18 is the pitch of a line of numbers, not a
+space between blocks, and it is the one measurement in this module that is neither."""
 
 LABEL = 7.8
 """The advance of one character of Plex Mono at 13px, in these coordinates: 0.6em, the
@@ -144,6 +149,7 @@ def _slope(page: QuestionPage) -> Figure:
     height = top + span + 24
     left, right = 88.0, WIDTH - 152.0
     moved = [place for place in drawn if place[1] is not None and place[1] != place[0]]
+    absent = [here for here, there in drawn if there is None]
 
     def height_of(place: int, of: int) -> float:
         """One position as a height: the first row at the top, the last at the bottom.
@@ -196,7 +202,7 @@ def _slope(page: QuestionPage) -> Figure:
         f"where each row of the gold is in the prediction, from {_source(page)}, "
         f"{len(drawn):,} of {gold.row_count:,} rows drawn"
     )
-    alternative = _slope_text(drawn, moved, gold.row_count)
+    alternative = _slope_text(drawn, moved, absent, gold.row_count)
     return _figure("slope", title, alternative, height, body)
 
 
@@ -206,22 +212,38 @@ def _room(y: float, taken: Sequence[float]) -> bool:
 
 
 def _slope_text(
-    drawn: Sequence[tuple[int, int | None]], moved: Sequence[tuple[int, int | None]], total: int
+    drawn: Sequence[tuple[int, int | None]],
+    moved: Sequence[tuple[int, int | None]],
+    absent: Sequence[int],
+    total: int,
 ) -> str:
-    """The slope chart in words: how many rows moved, and where the first of them went."""
+    """The slope chart in words: how many rows moved, how many are not there, and which.
+
+    A row the prediction does not hold is drawn as the absence it is, so the sentence has to
+    say so too: a caption reading "in the same places" over three marks that say "not in the
+    prediction" would make the drawing the only carrier of the fact, which is the one thing
+    a figure in this module may not be.
+    """
+    opening = f"first {len(drawn):,} rows of the gold, of {total:,}"
+    if not moved and not absent:
+        return f"The {opening}, are in the same places in the prediction."
+    if len(absent) == len(drawn):
+        return f"None of the {opening}, is in the prediction."
     named = ", ".join(
         f"row {here} of the gold is row {there} in the prediction" for here, there in moved[:8]
     )
     ending = "" if len(moved) <= 8 else f", and {len(moved) - 8:,} more"
+    missing = f"{len(absent):,} {_is_are(len(absent))} not in the prediction at all"
     if not moved:
-        return (
-            f"The first {len(drawn):,} rows of the gold, of {total:,}, are in the same "
-            f"places in the prediction."
-        )
-    return (
-        f"Of the first {len(drawn):,} rows of the gold, of {total:,}, {len(moved):,} are "
-        f"somewhere else in the prediction: {named}{ending}."
-    )
+        return f"Of the {opening}, {missing}; the rest are where they are in the gold."
+    somewhere = f"{len(moved):,} {_is_are(len(moved))} somewhere else in the prediction: {named}"
+    tail = "." if not absent else f", and {missing}."
+    return f"Of the {opening}, {somewhere}{ending}{tail}"
+
+
+def _is_are(count: int) -> str:
+    """Which verb a count takes, so a figure's own sentence reads as English."""
+    return "is" if count == 1 else "are"
 
 
 def _multiplicity(page: QuestionPage) -> Figure:
@@ -307,7 +329,7 @@ def _verdicts(page: RunPage) -> Figure:
     return proportion_bar(
         "verdicts",
         parts,
-        title=f"the verdicts of run {escape(page.run_id)}, from summary.json",
+        title=f"the verdicts of run {page.run_id}, from summary.json",
         whole="Of the questions this run audited",
     )
 
@@ -315,27 +337,25 @@ def _verdicts(page: RunPage) -> Figure:
 def _probes(page: RunPage) -> Figure:
     """One bar per probe, against the number of questions the run audited."""
     audited = max(page.questions_audited, 1)
-    height = len(page.probe_counts) * (BAR_HEIGHT + BAR_GAP) + 4
+    height = len(page.probe_fired) * (BAR_HEIGHT + BAR_GAP) + 4
     body: list[str] = []
-    for index, probe in enumerate(page.probe_counts):
-        count = _number(probe.value)
+    for index, (name, count) in enumerate(page.probe_fired):
         y = index * (BAR_HEIGHT + BAR_GAP)
-        width = _scaled(count, audited)
+        # Clamped to the span a full bar fills. The two numbers come from two keys of one
+        # summary and nothing ties them together: a document stating more firings than
+        # questions would otherwise draw a bar off the canvas and take its label with it.
+        width = max(min(_scaled(count, audited), BAR_SPAN), 1)
         marked = " figure__bar--marked" if count else ""
         body.append(
-            f'<rect class="figure__bar{marked}" x="0" y="{y}" width="{max(width, 1)}" '
+            f'<rect class="figure__bar{marked}" x="0" y="{y}" width="{width}" '
             f'height="{BAR_HEIGHT}"></rect>'
         )
         body.append(
-            f'<text class="figure__number" x="{max(width, 1) + 8}" y="{y + 16}">'
-            f"{count:,} {escape(probe.name)}</text>"
+            f'<text class="figure__number" x="{width + 8}" y="{y + 16}">'
+            f"{count:,} {escape(name)}</text>"
         )
     title = f"how many golds each probe fired on, of {page.questions_audited:,}, from summary.json"
-    fired = [
-        f"{probe.name} on {_number(probe.value):,}"
-        for probe in page.probe_counts
-        if _number(probe.value)
-    ]
+    fired = [f"{name} on {count:,}" for name, count in page.probe_fired if count]
     alternative = (
         f"Of {page.questions_audited:,} golds this run read, the probes fired on: "
         + ("; ".join(fired) if fired else "none")
@@ -419,9 +439,13 @@ def _rows_of(page: QuestionPage) -> tuple[Rows, Rows]:
 
 
 def _source(page: QuestionPage) -> str:
-    """Which files the figure's numbers were read from, for its ``<title>``."""
+    """Which files the figure's numbers were read from, for its ``<title>``.
+
+    Unescaped: a title is escaped once, where it is put into the markup, and a name escaped
+    here as well would reach the ``<title>`` as ``&amp;amp;`` and read as ``&amp;``.
+    """
     if len(page.records) == 2:
-        return f"{escape(page.records[0].file)} and {escape(page.records[1].file)}"
+        return f"{page.records[0].file} and {page.records[1].file}"
     return "counterexample.json"
 
 
@@ -457,14 +481,6 @@ def _places(gold: Rows, second: Rows) -> list[tuple[int, int | None]]:
 def _scaled(value: int, widest: int) -> int:
     """One count as a length in the figure's own coordinates, the widest filling the bar."""
     return round(BAR_SPAN * value / widest) if widest else 0
-
-
-def _number(value: str) -> int:
-    """A count the view model carries as the text a page states, back as a number."""
-    try:
-        return int(value.replace(",", ""))
-    except ValueError:
-        return 0
 
 
 __all__ = ["Figure", "proportion_bar", "question_figure", "run_figures"]
