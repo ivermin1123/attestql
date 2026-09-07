@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AttestQL</title>
+<meta name="description" content="Audit text-to-SQL gold and predictions on PostgreSQL and SQLite with typed replay evidence: per question, whether the two disagree on the shipped data, the rows that differ, and what the benchmark's own scorer said.">
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; padding: 2rem 1rem 4rem; font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; max-width: 52rem; margin-inline: auto; }
+  h1 { font-size: 2rem; margin: 0 0 .5rem; }
+  h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+  p { margin: .75rem 0; }
+  pre { overflow-x: auto; padding: .75rem 1rem; border: 1px solid #8884; border-radius: 4px; font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .95em; }
+  nav a { margin-right: 1.25rem; }
+  footer { margin-top: 3rem; font-size: .9rem; opacity: .8; }
+</style>
+</head>
+<body>
+<h1>AttestQL</h1>
+<nav>
+  <a href="https://github.com/ivermin1123/attestql">GitHub</a>
+  <a href="https://github.com/ivermin1123/attestql/blob/main/docs/claims-register.md">Claims register</a>
+  <a href="https://pypi.org/project/attestql/">PyPI</a>
+</nav>
+
+<p>You have a text-to-SQL prediction file and a benchmark that scored it. Run one command and get, per question, whether the prediction and the gold disagree on the shipped data, the rows that differ, and what the benchmark's own scorer would have said: for a question scored 0, the rows that decided it, and for one scored 1, whether a comparison that keeps duplicates, order and types agrees with the set comparison that credited it.</p>
+
+<pre>attestql audit --engine sqlite --dsn sandbox/fixture.sqlite \
+    --questions tools/audit-sandbox-sqlite/questions.json \
+    --predictions tools/audit-sandbox-sqlite/predictions.json --out audit</pre>
+
+<p>That run is the repository's own sandbox: the three BIRD Mini-Dev golds that upstream reports found wrong (q1029, q879, q207) on a fixture of a few rows, each paired with a corrected statement as its prediction, plus three synthetic questions. Its output, unedited:</p>
+
+<pre>q1029 european_football_2 R-ORD  NOT_EQUAL  smells=none  audit/q1029/
+q879  formula_1   R-ORD  NOT_EQUAL  smells=ordering-over-numeric-text  audit/q879/
+q207  toxicology  R-SET  NOT_EQUAL  smells=none  audit/q207/
+q900001 synthetic   R-ORD  GOLD-ONLY  smells=not-a-function-of-the-data  audit/q900001/
+q900002 synthetic   R-ORD  GOLD-ONLY  smells=arbitrary-cut,not-a-function-of-the-data  audit/q900002/
+q900005 synthetic   R-ORD  EQUAL      smells=ordering-over-numeric-text  audit/q900005/
+6 questions: 3 NOT_EQUAL, 5 smells fired, 0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)</pre>
+
+<p>Every <code>NOT_EQUAL</code> line has a directory. <code>audit/q879/counterexample.json</code> says why that one disagrees, trimmed here to the fields a reader opens first:</p>
+
+<pre>"gold":   "... ORDER BY T2.fastestLapSpeed DESC LIMIT 1"                -&gt; "Norwegian"
+"second": "... ORDER BY CAST(T2.fastestLapSpeed AS REAL) DESC LIMIT 1"  -&gt; "Peruvian"
+"bird_ex": {"value": 0, "method": "set(second_rows) == set(gold_rows), ..."}
+"differing_rows": {"in_gold_not_in_second": [["Norwegian"]], "in_second_not_in_gold": [["Peruvian"]]}</pre>
+
+<p>and <code>audit/q879/smells.json</code> names the mechanism: <code>fastestLapSpeed</code> is a text column holding only numbers, so the gold sorts <code>9.5</code> above <code>10</code> and the fastest lap is not the one it returns. The same directory holds the two evidence records, each with the statement, the role, the engine, the session settings, the result and its hash, and how to run it again.</p>
+
+<p><strong>NOT_EQUAL never means the gold is wrong.</strong> It means these two statements disagree on this data under this rule; here are the rows; decide.</p>
+
+<h2>Install</h2>
+<p>Python 3.11 or later. SQLite needs nothing else; PostgreSQL 16 needs a server.</p>
+<pre>uv tool install attestql        # or: pip install attestql</pre>
+
+<h2>Read on</h2>
+<p>The <a href="https://github.com/ivermin1123/attestql#readme">README</a> has the three measurements on BIRD's own files, the six upstream reports and their replies, and how to run the command on your own files. Every number has an owning artifact in the <a href="https://github.com/ivermin1123/attestql/blob/main/docs/claims-register.md">claims register</a>.</p>
+
+<footer>Apache-2.0. Source, issues and evidence: <a href="https://github.com/ivermin1123/attestql">github.com/ivermin1123/attestql</a>.</footer>
+</body>
+</html>
