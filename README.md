@@ -256,8 +256,8 @@ The same nine prediction files were then run on SQLite, on the eleven Mini-Dev d
 no server and no container. On SQLite the tool's reading of BIRD's EX and BIRD's own evaluator agree
 on 4,481 of 4,482 predictions against each gold copy, better than the 4,476 on PostgreSQL, because
 here the tool reads the cells that evaluator reads; the single disagreement is a row where the two
-answers are the same number to fifteen digits and this tool compares a REAL rendered to six decimal
-places. Of the 1,650 predictions BIRD credits, 237 (14.4 %) are NOT_EQUAL under the typed
+answers are the same number to fifteen digits and the gold's rule is R-ORD, which compares the
+canonical rendering, where a REAL is written at the serialization's numeric scale of six decimals. Of the 1,650 predictions BIRD credits, 237 (14.4 %) are NOT_EQUAL under the typed
 comparison: 230 return the gold's rows with other multiplicities, 6 the same value under another
 storage class, 1 differs only in row order. A sample of 50 of those 237, read by hand, is 27 wrong
 answers the benchmark credited, 22 duplicated rows a reader would forgive and 1 the typed rule

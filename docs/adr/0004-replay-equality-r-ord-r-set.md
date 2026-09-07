@@ -4,7 +4,8 @@
 wording in the Slice 1 brief. **Amended:** 2026-08-30, the Open question below is answered by
 ADR-0009 (in the private history before publication), which fixes Q13's result grain at
 one row per segment; 2026-09-04, what a NaN is under R-SET is stated at the end, and what a
-type is under R-SET is stated at the end of the decision.
+type is under R-SET is stated at the end of the decision; 2026-09-07, what the two rules read
+a number as is stated at the end of the decision.
 
 ## Context
 
@@ -48,6 +49,18 @@ declared type and every value carries its own class, an INTEGER `1` and a REAL `
 for the same reason and by the same rule. The rule is therefore engine-neutral and needs no second
 form: a comparator reads the class the engine returned a value at, never a class of its own making.
 ADR-0014 records where the second engine goes and what the record states about it.
+
+**The two rules can disagree about one pair of numbers, amended 2026-09-07.** R-ORD compares
+the canonical rendering, where a numeric is written at the serialization's `numeric_scale` of
+six, and R-SET compares the values as the result returned them, because a rounding step must not
+decide membership of a row set (owner decision of 2026-08-31, recorded in `compare_r_set`). So
+two numbers that first differ past the sixth decimal are EQUAL under R-ORD and NOT_EQUAL under
+R-SET, and neither reading is the other's mistake: a result whose order is the answer is compared
+by what it renders to, and a result that is a set is compared by what it holds. The case is not
+hypothetical. Mini-Dev q31 on SQLite returns `0.1344364012409514` where the prediction returns
+`0.134436401240951`, both render to `0.134436`, and the gold's rule is R-ORD, so the verdict is
+EQUAL (`plans/reports/measurement-260907-1106-minidev-sqlite.md`). A record declares its rule,
+which is what lets a reader of two verdicts see which reading produced each.
 
 ## Alternatives considered
 
