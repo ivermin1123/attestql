@@ -49,6 +49,13 @@ SCRATCH = "attestql_scratch"
 TIMEOUT_MS = 30_000
 SCHEMA_DIGEST = "sha256:fake-schema-digest"
 
+POSTGRESQL_TEXT_TYPES: frozenset[str] = frozenset({"text", "character varying", "character"})
+"""What this fake answers as the declared types that hold text, matched whole.
+
+PostgreSQL's three, for the reason its float types are below: these statements are written
+in that engine's type names, and spelling them here rather than importing them makes a change
+to that backend's reading a change a test notices."""
+
 POSTGRESQL_FLOAT_TYPES: frozenset[str] = frozenset({"float4", "float8"})
 """What this fake answers as the types whose aggregates depend on the order they were added.
 
@@ -302,6 +309,10 @@ class FakeBackend:
             for name in dict.fromkeys(tables)
             if name in self._planner_statistics
         }
+
+    def declared_type_is_text(self, declared_type: str) -> bool:
+        """PostgreSQL's reading of a declaration: one of three names, matched whole."""
+        return declared_type in POSTGRESQL_TEXT_TYPES
 
     def order_sensitive_aggregate_types(self) -> frozenset[str]:
         """What this fake's engine adds up value by value, PostgreSQL's two by default.

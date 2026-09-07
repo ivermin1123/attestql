@@ -134,6 +134,15 @@ SHUFFLE_FUNCTION = "attestql_shuffle"
 own identity. Registered from Python because SQLite has no hash function of its own, and
 deterministic, so a run reproduces and two runs under one seed write one order."""
 
+TEXT_AFFINITY_MARKS: tuple[str, ...] = ("CHAR", "CLOB", "TEXT")
+"""What a declaration has to contain for SQLite to give the column TEXT affinity.
+
+Rule 2 of the affinity rules, and the reason a declared type is read here by what it holds
+rather than by what it equals: SQLite keeps the text of the CREATE statement verbatim and
+decides affinity from that text, so ``VARCHAR(50)`` and ``NATIVE CHARACTER(70)`` are text
+columns and match no list of type names. The comparison is over the declaration upper-cased,
+because the rule is case-insensitive and a file may be written either way."""
+
 INTERRUPT_MESSAGE = "interrupted"
 """What SQLite calls the abort a progress handler asked for, and the whole of how a statement
 this module stopped is told from one the file refused.
@@ -680,6 +689,17 @@ class SqliteBackend:
                 types[name] = {str(row[0]): str(row[1]) for row in rows}
         return types
 
+    def declared_type_is_text(self, declared_type: str) -> bool:
+        """Whether a column declared that way has TEXT affinity, by SQLite's own rule.
+
+        Read off the text of the declaration, which is all this engine keeps of it and all
+        it decides affinity from. A column declared with no type at all holds none of the
+        marks and is not text here, which is what SQLite makes of it too: no declaration is
+        BLOB affinity, and what such a column actually held is answered on the result.
+        """
+        held = declared_type.upper()
+        return any(mark in held for mark in TEXT_AFFINITY_MARKS)
+
     def order_sensitive_aggregate_types(self) -> frozenset[str]:
         """Nothing: SQLite adds a REAL aggregate with a compensation, so its order cannot show.
 
@@ -1019,6 +1039,7 @@ __all__ = [
     "SHUFFLED_COPY",
     "STORAGE_CLASSES",
     "TEMP_SCHEMA",
+    "TEXT_AFFINITY_MARKS",
     "UNOBSERVED",
     "WITHOUT_A_ROW_IDENTITY",
     "SqliteBackend",

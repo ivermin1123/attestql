@@ -319,6 +319,20 @@ class Backend(Protocol):
         """
         raise NotImplementedError
 
+    def declared_type_is_text(self, declared_type: str) -> bool:
+        """Whether a column declared that way holds text, as this engine reads a declaration.
+
+        Asked beside ``column_types`` and answered by the engine, because a declaration is
+        read by the engine's own rule and not by the word it is spelled with: one catalogue
+        renders a fixed set of type names and settles it by the name, and another keeps the
+        text of the CREATE statement and settles it by what that text contains, so ``VARCHAR
+        (50)`` is a text column there and matches no name at all.
+
+        A declaration this cannot place is not text, which is the conservative direction: a
+        smell that reads it stays quiet rather than claiming an ordering over numbers.
+        """
+        raise NotImplementedError
+
     def order_sensitive_aggregate_types(self) -> frozenset[str]:
         """The result column types whose aggregates depend on the order the rows were read.
 

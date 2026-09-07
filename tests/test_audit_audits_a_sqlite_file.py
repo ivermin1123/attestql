@@ -31,7 +31,7 @@ from attestql.audit.cli import SUMMARY_FILE, AuditOptions, connect_and_audit
 from attestql.audit.compare import ORDERING_KEY_NAMES_NO_COLUMN, bird_ex, record_statement
 from attestql.audit.engines import SQLITE
 from attestql.audit.parse import StatementRefused
-from attestql.audit.smells import NUMERIC_TEXT
+from attestql.audit.smells import NUMERIC_TEXT, SmellSettings, ordering_over_numeric_text
 from attestql.audit.sqlite import (
     NOT_IN_THIS_FILE,
     QUALIFIED_NAME_IS_NOT_REACHED,
@@ -497,6 +497,42 @@ def test_the_census_counts_a_text_column_through_a_regexp_the_file_does_not_defi
     assert (numeric.rows, numeric.nulls, numeric.empty_strings, numeric.non_numeric) == (3, 1, 0, 0)
     assert numeric.pattern == NUMERIC_TEXT
     assert (words.rows, words.non_numeric) == (3, 3)
+
+
+AFFINITY_FIXTURE = """
+CREATE TABLE speeds (driver TEXT, fastestlapspeed VARCHAR(50));
+INSERT INTO speeds VALUES ('Alder', '259.870'), ('Birch', '93.175'), ('Cedar', '117.5');
+"""
+"""The shape BIRD's SQLite files are written in: a column of numerals declared with a length,
+which no list of type names holds and which SQLite reads as text all the same."""
+
+
+def test_a_column_declared_with_a_length_is_still_text_to_the_ordering_smell(
+    tmp_path: Path,
+) -> None:
+    """SQLite gives TEXT affinity to any declaration containing CHAR, CLOB or TEXT, so
+    ``VARCHAR(50)`` is a text column here and a gold ordering it sorts its numbers as
+    strings. The reading is the engine's, which is why the smell asks the backend: matching
+    the declaration against a list of names passed over this column and stayed quiet."""
+    backend = SqliteBackend.connect(str(_build(tmp_path / "affinity.sqlite", AFFINITY_FIXTURE)))
+    sql = "SELECT driver FROM speeds ORDER BY fastestlapspeed DESC"
+    baseline = backend.execute(sql, statement_timeout_seconds=TIMEOUT_SECONDS)
+
+    found = ordering_over_numeric_text(
+        parse_statement(sql),
+        backend,
+        baseline,
+        settings=SmellSettings(serialization=DESCRIPTOR, statement_timeout_seconds=TIMEOUT_SECONDS),
+    )
+
+    assert backend.declared_type_is_text("VARCHAR(50)")
+    assert (found.fired, found.applicable) == (True, True)
+    key = cast("list[dict[str, Any]]", found.evidence["keys"])[0]
+    assert key["declared_type"] == "VARCHAR(50)"
+    assert (
+        key["cast_sql"] == "SELECT driver FROM speeds ORDER BY CAST(fastestlapspeed AS REAL) DESC"
+    )
+    assert baseline.rows == (("Birch",), ("Alder",), ("Cedar",)), "'93.175' is the largest string"
 
 
 def test_a_rerun_over_the_copies_reads_the_copies_and_the_audited_one_never_does(
