@@ -1,0 +1,6444 @@
+{
+ "reading": "Clause-level sqlglot comparison. Touched clauses are all retained; primary is the first match in precedence. Whole rewrite means different tables or more than three touched clauses.",
+ "sqlglot_version": "30.18.0",
+ "dialect": "sqlite",
+ "comparison": "canonical rendering, identifiers normalised, comments removed",
+ "precedence": [
+  "whole_rewrite",
+  "projection",
+  "distinct",
+  "from_tables",
+  "join_condition",
+  "where",
+  "group_by",
+  "having",
+  "order_by_key",
+  "order_by_direction_only",
+  "limit_or_offset",
+  "aggregate_function",
+  "cast_or_type",
+  "subquery_or_cte_shape"
+ ],
+ "parse_failures": [],
+ "class_counts": {
+  "aggregate_function": 1,
+  "distinct": 25,
+  "group_by": 6,
+  "join_condition": 5,
+  "limit_or_offset": 2,
+  "order_by_direction_only": 3,
+  "order_by_key": 43,
+  "projection": 79,
+  "where": 32,
+  "whole_rewrite": 203
+ },
+ "questions": {
+  "0": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "2": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "3": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "5": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "6": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "8": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "10": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "11": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "12": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "13": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "15": {
+   "touched_clauses": [
+    "projection",
+    "group_by",
+    "order_by_key",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "16": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "18": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "having",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "19": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "20": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "21": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "25": {
+   "touched_clauses": [
+    "projection",
+    "group_by"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "26": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "31": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "32": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "35": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "43": {
+   "touched_clauses": [
+    "where",
+    "order_by_key"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "45": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "46": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "48": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "51": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "53": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "55": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "60": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "61": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "62": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "66": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "68": {
+   "touched_clauses": [
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "69": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "71": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "77": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "78": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "79": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "80": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "84": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction",
+    "subquery_or_cte"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "85": {
+   "touched_clauses": [
+    "projection",
+    "where"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "87": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "88": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "91": {
+   "touched_clauses": [
+    "projection",
+    "distinct"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "92": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "94": {
+   "touched_clauses": [],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": true,
+   "new_bare_aggregate_projection": true
+  },
+  "95": {
+   "touched_clauses": [
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "96": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "97": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "100": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "101": {
+   "touched_clauses": [
+    "distinct",
+    "from_tables",
+    "where",
+    "order_by_key",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "103": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "104": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "105": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "106": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "108": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "109": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "110": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "111": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "112": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "113": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "115": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "117": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "118": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "119": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "121": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "122": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "123": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "124": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "125": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "order_by_key",
+    "order_by_direction",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "126": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "127": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "129": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "133": {
+   "touched_clauses": [
+    "from_tables",
+    "where",
+    "limit_or_offset",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "134": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "limit_or_offset",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "135": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "137": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "138": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "139": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "140": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "141": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "group_by",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "143": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "144": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "having",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "145": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "146": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "147": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "148": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "149": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "151": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "152": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "153": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "having",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "154": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "having",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "155": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "156": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "157": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "158": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "161": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "162": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "164": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "166": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "171": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "175": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "having",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "178": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "179": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "181": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "183": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "186": {
+   "touched_clauses": [
+    "from_tables",
+    "join_condition",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "187": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "188": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "190": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "191": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "195": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "196": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "having",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "200": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "203": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "204": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "205": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "207": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "208": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "209": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "213": {
+   "touched_clauses": [
+    "distinct",
+    "where"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "218": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "220": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "224": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "229": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "231": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "239": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "245": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "248": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "249": {
+   "touched_clauses": [
+    "distinct",
+    "join_condition"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "250": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction",
+    "subquery_or_cte"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "251": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "having",
+    "order_by_key",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "253": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "271": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "272": {
+   "touched_clauses": [
+    "limit_or_offset"
+   ],
+   "primary_class": "limit_or_offset",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "273": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "277": {
+   "touched_clauses": [
+    "distinct",
+    "join_condition"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "280": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "281": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "282": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "286": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "309": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "group_by"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "310": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "311": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "317": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "328": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "329": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction",
+    "subquery_or_cte"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "341": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "342": {
+   "touched_clauses": [
+    "distinct",
+    "from_tables",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "349": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "350": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "351": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "357": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "359": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "360": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "join_condition",
+    "where",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "363": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "365": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "376": {
+   "touched_clauses": [
+    "distinct",
+    "where"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "383": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "386": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "387": {
+   "touched_clauses": [
+    "from_tables",
+    "where",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "388": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "396": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "402": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "403": {
+   "touched_clauses": [
+    "projection",
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": true,
+   "new_bare_aggregate_projection": true
+  },
+  "406": {
+   "touched_clauses": [
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "416": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "429": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "430": {
+   "touched_clauses": [
+    "distinct",
+    "join_condition",
+    "order_by_key"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "432": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "435": {
+   "touched_clauses": [
+    "group_by"
+   ],
+   "primary_class": "group_by",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "436": {
+   "touched_clauses": [
+    "group_by"
+   ],
+   "primary_class": "group_by",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "442": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "443": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "444": {
+   "touched_clauses": [
+    "projection",
+    "join_condition"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "445": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "451": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "454": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "456": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "462": {
+   "touched_clauses": [
+    "limit_or_offset"
+   ],
+   "primary_class": "limit_or_offset",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "469": {
+   "touched_clauses": [
+    "projection",
+    "where"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "476": {
+   "touched_clauses": [
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "477": {
+   "touched_clauses": [
+    "distinct",
+    "where",
+    "group_by"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "499": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "501": {
+   "touched_clauses": [
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "507": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "513": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "514": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "515": {
+   "touched_clauses": [
+    "from_tables",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "516": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "517": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "530": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "join_condition",
+    "order_by_key",
+    "order_by_direction",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "543": {
+   "touched_clauses": [
+    "projection",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "546": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "554": {
+   "touched_clauses": [
+    "group_by",
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "group_by",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "559": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "561": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "571": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "580": {
+   "touched_clauses": [
+    "distinct",
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "581": {
+   "touched_clauses": [
+    "join_condition"
+   ],
+   "primary_class": "join_condition",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "582": {
+   "touched_clauses": [
+    "join_condition"
+   ],
+   "primary_class": "join_condition",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "590": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "591": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "593": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "594": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "596": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "group_by",
+    "order_by_key",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "600": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "606": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "610": {
+   "touched_clauses": [
+    "distinct",
+    "from_tables",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "618": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "622": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "629": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "631": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "633": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "635": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "having",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "637": {
+   "touched_clauses": [
+    "distinct",
+    "where"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "639": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "640": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "641": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "646": {
+   "touched_clauses": [
+    "distinct",
+    "join_condition",
+    "where"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "649": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "bare_aggregate_projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "652": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "656": {
+   "touched_clauses": [
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "limit_or_offset",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "658": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "668": {
+   "touched_clauses": [
+    "order_by_key",
+    "aggregate_function"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "671": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "682": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "683": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "686": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "687": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "693": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "694": {
+   "touched_clauses": [
+    "join_condition",
+    "order_by_key"
+   ],
+   "primary_class": "join_condition",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "695": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "709": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "710": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "711": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "715": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "716": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "736": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "763": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "767": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "aggregate_function",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "769": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "794": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "801": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "810": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "832": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "835": {
+   "touched_clauses": [
+    "join_condition"
+   ],
+   "primary_class": "join_condition",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "856": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "862": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "865": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "880": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "890": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "908": {
+   "touched_clauses": [
+    "projection",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "909": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "913": {
+   "touched_clauses": [
+    "order_by_key"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "926": {
+   "touched_clauses": [
+    "projection",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "928": {
+   "touched_clauses": [
+    "projection",
+    "where"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "939": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "940": {
+   "touched_clauses": [
+    "aggregate_function",
+    "subquery_or_cte"
+   ],
+   "primary_class": "aggregate_function",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "944": {
+   "touched_clauses": [],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "949": {
+   "touched_clauses": [
+    "group_by",
+    "order_by_key",
+    "aggregate_function"
+   ],
+   "primary_class": "group_by",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "955": {
+   "touched_clauses": [
+    "from_tables",
+    "where",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "957": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "958": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "959": {
+   "touched_clauses": [
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "963": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "967": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "970": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "971": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "972": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "974": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "979": {
+   "touched_clauses": [
+    "order_by_key",
+    "aggregate_function"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "981": {
+   "touched_clauses": [
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "984": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "988": {
+   "touched_clauses": [
+    "where",
+    "group_by",
+    "order_by_key",
+    "aggregate_function",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "993": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "996": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "998": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "999": {
+   "touched_clauses": [
+    "from_tables",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1000": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "order_by_key",
+    "order_by_direction",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1006": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "order_by_key",
+    "order_by_direction",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1009": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1010": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1014": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1019": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1021": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1024": {
+   "touched_clauses": [
+    "projection",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1026": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1027": {
+   "touched_clauses": [
+    "join_condition",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1028": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1029": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1036": {
+   "touched_clauses": [
+    "where",
+    "aggregate_function",
+    "cast_or_type",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1037": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1039": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1047": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1055": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1066": {
+   "touched_clauses": [
+    "distinct",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1069": {
+   "touched_clauses": [
+    "from_tables",
+    "where",
+    "order_by_key",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1079": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1080": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1083": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1092": {
+   "touched_clauses": [
+    "group_by",
+    "having",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1095": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1109": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1112": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1113": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1120": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1121": {
+   "touched_clauses": [
+    "from_tables",
+    "join_condition",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1122": {
+   "touched_clauses": [
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1126": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1128": {
+   "touched_clauses": [
+    "join_condition",
+    "where"
+   ],
+   "primary_class": "join_condition",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1131": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "aggregate_function",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1135": {
+   "touched_clauses": [
+    "order_by_direction_only"
+   ],
+   "primary_class": "order_by_direction_only",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1140": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1147": {
+   "touched_clauses": [
+    "distinct",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1152": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1156": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1161": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1168": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "where",
+    "order_by_key",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": true
+  },
+  "1170": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1173": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1175": {
+   "touched_clauses": [
+    "from_tables",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1178": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1180": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1181": {
+   "touched_clauses": [
+    "projection",
+    "where"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1183": {
+   "touched_clauses": [
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1190": {
+   "touched_clauses": [
+    "where",
+    "cast_or_type"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1199": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1200": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1204": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1222": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1228": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1234": {
+   "touched_clauses": [
+    "distinct",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1241": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1243": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1244": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1247": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1250": {
+   "touched_clauses": [
+    "where",
+    "cast_or_type"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1253": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1254": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1256": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1260": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "join_condition",
+    "where",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1266": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1269": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1273": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1274": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1276": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1278": {
+   "touched_clauses": [
+    "from_tables",
+    "join_condition",
+    "group_by",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1279": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1282": {
+   "touched_clauses": [
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1283": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1284": {
+   "touched_clauses": [
+    "order_by_direction_only"
+   ],
+   "primary_class": "order_by_direction_only",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1286": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1287": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1289": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1292": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1293": {
+   "touched_clauses": [
+    "projection",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1294": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1296": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1298": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1299": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1304": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1317": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1322": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1323": {
+   "touched_clauses": [
+    "projection",
+    "distinct",
+    "from_tables",
+    "where",
+    "having",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1332": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1335": {
+   "touched_clauses": [
+    "where"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1358": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1363": {
+   "touched_clauses": [
+    "distinct"
+   ],
+   "primary_class": "distinct",
+   "distinct": {
+    "old": false,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1367": {
+   "touched_clauses": [
+    "group_by"
+   ],
+   "primary_class": "group_by",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1384": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1391": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "aggregate_function",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1398": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1399": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "limit_or_offset"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1404": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "group_by",
+    "bare_aggregate_projection",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": true,
+   "new_bare_aggregate_projection": false
+  },
+  "1406": {
+   "touched_clauses": [
+    "where",
+    "subquery_or_cte"
+   ],
+   "primary_class": "where",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1407": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1418": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1442": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "aggregate_function",
+    "cast_or_type",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1450": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1456": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "group_by",
+    "order_by_key",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1464": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1472": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1474": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1481": {
+   "touched_clauses": [],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1482": {
+   "touched_clauses": [
+    "projection",
+    "where",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1491": {
+   "touched_clauses": [
+    "projection",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1496": {
+   "touched_clauses": [
+    "group_by"
+   ],
+   "primary_class": "group_by",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1499": {
+   "touched_clauses": [
+    "projection",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "order_by_direction",
+    "limit_or_offset",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1501": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "order_by_key",
+    "order_by_direction",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1503": {
+   "touched_clauses": [
+    "projection"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": true,
+    "new": true
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1504": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1505": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1511": {
+   "touched_clauses": [
+    "from_tables",
+    "join_condition",
+    "where",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1512": {
+   "touched_clauses": [
+    "order_by_key",
+    "order_by_direction"
+   ],
+   "primary_class": "order_by_key",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1513": {
+   "touched_clauses": [
+    "order_by_direction_only"
+   ],
+   "primary_class": "order_by_direction_only",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1525": {
+   "touched_clauses": [
+    "projection",
+    "aggregate_function",
+    "cast_or_type"
+   ],
+   "primary_class": "projection",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1529": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "aggregate_function",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  },
+  "1531": {
+   "touched_clauses": [
+    "projection",
+    "from_tables",
+    "join_condition",
+    "where",
+    "group_by",
+    "order_by_key",
+    "aggregate_function",
+    "subquery_or_cte",
+    "whole_rewrite"
+   ],
+   "primary_class": "whole_rewrite",
+   "distinct": {
+    "old": false,
+    "new": false
+   },
+   "old_bare_aggregate_projection": false,
+   "new_bare_aggregate_projection": false
+  }
+ }
+}

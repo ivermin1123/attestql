@@ -1,0 +1,181 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-2e584677-05ef-4685-9faf-b00e1c30493b",
+  "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/inputs/dev/dev_20240627/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite | size=7327744",
+  "effective_database_role": "file",
+  "session_settings": {
+    "engine": "sqlite",
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "parser": {
+    "validator": "audit:sqlglot-sqlite-parse",
+    "sqlglot": "30.18.0",
+    "dialect": "sqlite"
+  },
+  "question_set": {
+    "path": "data/dev/dev_20240627/dev.json",
+    "digest": "sha256:630272f2b1c44d8cef2c3b246f623355cf0bbc1e832c81061df895530dfc2f06",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/dev.zip (sha256 cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630, Last-Modified 2024-06-29, downloaded 2026-09-07), member dev_20240627/dev.json",
+    "date": "2024-06-27",
+    "entries": 1534,
+    "audited": 47,
+    "duplicate_ids": [],
+    "ids": [
+      1152,
+      1156,
+      1161,
+      1168,
+      1170,
+      1173,
+      1175,
+      1178,
+      1180,
+      1181,
+      1183,
+      1190,
+      1199,
+      1200,
+      1204,
+      1222,
+      1228,
+      1234,
+      1241,
+      1243,
+      1244,
+      1247,
+      1250,
+      1253,
+      1254,
+      1256,
+      1260,
+      1266,
+      1269,
+      1273,
+      1274,
+      1276,
+      1278,
+      1279,
+      1282,
+      1283,
+      1284,
+      1286,
+      1287,
+      1289,
+      1292,
+      1293,
+      1294,
+      1296,
+      1298,
+      1299,
+      1304
+    ]
+  },
+  "predictions": {
+    "path": "data/predictions/rewrite-399.json",
+    "digest": "sha256:667a9dd8c7472876b4cec1187a58bb43635a9040f18a676ccefeee3603fe561e",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07), SQL for the audited ids selected by split.py",
+    "date": "2026-01-18T08:51:02Z",
+    "keyed_by": "question-id",
+    "statements": 399,
+    "positions_unused": []
+  },
+  "verdicts": {
+    "NOT_EQUAL": 31,
+    "EQUAL": 16
+  },
+  "smells": {
+    "ordering-over-numeric-text": 0,
+    "arbitrary-cut": 3,
+    "not-a-function-of-the-data": 2,
+    "float-aggregate-order": 0,
+    "direction-against-question": 0
+  },
+  "smells_fired": 5,
+  "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+      "multiplicity": 2,
+      "type": 0,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 0,
+      "0": 2
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "out/tool/rewrite-399/thrombosis_prediction/fixture.json",
+    "source": {
+      "path": "data/dev/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite",
+      "digest": "sha256:e7e16d74b4731b4b8d33fdbe8c29cd5622620788ce8d1f335631f65fc7cf1db9",
+      "origin": "dev.zip (sha256 cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630), member dev_20240627/dev_databases.zip, dev_databases, thrombosis_prediction/thrombosis_prediction.sqlite",
+      "date": "2024-06-14"
+    },
+    "schema_digest": "sha256:298ea928481863c7fc307a09fb41749798d78f06fce1aecfdb6b4aaef3ed6d54",
+    "row_counts": {
+      "main.Examination": 806,
+      "main.Laboratory": 13908,
+      "main.Patient": 1238
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "Patient",
+      "Examination",
+      "Laboratory"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {},
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "temp",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "Examination",
+      "Laboratory",
+      "Patient"
+    ],
+    "skipped": {},
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 30,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "out/tool/rewrite-399/thrombosis_prediction",
+    "serialization": "attestql/audit/2",
+    "work_mem": null,
+    "hash_mem_multiplier": null
+  },
+  "data_as_of": "2026-09-07T12:17:13.404441+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.317,
+    "shuffle": 0.037
+  },
+  "errors": [],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 1
+}

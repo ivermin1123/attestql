@@ -1,0 +1,169 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-29686fe0-7e5b-4f0e-8491-efb9b911f08f",
+  "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/inputs/dev/dev_20240627/dev_databases/student_club/student_club.sqlite | size=2641920",
+  "effective_database_role": "file",
+  "session_settings": {
+    "engine": "sqlite",
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "parser": {
+    "validator": "audit:sqlglot-sqlite-parse",
+    "sqlglot": "30.18.0",
+    "dialect": "sqlite"
+  },
+  "question_set": {
+    "path": "data/dev/dev_20240627/dev.json",
+    "digest": "sha256:630272f2b1c44d8cef2c3b246f623355cf0bbc1e832c81061df895530dfc2f06",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/dev.zip (sha256 cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630, Last-Modified 2024-06-29, downloaded 2026-09-07), member dev_20240627/dev.json",
+    "date": "2024-06-27",
+    "entries": 1534,
+    "audited": 20,
+    "duplicate_ids": [],
+    "ids": [
+      1317,
+      1322,
+      1323,
+      1332,
+      1335,
+      1358,
+      1363,
+      1367,
+      1384,
+      1391,
+      1398,
+      1399,
+      1404,
+      1406,
+      1407,
+      1418,
+      1442,
+      1450,
+      1456,
+      1464
+    ]
+  },
+  "predictions": {
+    "path": "data/predictions/rewrite-399.json",
+    "digest": "sha256:667a9dd8c7472876b4cec1187a58bb43635a9040f18a676ccefeee3603fe561e",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07), SQL for the audited ids selected by split.py",
+    "date": "2026-01-18T08:51:02Z",
+    "keyed_by": "question-id",
+    "statements": 399,
+    "positions_unused": []
+  },
+  "verdicts": {
+    "EQUAL": 11,
+    "NOT_EQUAL": 9
+  },
+  "smells": {
+    "ordering-over-numeric-text": 0,
+    "arbitrary-cut": 1,
+    "not-a-function-of-the-data": 1,
+    "float-aggregate-order": 0,
+    "direction-against-question": 0
+  },
+  "smells_fired": 2,
+  "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+      "multiplicity": 1,
+      "type": 0,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 0,
+      "0": 1
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "out/tool/rewrite-399/student_club/fixture.json",
+    "source": {
+      "path": "data/dev/dev_databases/student_club/student_club.sqlite",
+      "digest": "sha256:eb89bcfe97eefa386a27904ec5aa15159811a7eac894ec659a36e48fa9f76b77",
+      "origin": "dev.zip (sha256 cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630), member dev_20240627/dev_databases.zip, dev_databases, student_club/student_club.sqlite",
+      "date": "2024-06-14"
+    },
+    "schema_digest": "sha256:64709a2781d4c388f2169ca190cab020ca6914e9e9af8101899b2f8f3746abf4",
+    "row_counts": {
+      "main.attendance": 326,
+      "main.budget": 52,
+      "main.event": 42,
+      "main.expense": 32,
+      "main.income": 36,
+      "main.major": 113,
+      "main.member": 33,
+      "main.zip_code": 41877
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "event",
+      "attendance",
+      "member",
+      "budget",
+      "income",
+      "major",
+      "expense",
+      "zip_code"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {},
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "temp",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "attendance",
+      "budget",
+      "event",
+      "expense",
+      "income",
+      "major",
+      "member",
+      "zip_code"
+    ],
+    "skipped": {},
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 30,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "out/tool/rewrite-399/student_club",
+    "serialization": "attestql/audit/2",
+    "work_mem": null,
+    "hash_mem_multiplier": null
+  },
+  "data_as_of": "2026-09-07T12:17:12.737358+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.06,
+    "shuffle": 0.059
+  },
+  "errors": [],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 1
+}
