@@ -57,6 +57,7 @@ from contextlib import contextmanager, suppress
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from attestql.audit.backend import (
     BackendRefused,
@@ -369,7 +370,8 @@ class SqliteBackend:
         path = Path(target).expanduser()
         if not path.is_file():
             raise BackendRefused("connect", f"there is no SQLite file at {path}")
-        return cls(_open(path, step="connect"), path=path.resolve())
+        found = path.resolve()
+        return cls(_open(found, step="connect"), path=found)
 
     @property
     def scratch(self) -> str:
@@ -844,13 +846,27 @@ class SqliteBackend:
 def _open(path: Path, *, step: str) -> sqlite3.Connection:
     """One read-only connection to that file, with the envelope on and the functions bound."""
     try:
-        connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True, isolation_level=None)
+        connection = sqlite3.connect(_uri(path), uri=True, isolation_level=None)
     except sqlite3.Error as failed:
         # Named the way this interface names failures, so a caller that must not import a
         # driver can still tell a file it could not open from a question it could not answer.
         raise BackendRefused(step, str(failed).strip()) from failed
     _prepare(connection)
     return connection
+
+
+def _uri(path: Path) -> str:
+    """That file as a URI, with the path escaped so that ``mode=ro`` is still a parameter.
+
+    A URI filename ends at the first ``?`` or ``#``, so a path holding one would end there
+    and leave the rest of the path in front of ``mode=ro`` in the query, where SQLite reads
+    it as a parameter it does not know and ignores: the connection is then read-write over a
+    file whose name is the part before the ``?``, and SQLite creates that file when it is not
+    there. A ``%`` is the other one, because it begins an escape in a URI and a path is not
+    written in one. So every character but the separator is escaped here, and the path this
+    is given is absolute, so nothing about it is resolved twice.
+    """
+    return f"file:{quote(str(path), safe='/')}?mode=ro"
 
 
 def _prepare(connection: sqlite3.Connection) -> None:

@@ -107,6 +107,21 @@ attribute. Exact paths, as the drivers' and the parsers' are, and exercised by t
 below, so the day one stops being used is the day it stops being granted. Every other
 primitive in the set is forbidden there too, including the rest of ``importlib``."""
 
+URI_ESCAPE = "urllib.parse"
+"""Where a percent escape is written, and the whole of the exemption below. It builds URI
+text and takes it apart again; what puts ``urllib`` in the set above is ``urllib.request``,
+which opens a connection, and that half stays forbidden here as everywhere else."""
+
+URI_ESCAPERS: tuple[Path, ...] = (DRIVER_MODULES["sqlite3"],)
+"""The files permitted ``urllib.parse``, permitted that module alone, and the backend that
+opens a file through a URI for the same reason it is the file's own driver's importer.
+
+``mode=ro`` is what read-only means for a SQLite file and it is stated in the URI the
+connection is opened with, so a path holding a ``?``, a ``#`` or a ``%`` has to be escaped
+before it goes into one: unescaped, the filename ends where the path does not. Exact path,
+as the driver's and the parser's are, and exercised by the test below, so the day it stops
+being used is the day it stops being granted."""
+
 CONSOLE_SCRIPT_TEST = TESTS / "test_audit_end_to_end.py"
 """The one file permitted to start a process, and permitted ``subprocess`` alone.
 
@@ -291,6 +306,8 @@ def forbidden_primitives(path: Path) -> list[str]:
             for name in imported_modules_of(node):
                 if path in METADATA_READERS and name == PACKAGE_METADATA:
                     continue
+                if path in URI_ESCAPERS and name == URI_ESCAPE:
+                    continue
                 if name.split(".")[0] in forbidden_imports:
                     found.append(f"line {node.lineno}: import {name}")
         elif isinstance(node, ast.Call):
@@ -327,6 +344,14 @@ def test_each_metadata_reader_really_reads_the_metadata_it_is_allowed_to(path: P
     """The positive case of the metadata permissions, on the same ground as the rest."""
     assert PACKAGE_METADATA in imported_modules(path), (
         f"{path.name} is an allowed metadata reader and reads none"
+    )
+
+
+@pytest.mark.parametrize("path", URI_ESCAPERS, ids=lambda p: p.name)
+def test_each_uri_escaper_really_escapes_the_path_it_is_allowed_to(path: Path) -> None:
+    """The positive case of the URI permission, on the same ground as the metadata one."""
+    assert URI_ESCAPE in imported_modules(path), (
+        f"{path.name} is an allowed URI escaper and escapes nothing"
     )
 
 

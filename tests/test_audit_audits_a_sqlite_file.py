@@ -124,6 +124,29 @@ def test_a_file_that_is_not_there_is_a_refusal_and_not_an_empty_database(tmp_pat
         SqliteBackend.connect(str(tmp_path / "absent.sqlite"))
 
 
+@pytest.mark.parametrize("directory", ["a?directory", "a#directory"])
+def test_a_path_that_would_end_the_uri_early_opens_the_file_that_was_named(
+    tmp_path: Path, directory: str
+) -> None:
+    """A URI filename ends at the first ``?`` or ``#``. Unescaped, a path holding one would
+    end there and leave the rest of it in front of ``mode=ro`` in the query, which SQLite
+    ignores as a parameter it does not know: the connection would then be read-write over the
+    shorter name, and SQLite creates that file when it is not there. So the file that was
+    named is the file that is read, the write is still refused, and nothing is created."""
+    home = tmp_path / directory
+    home.mkdir()
+    backend = SqliteBackend.connect(str(_build(home / "audit.sqlite")))
+
+    assert _rows(backend, "SELECT count(*) FROM drivers") == ((3,),)
+    with pytest.raises(BackendRefused, match="readonly database"):
+        backend.execute(
+            "INSERT INTO drivers VALUES (9, 'Probe')", statement_timeout_seconds=TIMEOUT_SECONDS
+        )
+
+    assert sorted(entry.name for entry in tmp_path.iterdir()) == [directory]
+    assert sorted(entry.name for entry in home.iterdir()) == ["audit.sqlite"]
+
+
 def test_the_identity_names_the_version_the_file_and_its_size(
     backend: SqliteBackend, audited_file: Path
 ) -> None:
