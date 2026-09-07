@@ -1,0 +1,60 @@
+# Publishes a release to PyPI when a tag `v<version>` is pushed. No token is stored anywhere: PyPI
+# trusts the OIDC identity of this repository's `pypi` environment, registered once on pypi.org as a
+# trusted publisher (owner ivermin1123, repository attestql, workflow release.yml, environment pypi).
+# The same gate as `just check` runs first, the wheel is installed and asked its version before
+# anything is uploaded, so a tag that does not match pyproject.toml stops here with nothing published.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          python-version: "3.13"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: extractions/setup-just@v4
+      - run: uv sync --locked
+      - run: just check
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+      - run: uv build
+      - name: The wheel installs on its own and states the tag
+        run: |
+          uv tool install dist/attestql-*.whl
+          installed="$("$(uv tool dir --bin)/attestql" --version)"
+          echo "$installed"
+          test "$installed" = "attestql ${GITHUB_REF_NAME#v}"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
