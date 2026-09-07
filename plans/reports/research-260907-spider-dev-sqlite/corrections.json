@@ -1,0 +1,234 @@
+{
+ "reading": "Spider's own 2020-06-07 correction, measured by normalised SQL and question text.",
+ "normalisation": "SQL membership is the raw stripped line; question membership is raw stripped text",
+ "counts": {
+  "sql_changed": 28,
+  "question_changed": 21,
+  "both_changed": 5,
+  "question_only_changed": 16,
+  "untouched": 990
+ },
+ "correction_set": [
+  {
+   "question_id": 16,
+   "question_number": 17,
+   "db_id": "concert_singer",
+   "before_sql": "select avg(capacity) ,  max(capacity) from stadium",
+   "after_sql": "select max(capacity), average from stadium"
+  },
+  {
+   "question_id": 25,
+   "question_number": 26,
+   "db_id": "concert_singer",
+   "before_sql": "select t2.name ,  t2.capacity from concert as t1 join stadium as t2 on t1.stadium_id  =  t2.stadium_id where t1.year  >=  2014 group by t2.stadium_id order by count(*) desc limit 1",
+   "after_sql": "select t2.name ,  t2.capacity from concert as t1 join stadium as t2 on t1.stadium_id  =  t2.stadium_id where t1.year  >  2013 group by t2.stadium_id order by count(*) desc limit 1"
+  },
+  {
+   "question_id": 43,
+   "question_number": 44,
+   "db_id": "concert_singer",
+   "before_sql": "select count(*) from concert as t1 join stadium as t2 on t1.stadium_id  =  t2.stadium_id order by t2.capacity desc limit 1",
+   "after_sql": "select count(*) from concert where stadium_id = (select stadium_id from stadium order by capacity desc limit 1)"
+  },
+  {
+   "question_id": 44,
+   "question_number": 45,
+   "db_id": "concert_singer",
+   "before_sql": "select count(*) from concert as t1 join stadium as t2 on t1.stadium_id  =  t2.stadium_id order by t2.capacity desc limit 1",
+   "after_sql": "select count(*) from concert where stadium_id = (select stadium_id from stadium order by capacity desc limit 1)"
+  },
+  {
+   "question_id": 85,
+   "question_number": 86,
+   "db_id": "pets_1",
+   "before_sql": "select avg(age) from student where stuid not in (select t1.stuid from student as t1 join has_pet as t2 on t1.stuid  =  t2.stuid)",
+   "after_sql": "select avg(age) from student where stuid not in (select stuid from has_pet)"
+  },
+  {
+   "question_id": 86,
+   "question_number": 87,
+   "db_id": "pets_1",
+   "before_sql": "select avg(age) from student where stuid not in (select t1.stuid from student as t1 join has_pet as t2 on t1.stuid  =  t2.stuid)",
+   "after_sql": "select avg(age) from student where stuid not in (select stuid from has_pet)"
+  },
+  {
+   "question_id": 109,
+   "question_number": 110,
+   "db_id": "car_1",
+   "before_sql": "select count(*) ,  t2.fullname ,  t2.id from model_list as t1 join car_makers as t2 on t1.maker  =  t2.id group by t2.id;",
+   "after_sql": "select count(*) ,  t2.fullname from model_list as t1 join car_makers as t2 on t1.maker  =  t2.id group by t2.id;"
+  },
+  {
+   "question_id": 119,
+   "question_number": 120,
+   "db_id": "car_1",
+   "before_sql": "select weight from cars_data where cylinders  =  4 and year  =  1974 order by weight asc limit 1;",
+   "after_sql": "select min(weight) from cars_data where cylinders  =  8 and year  =  1974"
+  },
+  {
+   "question_id": 120,
+   "question_number": 121,
+   "db_id": "car_1",
+   "before_sql": "select weight from cars_data where cylinders  =  4 and year  =  1974 order by weight asc limit 1;",
+   "after_sql": "select min(weight) from cars_data where cylinders  =  8 and year  =  1974"
+  },
+  {
+   "question_id": 153,
+   "question_number": 154,
+   "db_id": "car_1",
+   "before_sql": "select distinct t1.year from cars_data as t1 where t1.weight  >  3000 and t1.weight  <  4000;",
+   "after_sql": "select distinct year from cars_data where weight between 3000 and 4000;"
+  },
+  {
+   "question_id": 154,
+   "question_number": 155,
+   "db_id": "car_1",
+   "before_sql": "select distinct t1.year from cars_data as t1 where t1.weight  >  3000 and t1.weight  <  4000;",
+   "after_sql": "select distinct year from cars_data where weight between 3000 and 4000;"
+  },
+  {
+   "question_id": 161,
+   "question_number": 162,
+   "db_id": "car_1",
+   "before_sql": "select count(*) from ( select t1.countryid ,  count(*) from countries as t1 join car_makers as t2 on t1.countryid  =  t2.country group by t1.countryid having count(*)  >  2 );",
+   "after_sql": "select count(*) from countries as t1 join car_makers as t2 on t1.countryid  =  t2.country group by t1.countryid having count(*)  >  2"
+  },
+  {
+   "question_id": 162,
+   "question_number": 163,
+   "db_id": "car_1",
+   "before_sql": "select count(*) from ( select t1.countryid ,  count(*) from countries as t1 join car_makers as t2 on t1.countryid  =  t2.country group by t1.countryid having count(*)  >  2 );",
+   "after_sql": "select count(*) from countries as t1 join car_makers as t2 on t1.countryid  =  t2.country group by t1.countryid having count(*)  >  2"
+  },
+  {
+   "question_id": 168,
+   "question_number": 169,
+   "db_id": "car_1",
+   "before_sql": "select t2.makeid ,  t2.make from cars_data as t1 join car_names as t2 on t1.id  =  t2.makeid where t1.horsepower  >  (select min(horsepower) from cars_data) and t1.cylinders  <=  3;",
+   "after_sql": "select t2.makeid ,  t2.make from cars_data as t1 join car_names as t2 on t1.id  =  t2.makeid where t1.horsepower  >  (select min(horsepower) from cars_data) and t1.cylinders  <  4;"
+  },
+  {
+   "question_id": 169,
+   "question_number": 170,
+   "db_id": "car_1",
+   "before_sql": "select mpg from cars_data where cylinders  =  8 or year  <  1980 order by mpg desc limit 1;",
+   "after_sql": "select max(mpg) from cars_data where cylinders  =  8 or year  <  1980"
+  },
+  {
+   "question_id": 170,
+   "question_number": 171,
+   "db_id": "car_1",
+   "before_sql": "select mpg from cars_data where cylinders  =  8 or year  <  1980 order by mpg desc limit 1;",
+   "after_sql": "select max(mpg) from cars_data where cylinders  =  8 or year  <  1980"
+  },
+  {
+   "question_id": 361,
+   "question_number": 362,
+   "db_id": "cre_Doc_Template_Mgt",
+   "before_sql": "select other_details from paragraphs where paragraph_text  =  'korea'",
+   "after_sql": "select other_details from paragraphs where paragraph_text like 'korea'"
+  },
+  {
+   "question_id": 362,
+   "question_number": 363,
+   "db_id": "cre_Doc_Template_Mgt",
+   "before_sql": "select other_details from paragraphs where paragraph_text  =  'korea'",
+   "after_sql": "select other_details from paragraphs where paragraph_text like 'korea'"
+  },
+  {
+   "question_id": 387,
+   "question_number": 388,
+   "db_id": "course_teach",
+   "before_sql": "select name from teacher where hometown != \"little lever urban distric\"",
+   "after_sql": "select name from teacher where hometown != \"little lever urban district\""
+  },
+  {
+   "question_id": 388,
+   "question_number": 389,
+   "db_id": "course_teach",
+   "before_sql": "select name from teacher where hometown != \"little lever urban distric\"",
+   "after_sql": "select name from teacher where hometown != \"little lever urban district\""
+  },
+  {
+   "question_id": 583,
+   "question_number": 584,
+   "db_id": "student_transcripts_tracking",
+   "before_sql": "select t1.first_name from students as t1 join addresses as t2 on t1.permanent_address_id  =  t2.address_id where t2.country  =  'haiti' union select first_name from students where cell_mobile_number  =  '09700166582'",
+   "after_sql": "select t1.first_name from students as t1 join addresses as t2 on t1.permanent_address_id  =  t2.address_id where t2.country  =  'haiti' or t1.cell_mobile_number  =  '09700166582'"
+  },
+  {
+   "question_id": 584,
+   "question_number": 585,
+   "db_id": "student_transcripts_tracking",
+   "before_sql": "select t1.first_name from students as t1 join addresses as t2 on t1.permanent_address_id  =  t2.address_id where t2.country  =  'haiti' union select first_name from students where cell_mobile_number  =  '09700166582'",
+   "after_sql": "select t1.first_name from students as t1 join addresses as t2 on t1.permanent_address_id  =  t2.address_id where t2.country  =  'haiti' or t1.cell_mobile_number  =  '09700166582'"
+  },
+  {
+   "question_id": 629,
+   "question_number": 630,
+   "db_id": "tvshow",
+   "before_sql": "select production_code ,  channel from cartoon order by original_air_date limit 1",
+   "after_sql": "select production_code ,  channel from cartoon order by original_air_date desc limit 1"
+  },
+  {
+   "question_id": 630,
+   "question_number": 631,
+   "db_id": "tvshow",
+   "before_sql": "select production_code ,  channel from cartoon order by original_air_date limit 1",
+   "after_sql": "select production_code ,  channel from cartoon order by original_air_date desc limit 1"
+  },
+  {
+   "question_id": 754,
+   "question_number": 755,
+   "db_id": "world_1",
+   "before_sql": "select * from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"english\" and isofficial  =  \"t\" union select * from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"dutch\" and isofficial  =  \"t\"",
+   "after_sql": "select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"english\" and isofficial  =  \"t\" union select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"dutch\" and isofficial  =  \"t\""
+  },
+  {
+   "question_id": 813,
+   "question_number": 814,
+   "db_id": "world_1",
+   "before_sql": "select name from city where population between 160000 and 90000",
+   "after_sql": "select name from city where population between 160000 and 900000"
+  },
+  {
+   "question_id": 924,
+   "question_number": 925,
+   "db_id": "dog_kennels",
+   "before_sql": "select name from dogs where dog_id not in( select dog_id from treatments group by dog_id having sum(cost_of_treatment)  >  1000 )",
+   "after_sql": "select name from dogs where dog_id not in ( select dog_id from treatments group by dog_id having sum(cost_of_treatment)  >  1000 )"
+  },
+  {
+   "question_id": 925,
+   "question_number": 926,
+   "db_id": "dog_kennels",
+   "before_sql": "select name from dogs where dog_id not in( select dog_id from treatments group by dog_id having sum(cost_of_treatment)  >  1000 )",
+   "after_sql": "select name from dogs where dog_id not in ( select dog_id from treatments group by dog_id having sum(cost_of_treatment)  >  1000 )"
+  }
+ ],
+ "text_only_ids": [
+  17,
+  34,
+  59,
+  80,
+  134,
+  136,
+  175,
+  178,
+  516,
+  554,
+  701,
+  786,
+  810,
+  811,
+  979,
+  1015
+ ],
+ "both_ids": [
+  16,
+  109,
+  120,
+  168,
+  925
+ ]
+}
