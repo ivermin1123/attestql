@@ -2,10 +2,10 @@
 
 <!-- cspell:ignore minidev -->
 
-Status 2026-09-07 20:05: L1 and L2 done and merged into main (`49afd57`, `0c41dbe`; register
-rows A41 and A42), their worktrees removed; L3 (task `task_4c1921eaaf8b`, worktree
-`research-260907-l3`) and L4 (`task_6f3de946b277`, `research-260907-l4`) dispatched at 19:47 and
-19:52 and running. Four lanes on codex (GLM) workers, one Orca child worktree each, two at a
+Status 2026-09-07 20:30: L1, L2 and L4 done and merged into main (`49afd57`, `0c41dbe`,
+`b926f71`; register rows A41, A42 and A43), their worktrees removed; L3 (task
+`task_4c1921eaaf8b`, worktree `research-260907-l3`, dispatched 19:47) is running its 19
+prediction files. Four lanes on codex (GLM) workers, one Orca child worktree each, two at a
 time (L1 and L2, then L3 and L4). The owner's order of 2026-09-07 18:37: a lane gets its own worktree, a
 written brief, a validation pass and a red review before it is dispatched. Read-only research:
 every lane writes one report and one artifact directory under `plans/reports/`, touches no
