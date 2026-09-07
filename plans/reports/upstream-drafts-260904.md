@@ -1,7 +1,8 @@
 # Upstream drafts, 2026-09-04
 
 Drafts the owner sends by hand. Nothing here is posted by a session. The four reports filed
-on 2026-09-04 are in `docs/claims-register.md`, section 5; this file holds the fifth.
+on 2026-09-04 are in `docs/claims-register.md`, section 5; this file holds the fifth, the sixth
+and the seventh.
 Each paragraph of a body is one line: GitHub renders a line break wherever a file wraps, so a
 body is pasted as it stands and never re-wrapped.
 
@@ -67,3 +68,37 @@ The 23, by what goes wrong:
 Why it matters for scoring: the evaluator compares result sets, so on a tie-cut gold a prediction that picks another of the tied rows, which is just as correct, scores 0, and on q81 and q847 a prediction that filters the NULLs out scores 0 for being right.
 
 Per-question reasons, the probe outputs, and a script that reruns all of it against `dev.zip` are here: <https://github.com/ivermin1123/attestql/tree/main/plans/reports/bird-dev-sqlite-260907> (the hand reading is `classification.json`). Happy to open one issue per question or send a corrected SQL for each if that is easier for you.
+
+## 7. bird-bench/mini_dev: five of the eleven databases differ between dev.zip and minidev.zip
+
+Where: new issue on `bird-bench/mini_dev`, the tracker whose README links both zips. Evidence:
+register row A38, `plans/reports/bird-dev-sqlite-260907/inputs.json` (`databases_against_minidev`)
+and `check_inputs.py` (digest, then schema, row counts and per-table row digests), measured
+2026-09-07 at the commit `plans/reports/measurement-260907-1435-bird-dev-sqlite.md` names.
+Not sent: the owner reads it first.
+
+Title: Five of the eleven dev databases differ between dev.zip and minidev.zip
+
+Body:
+
+The two zips the README links carry the same eleven `dev_databases`, but only six of the files are the same. I checked <https://bird-bench.oss-cn-beijing.aliyuncs.com/dev.zip> (sha256 `cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630`, Last-Modified 2024-06-29) against <https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip> (sha256 `cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f`, downloaded 2026-09-02) by file digest first, then by schema, row count per table and a digest of each table's rows where the files differed. `card_games`, `codebase_community`, `debit_card_specializing`, `financial`, `student_club` and `superhero` are byte-identical. The other five are not, and neither README says so.
+
+| Database | Table | dev.zip | minidev.zip |
+|---|---|---|---|
+| formula_1 | lapTimes | 420,369 rows | 400,524 rows |
+| formula_1 | pitStops | 6,070 | 5,815 |
+| formula_1 | qualifying | 7,397 | 6,967 |
+| formula_1 | races | 976 | 954 |
+| formula_1 | results | 23,657 | 23,179 |
+| thrombosis_prediction | Examination | 806 | 106 |
+| toxicology | atom | 12,333 | 9,111 |
+| toxicology | bond | 12,379 | 9,156 |
+| toxicology | connected | 24,758 | 18,312 |
+| california_schools | satscores | same count, 211 of 2,269 `cds` codes without their leading zero | the same codes with the zero |
+| european_football_2 | Player | same count, `height` stored as REAL | `height` stored as a truncated integer |
+
+The schemas agree in all five. In `formula_1`, `thrombosis_prediction` and `toxicology` the dev copy simply holds more rows. In `california_schools` the row counts agree and 211 of the 2,269 `satscores.cds` values lost their leading zero in dev's copy, so those 211 rows join to `schools` in Mini-Dev's copy and do not in dev's. In `european_football_2` the counts agree and `Player.height` is a REAL in dev and a truncated integer in Mini-Dev.
+
+Why it matters: a Mini-Dev question is a dev question, and its gold runs against whichever copy the user unpacked. A gold over `formula_1`, `toxicology` or `thrombosis_prediction` can return other rows on the two copies, and a gold that joins `satscores` to `schools` returns other rows on `california_schools`. Two people scoring the same predictions against "the dev databases" can get different EX for that reason alone, and the README of neither repository says which copy is the one the golds were written against.
+
+Two questions, then: which copy is the intended one for Mini-Dev, and could the README of each zip state the sha256 of the other and the five differences? The check itself is a short script; I am happy to send it, or the per-table row digests, if that helps.
