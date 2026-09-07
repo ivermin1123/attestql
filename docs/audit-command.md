@@ -257,5 +257,17 @@ the record back into the result and the descriptor it was rendered under, takes 
 over that rendering again and `record_hash` over the document with that one key removed, and
 compares. A record whose bytes changed after the audit wrote it says so on the page.
 
+Where a table cannot say the thing, the page draws it: an SVG built in Python from the same
+numbers the tables state, with its data source in its `<title>` and the same numbers in words
+under it. The run page draws its verdicts and its probes; a question drawn only where its class
+has a shape, which is the rows that moved, the rows one result holds more of, and the result that
+is the first rows of the other.
+
+The pages print. The sticky line at the top becomes an ordinary heading, every disclosure opens
+so paper holds what the screen would have held after you opened them all, every link prints where
+it goes, and nothing animates. The stylesheet, the script and the fonts are written under
+`static/` beside the pages, so a report is a directory you can move, serve or open with nothing
+fetched from a network.
+
 Rendering the same directory twice writes the same bytes: no clock is read and no generation time
 is written, so a report can be committed or published and re-made without a diff.
