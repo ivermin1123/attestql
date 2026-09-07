@@ -32,6 +32,7 @@ from attestql.audit.engines import SQLITE
 from attestql.audit.parse import StatementRefused
 from attestql.audit.smells import NUMERIC_TEXT
 from attestql.audit.sqlite import (
+    NOT_IN_THIS_FILE,
     QUALIFIED_NAME_IS_NOT_REACHED,
     UNOBSERVED,
     WITHOUT_A_ROW_IDENTITY,
@@ -529,6 +530,23 @@ def test_the_copies_name_what_they_did_not_cover_and_why(backend: SqliteBackend)
         assert prepared.unreachable[TableName("main", "results")] == QUALIFIED_NAME_IS_NOT_REACHED
         assert prepared.unreachable[TableName("", "keyed")] == WITHOUT_A_ROW_IDENTITY
         assert prepared.unreachable[TableName("", "fast")] == WITHOUT_A_ROW_IDENTITY
+    finally:
+        backend.drop_shuffled_copies()
+
+
+def test_a_name_the_file_does_not_hold_is_reported_and_the_rest_is_still_copied(
+    backend: SqliteBackend,
+) -> None:
+    """A gold that names a table nobody loaded is one question's error and never the end of
+    the shuffle. Which names the file holds is therefore asked before anything is counted:
+    counting one that is not there is the engine's own error, and this answer has a word for
+    it already."""
+    prepared = backend.prepare_shuffled_copies(
+        (TableName("", "drivers"), TableName("", "seasons")), seed="a-seed", row_limit=1000
+    )
+    try:
+        assert prepared.copied == (TableName("", "drivers"),)
+        assert prepared.unreachable == {TableName("", "seasons"): NOT_IN_THIS_FILE}
     finally:
         backend.drop_shuffled_copies()
 
