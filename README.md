@@ -1,201 +1,131 @@
 # AttestQL
 
-Audit text-to-SQL gold and predictions on PostgreSQL with typed replay evidence.
+You have a text-to-SQL prediction file and a benchmark that scored it. Run one command and get,
+per question, whether the prediction and the gold disagree on the shipped data, the rows that
+differ, and what the benchmark's own scorer would have said: for a question scored 0, the rows
+that decided it, and for one scored 1, whether a comparison that keeps duplicates, order and types
+agrees with the set comparison that credited it.
 
-## The problem
+```text
+attestql audit --engine sqlite --dsn sandbox/fixture.sqlite \
+    --questions tools/audit-sandbox-sqlite/questions.json \
+    --predictions tools/audit-sandbox-sqlite/predictions.json --out audit
+```
 
-Text-to-SQL benchmarks score a prediction by executing it and the gold statement on one shipped
-database and comparing the two results as Python sets: `set(predicted) == set(gold)`. That
-comparison drops duplicate rows, ignores order even when the question asks for one, and compares
-values loosely across types. It also cannot tell you when the gold itself is wrong, and it often
-is: the CIDR 2026 audit by Jin et al. measured 52.8 % annotation error in BIRD Mini-Dev and
-66.1 % in Spider 2.0-Snow ([paper](https://www.vldb.org/cidrdb/papers/2026/p5-jin.pdf)). Reports of
-wrong gold sit open on the benchmark trackers with nobody able to say, mechanically, where two
-statements disagree.
+That run is this repository's own sandbox: the three BIRD Mini-Dev golds that upstream reports
+found wrong (q1029, q879, q207) on a fixture of a few rows, each paired with a corrected statement
+as its prediction, plus three synthetic questions. Its output, unedited:
 
-AttestQL executes both statements under a read-only transaction with the server's parallel gather
-turned off, so that a float sum is added in one order and two runs of one statement cannot differ
-in a late digit, renders each result with a typed canonical serializer, compares them under a
-stated rule (ordered sequence when the gold orders, multiset otherwise), and writes an evidence
-record per execution with everything a second person needs to re-run it. When the two disagree it
-writes the differing rows as a counterexample. On the gold alone it runs mechanical probes for the
-defects that need no second statement.
+```text
+q1029 european_football_2 R-ORD  NOT_EQUAL  smells=none  audit/q1029/
+q879  formula_1   R-ORD  NOT_EQUAL  smells=ordering-over-numeric-text  audit/q879/
+q207  toxicology  R-SET  NOT_EQUAL  smells=none  audit/q207/
+q900001 synthetic   R-ORD  GOLD-ONLY  smells=not-a-function-of-the-data  audit/q900001/
+q900002 synthetic   R-ORD  GOLD-ONLY  smells=arbitrary-cut,not-a-function-of-the-data  audit/q900002/
+q900005 synthetic   R-ORD  EQUAL      smells=ordering-over-numeric-text  audit/q900005/
+6 questions: 3 NOT_EQUAL, 5 smells fired, 0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)
+```
+
+Every `NOT_EQUAL` line has a directory. `audit/q879/counterexample.json` says why that one
+disagrees, trimmed here to the fields a reader opens first:
+
+```text
+"gold":   "... ORDER BY T2.fastestLapSpeed DESC LIMIT 1"                -> "Norwegian"
+"second": "... ORDER BY CAST(T2.fastestLapSpeed AS REAL) DESC LIMIT 1"  -> "Peruvian"
+"bird_ex": {"value": 0, "method": "set(second_rows) == set(gold_rows), ..."}
+"differing_rows": {"in_gold_not_in_second": [["Norwegian"]], "in_second_not_in_gold": [["Peruvian"]]}
+```
+
+and `audit/q879/smells.json` names the mechanism: `fastestLapSpeed` is a text column holding only
+numbers, so the gold sorts `9.5` above `10` and the fastest lap is not the one it returns. The
+same directory holds the two evidence records, each with the statement, the role, the engine,
+the session settings, the result and its hash, and how to run it again.
 
 **NOT_EQUAL never means the gold is wrong.** It means these two statements disagree on this data
-under this rule; here are the rows; decide.
+under this rule; here are the rows; decide. The benchmark's own reading,
+`set(predicted) == set(gold)`, is computed beside every verdict as `bird_ex`, and the typed
+comparison beside it keeps duplicate rows, keeps order where the gold orders, and compares values
+by declared type, so a prediction the benchmark credits and this tool calls `NOT_EQUAL` is listed
+on the summary line by what makes the two readings differ.
 
-## Try it in ten minutes
+## Install
 
-You need PostgreSQL 16 (Docker is fine) and Python 3.11 or later. Install the package from PyPI:
-
-```text
-uv tool install attestql     # or: pip install attestql
-```
-
-Load BIRD Mini-Dev, the public benchmark this tool is demonstrated on
-([bird-bench/mini_dev](https://github.com/bird-bench/mini_dev), CC BY-SA 4.0), and give the tool
-one schema it may write scratch tables into:
+Python 3.11 or later. From PyPI:
 
 ```text
-unzip minidev.zip
-createdb bird
-psql -d bird -f minidev/MINIDEV_postgresql/BIRD_dev.sql
-psql -d bird -c 'CREATE SCHEMA attestql_scratch'
+uv tool install attestql        # or: pip install attestql
 ```
 
-Audit the gold statements alone:
+Or from a checkout, which is also how the sandbox above is built:
+
+```text
+git clone https://github.com/ivermin1123/attestql && cd attestql
+uv run python tools/audit-sandbox-sqlite/build.py sandbox
+uv run attestql audit --engine sqlite --dsn sandbox/fixture.sqlite \
+    --questions tools/audit-sandbox-sqlite/questions.json \
+    --predictions tools/audit-sandbox-sqlite/predictions.json --out audit
+```
+
+On your own files the command is the same. On SQLite, `--dsn` is the path to one database file and
+`--ids` picks the questions that database answers, so a benchmark of eleven databases is eleven
+runs; BIRD Mini-Dev and BIRD dev ship as SQLite files and need nothing else installed. On
+PostgreSQL 16 one server holds every database of the benchmark, so one run covers the whole
+question file:
 
 ```text
 attestql audit --dsn "host=localhost dbname=bird" \
-    --questions minidev/MINIDEV/mini_dev_postgresql.json --out audit/
+    --questions minidev/MINIDEV/mini_dev_postgresql.json --predictions preds.json --out audit
 ```
 
-Or compare your predictions against the gold (`{"879": "SELECT ..."}`, or BIRD's own
-`predict_dev.json`):
+A predictions file written for this tool is keyed by question id (`{"879": "SELECT ..."}`); BIRD's
+own `predict_dev.json` files are keyed by position and are read with
+`--predictions-keyed-by position`. Without `--predictions` the run audits the golds alone and runs
+the mechanical probes that need no second statement: an ordering key that is text holding numbers,
+an arbitrary or null-first cut that changes the answer, and a result that changes when the
+referenced tables are copied in another row order. Exit status is 0 with no disagreement, 1 with at least one, 2 when
+the tool could not run. Every flag, every line of the output and every key of `summary.json` is
+described in [docs/audit-command.md](docs/audit-command.md).
 
-```text
-attestql audit --dsn "host=localhost dbname=bird" \
-    --questions minidev/MINIDEV/mini_dev_postgresql.json --predictions preds.json --out audit/
-```
+## What it found
 
-BIRD's own prediction files under `llm/exp_result/` are keyed by the position of the entry in the
-question file rather than by question id, because its evaluation pairs prediction `i` with gold
-line `i`; read one with `--predictions-keyed-by position`, and under the default keying a file of
-that shape is refused rather than paired with whichever questions happen to carry those numbers.
-An entry that is the number `0` or an empty string, which is how BIRD dev's own
-`predict_dev.json` marks a prediction the model did not produce, is that question's error line and
-not a refusal of the file; a question the file does not name at all is audited gold-only.
-`--questions-origin`, `--questions-date`, `--predictions-origin` and `--predictions-date` record
-where each of the two files came from and what date its origin states, beside the sha256 this tool
-computes for it, in `summary.json` and in every evidence record. The data the server holds came
-from a file too: `--data-file` names the dump it was loaded from, which this tool digests and
-never reads, and `--data-origin` and `--data-date` state where that file came from, so all three
-sources are recorded alike.
+Three measurements, each on BIRD's own published files, each with its report, its artifact and
+BIRD's own evaluator run beside the tool as the check.
 
-The password comes from `PGPASSWORD` or `~/.pgpass`; a DSN that contains one, or any URI form, is
-refused. Loading BIRD's dump prints 99 `role "..." does not exist` errors from its ownership
-statements; they are harmless. The role needs SELECT on the audited tables and an existing schema it may create tables in
-(`--scratch-schema`, default `attestql_scratch`); without one, the shuffle probe reports itself
-as not run in `summary.json` and everything else still runs. A run holds its scratch schema from
-before it makes the copies until after it drops them, so a second audit told the same schema waits
-a minute for it and then reports its own shuffle as not run: give concurrent audits a schema each.
-On the full Mini-Dev gold set the run prints one line per question; three of them, and the last
-line (the whole output is in `plans/reports/audit-260902-minidev-gold-only/`):
+**BIRD Mini-Dev on PostgreSQL.** Of the 1,239 predictions in BIRD's nine published Mini-Dev
+prediction files that BIRD's evaluator scores 1, 164 (13.2 %) are `NOT_EQUAL` under the typed
+comparison, and read by hand 69 of those (42.1 %; 5.6 % of everything BIRD credits) are wrong
+answers the benchmark credited, 74 are duplicated rows a reader would forgive, and 21 are the
+typed rule alone. The two readings of EX agree on 4,476 of 4,482 predictions, and every
+disagreement is one float sum whose last digits depend on the order its parts are added in
+([report](plans/reports/measurement-260904-0046-prediction-mode-on-real-predictions.md)).
 
-```text
-q1380 student_club R-SET  GOLD-ONLY  smells=float-aggregate-order  audit/q1380/
-q1389 student_club R-ORD  GOLD-ONLY  smells=arbitrary-cut  audit/q1389/
-q879  formula_1   R-ORD  GOLD-ONLY  smells=ordering-over-numeric-text  audit/q879/
-498 questions: 0 NOT_EQUAL, 39 smells fired
-```
+**BIRD Mini-Dev on SQLite.** The same nine files on the eleven Mini-Dev database files, with no
+server: the tool's reading of BIRD's EX and BIRD's own evaluator agree on 4,481 of 4,482, and of
+the 1,650 predictions BIRD credits, 237 (14.4 %) are `NOT_EQUAL` under the typed comparison. A
+sample of 50 of those 237, read by hand, is 27 wrong answers the benchmark credited, 22 duplicated
+rows a reader would forgive and 1 the typed rule itself
+([report](plans/reports/measurement-260907-1106-minidev-sqlite.md)).
 
-Two copies of the Mini-Dev question set exist and they differ: the `minidev.zip` linked from the
-GitHub README (498 distinct ids, q879 still ordering a text column as text) and the Hugging Face
-dataset `birdsql/bird_mini_dev` (500 ids, q879 corrected, q1322 changed; 2026-01-18). The lines
-above are from the zip; the same run over the Hugging Face file fires on 29 golds instead of 30,
-the difference being q879. Both runs, with each file's digest and origin, are in
-`plans/reports/audit-260902-minidev-gold-only/` and `plans/reports/audit-260903-minidev-hf-gold-only/`.
+**BIRD dev, both copies of the golds.** BIRD's 2025-11-06 quality pass rewrote 399 of the 1,534
+dev golds; the gold-only probes, run over the older copy, fire on 31 of those 399 (7.8 %) against
+25 of the 963 golds BIRD left alone (2.6 %), and 29 of the 31 go quiet once BIRD's own rewrite
+replaces the old gold. The 25 fires on golds BIRD did not touch were read by hand: 23 are golds
+that do not answer their question on this data, one is harmless, one is the tool's own rule
+([report](plans/reports/measurement-260907-1435-bird-dev-sqlite.md)).
 
-Exit status is 0 with no disagreement, 1 with at least one, 2 on a tool error. `--fail-on-smell`
-makes a fired probe exit 1 too. Every `audit/q<id>/` holds `counterexample.json`, the two evidence
-records (`evidence-gold.json`, `evidence-second.json`) and `smells.json`; `audit/summary.json`
-holds the counts, the fixture digest, whether the shuffle ran, the session the run was made in (the
-server's version string beside its number) and the parser that judged every statement (the
-validator, the `postgast` release and the libpg_query grammar version). `fixture.unreadable_tables`
-names the tables a gold uses that the catalogue holds but the role may not SELECT from, beside
-`fixture.missing_tables`, the ones the catalogue does not hold at all; the first is repaired with a
-GRANT and the second in the question file, and either makes every question that uses the table an
-error line rather than a verdict, which names the side that failed, `gold`, `prediction` or `run`
-for the measurement around the two, before the message. With `--predictions` the summary line and
-`credited_but_not_equal` in the file count the comparisons BIRD's own `set(predicted) == set(gold)`
-scores 1 and the typed comparison calls NOT_EQUAL, by what makes them: `multiplicity` (the same
-distinct rows at other counts), `type` (the same values at other declared types), `order`,
-`truncation` (one result the first rows of the other) and `other` for a disagreement that is none of
-those; a gold-only run compared nothing against that reading and states null.
-`credited_but_not_equal.by_test_suite_ex` counts the same comparisons under the test-suite reading,
-`1` for the ones it credits with BIRD and `0` for the ones it refuses with this tool.
-`predictions.positions_unused` is empty unless `--predictions-keyed-by position` is given, where it
-names every position of the prediction file that lost to a lower position naming the same question:
-the question file holds one entry twice, the lowest position is the prediction that is compared, and
-the rest are recorded rather than silently dropped. The first run into a directory leaves a
-`.attestql-run` marker in it; a rerun into a directory that has the marker clears that run's
-`q<id>/` directories and `summary.json` before it writes anything, so what is in there is one run's
-evidence and not two, and a non-empty directory without the marker is refused with nothing in it
-touched. `fixture.json`, the fixture cache keyed by the server and the schema digest, stays, and so
-does anything else you put there. A cached measurement is used only when the server's own per-table
-counters still say what they said when it was taken, so data reloaded or edited under an unchanged
-schema is measured again rather than read back from the file.
+## What was reported upstream
 
-`--statement-timeout SECONDS`, 30 by default, bounds every statement the run sends, gold and
-prediction alike. A statement that reaches it is that question's ERROR line, naming the side that
-failed before the server's message; the record of the execution carries the timeout it actually ran
-under and `summary.json` the one the run was given. The summary line ends with how many statements
-reached the bound, the golds counted apart from the predictions, and `summary.json` lists their
-question ids under `timed_out`; a run where nothing reached it says so with two zeroes rather than
-leaving the reader to count the error list. Every statement runs with the server's parallel
-gather off and with `work_mem` at 4 MB and `hash_mem_multiplier` at 2, PostgreSQL 16's own defaults
-written out rather than inherited, so that a float sum is added in one order and two runs of one
-statement cannot differ in a late digit: a gather adds the partial sums in whatever order the
-workers returned them, and a hash aggregate that outgrows the memory bound spills and adds them per
-spilled batch, which moves three of the nine summation-order-sensitive Mini-Dev golds between 64 kB
-and 4 MB. All three are read back inside the statement's own transaction and the execution is
-refused if the session does not hold them, and holding them makes some plans slower here than on the
-same server at its own defaults.
-q707 of Mini-Dev is the worked example: its gold runs in 50 ms, and the `meta-llama-3-70b-instruct`
-prediction for it runs in 0.22 s with two parallel workers and in 41 s warm to 105 s cold without
-them, so it needs `--statement-timeout 120` to be compared at all. Four of the 4,482 prediction
-slots of the committed prediction-mode measurement time out at the default, on two questions; the
-timings behind this paragraph are in `plans/reports/session-260904-autonomous-run/q707-timeouts/`.
+Six reports, filed under the owner's own GitHub and Hugging Face identity, each with its
+counterexample. The replies, as of 2026-09-07:
 
-## What it does
-
-- Typed replay comparison: a type tag per cell, declared numeric scale, NULL rendering, a hash per
-  result; columns are compared by position and type, never by name, as the benchmark does; R-ORD
-  when the gold has a top-level ORDER BY and compares the rendered rows in order, byte for byte,
-  R-SET otherwise; a NaN is one value there, equal to a NaN and to nothing else, as PostgreSQL
-  groups and orders it; EQUAL, NOT_EQUAL, or
-  NOT_COMPARABLE with the mismatched preconditions named (fixture digest, serialization, rule,
-  ordering, and the seven session settings that change rendered bytes or the order a float sum is
-  added in: `TimeZone`, `DateStyle`, `IntervalStyle`, `extra_float_digits`, the database's default
-  collation, `work_mem` and `hash_mem_multiplier`). Within one run both
-  records are built under the same preconditions, so that verdict does not occur there; it is
-  for comparing two records from two runs, and a record carries everything that comparison
-  reads.
-- An evidence record per execution, twenty-one required fields, no defaults: what ran, as what role,
-  on which server, under which settings, with which result and hash, and how to re-run it. The
-  record names the engine it ran on, once, in its session settings, and each column of the result
-  carries that engine's own declared type for it. Those settings are one block whichever engine
-  wrote the record: the engine, then the seven PostgreSQL preconditions (`TimeZone`, `DateStyle`,
-  `IntervalStyle`, `extra_float_digits`, the database's default collation, `work_mem` and
-  `hash_mem_multiplier`), stated in full on PostgreSQL and absent on an engine that has no session
-  to read them from, then everything else that session reported.
-- Gold-only probes, all heuristics and labelled so: ordering over numeric-looking text; an
-  arbitrary or null-first cut that changes the answer; a result that is not a function of the data
-  (a seeded shuffle of the referenced tables, copied into scratch storage, changes it), with
-  float aggregates whose value depends on summation order reported under their own name; and,
-  off by default behind `--experimental-s2`, direction against the question. All five run on
-  either engine and read the engine's own rules rather than PostgreSQL's: where the nulls of an
-  ordering key go without a `NULLS FIRST` or `NULLS LAST` to say (last under `ASC` on PostgreSQL,
-  first on SQLite), what a numeric cast of an ordering key is written as, and which result types
-  hold an aggregate whose last digits are its summation order. On SQLite that last set is empty,
-  because the engine adds a REAL aggregate with a compensation, so a float cell that moves under
-  the shuffle there is reported as depending on the storage order rather than forgiven as
-  arithmetic. The copies are reached by the search path on PostgreSQL and by SQLite resolving an
-  unqualified name in `temp` first, and neither consults a name that states its own schema, so a
-  gold that writes `public.x`, `"Other".x` or `main.x` is reported as not covered by the shuffle
-  rather than rerun against a copy of it. Which answer a copy gives depends on the plan it is read
-  with, and
-  the plan on the planner's statistics: the run records `last_analyze`, `last_autoanalyze` and
-  `n_mod_since_analyze` per table, in the probe's own evidence and in the summary, and never runs
-  ANALYZE. A probe that fires on one run and is quiet on the next over the same data is that, and
-  the two records show it.
-- BIRD's own set-equality reading is computed beside every verdict, so a counterexample states
-  what the benchmark would have said. The test-suite reading of Zhong, Yu and Klein 2020
-  (`result_eq` of `ruiqi-zhong/test-suite-sql-eval`) is recorded beside it as `test_suite_ex`: it
-  keeps duplicate rows, keeps row order when the gold's text holds ORDER BY, and still admits a
-  projection whose columns came back in another order. Its DISTINCT strip is not mirrored, because
-  that evaluator rewrites both statements and runs them again and these rows are already fetched,
-  so it stands for that evaluator's answer only where neither statement holds a DISTINCT.
+| # | Where | What | Reply |
+|---|---|---|---|
+| 1 | [mini_dev issue 38](https://github.com/bird-bench/mini_dev/issues/38#issuecomment-5529732756) | q1029 orders `ASC NULLS FIRST` for "highest" | BIRD team, 2026-09-05: "We will review and correct this issue in the next patch." Issue closed |
+| 2 | [mini_dev issue 39](https://github.com/bird-bench/mini_dev/issues/39) | q207 joins `bond` on `molecule_id`, 13 elements instead of 5 | BIRD team, 2026-09-05: "We will review and correct this issue in the next patch." Issue closed |
+| 3 | [mini_dev issue 40](https://github.com/bird-bench/mini_dev/issues/40) | the GitHub zip and the Hugging Face dataset are different question sets | BIRD team, 2026-09-05: README changed to name the Hugging Face dataset as the one to download. Issue closed |
+| 4 | [SpotIt-plus issue 1](https://github.com/ai-ar-research/SpotIt-plus/issues/1) | asked which licence applies | Withdrawn by the owner on 2026-09-05: the LICENSE does grant use after its first sentence, so the report rested on a misreading |
+| 5 | [mini_dev issue 48](https://github.com/bird-bench/mini_dev/issues/48) | the PostgreSQL evaluator scores q1473 differently on two runs of the same database | none yet |
+| 6 | [mini_dev issue 49](https://github.com/bird-bench/mini_dev/issues/49), [dataset discussion 3](https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/discussions/3) | 23 BIRD dev golds the 2025-11-06 pass left unchanged that do not answer their question on the shipped data | none yet |
 
 ## What it does not do
 
@@ -203,98 +133,24 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   prediction, an upstream correction, a human's fix.
 - It does not generate differentiating data. Two statements that agree on the shipped rows but
   differ semantically are found only by the shuffle probe, not by search.
-- SQLite, where BIRD originally lives, is available behind the same evidence record
-  (`--engine sqlite --dsn <path to the file>`), and what differs is stated in the record rather than
-  hidden: a column carries the storage class its cells came back at because SQLite types values and
-  not columns, a REAL comes back as the decimal that round-trips it, no session setting is a
-  precondition because a file has no session, there is no role and no grant, and the parser is
-  sqlglot's SQLite dialect rather than the engine's own grammar. The sandbox in
-  `tools/audit-sandbox-sqlite/` runs in the gate, with every probe asked there on a statement that
-  fires it and one that keeps it quiet, and Mini-Dev has now been measured on SQLite as well.
-  Extension loading is never enabled on the connection, so a statement that calls
-  `load_extension` is refused by the engine when it runs and loads nothing.
+- The probes are heuristics and say so in their own evidence; the direction probe alone is 17 %
+  precise on Mini-Dev and is off by default.
 - It proves nothing about correctness, security, or production use. It runs as the role you give
   it; give it a read-only one.
-- Its parser is PostgreSQL 17's grammar (`libpg_query`), so a statement that only PostgreSQL 17
-  accepts parses here and then fails on a PostgreSQL 16 server; that failure is the question's
-  own error line, not a verdict.
 
 ## How to check rather than believe
 
-Everything this README claims has an artifact. The three defects that upstream trackers reported
-(BIRD Mini-Dev q1029, q879, q207) reproduce in `tools/audit-sandbox/` on a fixture of a few rows
-against a read-only role, and `tests/test_audit_end_to_end.py` runs the command on it, inside a
-container, every time `just check` runs. The same three on the real Mini-Dev dump, with their
-records and hashes, are in `plans/reports/spike-260902-three-gold-defects/`. The gold-only probes were
-measured over all 498 Mini-Dev statements and every fired row was classified by hand:
-[the measurement report](plans/reports/measurement-260902-2226-gold-only-probes-mini-dev.md)
-gives the precision per probe, including the one that is only 17 % and is therefore off by
-default. Prediction mode was run on BIRD's own nine PostgreSQL prediction files for Mini-Dev (4,482
-predictions, the Hugging Face gold), with BIRD's own evaluator run beside it as the check; the
-numbers below are that run repeated at the commit `0963374`. The two readings of EX agree on 4,476
-of 4,482 (4,479 against the GitHub zip's gold), and every disagreement is q1473, a `SUM` over
-`float8` whose last digits depend on the order its partial sums are added in: this tool holds that
-order (no parallel gather, `work_mem` and `hash_mem_multiplier` at stated values), while BIRD's
-evaluator runs at the server's own settings and scores q1473 differently from run to run. Of the
-1,239 predictions BIRD scores 1, 164 (13.2 %) are NOT_EQUAL under the typed comparison: 138 return
-the gold's rows with other multiplicities, 26 the same values under another declared type, none
-differ only in order. Read by hand, 69 of those 164 (42.1 %; 5.6 % of everything BIRD credits) are
-wrong answers the benchmark credited, 74 are duplicated rows a reader would forgive, and 21 are the
-typed rule and not the question. The test-suite reading recorded beside BIRD's (`test_suite_ex`)
-refuses 138 of those 164, every row with other multiplicities, and admits the 26; with the DISTINCT
-strip that evaluator performs and this tool does not, the research run found it refusing 37 of the
-170 such rows of the first run, so the strip is what makes that evaluator forgiving of a duplicated
-row here. Of the 1,521 predictions BIRD scores 0, 4 are right against a corrected gold, counted only
-where a correction exists (q1029, q207); the reverse, a 1 earned by reproducing a wrong gold, occurs
-6 times on the GitHub zip's golds and 2 on the Hugging Face file's. Against the first run the count
-BIRD credits moved by one and the loose rows by six: those six float rows are no longer read as 1,
-q1473 is EQUAL now that every statement runs without parallel workers, and q707 of
-`meta-llama-3-70b` times out under its serial plan. [The prediction-mode
-report](plans/reports/measurement-260904-0046-prediction-mode-on-real-predictions.md) holds the
-per-file table, the hand classification and the two tool defects the run found. [The claims
-register](docs/claims-register.md) lists every claim with its owning artifact, and every negative
-claim there carries the date it was measured, because negative claims decay.
-[ADR-0013](docs/adr/0013-audit-text-to-sql-gold-with-typed-replay-evidence.md) records the decision
-this tool implements and the date by which it is reconsidered if nobody uses it.
-
-The same nine prediction files were then run on SQLite, on the eleven Mini-Dev database files, with
-no server and no container. On SQLite the tool's reading of BIRD's EX and BIRD's own evaluator agree
-on 4,481 of 4,482 predictions against each gold copy, better than the 4,476 on PostgreSQL, because
-here the tool reads the cells that evaluator reads; the single disagreement is a row where the two
-answers are the same number to fifteen digits and the gold's rule is R-ORD, which compares the
-canonical rendering, where a REAL is written at the serialization's numeric scale of six decimals. Of the 1,650 predictions BIRD credits, 237 (14.4 %) are NOT_EQUAL under the typed
-comparison: 230 return the gold's rows with other multiplicities, 6 the same value under another
-storage class, 1 differs only in row order. A sample of 50 of those 237, read by hand, is 27 wrong
-answers the benchmark credited, 22 duplicated rows a reader would forgive and 1 the typed rule
-itself. Gold-only, the probes fire 25 times on 20 of the 500 golds, against 39 on 29 on PostgreSQL;
-the largest single difference is that `float-aggregate-order` never fires on SQLite, which adds its
-REALs with a compensation. Two Mini-Dev golds do not finish inside the default 30 second budget on
-SQLite. [The SQLite measurement report](plans/reports/measurement-260907-1106-minidev-sqlite.md)
-holds the per-file table, the hand classification and the question-by-question comparison with the
-PostgreSQL run.
-
-BIRD dev is eight times larger than Mini-Dev, and it now has two published copies of its golds: the
-2024 file and a quality pass BIRD released for 2025-11-06, which rewrites 399 of the 1,534 gold
-statements. Running the gold-only probes over the older copy and scoring them against those
-rewrites gives the closest thing to a recall number this project can measure: **the probes fire on
-31 of the 399 golds BIRD itself corrected, 7.8 %**, three times the 2.6 % rate on the 963 golds
-BIRD left alone, and 29 of the 31 go quiet once BIRD's own rewrite replaces the old gold. That is
-not a quality pass: it misses 368 of the 399, because most of BIRD's corrections are about what a
-question means and the probes only ask whether the data decides the answer at all. The probes stay
-heuristics, and the 25 fires on golds BIRD did not touch were read by hand: 23 are golds that do
-not answer their question on this data, one is harmless, one is the tool's own rule. On the same
-1,534 questions the tool's reading of BIRD's EX and BIRD's own dev evaluator agree on 6,136 of
-6,136 comparisons. [The BIRD dev
-report](plans/reports/measurement-260907-1435-bird-dev-sqlite.md) holds the tables, the hand
-classification, the overlap with the published errata, and the five of eleven shipped databases
-that differ between BIRD's own two downloads.
+Every number above has an owning artifact in [the claims register](docs/claims-register.md),
+which also lists the claims this project deliberately does not make and dates every negative
+claim, because negative claims decay. The three shipped-gold defects reproduce in the merge gate
+on both engines (`tools/audit-sandbox/`, `tools/audit-sandbox-sqlite/`) every time `just check`
+runs. [ADR-0013](docs/adr/0013-audit-text-to-sql-gold-with-typed-replay-evidence.md) records the
+decision this tool implements and the date by which it is reconsidered if nobody uses it.
 
 The history is short and stated: this repository was developed privately from 2026-08-25 under a
-different product direction, a governed data agent over a synthetic schema; it was reoriented on
-2026-09-02 by ADR-0013 to the problem above, and the public history starts after that. The
-private archive of the earlier history exists and can be provided on request. The code was
-written with AI assistance under the owner's review, and the gate, not the author, is what
-vouches for it.
+different product direction; it was reoriented on 2026-09-02 by ADR-0013 to the problem above, and
+the public history starts after that. The code was written with AI assistance under the owner's
+review, and the gate, not the author, is what vouches for it.
 
 ## Licence
 
