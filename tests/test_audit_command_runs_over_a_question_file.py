@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import dataclasses
 import hashlib
+import importlib.metadata
 import json
 import re
 from pathlib import Path
@@ -1346,6 +1347,19 @@ def parse_arguments_instant(value: str) -> Any:
 
 def test_the_console_entry_point_is_the_main_this_module_states() -> None:
     assert callable(main)
+
+
+def test_the_version_the_command_prints_is_the_release_that_is_installed(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Read off the installed distribution rather than stated in the source, so that what a
+    reader is told is the release the code they are running came from. It is what the command
+    was asked for and not a refusal, so it ends the process with status 0."""
+    with pytest.raises(SystemExit) as asked:
+        main(["--version"])
+
+    assert asked.value.code == 0
+    assert capsys.readouterr().out == f"attestql {importlib.metadata.version('attestql')}\n"
 
 
 # where the question file came from

@@ -97,15 +97,27 @@ PACKAGE_METADATA = "importlib.metadata"
 exemption below. It reads what a package manager wrote and imports no code, which is the
 reason ``importlib`` is in the set above."""
 
-METADATA_READERS: tuple[Path, ...] = AUDIT_PARSERS
+COMMAND_MODULE = SRC / "audit" / "cli.py"
+"""The command, which states the installed release when it is asked for ``--version``."""
+
+VERSION_TEST = TESTS / "test_audit_command_runs_over_a_question_file.py"
+"""The file that observes what that release reads as, which is the only way to observe it."""
+
+METADATA_READERS: tuple[Path, ...] = (*AUDIT_PARSERS, COMMAND_MODULE, VERSION_TEST)
 """The files permitted to read installed package metadata, permitted ``importlib.metadata``
-alone, and the parser modules for the same reason in both cases.
+alone.
 
 A summary states which parser judged its statements, and half of that is the parser's own
-release, which the distribution states and the package does not carry as a public
-attribute. Exact paths, as the drivers' and the parsers' are, and exercised by the test
-below, so the day one stops being used is the day it stops being granted. Every other
-primitive in the set is forbidden there too, including the rest of ``importlib``."""
+release, which the distribution states and the package does not carry as a public attribute.
+``--version`` is that same question asked about this project: what a reader is told has to be
+the release the code in front of them came from, and only the installed distribution knows
+that, where a number this repository stated about itself would be one more place to forget to
+move. The test is granted it for the observation it makes, as the console script's test is
+granted a process: the only way to show the command and the distribution agree is to read both.
+
+Exact paths, as the drivers' and the parsers' are, and exercised by the test below, so the day
+one stops being used is the day it stops being granted. Every other primitive in the set is
+forbidden there too, including the rest of ``importlib``."""
 
 URI_ESCAPE = "urllib.parse"
 """Where a percent escape is written, and the whole of the exemption below. It builds URI
