@@ -1,5 +1,12 @@
 # Phase 2: design applied and verified
 
+Status: DONE 2026-09-07. Verification and its screenshots:
+`plans/reports/design-260907-report-verification.md`. Cook report:
+`plans/reports/cook-260907-2009-web-ui-phase-2-design.md`. Two states of the spec's table
+are not producible by this tool (`result.truncated`, unreadable tables on a file) and one
+has no renderer path yet (a hand classification, phase 4's file); the verification report
+names all three and the four items left for the owner.
+
 ## Context
 
 Phase 1 produced correct, unstyled pages with token class hooks. This phase applies

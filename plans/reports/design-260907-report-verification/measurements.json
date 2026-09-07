@@ -1,0 +1,1060 @@
+{
+ "demo-run-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 2,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 88,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "13px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 106,
+  "widestElement": null
+ },
+ "entrance": {
+  "delays": [
+   "0s",
+   "0.03s",
+   "0.06s",
+   "0.09s",
+   "0.12s",
+   "0.15s",
+   "0.18s",
+   "0.21s",
+   "0.24s",
+   "0.27s",
+   "0.3s",
+   "0.3s"
+  ],
+  "durations": [
+   "0.24s"
+  ],
+  "iterations": [
+   "1"
+  ],
+  "names": [
+   "row-in"
+  ]
+ },
+ "fallback": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 81,
+   "columnWidth": 591,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 202,
+  "widestElement": null
+ },
+ "gold-only-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 0,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": null
+ },
+ "gold-only-360-dark": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 0,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 40,
+   "columnWidth": 315,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 255,
+  "widestElement": null
+ },
+ "multiplicity-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": null
+ },
+ "multiplicity-360-dark": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 40,
+   "columnWidth": 315,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 220,
+  "widestElement": {
+   "cls": "figure__svg figure__svg--multiplicity",
+   "right": 669,
+   "tag": "svg"
+  }
+ },
+ "not-comparable-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 0,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 132,
+  "widestElement": null
+ },
+ "not-comparable-360-dark": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 0,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 40,
+   "columnWidth": 315,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 132,
+  "widestElement": null
+ },
+ "order-10000-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": null
+ },
+ "order-10000-360-dark": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 40,
+   "columnWidth": 315,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 220,
+  "widestElement": {
+   "cls": "figure__svg figure__svg--slope",
+   "right": 669,
+   "tag": "svg"
+  }
+ },
+ "order-1280-dark": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": null
+ },
+ "order-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": null
+ },
+ "order-360-dark": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 40,
+   "columnWidth": 315,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 220,
+  "widestElement": {
+   "cls": "figure__svg figure__svg--slope",
+   "right": 669,
+   "tag": "svg"
+  }
+ },
+ "order-360-light": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 40,
+   "columnWidth": 315,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 220,
+  "widestElement": {
+   "cls": "figure__svg figure__svg--slope",
+   "right": 669,
+   "tag": "svg"
+  }
+ },
+ "order-768-dark": {
+  "bodyScrollWidth": 768,
+  "clientWidth": 768,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": null
+ },
+ "order-768-light": {
+  "bodyScrollWidth": 768,
+  "clientWidth": 768,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": null
+ },
+ "other-long-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 0,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": {
+   "cls": "rows__table",
+   "right": 1849,
+   "tag": "TABLE"
+  }
+ },
+ "other-long-360-dark": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 0,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 40,
+   "columnWidth": 315,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 220,
+  "widestElement": {
+   "cls": "rows__table",
+   "right": 1801,
+   "tag": "TABLE"
+  }
+ },
+ "print": {
+  "closedDisclosures": 13,
+  "linkAfter": "\" <counterexample.json>\"",
+  "revealedInPrint": 13,
+  "rowAnimations": [
+   "none"
+  ],
+  "rowOpacities": [
+   "1"
+  ],
+  "rowsTotal": 12,
+  "rowsVisible": 12,
+  "stripPosition": "static",
+  "transitions": [
+   "0s"
+  ]
+ },
+ "reduced-motion": {
+  "animationNames": [
+   "fade-in"
+  ],
+  "opacities": [
+   "1",
+   "0.997553",
+   "0.983438",
+   "0.953411",
+   "0.901498",
+   "0.816835"
+  ],
+  "transforms": [
+   "none"
+  ],
+  "transitionProperties": [
+   "opacity"
+  ]
+ },
+ "run-1280-dark": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 2,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 88,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 106,
+  "widestElement": null
+ },
+ "run-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 2,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 88,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 106,
+  "widestElement": null
+ },
+ "run-360-dark": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 2,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 44,
+   "columnWidth": 328,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 142,
+  "widestElement": {
+   "cls": "index__table",
+   "right": 863,
+   "tag": "TABLE"
+  }
+ },
+ "run-360-light": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 2,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 44,
+   "columnWidth": 328,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 142,
+  "widestElement": {
+   "cls": "index__table",
+   "right": 863,
+   "tag": "TABLE"
+  }
+ },
+ "run-768-dark": {
+  "bodyScrollWidth": 768,
+  "clientWidth": 768,
+  "figures": 2,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 88,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 106,
+  "widestElement": {
+   "cls": "index__table",
+   "right": 871,
+   "tag": "TABLE"
+  }
+ },
+ "run-768-light": {
+  "bodyScrollWidth": 768,
+  "clientWidth": 768,
+  "figures": 2,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 88,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 106,
+  "widestElement": {
+   "cls": "index__table",
+   "right": 871,
+   "tag": "TABLE"
+  }
+ },
+ "truncation-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": null
+ },
+ "truncation-360-dark": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 1,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 40,
+   "columnWidth": 315,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 220,
+  "widestElement": {
+   "cls": "figure__svg figure__svg--truncation",
+   "right": 669,
+   "tag": "svg"
+  }
+ },
+ "type-1280-light": {
+  "bodyScrollWidth": 1280,
+  "clientWidth": 1280,
+  "figures": 0,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 86,
+   "columnWidth": 634,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 185,
+  "widestElement": null
+ },
+ "type-360-dark": {
+  "bodyScrollWidth": 360,
+  "clientWidth": 360,
+  "figures": 0,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "fonts": [
+   "\"IBM Plex Sans\", \"Plex Sans fallback\", system-ui, sans-serif",
+   "\"IBM Plex Mono\", \"Plex Mono fallback\", ui-monospace, monospace"
+  ],
+  "overflows": false,
+  "prose": {
+   "charactersOnTheFirstLine": 40,
+   "columnWidth": 315,
+   "fontSize": "16px"
+  },
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "stripHeight": 220,
+  "widestElement": null
+ }
+}
