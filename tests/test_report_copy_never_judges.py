@@ -9,9 +9,12 @@ have to forbid the product's own sentences to pass, which is the opposite of wha
 for; a test over the literals forbids the page from adding a judgement of its own.
 
 So this reads the template files, takes the Jinja expressions and statements out -- what is
-left is exactly the text a template author typed -- and searches that. The second half is the
-positive control: the JSON's ``reading`` strings, holding the very words the list forbids, are
-on the rendered page, whole.
+left is exactly the text a template author typed -- and searches that. ``figures.py`` is read
+the same way and for the same reason: a figure's title and its text alternative are sentences
+written here, they reach a page, and a drawing that captioned itself with a judgement would be
+the rule broken in the one place a reader looks first. The second half is the positive
+control: the JSON's ``reading`` strings, holding the very words the list forbids, are on the
+rendered page, whole.
 """
 
 from __future__ import annotations
@@ -24,6 +27,7 @@ from pathlib import Path
 import pytest
 
 from attestql.audit.cli import main
+from attestql.report import figures
 from attestql.report.render import TEMPLATES
 
 pytestmark = pytest.mark.sandbox_sqlite
@@ -63,14 +67,19 @@ def literals(path: Path) -> str:
 
 
 def templates() -> list[Path]:
-    found = sorted(TEMPLATES.glob("*.html"))
-    assert found, f"no templates under {TEMPLATES}"
+    """Every template, and the module that writes the sentences a figure carries.
+
+    Both are searched whole: a template's literals are what is left when its Jinja is gone,
+    and a Python module's are its strings, its docstrings and its comments, none of which
+    has any business stating which of two statements was right either."""
+    found = [*sorted(TEMPLATES.glob("*.html")), Path(figures.__file__)]
+    assert len(found) > 1, f"no templates under {TEMPLATES}"
     return found
 
 
 @pytest.mark.parametrize("path", templates(), ids=lambda path: path.name)
 def test_no_template_literal_judges_a_statement(path: Path) -> None:
-    """The rule itself, one template at a time, so a failure names the file it is in."""
+    """The rule itself, one file at a time, so a failure names the file it is in."""
     text = literals(path).lower()
 
     found = [phrase for phrase in FORBIDDEN if phrase in text]

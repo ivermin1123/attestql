@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import io
 import json
+import re
 import shutil
 from contextlib import redirect_stdout
 from dataclasses import dataclass
@@ -46,6 +47,7 @@ from attestql.report.render import (
     PAGE_FILE,
     SECOND_RECORD_FILE,
     SMELLS_FILE,
+    STATIC,
     SUMMARY_FILE,
 )
 
@@ -543,6 +545,70 @@ def test_a_directory_that_is_not_an_audit_s_is_refused_with_the_reason(
     assert f"attestql: {empty} holds no {SUMMARY_FILE}" in capsys.readouterr().err
     with pytest.raises(ReportRefused, match=SUMMARY_FILE):
         render_report(empty)
+
+
+def test_the_run_page_draws_its_verdicts_and_its_probes_from_the_counts_it_states(
+    rendered: Rendered,
+) -> None:
+    """Two figures on the run page, each naming its file and stating its numbers as text.
+
+    The rule the design spec sets for every figure, asserted on a real one: a reader who
+    does not see the drawing reads the same counts in the caption under it, and the counts
+    themselves are in the table above it whatever happens to either.
+    """
+    page = rendered.page()
+    markup = (rendered.out / PAGE_FILE).read_text(encoding="utf-8")
+    summary = rendered.summary
+    audited = cast("dict[str, Any]", summary["question_set"])["audited"]
+
+    assert markup.count("<svg ") == 2
+    assert f"the verdicts of run {summary['run_id']}, from {SUMMARY_FILE}" in markup
+    assert f"how many golds each probe fired on, of {audited:,}, from {SUMMARY_FILE}" in markup
+    for verdict, count in cast("dict[str, int]", summary["verdicts"]).items():
+        if verdict != "NOT_EQUAL":
+            assert f"{count:,} {verdict}" in page.text
+    assert 'aria-describedby="figure-verdicts-text"' in markup
+    assert 'id="figure-verdicts-text"' in markup
+    assert "fill=" not in markup, "a figure carries classes and takes its colours from the page"
+
+
+def test_a_question_page_draws_the_class_its_counterexample_states(
+    rendered: Rendered,
+) -> None:
+    """A figure where the mechanism has one, and none where the table already says it.
+
+    q207 is a ``truncation`` on this sandbox and q1029 an ``other``: the first is drawn as a
+    bar and the prefix of it that the shorter result is, and the second is not drawn at all,
+    because ``other`` is not one shape.
+    """
+    truncation = (rendered.out / "q207" / PAGE_FILE).read_text(encoding="utf-8")
+    other = (rendered.out / "q1029" / PAGE_FILE).read_text(encoding="utf-8")
+
+    assert "<svg " in truncation
+    assert "one result and the shorter one that is its first rows" in truncation
+    assert "rows of the other one in the same order" in truncation
+    assert "<svg " not in other
+
+
+def test_the_fonts_are_beside_the_pages_with_the_licence_that_lets_them_be(
+    rendered: Rendered,
+) -> None:
+    """Every file the stylesheet asks for is written beside it, and so are its terms.
+
+    The fonts are under a directory of their own, which the copy has to walk into: a
+    stylesheet copied without them is a page that asks a reader's browser for a file that is
+    not there, and there is no request to a network to fall back on.
+    """
+    stylesheet = (rendered.out / "static" / "report.css").read_text(encoding="utf-8")
+    asked_for = re.findall(r'url\("(fonts/[^"]+)"\)', stylesheet)
+
+    assert len(asked_for) == 3, "three faces: the sans at two weights and the mono at one"
+    for name in asked_for:
+        assert (rendered.out / "static" / name).is_file(), name
+        assert (STATIC / name).read_bytes() == (rendered.out / "static" / name).read_bytes()
+    assert "font-display: swap" in stylesheet
+    for beside in ("OFL.txt", "provenance.txt"):
+        assert (rendered.out / "static" / "fonts" / beside).is_file(), beside
 
 
 def test_the_method_page_s_two_accessors_state_what_the_private_tables_hold() -> None:
