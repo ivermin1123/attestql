@@ -6,6 +6,20 @@ reference for its flags, its output and its keys; the README is the short versio
 was the README's own until version 0.2.1 and moved when the README was cut down to what a first
 reader needs.
 
+## The demo
+
+`attestql demo --out DIR` is the one command that needs no files of yours. It writes the sandbox
+the package carries into `DIR`: `fixture.sqlite`, built from the packaged `fixture.sql`, beside
+copies of `questions.json` and `predictions.json`, then runs the ordinary audit over the three into
+`DIR/audit` and prints, after the summary line, the `attestql audit` command that made the run, so
+the next thing a reader types is that line with their own files in it. All three files are
+rewritten on every demo and `DIR/audit` follows the rerun rule below, so a second demo into the
+same directory is a clean rerun. The exit status is the audit's, which is 1 here because three of
+the golds disagree with their corrections. The golds of q1029, q879 and q207 are BIRD Mini-Dev's
+own SQLite copy, reproduced under their CC BY-SA licence as `NOTICE` records; the rows they run
+against are this repository's synthetic fixture. `tools/audit-sandbox-sqlite/build.py` builds the
+file alone, through the same builder, for whoever wants to open it with `sqlite3`.
+
 ## Engines and connections
 
 The default engine is PostgreSQL 16 and `--dsn` takes libpq keyword form

@@ -7,26 +7,28 @@ that decided it, and for one scored 1, whether a comparison that keeps duplicate
 agrees with the set comparison that credited it.
 
 ```text
-attestql audit --engine sqlite --dsn sandbox/fixture.sqlite \
-    --questions tools/audit-sandbox-sqlite/questions.json \
-    --predictions tools/audit-sandbox-sqlite/predictions.json --out audit
+uv tool install attestql        # or: pip install attestql
+attestql demo --out demo
 ```
 
-That run is this repository's own sandbox: the three BIRD Mini-Dev golds that upstream reports
-found wrong (q1029, q879, q207) on a fixture of a few rows, each paired with a corrected statement
-as its prediction, plus three synthetic questions. Its output, unedited:
+The second command runs the sandbox the package carries: the three BIRD Mini-Dev golds that
+upstream reports found wrong (q1029, q879, q207) on a fixture of a few rows, each paired with a
+corrected statement as its prediction, plus three synthetic questions. It writes the fixture, the
+question file and the prediction file into `demo/`, audits them into `demo/audit/`, and ends with
+the plain `attestql audit` command that made the run. Its output, unedited:
 
 ```text
-q1029 european_football_2 R-ORD  NOT_EQUAL  smells=none  audit/q1029/
-q879  formula_1   R-ORD  NOT_EQUAL  smells=ordering-over-numeric-text  audit/q879/
-q207  toxicology  R-SET  NOT_EQUAL  smells=none  audit/q207/
-q900001 synthetic   R-ORD  GOLD-ONLY  smells=not-a-function-of-the-data  audit/q900001/
-q900002 synthetic   R-ORD  GOLD-ONLY  smells=arbitrary-cut,not-a-function-of-the-data  audit/q900002/
-q900005 synthetic   R-ORD  EQUAL      smells=ordering-over-numeric-text  audit/q900005/
+q1029 european_football_2 R-ORD  NOT_EQUAL  smells=none  demo/audit/q1029/
+q879  formula_1   R-ORD  NOT_EQUAL  smells=ordering-over-numeric-text  demo/audit/q879/
+q207  toxicology  R-SET  NOT_EQUAL  smells=none  demo/audit/q207/
+q900001 synthetic   R-ORD  GOLD-ONLY  smells=not-a-function-of-the-data  demo/audit/q900001/
+q900002 synthetic   R-ORD  GOLD-ONLY  smells=arbitrary-cut,not-a-function-of-the-data  demo/audit/q900002/
+q900005 synthetic   R-ORD  EQUAL      smells=ordering-over-numeric-text  demo/audit/q900005/
 6 questions: 3 NOT_EQUAL, 5 smells fired, 0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)
+rerun: attestql audit --engine sqlite --dsn demo/fixture.sqlite --questions demo/questions.json --predictions demo/predictions.json --out demo/audit
 ```
 
-Every `NOT_EQUAL` line has a directory. `audit/q879/counterexample.json` says why that one
+Every `NOT_EQUAL` line has a directory. `demo/audit/q879/counterexample.json` says why that one
 disagrees, trimmed here to the fields a reader opens first:
 
 ```text
@@ -36,7 +38,7 @@ disagrees, trimmed here to the fields a reader opens first:
 "differing_rows": {"in_gold_not_in_second": [["Norwegian"]], "in_second_not_in_gold": [["Peruvian"]]}
 ```
 
-and `audit/q879/smells.json` names the mechanism: `fastestLapSpeed` is a text column holding only
+and `demo/audit/q879/smells.json` names the mechanism: `fastestLapSpeed` is a text column holding only
 numbers, so the gold sorts `9.5` above `10` and the fastest lap is not the one it returns. The
 same directory holds the two evidence records, each with the statement, the role, the engine,
 the session settings, the result and its hash, and how to run it again.
@@ -50,23 +52,16 @@ on the summary line by what makes the two readings differ.
 
 ## Install
 
-Python 3.11 or later. From PyPI:
-
-```text
-uv tool install attestql        # or: pip install attestql
-```
-
-Or from a checkout, which is also how the sandbox above is built:
+Python 3.11 or later; SQLite needs nothing else, PostgreSQL needs a PostgreSQL 16 server. From
+PyPI as above, or from a checkout:
 
 ```text
 git clone https://github.com/ivermin1123/attestql && cd attestql
-uv run python tools/audit-sandbox-sqlite/build.py sandbox
-uv run attestql audit --engine sqlite --dsn sandbox/fixture.sqlite \
-    --questions tools/audit-sandbox-sqlite/questions.json \
-    --predictions tools/audit-sandbox-sqlite/predictions.json --out audit
+uv run attestql demo --out demo
 ```
 
-On your own files the command is the same. On SQLite, `--dsn` is the path to one database file and
+The demo exits 1, because three golds disagree with their corrections, which is what it is there
+to show. On your own files the command is the one its last line prints. On SQLite, `--dsn` is the path to one database file and
 `--ids` picks the questions that database answers, so a benchmark of eleven databases is eleven
 runs; BIRD Mini-Dev and BIRD dev ship as SQLite files and need nothing else installed. On
 PostgreSQL 16 one server holds every database of the benchmark, so one run covers the whole
@@ -143,8 +138,8 @@ counterexample. The replies, as of 2026-09-07:
 Every number above has an owning artifact in [the claims register](docs/claims-register.md),
 which also lists the claims this project deliberately does not make and dates every negative
 claim, because negative claims decay. The three shipped-gold defects reproduce in the merge gate
-on both engines (`tools/audit-sandbox/`, `tools/audit-sandbox-sqlite/`) every time `just check`
-runs. [ADR-0013](docs/adr/0013-audit-text-to-sql-gold-with-typed-replay-evidence.md) records the
+on both engines (`tools/audit-sandbox/` for PostgreSQL; `src/attestql/demo/` for SQLite, the same
+files `attestql demo` writes out) every time `just check` runs. [ADR-0013](docs/adr/0013-audit-text-to-sql-gold-with-typed-replay-evidence.md) records the
 decision this tool implements and the date by which it is reconsidered if nobody uses it.
 
 The history is short and stated: this repository was developed privately from 2026-08-25 under a
