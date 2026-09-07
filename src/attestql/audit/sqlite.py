@@ -134,6 +134,14 @@ SHUFFLE_FUNCTION = "attestql_shuffle"
 own identity. Registered from Python because SQLite has no hash function of its own, and
 deterministic, so a run reproduces and two runs under one seed write one order."""
 
+INTERRUPT_MESSAGE = "interrupted"
+"""What SQLite calls the abort a progress handler asked for, and the whole of how a statement
+this module stopped is told from one the file refused.
+
+Every other error is the engine's own answer about the statement and keeps its own message,
+however long the statement had been running when it arrived: a clock that has passed the
+deadline does not turn a missing table into a slow one."""
+
 PROGRESS_INSTRUCTIONS = 1000
 """How often the statement timeout is checked, in SQLite virtual-machine instructions.
 
@@ -913,7 +921,14 @@ def _plan_controls(
 def _fetch(
     connection: sqlite3.Connection, sql: str, statement_timeout_seconds: int
 ) -> tuple[tuple[str, ...], tuple[tuple[Any, ...], ...]]:
-    """Run one statement under the deadline and return the column names and every row."""
+    """Run one statement under the deadline and return the column names and every row.
+
+    The deadline is this process's own and is enforced by the progress handler, which aborts
+    the statement with SQLite's ``interrupted``. That error, and only that error, is reported
+    as the timeout: an error the file raised about the statement itself is what it says it is
+    whatever the clock has done since the deadline was set, and reporting it as a timeout
+    would send a reader looking for a slow statement rather than at a missing table.
+    """
     deadline = time.monotonic() + statement_timeout_seconds
     connection.set_progress_handler(_deadline(deadline), PROGRESS_INSTRUCTIONS)
     try:
@@ -924,13 +939,14 @@ def _fetch(
         finally:
             cursor.close()
     except sqlite3.Error as failed:
-        if time.monotonic() > deadline:
+        message = str(failed).strip()
+        if INTERRUPT_MESSAGE in message and time.monotonic() > deadline:
             raise BackendRefused(
                 "execute", f"the statement ran past its {statement_timeout_seconds}s timeout"
             ) from failed
         # The driver's own error, named the way this interface names failures, so a caller
         # of Backend never has to know which driver refused.
-        raise BackendRefused("execute", str(failed).strip()) from failed
+        raise BackendRefused("execute", message) from failed
     finally:
         connection.set_progress_handler(None, 0)
 
@@ -992,6 +1008,7 @@ __all__ = [
     "CENSUS_SQL",
     "DEFAULT_SCHEMA",
     "DRIVER_ERROR",
+    "INTERRUPT_MESSAGE",
     "MIXED_CLASSES",
     "NOT_IN_THIS_FILE",
     "ORDER_SENSITIVE_AGGREGATE_TYPES",
