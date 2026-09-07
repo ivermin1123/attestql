@@ -1,0 +1,213 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-d8b09b53-3f77-44eb-8772-e5b28555b951",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/minidev-sqlite/data/zip/minidev/MINIDEV/dev_databases/european_football_2/european_football_2.sqlite | size=597754880",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "delete",
+   "data_version": "2",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/zip/minidev/MINIDEV/mini_dev_sqlite.json",
+  "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+  "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+  "date": "2024-06-19",
+  "entries": 500,
+  "audited": 51,
+  "duplicate_ids": [
+   137,
+   138
+  ],
+  "ids": [
+   1025,
+   1028,
+   1029,
+   1030,
+   1031,
+   1032,
+   1035,
+   1036,
+   1037,
+   1039,
+   1040,
+   1042,
+   1044,
+   1048,
+   1057,
+   1058,
+   1068,
+   1076,
+   1078,
+   1079,
+   1080,
+   1084,
+   1088,
+   1091,
+   1092,
+   1094,
+   1096,
+   1098,
+   1102,
+   1103,
+   1105,
+   1107,
+   1110,
+   1113,
+   1114,
+   1115,
+   1116,
+   1122,
+   1124,
+   1130,
+   1133,
+   1134,
+   1135,
+   1136,
+   1139,
+   1141,
+   1144,
+   1145,
+   1146,
+   1147,
+   1148
+  ]
+ },
+ "predictions": {
+  "path": "data/preds/predict_mini_dev_gpt-4-32k_sqlite.json",
+  "digest": "sha256:7ee53fcc67b9eaca363efb53ddb94dabd61526dafc09d835d832989e4911a1ca",
+  "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4-32k_sqlite.json",
+  "date": "2024-06-19",
+  "keyed_by": "position",
+  "statements": 500,
+  "positions_unused": [
+   487,
+   488
+  ]
+ },
+ "verdicts": {
+  "EQUAL": 26,
+  "NOT_EQUAL": 23,
+  "ERROR": 2
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 2,
+  "not-a-function-of-the-data": 2,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 4,
+ "credited_but_not_equal": {
+  "total": 6,
+  "by_mechanism": {
+   "multiplicity": 6,
+   "type": 0,
+   "order": 0,
+   "truncation": 0,
+   "other": 0
+  },
+  "by_test_suite_ex": {
+   "1": 0,
+   "0": 6
+  }
+ },
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool/zip/gpt-4-32k/european_football_2/fixture.json",
+  "source": {
+   "path": "data/zip/minidev/MINIDEV/dev_databases/european_football_2/european_football_2.sqlite",
+   "digest": "sha256:f72f5c9b990371417288a67b27a02e601ef904d45525c2c9f7931fb01001c536",
+   "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV/dev_databases, european_football_2/european_football_2.sqlite",
+   "date": "2024-06-13"
+  },
+  "schema_digest": "sha256:954a8a8d6524994d3b40baa9fb2a91c922f170e93b000994be908ae47378e5e7",
+  "row_counts": {
+   "main.Country": 11,
+   "main.League": 11,
+   "main.Match": 25979,
+   "main.Player": 11060,
+   "main.Player_Attributes": 183978,
+   "main.Team": 299,
+   "main.Team_Attributes": 1458
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "Match",
+   "League",
+   "Team",
+   "Team_Attributes",
+   "Player_Attributes",
+   "Player",
+   "Country"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "attestql_scratch",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "Country",
+   "League",
+   "Match",
+   "Player",
+   "Player_Attributes",
+   "Team",
+   "Team_Attributes"
+  ],
+  "skipped": {},
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool/zip/gpt-4-32k/european_football_2",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T04:25:58.702968+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.01,
+  "questions": 7.425,
+  "shuffle": 2.203
+ },
+ "errors": [
+  {
+   "question_id": 1037,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: preferred_foot"
+  },
+  {
+   "question_id": 1076,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: ambiguous column name: id"
+  }
+ ],
+ "exit_status": 1
+}

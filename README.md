@@ -157,15 +157,29 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   for comparing two records from two runs, and a record carries everything that comparison
   reads.
 - An evidence record per execution, twenty-one required fields, no defaults: what ran, as what role,
-  on which server, under which settings, with which result and hash, and how to re-run it.
+  on which server, under which settings, with which result and hash, and how to re-run it. The
+  record names the engine it ran on, once, in its session settings, and each column of the result
+  carries that engine's own declared type for it. Those settings are one block whichever engine
+  wrote the record: the engine, then the seven PostgreSQL preconditions (`TimeZone`, `DateStyle`,
+  `IntervalStyle`, `extra_float_digits`, the database's default collation, `work_mem` and
+  `hash_mem_multiplier`), stated in full on PostgreSQL and absent on an engine that has no session
+  to read them from, then everything else that session reported.
 - Gold-only probes, all heuristics and labelled so: ordering over numeric-looking text; an
   arbitrary or null-first cut that changes the answer; a result that is not a function of the data
-  (a seeded shuffle of the referenced tables, copied into the scratch schema, changes it), with
+  (a seeded shuffle of the referenced tables, copied into scratch storage, changes it), with
   float aggregates whose value depends on summation order reported under their own name; and,
-  off by default behind `--experimental-s2`, direction against the question. The copies are
-  reached by the search path, which a name that states its own schema never consults, so a gold
-  that writes `public.x` or `"Other".x` is reported as not covered by the shuffle rather than
-  rerun against a copy of it. Which answer a copy gives depends on the plan it is read with, and
+  off by default behind `--experimental-s2`, direction against the question. All five run on
+  either engine and read the engine's own rules rather than PostgreSQL's: where the nulls of an
+  ordering key go without a `NULLS FIRST` or `NULLS LAST` to say (last under `ASC` on PostgreSQL,
+  first on SQLite), what a numeric cast of an ordering key is written as, and which result types
+  hold an aggregate whose last digits are its summation order. On SQLite that last set is empty,
+  because the engine adds a REAL aggregate with a compensation, so a float cell that moves under
+  the shuffle there is reported as depending on the storage order rather than forgiven as
+  arithmetic. The copies are reached by the search path on PostgreSQL and by SQLite resolving an
+  unqualified name in `temp` first, and neither consults a name that states its own schema, so a
+  gold that writes `public.x`, `"Other".x` or `main.x` is reported as not covered by the shuffle
+  rather than rerun against a copy of it. Which answer a copy gives depends on the plan it is read
+  with, and
   the plan on the planner's statistics: the run records `last_analyze`, `last_autoanalyze` and
   `n_mod_since_analyze` per table, in the probe's own evidence and in the summary, and never runs
   ANALYZE. A probe that fires on one run and is quiet on the next over the same data is that, and
@@ -184,8 +198,16 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   prediction, an upstream correction, a human's fix.
 - It does not generate differentiating data. Two statements that agree on the shipped rows but
   differ semantically are found only by the shuffle probe, not by search.
-- It runs on PostgreSQL only. SQLite, where BIRD originally lives, is the first expansion candidate
-  and is not built; the executor interface is engine-neutral so that it can be.
+- SQLite, where BIRD originally lives, is available behind the same evidence record
+  (`--engine sqlite --dsn <path to the file>`), and what differs is stated in the record rather than
+  hidden: a column carries the storage class its cells came back at because SQLite types values and
+  not columns, a REAL comes back as the decimal that round-trips it, no session setting is a
+  precondition because a file has no session, there is no role and no grant, and the parser is
+  sqlglot's SQLite dialect rather than the engine's own grammar. The sandbox in
+  `tools/audit-sandbox-sqlite/` runs in the gate, with every probe asked there on a statement that
+  fires it and one that keeps it quiet, and Mini-Dev has now been measured on SQLite as well.
+  Extension loading is never enabled on the connection, so a statement that calls
+  `load_extension` is refused by the engine when it runs and loads nothing.
 - It proves nothing about correctness, security, or production use. It runs as the role you give
   it; give it a read-only one.
 - Its parser is PostgreSQL 17's grammar (`libpg_query`), so a statement that only PostgreSQL 17
@@ -230,6 +252,38 @@ claim there carries the date it was measured, because negative claims decay.
 [ADR-0013](docs/adr/0013-audit-text-to-sql-gold-with-typed-replay-evidence.md) records the decision
 this tool implements and the date by which it is reconsidered if nobody uses it.
 
+The same nine prediction files were then run on SQLite, on the eleven Mini-Dev database files, with
+no server and no container. On SQLite the tool's reading of BIRD's EX and BIRD's own evaluator agree
+on 4,481 of 4,482 predictions against each gold copy, better than the 4,476 on PostgreSQL, because
+here the tool reads the cells that evaluator reads; the single disagreement is a row where the two
+answers are the same number to fifteen digits and the gold's rule is R-ORD, which compares the
+canonical rendering, where a REAL is written at the serialization's numeric scale of six decimals. Of the 1,650 predictions BIRD credits, 237 (14.4 %) are NOT_EQUAL under the typed
+comparison: 230 return the gold's rows with other multiplicities, 6 the same value under another
+storage class, 1 differs only in row order. A sample of 50 of those 237, read by hand, is 27 wrong
+answers the benchmark credited, 22 duplicated rows a reader would forgive and 1 the typed rule
+itself. Gold-only, the probes fire 25 times on 20 of the 500 golds, against 39 on 29 on PostgreSQL;
+the largest single difference is that `float-aggregate-order` never fires on SQLite, which adds its
+REALs with a compensation. Two Mini-Dev golds do not finish inside the default 30 second budget on
+SQLite. [The SQLite measurement report](plans/reports/measurement-260907-1106-minidev-sqlite.md)
+holds the per-file table, the hand classification and the question-by-question comparison with the
+PostgreSQL run.
+
+BIRD dev is eight times larger than Mini-Dev, and it now has two published copies of its golds: the
+2024 file and a quality pass BIRD released for 2025-11-06, which rewrites 399 of the 1,534 gold
+statements. Running the gold-only probes over the older copy and scoring them against those
+rewrites gives the closest thing to a recall number this project can measure: **the probes fire on
+31 of the 399 golds BIRD itself corrected, 7.8 %**, three times the 2.6 % rate on the 963 golds
+BIRD left alone, and 29 of the 31 go quiet once BIRD's own rewrite replaces the old gold. That is
+not a quality pass: it misses 368 of the 399, because most of BIRD's corrections are about what a
+question means and the probes only ask whether the data decides the answer at all. The probes stay
+heuristics, and the 25 fires on golds BIRD did not touch were read by hand: 23 are golds that do
+not answer their question on this data, one is harmless, one is the tool's own rule. On the same
+1,534 questions the tool's reading of BIRD's EX and BIRD's own dev evaluator agree on 6,136 of
+6,136 comparisons. [The BIRD dev
+report](plans/reports/measurement-260907-1435-bird-dev-sqlite.md) holds the tables, the hand
+classification, the overlap with the published errata, and the five of eleven shipped databases
+that differ between BIRD's own two downloads.
+
 The history is short and stated: this repository was developed privately from 2026-08-25 under a
 different product direction, a governed data agent over a synthetic schema; it was reoriented on
 2026-09-02 by ADR-0013 to the problem above, and the public history starts after that. The
@@ -240,5 +294,6 @@ vouches for it.
 ## Licence
 
 Apache-2.0 for this repository (`LICENSE`). The material excerpted from BIRD Mini-Dev, listed in
-`NOTICE`, keeps its own CC BY-SA 4.0 licence. The SQL parser, `postgast`, is a BSD binding to
-`libpg_query`, PostgreSQL's own grammar as a library; the driver, `psycopg`, is LGPL.
+`NOTICE`, keeps its own CC BY-SA 4.0 licence. The PostgreSQL parser, `postgast`, is a BSD binding
+to `libpg_query`, PostgreSQL's own grammar as a library, and the PostgreSQL driver, `psycopg`, is
+LGPL. The SQLite parser, `sqlglot`, is MIT, and the SQLite driver is the standard library's.

@@ -81,7 +81,7 @@ from attestql.audit.backend import (
     TableName,
     TextCensus,
 )
-from attestql.evidence.types import SessionSettings
+from attestql.evidence.types import ENGINE_POSTGRESQL, SessionSettings
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 DRIVER_ERROR: type[Exception] = psycopg.Error
@@ -199,6 +199,22 @@ the version to see that it could have. They are recorded and not preconditions b
 making them block would refuse every comparison made across two hosts, including all the
 ones where the sort did not change, and this repository has measured no cross-host drift
 of its own (`docs/claims-register.md`, section 3)."""
+
+TEXT_TYPES: frozenset[str] = frozenset({"text", "character varying", "character"})
+"""The declared types this engine calls text, as ``information_schema`` renders them.
+
+Matched whole, because that catalogue renders a closed set of names and always in lower
+case: a column is declared one of these or is not text, and a length is stated in another
+column and never inside the name. A smell that reads an ordering key asks the backend
+whether its column is text, and this is this engine's answer."""
+
+ORDER_SENSITIVE_AGGREGATE_TYPES: frozenset[str] = frozenset({"float4", "float8"})
+"""The result types whose aggregates depend on the order their rows were added in.
+
+What a probe forgives a rerun for changing, named here because which types they are is a
+property of how this engine adds and not of the probe. A result column carries the server's
+own type name, which is what these are spelled as.
+"""
 
 DEFAULT_SCHEMA = "public"
 """Where a table named without a schema is looked for. BIRD's gold names bare tables and
@@ -377,8 +393,8 @@ class PostgresBackend:
         return cls(cast("Connection", connection), scratch_schema=scratch_schema)
 
     @property
-    def scratch_schema(self) -> str:
-        """Where the shuffled copies are made. Named so a summary can state it."""
+    def scratch(self) -> str:
+        """The schema the copies are made in: the one this login was given for them."""
         return self._scratch_schema
 
     def identity(self) -> str:
@@ -454,6 +470,7 @@ class PostgresBackend:
             held = self._memory_in_force()
             locale = self._database_locale()
             self._session_settings = SessionSettings(
+                engine=ENGINE_POSTGRESQL,
                 time_zone=read_back["TimeZone"],
                 date_style=read_back["DateStyle"],
                 interval_style=read_back["IntervalStyle"],
@@ -664,6 +681,20 @@ class PostgresBackend:
             if columns is not None:
                 types[name] = columns
         return types
+
+    def declared_type_is_text(self, declared_type: str) -> bool:
+        """Whether that declared type is one of the three this catalogue calls text."""
+        return declared_type in TEXT_TYPES
+
+    def order_sensitive_aggregate_types(self) -> frozenset[str]:
+        """The two floating types PostgreSQL adds up value by value, by their server names.
+
+        ``float4`` and ``float8`` are the ones whose aggregate moves with the order the rows
+        arrive in: an ``AVG`` or a ``SUM`` over them is a running double, and a gather that
+        returns its partials in another order or a hash aggregate that spilled into another
+        set of batches gives another last digit. ``numeric`` is exact and is not one of them.
+        """
+        return ORDER_SENSITIVE_AGGREGATE_TYPES
 
     def numeric_text_census(self, table: TableName, column: str, pattern: str) -> TextCensus:
         """The four counts, taken in one pass over the column the caller named."""
@@ -1028,7 +1059,8 @@ class PostgresBackend:
             )
             names = {int(row[0]): str(row[1]) for row in rows}
         return tuple(
-            ColumnType(name=name, pg_type=names.get(oid, f"oid:{oid}")) for name, oid in described
+            ColumnType(name=name, declared_type=names.get(oid, f"oid:{oid}"))
+            for name, oid in described
         )
 
     def _settings(self, names: Sequence[str]) -> dict[str, str]:
@@ -1176,10 +1208,12 @@ __all__ = [
     "DEFAULT_SCHEMA",
     "DEFAULT_SCRATCH_SCHEMA",
     "DRIVER_ERROR",
+    "ORDER_SENSITIVE_AGGREGATE_TYPES",
     "PLAN_CONTROLS",
     "PRECONDITION_SETTINGS",
     "QUALIFIED_NAME_IS_NOT_REACHED",
     "RECORDED_SETTINGS",
+    "TEXT_TYPES",
     "ColumnDescription",
     "Connection",
     "Cursor",

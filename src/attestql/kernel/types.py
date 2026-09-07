@@ -87,15 +87,15 @@ class ProjectedColumnWidth:
     """
 
     name: str
-    pg_type: str
+    declared_type: str
     max_encoded_bytes: int
     max_decoded_bytes: int
 
     def __post_init__(self) -> None:
         if not self.name:
             raise ValueError("name is required")
-        if not self.pg_type:
-            raise ValueError("pg_type is required")
+        if not self.declared_type:
+            raise ValueError("declared_type is required")
         for bound in ("max_encoded_bytes", "max_decoded_bytes"):
             value = getattr(self, bound)
             if not isinstance(value, int) or isinstance(value, bool) or value < 1:
@@ -197,8 +197,17 @@ def admit(
 
 @dataclass(frozen=True)
 class ColumnType:
+    """One column of a result: the name it came back under and the type it came back at.
+
+    ``declared_type`` is the engine's own name for the type, spelled as that engine
+    spells it, and it is read in the namespace of the engine the record's session
+    settings name once. A column therefore carries no engine of its own: two columns
+    whose ``declared_type`` reads the same come from records that state the same engine,
+    or from two records a comparison already refused to make.
+    """
+
     name: str
-    pg_type: str
+    declared_type: str
 
 
 @dataclass(frozen=True)

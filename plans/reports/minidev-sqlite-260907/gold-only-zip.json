@@ -1,0 +1,2539 @@
+{
+ "5": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "11": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "12": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "17": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "23": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "24": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "25": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "26": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "27": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "28": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "31": {
+  "db": "california_schools",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "32": {
+  "db": "california_schools",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "36": {
+  "db": "california_schools",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "37": {
+  "db": "california_schools",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ]
+ },
+ "39": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "40": {
+  "db": "california_schools",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "41": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "45": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "46": {
+  "db": "california_schools",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "47": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "48": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "50": {
+  "db": "california_schools",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "62": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "72": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "77": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "79": {
+  "db": "california_schools",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "82": {
+  "db": "california_schools",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ]
+ },
+ "83": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "85": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "87": {
+  "db": "california_schools",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "89": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "92": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "93": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "94": {
+  "db": "financial",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "95": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "98": {
+  "db": "financial",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "99": {
+  "db": "financial",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "100": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "112": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "115": {
+  "db": "financial",
+  "rule": "R-ORD",
+  "smells": [
+   "ordering-over-numeric-text"
+  ]
+ },
+ "116": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "117": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "118": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "125": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "128": {
+  "db": "financial",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "129": {
+  "db": "financial",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "136": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "137": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "138": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "145": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "149": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "152": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "159": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "168": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "169": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "173": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "186": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "189": {
+  "db": "financial",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "192": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "194": {
+  "db": "financial",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "195": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "197": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "198": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "200": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "201": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "206": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "207": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "208": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "212": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "213": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "215": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "218": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "219": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "220": {
+  "db": "toxicology",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "226": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "227": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "228": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "230": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "231": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "232": {
+  "db": "toxicology",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "234": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "236": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "239": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "240": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "242": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "243": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "244": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "245": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "247": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "248": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "249": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "253": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "255": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "260": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "263": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "268": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "273": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "281": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "282": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "327": {
+  "db": "toxicology",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "340": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "341": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "344": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "345": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "346": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "347": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "349": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ]
+ },
+ "352": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "356": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "358": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "366": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "368": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "371": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "377": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "379": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "383": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "391": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "397": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "402": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "405": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "407": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "408": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "409": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "412": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "414": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "415": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "416": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "422": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "424": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "427": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "440": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "459": {
+  "db": "card_games",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "462": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "465": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "466": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "468": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "469": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "472": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "473": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "474": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "477": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "479": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "480": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "483": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "484": {
+  "db": "card_games",
+  "rule": "R-ORD",
+  "smells": [
+   "not-a-function-of-the-data"
+  ]
+ },
+ "486": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "487": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "518": {
+  "db": "card_games",
+  "rule": "",
+  "smells": []
+ },
+ "522": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "528": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "529": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "530": {
+  "db": "card_games",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "531": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "532": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "533": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "537": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "539": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "544": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "547": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "549": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "555": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "557": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "563": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "565": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "567": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "568": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "571": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "572": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "573": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "576": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "578": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "581": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "584": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "586": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "587": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "592": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "595": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "598": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "604": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "629": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "633": {
+  "db": "codebase_community",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "634": {
+  "db": "codebase_community",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "637": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "639": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "640": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "665": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "669": {
+  "db": "codebase_community",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "671": {
+  "db": "codebase_community",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ]
+ },
+ "672": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "678": {
+  "db": "codebase_community",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "682": {
+  "db": "codebase_community",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "683": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "685": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "687": {
+  "db": "codebase_community",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "694": {
+  "db": "codebase_community",
+  "rule": "R-ORD",
+  "smells": [
+   "not-a-function-of-the-data"
+  ]
+ },
+ "701": {
+  "db": "codebase_community",
+  "rule": "",
+  "smells": []
+ },
+ "704": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "705": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "707": {
+  "db": "codebase_community",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "710": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "716": {
+  "db": "codebase_community",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "717": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "719": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "723": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "724": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "726": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "728": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "730": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "732": {
+  "db": "superhero",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "733": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "736": {
+  "db": "superhero",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "737": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "738": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "739": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "740": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "743": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "744": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "745": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "747": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "750": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "751": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "753": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "758": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "760": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "761": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "764": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "765": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "766": {
+  "db": "superhero",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "769": {
+  "db": "superhero",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "772": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "773": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "775": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "779": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "781": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "782": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "785": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "786": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "788": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "790": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "791": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "792": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "794": {
+  "db": "superhero",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "796": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "797": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "798": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "800": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "801": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "806": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "819": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "822": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "824": {
+  "db": "superhero",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "825": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "829": {
+  "db": "superhero",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "846": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "847": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "850": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "854": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "857": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "859": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "861": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "862": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "865": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "866": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "868": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "869": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "872": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "875": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "877": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "879": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": [
+   "ordering-over-numeric-text"
+  ]
+ },
+ "880": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "881": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "884": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "892": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "894": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "895": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "896": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "897": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "898": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "901": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "902": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "904": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "906": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "909": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "910": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "912": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "915": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "928": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "930": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "931": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "933": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "937": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "940": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "944": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "945": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "948": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "950": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "951": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "954": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "955": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "959": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "960": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "962": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "963": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "964": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "967": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "971": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "972": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "977": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "978": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "981": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "988": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "989": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "990": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "994": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1001": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1002": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "1003": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1011": {
+  "db": "formula_1",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1014": {
+  "db": "formula_1",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1025": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1028": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "1029": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1030": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1031": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1032": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1035": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1036": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1037": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1039": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1040": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1042": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1044": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1048": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1057": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1058": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1068": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1076": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1078": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1079": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1080": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1084": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1088": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1091": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1092": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1094": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1096": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1098": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1102": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1103": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1105": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1107": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1110": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1113": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1114": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1115": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1116": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1122": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1124": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1130": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1133": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1134": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1135": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": [
+   "not-a-function-of-the-data"
+  ]
+ },
+ "1136": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1139": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1141": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1144": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ]
+ },
+ "1145": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1146": {
+  "db": "european_football_2",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1147": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1148": {
+  "db": "european_football_2",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1149": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1150": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1152": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1153": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1155": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1156": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1157": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1162": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1164": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1166": {
+  "db": "thrombosis_prediction",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1168": {
+  "db": "thrombosis_prediction",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "1169": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1171": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1175": {
+  "db": "thrombosis_prediction",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1179": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1185": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1187": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1189": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1192": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1195": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1198": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1201": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1205": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1208": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1209": {
+  "db": "thrombosis_prediction",
+  "rule": "R-ORD",
+  "smells": [
+   "not-a-function-of-the-data"
+  ]
+ },
+ "1220": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1225": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1227": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1229": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1231": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1232": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1235": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1238": {
+  "db": "thrombosis_prediction",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1239": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1241": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1242": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1243": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1247": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1251": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1252": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1254": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1255": {
+  "db": "thrombosis_prediction",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1256": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1257": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1265": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1267": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1270": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1275": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1281": {
+  "db": "thrombosis_prediction",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1302": {
+  "db": "thrombosis_prediction",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1312": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1317": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1322": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1323": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1331": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1334": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1338": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1339": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1340": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1344": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1346": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1350": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1351": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1352": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1356": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1357": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1359": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1361": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1362": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1368": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1371": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1375": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1376": {
+  "db": "student_club",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1378": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1380": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1381": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1387": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1389": {
+  "db": "student_club",
+  "rule": "R-ORD",
+  "smells": [
+   "arbitrary-cut"
+  ]
+ },
+ "1390": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1392": {
+  "db": "student_club",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1394": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1398": {
+  "db": "student_club",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1399": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1401": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1403": {
+  "db": "student_club",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1404": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1405": {
+  "db": "student_club",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1409": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1410": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1411": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1422": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1426": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1427": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1432": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1435": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1457": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1460": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1464": {
+  "db": "student_club",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1471": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1472": {
+  "db": "debit_card_specializing",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1473": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1476": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1479": {
+  "db": "debit_card_specializing",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1480": {
+  "db": "debit_card_specializing",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1481": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1482": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1483": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1484": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1486": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1490": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1493": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1498": {
+  "db": "debit_card_specializing",
+  "rule": "R-ORD",
+  "smells": []
+ },
+ "1500": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1501": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1505": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1506": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1507": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1509": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1514": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1515": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1521": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1524": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1525": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1526": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1528": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1529": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1531": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ },
+ "1533": {
+  "db": "debit_card_specializing",
+  "rule": "R-SET",
+  "smells": []
+ }
+}

@@ -1,10 +1,12 @@
-"""What the parse of one statement says about it, before any server is reached.
+"""PostgreSQL's parse of one statement: ``parse.py``'s surface, filled in by libpg_query.
 
 One parse per statement, and everything the audit reads off a statement is read off
 that parse: the tables it names, whether it orders its rows and by what, whether it
-bounds them, and whether it is one plain SELECT at all. A second parser somewhere else
-would be a second opinion about the same text, and the two would disagree on the day it
-mattered.
+bounds them, and whether it is one plain SELECT at all. A second parser over the same
+engine would be a second opinion about the same text, and the two would disagree on the
+day it mattered. A second parser over another engine is a different thing: it reads
+another grammar, answers the same questions, and reaches the audit through the
+``ParsedStatement`` protocol this module implements (ADR-0014 point 3).
 
 The parser is ``postgast``, a BSD-2-Clause binding to libpg_query, which is PostgreSQL's
 own grammar built as a library: the tool reads a statement the way the server that will
@@ -32,6 +34,13 @@ import postgast
 from postgast import pg_query_pb2 as nodes
 
 from attestql.audit.backend import TableName
+from attestql.audit.parse import (
+    ORDERING_KEY_PREFIX,
+    OrderingKey,
+    ParsedStatement,
+    ParserIdentity,
+    StatementRefused,
+)
 from attestql.evidence.types import ReplayRule, SortKey
 
 VALIDATOR_VERSION = "audit:libpg_query-parse"
@@ -46,13 +55,6 @@ CHECKS_PASSED: tuple[str, ...] = (
     "no_placeholder_without_a_bound_parameter",
 )
 """The three checks ``parse_statement`` runs, in the order it runs them."""
-
-ORDERING_KEY_PREFIX = "attestql_ordering_key_"
-"""What ``without_the_bound_and_projecting_its_keys`` names the columns it adds.
-
-A reader of the result of that variant is told which columns the statement projected and
-which this tool added: the projected columns come first, and the added ones carry this
-prefix and the key's position after it."""
 
 _PROJECTION = "SELECT "
 """The whole of the statement ``_expression_text`` wraps an expression in.
@@ -77,16 +79,15 @@ a binding can be reissued over the same libpg_query, and a summary that named on
 them would not say what read its statements."""
 
 
-class StatementRefused(ValueError):
-    """This text is not something the audit can run, and the reason says which part.
-
-    ``reason`` is the whole of the refusal, so a caller writes it into a summary line
-    rather than deciding for itself what a parse failure meant.
-    """
-
-    def __init__(self, reason: str) -> None:
-        self.reason = reason
-        super().__init__(reason)
+PARSER = ParserIdentity(
+    validator=VALIDATOR_VERSION,
+    checks=CHECKS_PASSED,
+    reported={"postgast": POSTGAST_VERSION, "grammar_version": GRAMMAR_VERSION},
+)
+"""This parser as a record and a summary name it: the validator every record states, the
+checks it ran, and the two releases that decide what it read, since a binding can be
+reissued over one libpg_query and a summary that named only one of them would not say
+what read its statements."""
 
 
 def _expression_text(node: nodes.Node) -> str:
@@ -106,42 +107,13 @@ def _expression_text(node: nodes.Node) -> str:
 
 
 @dataclass(frozen=True)
-class OrderingKey:
-    """One top-level ORDER BY element, as the parser reports it.
+class PostgresStatement:
+    """What libpg_query read off one statement: ``parse.py``'s ``ParsedStatement``.
 
-    ``expression`` is the key written out again by the parser's own writer, so
-    ``t2.fastestLapSpeed::numeric`` and ``CAST(t2.fastestLapSpeed AS numeric)`` are one
-    string and not two. ``nulls`` is ``first``, ``last`` or ``default``: where the nulls
-    go is part of what an ordered answer is, and a probe that asks whether a bounded
-    result is null-first needs to be told rather than to guess from the direction.
-
-    ``column_reference`` is the dotted name when the key is a plain column reference and
-    ``None`` when it is anything else. A smell that asks what type an ordering key has
-    can only ask it of a column, and this is how it is told the key names one; the name
-    is resolved to a table through the statement's aliases, which the statement carries.
-    """
-
-    expression: str
-    descending: bool
-    nulls: str
-    column_reference: tuple[str, ...] | None
-
-    def sort_key(self) -> SortKey:
-        """The ordering key as a record states it: the expression and its direction."""
-        return SortKey(column=self.expression, descending=self.descending)
-
-
-@dataclass(frozen=True)
-class ParsedStatement:
-    """Everything the audit reads off one statement without running it.
-
-    The four fields below the first five are what the smells read and the comparison
-    never does. ``aliases`` maps every name the FROM clause can be referred to by onto
-    the relation it names, so an ordering key written ``t2.laps`` resolves to a column of
-    a table rather than staying a string. ``output_names`` are the select list's own
-    aliases, which an ordering key may name instead of a column. ``set_operation`` and
-    ``from_has_subquery`` are the two shapes in which neither resolution is sound, and a
-    smell that meets one reports itself not applicable rather than guessing.
+    The fields are what that protocol states, and the two rewrites below are made on a
+    fresh parse of this statement's own text and written back out by the parser's own
+    writer, so a variant differs from the statement in exactly what was asked for and in
+    whatever the writer normalises about both of them equally.
     """
 
     sql: str
@@ -158,6 +130,21 @@ class ParsedStatement:
     from_has_subquery: bool
 
     @property
+    def unresolved_ordering_keys(self) -> tuple[str, ...]:
+        """None: in this grammar a sort key that is a token is a column or a syntax error.
+
+        A double-quoted token is an identifier to PostgreSQL wherever it appears, and the
+        server refuses one that names no column rather than reading it as a string, so there
+        is nothing here for a caller to resolve against the catalogue.
+        """
+        return ()
+
+    @property
+    def parser(self) -> ParserIdentity:
+        """This module's parser, which is the one that read every statement it returns."""
+        return PARSER
+
+    @property
     def replay_rule(self) -> ReplayRule:
         """R-ORD when the statement has a top-level ORDER BY, R-SET when it has none."""
         return ReplayRule.R_ORD if self.ordering else ReplayRule.R_SET
@@ -168,12 +155,7 @@ class ParsedStatement:
         return tuple(key.sort_key() for key in self.ordering)
 
     def with_ordering_key_cast_to_numeric(self, index: int) -> str:
-        """This statement with ordering key ``index`` cast to numeric, and nothing else.
-
-        The rewrite is made on a fresh parse of this statement's own text and written
-        back out by the parser's writer, so the variant differs from the gold in exactly
-        the cast and in whatever the writer normalises about both of them equally.
-        """
+        """This statement with ordering key ``index`` cast to numeric, and nothing else."""
         tree = _parse(self.sql)
         statement = _select_statement(tree)
         sort_clause = statement.sort_clause
@@ -447,7 +429,7 @@ def parse_statement(sql: str) -> ParsedStatement:
     subqueries: list[bool] = []
     for source in statement.from_clause:
         _collect_aliases(source, aliases, subqueries)
-    return ParsedStatement(
+    return PostgresStatement(
         sql=sql,
         tables=_tables_named(tree),
         ordering=_ordering(statement),
@@ -468,11 +450,9 @@ def parse_statement(sql: str) -> ParsedStatement:
 __all__ = [
     "CHECKS_PASSED",
     "GRAMMAR_VERSION",
-    "ORDERING_KEY_PREFIX",
+    "PARSER",
     "POSTGAST_VERSION",
     "VALIDATOR_VERSION",
-    "OrderingKey",
-    "ParsedStatement",
-    "StatementRefused",
+    "PostgresStatement",
     "parse_statement",
 ]

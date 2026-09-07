@@ -180,6 +180,49 @@ script BIRD tự đổi 10 EX so với lần chấm đã commit (q1473 ×7, q212
 song song bị bỏ: server hết worker, 110 EX đổi thành cụm id liên tiếp; lần dùng là 3 file song song.
 Mục mở mới: q212 gold có `LIMIT 1` trên COUNT hoà trong derived table mà probe cắt tuỳ ý không bật.
 
+Nhánh `sqlite-backend` (Batch B):
+
+| Hash | Việc | Số liệu | Giờ |
+|---|---|---|--- |
+| `eacc778` | B0: ADR-0014 Accepted với ba chốt; ADR-0004 thêm luật storage class; index | docs; CI <https://github.com/ivermin1123/attestql/actions/runs/33883811118> | 21:24 |
+| `930f165` | B1: `ColumnType.declared_type`; `SessionSettings.engine`, năm setting PostgreSQL vắng khi sqlite; version record/summary/counterexample/smells lên 2; bytes canonical không đổi (451 byte, sha256 ef5615ef… ghim bằng test) | test 637 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33943458181> | 11:01 |
+| `befbe9e` | B2: ParsedStatement thành protocol (`audit/parse.py`), `PostgresStatement`; `Engine(name, connect, parse, parser)` trong `audit/engines.py`, cờ `--engine`; bằng chứng PostgreSQL không đổi (`b2-postgres-unchanged/`: 501 dòng chỉ lệch q94 do probe shuffle, đối chứng cùng lệch; 30 record giống nhau trừ run_id) | test 659 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33944486978> | 11:24 |
+| commit chứa dòng này | Dừng Batch B tại `befbe9e` theo chỉ thị của chủ 11:29 (05/09, chuyển qua session attestql-fa): B3 chưa commit gì, cây sạch, không stash; report `parser-260905-sqlglot-sqlite-reading.md` của worker B3 ghi lại điều đã kiểm (sqlglot 30.18.0 MIT; đọc backtick đúng; token trong dấu nháy kép luôn thành identifier, khác SQLite; ba phương án) | docs | 05/09 12:xx |
+| `575d516` | merge main (`f2563db`) vào nhánh; xung đột ở `evidence/types.py`, `evidence/replay.py`, `audit/cli.py`, `audit/compare.py`, `tests/test_replay_equality.py`: giữ dáng của nhánh (engine trước, các setting PostgreSQL cho phép None) và các trường của main (`work_mem`, `hash_mem_multiplier` thành tiền đề; `datlocprovider`, `daticulocale`, `datcollversion`, `server_encoding` được ghi) | test 685 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33947729860> | 12:38 |
+| `5484ff5` | B0': ADR-0014 sửa theo R-D: sqlglot 100 % parse (1.534 và 500+500), libpg_query từ chối 127/45/46 toàn backtick hoặc `LIMIT offset, count`, 0/806 cột lưu và 0/2.034 cột kết quả trộn storage class, chín setting phiên SQLite được ghi, `PRAGMA query_only = 1` là bao ngoài và `mode=ro` là bảo đảm mức file, phương án 2 cho token trong nháy kép; register thêm dòng A26 | docs; test 685 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33947914832> | 12:42 |
+| `a2a32ce` | B1': một khối SessionSettings cho cả hai engine (engine, bảy tiền đề PostgreSQL có thể vắng, recorded bắt buộc; SQLite ghi chín khoá); không đổi layout nên không bump version | test 687 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33948157031> | 12:48 |
+| `62d224d` | B3a: backend SQLite (`audit/sqlite.py`) và parser sqlglot 30.18.0 (`audit/sqlite_statements.py`) sau cùng một bản ghi bằng chứng; engine `sqlite` trong registry, `--engine sqlite --dsn <file>`; REAL thành Decimal ngắn nhất round-trip, cột kết quả mang lớp lưu trữ quan sát được, BLOB bị từ chối; `mode=ro` + `PRAGMA query_only` đọc lại trước mỗi câu; bản sao xáo trộn là bảng TEMP trên kết nối thứ hai; cách đọc bird_ex chọn theo engine | test 778 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33949327275> | 13:15 |
+| `7a8e3fd` | Khoá ORDER BY trong nháy kép: parse chỉ nêu tên (`unresolved_ordering_keys`), nơi có backend phân giải theo cột của các bảng câu lệnh đọc, chỉ từ chối khoá không trỏ cột nào; giữ được gold BIRD đúng mà vẫn chặn cách đọc sai; ADR-0014 (Context 4, Decision 3) và report parser sửa theo | test 782 + 30 sandbox; CI <https://github.com/ivermin1123/attestql/actions/runs/33949606380> | 13:21 |
+| `c803934` | B3b: sandbox SQLite không container (`tools/audit-sandbox-sqlite/`, ba lỗi gold từ chính file SQLite của Mini-Dev, group_concat thay cho sum float); `just check` chạy cả hai sandbox; README, NOTICE, register A27 | test 800 + 30 sandbox + 11 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/33950199069> | 13:34 |
+| `73ec41d` | B4: năm probe chạy trên SQLite; tập kiểu cộng phụ thuộc thứ tự do backend trả lời (PostgreSQL float4/float8, SQLite rỗng vì Kahan-Babuska-Neumaier từ 3.43.0, đo 28.000 multiset); NULL mặc định đứng đầu dưới ASC do parse điền; README, ADR-0014, register A28 | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/33951172921> | 13:56 |
+| (không commit) | Máy khởi động lại 06/09 ~09:00, macOS xoá /private/tmp: lần đo B5 thứ nhất (114/220 run, 20 tiến trình song song, load 61, 19 timeout gold giả) và worker mất; đo lại từ đầu, dữ liệu và venv để ở `~/.cache/attestql-measure`, cap 3 tiến trình | | |
+| `04d2170` | B5: đo lại Mini-Dev trên SQLite, 220 run (2 bản gold x 10 x 11 database) + 27 run gold sửa, cap 3 tiến trình, không container; 40 run có dòng timeout, chạy lại đơn lẻ giữ nguyên cả 40 (gold q518, q701 quá 30 s thật). HF: 3.501 so sánh, 1.650 EX=1, 981 lỗi, khớp evaluator BIRD 4.481/4.482 (chỗ lệch duy nhất q31 do REAL làm tròn 6 chữ số); 237/1.650 (14,4 %) EX=1 mà NOT_EQUAL (230 bội, 6 lớp lưu trữ, 1 thứ tự), mẫu 50 tay: 27 A / 22 B / 1 C. Gold-only 25 smell trên 20 gold (PostgreSQL 39 trên 29), 19 câu lệch giữa hai engine; report + artifact + register A29-A33 + README + NOTICE | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/34088637798> | 12:55 |
+| `74594d0` | B5b: report SQLite về 118 dòng, danh sách id chuyển sang `differences.json`, hàng B5 ghi hash và CI thật | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/34089573285> | 13:09 |
+| `246a354` | B5c: report wrap lại 100 cột, 119 dòng, giữ mọi bảng và số | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/34090142899> | 13:17 |
+| `a227ae4` | B6': BIRD dev 1.534 câu trên SQLite, hai bản gold (dev.json 2024-06-27 và bản rà 2025-11-06 của BIRD), 22 run gold-only + 44 run dự đoán, cap 3 tiến trình; 18/66 run có dòng timeout, chạy lại đơn lẻ giữ nguyên cả 18 (q518 38 s, q701 192 s, và bản viết lại của q1131 quá 30 s trong khi bản 2024 chạy 0,3 s). Số dẫn: **probe bắt 31/399 gold BIRD tự sửa (7,8 %)**, gấp ba mức nền 25/963 (2,6 %) trên gold BIRD không đụng, và 29 trong 31 tắt khi bản 2025-11-06 thay bản 2024. 25 gold BIRD để nguyên mà probe kêu: đọc tay cả 25, 23 sai / 1 vô hại / 1 luật của tool. Prediction mode trên hai file dự đoán dev của chính BIRD (DAMO-ConvAI, MIT): khớp evaluator dev của BIRD 6.136/6.136, 90/899 (10,0 %) EX=1 mà NOT_EQUAL. Phát hiện thêm: 5 trong 11 database khác nhau giữa `dev.zip` và `minidev.zip`, không tài liệu nào nói. Report + artifact + register A34-A38 + README | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/34096837188> | 14:42 |
+| `f143e13` | B6'b: hàng B6' trong run report ghi hash và CI thật | test 807 + 30 sandbox + 17 sandbox_sqlite; CI <https://github.com/ivermin1123/attestql/actions/runs/34097167059> | 14:46 |
+
+Điểm dừng Batch B (05/09): B0, B1, B2 đã lên nhánh `sqlite-backend` và CI xanh; B3 dừng trước khi
+commit theo chỉ thị mới của chủ (làm C0 đến C5 trên `main` trước, rồi B0', B1', B2 đến B5, B6'). Brief B2
+và B3 nằm trong scratchpad của phiên (`specs/batch-b2.md`, `specs/batch-b3.md`); đầu vào cho B5/B6
+(11 database SQLite của Mini-Dev, 9 file dự đoán SQLite, BIRD dev.zip 346 MB) đã tải về scratchpad.
+Quyết định tự đưa: dừng theo chỉ thị chuyển qua session khác vì dừng là đảo được, còn hai session cùng
+sửa một checkout thì không.
+
+Kết thúc Batch B (07/09, 11:00 đến 16:00, session này, worker Opus viết, Fable duyệt): nhánh
+`sqlite-backend` từ `c4eb03d` (main lúc tách) đến `f143e13`, 17 commit, CI xanh từng commit; test 605 + 30
+sandbox lúc tách thành 807 + 30 sandbox + 17 sandbox_sqlite. Không merge vào main, không push main, không
+đăng gì upstream. Đọc lại bốn thread upstream (chỉ đọc, 07/09 12:00): `mini_dev` #38, #39, #40 mở, chưa ai
+trả lời; SpotIt-plus #1 chủ đã đóng 05/09. Không container sót, không tiến trình sót; Docker Desktop đang
+chạy (worker bật cho gate). Thư mục đo `~/.cache/attestql-measure/minidev-sqlite` (6,7 GB) và
+`bird-dev-sqlite` (4,1 GB) để lại, xoá được. Chờ chủ quyết: (1) merge `sqlite-backend` vào main và push;
+(2) REAL render sáu chữ số thập phân làm q31 EQUAL trong khi BIRD cho 0 (hằng serialize dùng chung với
+PostgreSQL, đổi là đổi mọi digest); (3) timeout không được đếm trong dòng tổng kết và `summary.json`, ba
+gold BIRD dev (q518, q701, q1131 bản 2025) quá 30 s; (4) file dự đoán BIRD dev ghi số 0 cho câu thiếu và
+tool từ chối cả file; (5) 5/11 database của dev.zip khác minidev.zip (A38, 211 mã CDS mất số 0 đầu); (6)
+q879 vẫn sai trong bản dev 2025-11-06, q207 sửa join nhưng thêm `LIMIT` ngoài `GROUP_CONCAT`: chỉ ghi,
+không gửi. Status Batch B: DONE (B0', B1', B2 đến B5, B6' đủ; B5 đo hai lần vì máy khởi động lại).
+
 Status: DONE_WITH_CONCERNS (2.7 không làm được nếu không đảo quyết định thiết kế; ADR-0014 chỉ là
 đề xuất; số liệu README đo ở `41621c0`, đo lại ở HEAD lệch đúng q1473 và q707 như trên).
 
@@ -220,3 +263,31 @@ container `attestql-research-pg` (cổng 5499).
 
 Chưa làm, chờ chủ: gửi draft 5 (chủ đăng); B0', B1', B2 đến B6' do `c5` tiếp tục; drift collation
 giữa hai host chưa đo.
+
+## Review fixes before the merge, 2026-09-07
+
+Ten review findings on `sqlite-backend`, one commit each, `just check` green before every commit
+and the branch pushed after each. Tests before: 807 passed and 30 skipped under `just test`, 30
+under `just sandbox`, 17 under `just sandbox-sqlite`. After: 821 passed and 30 skipped, both
+sandboxes unchanged at 30 and 17. No measurement was rerun and no PostgreSQL number moved.
+
+| Hash | What it did |
+|---|---|
+| `a8ef0bb` | S1: the SQLite file URI percent-escapes the path, so a `?`, `#` or `%` in it no longer ends the filename early and drops `mode=ro`; `urllib.parse` granted to that one module by exact path in the boundary test |
+| `a2c6203` | S2: the two credential refusals on `--dsn` move onto the engine record, so they are asked of PostgreSQL alone and a SQLite path holding `password` or `://` is accepted; the empty value is still refused for either engine |
+| `500997d` | S3: `summary.json` states where the shuffled copies were made, read off a new `Backend.scratch` property (the schema on PostgreSQL, `temp` on SQLite) instead of echoing `--scratch-schema` |
+| `89d13fb` | S4: `prepare_shuffled_copies` asks which names the file holds before counting rows, so one missing table is reported under `NOT_IN_THIS_FILE` and the others are still copied |
+| `98d09e8` | S5: identifiers are folded over the ASCII letters through one helper beside the backend protocol, so `STRASSE` no longer resolves to a column or table named `straße` |
+| `24edc46` | S6: only SQLite's `interrupted` is reported as the statement timeout; every other driver error keeps the engine's own message however far the clock has moved |
+| `9a02004` | S7: whether a declaration is text is the backend's answer, so SQLite applies the affinity rule (CHAR, CLOB, TEXT) and `VARCHAR(50)` fires `ordering-over-numeric-text`; PostgreSQL still matches its three catalogue names whole |
+| `eabcbf1` | S8: a test that `SELECT load_extension(...)` is refused when it runs, and one README sentence saying extension loading is never enabled |
+| `765577b` | S9: the R-ORD and R-SET asymmetry over one pair of numbers recorded as a non-claim and as an ADR-0004 amendment; the README sentence about Mini-Dev q31 names the rule and the rendering |
+| `960cb7b` | S10: version `0.1.3` to `0.2.0` with `uv lock`, because two `feat!` commits behind this branch changed the record layout; no tag cut |
+
+Decisions taken here: `urllib.parse` is permitted in `audit/sqlite.py` alone, with the positive
+test the other exact-path permissions of `tests/test_boundary.py` carry, because the URI is how
+`mode=ro` is stated and `urllib.request` stays forbidden; the `--dsn` rule became a field on
+`Engine` rather than a branch on the engine name in `cli.py`, which that module's own rule forbids;
+`PostgresBackend.scratch_schema` was renamed `scratch` so both engines answer the protocol under
+one name (`connect(scratch_schema=...)` unchanged). Still open, seen while reading and not touched:
+the register's non-claim "Any engine but PostgreSQL" still reads "nothing is built".

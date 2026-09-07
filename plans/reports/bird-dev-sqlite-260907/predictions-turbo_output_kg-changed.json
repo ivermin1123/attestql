@@ -1,0 +1,23 @@
+{
+ "source": "predict_dev_turbo_output_kg.json",
+ "entries": 1534,
+ "not_a_string": 14,
+ "positions": [
+  "33",
+  "69",
+  "83",
+  "120",
+  "173",
+  "212",
+  "402",
+  "444",
+  "484",
+  "693",
+  "708",
+  "1478",
+  "1482",
+  "1493"
+ ],
+ "substitute": " ",
+ "why": "upstream's package_sqls replaces a non-string prediction with a single space; this tool refuses the file instead, so the same substitution is made here before the run"
+}

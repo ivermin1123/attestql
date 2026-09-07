@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "attestql"
-version = "0.1.3"
+version = "0.2.0"
 description = "Audit text-to-SQL gold and predictions on PostgreSQL with typed replay evidence."
 readme = "README.md"
 license = "Apache-2.0"
@@ -31,6 +31,13 @@ dependencies = [
     # it. The licence is the reason the previous parser was replaced: the audit parses on
     # the product path, and a GPL parser there sets the terms of everything that embeds it.
     "postgast==0.1.0",
+    # The SQLite parser: sqlglot's SQLite dialect (MIT, no runtime dependency of its own).
+    # SQLite ships no grammar as a library, so the tool reads a SQLite statement with a
+    # parser rather than with the engine that will run it, and R-D measured this one
+    # reading every gold of BIRD dev and of both Mini-Dev SQLite copies. Pinned exactly for
+    # the reason the parser above is: the parse decides the replay rule and the ordering a
+    # record states, and a parser that changed under a rerun would change the record.
+    "sqlglot==30.18.0",
 ]
 
 [project.urls]
@@ -46,9 +53,13 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src", "tools"]
+# The third entry is the SQLite sandbox's builder, whose directory name is not an identifier
+# and is therefore not reachable as a package. It is on the path so that the tests and the
+# command line build the fixture through one function rather than through two copies of it.
+pythonpath = ["src", "tools", "tools/audit-sandbox-sqlite"]
 markers = [
     "sandbox: needs the audit sandbox (tools/audit-sandbox/run.sh); skipped when ATTESTQL_AUDIT_SANDBOX is absent",
+    "sandbox_sqlite: the SQLite audit sandbox (tools/audit-sandbox-sqlite/); needs no container and is never skipped",
 ]
 
 [dependency-groups]
@@ -79,4 +90,4 @@ ignore = ["E501"]
 typeCheckingMode = "strict"
 pythonVersion = "3.11"
 include = ["src", "tests", "tools"]
-extraPaths = ["src", "tools"]
+extraPaths = ["src", "tools", "tools/audit-sandbox-sqlite"]

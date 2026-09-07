@@ -28,10 +28,13 @@ case is a key that puts nulls first and a bounded result that then holds one.
 
 ``not-a-function-of-the-data`` reruns the gold over a seeded shuffled copy of its tables
 and compares the full result under the gold's own rule. When the two differ, the answer
-depended on the order rows happened to be stored in. When the only differing cells are
-floats that agree to six significant digits, the smell is reported as
-``float-aggregate-order`` instead: that is summation order, not a defect in the
-statement, and BIRD compares floats exactly.
+depended on the order rows happened to be stored in. When the only differing cells are of
+a type whose aggregates the engine adds up value by value, and they agree to six
+significant digits, the smell is reported as ``float-aggregate-order`` instead: that is
+summation order, not a defect in the statement, and BIRD compares floats exactly. Which
+types those are is the engine's own answer: PostgreSQL names ``float4`` and ``float8``,
+and SQLite names none, because it adds a REAL aggregate with a compensation and a changed
+REAL there is the statement depending on the storage order after all.
 
 ``direction-against-question`` is experimental and off unless asked for. It reads the
 question text for words meaning a maximum or a minimum and fires on the contradiction
@@ -58,7 +61,7 @@ from attestql.audit.backend import (
     TextCensus,
     planner_statistics_json,
 )
-from attestql.audit.statements import ORDERING_KEY_PREFIX, OrderingKey, ParsedStatement
+from attestql.audit.parse import ORDERING_KEY_PREFIX, OrderingKey, ParsedStatement
 from attestql.evidence.render import Json, json_row, result_digest, result_json
 from attestql.evidence.replay import ComparabilityResult, ReplayRule, compare_results
 from attestql.evidence.serialize import SerializationDescriptor, typed_row, typed_value
@@ -85,14 +88,6 @@ ROWS_IN_EVIDENCE = 10
 NUMERIC_TEXT = r"^-?[0-9]+(\.[0-9]+)?$"
 """What counts as a numeric-looking text value. A form this rejects is counted
 non-numeric and the smell stays quiet, which is the conservative direction."""
-
-TEXT_TYPES: frozenset[str] = frozenset({"text", "character varying", "character"})
-"""The declared types the first smell applies to, as a catalogue names them. These are
-PostgreSQL's ``information_schema`` names; a second engine adds its own here."""
-
-FLOAT_TYPES: frozenset[str] = frozenset({"float4", "float8"})
-"""The result types whose summation order the fourth smell forgives, by their server
-type names, which is what a result column carries."""
 
 SIGNIFICANT_DIGITS = 6
 """How far two float values have to agree before their difference is called summation
@@ -315,7 +310,10 @@ def ordering_over_numeric_text(
             keys.append({"key": key.expression, "not_applicable": resolved})
             continue
         relation, column, declared = resolved
-        textual = declared in TEXT_TYPES
+        # Whether a declaration is text is the engine's reading of it and not a list kept
+        # here: one catalogue renders a closed set of names and another keeps the text of
+        # the CREATE statement, where VARCHAR(50) is a text column and matches no name.
+        textual = backend.declared_type_is_text(declared)
         keys.append(
             {
                 "key": key.expression,
@@ -386,12 +384,15 @@ def _numeric_cast_reruns(
 def _nulls_first_in_effect(key: OrderingKey) -> bool:
     """Whether this key would put its nulls at the top of the result.
 
-    A written NULLS FIRST or NULLS LAST decides it and nothing else is consulted. Left to
-    the default, the placement is PostgreSQL's: a null sorts as larger than every value, so
-    an ascending key puts its nulls last and a descending key puts them first.
+    The parse decides it wherever the engine's default is settled, and ``default`` means
+    that parse left it open. On PostgreSQL a null sorts as larger than every value, so an
+    ascending key puts its nulls last and a descending key puts them first, which is what
+    is read here; SQLite sorts a null below every value and its ordering is the mirror,
+    which the SQLite parse fills in per key rather than leaving to be read here.
 
-    Reading the default the other way round is what made this probe call a plain
-    ``ORDER BY x ASC LIMIT 1`` a null-first cut, which on PostgreSQL it is not.
+    Reading PostgreSQL's default the other way round is what made this probe call a plain
+    ``ORDER BY x ASC LIMIT 1`` a null-first cut, which on PostgreSQL it is not and on
+    SQLite it is.
     """
     if key.nulls != "default":
         return key.nulls == "first"
@@ -685,7 +686,11 @@ def not_a_function_of_the_data(
     differing = [rerun for rerun in reruns if rerun.differs]
     if not differing:
         return _quiet(name, payload, applicable=asked)
-    floats = _float_order_only(baseline, [rerun.result for rerun in differing])
+    floats = _float_order_only(
+        baseline,
+        [rerun.result for rerun in differing],
+        backend.order_sensitive_aggregate_types(),
+    )
     if floats is not None:
         payload["float_cells"] = floats
         payload["significant_digits"] = SIGNIFICANT_DIGITS
@@ -737,7 +742,9 @@ def _significant(value: Decimal, digits: int) -> Decimal:
 
 
 def _float_order_only(
-    baseline: ExecutionResult, reruns: Sequence[ExecutionResult]
+    baseline: ExecutionResult,
+    reruns: Sequence[ExecutionResult],
+    order_sensitive_types: frozenset[str],
 ) -> list[Json] | None:
     """The differing cells when every one of them is a float agreeing to six digits.
 
@@ -745,10 +752,17 @@ def _float_order_only(
     other type, or two floats that disagree in the digits that were compared. The rows
     are paired by position, which is what a difference of summation order leaves intact
     and what a difference in the rows themselves does not.
+
+    ``order_sensitive_types`` is the engine's own answer to which result types an aggregate
+    adds up in the order the rows arrive in, and it is the whole of what makes a column
+    eligible here. An engine that answers with nothing forgives nothing: every changed cell
+    is then a statement that depends on the storage order and is reported as one.
     """
     cells: list[Json] = []
     floats = {
-        index for index, column in enumerate(baseline.columns) if column.pg_type in FLOAT_TYPES
+        index
+        for index, column in enumerate(baseline.columns)
+        if column.declared_type in order_sensitive_types
     }
     if not floats:
         return None
@@ -773,7 +787,7 @@ def _float_order_only(
                     {
                         "row": position,
                         "column": baseline.columns[index].name,
-                        "pg_type": baseline.columns[index].pg_type,
+                        "declared_type": baseline.columns[index].declared_type,
                         "baseline": format(one, "f"),
                         "rerun": format(other, "f"),
                     }
@@ -884,7 +898,7 @@ def smells_json(found: Sequence[Smell]) -> Json:
     }
 
 
-SMELLS_FORMAT = "attestql/audit/smells/1"
+SMELLS_FORMAT = "attestql/audit/smells/2"
 SMELLS_READING = (
     "A smell is a mechanical reason to read this gold statement again. It is a heuristic: "
     "it does not state that the statement is wrong, and a maintainer decides."
@@ -908,7 +922,6 @@ __all__ = [
     "SMELLS_FORMAT",
     "SMELLS_READING",
     "SMELL_NAMES",
-    "TEXT_TYPES",
     "QuestionText",
     "Smell",
     "SmellSettings",

@@ -1,0 +1,256 @@
+{
+ "reading": "The ids behind the counts the report states. gold_only_by_probe is which questions each probe fired on, per copy of the question set, on SQLite; against_postgresql is the questions whose gold-only probes differ between the two engines over the Hugging Face copy, grouped by the class the report's table names, each with the probes that fired on either engine.",
+ "gold_only_by_probe": {
+  "zip": {
+   "arbitrary-cut": [
+    37,
+    82,
+    94,
+    349,
+    671,
+    736,
+    766,
+    794,
+    847,
+    906,
+    1002,
+    1028,
+    1144,
+    1168,
+    1389
+   ],
+   "not-a-function-of-the-data": [
+    37,
+    82,
+    349,
+    484,
+    671,
+    694,
+    1135,
+    1144,
+    1209
+   ],
+   "ordering-over-numeric-text": [
+    115,
+    879
+   ]
+  },
+  "hf": {
+   "arbitrary-cut": [
+    37,
+    82,
+    94,
+    349,
+    671,
+    736,
+    766,
+    794,
+    847,
+    906,
+    1002,
+    1028,
+    1144,
+    1168,
+    1389
+   ],
+   "not-a-function-of-the-data": [
+    37,
+    82,
+    349,
+    484,
+    671,
+    694,
+    1135,
+    1144,
+    1209
+   ],
+   "ordering-over-numeric-text": [
+    115
+   ]
+  }
+ },
+ "gold_only_delta_zip_to_hf": {
+  "arbitrary-cut": {
+   "only_on_zip": [],
+   "only_on_hf": []
+  },
+  "not-a-function-of-the-data": {
+   "only_on_zip": [],
+   "only_on_hf": []
+  },
+  "ordering-over-numeric-text": {
+   "only_on_zip": [
+    879
+   ],
+   "only_on_hf": []
+  }
+ },
+ "against_postgresql": {
+  "float_aggregate_order_never_arises": [
+   {
+    "question_id": 955,
+    "postgresql": [
+     "float-aggregate-order"
+    ],
+    "sqlite": []
+   },
+   {
+    "question_id": 1340,
+    "postgresql": [
+     "float-aggregate-order"
+    ],
+    "sqlite": []
+   },
+   {
+    "question_id": 1361,
+    "postgresql": [
+     "float-aggregate-order"
+    ],
+    "sqlite": []
+   },
+   {
+    "question_id": 1380,
+    "postgresql": [
+     "float-aggregate-order"
+    ],
+    "sqlite": []
+   },
+   {
+    "question_id": 1410,
+    "postgresql": [
+     "float-aggregate-order"
+    ],
+    "sqlite": []
+   },
+   {
+    "question_id": 1473,
+    "postgresql": [
+     "float-aggregate-order"
+    ],
+    "sqlite": []
+   },
+   {
+    "question_id": 1529,
+    "postgresql": [
+     "float-aggregate-order"
+    ],
+    "sqlite": []
+   },
+   {
+    "question_id": 1531,
+    "postgresql": [
+     "float-aggregate-order"
+    ],
+    "sqlite": []
+   }
+  ],
+  "the_shuffled_copies_no_longer_move_the_answer": [
+   {
+    "question_id": 94,
+    "postgresql": [
+     "arbitrary-cut",
+     "not-a-function-of-the-data"
+    ],
+    "sqlite": [
+     "arbitrary-cut"
+    ]
+   },
+   {
+    "question_id": 751,
+    "postgresql": [
+     "arbitrary-cut",
+     "not-a-function-of-the-data"
+    ],
+    "sqlite": []
+   },
+   {
+    "question_id": 1482,
+    "postgresql": [
+     "not-a-function-of-the-data"
+    ],
+    "sqlite": []
+   },
+   {
+    "question_id": 671,
+    "postgresql": [
+     "arbitrary-cut"
+    ],
+    "sqlite": [
+     "arbitrary-cut",
+     "not-a-function-of-the-data"
+    ]
+   }
+  ],
+  "the_sqlite_gold_leaves_null_placement_to_the_engine": [
+   {
+    "question_id": 736,
+    "postgresql": [
+     "arbitrary-cut",
+     "not-a-function-of-the-data"
+    ],
+    "sqlite": [
+     "arbitrary-cut"
+    ]
+   },
+   {
+    "question_id": 766,
+    "postgresql": [
+     "arbitrary-cut",
+     "not-a-function-of-the-data"
+    ],
+    "sqlite": [
+     "arbitrary-cut"
+    ]
+   },
+   {
+    "question_id": 794,
+    "postgresql": [
+     "arbitrary-cut",
+     "not-a-function-of-the-data"
+    ],
+    "sqlite": [
+     "arbitrary-cut"
+    ]
+   },
+   {
+    "question_id": 906,
+    "postgresql": [
+     "arbitrary-cut",
+     "not-a-function-of-the-data"
+    ],
+    "sqlite": [
+     "arbitrary-cut"
+    ]
+   }
+  ],
+  "the_translation_says_something_else": [
+   {
+    "question_id": 37,
+    "postgresql": [
+     "arbitrary-cut"
+    ],
+    "sqlite": [
+     "arbitrary-cut",
+     "not-a-function-of-the-data"
+    ]
+   },
+   {
+    "question_id": 1168,
+    "postgresql": [
+     "arbitrary-cut",
+     "not-a-function-of-the-data"
+    ],
+    "sqlite": [
+     "arbitrary-cut"
+    ]
+   },
+   {
+    "question_id": 1209,
+    "postgresql": [],
+    "sqlite": [
+     "not-a-function-of-the-data"
+    ]
+   }
+  ]
+ }
+}

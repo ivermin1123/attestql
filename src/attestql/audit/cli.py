@@ -91,8 +91,10 @@ from attestql.audit.compare import (
     sided,
     write_comparison,
 )
+from attestql.audit.engines import DEFAULT_ENGINE, ENGINES, Engine, Parse, engine_named
 from attestql.audit.fixture import CACHE_FILE, file_digest, fixture_digest
-from attestql.audit.postgres import DEFAULT_SCRATCH_SCHEMA, PostgresBackend
+from attestql.audit.parse import ParsedStatement, StatementRefused
+from attestql.audit.postgres import DEFAULT_SCRATCH_SCHEMA
 from attestql.audit.smells import (
     DEFAULT_SHUFFLE_ROW_LIMIT,
     DEFAULT_SHUFFLE_SEED,
@@ -102,14 +104,6 @@ from attestql.audit.smells import (
     SmellSettings,
     all_smells,
     smells_json,
-)
-from attestql.audit.statements import (
-    GRAMMAR_VERSION,
-    POSTGAST_VERSION,
-    VALIDATOR_VERSION,
-    ParsedStatement,
-    StatementRefused,
-    parse_statement,
 )
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import Json, record_json, write_json
@@ -133,13 +127,14 @@ MARKER_TEXT = (
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 QUESTION_DIRECTORY = re.compile(r"q\d+")
 """The name of a directory this tool writes a question's evidence to."""
-SUMMARY_FORMAT = "attestql/audit/summary/1"
+SUMMARY_FORMAT = "attestql/audit/summary/2"
 """What the layout of ``summary.json`` is, for a reader who opens one.
 
 It moves when a key a reader was reading changes meaning or leaves, and not when one is
-added, for the reason ``COUNTEREXAMPLE_FORMAT`` states: every key written under this
-version still means what it meant when ``credited_but_not_equal`` gained
-``by_test_suite_ex`` beside ``by_mechanism``."""
+added, for the reason ``COUNTEREXAMPLE_FORMAT`` states: ``credited_but_not_equal`` gaining
+``by_test_suite_ex`` beside ``by_mechanism`` left it where it was. It reads ``2`` because
+what the session reported moved under ``session_settings`` beside the engine that reported
+it."""
 
 SMELLS_FILE = "smells.json"
 
@@ -152,7 +147,7 @@ ERROR = "ERROR"
 NO_SMELL = "none"
 
 SERIALIZATION = SerializationDescriptor(
-    version="attestql/audit/1",
+    version="attestql/audit/2",
     numeric_scale=6,
     timestamp_format="%Y-%m-%dT%H:%M:%S.%fZ",
     timezone="UTC",
@@ -163,7 +158,12 @@ SERIALIZATION = SerializationDescriptor(
 
 One descriptor for the whole tool: two records rendered under different rules are not
 comparable, and a run that let its rendering be configured would produce records that
-cannot be compared with anyone else's."""
+cannot be compared with anyone else's.
+
+``version`` is what a reader compares two records' layout under, so it moves with the
+layout and with nothing else (ADR-0014). It reads ``2`` since the session settings a
+record states gained the engine and a column's type became its declared type; the
+rendering rules below, and the bytes the serializer makes of them, did not change."""
 
 BIRD_PREDICTION_SUFFIX = "\t----- bird -----\t"
 """What BIRD's own ``predict_dev.json`` appends to each statement: a tab, a marker and
@@ -237,6 +237,7 @@ class AuditOptions:
     scratch_schema: str = DEFAULT_SCRATCH_SCHEMA
     statement_timeout_seconds: int = DEFAULT_STATEMENT_TIMEOUT_SECONDS
     data_as_of: datetime | None = None
+    engine: Engine = DEFAULT_ENGINE
 
     @property
     def with_content_digests(self) -> bool:
@@ -602,8 +603,10 @@ def _prepare_shuffle(
         return None, _refusal(refused)
 
 
-def _parsed_golds(questions: Sequence[Question]) -> tuple[ParsedStatement | StatementRefused, ...]:
-    """Every gold read once, in the order the questions are asked.
+def _parsed_golds(
+    questions: Sequence[Question], parse: Parse
+) -> tuple[ParsedStatement | StatementRefused, ...]:
+    """Every gold read once, by the engine's parser, in the order the questions are asked.
 
     The tables this run measures are read off these parses and so is every record written
     from them, and a parse is a function of its text: asking for a second one buys nothing
@@ -613,7 +616,7 @@ def _parsed_golds(questions: Sequence[Question]) -> tuple[ParsedStatement | Stat
     parsed: list[ParsedStatement | StatementRefused] = []
     for question in questions:
         try:
-            parsed.append(parse_statement(question.sql))
+            parsed.append(parse(question.sql))
         except StatementRefused as refused:
             parsed.append(refused)
     return tuple(parsed)
@@ -682,7 +685,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         settings = backend.session_settings()
     except BackendRefused as refused:
         raise ToolError(f"the backend will not state what it is: {refused}") from refused
-    golds = _parsed_golds(question_set.questions)
+    golds = _parsed_golds(question_set.questions, options.engine.parse)
     tables = _referenced_tables(golds)
     with phases.timed("fixture"):
         measured = _run_fixture(backend, tables, options)
@@ -722,6 +725,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
             positions_unused=resolved.positions_unused,
             identity=identity,
             role=role,
+            scratch=backend.scratch,
             session_settings=settings,
             measured=measured,
             shuffled=shuffled,
@@ -1038,7 +1042,7 @@ def _audit_one(
         verdict = GOLD_ONLY
     else:
         with sided(SIDE_PREDICTION):
-            second_parsed = parse_statement(prediction.sql)
+            second_parsed = options.engine.parse(prediction.sql)
         comparison = compare_statements(
             question=metadata,
             question_set_version=question_set.digest,
@@ -1180,6 +1184,7 @@ def _summary_json(
     positions_unused: tuple[int, ...],
     identity: str,
     role: str,
+    scratch: str,
     session_settings: SessionSettings,
     measured: _Measured,
     shuffled: ShuffledCopies | None,
@@ -1193,10 +1198,11 @@ def _summary_json(
     question directories and the summary of the run before it were removed before this
     one wrote anything.
 
-    ``session_settings_recorded`` is the session as it was found, and blocks nothing. The
-    two memory settings are under ``settings`` beside the serialization instead, because
-    they are what this run held every statement to rather than what it found: a reader
-    comparing two summaries reads them where the rest of this run's own choices are.
+    ``session_settings`` names the engine and holds the session as it was found, which
+    blocks nothing. The two memory settings are under ``settings`` beside the serialization
+    instead, because they are what this run held every statement to rather than what it
+    found: a reader comparing two summaries reads them where the rest of this run's own
+    choices are.
     """
     digest = measured.digest
     return {
@@ -1204,12 +1210,11 @@ def _summary_json(
         "run_id": summary.run_id,
         "backend_identity": identity,
         "effective_database_role": role,
-        "session_settings_recorded": dict(session_settings.recorded),
-        "parser": {
-            "validator": VALIDATOR_VERSION,
-            "postgast": POSTGAST_VERSION,
-            "grammar_version": GRAMMAR_VERSION,
+        "session_settings": {
+            "engine": session_settings.engine,
+            "recorded": dict(session_settings.recorded),
         },
+        "parser": options.engine.parser.json(),
         "question_set": {
             "path": str(question_set.path),
             "digest": question_set.digest,
@@ -1270,7 +1275,7 @@ def _summary_json(
         "shuffle": {
             "seed": options.shuffle_seed,
             "row_limit": options.shuffle_row_limit,
-            "scratch_schema": options.scratch_schema,
+            "scratch_schema": scratch,
             "prepared": shuffled is not None,
             "reason": no_shuffle,
             "copied": [] if shuffled is None else [name.text for name in shuffled.copied],
@@ -1311,31 +1316,6 @@ def _summary_json(
         ],
         "exit_status": summary.exit_status,
     }
-
-
-def _dsn(value: str) -> str:
-    """A DSN this tool will connect with: libpq keyword form, and no password in it.
-
-    A URI is refused before its contents are looked at. ``postgresql://user:secret@host/db``
-    carries the credential in the text itself, where it would reach every record, log and
-    process listing this DSN reaches, and no rule about what a URI may contain is worth
-    trusting when the keyword form has no such shape.
-    """
-    if "://" in value:
-        raise argparse.ArgumentTypeError(
-            "the DSN is a URI; this tool takes the libpq keyword form, "
-            "host=... port=... dbname=... user=..., because a URI is where a password is "
-            "written; set PGPASSWORD or use ~/.pgpass so that no credential is ever "
-            "written into a record, a log or this command line"
-        )
-    if "password" in value.lower():
-        raise argparse.ArgumentTypeError(
-            "the DSN names a password; set PGPASSWORD or use ~/.pgpass so that no "
-            "credential is ever written into a record, a log or this command line"
-        )
-    if not value.strip():
-        raise argparse.ArgumentTypeError("the DSN is empty")
-    return value
 
 
 def _schema(value: str) -> str:
@@ -1413,10 +1393,18 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     audit.add_argument(
+        "--engine",
+        choices=sorted(ENGINES),
+        default=DEFAULT_ENGINE.name,
+        help="which database engine to audit on; it decides the backend and the parser",
+    )
+    audit.add_argument(
         "--dsn",
         required=True,
-        type=_dsn,
-        help="libpq keyword DSN without a password; PGPASSWORD or ~/.pgpass supplies it",
+        help=(
+            "where the database is: a libpq keyword DSN without a password on PostgreSQL, "
+            "where PGPASSWORD or ~/.pgpass supplies it, and the path to the file on SQLite"
+        ),
     )
     audit.add_argument(
         "--questions", required=True, type=Path, help="the BIRD Mini-Dev question file"
@@ -1509,8 +1497,8 @@ def build_parser() -> argparse.ArgumentParser:
         type=_schema,
         default=DEFAULT_SCRATCH_SCHEMA,
         help=(
-            "an existing schema this role may create tables in, where the shuffled copies "
-            "are made; this tool creates no schema and drops none"
+            "on PostgreSQL only: an existing schema this role may create tables in, where "
+            "the shuffled copies are made; this tool creates no schema and drops none"
         ),
     )
     audit.add_argument(
@@ -1535,13 +1523,22 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
     """The command line as options, or an argparse exit for anything it refuses."""
     parser = build_parser()
     parsed = parser.parse_args(argv)
+    engine = engine_named(cast("str", parsed.engine))
+    dsn = cast("str", parsed.dsn)
+    if not dsn.strip():
+        parser.error("the DSN is empty")
+    # What may stand there is the engine's to say: a libpq keyword string on one, a file
+    # path on the other, and a rule written for one of them is wrong about the other.
+    refused = engine.refuse_target(dsn)
+    if refused is not None:
+        parser.error(refused)
     if parsed.data_file is None and (parsed.data_origin, parsed.data_date) != (None, None):
         parser.error(
             "--data-origin and --data-date state where the data file came from; "
             "name that file with --data-file"
         )
     return AuditOptions(
-        dsn=cast("str", parsed.dsn),
+        dsn=dsn,
         questions=cast("Path", parsed.questions),
         questions_origin=cast("str | None", parsed.questions_origin),
         questions_date=cast("str | None", parsed.questions_date),
@@ -1563,6 +1560,7 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
         shuffle_row_limit=cast("int", parsed.shuffle_row_limit),
         statement_timeout_seconds=cast("int", parsed.statement_timeout),
         data_as_of=cast("datetime | None", parsed.data_as_of),
+        engine=engine,
     )
 
 
@@ -1580,15 +1578,24 @@ def audit(options: AuditOptions, backend: Backend, writer: Writer) -> int:
         return 2
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    """Build the PostgreSQL backend and run the audit. The exit status is the answer."""
-    options = parse_arguments(argv)
+def connect_and_audit(options: AuditOptions, writer: Writer) -> int:
+    """Open the engine the options name and audit through it. The exit status is the answer.
+
+    The engine brings both halves: the backend opened here and the parser every statement
+    of the run is read by. Nothing below this line asks which engine it is, so a second
+    engine is a second entry in the registry and a branch nowhere.
+    """
     try:
-        backend = PostgresBackend.connect(options.dsn, scratch_schema=options.scratch_schema)
+        backend = options.engine.connect(options.dsn, scratch=options.scratch_schema)
     except BackendRefused as refused:
         print(f"{PROGRAM}: the database could not be reached: {refused}", file=sys.stderr)
         return 2
-    return audit(options, backend, ConsoleWriter(sys.stdout))
+    return audit(options, backend, writer)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """The command line, and then the audit it asked for. The exit status is the answer."""
+    return connect_and_audit(parse_arguments(argv), ConsoleWriter(sys.stdout))
 
 
 __all__ = [
@@ -1616,6 +1623,7 @@ __all__ = [
     "Writer",
     "audit",
     "build_parser",
+    "connect_and_audit",
     "main",
     "parse_arguments",
     "read_predictions",

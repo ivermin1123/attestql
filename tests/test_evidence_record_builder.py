@@ -29,6 +29,7 @@ from attestql.evidence.build import ExecutionIdentity, IncompleteEvidence, build
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.serialize import SerializationDescriptor
 from attestql.evidence.types import (
+    ENGINE_POSTGRESQL,
     FixtureDigest,
     QuestionMetadata,
     ReplayRule,
@@ -74,6 +75,7 @@ QUESTION = QuestionMetadata(
     evidence_text="",
 )
 SETTINGS = SessionSettings(
+    engine=ENGINE_POSTGRESQL,
     time_zone="UTC",
     date_style="ISO, MDY",
     interval_style="postgres",

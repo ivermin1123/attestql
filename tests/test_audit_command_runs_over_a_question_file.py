@@ -15,6 +15,7 @@ connection, which is the only way those two are reachable without a server.
 
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 import json
 import re
@@ -23,7 +24,6 @@ from typing import Any, cast
 
 import pytest
 
-from attestql.audit import cli
 from attestql.audit.backend import BackendRefused, PlannerStatistics, TableName, TextCensus
 from attestql.audit.cli import (
     MARKER_FILE,
@@ -39,13 +39,14 @@ from attestql.audit.cli import (
     run_audit,
 )
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
+from attestql.audit.engines import POSTGRESQL, SQLITE
 from attestql.audit.fixture import CACHE_FILE
+from attestql.audit.parse import ParsedStatement
 from attestql.audit.smells import DEFAULT_SHUFFLE_ROW_LIMIT, NUMERIC_TEXT
 from attestql.audit.statements import (
     GRAMMAR_VERSION,
     POSTGAST_VERSION,
     VALIDATOR_VERSION,
-    ParsedStatement,
     parse_statement,
 )
 from attestql.kernel.types import ExecutionResult
@@ -266,8 +267,16 @@ def test_the_summary_names_the_session_and_the_grammar_the_run_was_judged_by(
     write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
     run_audit(options(tmp_path), _quiet_backend(), Lines())
     written = summary_of(tmp_path)
-    recorded = written["session_settings_recorded"]
+    settings = written["session_settings"]
+    recorded = settings["recorded"]
 
+    assert settings["engine"] == SETTINGS.engine
+    assert set(settings) == {"engine", "recorded"}, (
+        "the seven that decide comparability are on each record, under the engine that "
+        "holds them; the summary states the session this run found and the engine it found it on"
+    )
+    assert written["settings"]["work_mem"] == SETTINGS.work_mem
+    assert written["settings"]["hash_mem_multiplier"] == SETTINGS.hash_mem_multiplier
     assert recorded == dict(SETTINGS.recorded)
     assert recorded["max_parallel_workers_per_gather"] == "2"
     assert recorded["server_version"].startswith("16.4")
@@ -439,23 +448,32 @@ def test_the_session_is_read_from_the_server_once_for_a_whole_run(tmp_path: Path
     assert backend.settings_calls == 1, "the session was read again for every statement"
 
 
-def test_every_statement_of_a_run_is_parsed_once(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_every_statement_of_a_run_is_parsed_once_by_the_engine_the_run_chose(
+    tmp_path: Path,
 ) -> None:
     """A parse is a function of its text, so a second one is not a second opinion.
 
     The golds are parsed before the data is measured, because the tables to measure are
     read off those parses, and each prediction is parsed where its comparison is asked for.
+    Counted through an engine of the test's own, which is the seam a second engine arrives
+    on: nothing below the options asks which engine is running.
     """
     parses: dict[str, int] = {}
 
-    def counting(sql: str) -> ParsedStatement:
+    def counting(sql: str, /) -> ParsedStatement:
         parses[sql] = parses.get(sql, 0) + 1
         return parse_statement(sql)
 
-    monkeypatch.setattr(cli, "parse_statement", counting)
     backend = _two_questions_with_predictions(tmp_path)
-    run_audit(options(tmp_path, predictions=tmp_path / "predictions.json"), backend, Lines())
+    run_audit(
+        options(
+            tmp_path,
+            predictions=tmp_path / "predictions.json",
+            engine=dataclasses.replace(POSTGRESQL, parse=counting),
+        ),
+        backend,
+        Lines(),
+    )
     assert parses == {FASTEST_LAP: 1, NUMERIC: 1, ELEMENTS: 1, ELEMENTS_ONE_ROW: 1}
 
 
@@ -1025,6 +1043,47 @@ def test_a_uri_that_carries_no_credential_at_all_is_refused_for_being_one() -> N
             ["audit", "--dsn", "postgres://localhost/bird", "--questions", "q.json", "--out", "a"]
         )
     assert refused.value.code == 2
+
+
+@pytest.mark.parametrize(
+    "path", ["/data/password/bird_dev.sqlite", "/data/http://mirror/bird_dev.sqlite"]
+)
+def test_a_sqlite_file_is_not_refused_for_what_would_carry_a_credential_in_a_dsn(
+    path: str,
+) -> None:
+    """Under ``--engine sqlite`` the value is a path, so neither refusal above is about it: a
+    directory called ``password`` is a directory somebody made, and ``://`` inside a path is
+    not a connection string. The rule belongs to the engine, so it is asked of the engine the
+    run named."""
+    parsed = parse_arguments(
+        ["audit", "--engine", "sqlite", "--dsn", path, "--questions", "q.json", "--out", "a"]
+    )
+
+    assert parsed.dsn == path
+    assert parsed.engine is SQLITE
+
+
+@pytest.mark.parametrize(
+    "dsn", ["postgresql://bird:hunter2@localhost/bird", "host=localhost password=hunter2"]
+)
+def test_the_same_two_values_are_still_refused_when_the_run_names_postgresql(dsn: str) -> None:
+    """The refusals move with the engine and are not weakened by the second one arriving."""
+    with pytest.raises(SystemExit) as refused:
+        parse_arguments(
+            ["audit", "--engine", "postgresql", "--dsn", dsn, "--questions", "q.json", "--out", "a"]
+        )
+
+    assert refused.value.code == 2
+
+
+def test_a_dsn_that_is_empty_is_refused_whichever_engine_was_named() -> None:
+    """No engine is named by nothing, so this one is asked before the engine's own rule."""
+    for engine in ("postgresql", "sqlite"):
+        with pytest.raises(SystemExit) as refused:
+            parse_arguments(
+                ["audit", "--engine", engine, "--dsn", "  ", "--questions", "q.json", "--out", "a"]
+            )
+        assert refused.value.code == 2
 
 
 def test_a_scratch_schema_named_by_nothing_is_refused_before_anything_runs() -> None:

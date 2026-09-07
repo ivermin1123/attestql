@@ -50,6 +50,8 @@ from attestql.evidence.replay import (
 )
 from attestql.evidence.serialize import SerializationDescriptor, UnsupportedValue
 from attestql.evidence.types import (
+    ENGINE_POSTGRESQL,
+    ENGINE_SQLITE,
     FixtureDigest,
     QuestionMetadata,
     ReplayRule,
@@ -71,6 +73,7 @@ QUESTION = QuestionMetadata(
 
 
 SETTINGS = SessionSettings(
+    engine=ENGINE_POSTGRESQL,
     time_zone="UTC",
     date_style="ISO, MDY",
     interval_style="postgres",
@@ -193,16 +196,36 @@ RETYPED = (ColumnType("feature", "text"), ColumnType("adopting_account_count", "
 """The same names at another declared type in the second position."""
 
 
+ANOTHER_ENGINE = SessionSettings(
+    engine=ENGINE_SQLITE,
+    time_zone=None,
+    date_style=None,
+    interval_style=None,
+    extra_float_digits=None,
+    database_collation=None,
+    work_mem=None,
+    hash_mem_multiplier=None,
+    recorded={"journal_mode": "delete"},
+)
+"""The same run on the other engine: a file has no session, so the seven are absent there
+and cannot be varied one at a time the way the settings of one engine can."""
+
+
 def _differing(field: str) -> dict[str, Any]:
     """One record override that makes exactly that precondition differ.
 
     A session setting is named through the field that holds it, so the override has to
     reach inside ``session_settings_in_force`` rather than replace a field of the record.
+    The engine is the one that cannot be varied on its own: changing it changes which of
+    the seven settings a record may state at all, so the override is the other engine's
+    whole settings block.
     """
     if field == "fixture":
         return {"fixture": dataclasses.replace(FIXTURE, schema_digest="sha256:another-schema")}
     setting = field.removeprefix("session_settings_in_force.")
     assert setting in SESSION_PRECONDITIONS, f"{field} is not a precondition this test knows"
+    if setting == "engine":
+        return {"session_settings_in_force": ANOTHER_ENGINE}
     return {
         "session_settings_in_force": dataclasses.replace(SETTINGS, **{setting: "another-value"})
     }
@@ -548,13 +571,38 @@ def test_a_verdict_names_what_differed_when_and_only_when_it_is_not_comparable()
         ComparabilityVerdict(ComparabilityResult.EQUAL, ("fixture",))
 
 
+def test_two_engines_are_never_comparable_and_the_verdict_names_the_engine_alone(
+    make_evidence_record: Any, execution_limits: ExecutionLimits
+) -> None:
+    """The seven settings the other engine does not hold are not seven disagreements.
+
+    A SQLite record states none of them because there is no session to read them from,
+    so listing them beside the engine would report an absence this tool already knows
+    the reason for as seven separate findings a reader has to dismiss one by one.
+    """
+    on_postgresql = make_evidence_record(result=_result(execution_limits, TWO_ROWS))
+    on_sqlite = make_evidence_record(
+        result=_result(execution_limits, TWO_ROWS), session_settings_in_force=ANOTHER_ENGINE
+    )
+
+    assert precondition_mismatches(on_postgresql, on_sqlite) == (
+        "session_settings_in_force.engine",
+    )
+    assert not preconditions_match(on_postgresql, on_sqlite)
+    assert compare_r_set(on_postgresql, on_sqlite) == ComparabilityVerdict(
+        ComparabilityResult.NOT_COMPARABLE, ("session_settings_in_force.engine",)
+    )
+
+
 def test_the_precondition_fields_and_the_rule_fields_are_disjoint() -> None:
-    """The eight are what must match before equality is required; the rule fields are what
-    equality would be required under. ADR-0013 point 6 names the first six, and the two
-    memory settings the executor holds every statement to are the rest of the list."""
+    """The nine are what must match before equality is required; the rule fields are what
+    equality would be required under. ADR-0013 point 6 names five of them, the two memory
+    settings the executor holds every statement to are two more, and ADR-0014 puts the
+    engine they are all read in ahead of the list."""
     assert set(PRECONDITION_FIELDS).isdisjoint(RULE_FIELDS)
     assert PRECONDITION_FIELDS == (
         "fixture",
+        "session_settings_in_force.engine",
         "session_settings_in_force.time_zone",
         "session_settings_in_force.date_style",
         "session_settings_in_force.interval_style",

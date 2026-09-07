@@ -353,7 +353,7 @@ def test_a_statement_runs_inside_a_read_only_transaction_that_is_rolled_back() -
     assert STATEMENT in connection.log
     assert connection.log[connection.log.index(STATEMENT) + 1] == "ROLLBACK"
     assert result.rows == ROWS
-    assert [(c.name, c.pg_type) for c in result.columns] == [
+    assert [(c.name, c.declared_type) for c in result.columns] == [
         ("nationality", "text"),
         ("laps", "int8"),
     ]
@@ -800,7 +800,10 @@ def test_a_loaded_float_and_interval_keep_the_type_the_server_named_on_the_colum
     which is what a reader of the record needs to see beside a cell tagged ``dec``."""
     connection = FakeConnection(rows=FLOAT_ROWS, columns=FLOAT_COLUMNS)
     result = _backend(connection).execute(FLOAT_STATEMENT, statement_timeout_seconds=30)
-    assert [(c.name, c.pg_type) for c in result.columns] == [("avg", "float8"), ("sum", "interval")]
+    assert [(c.name, c.declared_type) for c in result.columns] == [
+        ("avg", "float8"),
+        ("sum", "interval"),
+    ]
     assert result.rows == FLOAT_ROWS
 
 
