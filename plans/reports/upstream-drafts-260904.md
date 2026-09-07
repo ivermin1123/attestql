@@ -75,7 +75,7 @@ Where: new issue on `bird-bench/mini_dev`, the tracker whose README links both z
 register row A38, `plans/reports/bird-dev-sqlite-260907/inputs.json` (`databases_against_minidev`)
 and `check_inputs.py` (digest, then schema, row counts and per-table row digests), measured
 2026-09-07 at the commit `plans/reports/measurement-260907-1435-bird-dev-sqlite.md` names.
-Not sent: the owner reads it first.
+Sent 2026-09-07 10:54 UTC as `bird-bench/mini_dev` issue 50 on the owner's word; register U7.
 
 Title: Five of the eleven dev databases differ between dev.zip and minidev.zip
 
