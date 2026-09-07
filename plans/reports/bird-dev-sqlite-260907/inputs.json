@@ -1,0 +1,112 @@
+{
+ "reading": "What the inputs are, checked rather than assumed. databases_against_minidev is a finding about BIRD's publications: five of the eleven files differ between dev.zip and minidev.zip, three by row count and two by the rows themselves, so a measurement of BIRD dev must use dev.zip's own.",
+ "dev_json_entries": 1534,
+ "dev_1106_entries": 1534,
+ "same_ids_in_the_same_order": true,
+ "dev_sql_against_dev_json": {
+  "lines": 1534,
+  "entries": 1534,
+  "mismatched_positions": []
+ },
+ "database_sha256": {
+  "california_schools": "986817d793479801ed55133e55aa27e335422c0cd3866b54a3d6317b7c5f09c1",
+  "card_games": "c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227",
+  "codebase_community": "92101be6d2a9f6adceea59d38f6d1c556087f9eea1432432a21268cb1348036d",
+  "debit_card_specializing": "b3d149ad05746dbbe5116e229e17e18f09c39db43cf117d9ef3441753608b691",
+  "european_football_2": "e4d361dbeec6591a4b315877c0c481da05c8ff5a3d389b34d6e17b6f15bee4e0",
+  "financial": "d15d89cdb068a202b6f2b99342af44dffc1d52545b39ceaf62efdc0ba570101e",
+  "formula_1": "17185981cd747f6cdc374cb02a6096db3130e6ec2ddc582fe1686a28fb4c4c8a",
+  "student_club": "eb89bcfe97eefa386a27904ec5aa15159811a7eac894ec659a36e48fa9f76b77",
+  "superhero": "75e94a2c3236ee3bb2c01fb97a1c4b4c1c269bcefd4eab1d04be323d2d0825b1",
+  "thrombosis_prediction": "e7e16d74b4731b4b8d33fdbe8c29cd5622620788ce8d1f335631f65fc7cf1db9",
+  "toxicology": "f5fa7f21af1ad878ff8fef1b0582b8cb2d7ed63dbac65ff16d2ba05667650c5b"
+ },
+ "databases_against_minidev": {
+  "run": true,
+  "identical": [
+   "card_games",
+   "codebase_community",
+   "debit_card_specializing",
+   "financial",
+   "student_club",
+   "superhero"
+  ],
+  "different": {
+   "california_schools": {
+    "sha256_dev": "986817d793479801ed55133e55aa27e335422c0cd3866b54a3d6317b7c5f09c1",
+    "sha256_minidev": "c0903eec662e63068fd1d14403d3d6c1d473287fc10c4356333ea58f878db983",
+    "same_tables": true,
+    "row_counts_differ": {},
+    "tables_whose_rows_differ": [
+     "satscores"
+    ]
+   },
+   "european_football_2": {
+    "sha256_dev": "e4d361dbeec6591a4b315877c0c481da05c8ff5a3d389b34d6e17b6f15bee4e0",
+    "sha256_minidev": "f72f5c9b990371417288a67b27a02e601ef904d45525c2c9f7931fb01001c536",
+    "same_tables": true,
+    "row_counts_differ": {},
+    "tables_whose_rows_differ": [
+     "Player"
+    ]
+   },
+   "formula_1": {
+    "sha256_dev": "17185981cd747f6cdc374cb02a6096db3130e6ec2ddc582fe1686a28fb4c4c8a",
+    "sha256_minidev": "79770caf966707e35516fa566e24b40ae515c74ec1ec4631235245645b87b24d",
+    "same_tables": true,
+    "row_counts_differ": {
+     "lapTimes": {
+      "dev": 420369,
+      "minidev": 400524
+     },
+     "pitStops": {
+      "dev": 6070,
+      "minidev": 5815
+     },
+     "qualifying": {
+      "dev": 7397,
+      "minidev": 6967
+     },
+     "races": {
+      "dev": 976,
+      "minidev": 954
+     },
+     "results": {
+      "dev": 23657,
+      "minidev": 23179
+     }
+    }
+   },
+   "thrombosis_prediction": {
+    "sha256_dev": "e7e16d74b4731b4b8d33fdbe8c29cd5622620788ce8d1f335631f65fc7cf1db9",
+    "sha256_minidev": "87583183c3dc472fba04de702965560a9d7c0a548836613f242317e0eeb83f00",
+    "same_tables": true,
+    "row_counts_differ": {
+     "Examination": {
+      "dev": 806,
+      "minidev": 106
+     }
+    }
+   },
+   "toxicology": {
+    "sha256_dev": "f5fa7f21af1ad878ff8fef1b0582b8cb2d7ed63dbac65ff16d2ba05667650c5b",
+    "sha256_minidev": "35ef27ae6bdfda530e125ed369666ac0abb8bc8c0bcc0ad09407f547ecb61a93",
+    "same_tables": true,
+    "row_counts_differ": {
+     "atom": {
+      "dev": 12333,
+      "minidev": 9111
+     },
+     "bond": {
+      "dev": 12379,
+      "minidev": 9156
+     },
+     "connected": {
+      "dev": 24758,
+      "minidev": 18312
+     }
+    }
+   }
+  }
+ }
+}
