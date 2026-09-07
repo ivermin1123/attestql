@@ -732,18 +732,25 @@ class SqliteBackend:
         wanted = tuple(dict.fromkeys(tables))
         reachable = tuple(sorted(name for name in wanted if not name.schema))
         unreachable = {name: QUALIFIED_NAME_IS_NOT_REACHED for name in wanted if name.schema}
-        counts = self.row_counts(reachable)
         held = self._relations()
+        # Which names the file holds is asked before anything is counted, because counting a
+        # relation that is not there is the engine's error and a name that is not there is
+        # this answer's ``NOT_IN_THIS_FILE``: a gold that names a table nobody loaded is one
+        # question's problem and never the end of the shuffle.
+        present: dict[TableName, TableName] = {}
+        for name in reachable:
+            found = _in_this_file(name, held)
+            if found is None:
+                unreachable[name] = NOT_IN_THIS_FILE
+            else:
+                present[name] = found
+        counts = self.row_counts(tuple(present.values()))
         copied: list[TableName] = []
         skipped: dict[TableName, int] = {}
         made: set[TableName] = set()
         self._shuffled = None
         connection = self._writing_connection()
-        for name in reachable:
-            found = _in_this_file(name, held)
-            if found is None:
-                unreachable[name] = NOT_IN_THIS_FILE
-                continue
+        for name, found in present.items():
             if not self._has_a_row_identity(connection, found):
                 unreachable[name] = WITHOUT_A_ROW_IDENTITY
                 continue
