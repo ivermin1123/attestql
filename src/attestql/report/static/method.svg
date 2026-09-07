@@ -1,0 +1,82 @@
+<!-- The one figure that is authored rather than generated: what one question is put
+     through, on one screen. It is placed by the page that explains the method and is
+     committed here so that that page and this report render the same asset.
+
+     It carries no colour, no font file and no reference to anything outside the page. The
+     marks take classes report.css styles, which is what makes one file hold in light, in
+     dark and on paper; inlined into a page it is drawn in the page's own tokens, and opened
+     on its own it is a wireframe with no stylesheet to give it any. -->
+<svg xmlns="http://www.w3.org/2000/svg" class="figure__svg figure__svg--method" role="img" width="640" height="504" viewBox="0 0 640 504" aria-labelledby="method-title" aria-describedby="method-description">
+  <title id="method-title">What one question is put through: two statements, parsed, run under one session's preconditions, serialized, hashed, and compared under the gold's rule</title>
+  <desc id="method-description">Two columns, the gold statement on the left and the second statement on the right. Each is parsed, and a statement the parser cannot read stops there. Both are then run against one database in one session, under the preconditions that session states. Each result is serialized under one canonical rendering and hashed. The two hashes meet at a comparison under the rule the gold declared, R-SET or R-ORD, and the comparison answers EQUAL, NOT_EQUAL or NOT_COMPARABLE. NOT_COMPARABLE is the answer when a precondition differed, and NOT_EQUAL states that the two disagree on this data under this rule and not which of them is wrong.</desc>
+
+  <rect class="figure__frame" x="40" y="8" width="240" height="44" rx="3"/>
+  <text class="figure__label" x="160" y="28" text-anchor="middle">the gold statement</text>
+  <text class="figure__note" x="160" y="44" text-anchor="middle">as the question set ships it</text>
+
+  <rect class="figure__frame" x="360" y="8" width="240" height="44" rx="3"/>
+  <text class="figure__label" x="480" y="28" text-anchor="middle">the second statement</text>
+  <text class="figure__note" x="480" y="44" text-anchor="middle">a prediction, or another gold</text>
+
+  <line class="figure__line" x1="160" y1="52" x2="160" y2="72"/>
+  <path class="figure__head" d="M 155 72 L 165 72 L 160 80 Z"/>
+  <line class="figure__line" x1="480" y1="52" x2="480" y2="72"/>
+  <path class="figure__head" d="M 475 72 L 485 72 L 480 80 Z"/>
+
+  <rect class="figure__frame" x="40" y="80" width="240" height="44" rx="3"/>
+  <text class="figure__label" x="160" y="100" text-anchor="middle">parse</text>
+  <text class="figure__note" x="160" y="116" text-anchor="middle">tables, ordering, the rule</text>
+
+  <rect class="figure__frame" x="360" y="80" width="240" height="44" rx="3"/>
+  <text class="figure__label" x="480" y="100" text-anchor="middle">parse</text>
+  <text class="figure__note" x="480" y="116" text-anchor="middle">refused here is run nowhere</text>
+
+  <line class="figure__line" x1="160" y1="124" x2="160" y2="144"/>
+  <path class="figure__head" d="M 155 144 L 165 144 L 160 152 Z"/>
+  <line class="figure__line" x1="480" y1="124" x2="480" y2="144"/>
+  <path class="figure__head" d="M 475 144 L 485 144 L 480 152 Z"/>
+
+  <rect class="figure__frame" x="40" y="152" width="560" height="44" rx="3"/>
+  <text class="figure__label" x="320" y="172" text-anchor="middle">run, both in one session</text>
+  <text class="figure__note" x="320" y="188" text-anchor="middle">the preconditions are read off the server and recorded, not set</text>
+
+  <line class="figure__line" x1="160" y1="196" x2="160" y2="216"/>
+  <path class="figure__head" d="M 155 216 L 165 216 L 160 224 Z"/>
+  <line class="figure__line" x1="480" y1="196" x2="480" y2="216"/>
+  <path class="figure__head" d="M 475 216 L 485 216 L 480 224 Z"/>
+
+  <rect class="figure__frame" x="40" y="224" width="240" height="44" rx="3"/>
+  <text class="figure__label" x="160" y="244" text-anchor="middle">serialize</text>
+  <text class="figure__note" x="160" y="260" text-anchor="middle">one canonical rendering</text>
+
+  <rect class="figure__frame" x="360" y="224" width="240" height="44" rx="3"/>
+  <text class="figure__label" x="480" y="244" text-anchor="middle">serialize</text>
+  <text class="figure__note" x="480" y="260" text-anchor="middle">the same one, or nothing is comparable</text>
+
+  <line class="figure__line" x1="160" y1="268" x2="160" y2="288"/>
+  <path class="figure__head" d="M 155 288 L 165 288 L 160 296 Z"/>
+  <line class="figure__line" x1="480" y1="268" x2="480" y2="288"/>
+  <path class="figure__head" d="M 475 288 L 485 288 L 480 296 Z"/>
+
+  <rect class="figure__frame" x="40" y="296" width="240" height="44" rx="3"/>
+  <text class="figure__label" x="160" y="316" text-anchor="middle">hash</text>
+  <text class="figure__note" x="160" y="332" text-anchor="middle">over every row, not a sample</text>
+
+  <rect class="figure__frame" x="360" y="296" width="240" height="44" rx="3"/>
+  <text class="figure__label" x="480" y="316" text-anchor="middle">hash</text>
+  <text class="figure__note" x="480" y="332" text-anchor="middle">the record carries both</text>
+
+  <path class="figure__line" d="M 160 340 L 160 364 L 320 364 L 320 384"/>
+  <path class="figure__line" d="M 480 340 L 480 364 L 320 364"/>
+  <path class="figure__head" d="M 315 384 L 325 384 L 320 392 Z"/>
+
+  <rect class="figure__frame" x="160" y="392" width="320" height="44" rx="3"/>
+  <text class="figure__label" x="320" y="412" text-anchor="middle">compare, under the gold's rule</text>
+  <text class="figure__note" x="320" y="428" text-anchor="middle">R-SET, or R-ORD when the gold states an order</text>
+
+  <line class="figure__line" x1="320" y1="436" x2="320" y2="452"/>
+  <path class="figure__head" d="M 315 452 L 325 452 L 320 460 Z"/>
+
+  <text class="figure__label figure__label--warn" x="320" y="478" text-anchor="middle">EQUAL, NOT_EQUAL or NOT_COMPARABLE</text>
+  <text class="figure__note" x="320" y="494" text-anchor="middle">NOT_EQUAL states that these two disagree here, and nothing about which of them to keep</text>
+</svg>

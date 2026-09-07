@@ -9,6 +9,7 @@
 {% from "_record.html" import record_block %}
 {% from "_rerun.html" import rerun_block %}
 {% from "_files.html" import file_links %}
+{% from "_figure.html" import figure_block %}
 
 {% block strip %}{{ strip(page) }}{% endblock %}
 
@@ -44,7 +45,7 @@
   {% for difference in page.differences %}
   <article class="differing__side">
     <h3>{{ difference.heading }}, {{ difference.rows.total }}</h3>
-    {{ rows_table(difference.rows) }}
+    {{ rows_table(difference.rows, entrance=true) }}
   </article>
   {% endfor %}
 </section>
@@ -70,6 +71,9 @@
   <article class="mechanism">
     <h3>the class: <span class="chip chip--warn">{{ page.mechanism.classification }}</span></h3>
     <p class="mechanism__reading">{{ page.mechanism.reading }}</p>
+    {% if page.figure %}
+    {{ figure_block(page.figure) }}
+    {% endif %}
     <dl class="facts">
       {% for fact in page.mechanism.facts %}
       <dt>{{ fact.name }}</dt>

@@ -5,6 +5,7 @@
    evidence to open, so it is a row here with the side that failed and the message. #}
 {% extends "base.html" %}
 {% from "_files.html" import file_links %}
+{% from "_figure.html" import figure_block %}
 
 {% block strip %}
 <header class="strip strip--run">
@@ -27,6 +28,9 @@
       {% endfor %}
     </tbody>
   </table>
+  {% if page.verdict_figure %}
+  {{ figure_block(page.verdict_figure) }}
+  {% endif %}
   <h3>the probes</h3>
   <table class="counts__table">
     <thead><tr><th scope="col">probe</th><th scope="col">fired on</th></tr></thead>
@@ -36,6 +40,9 @@
       {% endfor %}
     </tbody>
   </table>
+  {% if page.probe_figure %}
+  {{ figure_block(page.probe_figure) }}
+  {% endif %}
   {% if page.credited %}
   <h3>credited by BIRD's own check and NOT_EQUAL here</h3>
   <table class="counts__table">

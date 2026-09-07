@@ -24,8 +24,9 @@ import difflib
 import json
 import re
 import shutil
+from collections import Counter
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import cast
 
@@ -33,6 +34,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from attestql.evidence.load import LoadedRecord, UnreadableRecord, load_record
 from attestql.evidence.render import Json
+from attestql.report.figures import Figure, question_figure, run_figures
 
 TEMPLATES = Path(__file__).parent / "templates"
 STATIC = Path(__file__).parent / "static"
@@ -316,6 +318,9 @@ class QuestionPage:
     """The JSON this page was rendered from: each file's own name, and what it is. The
     names are what the renderer copies beside the page, so a page that states a file a
     reader can open is a page whose file is there."""
+    figure: Figure | None = None
+    """The drawing of this question's mechanism, where its class has one. Filled in after
+    the page is built, because a figure is read off the page's own rows."""
 
     @property
     def title(self) -> str:
@@ -343,7 +348,10 @@ class RunPage:
     run_id: str
     format: str
     exit_status: int
+    questions_audited: int
     counts: tuple[Fact, ...]
+    verdict_counts: tuple[tuple[str, int], ...]
+    mechanism_counts: tuple[tuple[str, int], ...]
     probe_counts: tuple[Fact, ...]
     credited: tuple[Fact, ...]
     made_of: tuple[Fact, ...]
@@ -351,6 +359,13 @@ class RunPage:
     notes: tuple[Fact, ...]
     entries: tuple[Entry, ...]
     files: tuple[Fact, ...]
+    verdict_figure: Figure | None = None
+    probe_figure: Figure | None = None
+    """The verdicts and the probes drawn, filled in after the page is built. ``counts``
+    and ``probe_counts`` are the same numbers as the tables state them, and
+    ``verdict_counts`` and ``mechanism_counts`` are those numbers as numbers, which is what
+    a bar is drawn from: the classes are counted from the question directories this run
+    wrote, because ``summary.json`` counts a mechanism only for the credited rows."""
 
     @property
     def title(self) -> str:
@@ -404,6 +419,8 @@ def render_report(audit_directory: Path, out: Path | None = None) -> Report:
         summary = _document(summary_path)
         questions = [_question_page(directory) for directory in directories]
         run = _run_page(summary, questions, directories)
+        verdicts, probes = run_figures(run)
+        run = replace(run, verdict_figure=verdicts, probe_figure=probes)
     except UnreadableRecord as unreadable:
         raise ReportRefused(f"{audit_directory}: {unreadable}") from unreadable
     _clear_the_render_before_this_one(destination)
@@ -495,8 +512,10 @@ def _write(
         files.extend(
             _copy(directory / stated.name, beside / stated.name) for stated in question.files
         )
-    for static in sorted(STATIC.iterdir()):
-        files.append(_copy(static, out / STATIC_DIRECTORY / static.name))
+    for static in sorted(path for path in STATIC.rglob("*") if path.is_file()):
+        # The whole tree, because the fonts are under a directory of their own: a stylesheet
+        # copied without them would ask a reader's browser for a file that is not there.
+        files.append(_copy(static, out / STATIC_DIRECTORY / static.relative_to(STATIC)))
     return Report(out=out, pages=tuple(pages), files=tuple(files))
 
 
@@ -548,12 +567,19 @@ def _question_directories(audit_directory: Path) -> tuple[Path, ...]:
 
 
 def _question_page(directory: Path) -> QuestionPage:
-    """One question directory as its page: a comparison when it holds one, a gold otherwise."""
+    """One question directory as its page: a comparison when it holds one, a gold otherwise.
+
+    The figure is attached here rather than inside the two builders because it is read off
+    the finished page: the rows a slope chart draws are the rows the tables below it show.
+    """
     counterexample = directory / COUNTEREXAMPLE_FILE
     smells = _document(directory / SMELLS_FILE)
-    if counterexample.is_file():
-        return _comparison_page(directory, _document(counterexample), smells)
-    return _gold_only_page(directory, smells)
+    page = (
+        _comparison_page(directory, _document(counterexample), smells)
+        if counterexample.is_file()
+        else _gold_only_page(directory, smells)
+    )
+    return replace(page, figure=question_figure(page))
 
 
 def _comparison_page(directory: Path, counterexample: Json, smells: Json) -> QuestionPage:
@@ -993,15 +1019,21 @@ def _run_page(
     settings = _object(summary, "settings")
     shuffle = _object(summary, "shuffle")
     session = _object(summary, "session_settings")
+    verdicts = _object(summary, "verdicts")
     return RunPage(
         run_id=_text(summary, "run_id"),
         format=_text(summary, "format"),
         exit_status=_integer(summary, "exit_status"),
+        questions_audited=_integer(question_set, "audited"),
         counts=(
             Fact("questions audited", _as_text(question_set.get("audited"))),
-            *(Fact(name, _as_text(count)) for name, count in _object(summary, "verdicts").items()),
+            *(Fact(name, _as_text(count)) for name, count in verdicts.items()),
             Fact("probes fired", _as_text(summary.get("smells_fired"))),
         ),
+        verdict_counts=tuple(
+            (name, value) for name, value in verdicts.items() if isinstance(value, int)
+        ),
+        mechanism_counts=_mechanism_counts(questions),
         probe_counts=_facts(_object(summary, "smells")),
         credited=_credited(_object_or_none(summary, "credited_but_not_equal")),
         made_of=(
@@ -1049,6 +1081,20 @@ def _run_page(
         entries=_entries(summary, questions, directories),
         files=(Fact(SUMMARY_FILE, _text(summary, "format")),),
     )
+
+
+def _mechanism_counts(questions: Sequence[QuestionPage]) -> tuple[tuple[str, int], ...]:
+    """How many questions were put in each class, counted from the directories the run wrote.
+
+    ``summary.json`` counts a class only for the rows another evaluator credited, so a run
+    with no prediction file states none at all: the classes on the page are the ones its own
+    question directories hold. Largest first, then by name, so two renderings of one
+    directory draw the bar in one order.
+    """
+    counted = Counter(
+        page.mechanism.classification for page in questions if page.mechanism is not None
+    )
+    return tuple(sorted(counted.items(), key=lambda pair: (-pair[1], pair[0])))
 
 
 def _credited(stated: Json | None) -> tuple[Fact, ...]:
@@ -1303,6 +1349,7 @@ __all__ = [
     "Difference",
     "Entry",
     "Fact",
+    "Figure",
     "Hash",
     "Mechanism",
     "Probe",
