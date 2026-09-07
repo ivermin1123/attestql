@@ -34,6 +34,11 @@ question directories that the site shows are copied into `site/data/`.
   count and bytes; the budgets in phase 3 are copied from that report, not written by hand.
 - Full runs, every directory, are published as release assets (one archive per run) that each
   run page links to, so nothing is lost by the selection.
+- The database a question is about (`db_id`) reaches no JSON the audit writes (phase 1 found
+  this), so the selection script carries it: it reads the question file the run names in its
+  summary and writes `questions.json` beside the run's `summary.json` with `question_id`, `db_id`
+  and the question text. The renderer shows the database in the strip when that file is present
+  and states the question set alone when it is not. No audit change and no format bump.
 - The hand classifications are copied beside the runs they read and joined by their own keys:
   `prediction-mode-260904-real-predictions/classification.json` at
   `per_file[<prediction file>].rows[]` (`question_id`, `class`, `mechanism`, `reason`) and

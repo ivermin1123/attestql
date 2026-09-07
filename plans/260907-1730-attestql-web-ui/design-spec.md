@@ -109,6 +109,16 @@ not focusable. Filters on the run page are pre-rendered pages under their own pa
 (`not-equal/`, `by-mechanism/<class>/`, `by-probe/<name>/`), so every filtered view has a URL
 and works with no JavaScript; nothing filters by query string on a static host.
 
+## Figures
+
+Inline SVG from Python, the page's own tokens, no library. A figure appears only where the
+table cannot say it (the table in phase 2 lists them); it names its data source in a `<title>`,
+carries a text alternative with the same numbers, and is never the only carrier of a fact.
+Marks use `--ink` and `--ink-2` for structure, `--gold-tint` and `--second-tint` with their
+glyphs for the two sides, `--warn` for the one thing the figure is about. Numbers on axes are
+tabular Plex Mono at 13px. No grid lines beyond what a reader needs to read a value; no legend
+where a direct label fits.
+
 ## Motion
 
 Personality: Corporate. Signature easing `cubic-bezier(0.2, 0, 0, 1)`. Durations: 120 ms
