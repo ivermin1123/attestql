@@ -87,6 +87,9 @@ a corrected gold is recorded here when it happens, with its date, and not before
 | U2 | `bird-bench/mini_dev` issue 39 | q207 joins `bond` on `molecule_id` and returns 13 elements instead of 5; same defect as DAMO-ConvAI 227 | [issue 39](https://github.com/bird-bench/mini_dev/issues/39) |
 | U3 | `bird-bench/mini_dev` issue 40 | the GitHub zip and the Hugging Face dataset differ: ids 137 and 138 duplicated and 119 and 120 missing in the zip, q879 and q1322 with different golds | [issue 40](https://github.com/bird-bench/mini_dev/issues/40) |
 | U4 | `ai-ar-research/SpotIt-plus` issue 1 | the paper calls SpotIt+ open source while its LICENSE reserves all rights; asks which licence applies. Corrected 2026-09-04: the LICENSE does grant use after its first sentence (N3), so the report rests on a misreading; withdrawn by the owner on 2026-09-05 with the correction in `plans/reports/upstream-260904-2125-u4-licence-correction.md`, the issue closed by its reporter | [issue 1](https://github.com/ai-ar-research/SpotIt-plus/issues/1) |
+| U5 | `bird-bench/mini_dev` issue 48 | the PostgreSQL evaluator scores q1473 differently on two runs of the same database: a float aggregate summed in parallel-worker order, and under `work_mem` even with parallelism off; three `SET`s proposed for `evaluation_utils.py` | [issue 48](https://github.com/bird-bench/mini_dev/issues/48) |
+
+U5 was filed on 2026-09-07 by this session on the owner's instruction, after the four above.
 
 Replies received, checked 2026-09-07. The BIRD team (GitHub `BlackSoi1`) answered all three Mini-Dev
 reports on 2026-09-05 between 21:35 and 21:37 UTC and closed them:
