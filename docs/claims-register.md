@@ -71,7 +71,7 @@ re-ran or re-derived independently; **OWNER** the owner by hand.
 |---|---|
 | NOT_EQUAL means the gold is wrong | It means two statements disagree on this data under this rule. Deciding is a person's job; the record makes it a short one |
 | The probes are precise | They are heuristics: 67 % actionable over the Mini-Dev fires, and the direction probe 17 %, which is why it is off by default |
-| Any engine but PostgreSQL | SQLite is the first expansion candidate; nothing is built |
+| Any engine but PostgreSQL and SQLite | SQLite ships since ADR-0014 (A26 to A38 measure it); no third engine exists, and MySQL, the third Mini-Dev dialect, is not planned |
 | Differentiating data | Pairs that agree on the shipped rows are found only by the shuffle probe |
 | The shuffle probe covers a gold that names its table's schema | The copies are reached by putting the scratch schema on the search path, which a qualified name never consults. Those tables are reported as not covered, in the summary and in the smell's own evidence, rather than rerun against a copy |
 | Two audits may share one scratch schema at the same time | They take turns: the lock is held for the whole run, so the second waits a minute for the schema and is then told it is held, reporting its shuffle as not run. Concurrent audits want a scratch schema each |
