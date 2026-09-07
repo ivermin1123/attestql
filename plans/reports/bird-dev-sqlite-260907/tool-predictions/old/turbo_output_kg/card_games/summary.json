@@ -1,0 +1,555 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-e47bb6b2-09ff-4a0e-9f05-e2fb68dbf13c",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/bird-dev-sqlite/data/dev/dev_databases/card_games/card_games.sqlite | size=261820416",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "wal",
+   "data_version": "2",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/dev/dev_20240627/dev.json",
+  "digest": "sha256:630272f2b1c44d8cef2c3b246f623355cf0bbc1e832c81061df895530dfc2f06",
+  "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/dev.zip (sha256 cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630, Last-Modified 2024-06-29, downloaded 2026-09-07), member dev_20240627/dev.json",
+  "date": "2024-06-27",
+  "entries": 1534,
+  "audited": 191,
+  "duplicate_ids": [],
+  "ids": [
+   340,
+   341,
+   342,
+   343,
+   344,
+   345,
+   346,
+   347,
+   348,
+   349,
+   350,
+   351,
+   352,
+   353,
+   354,
+   355,
+   356,
+   357,
+   358,
+   359,
+   360,
+   361,
+   362,
+   363,
+   364,
+   365,
+   366,
+   367,
+   368,
+   369,
+   370,
+   371,
+   372,
+   373,
+   374,
+   375,
+   376,
+   377,
+   378,
+   379,
+   380,
+   381,
+   382,
+   383,
+   384,
+   385,
+   386,
+   387,
+   388,
+   389,
+   390,
+   391,
+   392,
+   393,
+   394,
+   395,
+   396,
+   397,
+   398,
+   399,
+   400,
+   401,
+   402,
+   403,
+   404,
+   405,
+   406,
+   407,
+   408,
+   409,
+   410,
+   411,
+   412,
+   413,
+   414,
+   415,
+   416,
+   417,
+   418,
+   419,
+   420,
+   421,
+   422,
+   423,
+   424,
+   425,
+   426,
+   427,
+   428,
+   429,
+   430,
+   431,
+   432,
+   433,
+   434,
+   435,
+   436,
+   437,
+   438,
+   439,
+   440,
+   441,
+   442,
+   443,
+   444,
+   445,
+   446,
+   447,
+   448,
+   449,
+   450,
+   451,
+   452,
+   453,
+   454,
+   455,
+   456,
+   457,
+   458,
+   459,
+   460,
+   461,
+   462,
+   463,
+   464,
+   465,
+   466,
+   467,
+   468,
+   469,
+   470,
+   471,
+   472,
+   473,
+   474,
+   475,
+   476,
+   477,
+   478,
+   479,
+   480,
+   481,
+   482,
+   483,
+   484,
+   485,
+   486,
+   487,
+   488,
+   489,
+   490,
+   491,
+   492,
+   493,
+   494,
+   495,
+   496,
+   497,
+   498,
+   499,
+   500,
+   501,
+   502,
+   503,
+   504,
+   505,
+   506,
+   507,
+   508,
+   509,
+   510,
+   511,
+   512,
+   513,
+   514,
+   515,
+   516,
+   517,
+   518,
+   519,
+   520,
+   521,
+   522,
+   523,
+   524,
+   525,
+   526,
+   527,
+   528,
+   529,
+   530
+  ]
+ },
+ "predictions": {
+  "path": "data/preds-readable/predict_dev_turbo_output_kg.json",
+  "digest": "sha256:58afe742660c8eb594e1a52d03886075b9e4fc88228af2da6e094160db06d22a",
+  "origin": "https://raw.githubusercontent.com/AlibabaResearch/DAMO-ConvAI/dec31ae335d7a5168ee17d5cc40c105e0da66d4e/bird/llm/exp_result/turbo_output_kg/predict_dev.json, every non-string entry replaced by the single space upstream's package_sqls substitutes (predictions_readable.py)",
+  "date": "2023-06-11",
+  "keyed_by": "position",
+  "statements": 1534,
+  "positions_unused": []
+ },
+ "verdicts": {
+  "NOT_EQUAL": 108,
+  "EQUAL": 46,
+  "ERROR": 37
+ },
+ "smells": {
+  "ordering-over-numeric-text": 1,
+  "arbitrary-cut": 5,
+  "not-a-function-of-the-data": 6,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 12,
+ "credited_but_not_equal": {
+  "total": 16,
+  "by_mechanism": {
+   "multiplicity": 16,
+   "type": 0,
+   "order": 0,
+   "truncation": 0,
+   "other": 0
+  },
+  "by_test_suite_ex": {
+   "1": 0,
+   "0": 16
+  }
+ },
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool-predictions/old/turbo_output_kg/card_games/fixture.json",
+  "source": {
+   "path": "data/dev/dev_databases/card_games/card_games.sqlite",
+   "digest": "sha256:c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227",
+   "origin": "dev.zip (sha256 cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630), member dev_20240627/dev_databases.zip, dev_databases, card_games/card_games.sqlite",
+   "date": "2024-06-14"
+  },
+  "schema_digest": "sha256:0654f2e002e823f47f4f1299e259b9557e98f1e388ac16be7a3fa11284be1030",
+  "row_counts": {
+   "main.cards": 56822,
+   "main.foreign_data": 229186,
+   "main.legalities": 427907,
+   "main.rulings": 87769,
+   "main.set_translations": 1210,
+   "main.sets": 551
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "cards",
+   "legalities",
+   "rulings",
+   "foreign_data",
+   "sets",
+   "set_translations"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "attestql_scratch",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "cards",
+   "foreign_data",
+   "rulings",
+   "set_translations",
+   "sets"
+  ],
+  "skipped": {
+   "legalities": 427907
+  },
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool-predictions/old/turbo_output_kg/card_games",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T07:17:16.336983+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.024,
+  "questions": 96.832,
+  "shuffle": 1.019
+ },
+ "errors": [
+  {
+   "question_id": 371,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: language"
+  },
+  {
+   "question_id": 378,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: cards.isFoil"
+  },
+  {
+   "question_id": 382,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: language"
+  },
+  {
+   "question_id": 383,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: status"
+  },
+  {
+   "question_id": 384,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: the statement ran past its 30s timeout"
+  },
+  {
+   "question_id": 390,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: ambiguous column name: id"
+  },
+  {
+   "question_id": 401,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: DIVIDE"
+  },
+  {
+   "question_id": 402,
+   "side": "prediction",
+   "step": "statement",
+   "message": "0 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 408,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: ruling_text"
+  },
+  {
+   "question_id": 409,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: format"
+  },
+  {
+   "question_id": 410,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: format"
+  },
+  {
+   "question_id": 414,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: baseSetSize"
+  },
+  {
+   "question_id": 415,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: ambiguous column name: ID"
+  },
+  {
+   "question_id": 416,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: language"
+  },
+  {
+   "question_id": 417,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: wrong number of arguments to function COUNT()"
+  },
+  {
+   "question_id": 424,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: Textless"
+  },
+  {
+   "question_id": 427,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: mcmName"
+  },
+  {
+   "question_id": 429,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: language"
+  },
+  {
+   "question_id": 432,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: baseSetSize"
+  },
+  {
+   "question_id": 433,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: DIVIDE"
+  },
+  {
+   "question_id": 434,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: language"
+  },
+  {
+   "question_id": 444,
+   "side": "prediction",
+   "step": "statement",
+   "message": "0 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 449,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: language"
+  },
+  {
+   "question_id": 454,
+   "side": "prediction",
+   "step": "statement",
+   "message": "the text does not parse: Required keyword:"
+  },
+  {
+   "question_id": 466,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: translation"
+  },
+  {
+   "question_id": 469,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: mtgoCode"
+  },
+  {
+   "question_id": 483,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: rulings.language"
+  },
+  {
+   "question_id": 484,
+   "side": "prediction",
+   "step": "statement",
+   "message": "0 statements in one text; an audit runs one"
+  },
+  {
+   "question_id": 486,
+   "side": "prediction",
+   "step": "statement",
+   "message": "the text does not parse: Required keyword:"
+  },
+  {
+   "question_id": 487,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: DIVIDE"
+  },
+  {
+   "question_id": 491,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: mcmName"
+  },
+  {
+   "question_id": 506,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: DIVIDE"
+  },
+  {
+   "question_id": 507,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such function: DIVIDE"
+  },
+  {
+   "question_id": 514,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: format"
+  },
+  {
+   "question_id": 518,
+   "side": "gold",
+   "step": "execute",
+   "message": "execute: the statement ran past its 30s timeout"
+  },
+  {
+   "question_id": 523,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: language"
+  },
+  {
+   "question_id": 530,
+   "side": "prediction",
+   "step": "execute",
+   "message": "execute: no such column: sets.frameVersion"
+  }
+ ],
+ "exit_status": 1
+}

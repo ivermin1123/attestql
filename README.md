@@ -266,6 +266,22 @@ SQLite. [The SQLite measurement report](plans/reports/measurement-260907-1106-mi
 holds the per-file table, the hand classification and the question-by-question comparison with the
 PostgreSQL run.
 
+BIRD dev is eight times larger than Mini-Dev, and it now has two published copies of its golds: the
+2024 file and a quality pass BIRD released for 2025-11-06, which rewrites 399 of the 1,534 gold
+statements. Running the gold-only probes over the older copy and scoring them against those
+rewrites gives the closest thing to a recall number this project can measure: **the probes fire on
+31 of the 399 golds BIRD itself corrected, 7.8 %**, three times the 2.6 % rate on the 963 golds
+BIRD left alone, and 29 of the 31 go quiet once BIRD's own rewrite replaces the old gold. That is
+not a quality pass: it misses 368 of the 399, because most of BIRD's corrections are about what a
+question means and the probes only ask whether the data decides the answer at all. The probes stay
+heuristics, and the 25 fires on golds BIRD did not touch were read by hand: 23 are golds that do
+not answer their question on this data, one is harmless, one is the tool's own rule. On the same
+1,534 questions the tool's reading of BIRD's EX and BIRD's own dev evaluator agree on 6,136 of
+6,136 comparisons. [The BIRD dev
+report](plans/reports/measurement-260907-1435-bird-dev-sqlite.md) holds the tables, the hand
+classification, the overlap with the published errata, and the five of eleven shipped databases
+that differ between BIRD's own two downloads.
+
 The history is short and stated: this repository was developed privately from 2026-08-25 under a
 different product direction, a governed data agent over a synthetic schema; it was reoriented on
 2026-09-02 by ADR-0013 to the problem above, and the public history starts after that. The
