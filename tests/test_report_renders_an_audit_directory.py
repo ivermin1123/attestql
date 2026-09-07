@@ -11,6 +11,11 @@ JSON links, a gold-only page's record and its probes in all three states, and an
 question, which has no directory, as a row of the run page with the side that stopped and the
 engine's own message.
 
+Where the pages go is asserted here too, because a render writes into a directory a reader
+may also be keeping files in: an ``--out`` naming the audit directory or a directory inside
+it is refused before anything is written, a rerun clears what the render before it wrote,
+and a directory holding files this command did not write is refused untouched.
+
 Two of the tests hand the renderer a document that has been changed after the audit wrote it,
 because both cases are what a page is for: a statement holding ``<script>`` is escaped, and a
 record whose bytes no longer hash to what it states says so beside the hash instead of
@@ -37,6 +42,7 @@ from attestql.report import ReportRefused, default_out, render_report
 from attestql.report.render import (
     COUNTEREXAMPLE_FILE,
     GOLD_RECORD_FILE,
+    MARKER_FILE,
     PAGE_FILE,
     SECOND_RECORD_FILE,
     SMELLS_FILE,
@@ -345,6 +351,89 @@ def test_an_error_question_is_a_row_of_the_run_page_and_has_no_page(tmp_path: Pa
     assert error["message"] in page.text
     assert not (out / "q900301").exists(), "a question that errored wrote no directory"
     assert not [link for link in page.links if link.endswith(PAGE_FILE)]
+
+
+def test_an_out_inside_the_audit_directory_is_refused_with_nothing_written(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A report goes beside an audit and never into one.
+
+    The audit's own rerun clears its directory, so a report written there is removed by the
+    next run or left stale beside it, and a report written onto it would copy the evidence
+    over itself. Both paths are resolved first, so the directory named through ``..`` is the
+    same answer as the directory named directly. Nothing is written in any of the three.
+    """
+    sandbox = tmp_path / "sandbox"
+    assert run(["demo", "--out", str(sandbox)])[0] == 1
+    audit = sandbox / DEMO_AUDIT
+    before = sorted(path.name for path in audit.iterdir())
+
+    for out in (audit, audit / "pages", Path(f"{audit}/../{DEMO_AUDIT}")):
+        status, lines = run(["report", str(audit), "--out", str(out)])
+
+        assert status == 2, out
+        assert lines == []
+        assert "is the audit directory" in capsys.readouterr().err
+        assert sorted(path.name for path in audit.iterdir()) == before, out
+        assert not (audit / PAGE_FILE).exists()
+
+
+def test_a_rerun_clears_the_render_before_it(rendered: Rendered, tmp_path: Path) -> None:
+    """A reader opens the output directory and reads it as one report.
+
+    A question page an earlier render wrote and this one does not is a page about a question
+    that is not in this run, so the rerun removes what it wrote before writing again: the
+    marker says which directory that rule applies to.
+    """
+    out = tmp_path / "report"
+    render_report(rendered.audit, out)
+    stale = out / "q999" / PAGE_FILE
+    stale.parent.mkdir()
+    stale.write_text("a page for a question this run does not hold", encoding="utf-8")
+    (out / "static" / "stale.css").write_text("body {}", encoding="utf-8")
+
+    render_report(rendered.audit, out)
+
+    assert not stale.exists()
+    assert not stale.parent.exists()
+    assert not (out / "static" / "stale.css").exists()
+    assert (out / MARKER_FILE).is_file()
+    assert sorted(path.name for path in out.iterdir()) == sorted(
+        [MARKER_FILE, PAGE_FILE, SUMMARY_FILE, "static"]
+        + [directory.name for directory in rendered.audit.iterdir() if directory.is_dir()]
+    )
+
+
+def test_a_directory_this_command_did_not_write_is_refused_untouched(
+    rendered: Rendered, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """``--out`` named a directory of the reader's own: deleting from it would cost them
+    files this command never wrote, so it is refused with nothing in it removed."""
+    mine = tmp_path / "mine"
+    mine.mkdir()
+    (mine / "notes.md").write_text("mine", encoding="utf-8")
+
+    status, lines = run(["report", str(rendered.audit), "--out", str(mine)])
+
+    assert status == 2
+    assert lines == []
+    assert f"holds no {MARKER_FILE}" in capsys.readouterr().err
+    assert [path.name for path in mine.iterdir()] == ["notes.md"]
+    assert (mine / "notes.md").read_text(encoding="utf-8") == "mine"
+
+
+def test_an_empty_directory_and_a_directory_that_is_not_there_are_both_taken_over(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """The two cases a first render meets, both written into and both marked."""
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    missing = tmp_path / "missing" / "under it"
+
+    for out in (empty, missing):
+        assert render_report(rendered.audit, out).out == out
+        assert (out / PAGE_FILE).is_file(), out
+        assert (out / MARKER_FILE).read_text(encoding="utf-8").startswith("written by attestql")
 
 
 def test_a_question_the_budget_stopped_is_a_row_of_the_run_page_with_the_bound(

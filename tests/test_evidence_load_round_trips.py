@@ -100,8 +100,9 @@ def test_every_record_of_the_postgresql_sandbox_re_hashes_to_what_it_states(
 ) -> None:
     """The same reading over records that state the seven session preconditions.
 
-    A PostgreSQL record renders numerics, timestamps and intervals this engine's own way, so
-    it is the half of the round trip that exercises the tags the SQLite sandbox has none of.
+    A PostgreSQL record renders numerics and timestamps this engine's own way (an interval
+    reaches the record as the text the engine printed, under the ``str`` tag), so it is the
+    half of the round trip that exercises the tags the SQLite sandbox has none of.
     """
     audit = tmp_path / "audit"
     run_audit(

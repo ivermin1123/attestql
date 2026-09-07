@@ -65,7 +65,18 @@ STATIC_DIRECTORY = "static"
 OUT_SUFFIX = "-report"
 """What the default ``--out`` appends to the audit directory's own name. A sibling and
 never a child: a rerun of the audit clears its own directory, and a report written inside
-one would be left there, stale, beside a fresh run."""
+one would be left there, stale, beside a fresh run. A ``--out`` that names the audit
+directory or a directory under it is refused for that reason, rather than half written and
+then abandoned where the audit's own cleanup will meet it."""
+
+MARKER_FILE = ".attestql-report"
+"""What says an output directory is a render's own and may be cleared by the next one."""
+
+MARKER_TEXT = (
+    "written by attestql report: every rerun into this directory removes index.html, "
+    "summary.json, the q<id>/ directories and static/\n"
+)
+"""The one line the marker holds, so a reader who opens it learns why it is there."""
 
 GOLD = "gold"
 SECOND = "second"
@@ -373,9 +384,12 @@ def default_out(audit_directory: Path) -> Path:
 def render_report(audit_directory: Path, out: Path | None = None) -> Report:
     """Render one audit directory into ``out``, or into its sibling when there is none.
 
-    The refusal comes first and names what was looked for: a directory holding no
-    ``summary.json`` was not written by ``attestql audit``, and rendering half of one
-    would produce a page whose numbers came from nowhere.
+    Every refusal comes before anything is written, and each names what was looked for: a
+    directory holding no ``summary.json`` was not written by ``attestql audit``, an ``--out``
+    inside the audit directory would be cleared by the audit's own rerun, and an output
+    directory holding files this command did not write is a reader's own. A render that
+    wrote a page and then refused would leave exactly the half-written directory these
+    checks exist to prevent.
     """
     summary_path = audit_directory / SUMMARY_FILE
     if not summary_path.is_file():
@@ -384,6 +398,7 @@ def render_report(audit_directory: Path, out: Path | None = None) -> Report:
             f"{PAGE_COMMAND} wrote"
         )
     destination = default_out(audit_directory) if out is None else out
+    _refuse_an_out_inside_the_audit(audit_directory, destination)
     directories = _question_directories(audit_directory)
     try:
         summary = _document(summary_path)
@@ -391,7 +406,74 @@ def render_report(audit_directory: Path, out: Path | None = None) -> Report:
         run = _run_page(summary, questions, directories)
     except UnreadableRecord as unreadable:
         raise ReportRefused(f"{audit_directory}: {unreadable}") from unreadable
-    return _write(destination, run, questions, audit_directory, directories)
+    _clear_the_render_before_this_one(destination)
+    try:
+        return _write(destination, run, questions, audit_directory, directories)
+    except OSError as unwritable:
+        # Everything below writes files, and a write that fails is this command failing to
+        # do what it was asked rather than a directory it could not read: it is the same
+        # refusal and the same exit status as the checks above, and never a traceback.
+        raise ReportRefused(f"{destination} could not be written: {unwritable}") from unwritable
+
+
+def _refuse_an_out_inside_the_audit(audit_directory: Path, out: Path) -> None:
+    """A report is written beside an audit and never into one.
+
+    The audit's own rerun clears its directory, so a report written there is either removed
+    by the next run or left stale beside it, and a report written *onto* it would copy the
+    evidence over itself. Both resolved first, so a relative path, a symlink and a ``..``
+    naming the same directory are the same answer.
+    """
+    inside = out.resolve()
+    audit = audit_directory.resolve()
+    if inside == audit or audit in inside.parents:
+        raise ReportRefused(
+            f"--out {out} is the audit directory {audit_directory} or a directory inside it, "
+            f"and a report goes beside an audit: a rerun of the audit clears its own "
+            f"directory, so nothing written in there survives it. Nothing was written."
+        )
+
+
+def _clear_the_render_before_this_one(out: Path) -> None:
+    """Everything a previous render wrote here, gone before this one writes anything.
+
+    The same rule the audit's own output directory follows, for the same reason: a reader
+    opens this directory and reads it as one report, so a question page the render before
+    wrote and this one does not is a page about a question that is not in this run.
+
+    Only a directory this command wrote to is cleared, which is what ``MARKER_FILE`` says.
+    One that is empty is taken over and marked, one that holds the marker is cleared and
+    keeps it, and one that holds anything else is refused untouched: ``--out`` named a
+    directory of the reader's own, and deleting from it would cost them files this command
+    never wrote.
+    """
+    try:
+        out.mkdir(parents=True, exist_ok=True)
+        entries = sorted(out.iterdir())
+    except OSError as unusable:
+        raise ReportRefused(
+            f"the output directory {out} cannot be made or read: {unusable}"
+        ) from unusable
+    if entries and not (out / MARKER_FILE).is_file():
+        raise ReportRefused(
+            f"the output directory {out} is not empty and holds no {MARKER_FILE}, the file "
+            f"a report leaves in a directory of its own: nothing in it was removed. A render "
+            f"writes into a directory that is empty, that is not there yet, or that an "
+            f"earlier report wrote to."
+        )
+    try:
+        for name in (PAGE_FILE, SUMMARY_FILE):
+            (out / name).unlink(missing_ok=True)
+        for child in entries:
+            if child.is_dir() and (
+                QUESTION_DIRECTORY.match(child.name) or child.name == STATIC_DIRECTORY
+            ):
+                shutil.rmtree(child)
+        (out / MARKER_FILE).write_text(MARKER_TEXT, encoding="utf-8")
+    except OSError as unwritable:
+        raise ReportRefused(
+            f"the output directory {out} cannot be cleared of the render before it: {unwritable}"
+        ) from unwritable
 
 
 def _write(
@@ -1208,6 +1290,8 @@ def _count(value: int) -> str:
 __all__ = [
     "COUNTEREXAMPLE_FILE",
     "GOLD_RECORD_FILE",
+    "MARKER_FILE",
+    "MARKER_TEXT",
     "PAGE_FILE",
     "SECOND_RECORD_FILE",
     "SMELLS_FILE",

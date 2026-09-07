@@ -212,7 +212,15 @@ nothing else. `--out` says where they go and defaults to the audit directory's o
 `<audit-dir>-report/`, because a rerun of the audit clears the audit directory and a report
 written inside one would be left there, stale, beside a fresh run. Exit status is 0 when the
 pages were written and 2 when the directory could not be rendered: a directory holding no
-`summary.json` was not written by this tool, and the line says so with nothing written.
+`summary.json` was not written by this tool, and the line says so with nothing written. An
+`--out` naming the audit directory itself, or a directory inside it, is refused for the same
+reason the default is a sibling.
+
+The output directory follows the rule the audit's own does. The first render leaves a
+`.attestql-report` marker in it; a render into a directory that has the marker removes what the
+render before it wrote (`index.html`, `summary.json`, every `q<id>/` and `static/`) before
+writing anything, so what is in there is one report and not two, and anything else you put there
+stays. A non-empty directory without the marker is refused with nothing in it touched.
 
 `index.html` is the run: the counts, what the run was made of (both file digests with whatever
 origin the run was told, the server, the parser, the serialization, the fixture digest, the
