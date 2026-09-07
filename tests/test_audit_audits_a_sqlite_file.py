@@ -17,7 +17,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from collections.abc import Sequence
+import time
+from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -306,6 +307,37 @@ def test_a_statement_that_runs_past_its_bound_is_stopped_and_named(
             "SELECT count(*) FROM forever",
             statement_timeout_seconds=1,
         )
+
+
+def _a_clock_past(deadline_seconds: float) -> Callable[[], float]:
+    """A monotonic clock that starts at zero and is past that many seconds from then on.
+
+    The deadline is moved rather than the statement made slow, because a statement really
+    made to run that long is aborted by the progress handler and comes back as the interrupt,
+    which is the other branch. What is being read here is the branch a slow machine reaches:
+    an error the file raised, arriving when the deadline has already passed.
+    """
+    ticks = iter([0.0])
+
+    def reading() -> float:
+        return next(ticks, deadline_seconds + 1.0)
+
+    return reading
+
+
+def test_an_error_that_is_not_the_interrupt_keeps_its_message_past_the_deadline(
+    backend: SqliteBackend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SQLite aborts a statement that runs past its bound with ``interrupted``, and that is
+    the one error this backend reports as the timeout. A missing table is the file's answer
+    about the statement, so it keeps the file's own words even when the deadline has passed
+    in the meantime: a reader is sent to the table the gold names and not to a slow query."""
+    monkeypatch.setattr(time, "monotonic", _a_clock_past(TIMEOUT_SECONDS))
+
+    with pytest.raises(BackendRefused, match="no such table: seasons") as refused:
+        backend.execute("SELECT year FROM seasons", statement_timeout_seconds=TIMEOUT_SECONDS)
+
+    assert "timeout" not in refused.value.detail
 
 
 def test_the_bound_the_result_states_is_the_one_the_statement_ran_under(
