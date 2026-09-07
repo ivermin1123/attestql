@@ -49,7 +49,13 @@ paths, so make exactly these links inside `MEASURE_WORK`: `data/dev/dev_20240627
 `$ATTESTQL_INPUTS/dev/dev_20240627/dev_databases`, and
 `data/hf/dev_20251106-00000-of-00001.json` to `$ATTESTQL_INPUTS/dev_20251106.json`.
 Prediction files you download go under `$MEASURE_WORK/data/preds/` with a
-`SHA256SUMS.predictions`. The inputs directory is read-only at the filesystem level: BIRD's own evaluator opens a
+`SHA256SUMS.predictions`. One database needs a private copy: `card_games.sqlite` is published
+with a WAL header, and on read-only media SQLite refuses the tool's first pragma with `attempt
+to write a readonly database`; L1 solved it with a byte-identical work copy under
+`MEASURE_WORK` for that database alone, digest asserted (`prepare_database.py` in
+`plans/reports/research-260907-bird-rewrites/`, merged into main after this brief was
+dispatched, or write your own ten-line equivalent); point that database's runs at the copy and
+say so in the report. The inputs directory is read-only at the filesystem level: BIRD's own evaluator opens a
 database read-write, and the permission is what stops it. Do not change its mode. Install the tool once from your worktree:
 `uv venv "$MEASURE_WORK/venv" --python 3.13 && uv pip install --python "$MEASURE_WORK/venv/bin/python" <worktree>`,
 then `ATTESTQL="$MEASURE_WORK/venv/bin/attestql"`.
