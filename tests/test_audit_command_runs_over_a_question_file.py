@@ -39,7 +39,7 @@ from attestql.audit.cli import (
     run_audit,
 )
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
-from attestql.audit.engines import POSTGRESQL
+from attestql.audit.engines import POSTGRESQL, SQLITE
 from attestql.audit.fixture import CACHE_FILE
 from attestql.audit.parse import ParsedStatement
 from attestql.audit.smells import DEFAULT_SHUFFLE_ROW_LIMIT, NUMERIC_TEXT
@@ -1043,6 +1043,47 @@ def test_a_uri_that_carries_no_credential_at_all_is_refused_for_being_one() -> N
             ["audit", "--dsn", "postgres://localhost/bird", "--questions", "q.json", "--out", "a"]
         )
     assert refused.value.code == 2
+
+
+@pytest.mark.parametrize(
+    "path", ["/data/password/bird_dev.sqlite", "/data/http://mirror/bird_dev.sqlite"]
+)
+def test_a_sqlite_file_is_not_refused_for_what_would_carry_a_credential_in_a_dsn(
+    path: str,
+) -> None:
+    """Under ``--engine sqlite`` the value is a path, so neither refusal above is about it: a
+    directory called ``password`` is a directory somebody made, and ``://`` inside a path is
+    not a connection string. The rule belongs to the engine, so it is asked of the engine the
+    run named."""
+    parsed = parse_arguments(
+        ["audit", "--engine", "sqlite", "--dsn", path, "--questions", "q.json", "--out", "a"]
+    )
+
+    assert parsed.dsn == path
+    assert parsed.engine is SQLITE
+
+
+@pytest.mark.parametrize(
+    "dsn", ["postgresql://bird:hunter2@localhost/bird", "host=localhost password=hunter2"]
+)
+def test_the_same_two_values_are_still_refused_when_the_run_names_postgresql(dsn: str) -> None:
+    """The refusals move with the engine and are not weakened by the second one arriving."""
+    with pytest.raises(SystemExit) as refused:
+        parse_arguments(
+            ["audit", "--engine", "postgresql", "--dsn", dsn, "--questions", "q.json", "--out", "a"]
+        )
+
+    assert refused.value.code == 2
+
+
+def test_a_dsn_that_is_empty_is_refused_whichever_engine_was_named() -> None:
+    """No engine is named by nothing, so this one is asked before the engine's own rule."""
+    for engine in ("postgresql", "sqlite"):
+        with pytest.raises(SystemExit) as refused:
+            parse_arguments(
+                ["audit", "--engine", engine, "--dsn", "  ", "--questions", "q.json", "--out", "a"]
+            )
+        assert refused.value.code == 2
 
 
 def test_a_scratch_schema_named_by_nothing_is_refused_before_anything_runs() -> None:
