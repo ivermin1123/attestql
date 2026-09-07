@@ -103,8 +103,9 @@ a corrected gold is recorded here when it happens, with its date, and not before
 | U3 | `bird-bench/mini_dev` issue 40 | the GitHub zip and the Hugging Face dataset differ: ids 137 and 138 duplicated and 119 and 120 missing in the zip, q879 and q1322 with different golds | [issue 40](https://github.com/bird-bench/mini_dev/issues/40) |
 | U4 | `ai-ar-research/SpotIt-plus` issue 1 | the paper calls SpotIt+ open source while its LICENSE reserves all rights; asks which licence applies. Corrected 2026-09-04: the LICENSE does grant use after its first sentence (N3), so the report rests on a misreading; withdrawn by the owner on 2026-09-05 with the correction in `plans/reports/upstream-260904-2125-u4-licence-correction.md`, the issue closed by its reporter | [issue 1](https://github.com/ai-ar-research/SpotIt-plus/issues/1) |
 | U5 | `bird-bench/mini_dev` issue 48 | the PostgreSQL evaluator scores q1473 differently on two runs of the same database: a float aggregate summed in parallel-worker order, and under `work_mem` even with parallelism off; three `SET`s proposed for `evaluation_utils.py` | [issue 48](https://github.com/bird-bench/mini_dev/issues/48) |
+| U6 | `bird-bench/mini_dev` issue 49, linked from `AlibabaResearch/DAMO-ConvAI` issue 39 | BIRD dev, the 2025-11-06 pass: 23 golds left unchanged that do not answer their question on the shipped data (16 cut through a tie, 2 sort NULL first, 2 sort numbers as text, q1004, q484, q523), from A34 to A36 | [issue 49](https://github.com/bird-bench/mini_dev/issues/49), [panel comment](https://github.com/AlibabaResearch/DAMO-ConvAI/issues/39#issuecomment-5568714684) |
 
-U5 was filed on 2026-09-07 by this session on the owner's instruction, after the four above.
+U5 and U6 were filed on 2026-09-07 by this session on the owner's instruction, after the four above; U6 went to GitHub rather than the Hugging Face discussion the draft names because no Hugging Face login exists on this machine.
 
 Replies received, checked 2026-09-07. The BIRD team (GitHub `BlackSoi1`) answered all three Mini-Dev
 reports on 2026-09-05 between 21:35 and 21:37 UTC and closed them:
