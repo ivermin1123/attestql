@@ -48,6 +48,63 @@ class Parse(Protocol):
     def __call__(self, sql: str, /) -> ParsedStatement: ...
 
 
+class RefuseTarget(Protocol):
+    """Why this engine will not be reached at that target, or ``None`` when it may be.
+
+    Asked of the command line before anything is opened, so what it judges is the shape of
+    the string and never the thing at the end of it: whether a server answers or a file is
+    there is the backend's to say, at the moment it asks, with the target in the message.
+    The rule differs by engine because a target does: what is a connection string on one is
+    a path on another, and a rule written about one of them is wrong about the other.
+    """
+
+    def __call__(self, target: str, /) -> str | None: ...
+
+
+DSN_IS_A_URI = (
+    "the DSN is a URI; this tool takes the libpq keyword form, "
+    "host=... port=... dbname=... user=..., because a URI is where a password is "
+    "written; set PGPASSWORD or use ~/.pgpass so that no credential is ever "
+    "written into a record, a log or this command line"
+)
+"""Why a PostgreSQL DSN written as a URI is refused before its contents are looked at.
+
+``postgresql://user:secret@host/db`` carries the credential in the text itself, where it
+would reach every record, log and process listing the DSN reaches, and no rule about what a
+URI may contain is worth trusting when the keyword form has no such shape."""
+
+DSN_NAMES_A_CREDENTIAL = (
+    "the DSN names a password; set PGPASSWORD or use ~/.pgpass so that no "
+    "credential is ever written into a record, a log or this command line"
+)
+"""Why a keyword DSN holding the word is refused. The credential reaches the driver from
+the environment or from ``~/.pgpass``, so nothing has to write it on a command line."""
+
+
+def _refuse_nothing_about_the_target(target: str, /) -> str | None:
+    """What an engine that states no rule about the shape of its target answers.
+
+    The default, because a rule about a target is a claim about what such a string may
+    hold, and an engine that has not made one says so rather than borrowing another
+    engine's.
+    """
+    return None
+
+
+def _refuse_a_postgresql_dsn(target: str, /) -> str | None:
+    """A DSN this tool will not connect with: a URI, or a keyword form naming a password.
+
+    Both are about the credential and neither is about the server: a DSN that carries one
+    is written into a record, a log and a process listing by the run that uses it, and the
+    two shapes above are where one is written.
+    """
+    if "://" in target:
+        return DSN_IS_A_URI
+    if "password" in target.lower():
+        return DSN_NAMES_A_CREDENTIAL
+    return None
+
+
 @dataclass(frozen=True)
 class Engine:
     """What a run needs to audit on one engine, chosen once and passed as one value.
@@ -55,13 +112,16 @@ class Engine:
     ``name`` is what the record's session settings state and what the ``--engine`` flag
     selects. ``parser`` is what the summary reports; the statements ``parse`` returns
     carry the same identity, so a record and the summary above it can never name two
-    different parsers for one statement.
+    different parsers for one statement. ``refuse_target`` is what the command line asks
+    before it opens anything, and it is here rather than in the options because what a
+    target may look like is the engine's to say.
     """
 
     name: str
     connect: Connect
     parse: Parse
     parser: ParserIdentity
+    refuse_target: RefuseTarget = _refuse_nothing_about_the_target
 
 
 def _connect_postgresql(target: str, /, *, scratch: str) -> Backend:
@@ -83,8 +143,10 @@ POSTGRESQL = Engine(
     connect=_connect_postgresql,
     parse=parse_statement,
     parser=PARSER,
+    refuse_target=_refuse_a_postgresql_dsn,
 )
-"""PostgreSQL: psycopg over a DSN, and libpg_query over the statement."""
+"""PostgreSQL: psycopg over a DSN, and libpg_query over the statement. The target is a
+libpq keyword string, and the two shapes that would carry a credential in it are refused."""
 
 SQLITE = Engine(
     name=ENGINE_SQLITE,
@@ -93,7 +155,10 @@ SQLITE = Engine(
     parser=SQLITE_PARSER,
 )
 """SQLite: the standard library's driver over a file, and sqlglot's SQLite dialect over the
-statement (ADR-0014 points 2 and 3). The target is the path to the file."""
+statement (ADR-0014 points 2 and 3). The target is the path to the file, and no shape of a
+path is refused: PostgreSQL's two refusals are about a connection string, and a directory
+called ``password`` or one holding ``://`` is a directory somebody made. Whether the file is
+there is answered when it is opened, with the path in the message."""
 
 ENGINES: Mapping[str, Engine] = {POSTGRESQL.name: POSTGRESQL, SQLITE.name: SQLITE}
 """Every engine an audit can run on, by the name the flag takes."""
@@ -112,11 +177,14 @@ def engine_named(name: str) -> Engine:
 
 __all__ = [
     "DEFAULT_ENGINE",
+    "DSN_IS_A_URI",
+    "DSN_NAMES_A_CREDENTIAL",
     "ENGINES",
     "POSTGRESQL",
     "SQLITE",
     "Connect",
     "Engine",
     "Parse",
+    "RefuseTarget",
     "engine_named",
 ]

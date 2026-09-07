@@ -1316,31 +1316,6 @@ def _summary_json(
     }
 
 
-def _dsn(value: str) -> str:
-    """A DSN this tool will connect with: libpq keyword form, and no password in it.
-
-    A URI is refused before its contents are looked at. ``postgresql://user:secret@host/db``
-    carries the credential in the text itself, where it would reach every record, log and
-    process listing this DSN reaches, and no rule about what a URI may contain is worth
-    trusting when the keyword form has no such shape.
-    """
-    if "://" in value:
-        raise argparse.ArgumentTypeError(
-            "the DSN is a URI; this tool takes the libpq keyword form, "
-            "host=... port=... dbname=... user=..., because a URI is where a password is "
-            "written; set PGPASSWORD or use ~/.pgpass so that no credential is ever "
-            "written into a record, a log or this command line"
-        )
-    if "password" in value.lower():
-        raise argparse.ArgumentTypeError(
-            "the DSN names a password; set PGPASSWORD or use ~/.pgpass so that no "
-            "credential is ever written into a record, a log or this command line"
-        )
-    if not value.strip():
-        raise argparse.ArgumentTypeError("the DSN is empty")
-    return value
-
-
 def _schema(value: str) -> str:
     """A schema name the copies can be written into: one name, and not an empty one.
 
@@ -1424,8 +1399,10 @@ def build_parser() -> argparse.ArgumentParser:
     audit.add_argument(
         "--dsn",
         required=True,
-        type=_dsn,
-        help="libpq keyword DSN without a password; PGPASSWORD or ~/.pgpass supplies it",
+        help=(
+            "where the database is: a libpq keyword DSN without a password on PostgreSQL, "
+            "where PGPASSWORD or ~/.pgpass supplies it, and the path to the file on SQLite"
+        ),
     )
     audit.add_argument(
         "--questions", required=True, type=Path, help="the BIRD Mini-Dev question file"
@@ -1544,13 +1521,22 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
     """The command line as options, or an argparse exit for anything it refuses."""
     parser = build_parser()
     parsed = parser.parse_args(argv)
+    engine = engine_named(cast("str", parsed.engine))
+    dsn = cast("str", parsed.dsn)
+    if not dsn.strip():
+        parser.error("the DSN is empty")
+    # What may stand there is the engine's to say: a libpq keyword string on one, a file
+    # path on the other, and a rule written for one of them is wrong about the other.
+    refused = engine.refuse_target(dsn)
+    if refused is not None:
+        parser.error(refused)
     if parsed.data_file is None and (parsed.data_origin, parsed.data_date) != (None, None):
         parser.error(
             "--data-origin and --data-date state where the data file came from; "
             "name that file with --data-file"
         )
     return AuditOptions(
-        dsn=cast("str", parsed.dsn),
+        dsn=dsn,
         questions=cast("Path", parsed.questions),
         questions_origin=cast("str | None", parsed.questions_origin),
         questions_date=cast("str | None", parsed.questions_date),
@@ -1572,7 +1558,7 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
         shuffle_row_limit=cast("int", parsed.shuffle_row_limit),
         statement_timeout_seconds=cast("int", parsed.statement_timeout),
         data_as_of=cast("datetime | None", parsed.data_as_of),
-        engine=engine_named(cast("str", parsed.engine)),
+        engine=engine,
     )
 
 
