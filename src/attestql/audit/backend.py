@@ -32,11 +32,31 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from string import ascii_lowercase, ascii_uppercase
 from typing import Protocol
 
 from attestql.evidence.render import Json
 from attestql.evidence.types import SessionSettings
 from attestql.kernel.types import ExecutionResult
+
+ASCII_LETTERS_FOLDED = str.maketrans(ascii_uppercase, ascii_lowercase)
+"""The 26 letters and nothing else, which is the whole of the rule below."""
+
+
+def folded(name: str) -> str:
+    """One name as an engine matches two spellings of it: the ASCII letters, and no more.
+
+    Both engines fold exactly that much. SQLite compares an identifier with an ASCII
+    case-insensitive comparison and leaves every other character as it is, so ``STRASSE`` and
+    ``straße`` are two names there; PostgreSQL downcases an unquoted identifier and leaves a
+    multibyte character alone.
+
+    Python's ``casefold`` is the Unicode rule and is wider than either: it folds ``ß`` to
+    ``ss``. Matching a name with it makes this tool read a statement the way no engine does,
+    which is how a sort key that names no column comes to be read as naming one, and how a
+    table the file does not hold comes to be measured as one it does.
+    """
+    return name.translate(ASCII_LETTERS_FOLDED)
 
 
 @dataclass(frozen=True, order=True)
@@ -382,6 +402,7 @@ class Backend(Protocol):
 
 
 __all__ = [
+    "ASCII_LETTERS_FOLDED",
     "Backend",
     "BackendRefused",
     "PlannerStatistics",
@@ -390,5 +411,6 @@ __all__ = [
     "TableLookup",
     "TableName",
     "TextCensus",
+    "folded",
     "planner_statistics_json",
 ]

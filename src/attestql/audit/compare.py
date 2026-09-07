@@ -53,7 +53,7 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 
-from attestql.audit.backend import Backend, BackendRefused
+from attestql.audit.backend import Backend, BackendRefused, folded
 from attestql.audit.fixture import fixture_digest
 from attestql.audit.parse import OrderingKey, ParsedStatement, StatementRefused
 from attestql.evidence.build import ExecutionIdentity, build_evidence_record
@@ -706,8 +706,8 @@ keys are never ambiguous names none and never reaches this."""
 def _require_the_ordering_keys_name_columns(parsed: ParsedStatement, backend: Backend) -> None:
     """Resolve the sort keys the parse could not place, against the tables the statement reads.
 
-    Case-insensitively, because that is how the engines that produce such a key resolve a
-    name. The columns of every table the statement names are one set here rather than one set
+    Case-insensitively over the ASCII letters, because that is how the engines that produce
+    such a key resolve a name. The columns of every table the statement names are one set here rather than one set
     per table: which table a bare key belongs to is the engine's resolution and not this
     one's, and what is being decided is only whether the token is a column at all.
 
@@ -720,11 +720,11 @@ def _require_the_ordering_keys_name_columns(parsed: ParsedStatement, backend: Ba
     if not keys:
         return
     catalogue = backend.column_types(parsed.tables)
-    held = {column.casefold() for columns in catalogue.values() for column in columns}
-    held |= {name.casefold() for name in parsed.output_names}
+    held = {folded(column) for columns in catalogue.values() for column in columns}
+    held |= {folded(name) for name in parsed.output_names}
     named = ", ".join(table.text for table in parsed.tables) or "any table"
     for key in keys:
-        if key.casefold() not in held:
+        if folded(key) not in held:
             raise StatementRefused(
                 ORDERING_KEY_NAMES_NO_COLUMN.format(token=f'"{key}"', tables=named)
             )
