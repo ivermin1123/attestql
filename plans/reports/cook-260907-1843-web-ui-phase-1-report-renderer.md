@@ -80,14 +80,14 @@ Worked 2026-09-07 18:43 to 19:40 (Asia/Saigon) on the web UI branch in the workt
 
 | File | What it observes |
 | --- | --- |
-| `tests/test_report_renders_an_audit_directory.py` | 14 tests over `attestql demo`, parsed with `html.parser`: the run page's counts against `summary.json`, the digests, the index and its links; a comparison page's two statements, verdict, rule, mechanism, both differing-rows sections, both published readings, both hashes and its four JSON links, present as files; a gold-only page's record and its probes in all three states; an ERROR question as a row with no page; a timed-out side with the bound; escaping of a statement holding `<script>`; a tampered record stating both hashes; byte-identical output on a second render; the default `--out`; the refusal and its status; the two accessors |
+| `tests/test_report_renders_an_audit_directory.py` | 17 tests over `attestql demo`, parsed with `html.parser`: the run page's counts against `summary.json`, the digests, the index and its links; a comparison page's two statements, verdict, rule, mechanism, both differing-rows sections, both published readings, both hashes and its four JSON links, present as files; a gold-only page's record and its probes in all three states; an ERROR question as a row with no page; a timed-out side with the bound; escaping of a statement holding `<script>`; a tampered record stating both hashes; byte-identical output on a second render; the default `--out`; the refusal and its status; the two accessors |
 | `tests/test_report_copy_never_judges.py` | the forbidden phrases over each template's literals, and the positive control |
 | `tests/test_evidence_load_round_trips.py` | every record of both sandboxes re-hashes to its `result_hash` and its `record_hash` (10 on SQLite, the PostgreSQL sandbox's under the `sandbox` marker); an unknown type tag is refused |
 | `tests/test_report_imports_no_engine.py` | the import graph: no driver, no parser, one dependency outside the standard library |
 | `tests/test_audit_end_to_end.py` | one added test: the PostgreSQL sandbox's own directory renders, one page per directory |
 
-`just check`: green (lint, pyright strict, repocheck, markdownlint and cspell, 933 passed and 33
-skipped, the Docker sandbox's 33, the SQLite sandbox's 50).
+`just check`: green (lint, pyright strict, repocheck, markdownlint and cspell, 945 passed and 33
+skipped, the Docker sandbox's 33, the SQLite sandbox's 54), counted after the review fixes below.
 
 ## Acceptance
 
@@ -110,3 +110,44 @@ strict over the new package; the committed spike directory
 - The record's full result is rendered row for row, as the plan states. A 10,000-row record is
   a large page; phase 4's budgets are derived from a dry run, and this is the term that
   dominates them.
+
+## Review fixes, 2026-09-07 19:24
+
+The coordinator's stage 2 review (independent reviewer) found no Critical and three Important
+findings, all reproduced before the fix and all fixed in the commit after `7253d64`. Behaviour
+changed in one place only, the output directory, and the pages themselves are byte for byte what
+they were.
+
+**1. `--out` inside the audit directory wrote a page and then crashed.** `render_report` wrapped
+only the reads, so `shutil.SameFileError` from copying `summary.json` onto itself escaped as a
+traceback with status 1, after `index.html` had already been written into the audit directory.
+Fixed by refusing an `--out` that resolves to the audit directory or under it, before anything
+is written, and by translating an `OSError` raised while writing into the same refusal the reads
+raise, so nothing leaves this command as a traceback. Both paths are resolved first, so a `..`
+naming the same directory is the same answer.
+
+**2. A previous render was never cleared.** A stale `q999/index.html` survived beside fresh
+pages with status 0. Fixed by the rule the audit's own output directory follows: the first
+render leaves a `.attestql-report` marker, a render into a marked directory removes what the
+render before it wrote (`index.html`, `summary.json`, every `q<id>/`, `static/`) and keeps
+anything else, and a non-empty directory without the marker is refused untouched.
+
+**3. The import walker skipped the ancestor packages.** It resolved
+`from attestql.evidence.load import X` straight to `evidence/load.py` and never visited
+`attestql/__init__.py` or `attestql/evidence/__init__.py`, which Python executes on any submodule
+import; a driver imported in one of them would have been loaded by every page and the test would
+have passed. Fixed by walking every ancestor package's `__init__` with the module under it. The
+walker is now parameterised over the tree, and the positive control builds one whose forbidden
+import is only in an ancestor and shows it reached; without the ancestors that walk returns
+three modules instead of five and the control fails.
+
+Minor: the PostgreSQL round-trip test's docstring claimed intervals are rendered as their own
+kind; `canonical_type_tag` has no interval tag and an interval reaches a record as the text the
+engine printed, under `str`. The sentence now says that.
+
+Tests added: `--out` equal to the audit directory, a child of it and one naming it through `..`
+are each refused with status 2 and the audit directory's listing unchanged; a rerun clears a
+stale page and a stale stylesheet and leaves exactly the files of one report; a foreign
+non-empty directory is refused with its own file untouched; an empty directory and one that is
+not there yet are both taken over and marked; the two ancestor-package tests above.
+`docs/audit-command.md` gained the two sentences that state the new rules.
