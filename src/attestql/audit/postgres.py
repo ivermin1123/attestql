@@ -200,6 +200,14 @@ making them block would refuse every comparison made across two hosts, including
 ones where the sort did not change, and this repository has measured no cross-host drift
 of its own (`docs/claims-register.md`, section 3)."""
 
+TEXT_TYPES: frozenset[str] = frozenset({"text", "character varying", "character"})
+"""The declared types this engine calls text, as ``information_schema`` renders them.
+
+Matched whole, because that catalogue renders a closed set of names and always in lower
+case: a column is declared one of these or is not text, and a length is stated in another
+column and never inside the name. A smell that reads an ordering key asks the backend
+whether its column is text, and this is this engine's answer."""
+
 ORDER_SENSITIVE_AGGREGATE_TYPES: frozenset[str] = frozenset({"float4", "float8"})
 """The result types whose aggregates depend on the order their rows were added in.
 
@@ -673,6 +681,10 @@ class PostgresBackend:
             if columns is not None:
                 types[name] = columns
         return types
+
+    def declared_type_is_text(self, declared_type: str) -> bool:
+        """Whether that declared type is one of the three this catalogue calls text."""
+        return declared_type in TEXT_TYPES
 
     def order_sensitive_aggregate_types(self) -> frozenset[str]:
         """The two floating types PostgreSQL adds up value by value, by their server names.
@@ -1201,6 +1213,7 @@ __all__ = [
     "PRECONDITION_SETTINGS",
     "QUALIFIED_NAME_IS_NOT_REACHED",
     "RECORDED_SETTINGS",
+    "TEXT_TYPES",
     "ColumnDescription",
     "Connection",
     "Cursor",

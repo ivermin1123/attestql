@@ -89,18 +89,6 @@ NUMERIC_TEXT = r"^-?[0-9]+(\.[0-9]+)?$"
 """What counts as a numeric-looking text value. A form this rejects is counted
 non-numeric and the smell stays quiet, which is the conservative direction."""
 
-TEXT_TYPES: frozenset[str] = frozenset(
-    {"text", "character varying", "character", "TEXT", "VARCHAR", "CHAR", "CLOB"}
-)
-"""The declared types the first smell applies to, as a catalogue names them.
-
-The lowercase four are PostgreSQL's ``information_schema`` names, which that catalogue
-always renders in lowercase. The uppercase four are SQLite's, and they are the text of the
-CREATE statement rather than a catalogue's rendering of it: SQLite keeps a column's declared
-type verbatim, so what is matched is what the file was written with. A declared type this
-set does not hold is not text as far as this smell is concerned, which is the conservative
-direction: the smell stays quiet."""
-
 SIGNIFICANT_DIGITS = 6
 """How far two float values have to agree before their difference is called summation
 order rather than a difference in the answer."""
@@ -322,7 +310,10 @@ def ordering_over_numeric_text(
             keys.append({"key": key.expression, "not_applicable": resolved})
             continue
         relation, column, declared = resolved
-        textual = declared in TEXT_TYPES
+        # Whether a declaration is text is the engine's reading of it and not a list kept
+        # here: one catalogue renders a closed set of names and another keeps the text of
+        # the CREATE statement, where VARCHAR(50) is a text column and matches no name.
+        textual = backend.declared_type_is_text(declared)
         keys.append(
             {
                 "key": key.expression,
@@ -931,7 +922,6 @@ __all__ = [
     "SMELLS_FORMAT",
     "SMELLS_READING",
     "SMELL_NAMES",
-    "TEXT_TYPES",
     "QuestionText",
     "Smell",
     "SmellSettings",
