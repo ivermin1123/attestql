@@ -40,6 +40,7 @@ repository.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -68,6 +69,10 @@ from attestql.evidence.render import result_digest, row_difference, write_json
 from attestql.evidence.replay import ReplayRule, compare_r_ord
 from attestql.evidence.types import QuestionMetadata, StatementSource
 from attestql.report.render import GOLD_RECORD_FILE, SECOND_RECORD_FILE, SMELLS_FILE, SUMMARY_FILE
+
+REPOSITORY = Path(__file__).resolve().parents[2]
+"""Where this file lives, so the guard below can refuse to write inside it. The module's
+docstring promises the directory is outside the repository; this is what keeps the promise."""
 
 WIDE_ROWS = 10_000
 """How many rows the widest table holds, and therefore how many a record does. The bound the
@@ -269,6 +274,7 @@ predictions or about any published result. The data they run against is this rep
 synthetic fixture.
 """
 
+NOTE_FILE = "THIS-IS-NOT-EVIDENCE.txt"
 STRESS = "stress"
 SECOND_FIXTURE = "fixture-second.sqlite"
 """The directory the run writes into, and the second file the NOT_COMPARABLE question's other
@@ -279,6 +285,12 @@ records disagree on and the reason the library refuses to compare them."""
 def build(out: Path) -> int:
     """Build the fixture, run the audit over it, add the one question a run cannot make."""
     out = out.expanduser().resolve()
+    if out == REPOSITORY or REPOSITORY in out.parents:
+        # The same rule tools/audit-sandbox-sqlite/build.py holds, for the same reason, and
+        # here it is load bearing: the first thing this does to the directory it is given is
+        # remove it.
+        print(f"the output directory must be outside the repository: {out}", file=sys.stderr)
+        return 2
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
@@ -311,7 +323,11 @@ def build(out: Path) -> int:
         ]
     )
     _not_comparable(out, audit)
-    (out / "THIS-IS-NOT-EVIDENCE.txt").write_text(NOTE, encoding="utf-8")
+    for beside in (out, audit):
+        # Beside the directory and inside it. A person renders the audit directory, and moves
+        # or publishes it; the note has to travel with it. `attestql report` reads the five
+        # files it names and ignores everything else, so this changes no page.
+        (beside / NOTE_FILE).write_text(NOTE, encoding="utf-8")
     _measure(audit)
     print(f"the audit is {audit}, and the run exited {status}")
     return 0
@@ -425,7 +441,7 @@ def _inputs(out: Path) -> tuple[Path, Path]:
         json.dumps(
             {
                 "source": {
-                    "what": "a rendering fixture, not a benchmark: see THIS-IS-NOT-EVIDENCE.txt",
+                    "what": f"a rendering fixture, not a benchmark: see {NOTE_FILE}",
                     "written_by": "tools/report-stress/build.py",
                 },
                 "questions": entries,
@@ -463,9 +479,12 @@ def _not_comparable(out: Path, audit: Path) -> None:
         evidence_text=evidence,
     )
     parsed = engine.parse(sql)
-    source = StatementSource(
-        path=str(out / "questions.json"), digest="0" * 64, origin=ORIGIN, date="2026-09-07"
-    )
+    questions = out / "questions.json"
+    # The digest of the file the statement was read from, in the form the audit's own writer
+    # states it. Without it the one record built outside the run would carry a stand-in where
+    # every other record on the page carries the sha256 a reader can take again themselves.
+    digest = f"sha256:{hashlib.sha256(questions.read_bytes()).hexdigest()}"
+    source = StatementSource(path=str(questions), digest=digest, origin=ORIGIN, date="2026-09-07")
     gold, second = (
         _record(
             engine.connect(str(out / name), scratch=DEFAULT_SCRATCH_SCHEMA),
@@ -473,6 +492,7 @@ def _not_comparable(out: Path, audit: Path) -> None:
             parsed,
             source,
             out,
+            digest,
         )
         for name in ("fixture.sqlite", SECOND_FIXTURE)
     )
@@ -513,11 +533,17 @@ def _record(
     parsed: ParsedStatement,
     source: StatementSource,
     out: Path,
+    question_set_version: str,
 ) -> EvidenceRecord:
-    """One statement recorded against one fixture, by the recorder every other record uses."""
+    """One statement recorded against one fixture, by the recorder every other record uses.
+
+    ``source_digest`` is empty because the run's own records hold it empty: it is the digest
+    of the file the data was loaded from, and this sandbox is given no ``--data-file``.
+    Filling it here would state a provenance no record in this directory has.
+    """
     return record_statement(
         question=metadata,
-        question_set_version="0" * 64,
+        question_set_version=question_set_version,
         statement_source=source,
         parsed=parsed,
         backend=backend,
