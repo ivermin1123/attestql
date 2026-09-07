@@ -1,0 +1,31 @@
+{# The two statements, side by side where there is room and stacked where there is not.
+
+   The tokens the two differ in carry a class; the marking is a comparison of two texts and
+   says nothing about either statement, which is what the line under them states. #}
+{% macro statement_pair(sides) %}
+<section class="statements" id="statements" data-marking="on">
+  <h2>The statements</h2>
+  <div class="statements__pair">
+    {% for side in sides %}
+    <article class="statement statement--{{ side.side }}">
+      <h3 class="statement__side"><span class="glyph" aria-hidden="true">{{ side.glyph }}</span> {{ side.side }}</h3>
+      <pre class="sql mono"><code>{% for token in side.tokens %}{% if token.differs %}<span class="token token--differs">{{ token.text }}</span>{% else %}{{ token.text }}{% endif %}{% endfor %}</code></pre>
+      {% if side.ordering %}
+      <dl class="facts facts--ordering">
+        {% for key in side.ordering %}
+        <dt>{{ key.name }}</dt>
+        <dd>{{ key.value }}{% if key.detail %}, {{ key.detail }}{% endif %}</dd>
+        {% endfor %}
+      </dl>
+      {% else %}
+      <p class="ink-2">this statement states no ordering of its own</p>
+      {% endif %}
+      <p class="statement__hash mono ink-2">{{ side.result_hash }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% if sides|length > 1 %}
+  <p class="ink-2">The marked tokens are where the two texts differ. Two statements that differ everywhere can return the same rows, and two that differ in one token can return other rows; the verdict above is read off the results.</p>
+  {% endif %}
+</section>
+{% endmacro %}

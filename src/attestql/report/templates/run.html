@@ -1,0 +1,119 @@
+{# The run: what it counted, what it was made of, and the index of its questions.
+
+   The counts are the summary's own. The index is one row per directory the run wrote,
+   and then the questions that wrote none: a statement that could not be run has no
+   evidence to open, so it is a row here with the side that failed and the message. #}
+{% extends "base.html" %}
+{% from "_files.html" import file_links %}
+
+{% block strip %}
+<header class="strip strip--run">
+  <h1 class="strip__title">the run</h1>
+  <p class="strip__facts">
+    <span class="chip chip--set mono">{{ page.run_id }}</span>
+    <span class="chip chip--rule">exit status {{ page.exit_status }}</span>
+  </p>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="counts" id="counts">
+  <h2>What it counted</h2>
+  <table class="counts__table">
+    <thead><tr><th scope="col">what</th><th scope="col">how many</th></tr></thead>
+    <tbody>
+      {% for count in page.counts %}
+      <tr><th scope="row">{{ count.name }}</th><td class="mono">{{ count.value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h3>the probes</h3>
+  <table class="counts__table">
+    <thead><tr><th scope="col">probe</th><th scope="col">fired on</th></tr></thead>
+    <tbody>
+      {% for count in page.probe_counts %}
+      <tr><th scope="row">{{ count.name }}</th><td class="mono">{{ count.value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if page.credited %}
+  <h3>credited by BIRD's own check and NOT_EQUAL here</h3>
+  <table class="counts__table">
+    <thead><tr><th scope="col">what</th><th scope="col">how many</th></tr></thead>
+    <tbody>
+      {% for count in page.credited %}
+      <tr><th scope="row">{{ count.name }}</th><td class="mono">{{ count.value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+
+<section class="made-of" id="made-of">
+  <h2>What the run was made of</h2>
+  <dl class="facts">
+    {% for fact in page.made_of %}
+    <dt>{{ fact.name }}</dt>
+    <dd class="mono">{{ fact.value }}{% if fact.detail %}<span class="ink-2"> {{ fact.detail }}</span>{% endif %}</dd>
+    {% endfor %}
+  </dl>
+</section>
+
+<section class="session" id="session">
+  <h2>The session the run was made in</h2>
+  <details>
+    <summary>what the engine reported, {{ page.session|length }} settings</summary>
+    <dl class="facts">
+      {% for fact in page.session %}
+      <dt>{{ fact.name }}</dt>
+      <dd class="mono">{{ fact.value }}</dd>
+      {% endfor %}
+    </dl>
+  </details>
+</section>
+
+{% if page.notes %}
+<section class="notes" id="notes">
+  <h2>What the run states about itself</h2>
+  <dl class="facts">
+    {% for note in page.notes %}
+    <dt>{{ note.name }}</dt>
+    <dd class="mono">{{ note.value }}{% if note.detail %}<span class="ink-2"> {{ note.detail }}</span>{% endif %}</dd>
+    {% endfor %}
+  </dl>
+</section>
+{% endif %}
+
+<section class="index" id="index">
+  <h2>The questions</h2>
+  <div class="rows__region">
+    <table class="index__table">
+      <thead>
+        <tr>
+          <th scope="col">question</th>
+          <th scope="col">rule</th>
+          <th scope="col">verdict</th>
+          <th scope="col">class</th>
+          <th scope="col">probes</th>
+          <th scope="col">what was asked</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in page.entries %}
+        <tr class="index__row index__row--{{ entry.verdict|lower }}">
+          <th scope="row" class="mono">{% if entry.href %}<a href="{{ entry.href }}">q{{ entry.question_id }}</a>{% else %}q{{ entry.question_id }}{% endif %}</th>
+          <td>{{ entry.replay_rule }}</td>
+          <td><span class="chip chip--verdict chip--{{ entry.verdict|lower }}">{{ entry.verdict }}</span></td>
+          <td>{% if entry.mechanism %}<span class="chip chip--warn">{{ entry.mechanism }}</span>{% endif %}</td>
+          <td>{% for probe in entry.probes %}<span class="chip chip--warn">{{ probe }}</span> {% endfor %}</td>
+          <td>{% if entry.note %}<span class="warn">{{ entry.note }}</span>{% else %}{{ entry.question_text }}{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="ink-2">A question whose statement could not be run wrote no directory, so it is a row here and has no page: the summary holds the side that stopped, the step it stopped at and the engine's own message.</p>
+</section>
+
+{{ file_links(page.files) }}
+{% endblock %}

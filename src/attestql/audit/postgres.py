@@ -181,6 +181,18 @@ server would otherwise have been free to do rather than what any statement ran w
 text value the server rendered was rendered in, and two records made on two databases that
 disagree on it are comparing bytes produced under two encodings."""
 
+
+def session_preconditions() -> tuple[str, ...]:
+    """The seven settings two records must agree on, named as this engine names them.
+
+    Six are read from the session and are ``PRECONDITION_SETTINGS``; the seventh is the
+    database's own default collation, which is a property of the database and is read from
+    the catalogue instead, so nothing in this module held all seven at once. A page that
+    states what a comparison checks needs the seven and not the six.
+    """
+    return (*PRECONDITION_SETTINGS, "datcollate")
+
+
 DATABASE_LOCALE = (
     "SELECT to_jsonb(d) FROM pg_catalog.pg_database AS d WHERE d.datname = current_database()"
 )
@@ -1251,4 +1263,5 @@ __all__ = [
     "NumericFromFloatText",
     "PostgresBackend",
     "TextFromInterval",
+    "session_preconditions",
 ]

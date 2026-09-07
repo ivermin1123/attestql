@@ -201,3 +201,39 @@ by hand, is in
 [the measurement report](../plans/reports/measurement-260902-2226-gold-only-probes-mini-dev.md):
 67 % actionable over the fires, and the direction probe alone 17 %, which is why it is off by
 default.
+
+## The report command
+
+`attestql report <audit-dir>` reads the JSON one audit wrote and writes a page for the run and a
+page for each question, with the JSON each page was rendered from copied beside it. It reads the
+files and reaches no database, so a directory produced on another machine, by either engine,
+renders here: the pages are built from the `format` strings the documents declare and from
+nothing else. `--out` says where they go and defaults to the audit directory's own sibling,
+`<audit-dir>-report/`, because a rerun of the audit clears the audit directory and a report
+written inside one would be left there, stale, beside a fresh run. Exit status is 0 when the
+pages were written and 2 when the directory could not be rendered: a directory holding no
+`summary.json` was not written by this tool, and the line says so with nothing written.
+
+`index.html` is the run: the counts, what the run was made of (both file digests with whatever
+origin the run was told, the server, the parser, the serialization, the fixture digest, the
+shuffle and the session as the engine reported it), the states the run has to state about itself
+(duplicate ids, prediction positions not compared, tables missing or unreadable, tables the
+shuffle did not reach, statements the budget stopped), and an index of every question. A question
+whose statement could not be run wrote no directory, so it is a row of that index read from the
+summary's own error list, with the side that stopped and the engine's message, and has no page.
+
+`q<id>/index.html` is one question, in a fixed order: what was asked, the two statements with the
+tokens they differ in marked, the rows the two results differ in, what BIRD's own check and the
+test-suite check would have said, and then the results, the probes in all three states, both
+evidence records and the instruction for running each statement again. The page states the
+verdict, the mechanism and every `reading` string as the JSON holds them and adds no judgement of
+its own; a test reads the templates' own literals and forbids a short list of phrases there.
+
+Beside every record's two hashes the page states `recomputed from this JSON: match`, or the two
+values when they differ. The line is not a repetition of the file: `attestql.evidence.load` reads
+the record back into the result and the descriptor it was rendered under, takes `result_hash`
+over that rendering again and `record_hash` over the document with that one key removed, and
+compares. A record whose bytes changed after the audit wrote it says so on the page.
+
+Rendering the same directory twice writes the same bytes: no clock is read and no generation time
+is written, so a report can be committed or published and re-made without a diff.
