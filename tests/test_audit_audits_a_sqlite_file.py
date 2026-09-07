@@ -282,6 +282,20 @@ def test_a_write_is_refused_by_the_file_and_by_the_envelope_over_it(
             backend.execute(sql, statement_timeout_seconds=TIMEOUT_SECONDS)
 
 
+def test_loading_an_extension_is_refused_at_the_moment_the_statement_runs(
+    backend: SqliteBackend,
+) -> None:
+    """Nothing here enables extension loading and the driver leaves it off, so a statement
+    that calls for one is refused by the engine and loads nothing. The parse admits the call:
+    an allowlist reads a grammar, and what this connection will actually do is the engine's
+    answer, so it is read here rather than assumed there."""
+    sql = "SELECT load_extension('sqlite_probe')"
+
+    assert parse_statement(sql).sql == sql, "the parse admits it; the execution is what refuses"
+    with pytest.raises(BackendRefused, match="not authorized"):
+        backend.execute(sql, statement_timeout_seconds=TIMEOUT_SECONDS)
+
+
 def test_a_connection_that_lost_the_envelope_is_refused_rather_than_read(
     audited_file: Path,
 ) -> None:
