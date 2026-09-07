@@ -88,7 +88,7 @@ Each file has 500 positions over 498 distinct ids. Direction is Mini-Dev to dev.
 | llama-3-8b | 124 | 123 | 1 | 0 | 1 |
 | mixtral-8x7b | 107 | 107 | 0 | 0 | 0 |
 | phi-3-medium | 157 | 155 | 2 | 0 | 2 |
-| **Total** | **1,655** | **1,651** | **14 of 4,500** | **4** | **10** |
+| **Total** | **1,655** | **1,649** | **14 of 4,500** | **4** | **10** |
 
 Only q906, q933, q944 and q1189 move. q1189 loses EX on seven files, q944 loses on three, q906
 gains on three and q933 gains on one. The Mini-Dev side matches the earlier `official/hf` scores
