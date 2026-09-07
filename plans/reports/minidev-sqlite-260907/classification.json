@@ -1,0 +1,458 @@
+{
+ "per_file": {
+  "gpt-35-turbo-instruct": {
+   "ex1_not_equal": 26,
+   "classified": 7,
+   "A": 3,
+   "B": 3,
+   "C": 1,
+   "precision_A": 0.429,
+   "precision_A_or_B": 0.857,
+   "rows": [
+    {
+     "question_id": 45,
+     "class": "C",
+     "mechanism": "type",
+     "test_suite_ex": 1,
+     "reason": "AvgScrWrite as INTEGER 507 against AVG() as REAL 507.0, one row, same value"
+    },
+    {
+     "question_id": 345,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 3 statuses; the prediction returns 3,810 rows"
+    },
+    {
+     "question_id": 440,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct row repeated, 6 rows"
+    },
+    {
+     "question_id": 854,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct coordinate row repeated, once per race"
+    },
+    {
+     "question_id": 1035,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 161 ids; the prediction returns 356, so the count of teams is misstated"
+    },
+    {
+     "question_id": 1155,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 103 patients; the prediction returns 1,281 rows"
+    },
+    {
+     "question_id": 1507,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "2 distinct times, 3 rows"
+    }
+   ]
+  },
+  "gpt-35-turbo": {
+   "ex1_not_equal": 27,
+   "classified": 7,
+   "A": 5,
+   "B": 2,
+   "C": 0,
+   "precision_A": 0.714,
+   "precision_A_or_B": 1.0,
+   "rows": [
+    {
+     "question_id": 240,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 6 elements; the prediction lists every atom, 24 rows"
+    },
+    {
+     "question_id": 391,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 8 names; the prediction returns 80"
+    },
+    {
+     "question_id": 528,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "1,664 distinct rows, 1,890 rows"
+    },
+    {
+     "question_id": 1035,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 161 ids; the prediction returns 356, so the count of teams is misstated"
+    },
+    {
+     "question_id": 1141,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 2 classes; the prediction returns 6 rows, so the answer to a which-of-three question is a list of six"
+    },
+    {
+     "question_id": 1232,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 13 patients; the prediction returns 74"
+    },
+    {
+     "question_id": 1514,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct row (CZK) repeated, 3 rows"
+    }
+   ]
+  },
+  "gpt-4-32k": {
+   "ex1_not_equal": 32,
+   "classified": 8,
+   "A": 4,
+   "B": 4,
+   "C": 0,
+   "precision_A": 0.5,
+   "precision_A_or_B": 1.0,
+   "rows": [
+    {
+     "question_id": 227,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "a percentage computed by two scalar subqueries and then selected once per row of molecule: 343 identical rows where the question asks for one number"
+    },
+    {
+     "question_id": 358,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct row (black) repeated, once per printing"
+    },
+    {
+     "question_id": 522,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold groups 2 (name, format) rows; the prediction returns 66"
+    },
+    {
+     "question_id": 854,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct coordinate row repeated, once per race"
+    },
+    {
+     "question_id": 1036,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "128 distinct names, 129 rows"
+    },
+    {
+     "question_id": 1141,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 2 classes; the prediction returns 6 rows, so the answer to a which-of-three question is a list of six"
+    },
+    {
+     "question_id": 1220,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 20 patients; the prediction returns 44"
+    },
+    {
+     "question_id": 1514,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct row (CZK) repeated, 3 rows"
+    }
+   ]
+  },
+  "gpt-4-turbo": {
+   "ex1_not_equal": 29,
+   "classified": 7,
+   "A": 3,
+   "B": 4,
+   "C": 0,
+   "precision_A": 0.429,
+   "precision_A_or_B": 1.0,
+   "rows": [
+    {
+     "question_id": 345,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 3 statuses; the prediction returns 3,810 rows"
+    },
+    {
+     "question_id": 459,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "the gold's LIMIT 1 name; the prediction returns that one name 88 times, once per printing"
+    },
+    {
+     "question_id": 528,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "1,664 distinct rows, 1,890 rows"
+    },
+    {
+     "question_id": 1036,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "128 distinct names, 129 rows"
+    },
+    {
+     "question_id": 1130,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "43 distinct names, 56 rows"
+    },
+    {
+     "question_id": 1209,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 38 diagnoses; the prediction returns 871"
+    },
+    {
+     "question_id": 1506,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 21 descriptions; the prediction returns 933"
+    }
+   ]
+  },
+  "gpt-4": {
+   "ex1_not_equal": 32,
+   "classified": 8,
+   "A": 5,
+   "B": 3,
+   "C": 0,
+   "precision_A": 0.625,
+   "precision_A_or_B": 1.0,
+   "rows": [
+    {
+     "question_id": 206,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct row (c) repeated, 2 or 4 rows"
+    },
+    {
+     "question_id": 345,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 3 statuses; the prediction returns 3,810 rows"
+    },
+    {
+     "question_id": 522,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold groups 2 (name, format) rows; the prediction returns 66"
+    },
+    {
+     "question_id": 854,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct coordinate row repeated, once per race"
+    },
+    {
+     "question_id": 1035,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 161 ids; the prediction returns 356, so the count of teams is misstated"
+    },
+    {
+     "question_id": 1124,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 3,339 names; the prediction returns 42,823"
+    },
+    {
+     "question_id": 1209,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 38 diagnoses; the prediction returns 871"
+    },
+    {
+     "question_id": 1500,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "the prediction adds DISTINCT (27 rows) where the gold repeats the 27 descriptions over 976 rows; the prediction is the cleaner answer"
+    }
+   ]
+  },
+  "meta-llama-3-70b-instruct-2": {
+   "ex1_not_equal": 29,
+   "classified": 7,
+   "A": 4,
+   "B": 3,
+   "C": 0,
+   "precision_A": 0.571,
+   "precision_A_or_B": 1.0,
+   "rows": [
+    {
+     "question_id": 240,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 6 elements; the prediction lists every atom, 24 rows"
+    },
+    {
+     "question_id": 345,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 3 statuses; the prediction returns 3,810 rows"
+    },
+    {
+     "question_id": 522,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold groups 2 (name, format) rows; the prediction returns 66"
+    },
+    {
+     "question_id": 1036,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "128 distinct names, 129 rows"
+    },
+    {
+     "question_id": 1130,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "43 distinct names, 56 rows"
+    },
+    {
+     "question_id": 1187,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 63 ids; the prediction returns 465, so the count the question asks for is misstated"
+    },
+    {
+     "question_id": 1435,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "2 distinct names, 3 rows"
+    }
+   ]
+  },
+  "meta-llama-3-8b-instruct-2": {
+   "ex1_not_equal": 21,
+   "classified": 5,
+   "A": 3,
+   "B": 2,
+   "C": 0,
+   "precision_A": 0.6,
+   "precision_A_or_B": 1.0,
+   "rows": [
+    {
+     "question_id": 230,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 5 (element, label) rows; the prediction returns 636"
+    },
+    {
+     "question_id": 462,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "2 distinct translations, one of them twice: 3 rows"
+    },
+    {
+     "question_id": 1088,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 1,105 names; the prediction returns 15,429"
+    },
+    {
+     "question_id": 1147,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct row (Lionel Messi) repeated"
+    },
+    {
+     "question_id": 1220,
+     "class": "A",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "gold DISTINCT over 20 patients; the prediction returns 44"
+    }
+   ]
+  },
+  "mistralai-mixtral-8x7b-instru-4": {
+   "ex1_not_equal": 16,
+   "classified": 1,
+   "A": 0,
+   "B": 1,
+   "C": 0,
+   "precision_A": 0.0,
+   "precision_A_or_B": 1.0,
+   "rows": [
+    {
+     "question_id": 206,
+     "class": "B",
+     "mechanism": "multiplicity",
+     "test_suite_ex": 0,
+     "reason": "one distinct row (c) repeated, 2 or 4 rows"
+    }
+   ]
+  },
+  "phi-3-medium-128k-instruct-1": {
+   "ex1_not_equal": 25,
+   "classified": 0,
+   "A": 0,
+   "B": 0,
+   "C": 0,
+   "precision_A": null,
+   "precision_A_or_B": null,
+   "rows": []
+  }
+ },
+ "unjudged": [],
+ "sampled": {
+  "size": 50,
+  "of": 237,
+  "rule": "ordered by (model, question id), every 4th row, first 50"
+ }
+}

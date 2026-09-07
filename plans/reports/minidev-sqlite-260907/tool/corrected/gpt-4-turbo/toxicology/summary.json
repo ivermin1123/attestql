@@ -1,0 +1,132 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-2b820cdb-7cae-4e00-988b-c8a300393da4",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/minidev-sqlite/data/zip/minidev/MINIDEV/dev_databases/toxicology/toxicology.sqlite | size=2678784",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "delete",
+   "data_version": "1",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/corrected-gold.json",
+  "digest": "sha256:1623525c280b1a9df7fe09625a9a079ade3e4557c6d02a836ac1b1f301160cbd",
+  "origin": "the three golds of tools/audit-sandbox-sqlite/predictions.json, against the Hugging Face copy's own question text",
+  "date": null,
+  "entries": 3,
+  "audited": 1,
+  "duplicate_ids": [],
+  "ids": [
+   207
+  ]
+ },
+ "predictions": {
+  "path": "data/preds-by-id/predict_mini_dev_gpt-4-turbo_sqlite.json",
+  "digest": "sha256:b3d16d40adcf6908d5d9c5a5829022c829d505268ea9bce29fe8b5ed939a9745",
+  "origin": null,
+  "date": null,
+  "keyed_by": "question-id",
+  "statements": 498,
+  "positions_unused": []
+ },
+ "verdicts": {
+  "ERROR": 1
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 0,
+  "not-a-function-of-the-data": 0,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 0,
+ "credited_but_not_equal": {
+  "total": 0,
+  "by_mechanism": {
+   "multiplicity": 0,
+   "type": 0,
+   "order": 0,
+   "truncation": 0,
+   "other": 0
+  },
+  "by_test_suite_ex": {
+   "1": 0,
+   "0": 0
+  }
+ },
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool/corrected/gpt-4-turbo/toxicology/fixture.json",
+  "source": null,
+  "schema_digest": "sha256:ba066623f66532d33add2cfe794ca975066e0c8b12ccd6d503a5f78f03b5f1e9",
+  "row_counts": {
+   "main.atom": 9111,
+   "main.bond": 9156,
+   "main.connected": 18312
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "atom",
+   "connected",
+   "bond"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "attestql_scratch",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "atom",
+   "bond",
+   "connected"
+  ],
+  "skipped": {},
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool/corrected/gpt-4-turbo/toxicology",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T05:16:03.678456+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.001,
+  "questions": 0.0,
+  "shuffle": 0.033
+ },
+ "errors": [
+  {
+   "question_id": 207,
+   "side": "prediction",
+   "step": "statement",
+   "message": "the statement is a COLUMN and not a SELECT"
+  }
+ ],
+ "exit_status": 2
+}

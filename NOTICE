@@ -34,6 +34,11 @@ Apache License and keeps its own licence and attribution:
       four counterexamples (Mini-Dev questions 565, 1035, 1473 and 1057): the question text,
       evidence text and gold SQL, a prediction from BIRD's own llm/exp_result/sql_output_kg
       files, and the rows both returned from the Mini-Dev PostgreSQL databases.
+  plans/reports/minidev-sqlite-260907/examples/
+      three counterexamples (Mini-Dev questions 846, 45 and 1035): the question text, evidence
+      text and gold SQL as Mini-Dev's SQLite copy writes them, a prediction from BIRD's own
+      llm/exp_result/sql_output_kg files, and the rows both returned from the Mini-Dev SQLite
+      databases.
 
 Every other file, including the run outputs that carry only question ids, verdicts, hashes and
 counts, is this repository's own work under the Apache License.

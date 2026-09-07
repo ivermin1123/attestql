@@ -198,15 +198,14 @@ timings behind this paragraph are in `plans/reports/session-260904-autonomous-ru
   prediction, an upstream correction, a human's fix.
 - It does not generate differentiating data. Two statements that agree on the shipped rows but
   differ semantically are found only by the shuffle probe, not by search.
-- Its measured numbers are PostgreSQL's. SQLite, where BIRD originally lives, is available behind
-  the same evidence record (`--engine sqlite --dsn <path to the file>`), and what differs is stated
-  in the record rather than hidden: a column carries the storage class its cells came back at
-  because SQLite types values and not columns, a REAL comes back as the decimal that round-trips
-  it, no session setting is a precondition because a file has no session, there is no role and no
-  grant, and the parser is sqlglot's SQLite dialect rather than the engine's own grammar. No
-  benchmark run on SQLite has been measured yet; the sandbox in `tools/audit-sandbox-sqlite/` is
-  what exists, and it runs in the gate, with every probe asked there on a statement that fires it
-  and one that keeps it quiet.
+- SQLite, where BIRD originally lives, is available behind the same evidence record
+  (`--engine sqlite --dsn <path to the file>`), and what differs is stated in the record rather than
+  hidden: a column carries the storage class its cells came back at because SQLite types values and
+  not columns, a REAL comes back as the decimal that round-trips it, no session setting is a
+  precondition because a file has no session, there is no role and no grant, and the parser is
+  sqlglot's SQLite dialect rather than the engine's own grammar. The sandbox in
+  `tools/audit-sandbox-sqlite/` runs in the gate, with every probe asked there on a statement that
+  fires it and one that keeps it quiet, and Mini-Dev has now been measured on SQLite as well.
 - It proves nothing about correctness, security, or production use. It runs as the role you give
   it; give it a read-only one.
 - Its parser is PostgreSQL 17's grammar (`libpg_query`), so a statement that only PostgreSQL 17
@@ -250,6 +249,22 @@ register](docs/claims-register.md) lists every claim with its owning artifact, a
 claim there carries the date it was measured, because negative claims decay.
 [ADR-0013](docs/adr/0013-audit-text-to-sql-gold-with-typed-replay-evidence.md) records the decision
 this tool implements and the date by which it is reconsidered if nobody uses it.
+
+The same nine prediction files were then run on SQLite, on the eleven Mini-Dev database files, with
+no server and no container. On SQLite the tool's reading of BIRD's EX and BIRD's own evaluator agree
+on 4,481 of 4,482 predictions against each gold copy, better than the 4,476 on PostgreSQL, because
+here the tool reads the cells that evaluator reads; the single disagreement is a row where the two
+answers are the same number to fifteen digits and this tool compares a REAL rendered to six decimal
+places. Of the 1,650 predictions BIRD credits, 237 (14.4 %) are NOT_EQUAL under the typed
+comparison: 230 return the gold's rows with other multiplicities, 6 the same value under another
+storage class, 1 differs only in row order. A sample of 50 of those 237, read by hand, is 27 wrong
+answers the benchmark credited, 22 duplicated rows a reader would forgive and 1 the typed rule
+itself. Gold-only, the probes fire 25 times on 20 of the 500 golds, against 39 on 29 on PostgreSQL;
+the largest single difference is that `float-aggregate-order` never fires on SQLite, which adds its
+REALs with a compensation. Two Mini-Dev golds do not finish inside the default 30 second budget on
+SQLite. [The SQLite measurement report](plans/reports/measurement-260907-1106-minidev-sqlite.md)
+holds the per-file table, the hand classification and the question-by-question comparison with the
+PostgreSQL run.
 
 The history is short and stated: this repository was developed privately from 2026-08-25 under a
 different product direction, a governed data agent over a synthetic schema; it was reoriented on
