@@ -123,11 +123,71 @@ Validation section: the contrast test is in the gate, and the verification repor
 screenshot per width and theme with the measured numbers and names the act behind every claim.
 Both sandbox audits still render (the gate's own tests). Every file the phase names exists.
 
+## Review fixes, 2026-09-07 22:45
+
+The coordinator's review (spec compliance, an independent reviewer, and its own Playwright
+measurements over the stress report) found no Critical code defect, one rule violation in the
+commits, one Important design defect, one Important defect in a figure's own sentence, and six
+smaller items. All ten are fixed; the gate is green at 1,020 passed and 33 skipped, two more
+than before, which are the two new slope cases.
+
+**The rule.** Every one of the six commits carried a `Co-Authored-By` trailer naming a model.
+The repository allows no AI reference in its artifacts and the brief asked for none. None was
+pushed, so all six were rewritten in place with `git filter-branch --msg-filter`, keeping every
+other line: `git log --format=%B 8fd4458..HEAD | grep -ci co-authored` is 0 and
+`git diff <old head> <new head>` is empty, so no tree moved.
+
+**The design defect.** At 1280 and wider the sticky strip started one gutter left of the prose
+under it, because `.strip > *` took `width: min(100%, var(--content))` while `.page` takes that
+width with the gutter as padding inside its border box. Repaired by subtracting the two gutters
+from the strip child's width. Applying only that moved the title and left the chip row and the
+set line where they were, because both restate `margin` as a shorthand and lost the auto inline
+margins that centre them; that half was found by measuring all three children instead of the
+title alone, and `.strip__set` also had to stop clamping itself to the 66ch prose measure, which
+would have centred a 634px line inside a 1152px box. The measured numbers, the re-shot
+screenshots and the whole account are in the verification report under a heading of its own.
+
+**The figure that contradicted itself.** `_slope`'s text alternative counted only the rows that
+moved, so a gold whose rows the prediction does not hold drew "not in the prediction" marks
+under a caption reading "in the same places in the prediction". The absent places are counted
+and named now, the "same places" sentence is returned only when nothing moved and nothing is
+absent, and a gold the prediction holds none of says exactly that. Two cases were added to the
+determinism test, one for each shape.
+
+**The smaller items.**
+
+- Figure titles were escaped twice: `_verdicts` and `_source` escaped their own text and
+  `_figure` escaped the whole title again, so a run id holding `&` would have reached the
+  `<title>` as `&amp;amp;`. The inner calls are gone; a title is escaped once, where it is put
+  into the markup.
+- `_probes` scaled its bar by `questions_audited`, a number with no relation to the probe
+  counts, so a summary stating more firings than questions drew a bar off the canvas. Clamped
+  to `BAR_SPAN`.
+- A probe count that is not a whole number was drawn as a zero by a `_number` helper that
+  swallowed the error. `RunPage` carries `probe_fired` as typed pairs read through `_integer`
+  now, which refuses the report with the key named, the way every other number on the page is
+  read; `_number` is deleted.
+- The stress builder's one record built outside the run carried stand-in digests where the
+  run's own records carry the sha256 of `questions.json`; it computes and states the same
+  digest, in the same `sha256:` form. `source_digest` stays empty, because the run's own
+  records hold it empty: it is the data file's digest and this sandbox is given none.
+- The builder promised to write nothing inside the repository and nothing enforced it. It holds
+  the guard `tools/audit-sandbox-sqlite/build.py` holds, which matters more here because the
+  first thing it does to the directory it is given is remove it.
+- The note saying the directory is a rendering fixture is written inside the audit directory as
+  well as beside it, so it travels with the directory a person renders.
+- The `SLOPE_STEP` docstring claimed all three constants are on the spacing scale; 18 is not,
+  and the sentence now says which two are and what the third is.
+- The new paragraph in `docs/audit-command.md` was missing a verb.
+- `design-spec.md` now states the dark tints this phase moved, with the reason and the numbers,
+  which the spec's own rule allows. `66ch` is untouched: the measure is an owner decision and
+  stays open in the verification report.
+
 ## Left for the owner, and for phase 3
 
 1. `66ch` measures 86 characters, and the design reference's band is 45 to 75. `55ch` measures
    72. Not changed: `design-spec.md` is accepted and is not this phase's to edit.
-2. `design-spec.md` still states the dark tints this phase moved.
+2. (Closed in review: `design-spec.md` now states the dark tints this phase moved.)
 3. A table wider than its column scrolls with a pointer and not with a keyboard. A `tabindex`
    on every `.rows__region` would put ten tab stops on a question page; the fix belongs where a
    region can be given a stop only when its table is wide.
