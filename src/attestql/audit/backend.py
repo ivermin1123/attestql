@@ -185,6 +185,18 @@ class ShuffledCopies:
 class Backend(Protocol):
     """One database, read-only, for the length of an audit."""
 
+    @property
+    def scratch(self) -> str:
+        """Where the shuffled copies of this run live, in the engine's own words.
+
+        Read off the backend and not off the options, because the option is what the run
+        asked for and this is what the engine made of it: a schema the login already holds
+        on one engine, and the connection's own TEMP database on one that needs nothing
+        arranged. A summary states it beside the seed and the row limit, so a reader is told
+        where a rerun's rows came from rather than what the command line said.
+        """
+        raise NotImplementedError
+
     def identity(self) -> str:
         """Engine, version, host or path, and database, as one line.
 

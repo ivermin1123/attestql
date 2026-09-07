@@ -750,6 +750,32 @@ def test_a_whole_audit_runs_on_a_sqlite_file_and_the_summary_says_which_engine(
     assert document["effective_database_role"] == "file"
 
 
+def test_the_summary_states_where_the_copies_were_made_and_not_what_was_asked_for(
+    tmp_path: Path, audited_file: Path
+) -> None:
+    """``--scratch-schema`` is PostgreSQL's. This engine accepts the name, makes its copies
+    in TEMP whatever it says, and the summary reads the place off the backend, so a reader of
+    a SQLite run is told where a rerun's rows came from rather than what was asked for."""
+    questions, _ = _question_files(tmp_path)
+    options = AuditOptions(
+        dsn=str(audited_file),
+        questions=questions,
+        out=tmp_path / "audit",
+        engine=SQLITE,
+        scratch_schema="a_schema_no_file_has",
+        data_as_of=datetime(2026, 9, 5, tzinfo=UTC),
+    )
+
+    assert connect_and_audit(options, Lines()) == 0
+
+    document = cast(
+        "dict[str, Any]",
+        json.loads((tmp_path / "audit" / SUMMARY_FILE).read_text(encoding="utf-8")),
+    )
+    assert document["shuffle"]["scratch_schema"] == "temp"
+    assert document["shuffle"]["copied"] == ["drivers", "results"]
+
+
 def test_the_gold_and_its_correction_land_on_two_drivers_over_this_file(
     backend: SqliteBackend,
 ) -> None:

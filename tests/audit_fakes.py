@@ -45,6 +45,7 @@ from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 IDENTITY = "FakeSQL 1.0 | server=memory:0 | database=fake"
 ROLE = "fake_reader"
+SCRATCH = "attestql_scratch"
 TIMEOUT_MS = 30_000
 SCHEMA_DIGEST = "sha256:fake-schema-digest"
 
@@ -190,6 +191,13 @@ class FakeBackend:
         self.executed_plan_variant: list[tuple[str, int]] = []
         self.prepared: list[tuple[tuple[TableName, ...], str, int]] = []
         self.dropped = 0
+
+    @property
+    def scratch(self) -> str:
+        """Where this fake would make its copies, in PostgreSQL's words like the rest of it,
+        and spelled here rather than imported so that a change to that backend's default is
+        a change a test notices rather than one it follows."""
+        return SCRATCH
 
     def identity(self) -> str:
         return self._identity

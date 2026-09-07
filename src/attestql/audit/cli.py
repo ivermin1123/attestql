@@ -725,6 +725,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
             positions_unused=resolved.positions_unused,
             identity=identity,
             role=role,
+            scratch=backend.scratch,
             session_settings=settings,
             measured=measured,
             shuffled=shuffled,
@@ -1183,6 +1184,7 @@ def _summary_json(
     positions_unused: tuple[int, ...],
     identity: str,
     role: str,
+    scratch: str,
     session_settings: SessionSettings,
     measured: _Measured,
     shuffled: ShuffledCopies | None,
@@ -1273,7 +1275,7 @@ def _summary_json(
         "shuffle": {
             "seed": options.shuffle_seed,
             "row_limit": options.shuffle_row_limit,
-            "scratch_schema": options.scratch_schema,
+            "scratch_schema": scratch,
             "prepared": shuffled is not None,
             "reason": no_shuffle,
             "copied": [] if shuffled is None else [name.text for name in shuffled.copied],
@@ -1495,8 +1497,8 @@ def build_parser() -> argparse.ArgumentParser:
         type=_schema,
         default=DEFAULT_SCRATCH_SCHEMA,
         help=(
-            "an existing schema this role may create tables in, where the shuffled copies "
-            "are made; this tool creates no schema and drops none"
+            "on PostgreSQL only: an existing schema this role may create tables in, where "
+            "the shuffled copies are made; this tool creates no schema and drops none"
         ),
     )
     audit.add_argument(
