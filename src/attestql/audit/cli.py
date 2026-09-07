@@ -95,7 +95,7 @@ from attestql.audit.compare import (
     sided,
     write_comparison,
 )
-from attestql.audit.engines import DEFAULT_ENGINE, ENGINES, Engine, Parse, engine_named
+from attestql.audit.engines import DEFAULT_ENGINE, ENGINES, SQLITE, Engine, Parse, engine_named
 from attestql.audit.fixture import CACHE_FILE, file_digest, fixture_digest
 from attestql.audit.parse import ParsedStatement, StatementRefused
 from attestql.audit.postgres import DEFAULT_SCRATCH_SCHEMA
@@ -109,6 +109,7 @@ from attestql.audit.smells import (
     all_smells,
     smells_json,
 )
+from attestql.demo import FIXTURE_FILE, build_fixture, write_inputs
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import Json, record_json, write_json
 from attestql.evidence.replay import ComparabilityResult
@@ -121,6 +122,24 @@ from attestql.evidence.types import (
 )
 
 PROGRAM = "attestql"
+
+AUDIT = "audit"
+"""The subcommand that audits a question file against a database."""
+
+DEMO = "demo"
+"""The subcommand that writes the packaged sandbox somewhere and audits that.
+
+Named beside the audit rather than under it because it takes none of the audit's options: it
+builds the run it then makes, and what it is for is a person who installed the wheel and has
+no question file, no prediction file and no database to point the audit at."""
+
+DEMO_AUDIT_DIRECTORY = "audit"
+"""Where the demo's audit writes, under the directory the demo was given: the sandbox it
+built is beside it, so one directory holds the run and everything the run read."""
+
+RERUN_PREFIX = "rerun: "
+"""What the demo's last line starts with, before the audit command it just ran."""
+
 SUMMARY_FILE = "summary.json"
 MARKER_FILE = ".attestql-run"
 """What says an output directory is an audit's own and may be cleared by the next run."""
@@ -1508,7 +1527,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
     audit = subcommands.add_parser(
-        "audit",
+        AUDIT,
         help="compare golds and predictions on one database and record what differs",
         description=(
             "Run each gold statement, and each prediction beside it, against one "
@@ -1639,6 +1658,20 @@ def build_parser() -> argparse.ArgumentParser:
     audit.add_argument(
         "--data-as-of", type=_instant, help="what instant the data is as of; the run's by default"
     )
+    demo = subcommands.add_parser(
+        DEMO,
+        help="build the packaged sandbox and audit it",
+        description=(
+            "Write this package's own SQLite sandbox into a directory, audit it, and print "
+            "the audit command over the files that were written."
+        ),
+    )
+    demo.add_argument(
+        "--out",
+        required=True,
+        type=Path,
+        help="the directory the sandbox and its audit are written into",
+    )
     return parser
 
 
@@ -1721,12 +1754,67 @@ def connect_and_audit(options: AuditOptions, writer: Writer) -> int:
     return audit(options, backend, writer)
 
 
+def run_demo(out: Path, writer: Writer) -> int:
+    """Write the packaged sandbox into that directory, audit it, and say how to rerun it.
+
+    What a person who installed the wheel has and nothing else: the fixture is built from the
+    packaged ``fixture.sql``, the questions and the predictions are copied out beside it, and
+    the audit that follows is the ordinary one over those three files. It exits 1 here because
+    three of the golds disagree with their corrections on this data, which is the finding and
+    not a failure of the command.
+
+    The files are written every time, so a second demo into one directory is a clean rerun:
+    the sandbox is rebuilt, and the audit's own directory follows the marker rule that governs
+    every other run. The command line is built once and used twice, for the run and for the
+    last line, so what a reader is told to type is the run whose lines are above it rather than
+    a sentence about it, over paths as the command line gave them: a relative ``--out`` stays
+    relative and every path on that line is one the reader can type where they are standing.
+    The line is printed whatever the audit answered, because it names the run either way.
+    """
+    try:
+        # The built path is resolved and names the same file as the one below; the audit is
+        # given the paths the command line was given, and those are what its lines state.
+        build_fixture(out)
+        questions, predictions = write_inputs(out)
+    except OSError as unwritable:
+        print(f"{PROGRAM}: the demo cannot be written into {out}: {unwritable}", file=sys.stderr)
+        return 2
+    arguments = [
+        AUDIT,
+        "--engine",
+        SQLITE.name,
+        "--dsn",
+        str(out / FIXTURE_FILE),
+        "--questions",
+        str(questions),
+        "--predictions",
+        str(predictions),
+        "--out",
+        str(out / DEMO_AUDIT_DIRECTORY),
+    ]
+    status = connect_and_audit(parse_arguments(arguments), writer)
+    writer.line(f"{RERUN_PREFIX}{PROGRAM} {' '.join(arguments)}")
+    return status
+
+
 def main(argv: Sequence[str] | None = None) -> int:
-    """The command line, and then the audit it asked for. The exit status is the answer."""
-    return connect_and_audit(parse_arguments(argv), ConsoleWriter(sys.stdout))
+    """The command line, and then the command it asked for. The exit status is the answer.
+
+    Which subcommand was asked for is read here and its options are read by the function that
+    runs it: the demo takes none of the audit's, and it reaches the audit through the same
+    ``parse_arguments`` every other run does, over a command line it builds and then prints.
+    """
+    parsed = build_parser().parse_args(argv)
+    writer = ConsoleWriter(sys.stdout)
+    if parsed.command == DEMO:
+        return run_demo(cast("Path", parsed.out), writer)
+    return connect_and_audit(parse_arguments(argv), writer)
 
 
 __all__ = [
+    "AUDIT",
+    "DEMO",
+    "DEMO_AUDIT_DIRECTORY",
     "ERROR",
     "GOLD_ONLY",
     "MARKER_FILE",
@@ -1734,6 +1822,7 @@ __all__ = [
     "POSITION_KEYING",
     "PROGRAM",
     "QUESTION_ID_KEYING",
+    "RERUN_PREFIX",
     "SERIALIZATION",
     "SMELLS_FILE",
     "SUMMARY_FILE",
@@ -1759,4 +1848,5 @@ __all__ = [
     "read_questions",
     "resolve_predictions",
     "run_audit",
+    "run_demo",
 ]
