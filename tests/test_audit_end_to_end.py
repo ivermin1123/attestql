@@ -50,6 +50,7 @@ from attestql.audit.postgres import (
 from attestql.audit.statements import VALIDATOR_VERSION
 from attestql.evidence.replay import ComparabilityResult
 from attestql.evidence.types import ENGINE_POSTGRESQL
+from attestql.report import render_report
 
 pytestmark = pytest.mark.sandbox
 
@@ -599,3 +600,21 @@ def test_a_second_connection_cannot_take_the_scratch_schema_while_the_copies_are
 
     assert advisory(other, "pg_try_advisory_lock") is True
     assert advisory(other, "pg_advisory_unlock") is True
+
+
+def test_this_run_s_own_directory_renders(audited: Run, tmp_path: Path) -> None:
+    """``attestql report`` over the directory this file's run wrote, on the other engine.
+
+    The renderer's own tests read the packaged SQLite sandbox, which states no session
+    preconditions and whose columns carry storage classes. This is the half they cannot
+    reach: a directory of PostgreSQL records, rendered here so that the page and the server
+    that produced it are exercised in one gate.
+    """
+    rendered = render_report(audited.out, tmp_path / "report")
+
+    assert [page.parent.name for page in rendered.pages[1:]] == [
+        f"q{question_id}"
+        for question_id in sorted(
+            int(directory.name[1:]) for directory in audited.out.glob("q*") if directory.is_dir()
+        )
+    ], "one page per directory, in the order their ids read as numbers"

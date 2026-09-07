@@ -1,0 +1,121 @@
+{# One question, in the order the design spec fixes: what was asked, the two statements,
+   what differs between their results, what the two published evaluators would have said,
+   and then everything a reader can explore. #}
+{% extends "base.html" %}
+{% from "_strip.html" import strip %}
+{% from "_rows.html" import rows_table %}
+{% from "_statements.html" import statement_pair %}
+{% from "_probes.html" import probe_list %}
+{% from "_record.html" import record_block %}
+{% from "_rerun.html" import rerun_block %}
+{% from "_files.html" import file_links %}
+
+{% block strip %}{{ strip(page) }}{% endblock %}
+
+{% block content %}
+<section class="question">
+  <h2>The question</h2>
+  <p class="question__text">{{ page.question_text }}</p>
+  {% if page.evidence_text %}
+  <p class="question__hint ink-2">the hint the set supplies: {{ page.evidence_text }}</p>
+  {% endif %}
+  <p class="verdict__reading">{{ page.verdict_reading }}</p>
+  {% if page.mismatched %}
+  <p class="warn">the two records disagree on these preconditions, so they were not compared: {{ page.mismatched|join(', ') }}</p>
+  {% endif %}
+  {% if page.projection %}
+  <div class="projection">
+    <p>{{ page.projection.reading }}</p>
+    <dl class="facts">
+      <dt>gold</dt>
+      <dd class="mono">{{ page.projection.gold|join(', ') }}</dd>
+      <dt>prediction</dt>
+      <dd class="mono">{{ page.projection.second|join(', ') }}</dd>
+    </dl>
+  </div>
+  {% endif %}
+</section>
+
+{{ statement_pair(page.sides) }}
+
+{% if page.differences %}
+<section class="differing" id="differing">
+  <h2>The rows they differ in</h2>
+  {% for difference in page.differences %}
+  <article class="differing__side">
+    <h3>{{ difference.heading }}, {{ difference.rows.total }}</h3>
+    {{ rows_table(difference.rows) }}
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if page.readings or page.mechanism %}
+<section class="readings" id="readings">
+  <h2>What the benchmark would have said</h2>
+  {% for reading in page.readings %}
+  <article class="reading">
+    <h3>{{ reading.name }}: {{ reading.value }}</h3>
+    <p class="reading__method">{{ reading.method }}</p>
+    <p class="reading__source mono ink-2">{{ reading.source }}</p>
+    <dl class="facts">
+      {% for count in reading.counts %}
+      <dt>{{ count.name }}</dt>
+      <dd class="mono">{{ count.value }}</dd>
+      {% endfor %}
+    </dl>
+  </article>
+  {% endfor %}
+  {% if page.mechanism %}
+  <article class="mechanism">
+    <h3>the class: <span class="chip chip--warn">{{ page.mechanism.classification }}</span></h3>
+    <p class="mechanism__reading">{{ page.mechanism.reading }}</p>
+    <dl class="facts">
+      {% for fact in page.mechanism.facts %}
+      <dt>{{ fact.name }}</dt>
+      <dd class="mono">{{ fact.value }}</dd>
+      {% endfor %}
+    </dl>
+  </article>
+  {% endif %}
+</section>
+{% endif %}
+
+<section class="results" id="results">
+  <h2>The results</h2>
+  {% for side in page.sides %}
+  <details class="results__side">
+    <summary>{{ side.side }}, {{ side.result.total }}</summary>
+    {{ rows_table(side.result) }}
+  </details>
+  {% endfor %}
+</section>
+
+{{ probe_list(page, rows_table) }}
+
+<section class="records" id="records">
+  <h2>The evidence records</h2>
+  {% for record in page.records %}
+  {{ record_block(record, rows_table) }}
+  {% endfor %}
+</section>
+
+{{ rerun_block(page.records) }}
+
+<section class="run" id="run">
+  <h2>This question's run</h2>
+  <dl class="facts">
+    <dt>run</dt>
+    <dd class="mono">{{ page.run_id }}</dd>
+    <dt>server</dt>
+    <dd class="mono">{{ page.backend_identity }}</dd>
+    <dt>question set</dt>
+    <dd>{{ page.question_set }}</dd>
+    <dt>replay rule</dt>
+    <dd>{{ page.replay_rule }}</dd>
+  </dl>
+  <p><a href="{{ root }}index.html">the run this question belongs to</a></p>
+</section>
+
+{{ file_links(page.files) }}
+{% endblock %}

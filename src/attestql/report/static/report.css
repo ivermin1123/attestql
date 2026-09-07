@@ -1,0 +1,122 @@
+/* The tokens of the design spec, and the few rules phase 1 needs to be true.
+
+   This file is the class hooks and the token scale, not the design: the typography, the
+   spacing and the states are phase 2's, which applies them against measurements at 360,
+   768 and 1280 px. What is here is what the markup would be wrong without -- the token
+   values themselves, a region that scrolls sideways so the page body never does, a
+   visible focus ring, and the two tints paired with their glyph. */
+
+:root {
+  --paper: #FAF9F6;
+  --ink: #1C1B18;
+  --ink-2: #5A5750;
+  --rule: #DAD7CF;
+  --accent: #1F5F7A;
+  --warn: #9A4B00;
+  --gold-tint: #F3DBA6;
+  --second-tint: #CCDFEA;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --radius: 3px;
+  --easing: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #151412;
+    --ink: #ECEAE4;
+    --ink-2: #A9A59B;
+    --rule: #33312C;
+    --accent: #7FB6CF;
+    --warn: #E8A24C;
+    --gold-tint: #2E2416;
+    --second-tint: #16252B;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.page {
+  max-width: 66ch;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+a { color: var(--accent); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.mono { font-family: ui-monospace, monospace; }
+.ink-2 { color: var(--ink-2); }
+.warn { color: var(--warn); }
+
+.strip {
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  padding: var(--space-2) var(--space-4);
+  transition: padding 240ms var(--easing);
+}
+
+.chip {
+  display: inline-block;
+  border: 1px solid var(--rule);
+  background: var(--rule);
+  border-radius: var(--radius);
+  padding: 0 var(--space-2);
+  font: inherit;
+  color: inherit;
+}
+
+.chip--warn { background: var(--gold-tint); color: var(--warn); }
+
+/* A table, a SQL block and a JSON block escape the prose measure inside their own region,
+   so a result sixteen columns wide never makes the page itself scroll sideways. */
+.rows__region, .sql, .json {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.rows__table { border-collapse: collapse; }
+.rows__table th, .rows__table td {
+  border: 1px solid var(--rule);
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+  vertical-align: top;
+}
+
+.rows__name { display: block; }
+.rows__type { display: block; }
+
+.rows__row--gold td { background: var(--gold-tint); }
+.rows__row--second td { background: var(--second-tint); }
+
+.cell--int, .cell--dec { text-align: right; font-variant-numeric: tabular-nums; }
+.cell--null { color: var(--ink-2); text-decoration: underline dotted; }
+
+.token--differs { background: var(--gold-tint); }
+[data-marking="off"] .token--differs { background: none; }
+
+.sql, .json { line-height: 1.6; border-radius: var(--radius); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-property: opacity; }
+}
+
+@media print {
+  .strip { position: static; }
+  * { transition: none; }
+}
