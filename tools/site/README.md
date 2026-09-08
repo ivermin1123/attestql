@@ -49,7 +49,12 @@ npx --yes wrangler@4.129.0 pages deploy <repo>/build/site \
 
 Preview URL, deployed 2026-09-08: <https://attestql-ui.pages.dev>. Each deploy also prints an
 address of its own for that one deployment; the current one is
-<https://f6872917.attestql-ui.pages.dev>.
+<https://79f77b57.attestql-ui.pages.dev>.
+
+The demo the build audits runs at a fixed `/tmp/attestql-site-sandbox`, not under `build/`. The
+SQLite backend records the absolute path of the file it opened and every question page states it,
+so where the demo runs is published: the path is chosen to name no user, no repository and no
+build location.
 
 ## What this does not touch
 
