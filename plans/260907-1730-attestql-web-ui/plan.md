@@ -28,7 +28,9 @@ gets the same pages by running `attestql report audit/`.
 - `site/index.html` and `README.md` belong to the main session (its message of 2026-09-07
   18:05) and are not edited here. The built site lives in `build/site/` from `tools/site/`, and
   deploys to a preview project `attestql-ui`; the live project `attestql`, the domain and the
-  DNS record are not touched. Replacing what attestql.com serves is an owner step.
+  DNS record are not touched. Replacing what attestql.com serves is an owner step: done
+  2026-09-08 on the owner's word, with the deployment workflow `.github/workflows/site.yml`; the
+  domain and the DNS record were not touched.
 - `counterexample.json` previews 25 rows per side and a bounded difference; the two evidence
   records hold every row and their hashes cover every row. Pages show rows from the records,
   state where each table came from, and never modify, trim or re-issue a record.
@@ -59,7 +61,7 @@ gets the same pages by running `attestql report audit/`.
    large text at least 3:1, both computed.
 4. `uv run python tools/site/build.py` builds the site from `tools/site/data/` in under two
    minutes and under the size budget stated in phase 3; the preview project serves it over
-   HTTPS; attestql.com is unchanged until the owner's switch.
+   HTTPS; attestql.com is unchanged until the owner's switch (made 2026-09-08).
 5. Every published CLI run (nine per prediction benchmark, one or two per gold-only benchmark)
    has a run page under its benchmark whose counts match its `summary.json`; every selected
    question has a page whose content matches its artifacts; ERROR and timed-out questions are

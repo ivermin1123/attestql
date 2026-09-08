@@ -71,9 +71,17 @@ SQLite backend records the absolute path of the file it opened and every questio
 so where the demo runs is published: the path is chosen to name no user, no repository and no
 build location.
 
-## What this does not touch
+## attestql.com
 
-The `attestql` project, the domain and the DNS record. attestql.com serves `site/index.html` from
-`main` and keeps serving it until the owner decides otherwise; deploying this site there, and
-retiring `site/index.html`, is an owner step and not a session's. A GitHub Actions deployment is
-added at that switch and not before.
+attestql.com serves this build since 2026-09-08, on the owner's word. `.github/workflows/site.yml`
+builds the site with the command above on every push to `main` and publishes it to the Cloudflare
+Pages project `attestql`, whose production branch is `main` and which holds the domain; a manual
+run of the same workflow publishes whichever ref it was started on to the preview project
+`attestql-ui` instead, so a branch can be looked at before it is merged. The workflow reads two
+repository secrets, `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`, the token holding
+"Cloudflare Pages: Edit" on that account and nothing else; wrangler takes both from the
+environment and neither reaches a log. The first deployment was made by hand from outside the
+repository with the command of the previous section and `--project-name attestql --branch main`.
+The domain and the DNS record were not touched: the project already held them. `site/index.html`
+is no longer what the domain serves; it stays in the repository as the source of the three links
+the landing carries until the session that owns it retires it.

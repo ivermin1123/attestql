@@ -133,7 +133,7 @@ any single page over 2 MB; those sit under the Cloudflare Pages Free plan's own 
 published under `tools/site/data/`, the build audits the sandbox the package carries and shows
 that, with a banner on every page saying so. It reaches no network and no database: everything on
 both pages is read out of `pyproject.toml`, `README.md`, `site/index.html` and the JSON of the
-runs. `tools/site/README.md` has the deploy command for the preview project.
+runs. `tools/site/README.md` has the deploy command for the preview project. Since 2026-09-08 `.github/workflows/site.yml` runs the same build on every push to `main` and publishes it to attestql.com, and on a manual run to the preview; `tools/site/README.md` names the two secrets it reads.
 
 ## 7. Editor
 
