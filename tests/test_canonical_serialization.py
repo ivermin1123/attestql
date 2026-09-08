@@ -22,6 +22,7 @@ import pytest
 from attestql.evidence.serialize import (
     FORMAT_IDENTITY,
     SerializationDescriptor,
+    UndecodedText,
     UnsupportedValue,
     canonical_serialize,
     canonical_type_tag,
@@ -400,3 +401,38 @@ def test_a_typed_row_keys_every_value_by_the_type_it_came_back_as() -> None:
     """Python holds 1, True and Decimal(1) equal and hashes them alike, so a multiset keyed
     on the values alone would count three results as one."""
     assert len(set(typed_row((1, True, Decimal(1))))) == 3
+
+
+def test_text_that_did_not_decode_renders_as_the_bytes_it_holds(
+    execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
+) -> None:
+    """A text column can hold bytes no encoding decodes. They are the data, so they are
+    rendered rather than refused, as hex under a tag of their own."""
+    rendered = _rendered(
+        _one_value(execution_limits, "text", UndecodedText(b"\xff\xfe")),
+        serialization_descriptor,
+    )
+    assert "text-bytes:fffe" in rendered
+
+
+def test_text_that_did_not_decode_is_never_the_text_of_its_own_hex(
+    execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
+) -> None:
+    """The byte 0xff and a text column holding the two characters "ff" are two values, and
+    a rendering that told them apart only by their payload would call them one."""
+    as_bytes = _rendered(
+        _one_value(execution_limits, "text", UndecodedText(b"\xff")), serialization_descriptor
+    )
+    as_text = _rendered(_one_value(execution_limits, "text", "ff"), serialization_descriptor)
+    assert as_bytes != as_text
+    assert typed_value(UndecodedText(b"\xff")) != typed_value("ff")
+    assert canonical_type_tag(UndecodedText(b"\xff")) == "text-bytes"
+
+
+def test_bytes_that_are_not_text_are_still_refused(
+    execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
+) -> None:
+    """Only a text value that did not decode has a rendering here. A BLOB is a value of
+    another storage class, and giving it this one would hold the two equal."""
+    with pytest.raises(UnsupportedValue, match="bytes"):
+        canonical_serialize(_one_value(execution_limits, "blob", b"\xff"), serialization_descriptor)

@@ -11,6 +11,7 @@ Format: Status, Date, Context, Decision, Alternatives considered, Consequences, 
 | [0004](0004-replay-equality-r-ord-r-set.md) | Replay equality is R-ORD or R-SET, declared per result; "byte-identical" is rejected as ambiguous | Accepted |
 | [0013](0013-audit-text-to-sql-gold-with-typed-replay-evidence.md) | AttestQL audits text-to-SQL gold and predictions with typed replay evidence, and the Slice 1 product path is retired | Accepted |
 | [0014](0014-sqlite-backend-behind-the-same-evidence-record.md) | A SQLite backend behind the same evidence record: one record and one comparator, one backend and one parser per engine | Accepted |
+| [0015](0015-a-text-value-that-does-not-decode-is-recorded-as-its-bytes.md) | A text value that does not decode is recorded as its bytes, under a tag of its own | Accepted |
 
 ## The numbers that are missing
 

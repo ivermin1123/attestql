@@ -182,7 +182,7 @@ ERROR = "ERROR"
 NO_SMELL = "none"
 
 SERIALIZATION = SerializationDescriptor(
-    version="attestql/audit/2",
+    version="attestql/audit/3",
     numeric_scale=6,
     timestamp_format="%Y-%m-%dT%H:%M:%S.%fZ",
     timezone="UTC",
@@ -196,9 +196,12 @@ comparable, and a run that let its rendering be configured would produce records
 cannot be compared with anyone else's.
 
 ``version`` is what a reader compares two records' layout under, so it moves with the
-layout and with nothing else (ADR-0014). It reads ``2`` since the session settings a
-record states gained the engine and a column's type became its declared type; the
-rendering rules below, and the bytes the serializer makes of them, did not change."""
+layout and with the set of value types a record can hold, and with nothing else (ADR-0014,
+ADR-0015). It read ``2`` from the session settings gaining the engine and a column's type
+becoming its declared type; it reads ``3`` since a text value that does not decode is
+recorded as its bytes rather than refused. The rendering rules below have not changed at
+any of it, and neither have the bytes the serializer makes of a record written before it:
+a record states the version it was written under and is re-rendered under that one."""
 
 BIRD_PREDICTION_SUFFIX = "\t----- bird -----\t"
 """What BIRD's own ``predict_dev.json`` appends to each statement: a tab, a marker and

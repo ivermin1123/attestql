@@ -26,7 +26,7 @@ from decimal import Decimal, InvalidOperation
 from typing import cast
 
 from attestql.evidence.render import Json, digest_of, result_digest
-from attestql.evidence.serialize import SerializationDescriptor
+from attestql.evidence.serialize import SerializationDescriptor, UndecodedText
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 RESULT_HASH = "result_hash"
@@ -81,11 +81,27 @@ def load_value(cell: Json) -> object:
         return _decimal(payload)
     if tag == "str":
         return _string(payload)
+    if tag == "text-bytes":
+        return _undecoded_text(payload)
     if tag == "ts":
         return _instant(payload, datetime.fromisoformat, "a timestamp")
     if tag == "date":
         return _instant(payload, date.fromisoformat, "a date")
     raise UnreadableRecord(f"no reading is stated for a cell tagged {tag!r}")
+
+
+def _undecoded_text(payload: object) -> UndecodedText:
+    """The hex a text value that did not decode was rendered as, back as those bytes."""
+    if not isinstance(payload, str):
+        raise UnreadableRecord(
+            f"a text-bytes cell holds {type(payload).__name__} and its value is hex text"
+        )
+    try:
+        return UndecodedText(bytes.fromhex(payload))
+    except ValueError as unreadable:
+        raise UnreadableRecord(
+            f"a text-bytes cell holds {payload!r}, which is no hex"
+        ) from unreadable
 
 
 def load_row(row: Sequence[Json]) -> tuple[object, ...]:

@@ -15,6 +15,14 @@ rendering either and no decimal to become, so a statement that returns one is re
 way the PostgreSQL backend refuses a float its server printed unreadably: named, at the
 value, rather than carried into a record nothing can serialize.
 
+**A TEXT cell whose bytes are not UTF-8 is the data, and is recorded.** SQLite stores what it
+was given, and a benchmark database can hold a text column whose bytes no encoding decodes;
+Python's driver raises in its decoder there and the whole statement fails, which is two Spider
+golds nobody can audit. The connection's ``text_factory`` therefore answers with the text when
+it decodes and with ``UndecodedText`` when it does not, which is the bytes themselves under a
+tag of their own. The cell stays a TEXT cell: its storage class is TEXT, it is never equal to
+text that decoded, and it is never equal to a BLOB holding the same bytes either.
+
 **What a result column's type is.** A SQLite column has no declared result type, so
 ``declared_type`` carries the storage class the column's cells were observed at, read from
 the fetched rows: one class name when every cell agrees and the sorted classes joined with
@@ -83,6 +91,7 @@ from attestql.audit.backend import (
     TextCensus,
     folded,
 )
+from attestql.evidence.serialize import UndecodedText
 from attestql.evidence.types import ENGINE_SQLITE, SessionSettings
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
@@ -113,13 +122,16 @@ STORAGE_CLASSES: Mapping[type, str] = {
     int: "INTEGER",
     float: "REAL",
     str: "TEXT",
+    UndecodedText: "TEXT",
     bytes: "BLOB",
 }
 """SQLite's five storage classes, by the Python type its driver hands each one back as.
 
 The mapping is exact and not by subclass: it is what the driver returns for a cell and the
 whole of what a SQLite value can be, so a type that is not here is a driver that has been
-told to adapt something and a value this module cannot say the storage class of."""
+told to adapt something and a value this module cannot say the storage class of. That is why
+``UndecodedText`` is here beside ``str``: it is a TEXT cell this reader could not decode, and
+a lookup by subclass would have called it a BLOB."""
 
 ORDER_SENSITIVE_AGGREGATE_TYPES: frozenset[str] = frozenset()
 """The result types whose aggregates depend on the order their rows were added in: none.
@@ -308,8 +320,12 @@ def _as_recorded(value: object) -> object:
     ``repr`` of a Python float is the shortest decimal text that round-trips the double, so
     the decimal built from it holds exactly the number the file holds and no digit is
     invented or lost. A BLOB has no canonical rendering and no decimal to become, so it is
-    refused here rather than carried into a record that could not be written.
+    refused here rather than carried into a record that could not be written. Text that did
+    not decode has one, and is a TEXT cell rather than a BLOB, so it goes into the record as
+    the bytes it is.
     """
+    if isinstance(value, UndecodedText):
+        return value
     if isinstance(value, bytes):
         raise BackendRefused(
             "blob_value",
@@ -339,6 +355,11 @@ def _rendered_cell(value: object) -> str:
     one.
     """
     storage = _storage_class(value)
+    if isinstance(value, UndecodedText):
+        # TEXT is its storage class and hex is the only rendering its bytes have, so the
+        # class is qualified here: without that, text reading "ff" and the byte 0xff would
+        # render alike and a digest would call two tables one.
+        return f"{storage}-undecoded:{value.hex()}"
     if value is None:
         payload = ""
     elif isinstance(value, bytes):
@@ -367,6 +388,10 @@ def _numeric_text(pattern: str, value: object) -> bool | None:
     """
     if value is None:
         return None
+    if isinstance(value, UndecodedText):
+        # Its bytes are not text and their hex is not the value: a census over a column
+        # holding one counts it as matching nothing, which keeps the smell conservative.
+        return False
     text = value.hex() if isinstance(value, bytes) else str(value)
     return re.search(pattern, text) is not None
 
@@ -1001,8 +1026,23 @@ def _uri(path: Path) -> str:
     return f"file:{quote(str(path), safe='/')}?mode=ro"
 
 
+def _text_or_its_bytes(raw: bytes) -> str | UndecodedText:
+    """One TEXT cell as text, or as the bytes it holds when they are not UTF-8.
+
+    The driver hands a text value over as UTF-8 whatever the file's own encoding is, so what
+    fails to decode here is a value the database holds and no encoding renders. Answering with
+    the bytes is what lets the row be recorded and compared; the default answer raises, and one
+    cell then fails the whole statement.
+    """
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return UndecodedText(raw)
+
+
 def _prepare(connection: sqlite3.Connection) -> None:
     """Put the envelope on one connection and register the two functions this module needs."""
+    connection.text_factory = _text_or_its_bytes
     connection.create_function(NUMERIC_TEXT_FUNCTION, 2, _numeric_text, deterministic=True)
     connection.create_function(SHUFFLE_FUNCTION, 2, _shuffle_key, deterministic=True)
     _run(connection, f"{QUERY_ONLY} = 1", step="connect")
