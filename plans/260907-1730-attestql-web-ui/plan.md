@@ -63,7 +63,10 @@ gets the same pages by running `attestql report audit/`.
 5. Every published CLI run (nine per prediction benchmark, one or two per gold-only benchmark)
    has a run page under its benchmark whose counts match its `summary.json`; every selected
    question has a page whose content matches its artifacts; ERROR and timed-out questions are
-   rows of the run page from the summary and have no page of their own.
+   rows of the run page from the summary and have no page of their own. Amended 2026-09-08: on
+   SQLite one connection is one database file, so a prediction file there is a group of eleven
+   runs rather than one run, and the criterion is read per run under its group, with the group
+   stating the sums of its eleven by the merge rule the SQLite measurement reports state.
 6. Every record on every page carries "recomputed from this JSON: match" from the loader of
    phase 1, and the built site stays under the file and size budgets phase 4 derives.
 7. `just check` is green at the end of every phase.
