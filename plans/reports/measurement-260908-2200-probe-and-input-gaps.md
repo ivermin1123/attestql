@@ -1,7 +1,7 @@
 <!-- cspell:ignore minidev dev1106 qid -->
 # Measurement: one new probe and three input gaps
 
-Date 2026-09-08 22:00 +07, tree `b003a3dde693e5cde9a4c2a096218c5fa6dbe20c`. Artifact:
+Date 2026-09-08 22:00 +07, tree `d85932e`. Artifact:
 [directory](probe-260908-duplicate-full-row/). Plan:
 [260908-2119-probe-and-input-gaps](../260908-2119-probe-and-input-gaps/plan.md).
 
@@ -90,6 +90,21 @@ when the run ends. Every `card_games` run of the sweep above read one.
   version.
 - The measurement report of 2026-09-02 that states each probe's precision predates this probe, and
   says so where it is linked.
+
+## What the review changed
+
+The four commits were reviewed on the diff before this report was written, and five findings were
+fixed at `400a30d` and `d85932e`, after which every number above was measured again and came back
+identical. Two were pairing hazards in the line reader: `str.splitlines` also breaks at a form feed,
+a vertical tab and two Unicode separators, so one of those inside a statement would have pushed
+every later line onto the wrong question; and dropping the empty lines at the end of a file turned a
+question the model wrote nothing for into a question nobody wrote a prediction for, which are
+counted differently. A private copy that could not be made raised the operating system's error out
+of `connect` and left the half-written copy behind, and now refuses with a name and leaves nothing.
+A record stated the path the copy was made at, which moves the record's hash between two runs and
+can carry an account name; it states the fact. A page showed a text value that did not decode as
+bare hex wherever its column agreed, so a gold holding the byte `0xff` and a prediction holding the
+text `ff` read alike on the very table that explains the verdict; that tag is always shown now.
 
 ## Unresolved questions
 
