@@ -73,6 +73,14 @@ that is the number `0` or an empty string, which is how BIRD dev's own `predict_
 prediction the model did not produce, is that question's error line and not a refusal of the
 file; a question the file does not name at all is audited gold-only.
 
+Most published prediction files hold no keys at all: one statement per line, in the order of the
+question file. `--predictions-format lines` reads one, where a line's position is its key, so that
+reading is position keying and asking for question ids there is refused. An empty line is that
+question's error line the way the number `0` is, empty lines at the end of the file are not
+positions, and the BIRD suffix comes off a line as it does off a value. An edit that only one
+publisher's file needs, such as a comment cut or a database name appended to every statement, is
+made before the file reaches this tool.
+
 `--questions-origin`, `--questions-date`, `--predictions-origin` and `--predictions-date` record
 where each of the two files came from and what date its origin states, beside the sha256 this tool
 computes for it, in `summary.json` and in every evidence record. The data the server holds came

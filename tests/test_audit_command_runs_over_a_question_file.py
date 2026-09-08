@@ -33,7 +33,10 @@ from attestql.audit.backend import (
     TextCensus,
 )
 from attestql.audit.cli import (
+    LINE_PREDICTIONS,
     MARKER_FILE,
+    POSITION_KEYING,
+    QUESTION_ID_KEYING,
     SMELLS_FILE,
     SUMMARY_FILE,
     AuditOptions,
@@ -1787,3 +1790,133 @@ def test_a_question_file_whose_ids_are_the_positions_is_read_either_way(tmp_path
     )
     assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1}
     assert summary_of(tmp_path)["predictions"]["positions_unused"] == []
+
+
+# a predictions file that holds one statement per line
+
+
+def _lines_file(tmp_path: Path, text: str) -> Path:
+    path = tmp_path / "preds.txt"
+    path.write_text(text, encoding="utf-8")
+    return path
+
+
+def _lines_options(tmp_path: Path, path: Path) -> AuditOptions:
+    return options(
+        tmp_path,
+        predictions=path,
+        predictions_format=LINE_PREDICTIONS,
+        predictions_keyed_by=POSITION_KEYING,
+    )
+
+
+def test_one_statement_per_line_is_paired_by_the_position_of_its_line(tmp_path: Path) -> None:
+    """Twelve of the twenty-one published BIRD dev prediction files ship like this: no keys,
+    one statement a line, the first line answering the first entry of the question file."""
+    _duplicated_question_file(tmp_path)
+    path = _lines_file(
+        tmp_path, f"{ELEMENTS_ONE_ROW}\n{TWO_ROWS}\nSELECT element FROM atom LIMIT 0\n"
+    )
+    summary = run_audit(_lines_options(tmp_path, path), _two_question_backend(), Lines())
+    written = summary_of(tmp_path)
+
+    assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1}
+    assert written["predictions"]["format"] == LINE_PREDICTIONS
+    assert written["predictions"]["keyed_by"] == POSITION_KEYING
+    assert written["predictions"]["statements"] == 3
+    assert written["predictions"]["digest"] == sha256_of(path)
+
+
+def test_a_bird_suffix_comes_off_a_line_as_it_does_off_a_json_value(tmp_path: Path) -> None:
+    _duplicated_question_file(tmp_path)
+    path = _lines_file(
+        tmp_path,
+        f"{ELEMENTS_ONE_ROW}\t----- bird -----\ttoxicology\n{TWO_ROWS}\n{ELEMENTS}\n",
+    )
+    summary = run_audit(_lines_options(tmp_path, path), _two_question_backend(), Lines())
+    assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1}
+
+
+def test_an_empty_line_is_the_file_saying_the_model_wrote_nothing(tmp_path: Path) -> None:
+    """The empty line keeps the position it holds, so the statements after it still answer
+    the questions they were written for."""
+    _duplicated_question_file(tmp_path)
+    path = _lines_file(tmp_path, f"\n{TWO_ROWS}\n{ELEMENTS}\n")
+    lines = Lines()
+    summary = run_audit(_lines_options(tmp_path, path), _two_question_backend(), lines)
+
+    assert summary.errors[0].side == "prediction"
+    assert "an empty line" in lines.written[0]
+    assert summary.verdicts == {"ERROR": 1, "EQUAL": 1}
+
+
+def test_blank_lines_at_the_end_of_the_file_are_not_positions(tmp_path: Path) -> None:
+    """A file that ends with a newline too many holds no prediction there, and a run that
+    refused it would refuse most of the files that ship this way."""
+    _duplicated_question_file(tmp_path)
+    path = _lines_file(tmp_path, f"{ELEMENTS_ONE_ROW}\n{TWO_ROWS}\n{ELEMENTS}\n\n\n")
+    summary = run_audit(_lines_options(tmp_path, path), _two_question_backend(), Lines())
+    assert summary_of(tmp_path)["predictions"]["statements"] == 3
+    assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1}
+
+
+def test_a_line_file_with_more_lines_than_the_question_file_has_entries_stops_the_run(
+    tmp_path: Path,
+) -> None:
+    _duplicated_question_file(tmp_path)
+    path = _lines_file(tmp_path, f"{ELEMENTS_ONE_ROW}\n{TWO_ROWS}\n{ELEMENTS}\n{ELEMENTS}\n")
+    with pytest.raises(ToolError, match="the key 3, which is no entry of"):
+        run_audit(_lines_options(tmp_path, path), _two_question_backend(), Lines())
+
+
+def test_a_json_file_read_line_by_line_is_a_statement_that_does_not_parse(
+    tmp_path: Path,
+) -> None:
+    """Read line by line, a JSON object is one line of braces and quotes, which fails as a
+    statement at the question it was paired with rather than pairing anything silently."""
+    _duplicated_question_file(tmp_path)
+    path = tmp_path / "preds.txt"
+    path.write_text(json.dumps({"207": ELEMENTS_ONE_ROW}), encoding="utf-8")
+    lines = Lines()
+    summary = run_audit(_lines_options(tmp_path, path), _two_question_backend(), lines)
+    assert summary.errors[0].side == "prediction"
+
+
+def test_the_default_keying_follows_the_shape_of_the_predictions_file() -> None:
+    command = [
+        "audit",
+        "--dsn",
+        "host=localhost dbname=bird",
+        "--questions",
+        "questions.json",
+        "--out",
+        "out",
+        "--predictions",
+        "preds.txt",
+    ]
+    assert (
+        parse_arguments([*command, "--predictions-format", LINE_PREDICTIONS]).predictions_keyed_by
+        == POSITION_KEYING
+    )
+    assert parse_arguments(command).predictions_keyed_by == QUESTION_ID_KEYING
+
+
+def test_asking_for_question_ids_in_a_file_that_has_no_keys_is_refused() -> None:
+    with pytest.raises(SystemExit):
+        parse_arguments(
+            [
+                "audit",
+                "--dsn",
+                "host=localhost dbname=bird",
+                "--questions",
+                "questions.json",
+                "--out",
+                "out",
+                "--predictions",
+                "preds.txt",
+                "--predictions-format",
+                LINE_PREDICTIONS,
+                "--predictions-keyed-by",
+                QUESTION_ID_KEYING,
+            ]
+        )
