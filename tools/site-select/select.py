@@ -173,6 +173,12 @@ class Classification:
     reason_field: str
     keys: str
     document: Mapping[str, object]
+    classes: Mapping[str, str]
+    """What each class of this classification means, in the words of the document that defines
+    it. A page shows the class a maintainer recorded, and `A` on its own says nothing; these
+    are cut out of the measurement report's own legend or out of the file's own `reading`
+    string, so the page states a meaning nobody wrote for it."""
+    classes_source: str
 
     @property
     def relative(self) -> str:
@@ -238,7 +244,7 @@ def select(work: Path, out: Path, *, dry_run: bool) -> int:
     report(runs, kept, dropped)
     if dry_run:
         return 0
-    write(out, runs, kept, dropped, classifications, work)
+    write(out, runs, questions, kept, dropped, classifications, work)
     print(f"written to {out}")
     return 0
 
@@ -356,6 +362,18 @@ def _probe_fired(directory: Path) -> bool:
     )
 
 
+CLASS_LEGEND = re.compile(
+    r"^\|\s*([A-Za-z0-9]+):\s*([^|]+?)\s*\|(?:[^|]*\|){2}\s*([^|]+?)\s*\|\s*$", re.MULTILINE
+)
+"""One row of a measurement report's class legend: the letter, the words after the colon that
+name the class, and the last cell, which is what the class means. Read rather than retyped, so
+the page and the report cannot say two different things about what an `A` is."""
+
+SENTENCE = re.compile(r"(?<=\.)\s+")
+"""Where one sentence of a `reading` string ends. The BIRD dev classification defines each of
+its classes in a sentence of its own inside that string, and each is cut out whole."""
+
+
 def read_classifications() -> list[Classification]:
     """The two hand classifications, each with the date its own measurement report states."""
     return [
@@ -371,6 +389,12 @@ def read_classifications() -> list[Classification]:
             document=_document(
                 REPORTS / "prediction-mode-260904-real-predictions" / CLASSIFICATION_FILE
             ),
+            classes=_legend(
+                REPORTS / "measurement-260904-0046-prediction-mode-on-real-predictions.md"
+            ),
+            classes_source=(
+                "plans/reports/measurement-260904-0046-prediction-mode-on-real-predictions.md"
+            ),
         ),
         Classification(
             benchmark="bird-dev-sqlite",
@@ -380,8 +404,53 @@ def read_classifications() -> list[Classification]:
             reason_field="why",
             keys="rows[], joined by question_id and db",
             document=_document(REPORTS / "bird-dev-sqlite-260907" / CLASSIFICATION_FILE),
+            classes=_reading_classes(
+                _document(REPORTS / "bird-dev-sqlite-260907" / CLASSIFICATION_FILE)
+            ),
+            classes_source=(
+                f"plans/reports/bird-dev-sqlite-260907/{CLASSIFICATION_FILE}, its reading"
+            ),
         ),
     ]
+
+
+def _legend(report: Path) -> Mapping[str, str]:
+    """The class legend of one measurement report, as `A` to what an `A` means.
+
+    The report states it as a table whose first cell is `A: a wrong answer the benchmark
+    credited` and whose last is what puts a row in that class. Both halves are kept, joined by
+    a colon, in the report's own words: a page that paraphrased them could disagree with the
+    document the classification was written against.
+    """
+    found = {
+        # The backticks are the report's own markup for a name and are not words; everything
+        # else is left exactly as the report writes it.
+        letter: f"{name}: {means}".replace("`", "")
+        for letter, name, means in CLASS_LEGEND.findall(report.read_text(encoding="utf-8"))
+    }
+    if not found:
+        raise SelectionRefused(
+            f"{report} states no class legend to read the meaning of a class out of: the row "
+            f"this looks for begins `| A: ` and ends with what puts a row in that class"
+        )
+    return found
+
+
+def _reading_classes(document: Mapping[str, object]) -> Mapping[str, str]:
+    """The classes a `reading` string defines, one sentence each, cut out whole.
+
+    The BIRD dev classification names its classes in words rather than letters and defines each
+    in its own sentence of the `reading` it carries. Those sentences are the definition; this
+    takes them as they are written and adds nothing.
+    """
+    reading = _text(document, "reading")
+    names = {_text(row, "class") for row in _list(document, "rows")}
+    found: dict[str, str] = {}
+    for sentence in SENTENCE.split(reading):
+        for name in names:
+            if sentence.startswith(f"{name}: "):
+                found[name] = sentence[len(name) + 2 :].strip().rstrip(".")
+    return found
 
 
 def _report_date(report: Path) -> str:
@@ -530,6 +599,7 @@ def report(runs: Sequence[Run], kept: Sequence[Question], dropped: Sequence[Ques
 def write(
     out: Path,
     runs: Sequence[Run],
+    questions: Sequence[Question],
     kept: Sequence[Question],
     dropped: Sequence[Question],
     classifications: Mapping[str, Classification],
@@ -559,7 +629,7 @@ def write(
             continue
         shutil.copyfile(classification.source, out / benchmark / CLASSIFICATION_FILE)
         _write_json(out / benchmark / CLASSIFICATION_SOURCE_FILE, _source_of(classification, None))
-    _write_json(out / AGGREGATE_FILE, _aggregate(runs, kept, classifications))
+    _write_json(out / AGGREGATE_FILE, _aggregate(runs, questions, kept, classifications))
     _write_json(out / SELECTION_FILE, _selection(runs, kept))
     _write_json(out / LEFT_OUT_FILE, _left_out(dropped))
 
@@ -615,6 +685,8 @@ def _source_of(classification: Classification, run: Run | None) -> Mapping[str, 
         "shape": classification.shape,
         "reason_field": classification.reason_field,
         "keys": classification.keys,
+        "classes": dict(classification.classes),
+        "classes_source": classification.classes_source,
     }
     if run is not None:
         stated["key"] = run.group or run.name if classification.shape == "per_file" else run.name
@@ -623,14 +695,21 @@ def _source_of(classification: Classification, run: Run | None) -> Mapping[str, 
 
 def _aggregate(
     runs: Sequence[Run],
+    questions: Sequence[Question],
     kept: Sequence[Question],
     classifications: Mapping[str, Classification],
 ) -> Mapping[str, object]:
     """The three numbers the landing page reads, each with the file it was read out of.
 
-    `credited_but_not_equal` is the count every `minidev-pg` run's own summary states, added
-    up; the two hand numbers are the rows of the two classifications that join to a question
-    those runs credited, so that the part is a part of the whole the bar draws it inside.
+    Each carries two numbers. `value` is what was found: the count every `minidev-pg` run's own
+    summary states, added up, and the rows of the two classifications that join to a question
+    those runs found. `published` is how many of them have a page on this site, which is fewer
+    where a question's evidence record is larger than a page is allowed to be.
+
+    The two are kept apart because they answer different questions. What a maintainer read and
+    classified is a fact about the benchmark; whether it fits inside a file budget is a fact
+    about this site, and a site that let its own budget change the finding it reports would be
+    reporting the budget. The bar the landing draws is drawn from `value`.
     """
     prediction_runs = [run for run in runs if run.benchmark == "minidev-pg"]
     credited = 0
@@ -639,37 +718,51 @@ def _aggregate(
         if not isinstance(stated, dict):
             raise SelectionRefused(f"{run.slug} states no credited_but_not_equal to add up")
         credited += _integer(cast("Mapping[str, object]", stated), "total")
+    published_credited = len(
+        [
+            question
+            for question in kept
+            if question.run.benchmark == "minidev-pg" and "credited" in question.reasons
+        ]
+    )
     return {
         "credited_but_not_equal": {
             "value": credited,
+            "published": published_credited,
             "source": (
                 "minidev-pg/<run>/summary.json, credited_but_not_equal.total over the "
                 f"{len(prediction_runs)} runs"
             ),
         },
         "classified_by_hand": {
-            "value": _classified(kept, classifications, "minidev-pg", "A"),
+            "value": _classified(questions, classifications, "minidev-pg", "A"),
+            "published": _classified(kept, classifications, "minidev-pg", "A"),
             "source": f"minidev-pg/{CLASSIFICATION_FILE}",
         },
         "bird_dev_classified_by_hand": {
-            "value": _classified(kept, classifications, "bird-dev-sqlite", "wrong"),
+            "value": _classified(questions, classifications, "bird-dev-sqlite", "wrong"),
+            "published": _classified(kept, classifications, "bird-dev-sqlite", "wrong"),
             "source": f"bird-dev-sqlite/{CLASSIFICATION_FILE}",
         },
     }
 
 
 def _classified(
-    kept: Sequence[Question],
+    questions: Sequence[Question],
     classifications: Mapping[str, Classification],
     benchmark: str,
     wanted: str,
 ) -> int:
-    """The rows of one classification in one class that join to a published question."""
+    """The rows of one classification in one class that join to a question of these runs.
+
+    Called twice: over every question the selection named, which is the count, and over the
+    ones that survived the budget, which is how many have a page.
+    """
     classification = classifications.get(benchmark)
     if classification is None:
         return 0
     total = 0
-    for question in kept:
+    for question in questions:
         if question.run.benchmark != benchmark or "hand" not in question.reasons:
             continue
         row = _hand_rows(classification, question.run).get(question.question_id)

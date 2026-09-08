@@ -360,6 +360,10 @@ class HandReading:
     """
 
     classification: str
+    meaning: str
+    """What that class means, in the words of the document that defines it, or nothing where
+    the file beside the classification defines no such class. A page showing ``A`` and nothing
+    else states a letter a reader has no way to read."""
     reason: str
     date: str
     source: str
@@ -842,9 +846,13 @@ def _by_hand(audit_directory: Path) -> Mapping[str, HandReading]:
     where = _document(note)
     rows = _classified(_document(classification), where)
     field = _optional_text(where, "reason_field") or "reason"
+    classes = _object_or_none(where, "classes") or {}
     return {
         _as_text(row.get("question_id")): HandReading(
             classification=_optional_text(row, "class"),
+            # The note's own words for that class, or nothing: a class the note does not define
+            # is rendered as the value the row holds and nothing is invented beside it.
+            meaning=_as_text(classes.get(_optional_text(row, "class")) or ""),
             reason=_optional_text(row, field),
             date=_optional_text(where, "date"),
             source=_optional_text(where, "source"),

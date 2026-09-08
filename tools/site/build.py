@@ -326,11 +326,24 @@ class Benchmark:
 
 @dataclass(frozen=True)
 class Number:
-    """One headline number, and the file it was read out of."""
+    """One headline number: what was found, how much of it has a page, and where both came from.
+
+    The two are not the same question. `value` is what the runs and the classification state,
+    which is a fact about the benchmark; `published` is how many of them have a page here, which
+    is a fact about this site's file budget. A site that let its own budget change the number it
+    reports would be reporting the budget, so the number is `value` and the shortfall is a line
+    under it.
+    """
 
     name: str
     value: int
+    published: int
     source: str
+
+    @property
+    def rest(self) -> int:
+        """How many are not on a page here. The one subtraction this page does."""
+        return self.value - self.published
 
 
 @dataclass(frozen=True)
@@ -837,6 +850,13 @@ def _numbers() -> tuple[tuple[Number, ...], str]:
         Number(
             name=words,
             value=_integer(_mapping(stated, key), "value"),
+            # As many as were found, where the file does not say: an aggregate written before
+            # the two were told apart states one number, and one number is what it meant.
+            published=(
+                _integer(_mapping(stated, key), "published")
+                if "published" in _mapping(stated, key)
+                else _integer(_mapping(stated, key), "value")
+            ),
             source=_string(_mapping(stated, key), "source"),
         )
         for key, words in HEADLINE

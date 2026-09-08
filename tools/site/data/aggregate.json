@@ -1,14 +1,17 @@
 {
  "credited_but_not_equal": {
   "value": 164,
+  "published": 161,
   "source": "minidev-pg/<run>/summary.json, credited_but_not_equal.total over the 9 runs"
  },
  "classified_by_hand": {
-  "value": 66,
+  "value": 69,
+  "published": 66,
   "source": "minidev-pg/classification.json"
  },
  "bird_dev_classified_by_hand": {
   "value": 23,
+  "published": 23,
   "source": "bird-dev-sqlite/classification.json"
  }
 }

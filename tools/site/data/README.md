@@ -45,7 +45,10 @@ could not be run has no directory and is a row of the run page read from the sum
   what date the measurement report states for it, and which of its rows are this run's. The
   question page shows one "read by hand" row where the file holds a row for that question, with
   the class and the reason verbatim and that date. The tool's verdict and a person's reading are
-  two blocks and never one.
+  two blocks and never one. The note also carries `classes`, what each class of that
+  classification means, cut out of the measurement report's own legend or out of the file's own
+  `reading` string and named in `classes_source`, so that the row states a meaning nobody wrote
+  for this site. A class the note does not define is shown as the value the row holds, alone.
 - `published.json`: the name, the URL, the size and the sha256 of the release asset holding the
   whole of that run or group, and `directories`, how many question directories that archive
   holds, counted out of the archive itself by `tools/site-select/manifest.py`. What is here is a
@@ -56,22 +59,33 @@ could not be run has no directory and is a row of the run page read from the sum
 ## `aggregate.json`
 
 Beside the benchmarks, one file the landing page reads for its three headline numbers. It is
-written by `tools/site-select/select.py` and never by hand. Each key holds an object with two
-fields: `value`, the number, and `source`, the file the number was read out of, which the landing
-puts in a `title` attribute beside it so a reader can see what to open.
+written by `tools/site-select/select.py` and never by hand. Each key holds an object with three
+fields: `value`, the number; `published`, how many of them have a page on this site; and
+`source`, the file the number was read out of, which the landing puts in a `title` attribute
+beside it so a reader can see what to open.
 
 ```json
 {
-  "credited_but_not_equal": {"value": 0, "source": "minidev-pg/<run>/summary.json ..."},
-  "classified_by_hand": {"value": 0, "source": "minidev-pg/classification.json"},
-  "bird_dev_classified_by_hand": {"value": 0, "source": "bird-dev-sqlite/classification.json"}
+  "credited_but_not_equal": {"value": 0, "published": 0, "source": "minidev-pg/<run>/summary ..."},
+  "classified_by_hand": {"value": 0, "published": 0, "source": "minidev-pg/classification.json"},
+  "bird_dev_classified_by_hand": {"value": 0, "published": 0, "source": "bird-dev-sqlite/..."}
 }
 ```
+
+`value` and `published` are two questions and the landing shows the number as `value`. What the
+runs and the classifications state is a fact about the benchmark; how much of it has a page here
+is a fact about this site's file budget, and a site whose own budget changed the number it
+reports would be reporting the budget. Where `published` is below `value` the landing puts one
+line under the number saying how many have a page and how many are whole in the release assets
+only; where they are equal it says nothing, and the proportion bar is drawn from `value`. An
+aggregate written before the two were told apart holds no `published`, and the build reads
+`value` for both, which is what one number meant.
 
 - `credited_but_not_equal`: the questions BIRD's own check credited and this comparison called
   NOT_EQUAL, totalled over the nine PostgreSQL runs against the gold copy the aggregate names.
 - `classified_by_hand`: of those, the ones a maintainer read and classified as a gold that does
-  not answer its question.
+  not answer its question. It is the classification joined to those nine runs' own sets, whether
+  or not the question has a page: what the budget published is `published`.
 - `bird_dev_classified_by_hand`: the BIRD dev golds classified by hand the same way.
 
 The three keys are the ones `tools/site/build.py` names in `HEADLINE`, and the build refuses a

@@ -4,5 +4,11 @@
  "shape": "rows",
  "reason_field": "why",
  "keys": "rows[], joined by question_id and db",
+ "classes": {
+  "wrong": "the gold does not answer its question on this data",
+  "harmless": "the probe fired on something real and the answer is the same either way",
+  "rule": "the tool's own rule, not the question's"
+ },
+ "classes_source": "plans/reports/bird-dev-sqlite-260907/classification.json, its reading",
  "key": "european_football_2"
 }

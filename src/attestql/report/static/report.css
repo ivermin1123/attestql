@@ -788,6 +788,23 @@ details[open] > *:not(summary) {
   margin-bottom: var(--space-2);
 }
 
+/* What the class a maintainer recorded means, in the words of the file that defines it. Beside
+   the chip and not inside it: the chip is the value the row holds and this is its reading. */
+.by-hand__class {
+  color: var(--ink-2);
+}
+
+/* How many of a headline number have a page here, under the number. Its own line rather than a
+   row of its own, because it is about the number above it and not a fourth number; the family
+   and the size come off the monospace the count is set in. */
+.headline__published {
+  display: block;
+  margin-top: var(--space-1);
+  font-family: var(--sans);
+  font-size: var(--text-cell);
+  line-height: var(--leading-cell);
+}
+
 /* ---------------------------------------------------------------------------------------
    Figures. The marks carry classes and take their colours here: an SVG presentation
    attribute does not read `var()`, and a figure that carried its own colours would be
