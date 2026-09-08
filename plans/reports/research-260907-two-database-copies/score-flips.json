@@ -1,0 +1,262 @@
+{
+ "gold": "mini_dev_sqlite_hf.json, sha256 88ceb071...",
+ "card_games_preparation": "BIRD's evaluator opens card_games read-write; each copy is a writable clone with sha256 c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227",
+ "prediction_positions": 500,
+ "distinct_question_ids": 498,
+ "files": [
+  {
+   "model": "gpt-35-turbo-instruct",
+   "positions": 500,
+   "ex_sum_minidev": 170,
+   "ex_sum_dev": 170,
+   "changed_positions": 2,
+   "changed_question_ids": [
+    906,
+    1189
+   ],
+   "minidev_to_dev_gain": 1,
+   "minidev_to_dev_loss": 1,
+   "rows": [
+    {
+     "position": 95,
+     "question_id": 1189,
+     "db_id": "thrombosis_prediction",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    },
+    {
+     "position": 207,
+     "question_id": 906,
+     "db_id": "formula_1",
+     "minidev_res": 0,
+     "dev_res": 1,
+     "direction": "minidev-0-dev-1"
+    }
+   ]
+  },
+  {
+   "model": "gpt-35-turbo",
+   "positions": 500,
+   "ex_sum_minidev": 191,
+   "ex_sum_dev": 192,
+   "changed_positions": 3,
+   "changed_question_ids": [
+    906,
+    933,
+    1189
+   ],
+   "minidev_to_dev_gain": 2,
+   "minidev_to_dev_loss": 1,
+   "rows": [
+    {
+     "position": 95,
+     "question_id": 1189,
+     "db_id": "thrombosis_prediction",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    },
+    {
+     "position": 207,
+     "question_id": 906,
+     "db_id": "formula_1",
+     "minidev_res": 0,
+     "dev_res": 1,
+     "direction": "minidev-0-dev-1"
+    },
+    {
+     "position": 215,
+     "question_id": 933,
+     "db_id": "formula_1",
+     "minidev_res": 0,
+     "dev_res": 1,
+     "direction": "minidev-0-dev-1"
+    }
+   ]
+  },
+  {
+   "model": "gpt-4-32k",
+   "positions": 500,
+   "ex_sum_minidev": 237,
+   "ex_sum_dev": 236,
+   "changed_positions": 3,
+   "changed_question_ids": [
+    906,
+    944,
+    1189
+   ],
+   "minidev_to_dev_gain": 1,
+   "minidev_to_dev_loss": 2,
+   "rows": [
+    {
+     "position": 95,
+     "question_id": 1189,
+     "db_id": "thrombosis_prediction",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    },
+    {
+     "position": 207,
+     "question_id": 906,
+     "db_id": "formula_1",
+     "minidev_res": 0,
+     "dev_res": 1,
+     "direction": "minidev-0-dev-1"
+    },
+    {
+     "position": 218,
+     "question_id": 944,
+     "db_id": "formula_1",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    }
+   ]
+  },
+  {
+   "model": "gpt-4-turbo",
+   "positions": 500,
+   "ex_sum_minidev": 219,
+   "ex_sum_dev": 218,
+   "changed_positions": 1,
+   "changed_question_ids": [
+    1189
+   ],
+   "minidev_to_dev_gain": 0,
+   "minidev_to_dev_loss": 1,
+   "rows": [
+    {
+     "position": 95,
+     "question_id": 1189,
+     "db_id": "thrombosis_prediction",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    }
+   ]
+  },
+  {
+   "model": "gpt-4",
+   "positions": 500,
+   "ex_sum_minidev": 244,
+   "ex_sum_dev": 243,
+   "changed_positions": 1,
+   "changed_question_ids": [
+    1189
+   ],
+   "minidev_to_dev_gain": 0,
+   "minidev_to_dev_loss": 1,
+   "rows": [
+    {
+     "position": 95,
+     "question_id": 1189,
+     "db_id": "thrombosis_prediction",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    }
+   ]
+  },
+  {
+   "model": "meta-llama-3-70b-instruct-2",
+   "positions": 500,
+   "ex_sum_minidev": 206,
+   "ex_sum_dev": 205,
+   "changed_positions": 1,
+   "changed_question_ids": [
+    1189
+   ],
+   "minidev_to_dev_gain": 0,
+   "minidev_to_dev_loss": 1,
+   "rows": [
+    {
+     "position": 95,
+     "question_id": 1189,
+     "db_id": "thrombosis_prediction",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    }
+   ]
+  },
+  {
+   "model": "meta-llama-3-8b-instruct-2",
+   "positions": 500,
+   "ex_sum_minidev": 124,
+   "ex_sum_dev": 123,
+   "changed_positions": 1,
+   "changed_question_ids": [
+    944
+   ],
+   "minidev_to_dev_gain": 0,
+   "minidev_to_dev_loss": 1,
+   "rows": [
+    {
+     "position": 218,
+     "question_id": 944,
+     "db_id": "formula_1",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    }
+   ]
+  },
+  {
+   "model": "mistralai-mixtral-8x7b-instru-4",
+   "positions": 500,
+   "ex_sum_minidev": 107,
+   "ex_sum_dev": 107,
+   "changed_positions": 0,
+   "changed_question_ids": [],
+   "minidev_to_dev_gain": 0,
+   "minidev_to_dev_loss": 0,
+   "rows": []
+  },
+  {
+   "model": "phi-3-medium-128k-instruct-1",
+   "positions": 500,
+   "ex_sum_minidev": 157,
+   "ex_sum_dev": 155,
+   "changed_positions": 2,
+   "changed_question_ids": [
+    944,
+    1189
+   ],
+   "minidev_to_dev_gain": 0,
+   "minidev_to_dev_loss": 2,
+   "rows": [
+    {
+     "position": 95,
+     "question_id": 1189,
+     "db_id": "thrombosis_prediction",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    },
+    {
+     "position": 218,
+     "question_id": 944,
+     "db_id": "formula_1",
+     "minidev_res": 1,
+     "dev_res": 0,
+     "direction": "minidev-1-dev-0"
+    }
+   ]
+  }
+ ],
+ "total_changed_positions": 14,
+ "total_minidev_to_dev_gain": 4,
+ "total_minidev_to_dev_loss": 10,
+ "all_changed_question_ids": [
+  906,
+  933,
+  944,
+  1189
+ ],
+ "crosscheck_against_minidev_measurement": {
+  "source": "plans/reports/minidev-sqlite-260907/official/hf",
+  "differences": []
+ }
+}

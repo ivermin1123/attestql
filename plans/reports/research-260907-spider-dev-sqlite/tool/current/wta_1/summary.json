@@ -1,0 +1,189 @@
+{
+ "format": "attestql/audit/summary/2",
+ "run_id": "audit-47ee7bdd-b2cb-4755-85ce-21e1258d65b6",
+ "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/l4/data/spider/spider_data/database/wta_1/wta_1.sqlite | size=104738816",
+ "effective_database_role": "file",
+ "session_settings": {
+  "engine": "sqlite",
+  "recorded": {
+   "sqlite_version": "3.53.4",
+   "encoding": "UTF-8",
+   "reverse_unordered_selects": "0",
+   "query_only": "1",
+   "journal_mode": "delete",
+   "data_version": "1",
+   "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+   "collation_list": "RTRIM,NOCASE,BINARY",
+   "case_sensitive_like": "0"
+  }
+ },
+ "parser": {
+  "validator": "audit:sqlglot-sqlite-parse",
+  "sqlglot": "30.18.0",
+  "dialect": "sqlite"
+ },
+ "question_set": {
+  "path": "data/questions-current.json",
+  "digest": "sha256:a27e1f404c28a4aacc9933cf5197afa6ee2cc3eb0cfd3be949e354f57cb4f91e",
+  "origin": "https://drive.google.com/file/d/1403EGqzIDoHMdQF4c9Bkyl7dZLZ5Wt6J/view (spider_data.zip sha256 00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b, CC BY-SA 4.0), member spider_data/dev.json",
+  "date": "2020-08-03",
+  "entries": 1034,
+  "audited": 62,
+  "duplicate_ids": [],
+  "ids": [
+   429,
+   430,
+   431,
+   432,
+   433,
+   434,
+   435,
+   436,
+   437,
+   438,
+   439,
+   440,
+   441,
+   442,
+   443,
+   444,
+   445,
+   446,
+   447,
+   448,
+   449,
+   450,
+   451,
+   452,
+   453,
+   454,
+   455,
+   456,
+   457,
+   458,
+   459,
+   460,
+   461,
+   462,
+   463,
+   464,
+   465,
+   466,
+   467,
+   468,
+   469,
+   470,
+   471,
+   472,
+   473,
+   474,
+   475,
+   476,
+   477,
+   478,
+   479,
+   480,
+   481,
+   482,
+   483,
+   484,
+   485,
+   486,
+   487,
+   488,
+   489,
+   490
+  ]
+ },
+ "predictions": null,
+ "verdicts": {
+  "GOLD-ONLY": 60,
+  "ERROR": 2
+ },
+ "smells": {
+  "ordering-over-numeric-text": 0,
+  "arbitrary-cut": 0,
+  "not-a-function-of-the-data": 4,
+  "float-aggregate-order": 0,
+  "direction-against-question": 0
+ },
+ "smells_fired": 4,
+ "credited_but_not_equal": null,
+ "fixture": {
+  "depth": "counts",
+  "cache": "out/tool/current/wta_1/fixture.json",
+  "source": {
+   "path": "data/spider/spider_data/database/wta_1/wta_1.sqlite",
+   "digest": "sha256:8f20747456d7748674b4f05432f3de96446ced95b8bd5a6fd01284f6c28f727c",
+   "origin": "https://drive.google.com/file/d/1403EGqzIDoHMdQF4c9Bkyl7dZLZ5Wt6J/view (spider_data.zip sha256 00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b, CC BY-SA 4.0), member spider_data/database/wta_1/wta_1.sqlite",
+   "date": "2018-09-24"
+  },
+  "schema_digest": "sha256:6355280e93e2b12a2fe4a8aa555ccbcbe739f386c609d5bf6c9eb210c1754667",
+  "row_counts": {
+   "main.matches": 278,
+   "main.players": 20662,
+   "main.rankings": 510437
+  },
+  "content_digests": {},
+  "measured_tables": [
+   "players",
+   "matches",
+   "rankings"
+  ],
+  "missing_tables": [],
+  "unreadable_tables": [],
+  "refused": ""
+ },
+ "planner_statistics": {},
+ "shuffle": {
+  "seed": 1,
+  "row_limit": 300000,
+  "scratch_schema": "temp",
+  "prepared": true,
+  "reason": "",
+  "copied": [
+   "matches",
+   "players"
+  ],
+  "skipped": {
+   "rankings": 510437
+  },
+  "not_reached_by_a_copy": {}
+ },
+ "settings": {
+  "statement_timeout_seconds": 30,
+  "fail_on_smell": false,
+  "experimental_s2": false,
+  "plan_variant": false,
+  "out": "out/tool/current/wta_1",
+  "serialization": "attestql/audit/2",
+  "work_mem": null,
+  "hash_mem_multiplier": null
+ },
+ "data_as_of": "2026-09-07T13:11:15.003306+00:00",
+ "data_as_of_source": "the instant the run started",
+ "elapsed_seconds": {
+  "fixture": 0.003,
+  "questions": 5.812,
+  "shuffle": 0.026
+ },
+ "errors": [
+  {
+   "question_id": 455,
+   "side": "gold",
+   "step": "execute",
+   "message": "execute: Could not decode to UTF-8 column"
+  },
+  {
+   "question_id": 456,
+   "side": "gold",
+   "step": "execute",
+   "message": "execute: Could not decode to UTF-8 column"
+  }
+ ],
+ "timed_out": {
+  "gold": [],
+  "prediction": []
+ },
+ "exit_status": 0
+}

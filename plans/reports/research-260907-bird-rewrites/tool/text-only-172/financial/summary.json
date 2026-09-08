@@ -1,0 +1,138 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-252d8383-80cf-4a74-b929-d4bb32263739",
+  "backend_identity": "SQLite 3.53.4 | file=/Users/hoangle/.cache/attestql-measure/inputs/dev/dev_20240627/dev_databases/financial/financial.sqlite | size=71294976",
+  "effective_database_role": "file",
+  "session_settings": {
+    "engine": "sqlite",
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "parser": {
+    "validator": "audit:sqlglot-sqlite-parse",
+    "sqlglot": "30.18.0",
+    "dialect": "sqlite"
+  },
+  "question_set": {
+    "path": "data/dev/dev_20240627/dev.json",
+    "digest": "sha256:630272f2b1c44d8cef2c3b246f623355cf0bbc1e832c81061df895530dfc2f06",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/dev.zip (sha256 cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630, Last-Modified 2024-06-29, downloaded 2026-09-07), member dev_20240627/dev.json",
+    "date": "2024-06-27",
+    "entries": 1534,
+    "audited": 2,
+    "duplicate_ids": [],
+    "ids": [
+      180,
+      185
+    ]
+  },
+  "predictions": {
+    "path": "data/predictions/text-only-172.json",
+    "digest": "sha256:f86036ffc9d4cff6356d5eef32826684d64f90b07b97a2f0517186f9e0f84db6",
+    "origin": "dev.zip member dev_20240627/dev.json (sha256 630272f2b1c44d8cef2c3b246f623355cf0bbc1e832c81061df895530dfc2f06), unchanged SQL for the audited ids selected by split.py",
+    "date": "2024-06-27",
+    "keyed_by": "question-id",
+    "statements": 172,
+    "positions_unused": []
+  },
+  "verdicts": {
+    "EQUAL": 2
+  },
+  "smells": {
+    "ordering-over-numeric-text": 0,
+    "arbitrary-cut": 0,
+    "not-a-function-of-the-data": 0,
+    "float-aggregate-order": 0,
+    "direction-against-question": 0
+  },
+  "smells_fired": 0,
+  "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+      "multiplicity": 0,
+      "type": 0,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 0,
+      "0": 0
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "out/tool/text-only-172/financial/fixture.json",
+    "source": {
+      "path": "data/dev/dev_databases/financial/financial.sqlite",
+      "digest": "sha256:d15d89cdb068a202b6f2b99342af44dffc1d52545b39ceaf62efdc0ba570101e",
+      "origin": "dev.zip (sha256 cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630), member dev_20240627/dev_databases.zip, dev_databases, financial/financial.sqlite",
+      "date": "2024-06-14"
+    },
+    "schema_digest": "sha256:39974fe76e0596a21aecf68db79238e1f60ab91fbe2a7cb4a5d5ff4c6fbe1e9d",
+    "row_counts": {
+      "main.account": 4500,
+      "main.client": 5369,
+      "main.disp": 5369,
+      "main.district": 77
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "client",
+      "district",
+      "disp",
+      "account"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {},
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "temp",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "account",
+      "client",
+      "disp",
+      "district"
+    ],
+    "skipped": {},
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 30,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "out/tool/text-only-172/financial",
+    "serialization": "attestql/audit/2",
+    "work_mem": null,
+    "hash_mem_multiplier": null
+  },
+  "data_as_of": "2026-09-07T12:11:12.101660+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.017,
+    "shuffle": 0.02
+  },
+  "errors": [],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 0
+}

@@ -1,0 +1,131 @@
+{
+ "reading": "Pairing checks against both question copies. Position-keyed CodeS files carry BIRD's db_id suffix at every position; Alpha-SQL and DAIL-SQL carry the id set. Plain position-keyed RSL-SQL, GSR and CSC-SQL files are paired by the code witnesses named in sources.json and have exactly 1,534 lines. ATLAS Core lines carry a tab database suffix checked against every dev position before removal.",
+ "files": {
+  "alpha-sql-dev.json": {
+   "entries": 1534,
+   "keyed_by": "id",
+   "codeS_suffix_database_matches": null,
+   "atlas_suffix_database_matches": null
+  },
+  "predict_dev-codes-1b-bird.json": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 1534,
+   "atlas_suffix_database_matches": null
+  },
+  "predict_dev-codes-1b-bird-with-evidence.json": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 1534,
+   "atlas_suffix_database_matches": null
+  },
+  "predict_dev-codes-3b-bird.json": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 1534,
+   "atlas_suffix_database_matches": null
+  },
+  "predict_dev-codes-3b-bird-with-evidence.json": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 1534,
+   "atlas_suffix_database_matches": null
+  },
+  "predict_dev-codes-7b-bird.json": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 1534,
+   "atlas_suffix_database_matches": null
+  },
+  "predict_dev-codes-7b-bird-with-evidence.json": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 1534,
+   "atlas_suffix_database_matches": null
+  },
+  "predict_dev-codes-15b-bird.json": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 1534,
+   "atlas_suffix_database_matches": null
+  },
+  "predict_dev-codes-15b-bird-with-evidence.json": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 1534,
+   "atlas_suffix_database_matches": null
+  },
+  "csc-sql-7b.sql": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 0,
+   "atlas_suffix_database_matches": null
+  },
+  "csc-sql-32b.sql": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 0,
+   "atlas_suffix_database_matches": null
+  },
+  "gsr-gpt-4o.sql": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 0,
+   "atlas_suffix_database_matches": null
+  },
+  "rsl-sql-deepseek.txt": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 0,
+   "atlas_suffix_database_matches": null
+  },
+  "rsl-sql-gpt-4o.txt": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 0,
+   "atlas_suffix_database_matches": null
+  },
+  "dail-sql-gpt-4-7shot-mask-thr-0.8.txt": {
+   "entries": 1534,
+   "keyed_by": "id",
+   "codeS_suffix_database_matches": null,
+   "atlas_suffix_database_matches": null
+  },
+  "dail-sql-gpt-4-7shot-mask-thr-0.85.txt": {
+   "entries": 1534,
+   "keyed_by": "id",
+   "codeS_suffix_database_matches": null,
+   "atlas_suffix_database_matches": null
+  },
+  "dail-sql-gpt-4-7shot-questionmask.txt": {
+   "entries": 1534,
+   "keyed_by": "id",
+   "codeS_suffix_database_matches": null,
+   "atlas_suffix_database_matches": null
+  },
+  "dail-sql-gpt-4-9shot-mask-thr.txt": {
+   "entries": 1534,
+   "keyed_by": "id",
+   "codeS_suffix_database_matches": null,
+   "atlas_suffix_database_matches": null
+  },
+  "dail-sql-gpt-4-9shot-questionmask.txt": {
+   "entries": 1534,
+   "keyed_by": "id",
+   "codeS_suffix_database_matches": null,
+   "atlas_suffix_database_matches": null
+  },
+  "atlas-core-20260301.sql": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 0,
+   "atlas_suffix_database_matches": 1534
+  },
+  "atlas-core-20260324.sql": {
+   "entries": 1534,
+   "keyed_by": "position",
+   "codeS_suffix_database_matches": 0,
+   "atlas_suffix_database_matches": 1534
+  }
+ }
+}
