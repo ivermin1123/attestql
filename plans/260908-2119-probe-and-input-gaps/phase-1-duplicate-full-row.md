@@ -21,7 +21,9 @@ ask for that.
 - It fires when the gold's own result holds at least one row more than once and the statement's
   outer select does not state DISTINCT.
 - It is not applicable when the statement states DISTINCT, when the result holds fewer than two
-  rows, or when the result was truncated (the repeats may be an artefact of the cut).
+  rows, or when a bounded result held no repeat. Amended while building: truncation cannot create a
+  repeat, so a repeat inside a bounded result is real and fires; it is the silence of a bounded
+  result that proves nothing.
 - It asks the database nothing. Its evidence is the result already in hand.
 - Evidence: the row count, the distinct row count, the largest repeat count, and up to
   `ROWS_IN_EVIDENCE` repeated rows with their counts, rendered through `typed_row` like every other

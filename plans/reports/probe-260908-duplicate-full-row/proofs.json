@@ -1,0 +1,89 @@
+{
+ "inputs": {
+  "mini_dev_sqlite.json (minidev.zip)": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+  "mini_dev_sqlite_hf.json (Hugging Face)": "sha256:88ceb0710163cae46a256ecea8f0a8c98286599530b60587fda5c3cfe57d45d2",
+  "spider dev.json (spider_data.zip)": "sha256:30d64a3fccde493226df79687aed9e4a1c0129525baf44f29c0573d914d758a4",
+  "wta_1.sqlite (spider_data.zip)": "sha256:8f20747456d7748674b4f05432f3de96446ced95b8bd5a6fd01284f6c28f727c",
+  "rsl-sql-gpt-4o.txt (RSL-SQL, as shipped)": "sha256:33efedab4db239721c8a6c2ef6727c06e8b6537ece86788d6e8daa5e5af3c6e8"
+ },
+ "undecodable_text": {
+  "questions": [
+   455,
+   456
+  ],
+  "database": "wta_1",
+  "before": "both golds were gold-side execution errors: the driver raised in its decoder (A43)",
+  "verdicts": {
+   "GOLD-ONLY": 2
+  },
+  "errors": [],
+  "q455_cells_by_tag": {
+   "str": 41322,
+   "text-bytes": 2
+  },
+  "q455_row_count": 20662,
+  "serialization_version": "attestql/audit/3"
+ },
+ "plain_line_predictions": {
+  "file": "rsl-sql-gpt-4o.txt, 1,534 lines, read as shipped",
+  "database": "toxicology",
+  "as_shipped": {
+   "verdicts": {
+    "EQUAL": 93,
+    "NOT_EQUAL": 52
+   },
+   "credited_but_not_equal": {
+    "total": 9,
+    "by_mechanism": {
+     "multiplicity": 9,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 9
+    }
+   },
+   "predictions": {
+    "path": "/Users/hoangle/.cache/attestql-measure/l3/data/preds/rsl-sql-gpt-4o.txt",
+    "digest": "sha256:33efedab4db239721c8a6c2ef6727c06e8b6537ece86788d6e8daa5e5af3c6e8",
+    "origin": "RSL-SQL, GPT-4o, as shipped",
+    "date": null,
+    "keyed_by": "position",
+    "format": "lines",
+    "statements": 1534,
+    "positions_unused": []
+   }
+  },
+  "wrapped_into_json_by_the_l3_lane": {
+   "verdicts": {
+    "EQUAL": 93,
+    "NOT_EQUAL": 52
+   },
+   "credited_but_not_equal": {
+    "total": 9,
+    "by_mechanism": {
+     "multiplicity": 9,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 9
+    }
+   }
+  },
+  "verdicts_agree": true,
+  "credited_but_not_equal_agree": true
+ },
+ "wal_on_read_only_media": {
+  "file": "card_games.sqlite of dev.zip, 261,820,416 bytes, journal_mode wal",
+  "before": "the open is refused with 'attempt to write a readonly database'",
+  "now": "a private copy is read and named in the session settings under read_through_private_copy",
+  "seen_in_this_measurement": "every card_games run of the Mini-Dev sweep read a copy"
+ }
+}

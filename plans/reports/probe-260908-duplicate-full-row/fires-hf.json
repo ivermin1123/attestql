@@ -1,0 +1,179 @@
+{
+ "audited": 496,
+ "errors": 2,
+ "smells": {
+  "ordering-over-numeric-text": 1,
+  "arbitrary-cut": 15,
+  "not-a-function-of-the-data": 9,
+  "float-aggregate-order": 0,
+  "duplicate-full-row": 33,
+  "direction-against-question": 0
+ },
+ "golds_with_a_fire": 53,
+ "by_gold": {
+  "california_schools/q24": [
+   "duplicate-full-row"
+  ],
+  "california_schools/q27": [
+   "duplicate-full-row"
+  ],
+  "california_schools/q37": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ],
+  "california_schools/q82": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ],
+  "card_games/q349": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ],
+  "card_games/q366": [
+   "duplicate-full-row"
+  ],
+  "card_games/q397": [
+   "duplicate-full-row"
+  ],
+  "card_games/q407": [
+   "duplicate-full-row"
+  ],
+  "card_games/q412": [
+   "duplicate-full-row"
+  ],
+  "card_games/q469": [
+   "duplicate-full-row"
+  ],
+  "card_games/q473": [
+   "duplicate-full-row"
+  ],
+  "card_games/q484": [
+   "not-a-function-of-the-data"
+  ],
+  "codebase_community/q532": [
+   "duplicate-full-row"
+  ],
+  "codebase_community/q584": [
+   "duplicate-full-row"
+  ],
+  "codebase_community/q637": [
+   "duplicate-full-row"
+  ],
+  "codebase_community/q671": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ],
+  "codebase_community/q694": [
+   "not-a-function-of-the-data"
+  ],
+  "debit_card_specializing/q1500": [
+   "duplicate-full-row"
+  ],
+  "debit_card_specializing/q1533": [
+   "duplicate-full-row"
+  ],
+  "european_football_2/q1028": [
+   "arbitrary-cut"
+  ],
+  "european_football_2/q1029": [
+   "duplicate-full-row"
+  ],
+  "european_football_2/q1135": [
+   "not-a-function-of-the-data"
+  ],
+  "european_football_2/q1144": [
+   "arbitrary-cut",
+   "not-a-function-of-the-data"
+  ],
+  "financial/q115": [
+   "ordering-over-numeric-text"
+  ],
+  "financial/q125": [
+   "duplicate-full-row"
+  ],
+  "financial/q145": [
+   "duplicate-full-row"
+  ],
+  "financial/q149": [
+   "duplicate-full-row"
+  ],
+  "financial/q94": [
+   "arbitrary-cut"
+  ],
+  "formula_1/q1002": [
+   "arbitrary-cut"
+  ],
+  "formula_1/q847": [
+   "arbitrary-cut"
+  ],
+  "formula_1/q906": [
+   "arbitrary-cut"
+  ],
+  "formula_1/q930": [
+   "duplicate-full-row"
+  ],
+  "formula_1/q959": [
+   "duplicate-full-row"
+  ],
+  "formula_1/q964": [
+   "duplicate-full-row"
+  ],
+  "formula_1/q972": [
+   "duplicate-full-row"
+  ],
+  "student_club/q1322": [
+   "duplicate-full-row"
+  ],
+  "student_club/q1338": [
+   "duplicate-full-row"
+  ],
+  "student_club/q1387": [
+   "duplicate-full-row"
+  ],
+  "student_club/q1389": [
+   "arbitrary-cut"
+  ],
+  "student_club/q1399": [
+   "duplicate-full-row"
+  ],
+  "student_club/q1411": [
+   "duplicate-full-row"
+  ],
+  "superhero/q726": [
+   "duplicate-full-row"
+  ],
+  "superhero/q730": [
+   "duplicate-full-row"
+  ],
+  "superhero/q736": [
+   "arbitrary-cut"
+  ],
+  "superhero/q738": [
+   "duplicate-full-row"
+  ],
+  "superhero/q766": [
+   "arbitrary-cut"
+  ],
+  "superhero/q794": [
+   "arbitrary-cut"
+  ],
+  "superhero/q797": [
+   "duplicate-full-row"
+  ],
+  "superhero/q798": [
+   "duplicate-full-row"
+  ],
+  "thrombosis_prediction/q1168": [
+   "arbitrary-cut"
+  ],
+  "thrombosis_prediction/q1205": [
+   "duplicate-full-row"
+  ],
+  "thrombosis_prediction/q1209": [
+   "not-a-function-of-the-data"
+  ],
+  "toxicology/q213": [
+   "duplicate-full-row"
+  ]
+ }
+}
