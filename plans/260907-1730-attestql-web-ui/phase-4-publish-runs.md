@@ -5,7 +5,8 @@ selected into `tools/site/data/` by `tools/site-select/select.py` under the buil
 budgets, 21 release assets holding the whole of every run on the `v0.2.2` release, and the
 preview serving the real rows with no banner. Every count reconciles with the measurement report
 that first made it, nineteen of twenty-one rows at zero difference and the other two explained:
-`plans/reports/measurement-260908-site-publish-runs.md`. attestql.com is unchanged.
+`plans/reports/measurement-260908-site-publish-runs.md`. attestql.com was unchanged by this phase
+and switched onto the site later the same day, on the owner's word (`plan.md`, constraints).
 
 ## Context
 
