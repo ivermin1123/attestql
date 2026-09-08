@@ -1,0 +1,17 @@
+{# The credit every page of the site's own carries at its foot.
+
+   The site is the widest thing this project redistributes, and what it shows of the audited
+   question sets is theirs and not this project's: the question, the evidence and the gold are
+   reproduced as they ship. CC BY-SA 4.0 asks for the name, the licence and what was changed, so
+   all three are on the page rather than in a file a reader would have to go and find. One macro
+   and not five blocks, because five copies of a licence sentence drift into five sentences.
+
+   `NOTICE` in the repository is the precise list, file by file, and is what this links to; the
+   block states the datasets and the licence, which is what a reader of a page needs. #}
+
+{% macro credit_block() %}
+<section class="credit" id="credit">
+  <h2>Data and credit</h2>
+  <p>The audited question sets are <a href="https://github.com/bird-bench/mini_dev">BIRD Mini-Dev</a> and <a href="https://github.com/AlibabaResearch/DAMO-ConvAI/tree/main/bird">BIRD dev</a>, both licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. This site shows their question text, evidence text and gold SQL as they ship, beside results this project measured. The rest of the site is this project's own work under Apache-2.0, and <a href="https://github.com/ivermin1123/attestql/blob/main/NOTICE">NOTICE</a> is the precise list of which files carry which.</p>
+</section>
+{% endmacro %}

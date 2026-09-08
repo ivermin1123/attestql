@@ -8,6 +8,7 @@
 {% extends "base.html" %}
 {% from "_rows.html" import rows_table %}
 {% from "_figure.html" import figure_block %}
+{% from "_credit.html" import credit_block %}
 
 {% block strip %}
 <header class="strip strip--run">
@@ -129,4 +130,5 @@
     {% endfor %}
   </ul>
 </section>
+{{ credit_block() }}
 {% endblock %}
