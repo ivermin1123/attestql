@@ -1224,13 +1224,24 @@ def _cells(row: Sequence[Json]) -> tuple[Cell, ...]:
     )
 
 
+ALWAYS_TAGGED = ("text-bytes",)
+"""Tags a cell carries even where every row of its column agrees.
+
+A text value that did not decode is rendered as the hex of its bytes, and hex is text: a
+column of them beside a column of text would show two readings of the same characters with
+nothing to tell them apart, and the difference is what a verdict can turn on. Every other
+tag is shown only where the rows disagree, because the payload already reads as itself.
+"""
+
+
 def _tagged(rows: Rows) -> Rows:
     """The same table with a type tag on the cells of every column whose rows disagree.
 
     A column of a SQLite result holds whatever its cells came back as, so a page that
     showed only the declared type would state one type for a column holding two. The tag
     is put where the rows themselves disagree, which is where a reader has something to
-    see, and nowhere else: it is read off the rows and states nothing about the engine.
+    see, and nowhere else, with the exception of ``ALWAYS_TAGGED``: it is read off the rows
+    and states nothing about the engine.
     """
     if not rows.rows:
         return rows
@@ -1249,7 +1260,7 @@ def _tagged(rows: Rows) -> Rows:
                         tag=cell.tag,
                         text=cell.text,
                         is_null=cell.is_null,
-                        show_tag=mixed[index],
+                        show_tag=mixed[index] or cell.tag in ALWAYS_TAGGED,
                     )
                     for index, cell in enumerate(row.cells)
                 ),

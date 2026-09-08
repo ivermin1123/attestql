@@ -218,5 +218,6 @@ def test_a_text_value_that_did_not_decode_round_trips_as_its_bytes(tmp_path: Pat
     rows = cast("list[list[dict[str, Any]]]", cast("dict[str, Any]", stated["result"])["rows"])
     assert sorted(cell["type"] for row in rows for cell in row) == ["str", "text-bytes"]
     loaded = [value for row in load_record(stated).result.rows for value in row]
-    assert UndecodedText(b"\xff") in loaded, "the bytes come back as the bytes"
+    undecoded = [value for value in loaded if type(value) is UndecodedText]
+    assert undecoded == [UndecodedText(b"\xff")], "the bytes come back as those bytes"
     assert "ff" in loaded, "and the text that decoded is still text"

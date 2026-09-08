@@ -47,11 +47,15 @@ each with `--ids` naming the questions that database answers.
 A SQLite file whose header says WAL, which BIRD's `card_games` is, needs a `-shm` and a `-wal`
 beside it before it can be read at all, so a directory that cannot be written to refuses the open.
 The run answers that one refusal by copying the file and any sidecars into a private directory and
-reading the copy: it says so on stderr with the size, names the copy in every record's session
-settings under `read_through_private_copy`, keeps the identity, the size and the content signal on
-the original because the original is what was audited, and removes the copy when the run ends. It
-costs what the file weighs, 262 MB for `card_games`. The alternative, telling SQLite the file is
-immutable, is not taken: it is a promise about the file that the run cannot check.
+reading the copy: it says so on stderr with the size and the temporary directory, states in every
+record's session settings under `read_through_private_copy` that a byte-identical private copy was
+read, keeps the identity, the size and the content signal on the original because the original is
+what was audited, and removes the copy when the run ends. The record states the fact and not the
+path, because the directory is fresh on every run. A copy that cannot be made, for want of disk or
+because a sidecar cannot be read, is a refusal like any other and leaves nothing behind. It costs
+what the file weighs, 262 MB for `card_games`, and two runs over the same file make two copies, so
+audit such a database one run at a time or count the disk. The alternative, telling SQLite the file
+is immutable, is not taken: it is a promise about the file that the run cannot check.
 
 The PostgreSQL parser is PostgreSQL 17's grammar (`libpg_query`), so a statement that only
 PostgreSQL 17 accepts parses here and then fails on a PostgreSQL 16 server; that failure is the
@@ -77,10 +81,12 @@ file; a question the file does not name at all is audited gold-only.
 
 Most published prediction files hold no keys at all: one statement per line, in the order of the
 question file. `--predictions-format lines` reads one, where a line's position is its key, so that
-reading is position keying and asking for question ids there is refused. An empty line is that
-question's error line the way the number `0` is, empty lines at the end of the file are not
-positions, and the BIRD suffix comes off a line as it does off a value. An edit that only one
-publisher's file needs, such as a comment cut or a database name appended to every statement, is
+reading is position keying and asking for question ids there is refused. A line ends at a line feed
+and at nothing else, and the carriage return of a CRLF file comes off the end of its line; the
+newline that ends the last line is not a line of its own. Every empty line is a position, at the end
+of the file as well as between statements, and is that question's error line the way the number `0`
+is under the JSON shape. The BIRD suffix comes off a line as it does off a value. An edit that only
+one publisher's file needs, such as a comment cut or a database name appended to every statement, is
 made before the file reaches this tool.
 
 `--questions-origin`, `--questions-date`, `--predictions-origin` and `--predictions-date` record

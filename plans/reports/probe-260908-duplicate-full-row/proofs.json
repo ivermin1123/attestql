@@ -83,7 +83,7 @@
  "wal_on_read_only_media": {
   "file": "card_games.sqlite of dev.zip, 261,820,416 bytes, journal_mode wal",
   "before": "the open is refused with 'attempt to write a readonly database'",
-  "now": "a private copy is read and named in the session settings under read_through_private_copy",
+  "now": "a private copy is read; every record states under read_through_private_copy that a byte-identical private copy was read, and the copy goes when the run ends",
   "seen_in_this_measurement": "every card_games run of the Mini-Dev sweep read a copy"
  }
 }

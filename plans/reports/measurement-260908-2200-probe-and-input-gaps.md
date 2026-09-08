@@ -78,9 +78,9 @@ smells against none, which is the new probe.
 sidecars before it can read a row and the read-only input cache refuses the open. Both lanes of
 2026-09-07 worked around it by copying the file. The backend now answers that one refusal, and only
 when the header says WAL, by reading a private copy: the identity, the size and the content signal
-stay on the original, the copy is named in the session settings under `read_through_private_copy`,
-announced on stderr with its size, and removed when the run ends. Every `card_games` run of the
-sweep above read one.
+stay on the original, the session settings state under `read_through_private_copy` that a
+byte-identical private copy was read, the line on stderr names the disk it costs, and the copy goes
+when the run ends. Every `card_games` run of the sweep above read one.
 
 ## What changes in AttestQL
 
