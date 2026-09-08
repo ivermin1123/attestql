@@ -52,9 +52,11 @@ from attestql.audit.sqlite_statements import PARSER as SQLITE_PARSER
 from attestql.audit.sqlite_statements import parse_statement
 from attestql.evidence.serialize import (
     SerializationDescriptor,
+    UndecodedText,
     UnsupportedValue,
     canonical_type_tag,
     typed_row,
+    typed_value,
 )
 from attestql.evidence.types import ENGINE_SQLITE, QuestionMetadata, StatementSource
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
@@ -255,6 +257,44 @@ def test_a_blob_is_refused_at_the_value_rather_than_carried_into_a_record(
         backend.execute("SELECT x FROM b", statement_timeout_seconds=TIMEOUT_SECONDS)
     with pytest.raises(UnsupportedValue):
         canonical_type_tag(b"\x00")
+
+
+UNDECODABLE = (
+    "CREATE TABLE u (x TEXT); "
+    "INSERT INTO u VALUES (CAST(x'ff' AS TEXT)), ('ff'), (CAST(x'e4bda0' AS TEXT));"
+)
+"""Three TEXT cells: bytes no encoding decodes, the two characters of their hex, and text
+that does decode, which is what a column of a benchmark database can hold at once."""
+
+
+def test_a_text_cell_that_is_not_utf_8_is_read_as_the_bytes_it_holds(tmp_path: Path) -> None:
+    """Python's driver raises in its decoder there and the whole statement fails, which is
+    two Spider golds nobody can audit. The bytes are the data and are read as themselves."""
+    backend = SqliteBackend.connect(str(_build(tmp_path / "text.sqlite", UNDECODABLE)))
+    result = backend.execute("SELECT x FROM u", statement_timeout_seconds=TIMEOUT_SECONDS)
+
+    assert result.rows == ((UndecodedText(b"\xff"),), ("ff",), ("\u4f60",))
+    assert [column.declared_type for column in result.columns] == ["TEXT"]
+
+
+def test_a_text_cell_that_did_not_decode_is_not_the_text_of_its_hex(tmp_path: Path) -> None:
+    """It is a TEXT cell, so its storage class is TEXT and not BLOB; and it is not the text
+    "ff", so the comparison and the content digest both keep the two apart."""
+    backend = SqliteBackend.connect(str(_build(tmp_path / "text.sqlite", UNDECODABLE)))
+    rows = _rows(backend, "SELECT x FROM u")
+
+    assert typed_value(rows[0][0]) != typed_value(rows[1][0])
+    assert canonical_type_tag(rows[0][0]) == "text-bytes"
+    digest = backend.content_digests([TableName("", "u")])
+    other = SqliteBackend.connect(
+        str(
+            _build(
+                tmp_path / "other.sqlite",
+                "CREATE TABLE u (x TEXT); INSERT INTO u VALUES ('ff'), ('ff'), (CAST(x'e4bda0' AS TEXT));",
+            )
+        )
+    )
+    assert digest != other.content_digests([TableName("", "u")])
 
 
 def test_a_column_is_typed_by_the_storage_classes_its_cells_came_back_at(

@@ -25,6 +25,13 @@ a different result rather than a different session.
 A value the rendering has no stated rule for is refused. There is no fallback to
 ``str``: a fallback would render a type nobody decided a rule for, and the first
 sign of it would be two renderings that disagree for a reason no reader can find.
+
+``UndecodedText`` is the one value that is bytes and still has a rendering. A text
+column can hold bytes that are not valid text in the database's own encoding, and a
+reader that refused the row would refuse the data the database actually holds; a
+reader that decoded it with replacements would render two different values alike.
+It is rendered as the hex of its bytes under a tag of its own, which keeps it a
+value of the text column it came from and never equal to text that decoded.
 """
 
 from __future__ import annotations
@@ -44,6 +51,21 @@ FORMAT_IDENTITY = "attestql/canonical-serialization/1"
 _CELL = "\t"
 _LINE = "\n"
 _ESCAPES = ((("\\"), "\\\\"), ("\t", "\\t"), ("\n", "\\n"), ("\r", "\\r"))
+
+
+class UndecodedText(bytes):
+    """The bytes of a text value that is not valid text in the encoding it was read under.
+
+    A ``bytes`` and not a ``str``, because there is no text here to hold: whatever the
+    column meant, what it returned is these bytes. A type of its own and not a bare
+    ``bytes``, because a text column that holds undecodable bytes and a binary column that
+    holds the same bytes are two different values, and only the first one has a rendering.
+    """
+
+    __slots__ = ()
+
+    def __repr__(self) -> str:
+        return f"UndecodedText({bytes(self)!r})"
 
 
 class UnsupportedValue(ValueError):
@@ -70,6 +92,8 @@ def canonical_type_tag(value: object) -> str:
     """
     if value is None:
         return "null"
+    if isinstance(value, UndecodedText):
+        return "text-bytes"
     if isinstance(value, bool):
         return "bool"
     if isinstance(value, int):
@@ -192,11 +216,20 @@ class SerializationDescriptor:
             payload = _render_decimal(_as_decimal(value), self.numeric_scale)
         elif tag == "str":
             payload = str(value)
+        elif tag == "text-bytes":
+            payload = _as_undecoded_text(value).hex()
         elif tag == "ts":
             payload = _render_datetime(_as_datetime(value), self.timestamp_format, self.timezone)
         else:
             payload = _as_date(value).isoformat()
         return f"{tag}:{_escape(payload)}"
+
+
+def _as_undecoded_text(value: object) -> UndecodedText:
+    """Narrow a value the tag has already established is undecoded text."""
+    if not isinstance(value, UndecodedText):  # pragma: no cover - the tag decided this
+        raise UnsupportedValue(f"expected undecoded text, got {type(value).__name__}")
+    return value
 
 
 def _as_decimal(value: object) -> Decimal:
@@ -262,6 +295,7 @@ def _cell(key: str, value: str) -> str:
 __all__ = [
     "FORMAT_IDENTITY",
     "SerializationDescriptor",
+    "UndecodedText",
     "UnsupportedValue",
     "canonical_serialize",
     "canonical_type_tag",

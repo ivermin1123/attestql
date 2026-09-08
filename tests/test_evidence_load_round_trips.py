@@ -18,6 +18,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import sqlite3
 from collections.abc import Iterator
 from contextlib import redirect_stdout
 from datetime import UTC, datetime
@@ -28,8 +29,10 @@ import pytest
 
 from attestql.audit.cli import AuditOptions, main, run_audit
 from attestql.audit.compare import GOLD_RECORD_FILE, SECOND_RECORD_FILE
+from attestql.audit.engines import SQLITE
 from attestql.audit.postgres import PostgresBackend
 from attestql.evidence.load import UnreadableRecord, load_record
+from attestql.evidence.serialize import UndecodedText
 
 REPOSITORY = Path(__file__).resolve().parent.parent
 SANDBOX = REPOSITORY / "tools" / "audit-sandbox"
@@ -57,6 +60,10 @@ def records(audit: Path) -> Iterator[Path]:
     found = sorted(path for path in audit.rglob("*.json") if path.name in RECORDS)
     assert found, f"{audit} holds no evidence record"
     yield from found
+
+
+def _write(path: Path, document: object) -> None:
+    path.write_text(json.dumps(document), encoding="utf-8")
 
 
 def document(path: Path) -> dict[str, Any]:
@@ -146,3 +153,70 @@ def test_a_cell_tagged_with_a_type_the_reading_has_no_rule_for_is_refused(
 
     with pytest.raises(UnreadableRecord, match="money"):
         load_record(stated)
+
+
+SITE_RECORDS = REPOSITORY / "tools" / "site" / "data" / "bird-dev-sqlite"
+
+
+def test_a_record_written_under_the_earlier_layout_still_re_hashes() -> None:
+    """The layout version moved when a text value that does not decode became recordable.
+    A record written before that states the version it was written under and is rendered
+    under that one, so its two hashes are still its own: a reader that re-rendered every
+    record under today's rules would report every record ever written as a mismatch."""
+    written = sorted(SITE_RECORDS.rglob("evidence-gold.json"))
+    assert written, "the site data holds records from a real run"
+    earlier = [
+        path
+        for path in written
+        if cast("dict[str, str]", document(path)["serialization"])["version"] == "attestql/audit/2"
+    ]
+    assert earlier, "those records were written under the layout before this one"
+    for path in earlier[:20]:
+        round_trips(path)
+
+
+def test_a_text_value_that_did_not_decode_round_trips_as_its_bytes(tmp_path: Path) -> None:
+    """The cell a benchmark database holds and Python's decoder refuses: it is recorded as
+    the bytes it is, read back as the same bytes, and hashes to what the record states."""
+    path = tmp_path / "undecodable.sqlite"
+    connection = sqlite3.connect(path)
+    with connection:
+        connection.execute("CREATE TABLE t (a TEXT)")
+        connection.execute("INSERT INTO t VALUES (CAST(x'ff' AS TEXT)), ('ff')")
+    connection.close()
+    _write(
+        tmp_path / "questions.json",
+        [
+            {
+                "question_id": 1,
+                "db_id": "t",
+                "question": "Which ones?",
+                "evidence": "",
+                "SQL": "SELECT a FROM t ORDER BY a",
+                "difficulty": "simple",
+            }
+        ],
+    )
+    _write(tmp_path / "predictions.json", {"1": "SELECT a FROM t ORDER BY a DESC"})
+    audit = tmp_path / "audit"
+    run_audit(
+        AuditOptions(
+            dsn=str(path),
+            questions=tmp_path / "questions.json",
+            predictions=tmp_path / "predictions.json",
+            out=audit,
+            engine=SQLITE,
+        ),
+        SQLITE.connect(str(path), scratch="temp"),
+        Lines(),
+    )
+    written = list(records(audit))
+    assert len(written) == 2, "the gold and the prediction, which order the rows otherwise"
+    for record in written:
+        round_trips(record)
+    stated = document(written[0])
+    rows = cast("list[list[dict[str, Any]]]", cast("dict[str, Any]", stated["result"])["rows"])
+    assert sorted(cell["type"] for row in rows for cell in row) == ["str", "text-bytes"]
+    loaded = [value for row in load_record(stated).result.rows for value in row]
+    assert UndecodedText(b"\xff") in loaded, "the bytes come back as the bytes"
+    assert "ff" in loaded, "and the text that decoded is still text"

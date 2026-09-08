@@ -25,6 +25,7 @@ from typing import Any
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.serialize import (
     SerializationDescriptor,
+    UndecodedText,
     canonical_serialize,
     canonical_type_tag,
 )
@@ -45,6 +46,8 @@ def json_value(value: object) -> Json:
     tag = canonical_type_tag(value)
     if value is None:
         payload: object = None
+    elif isinstance(value, UndecodedText):
+        payload = value.hex()
     elif isinstance(value, bool | int | str):
         payload = value
     elif isinstance(value, Decimal):

@@ -35,7 +35,9 @@ reports its own shuffle as not run: give concurrent audits a schema each.
 SQLite, where BIRD originally lives, is available behind the same evidence record
 (`--engine sqlite --dsn <path to the file>`), and what differs is stated in the record rather than
 hidden: a column carries the storage class its cells came back at because SQLite types values and
-not columns, a REAL comes back as the decimal that round-trips it, no session setting is a
+not columns, a REAL comes back as the decimal that round-trips it, a TEXT cell whose bytes are not
+valid UTF-8 is recorded as those bytes under the tag `text-bytes` rather than failing the statement
+in the decoder (ADR-0015), a BLOB is still refused at the value, no session setting is a
 precondition because a file has no session, there is no role and no grant, and the parser is
 sqlglot's SQLite dialect rather than the engine's own grammar. Extension loading is never enabled
 on the connection, so a statement that calls `load_extension` is refused by the engine when it
