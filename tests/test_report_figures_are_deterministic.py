@@ -21,6 +21,7 @@ pages of a real run.
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 
 import pytest
 
@@ -211,6 +212,45 @@ def test_a_figure_names_its_data_source_and_states_its_numbers(name: str, figure
     assert re.search(r"\d", figure.alternative), f"{figure.alternative} states no number"
     assert f'aria-describedby="{figure.described_by}"' in figure.svg
     assert figure.svg.startswith("<svg ") and figure.svg.endswith("</svg>")
+
+
+def test_the_verdict_bar_cuts_not_equal_only_where_every_such_question_has_a_class() -> None:
+    """The classes come from the directories that are there; the verdicts from the summary.
+
+    On a directory the audit wrote the two agree and NOT_EQUAL is drawn as its classes. On
+    a directory holding a selection of the run, the classes count the selection, and a cut
+    would draw it as if it were the run: NOT_EQUAL is then one part, as the summary states.
+    """
+    selection = run_page()
+    classes = (("other", 4), ("order", 2), ("multiplicity", 1), ("truncation", 1))
+    whole = replace(selection, mechanism_counts=classes)
+    cut, _ = run_figures(whole)
+    uncut, _ = run_figures(selection)
+
+    assert sum(value for _, value in selection.mechanism_counts) == 7, "one of eight unclassed"
+    assert "8 NOT_EQUAL" not in cut.svg and "4 other" in cut.svg and "1 truncation" in cut.svg
+    assert "8 NOT_EQUAL" in uncut.svg and "3 other" not in uncut.svg
+    assert "8 NOT_EQUAL" in uncut.alternative
+
+
+def test_a_cut_bar_names_every_part_in_a_legend_that_never_runs_off_the_edge() -> None:
+    """Eight parts of one and a half characters each do not fit under their own pixels.
+
+    The legend names each part in the bar's order, a square in the part's colour before its
+    count and name, and every entry starts at or after the left edge and ends before the
+    right one; a row is added when the next entry would not fit.
+    """
+    parts = [(f"part-{index}", 1 if index else 500, True) for index in range(8)]
+    figure = proportion_bar("legend", parts, title="summary.json", whole="Of 507")
+    entries = re.findall(
+        r'<text class="figure__number" x="([\d.]+)" y="(\d+)">([^<]+)</text>', figure.svg
+    )
+    swatches = figure.svg.count('width="10" height="10"')
+
+    assert [name for _, _, name in entries] == [f"{value:,} {label}" for label, value, _ in parts]
+    assert swatches == len(parts)
+    assert all(0 <= float(x) < 640 for x, _, _ in entries)
+    assert len({y for _, y, _ in entries}) >= 2, "eight names need more than one row"
 
 
 def test_the_slope_chart_draws_one_line_per_row_of_a_known_counterexample() -> None:

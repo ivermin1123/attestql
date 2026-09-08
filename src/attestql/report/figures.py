@@ -315,17 +315,24 @@ def _truncation(page: QuestionPage) -> Figure:
 
 
 def _verdicts(page: RunPage) -> Figure:
-    """The run's verdicts as one bar, NOT_EQUAL cut into the classes the questions were put in."""
+    """The run's verdicts as one bar, NOT_EQUAL cut into the classes the questions were put in.
+
+    The classes are counted from the question directories that are there, and the verdicts
+    from ``summary.json``. Where the two agree, every NOT_EQUAL question has a directory and a
+    class, and the cut is the run's; where they do not, some directories are not here, as on a
+    site that shows a selection of a run, and a cut would draw the selection as if it were the
+    run. Then NOT_EQUAL is one part, as the summary states it.
+    """
     parts: list[tuple[str, int, bool]] = []
     for verdict, count in page.verdict_counts:
         if verdict != "NOT_EQUAL":
             parts.append((verdict, count, verdict not in {"EQUAL", "GOLD-ONLY"}))
             continue
         classes = [(name, value) for name, value in page.mechanism_counts if value]
-        parts.extend((name, value, True) for name, value in classes)
-        counted = sum(value for _, value in classes)
-        if count > counted:
-            parts.append(("NOT_EQUAL", count - counted, True))
+        if classes and sum(value for _, value in classes) == count:
+            parts.extend((name, value, True) for name, value in classes)
+        else:
+            parts.append(("NOT_EQUAL", count, True))
     return proportion_bar(
         "verdicts",
         parts,
@@ -364,9 +371,13 @@ def _probes(page: RunPage) -> Figure:
     return _figure("probes", title, alternative, height, body)
 
 
+SWATCH = 10
+"""The side of the square a legend entry carries, in the colour of its part."""
+
+
 @dataclass(frozen=True)
 class _Segments:
-    """The marks of one cut bar and the direct labels that fit beside them."""
+    """The marks of one cut bar and the legend that names them, in the bar's order."""
 
     marks: tuple[str, ...]
     labels: tuple[str, ...]
@@ -374,18 +385,19 @@ class _Segments:
 
 
 def _segments(parts: Sequence[tuple[str, int, bool]], total: int) -> _Segments:
-    """One bar cut into its parts, each part named where it is.
+    """One bar cut into its parts, and a legend under it naming each in the bar's order.
 
-    Every part gets its own label. Eight parts across 640px do not fit on one line of 13px
-    mono, so a label goes on the first row below the bar that is free where its part starts,
-    and a row is added when none is: a part left unnamed is the one a reader asks about. A
-    label that would run off the right edge is anchored to it instead. The text under the
-    figure states every number whatever the labels did.
+    The names are a legend and not labels placed under their parts: a part of one question
+    among five hundred is a pixel wide, and three such parts side by side have nowhere under
+    them for three names. The legend flows left to right, each entry a square in the part's
+    colour and its count and name, and starts another row where the next entry would run off
+    the right edge. The text under the figure states every number whatever the legend did.
     """
     marks: list[str] = []
     labels: list[str] = []
-    pens: list[float] = [0.0]
     x = 0.0
+    pen = 0.0
+    row = 0
     for label, value, warn in parts:
         if not value:
             continue
@@ -399,24 +411,22 @@ def _segments(parts: Sequence[tuple[str, int, bool]], total: int) -> _Segments:
             f'width="{max(width - 1, 1):.1f}" height="{BAR_HEIGHT}"></rect>'
         )
         text = f"{value:,} {label}"
-        room = LABEL * len(text)
-        row = next((index for index, pen in enumerate(pens) if pen <= x), len(pens))
-        if row == len(pens):
-            pens.append(0.0)
+        room = SWATCH + 6 + LABEL * len(text)
+        if pen and pen + room > WIDTH:
+            row += 1
+            pen = 0.0
         baseline = BAR_HEIGHT + BAR_GAP + 13 + row * 16
         labels.append(
-            f'<line class="figure__axis" x1="{x:.1f}" y1="{BAR_HEIGHT}" x2="{x:.1f}" '
-            f'y2="{baseline - 10:.1f}"></line>'
+            f'<rect class="figure__bar{marked}" x="{pen:.1f}" y="{baseline - SWATCH}" '
+            f'width="{SWATCH}" height="{SWATCH}"></rect>'
         )
         labels.append(
-            f'<text class="figure__number" x="{x + 4:.1f}" y="{baseline}">{escape(text)}</text>'
-            if x + 4 + room <= WIDTH
-            else f'<text class="figure__number" x="{WIDTH}" y="{baseline}" '
-            f'text-anchor="end">{escape(text)}</text>'
+            f'<text class="figure__number" x="{pen + SWATCH + 6:.1f}" y="{baseline}">'
+            f"{escape(text)}</text>"
         )
-        pens[row] = x + room + 12
+        pen += room + 16
         x += width
-    return _Segments(marks=tuple(marks), labels=tuple(labels), rows=len(pens))
+    return _Segments(marks=tuple(marks), labels=tuple(labels), rows=row + 1)
 
 
 def _figure(name: str, title: str, alternative: str, height: int, body: Sequence[str]) -> Figure:
