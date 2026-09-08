@@ -39,7 +39,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date, datetime
-from decimal import ROUND_HALF_UP, Decimal, localcontext
+from decimal import MAX_PREC, ROUND_HALF_UP, Decimal, InvalidOperation, localcontext
 from enum import Enum
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -157,10 +157,22 @@ def _render_decimal(value: Decimal, numeric_scale: int) -> str:
         )
     exponent = Decimal(1).scaleb(-numeric_scale)
     with localcontext() as context:
-        # The result needs room for every integral digit plus the scale; the default
-        # precision would refuse a wide value rather than round it to the scale asked for.
-        context.prec = max(len(value.as_tuple().digits) + numeric_scale + 1, context.prec)
-        quantized = value.quantize(exponent, rounding=ROUND_HALF_UP)
+        # The result needs room for every integral digit plus the scale, and one digit more
+        # for a rounding carry that widens the integral part. The room is sized from the
+        # magnitude and not from the count of significant digits, because a value like
+        # 1E+100 carries one significant digit and still renders a hundred integral ones;
+        # sizing it by the digits it carries would refuse that value rather than round it.
+        # The room an amount at the very top of the exponent range would ask for is more
+        # than a context can hold, so the ask is capped and the quantize below refuses it.
+        context.prec = min(max(value.adjusted() + numeric_scale + 2, context.prec), MAX_PREC)
+        try:
+            quantized = value.quantize(exponent, rounding=ROUND_HALF_UP)
+        except InvalidOperation as unrenderable:
+            # One value nobody can render is one question that reports an error, not a run
+            # that ends without a summary.
+            raise UnsupportedValue(
+                f"a numeric this large has no rendering at a fixed scale, got {value}"
+            ) from unrenderable
     if quantized == 0:
         # Rounding a small negative amount to the scale yields a signed zero, and a
         # zero that renders two ways would report a re-run as a different result over

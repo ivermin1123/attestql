@@ -307,6 +307,49 @@ def test_a_numeric_rounded_to_zero_at_the_scale_renders_without_a_sign(
     )
 
 
+def test_a_numeric_wider_than_the_default_precision_is_rendered_and_not_refused(
+    execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
+) -> None:
+    """The room the rendering asks for is the amount's magnitude, not the count of digits it
+    carries. A value of 1E+100 carries one significant digit and a hundred integral zeroes,
+    and a rendering sized by the digits it carries would refuse the row the database served."""
+    wide = _one_value(execution_limits, "numeric", Decimal("1E+100"))
+    assert "dec:1" + "0" * 100 + ".000000" in _rendered(wide, serialization_descriptor)
+
+
+def test_a_wide_numeric_keeps_the_digits_it_carries_at_the_top_of_its_magnitude(
+    execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
+) -> None:
+    wide = _one_value(execution_limits, "numeric", Decimal("9.99E+100"))
+    assert "dec:999" + "0" * 98 + ".000000" in _rendered(wide, serialization_descriptor)
+
+
+@pytest.mark.parametrize("exponent", [21, 22])
+def test_the_default_precision_is_not_a_boundary_the_rendering_stops_at(
+    exponent: int,
+    execution_limits: ExecutionLimits,
+    serialization_descriptor: SerializationDescriptor,
+) -> None:
+    """A default context holds 28 digits, so at a scale of six the widest amount a rendering
+    sized by that default reached was 1E+21. Both sides of that line render the same way; the
+    default is the floor of the room asked for and never the largest amount there is a rule for."""
+    value = _one_value(execution_limits, "numeric", Decimal(f"1E+{exponent}"))
+    assert "dec:1" + "0" * exponent + ".000000" in _rendered(value, serialization_descriptor)
+
+
+def test_a_numeric_no_context_can_hold_is_refused_rather_than_ending_the_run(
+    execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
+) -> None:
+    """An amount too large for any precision a context can be given still has to be refused,
+    and refusing it as an unsupported value is what makes it one question that reports an
+    error instead of a run that stops without a summary."""
+    with pytest.raises(UnsupportedValue, match="this large"):
+        canonical_serialize(
+            _one_value(execution_limits, "numeric", Decimal("1E+1000000")),
+            serialization_descriptor,
+        )
+
+
 def test_the_rows_render_in_the_order_the_result_holds_them(
     execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
 ) -> None:
