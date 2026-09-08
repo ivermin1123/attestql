@@ -48,10 +48,15 @@
 <section class="headline" id="headline">
   <h2>What the published runs found</h2>
   {% if page.numbers %}
-  <dl class="facts">
+  <dl class="facts headline__numbers">
     {% for number in page.numbers %}
-    <dt>{{ number.name }}</dt>
-    <dd class="mono" title="{{ number.source }}">{{ "{:,}".format(number.value) }}{% if number.rest > 0 %}<span class="headline__published ink-2">{{ "{:,}".format(number.published) }} of them have a page here; the other {{ "{:,}".format(number.rest) }} are whole in the release assets.</span>{% endif %}</dd>
+    <div class="headline__number">
+      <dt>{{ number.name }}</dt>
+      <dd class="mono headline__value" title="{{ number.source }}">{{ "{:,}".format(number.value) }}</dd>
+      {% if number.rest > 0 %}
+      <dd class="headline__published ink-2">{{ "{:,}".format(number.published) }} of them have a page here; the other {{ "{:,}".format(number.rest) }} are whole in the release assets.</dd>
+      {% endif %}
+    </div>
     {% endfor %}
   </dl>
   {% if page.bar %}

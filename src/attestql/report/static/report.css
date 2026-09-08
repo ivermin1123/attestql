@@ -217,6 +217,14 @@ body {
   max-width: var(--measure);
 }
 
+/* A list of facts and a record's hash line hold digests, paths and origins set in mono, and
+   are read across, not down: they take the column like a table does. The measure is for
+   sentences. */
+.page .facts,
+.page .record__hash {
+  max-width: none;
+}
+
 section {
   margin: 0 0 var(--space-7);
 }
@@ -794,12 +802,32 @@ details[open] > *:not(summary) {
   color: var(--ink-2);
 }
 
-/* How many of a headline number have a page here, under the number. Its own line rather than a
-   row of its own, because it is about the number above it and not a fourth number; the family
-   and the size come off the monospace the count is set in. */
+/* The landing's three numbers. Each is one cell: the name, the count in the title size under
+   it, and, where fewer have a page here than were found, one line saying so. Cells sit side by
+   side where three fit and stack where they do not; a name here is a sentence, which is why
+   these are not two columns of a facts list, where the sentence would leave the count no room. */
+.headline__numbers {
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-5) var(--space-6);
+}
+
+.headline__number {
+  display: grid;
+  gap: var(--space-1);
+  align-content: start;
+}
+
+.headline__number dt {
+  color: var(--ink-2);
+}
+
+.headline__value {
+  font-size: var(--text-title);
+  line-height: var(--leading-cell);
+  font-variant-numeric: tabular-nums;
+}
+
 .headline__published {
-  display: block;
-  margin-top: var(--space-1);
   font-family: var(--sans);
   font-size: var(--text-cell);
   line-height: var(--leading-cell);
