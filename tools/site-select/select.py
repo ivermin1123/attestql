@@ -93,6 +93,12 @@ generous because files are nowhere near their budget. The build measures rather 
 and is the authority; the reconciliation report states both numbers."""
 
 
+ASSET_SCHEME = "https://"
+"""What a release asset's address has to begin with. The address reaches an `href` on every
+run page, where a `javascript:` value would run on a reader's click: autoescaping puts the
+text safely inside the attribute and says nothing about what the scheme does."""
+
+
 class SelectionRefused(Exception):
     """The selection cannot be made, and the message says what is over or what is missing."""
 
@@ -722,9 +728,11 @@ def _left_out(dropped: Sequence[Question]) -> Mapping[str, object]:
 def write_published(out: Path, manifest: Path) -> int:
     """The release-asset line of each run or group, written after the assets are uploaded.
 
-    The manifest is a list of `{name, url, bytes, sha256}` for the archives; every run whose
-    archive is in it gets `published.json` beside its summary, and every group gets one of its
-    own at the group's level, which is where a reader of the benchmark index is.
+    The manifest is a list of `{name, url, bytes, sha256, directories, per_run}` for the
+    archives; every run whose archive is in it gets `published.json` beside its summary, and
+    every group gets one of its own at the group's level, which is where a reader of the
+    benchmark index is. A run's file states that run's own count of question directories and a
+    group's file states the group's, so that neither page says the other's number.
     """
     assets = {
         _text(asset, "name"): asset
@@ -740,12 +748,39 @@ def write_published(out: Path, manifest: Path) -> int:
         asset = assets.get(archive)
         if asset is None:
             raise SelectionRefused(f"{manifest} names no asset {archive} for {run}")
-        _write_json(run / PUBLISHED_FILE, asset)
+        url = _text(asset, "url")
+        if not url.startswith(ASSET_SCHEME):
+            raise SelectionRefused(
+                f"{manifest} states {url!r} for {archive}, and a release asset's address is a "
+                f"link on every run page: it has to begin with {ASSET_SCHEME}"
+            )
+        per_run = asset.get("per_run")
+        counted: Mapping[str, object] = (
+            cast("Mapping[str, object]", per_run) if isinstance(per_run, dict) else {}
+        )
+        _write_json(run / PUBLISHED_FILE, _asset(asset, counted.get("/".join(("runs", *parts)))))
         written += 1
         if len(parts) == 3:
-            _write_json(run.parent / PUBLISHED_FILE, asset)
+            _write_json(run.parent / PUBLISHED_FILE, _asset(asset, asset.get("directories")))
     print(f"{PUBLISHED_FILE} written for {written} runs")
     return 0
+
+
+def _asset(asset: Mapping[str, object], directories: object) -> Mapping[str, object]:
+    """One `published.json`: what the archive is, and how many question directories it holds.
+
+    `per_run` and the total stay in the manifest; what reaches a page is the one number that
+    page is about, so that a run of a group states its own count and the group states its sum.
+    """
+    stated: dict[str, object] = {
+        "name": _text(asset, "name"),
+        "url": _text(asset, "url"),
+        "bytes": _integer(asset, "bytes"),
+        "sha256": _text(asset, "sha256"),
+    }
+    if isinstance(directories, int) and not isinstance(directories, bool):
+        stated["directories"] = directories
+    return stated
 
 
 def _write_json(path: Path, document: object) -> None:

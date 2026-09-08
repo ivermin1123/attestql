@@ -665,3 +665,38 @@ def test_every_page_takes_its_stylesheet_from_the_one_static_directory_of_the_si
         stylesheets += 1
     assert stylesheets > 4
     assert sorted(path.name for path in out.rglob("static") if path.is_dir()) == ["static"]
+
+
+def test_a_group_published_as_one_archive_states_that_archive_on_the_group_s_own_page(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, built: Path
+) -> None:
+    """A group is what one prediction file was audited as, and one archive is what holds it.
+
+    A reader on the group page is a level above the runs, so the sentence there is the group's
+    sum against the archive's own count, and the link is the one archive both runs are in.
+    """
+    source = built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN
+    data = tmp_path / "data"
+    first = _publish(data, "grouped/a-model/first-db", source)
+    _publish(data, "grouped/a-model/second-db", source)
+    published = json.dumps(
+        {
+            "name": "grouped-a-model.tar.gz",
+            "url": "https://example.invalid/grouped-a-model.tar.gz",
+            "bytes": 1234567,
+            "sha256": "9" * 64,
+            "directories": 400,
+        }
+    )
+    (first.parent / "published.json").write_text(published, encoding="utf-8")
+    monkeypatch.setattr(site, "DATA", data)
+    out = tmp_path / "site"
+
+    build(out)
+
+    group = read(out / site.RUNS_DIRECTORY / "grouped" / "a-model" / PAGE_FILE)
+    text = " ".join("".join(group.text).split())
+    written = 2 * len(list(source.glob("q*")))
+    assert f"This site holds {written} of the 400 question directories these 2 runs wrote" in text
+    assert "https://example.invalid/grouped-a-model.tar.gz" in group.links
+    assert "9" * 64 in text

@@ -878,3 +878,58 @@ def test_a_run_published_as_a_release_asset_states_where_the_whole_of_it_is(
     assert "1,234,567 bytes" in page.text
     assert "9" * 64 in page.text
     assert "release asset" not in read(rendered.out / PAGE_FILE).text
+
+
+def _published(directories: int | None = None, url: str | None = None) -> str:
+    """One ``published.json`` as the selection writes it, with the count where there is one."""
+    stated: dict[str, Any] = {
+        "name": "a-benchmark-a-run.tar.gz",
+        "url": url or "https://example.invalid/a-benchmark-a-run.tar.gz",
+        "bytes": 1234567,
+        "sha256": "9" * 64,
+    }
+    if directories is not None:
+        stated["directories"] = directories
+    return json.dumps(stated)
+
+
+def test_a_published_run_says_how_many_of_its_question_directories_have_a_page_here(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """A page that states how many questions it shows and not how many there are says nothing.
+
+    The run wrote a directory per question it has evidence for; a site shows the ones its
+    budget fits. Both numbers are on the page: the one counted here as the pages were written,
+    and the one the archive holds, which is the manifest's and reaches the page through
+    ``published.json``. A file written before that number existed still renders, without it.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    written = len(list(audit.glob("q*")))
+    assert written > 1, "the demo writes a directory per question it has evidence for"
+
+    (audit / "published.json").write_text(_published(directories=218), encoding="utf-8")
+    render_report(audit, tmp_path / "counted")
+    (audit / "published.json").write_text(_published(), encoding="utf-8")
+    render_report(audit, tmp_path / "uncounted")
+
+    counted = read(tmp_path / "counted" / PAGE_FILE).text
+    assert f"This site holds {written} of the 218 question directories this run wrote" in counted
+    assert "the archive holds every one" in counted
+    uncounted = read(tmp_path / "uncounted" / PAGE_FILE).text
+    assert "of the 218 question directories" not in uncounted
+    assert "The pages here are a selection of this run's questions." in uncounted
+
+
+def test_a_release_asset_the_page_could_not_fetch_is_refused_rather_than_linked(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """The address becomes an ``href`` a reader clicks, so what it is is checked, not escaped.
+
+    Autoescaping puts the value safely inside the attribute and says nothing about what the
+    scheme does when the link is followed: a ``javascript:`` value would run on that click.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    (audit / "published.json").write_text(_published(url="javascript:alert(1)"), encoding="utf-8")
+
+    with pytest.raises(ReportRefused, match="has to begin with https://"):
+        render_report(audit, tmp_path / "report")

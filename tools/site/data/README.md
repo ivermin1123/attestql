@@ -47,7 +47,11 @@ could not be run has no directory and is a row of the run page read from the sum
   the class and the reason verbatim and that date. The tool's verdict and a person's reading are
   two blocks and never one.
 - `published.json`: the name, the URL, the size and the sha256 of the release asset holding the
-  whole of that run or group. What is here is a selection; that archive is all of it.
+  whole of that run or group, and `directories`, how many question directories that archive
+  holds, counted out of the archive itself by `tools/site-select/manifest.py`. What is here is a
+  selection; that archive is all of it, and the run page states both numbers: how many question
+  directories have a page here, counted as the pages were written, and how many the run wrote.
+  A run of a group states its own count and the group's own file states the group's sum.
 
 ## `aggregate.json`
 

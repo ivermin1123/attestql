@@ -23,7 +23,11 @@
 {% if page.published %}
 <section class="published" id="published">
   <h2>The whole of this run is a release asset</h2>
+  {% if page.published.directories %}
+  <p>This site holds {{ page.directories }} of the {{ page.published.directories }} question directories this run wrote; the archive holds every one:</p>
+  {% else %}
   <p>The pages here are a selection of this run's questions. Every question directory it wrote is in one archive:</p>
+  {% endif %}
   <dl class="facts">
     <dt>archive</dt>
     <dd class="mono"><a href="{{ page.published.url }}">{{ page.published.name }}</a></dd>

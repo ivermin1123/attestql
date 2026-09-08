@@ -2,5 +2,6 @@
  "name": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz",
  "url": "https://github.com/ivermin1123/attestql/releases/download/v0.2.2/minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz",
  "bytes": 2180708,
- "sha256": "cfed02286a542624870170d3a8e8db52a8d16040c78937a5db5f9a2a02d00770"
+ "sha256": "cfed02286a542624870170d3a8e8db52a8d16040c78937a5db5f9a2a02d00770",
+ "directories": 33
 }

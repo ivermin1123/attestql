@@ -266,9 +266,11 @@ states that database in front of the question set. A `classification.json` with 
 `classification-source.json` beside it, saying where the copy came from, what date it carries and
 which of its rows are this run's, puts one "read by hand" row on each question it holds a row
 for, showing the class and the reason verbatim with that date; the tool's verdict and a person's
-reading are two blocks on the page and are never merged. A `published.json` holding a name, a
-URL, a size and a sha256 puts the address of the whole run on the run page. A directory this tool
-wrote holds none of the three and renders exactly as it did before they existed.
+reading are two blocks on the page and are never merged. A `published.json` holding a name, an
+`https://` URL, a size and a sha256 puts the address of the whole run on the run page, and where
+it also holds `directories`, how many question directories the archive has, the page states how
+many of them have a page here. A directory this tool wrote holds none of the three and renders
+exactly as it did before they existed.
 
 Beside every record's two hashes the page states `recomputed from this JSON: match`, or the two
 values when they differ. The line is not a repetition of the file: `attestql.evidence.load` reads
