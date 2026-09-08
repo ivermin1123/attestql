@@ -667,6 +667,51 @@ def test_every_page_takes_its_stylesheet_from_the_one_static_directory_of_the_si
     assert sorted(path.name for path in out.rglob("static") if path.is_dir()) == ["static"]
 
 
+def test_a_number_the_site_could_not_publish_whole_says_so_under_itself(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """What was found and what has a page are two questions, and the page states both.
+
+    The number is what the runs and the classification hold, which no budget of this site may
+    change; how many of them have a page here is a fact about the budget, and it is one line
+    under the number. Where the two are the same there is nothing to say, and an aggregate
+    written before they were told apart states one number and gets the same silence.
+    """
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / site.AGGREGATE_FILE).write_text(
+        json.dumps(
+            {
+                "credited_but_not_equal": {
+                    "value": 164,
+                    "published": 161,
+                    "source": "minidev-pg/<run>/summary.json",
+                },
+                "classified_by_hand": {
+                    "value": 69,
+                    "published": 69,
+                    "source": "minidev-pg/classification.json",
+                },
+                "bird_dev_classified_by_hand": {
+                    "value": 23,
+                    "source": "bird-dev-sqlite/classification.json",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(site, "DATA", data)
+    out = tmp_path / "site"
+
+    build(out)
+
+    text = " ".join("".join(read(out / PAGE_FILE).text).split())
+    assert "164" in text and "69" in text and "23" in text, "the numbers are what was found"
+    assert "161 of them have a page here; the other 3 are whole in the release assets." in text
+    assert "69 of them have a page here" not in text, "as many published as found"
+    assert "23 of them have a page here" not in text, "a file that states the one number"
+
+
 def test_a_group_published_as_one_archive_states_that_archive_on_the_group_s_own_page(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, built: Path
 ) -> None:

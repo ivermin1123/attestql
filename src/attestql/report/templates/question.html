@@ -28,7 +28,7 @@
   <p class="verdict__reading">{{ page.verdict_reading }}</p>
   {% if page.by_hand %}
   <div class="by-hand">
-    <p class="by-hand__label">read by hand, {{ page.by_hand.date }}: <span class="chip chip--warn">{{ page.by_hand.classification }}</span></p>
+    <p class="by-hand__label">read by hand, {{ page.by_hand.date }}: <span class="chip chip--warn">{{ page.by_hand.classification }}</span>{% if page.by_hand.meaning %} <span class="by-hand__class">{{ page.by_hand.meaning }}</span>{% endif %}</p>
     <p class="by-hand__reason">{{ page.by_hand.reason }}</p>
     <p class="by-hand__source ink-2">a maintainer's reading of this question, out of <a href="{{ root }}{{ page.by_hand.file }}">{{ page.by_hand.file }}</a>, copied from {{ page.by_hand.source }}. It is not a verdict and nothing above it was computed from it.</p>
   </div>

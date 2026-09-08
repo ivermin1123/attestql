@@ -933,3 +933,49 @@ def test_a_release_asset_the_page_could_not_fetch_is_refused_rather_than_linked(
 
     with pytest.raises(ReportRefused, match="has to begin with https://"):
         render_report(audit, tmp_path / "report")
+
+
+def _classify(audit: Path, stated: dict[str, Any], note: dict[str, Any]) -> None:
+    """One hand classification and the note beside it, for the question the demo has at 879."""
+    (audit / "classification.json").write_text(
+        json.dumps({"per_file": {"a-model": {"rows": [stated]}}}), encoding="utf-8"
+    )
+    (audit / "classification-source.json").write_text(
+        json.dumps(
+            {
+                "source": "plans/reports/a-measurement/classification.json",
+                "date": "2026-09-04",
+                "shape": "per_file",
+                "key": "a-model",
+                "reason_field": "reason",
+                "keys": "per_file[<prediction file>].rows[]",
+                **note,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def test_the_class_a_maintainer_recorded_is_read_with_what_its_own_source_says_it_means(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """``A`` on its own is a letter, and a letter is not a reading.
+
+    The note beside the classification carries the meaning of each class in the words of the
+    document that defines it, and the row states the letter and then those words. A class the
+    note does not define is rendered as the value the row holds, with nothing invented beside
+    it, which is what an older note written before the meanings existed leaves.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    meaning = "a wrong answer the benchmark credited: another table or projection"
+    row: dict[str, Any] = {"question_id": 879, "class": "A", "reason": "orders speeds as text"}
+    _classify(audit, row, {"classes": {"A": meaning}, "classes_source": "the report's legend"})
+    render_report(audit, tmp_path / "defined")
+    _classify(audit, row, {})
+    render_report(audit, tmp_path / "undefined")
+
+    defined = read(tmp_path / "defined" / "q879" / PAGE_FILE).text
+    assert f"A {meaning}" in defined
+    undefined = read(tmp_path / "undefined" / "q879" / PAGE_FILE).text
+    assert meaning not in undefined
+    assert "read by hand, 2026-09-04: A" in undefined
