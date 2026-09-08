@@ -71,12 +71,30 @@ one would be left there, stale, beside a fresh run. A ``--out`` that names the a
 directory or a directory under it is refused for that reason, rather than half written and
 then abandoned where the audit's own cleanup will meet it."""
 
+NOT_EQUAL = "NOT_EQUAL"
+"""The verdict the first filter is about, spelled as the summary and the pages spell it."""
+
+NOT_EQUAL_DIRECTORY = "not-equal"
+BY_MECHANISM_DIRECTORY = "by-mechanism"
+BY_PROBE_DIRECTORY = "by-probe"
+FILTER_DIRECTORIES: tuple[str, ...] = (
+    NOT_EQUAL_DIRECTORY,
+    BY_MECHANISM_DIRECTORY,
+    BY_PROBE_DIRECTORY,
+)
+"""Where the pre-rendered filters of the index go, and the three names the clear below
+removes. A static host reads no query string and this project ships no script that filters,
+so a filtered view of the index is a directory with an address of its own: one for the
+NOT_EQUAL rows, one per mechanism the run holds under ``by-mechanism/``, one per probe that
+fired under ``by-probe/``. A filter no row satisfies is not written, because a page listing
+nothing is a page a reader followed a link to for nothing."""
+
 MARKER_FILE = ".attestql-report"
 """What says an output directory is a render's own and may be cleared by the next one."""
 
 MARKER_TEXT = (
     "written by attestql report: every rerun into this directory removes index.html, "
-    "summary.json, the q<id>/ directories and static/\n"
+    "summary.json, the q<id>/ directories, not-equal/, by-mechanism/, by-probe/ and static/\n"
 )
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 
@@ -342,6 +360,34 @@ class Entry:
 
 
 @dataclass(frozen=True)
+class FilterPage:
+    """The run page's index with rows left out, under an address of its own.
+
+    Nothing is decided here that the run page did not decide: the rows are its own ``Entry``
+    objects, kept or dropped by a field one of them already holds. ``slug`` is where the page
+    goes under the report, and the number of steps in it is how far a question's own path has
+    to climb to be reached from here.
+    """
+
+    slug: str
+    heading: str
+    restriction: str
+    run_id: str
+    of: int
+    """How many rows the whole index holds, so the page states what it is a part of."""
+    entries: tuple[Entry, ...]
+
+    @property
+    def root(self) -> str:
+        """What this page puts in front of a path the run page states relative to itself."""
+        return "../" * (self.slug.count("/") + 1)
+
+    @property
+    def title(self) -> str:
+        return f"attestql run {self.run_id}: {self.heading}"
+
+
+@dataclass(frozen=True)
 class RunPage:
     """One audit directory's ``summary.json`` as the page a reader opens first."""
 
@@ -360,6 +406,10 @@ class RunPage:
     notes: tuple[Fact, ...]
     entries: tuple[Entry, ...]
     files: tuple[Fact, ...]
+    filters: tuple[FilterPage, ...] = ()
+    """The pre-rendered restrictions of the index above, each a page of its own. Filled in
+    after the page is built, because a filter is the index with rows dropped and the index is
+    what the page is built from."""
     verdict_figure: Figure | None = None
     probe_figure: Figure | None = None
     """The verdicts and the probes drawn, filled in after the page is built. ``counts``
@@ -382,14 +432,24 @@ class Report:
     out: Path
     pages: tuple[Path, ...]
     files: tuple[Path, ...]
+    filters: tuple[Path, ...] = ()
+    """The pre-rendered filters of the index, counted apart from ``pages`` because they hold
+    no question a page above does not: a reader told the run wrote eleven pages and finding
+    nineteen files would be counting the same questions twice."""
 
     @property
     def line(self) -> str:
         """The one line the command prints: how many pages, and where they were written."""
         questions = len(self.pages) - 1
+        filtered = (
+            ""
+            if not self.filters
+            else f", {len(self.filters)} filtered "
+            f"{'index' if len(self.filters) == 1 else 'indexes'}"
+        )
         return (
             f"{len(self.pages)} pages ({questions} "
-            f"{'question' if questions == 1 else 'questions'}) in {self.out.as_posix()}"
+            f"{'question' if questions == 1 else 'questions'}{filtered}) in {self.out.as_posix()}"
         )
 
 
@@ -423,7 +483,12 @@ def render_report(audit_directory: Path, out: Path | None = None) -> Report:
         questions = [_question_page(directory) for directory in directories]
         run = _run_page(summary, questions, directories)
         verdicts, probes = run_figures(run)
-        run = replace(run, verdict_figure=verdicts, probe_figure=probes)
+        run = replace(
+            run,
+            verdict_figure=verdicts,
+            probe_figure=probes,
+            filters=_filters(run.entries, run.run_id),
+        )
     except UnreadableRecord as unreadable:
         raise ReportRefused(f"{audit_directory}: {unreadable}") from unreadable
     _clear_the_render_before_this_one(destination)
@@ -486,7 +551,9 @@ def _clear_the_render_before_this_one(out: Path) -> None:
             (out / name).unlink(missing_ok=True)
         for child in entries:
             if child.is_dir() and (
-                QUESTION_DIRECTORY.match(child.name) or child.name == STATIC_DIRECTORY
+                QUESTION_DIRECTORY.match(child.name)
+                or child.name == STATIC_DIRECTORY
+                or child.name in FILTER_DIRECTORIES
             ):
                 shutil.rmtree(child)
         (out / MARKER_FILE).write_text(MARKER_TEXT, encoding="utf-8")
@@ -515,11 +582,21 @@ def _write(
         files.extend(
             _copy(directory / stated.name, beside / stated.name) for stated in question.files
         )
+    filters = [
+        _page(
+            out / view.slug / PAGE_FILE,
+            environment,
+            "filter.html",
+            page=view,
+            root=view.root,
+        )
+        for view in run.filters
+    ]
     for static in sorted(path for path in STATIC.rglob("*") if path.is_file()):
         # The whole tree, because the fonts are under a directory of their own: a stylesheet
         # copied without them would ask a reader's browser for a file that is not there.
         files.append(_copy(static, out / STATIC_DIRECTORY / static.relative_to(STATIC)))
-    return Report(out=out, pages=tuple(pages), files=tuple(files))
+    return Report(out=out, pages=tuple(pages), files=tuple(files), filters=tuple(filters))
 
 
 def _environment() -> Environment:
@@ -1087,6 +1164,57 @@ def _run_page(
     )
 
 
+def _filters(entries: Sequence[Entry], run_id: str) -> tuple[FilterPage, ...]:
+    """The restrictions of the index that this run has rows for, in a fixed order.
+
+    Every one is a subset of the rows above it and states its own rule in a sentence: no
+    filter here reads a file the run page did not, and none of them counts anything. Which
+    filters exist is the run's own business -- a mechanism no question was classified under
+    and a probe that fired on nothing get no page, because a link to an empty index is a
+    reader's wasted click -- and the order is fixed so that two renders of one directory
+    write the same bytes.
+    """
+    of = len(entries)
+
+    def view(slug: str, heading: str, restriction: str, rows: list[Entry]) -> FilterPage:
+        return FilterPage(
+            slug=slug,
+            heading=heading,
+            restriction=restriction,
+            run_id=run_id,
+            of=of,
+            entries=tuple(rows),
+        )
+
+    views: list[FilterPage] = [
+        view(
+            NOT_EQUAL_DIRECTORY,
+            NOT_EQUAL,
+            f"The questions of this run whose verdict is {NOT_EQUAL}.",
+            [entry for entry in entries if entry.verdict == NOT_EQUAL],
+        )
+    ]
+    views.extend(
+        view(
+            f"{BY_MECHANISM_DIRECTORY}/{classification}",
+            f"class {classification}",
+            f"The questions this run's counterexamples classified as {classification}.",
+            [entry for entry in entries if entry.mechanism == classification],
+        )
+        for classification in sorted({entry.mechanism for entry in entries if entry.mechanism})
+    )
+    views.extend(
+        view(
+            f"{BY_PROBE_DIRECTORY}/{probe}",
+            f"probe {probe}",
+            f"The questions whose gold statement fired the probe {probe}.",
+            [entry for entry in entries if probe in entry.probes],
+        )
+        for probe in sorted({probe for entry in entries for probe in entry.probes})
+    )
+    return tuple(kept for kept in views if kept.entries)
+
+
 def _probe_fired(smells: Json) -> tuple[tuple[str, int], ...]:
     """Each probe and how many golds it fired on, as numbers, in the summary's own order.
 
@@ -1349,10 +1477,15 @@ def _count(value: int) -> str:
 
 
 __all__ = [
+    "BY_MECHANISM_DIRECTORY",
+    "BY_PROBE_DIRECTORY",
     "COUNTEREXAMPLE_FILE",
+    "FILTER_DIRECTORIES",
     "GOLD_RECORD_FILE",
     "MARKER_FILE",
     "MARKER_TEXT",
+    "NOT_EQUAL",
+    "NOT_EQUAL_DIRECTORY",
     "PAGE_FILE",
     "SECOND_RECORD_FILE",
     "SMELLS_FILE",
@@ -1365,6 +1498,7 @@ __all__ = [
     "Entry",
     "Fact",
     "Figure",
+    "FilterPage",
     "Hash",
     "Mechanism",
     "Probe",

@@ -41,9 +41,14 @@ from attestql.audit.postgres import session_preconditions
 from attestql.audit.smells import SMELL_NAMES, probe_meanings
 from attestql.report import ReportRefused, default_out, render_report
 from attestql.report.render import (
+    BY_MECHANISM_DIRECTORY,
+    BY_PROBE_DIRECTORY,
     COUNTEREXAMPLE_FILE,
+    FILTER_DIRECTORIES,
     GOLD_RECORD_FILE,
     MARKER_FILE,
+    MARKER_TEXT,
+    NOT_EQUAL_DIRECTORY,
     PAGE_FILE,
     SECOND_RECORD_FILE,
     SMELLS_FILE,
@@ -115,6 +120,11 @@ class _Read(HTMLParser):
         self.text.append(data)
         if self.cell is not None:
             self.cell.append(data)
+
+
+def _is_a_question_row(row: tuple[str, ...]) -> bool:
+    """One row of a question index rather than its header: the first cell is ``q<id>``."""
+    return bool(row) and row[0].startswith("q") and row[0][1:].isdigit()
 
 
 def read(path: Path) -> Page:
@@ -204,7 +214,7 @@ def test_the_run_page_indexes_every_question_that_wrote_a_directory(
     )
 
     assert [f"{name}/{PAGE_FILE}" for _, name in written] == [
-        link for link in page.links if link.endswith(PAGE_FILE)
+        link for link in page.links if link.endswith(PAGE_FILE) and link.startswith("q")
     ]
     assert page.row_of("q879")[1:3] == ("R-ORD", "NOT_EQUAL")
     assert page.row_of("q900001")[2] == "GOLD-ONLY"
@@ -304,6 +314,73 @@ def test_every_record_on_every_page_carries_its_hashes_taken_again(
         assert page.text.count("recomputed from this JSON: match") == 2 * len(records)
 
 
+def test_the_filter_pages_hold_the_rows_the_run_page_and_the_summary_state(
+    rendered: Rendered,
+) -> None:
+    """Every filter is the index restricted, and the restriction is one the summary counts.
+
+    A static host reads no query string, so a filtered view is a directory. What is asserted
+    is that each one holds exactly the rows its rule keeps: the NOT_EQUAL page holds the
+    summary's own NOT_EQUAL count, each probe page holds the golds the summary says that probe
+    fired on, and every row of every filter is a row of the whole index.
+    """
+    whole = rendered.page()
+    summary = rendered.summary
+    every = {row[0] for row in whole.rows if _is_a_question_row(row)}
+
+    not_equal = rendered.page(NOT_EQUAL_DIRECTORY)
+    kept = [row for row in not_equal.rows if _is_a_question_row(row)]
+    assert len(kept) == cast("dict[str, int]", summary["verdicts"])["NOT_EQUAL"]
+    assert all(row[2] == "NOT_EQUAL" for row in kept)
+    assert {row[0] for row in kept} <= every
+    assert "The questions of this run whose verdict is NOT_EQUAL." in not_equal.text
+    assert f"../{PAGE_FILE}" in not_equal.links, "a link back to the whole index"
+
+    for probe, count in cast("dict[str, int]", summary["smells"]).items():
+        page = rendered.out / BY_PROBE_DIRECTORY / probe / PAGE_FILE
+        assert page.is_file() == bool(count), probe
+        if count:
+            rows = [row for row in read(page).rows if _is_a_question_row(row)]
+            assert len(rows) == count, probe
+            assert all(probe in row[4] for row in rows), probe
+            assert f"../../{PAGE_FILE}" in read(page).links, probe
+
+    for classification in {row[3] for row in whole.rows if _is_a_question_row(row) and row[3]}:
+        rows = [
+            row
+            for row in read(rendered.out / BY_MECHANISM_DIRECTORY / classification / PAGE_FILE).rows
+            if _is_a_question_row(row)
+        ]
+        assert rows, classification
+        assert all(row[3] == classification for row in rows), classification
+
+
+def test_a_filter_no_question_of_this_run_satisfies_is_not_written(
+    rendered: Rendered,
+) -> None:
+    """A link to an empty index is a reader's wasted click, so the page is not written.
+
+    ``multiplicity`` is a class of the tool that this sandbox produces no question in, and
+    two of the five probes fire on none of its golds. Neither gets a directory, and the run
+    page links to neither.
+    """
+    page = rendered.page()
+
+    assert not (rendered.out / BY_MECHANISM_DIRECTORY / "multiplicity").exists()
+    for quiet in ("float-aggregate-order", "direction-against-question"):
+        assert not (rendered.out / BY_PROBE_DIRECTORY / quiet).exists(), quiet
+    written = sorted(
+        path.parent.relative_to(rendered.out).as_posix()
+        for name in FILTER_DIRECTORIES
+        for path in (rendered.out / name).rglob(PAGE_FILE)
+    )
+    assert written == sorted(
+        link.removesuffix(f"/{PAGE_FILE}")
+        for link in page.links
+        if link.startswith(tuple(FILTER_DIRECTORIES))
+    )
+
+
 def test_an_error_question_is_a_row_of_the_run_page_and_has_no_page(tmp_path: Path) -> None:
     """A statement the engine could not run wrote no directory, so the run page states it
     from the summary's own error list: the side that stopped and the message it stopped with.
@@ -401,9 +478,31 @@ def test_a_rerun_clears_the_render_before_it(rendered: Rendered, tmp_path: Path)
     assert not (out / "static" / "stale.css").exists()
     assert (out / MARKER_FILE).is_file()
     assert sorted(path.name for path in out.iterdir()) == sorted(
-        [MARKER_FILE, PAGE_FILE, SUMMARY_FILE, "static"]
+        [MARKER_FILE, PAGE_FILE, SUMMARY_FILE, "static", *FILTER_DIRECTORIES]
         + [directory.name for directory in rendered.audit.iterdir() if directory.is_dir()]
     )
+
+
+def test_a_rerun_clears_a_filter_the_run_before_it_wrote(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """The filters are cleared by the same rule the question directories are.
+
+    A mechanism the run before held and this one does not is a filter page listing questions
+    that are not in this run, which is the state the clear exists to prevent.
+    """
+    out = tmp_path / "report"
+    render_report(rendered.audit, out)
+    stale = out / BY_MECHANISM_DIRECTORY / "a-class-no-run-holds" / PAGE_FILE
+    stale.parent.mkdir(parents=True)
+    stale.write_text("a filter for a class this run does not hold", encoding="utf-8")
+
+    render_report(rendered.audit, out)
+
+    assert not stale.exists()
+    assert not stale.parent.exists()
+    assert (out / NOT_EQUAL_DIRECTORY / PAGE_FILE).is_file()
+    assert MARKER_TEXT.count(BY_MECHANISM_DIRECTORY) == 1, "the marker says what is removed"
 
 
 def test_a_directory_this_command_did_not_write_is_refused_untouched(
@@ -509,9 +608,11 @@ def test_rendering_the_same_directory_twice_writes_the_same_bytes(
     first = render_report(rendered.audit, tmp_path / "first")
     second = render_report(rendered.audit, tmp_path / "second")
 
-    assert [path.name for path in first.pages] == [path.name for path in second.pages]
-    for page, again in zip(first.pages, second.pages, strict=True):
-        assert page.read_bytes() == again.read_bytes(), page.name
+    for one, other in ((first.pages, second.pages), (first.filters, second.filters)):
+        assert [path.name for path in one] == [path.name for path in other]
+        for page, again in zip(one, other, strict=True):
+            assert page.read_bytes() == again.read_bytes(), page.name
+    assert first.filters, "the demo holds a NOT_EQUAL row, so it has at least one filter"
 
 
 def test_the_report_goes_beside_the_audit_when_the_command_line_does_not_say(

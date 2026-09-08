@@ -1,0 +1,26 @@
+{# One filter of the run page's index, pre-rendered under an address of its own.
+
+   A static host has no query strings and this project has no script that filters, so a
+   filtered view is a directory. The rows are the run page's own rows with the ones the
+   restriction leaves out removed; nothing here decides anything the run page did not, and
+   the line under the title says what was left out and links back to the whole. #}
+{% extends "base.html" %}
+{% from "_index.html" import index_table %}
+
+{% block strip %}
+<header class="strip strip--run">
+  <h1 class="strip__title">{{ page.heading }}</h1>
+  <p class="strip__facts">
+    <span class="chip chip--set mono">{{ page.run_id }}</span>
+    <span class="chip chip--rule">{{ page.entries|length }} of {{ page.of }}</span>
+  </p>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="index" id="index">
+  <h2>The questions</h2>
+  <p>{{ page.restriction }} <a href="{{ root }}index.html">The run page</a> holds the whole index.</p>
+  {{ index_table(page.entries, root) }}
+</section>
+{% endblock %}

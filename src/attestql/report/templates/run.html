@@ -6,6 +6,7 @@
 {% extends "base.html" %}
 {% from "_files.html" import file_links %}
 {% from "_figure.html" import figure_block %}
+{% from "_index.html" import index_table %}
 
 {% block strip %}
 <header class="strip strip--run">
@@ -93,33 +94,17 @@
 
 <section class="index" id="index">
   <h2>The questions</h2>
-  <div class="rows__region">
-    <table class="index__table">
-      <thead>
-        <tr>
-          <th scope="col">question</th>
-          <th scope="col">rule</th>
-          <th scope="col">verdict</th>
-          <th scope="col">class</th>
-          <th scope="col">probes</th>
-          <th scope="col">what was asked</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for entry in page.entries %}
-        <tr class="index__row index__row--{{ entry.verdict|lower }}">
-          <th scope="row" class="mono">{% if entry.href %}<a href="{{ entry.href }}">q{{ entry.question_id }}</a>{% else %}q{{ entry.question_id }}{% endif %}</th>
-          <td>{{ entry.replay_rule }}</td>
-          <td><span class="chip chip--verdict chip--{{ entry.verdict|lower }}">{{ entry.verdict }}</span></td>
-          <td>{% if entry.mechanism %}<span class="chip chip--warn">{{ entry.mechanism }}</span>{% endif %}</td>
-          <td>{% for probe in entry.probes %}<span class="chip chip--warn">{{ probe }}</span> {% endfor %}</td>
-          <td>{% if entry.note %}<span class="warn">{{ entry.note }}</span>{% else %}{{ entry.question_text }}{% endif %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  {{ index_table(page.entries, "") }}
   <p class="ink-2">A question whose statement could not be run wrote no directory, so it is a row here and has no page: the summary holds the side that stopped, the step it stopped at and the engine's own message.</p>
+  {% if page.filters %}
+  <h3>The same index, restricted</h3>
+  <p class="ink-2">Each of these is a page of its own, so a filtered view has an address a reader can send. Nothing here is done by a script or by a query string.</p>
+  <ul class="filters">
+    {% for filter in page.filters %}
+    <li><a href="{{ filter.slug }}/index.html">{{ filter.heading }}</a> <span class="ink-2">{{ filter.entries|length }}</span></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
 </section>
 
 {{ file_links(page.files) }}
