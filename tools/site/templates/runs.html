@@ -1,0 +1,25 @@
+{# Every benchmark the site holds, and every run under each. One row per CLI run, because
+   the audit writes one second statement per question per run and a prediction file is one
+   run. #}
+{% extends "base.html" %}
+
+{% block strip %}
+<header class="strip strip--run">
+  <h1 class="strip__title">The runs</h1>
+  <p class="strip__facts">
+    <span class="chip chip--rule">{{ page.benchmarks|length }} benchmarks</span>
+  </p>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="index" id="benchmarks">
+  <h2>What is published here</h2>
+  <p>Each benchmark holds one run per prediction file, and each run its own page. <a href="{{ root }}index.html">The landing page</a> is where this site starts.</p>
+  <ul class="files__list">
+    {% for benchmark in page.benchmarks %}
+    <li><a href="{{ root }}{{ benchmark.slug }}/index.html">{{ benchmark.name }}</a> <span class="ink-2">{{ benchmark.runs|length }} runs</span></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

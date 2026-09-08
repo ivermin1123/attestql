@@ -98,6 +98,14 @@ MARKER_TEXT = (
 )
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 
+BIRD_READING = "BIRD's own check"
+TEST_SUITE_READING = "the test-suite check"
+"""What the two readings beside a verdict are called on a question page.
+
+Named here rather than typed into the template because a page elsewhere states the same two
+by name -- the site's method page lists what is computed beside every verdict -- and two
+spellings of one thing would be a reader's question about whether they are one thing."""
+
 GOLD = "gold"
 SECOND = "second"
 GOLD_ONLY = "GOLD-ONLY"
@@ -459,8 +467,12 @@ def default_out(audit_directory: Path) -> Path:
     return resolved.parent / f"{resolved.name}{OUT_SUFFIX}"
 
 
-def render_report(audit_directory: Path, out: Path | None = None) -> Report:
+def render_report(audit_directory: Path, out: Path | None = None, *, banner: str = "") -> Report:
     """Render one audit directory into ``out``, or into its sibling when there is none.
+
+    ``banner`` is a line put above every page written here, for a caller building a whole
+    site out of several runs and needing to say something about all of them at once. It is
+    empty for ``attestql report``, whose pages state what their own directory holds.
 
     Every refusal comes before anything is written, and each names what was looked for: a
     directory holding no ``summary.json`` was not written by ``attestql audit``, an ``--out``
@@ -493,7 +505,7 @@ def render_report(audit_directory: Path, out: Path | None = None) -> Report:
         raise ReportRefused(f"{audit_directory}: {unreadable}") from unreadable
     _clear_the_render_before_this_one(destination)
     try:
-        return _write(destination, run, questions, audit_directory, directories)
+        return _write(destination, run, questions, audit_directory, directories, banner)
     except OSError as unwritable:
         # Everything below writes files, and a write that fails is this command failing to
         # do what it was asked rather than a directory it could not read: it is the same
@@ -569,15 +581,25 @@ def _write(
     questions: Sequence[QuestionPage],
     audit_directory: Path,
     directories: Sequence[Path],
+    banner: str,
 ) -> Report:
     """The pages, the stylesheet and the script, and the JSON copied beside each page."""
     environment = _environment()
-    pages: list[Path] = [_page(out / PAGE_FILE, environment, "run.html", page=run, root="")]
+    pages: list[Path] = [
+        _page(out / PAGE_FILE, environment, "run.html", page=run, root="", banner=banner)
+    ]
     files: list[Path] = [_copy(audit_directory / SUMMARY_FILE, out / SUMMARY_FILE)]
     for question, directory in zip(questions, directories, strict=True):
         beside = out / question.slug
         pages.append(
-            _page(beside / PAGE_FILE, environment, "question.html", page=question, root="../")
+            _page(
+                beside / PAGE_FILE,
+                environment,
+                "question.html",
+                page=question,
+                root="../",
+                banner=banner,
+            )
         )
         files.extend(
             _copy(directory / stated.name, beside / stated.name) for stated in question.files
@@ -589,6 +611,7 @@ def _write(
             "filter.html",
             page=view,
             root=view.root,
+            banner=banner,
         )
         for view in run.filters
     ]
@@ -618,9 +641,17 @@ def _environment() -> Environment:
     )
 
 
-def _page(path: Path, environment: Environment, template: str, *, page: object, root: str) -> Path:
+def _page(
+    path: Path,
+    environment: Environment,
+    template: str,
+    *,
+    page: object,
+    root: str,
+    banner: str = "",
+) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
-    rendered = environment.get_template(template).render(page=page, root=root)
+    rendered = environment.get_template(template).render(page=page, root=root, banner=banner)
     path.write_text(rendered, encoding="utf-8")
     return path
 
@@ -630,6 +661,18 @@ def _copy(source: Path, destination: Path) -> Path:
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source, destination)
     return destination
+
+
+def question_page(directory: Path) -> QuestionPage:
+    """One question directory as the model a template renders, for a page built elsewhere.
+
+    The second of the accessors this package exposes for the site: the site's landing shows
+    one question's differing rows through the same macro the question page shows them
+    through, and the rows it shows have to be the ones this module reads out of that
+    directory. A second reader of ``counterexample.json`` written over there would be a
+    second answer to what those rows are.
+    """
+    return _question_page(directory)
 
 
 def _question_directories(audit_directory: Path) -> tuple[Path, ...]:
@@ -712,8 +755,8 @@ def _comparison_page(directory: Path, counterexample: Json, smells: Json) -> Que
         ),
         differences=_differences(counterexample, records),
         readings=(
-            _reading("BIRD's own check", _object(counterexample, "bird_ex")),
-            _reading("the test-suite check", _object(counterexample, "test_suite_ex")),
+            _reading(BIRD_READING, _object(counterexample, "bird_ex")),
+            _reading(TEST_SUITE_READING, _object(counterexample, "test_suite_ex")),
         ),
         probes=_probes(smells),
         probes_reading=_text(smells, "reading"),
@@ -1477,6 +1520,7 @@ def _count(value: int) -> str:
 
 
 __all__ = [
+    "BIRD_READING",
     "BY_MECHANISM_DIRECTORY",
     "BY_PROBE_DIRECTORY",
     "COUNTEREXAMPLE_FILE",
@@ -1492,6 +1536,7 @@ __all__ = [
     "STATIC",
     "SUMMARY_FILE",
     "TEMPLATES",
+    "TEST_SUITE_READING",
     "Cell",
     "Column",
     "Difference",
@@ -1516,5 +1561,6 @@ __all__ = [
     "Token",
     "default_out",
     "mark_differences",
+    "question_page",
     "render_report",
 ]

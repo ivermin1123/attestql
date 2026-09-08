@@ -12,7 +12,9 @@ So this reads the template files, takes the Jinja expressions and statements out
 left is exactly the text a template author typed -- and searches that. ``figures.py`` is read
 the same way and for the same reason: a figure's title and its text alternative are sentences
 written here, they reach a page, and a drawing that captioned itself with a judgement would be
-the rule broken in the one place a reader looks first. The second half is the positive
+the rule broken in the one place a reader looks first. The site's own templates under
+``tools/site/templates`` are in the same list, because the landing page is the first page most
+readers of this project will ever see. The second half is the positive
 control: the JSON's ``reading`` strings, holding the very words the list forbids, are on the
 rendered page, whole.
 """
@@ -61,19 +63,32 @@ on the page below: they hold the words the list forbids, and they are what the r
 rather than what it is aimed at."""
 
 
+SITE_TEMPLATES = Path(__file__).resolve().parent.parent / "tools" / "site" / "templates"
+"""The site's own templates, under the same rule: the landing and the method page are read by
+the same people the report's pages are, and a judgement typed into one of them would be the
+rule broken on the page a link to the site opens first."""
+
+
 def literals(path: Path) -> str:
     """One template with its Jinja gone: the text it states whatever the model holds."""
     return JINJA.sub(" ", path.read_text(encoding="utf-8"))
 
 
 def templates() -> list[Path]:
-    """Every template, and the module that writes the sentences a figure carries.
+    """Every template, the site's own, and the module that writes a figure's sentences.
 
-    Both are searched whole: a template's literals are what is left when its Jinja is gone,
-    and a Python module's are its strings, its docstrings and its comments, none of which
-    has any business stating which of two statements was right either."""
-    found = [*sorted(TEMPLATES.glob("*.html")), Path(figures.__file__)]
+    All three are searched whole: a template's literals are what is left when its Jinja is
+    gone, and a Python module's are its strings, its docstrings and its comments, none of
+    which has any business stating which of two statements was right either."""
+    found = [
+        *sorted(TEMPLATES.glob("*.html")),
+        *sorted(SITE_TEMPLATES.glob("*.html")),
+        Path(figures.__file__),
+    ]
     assert len(found) > 1, f"no templates under {TEMPLATES}"
+    assert any(path.parent == SITE_TEMPLATES for path in found), (
+        f"no templates under {SITE_TEMPLATES}"
+    )
     return found
 
 
