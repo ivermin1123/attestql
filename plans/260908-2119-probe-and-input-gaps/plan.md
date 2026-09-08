@@ -1,7 +1,10 @@
 # One probe and three input gaps, 2026-09-08
 
-Status 2026-09-08 21:30: written, not started. Four phases on `main`, one commit each, the gate
-`just check` green before every commit.
+Status 2026-09-08 22:10: all four done on `main` (`0ad15ca`, `e5d6899`, `0ff052f`, `b003a3d`),
+the gate green before each, measured in
+[measurement-260908-2200-probe-and-input-gaps.md](../reports/measurement-260908-2200-probe-and-input-gaps.md)
+and recorded as register rows A45 to A48. The order ran 1, 4, 3, 2: the WAL copy of phase 4 is what
+let the measurement read `card_games` from the read-only input cache.
 
 The GLM research batch of 2026-09-07 (`plans/260907-1822-glm-research-lanes/`, register rows A41
 to A44) ended with one probe worth building and three gaps found in use. This plan builds them.
