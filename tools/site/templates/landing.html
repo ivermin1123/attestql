@@ -64,21 +64,43 @@
 
 <section class="index" id="runs">
   <h2>The runs</h2>
-  <p>Each row is one CLI run, and each links to the page rendered from its own <span class="mono">summary.json</span>. <a href="{{ root }}runs/index.html">Every benchmark</a> is indexed on its own page.</p>
+  <p>Each row links to a page rendered from a <span class="mono">summary.json</span> the audit wrote. Where a connection is one database file, one prediction file is a group of eleven runs and the row is the group. <a href="{{ root }}runs/index.html">Every benchmark</a> is indexed on its own page.</p>
   {% for benchmark in page.benchmarks %}
   <h3>{{ benchmark.name }}</h3>
   <div class="rows__region">
     <table class="index__table">
+      {% if benchmark.groups %}
+      <thead>
+        <tr>
+          <th scope="col">group</th>
+          <th scope="col">runs</th>
+          {% for sum in benchmark.groups[0].sums %}
+          <th scope="col">{{ sum.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for group in benchmark.groups %}
+        <tr class="index__row">
+          <th scope="row" class="mono"><a href="{{ root }}{{ group.slug }}/index.html">{{ group.name }}</a></th>
+          <td class="mono">{{ group.runs|length }}</td>
+          {% for sum in group.sums %}
+          <td class="mono">{{ sum.value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% else %}
       <thead>
         <tr>
           <th scope="col">run</th>
-          {% for fact in benchmark.runs[0].facts %}
+          {% for fact in benchmark.direct[0].facts %}
           <th scope="col">{{ fact.name }}</th>
           {% endfor %}
         </tr>
       </thead>
       <tbody>
-        {% for run in benchmark.runs %}
+        {% for run in benchmark.direct %}
         <tr class="index__row">
           <th scope="row" class="mono"><a href="{{ root }}{{ run.slug }}/index.html">{{ run.name }}</a></th>
           {% for fact in run.facts %}
@@ -87,6 +109,7 @@
         </tr>
         {% endfor %}
       </tbody>
+      {% endif %}
     </table>
   </div>
   {% endfor %}

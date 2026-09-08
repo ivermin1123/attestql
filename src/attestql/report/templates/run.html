@@ -1,4 +1,5 @@
-{# The run: what it counted, what it was made of, and the index of its questions.
+{# The run: where the whole of it is, what it counted, what it was made of, and the index of
+   its questions.
 
    The counts are the summary's own. The index is one row per directory the run wrote,
    and then the questions that wrote none: a statement that could not be run has no
@@ -19,6 +20,21 @@
 {% endblock %}
 
 {% block content %}
+{% if page.published %}
+<section class="published" id="published">
+  <h2>The whole of this run is a release asset</h2>
+  <p>The pages here are a selection of this run's questions. Every question directory it wrote is in one archive:</p>
+  <dl class="facts">
+    <dt>archive</dt>
+    <dd class="mono"><a href="{{ page.published.url }}">{{ page.published.name }}</a></dd>
+    <dt>size</dt>
+    <dd class="mono">{{ page.published.size }}</dd>
+    <dt>sha256</dt>
+    <dd class="mono">{{ page.published.digest }}</dd>
+  </dl>
+</section>
+{% endif %}
+
 <section class="counts" id="counts">
   <h2>What it counted</h2>
   <table class="counts__table">

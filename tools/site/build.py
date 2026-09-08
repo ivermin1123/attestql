@@ -115,6 +115,12 @@ DATA_README = "README.md"
 """Where the runs go under the built site, and what the two extra files under `data/` are
 called. `aggregate.json` is phase 4's, and its shape is stated in `data/README.md`."""
 
+COMPARED_VERDICTS = ("EQUAL", "NOT_EQUAL", "NOT_COMPARABLE")
+CREDITED_COUNT = "credited by BIRD and NOT_EQUAL"
+"""Which verdicts are a comparison of two statements, and what the credited count is called on
+a group's line. A gold-only question was audited without a second statement and an errored one
+never reached the comparison, so neither is compared; the three that are, are these."""
+
 MAX_FILES = 8_000
 MAX_BYTES = 40 * 1024 * 1024
 MAX_PAGE_BYTES = 2 * 1024 * 1024
@@ -179,6 +185,13 @@ class Run:
     name: str
     audit: Path
     summary: Mapping[str, object]
+    group: str = ""
+    """The level a benchmark has when one prediction file is more than one run. On SQLite
+    ``--dsn`` is one file, so a question set naming eleven databases is eleven invocations of
+    the audit and a prediction file is a group of them; on PostgreSQL one run answers the
+    whole set and there is no group. A run of a group is one segment deeper in every URL, and
+    the two indexes and the nav above it are measured from that depth rather than assuming
+    the shallower one."""
     command: str = ""
     output: str = ""
     """The command that made this run and what it printed, filled in for the sandbox alone:
@@ -191,7 +204,34 @@ class Run:
 
     @property
     def slug(self) -> str:
-        return f"{RUNS_DIRECTORY}/{self.benchmark}/{self.name}"
+        return "/".join(
+            part for part in (RUNS_DIRECTORY, self.benchmark, self.group, self.name) if part
+        )
+
+    @property
+    def counts(self) -> Mapping[str, int]:
+        """This run's own numbers, the ones a group's line adds up: what the summary states.
+
+        Read here rather than in the group, so that the numbers a group states are the numbers
+        its runs' pages state and there is one reader of the summary and not two.
+        """
+        verdicts = {
+            name: _integer(_mapping(self.summary, "verdicts"), name)
+            for name in _mapping(self.summary, "verdicts")
+        }
+        compared = sum(verdicts.get(name, 0) for name in COMPARED_VERDICTS)
+        credited = self.summary.get("credited_but_not_equal")
+        return {
+            "audited": _integer(_mapping(self.summary, "question_set"), "audited"),
+            "compared": compared,
+            **verdicts,
+            "probes fired": _integer(self.summary, "smells_fired"),
+            CREDITED_COUNT: (
+                0
+                if not isinstance(credited, dict)
+                else _integer(cast("Mapping[str, object]", credited), "total")
+            ),
+        }
 
     @property
     def facts(self) -> tuple[Fact, ...]:
@@ -215,11 +255,45 @@ class Runs:
 
 
 @dataclass(frozen=True)
+class Group:
+    """One prediction file audited over the eleven databases it names, as one line and one page.
+
+    The line states the sums of its runs' counts, by the merge rule the SQLite measurement
+    reports state: no question id is in two of the eleven, so the counts add. It is a line and
+    never a merged ``summary.json``, because a summary no audit wrote is this site's invention
+    and every other number on this site is one an artifact states.
+    """
+
+    name: str
+    benchmark: str
+    runs: tuple[Run, ...]
+
+    @property
+    def slug(self) -> str:
+        return f"{RUNS_DIRECTORY}/{self.benchmark}/{self.name}"
+
+    @property
+    def title(self) -> str:
+        return f"attestql: {self.benchmark}, the runs of {self.name}"
+
+    @property
+    def sums(self) -> tuple[Fact, ...]:
+        """Every count its runs state, added up, in the order the first run states them."""
+        names: list[str] = []
+        for run in self.runs:
+            names.extend(name for name in run.counts if name not in names)
+        return tuple(
+            Fact(name, f"{sum(run.counts.get(name, 0) for run in self.runs):,}") for name in names
+        )
+
+
+@dataclass(frozen=True)
 class Benchmark:
-    """One benchmark and the runs under it, as the two indexes state them."""
+    """One benchmark and what is under it: its runs, or the groups its runs are gathered in."""
 
     name: str
     runs: tuple[Run, ...]
+    groups: tuple[Group, ...] = ()
 
     @property
     def title(self) -> str:
@@ -228,6 +302,11 @@ class Benchmark:
     @property
     def slug(self) -> str:
         return f"{RUNS_DIRECTORY}/{self.name}"
+
+    @property
+    def direct(self) -> tuple[Run, ...]:
+        """The runs this benchmark holds itself, which is none when it holds groups."""
+        return tuple(run for run in self.runs if not run.group)
 
 
 @dataclass(frozen=True)
@@ -340,9 +419,13 @@ def build(out: Path) -> Built:
         benchmarks = _benchmarks(runs)
         for run in runs:
             try:
-                render_report(run.audit, out / run.slug, banner=banner)
+                # Every run points at the one `static/` this build writes at the site root
+                # rather than carrying a copy of it: the stylesheet, the script and the three
+                # font files are 98 kB, and a copy per run would be a tenth of everything the
+                # site is allowed to weigh spent on the same eight files over and over.
+                render_report(run.audit, out / run.slug, banner=banner, static_root=_up(run.slug))
             except ReportRefused as refused:
-                raise BuildRefused(f"{run.benchmark}/{run.name}: {refused}") from refused
+                raise BuildRefused(f"{run.slug}: {refused}") from refused
         environment = _environment()
         for benchmark in benchmarks:
             _write(
@@ -350,9 +433,18 @@ def build(out: Path) -> Built:
                 environment,
                 "benchmark.html",
                 page=benchmark,
-                root="../../",
+                root=_up(benchmark.slug),
                 banner=banner,
             )
+            for group in benchmark.groups:
+                _write(
+                    out / group.slug / PAGE_FILE,
+                    environment,
+                    "group.html",
+                    page=group,
+                    root=_up(group.slug),
+                    banner=banner,
+                )
         _write(
             out / RUNS_DIRECTORY / PAGE_FILE,
             environment,
@@ -382,6 +474,17 @@ def build(out: Path) -> Built:
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
     return _measure(out, time.perf_counter() - started)
+
+
+def _up(slug: str) -> str:
+    """What a page at this address puts in front of a path to reach the site's root.
+
+    Counted off the address rather than written beside each call, because the group level made
+    two of them wrong at once: a run of a group is one segment deeper than a run without one,
+    and so is its benchmark's group page. A directory is a segment, so the number of steps up
+    is the number of segments in the address.
+    """
+    return "../" * len(slug.split("/"))
 
 
 def _refuse_an_out_inside_the_live_page(out: Path) -> None:
@@ -472,18 +575,7 @@ def _runs(scratch: Path) -> tuple[Run, ...]:
         command=command,
         output=output,
     )
-    published = [
-        Run(
-            benchmark=benchmark.name,
-            name=run.name,
-            audit=run,
-            summary=_document(run / SUMMARY_FILE),
-            published=True,
-        )
-        for benchmark in benchmark_directories()
-        for run in sorted(_nameable(path) for path in benchmark.iterdir() if path.is_dir())
-        if (run / SUMMARY_FILE).is_file()
-    ]
+    published = [run for benchmark in benchmark_directories() for run in _published(benchmark)]
     taken = [run for run in published if run.slug == sandbox.slug]
     if taken:
         raise BuildRefused(
@@ -492,6 +584,44 @@ def _runs(scratch: Path) -> tuple[Run, ...]:
             f"would mean the second overwrote the first"
         )
     return (sandbox, *published)
+
+
+def _published(benchmark: Path) -> list[Run]:
+    """The runs of one benchmark, under the group level where that benchmark has one.
+
+    A directory holding a `summary.json` is a run. One that holds none and holds run
+    directories is a group, which is what a SQLite benchmark has: `--dsn` is one file there, so
+    a question set naming eleven databases is eleven invocations of the audit and a prediction
+    file is a group of eleven. Both shapes are read here, so that a benchmark of either kind is
+    published without a template of its own; a directory that is neither -- no summary, and no
+    run under it -- is left out, the way an empty benchmark directory is.
+    """
+    found: list[Run] = []
+    for first in sorted(_nameable(path) for path in benchmark.iterdir() if path.is_dir()):
+        if (first / SUMMARY_FILE).is_file():
+            found.append(
+                Run(
+                    benchmark=benchmark.name,
+                    name=first.name,
+                    audit=first,
+                    summary=_document(first / SUMMARY_FILE),
+                    published=True,
+                )
+            )
+            continue
+        found.extend(
+            Run(
+                benchmark=benchmark.name,
+                group=first.name,
+                name=second.name,
+                audit=second,
+                summary=_document(second / SUMMARY_FILE),
+                published=True,
+            )
+            for second in sorted(_nameable(path) for path in first.iterdir() if path.is_dir())
+            if (second / SUMMARY_FILE).is_file()
+        )
+    return found
 
 
 def _demo(scratch: Path) -> tuple[Path, str, str]:
@@ -523,12 +653,27 @@ def _demo(scratch: Path) -> tuple[Path, str, str]:
 
 
 def _benchmarks(runs: Sequence[Run]) -> tuple[Benchmark, ...]:
-    """The runs grouped under the benchmark each belongs to, in the order they were found."""
+    """The runs under the benchmark each belongs to, and under the group where they have one."""
     names = list(dict.fromkeys(run.benchmark for run in runs))
-    return tuple(
-        Benchmark(name=name, runs=tuple(run for run in runs if run.benchmark == name))
-        for name in names
-    )
+    benchmarks: list[Benchmark] = []
+    for name in names:
+        under = tuple(run for run in runs if run.benchmark == name)
+        groups = list(dict.fromkeys(run.group for run in under if run.group))
+        benchmarks.append(
+            Benchmark(
+                name=name,
+                runs=under,
+                groups=tuple(
+                    Group(
+                        name=group,
+                        benchmark=name,
+                        runs=tuple(run for run in under if run.group == group),
+                    )
+                    for group in groups
+                ),
+            )
+        )
+    return tuple(benchmarks)
 
 
 def _landing(runs: Sequence[Run], benchmarks: Sequence[Benchmark]) -> Landing:
@@ -804,9 +949,10 @@ def _environment() -> Environment:
 def _write(
     path: Path, environment: Environment, template: str, *, page: object, root: str, banner: str
 ) -> Path:
+    """One page of the site's own. Its stylesheet is the site's, which is where its root is."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        environment.get_template(template).render(page=page, root=root, banner=banner),
+        environment.get_template(template).render(page=page, root=root, banner=banner, static=root),
         encoding="utf-8",
     )
     return path

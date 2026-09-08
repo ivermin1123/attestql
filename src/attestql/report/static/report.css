@@ -759,6 +759,29 @@ details[open] > *:not(summary) {
   margin-bottom: var(--space-4);
 }
 
+/* A maintainer's own reading of a question, where one exists. Marked off the way the
+   projection block is, and never merged into the verdict above it: the rule is what the tool
+   computed over two results, and this is what a person made of the same question. Its own
+   border, so that a reader can see at a glance which of the two they are reading. */
+.by-hand {
+  border-left: 1px solid var(--rule);
+  padding-left: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.by-hand__label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.by-hand__reason,
+.by-hand__source {
+  margin-bottom: var(--space-2);
+}
+
 /* ---------------------------------------------------------------------------------------
    Figures. The marks carry classes and take their colours here: an SVG presentation
    attribute does not read `var()`, and a figure that carried its own colours would be

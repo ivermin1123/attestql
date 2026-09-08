@@ -1,6 +1,11 @@
 {# One question, in the order the design spec fixes: what was asked, the two statements,
    what differs between their results, what the two published evaluators would have said,
-   and then everything a reader can explore. #}
+   and then everything a reader can explore.
+
+   Where a maintainer read this question and wrote down what they made of it, that reading is
+   a block of its own under the verdict's own words, with the date of the file it was written
+   in and a link to that file. The two never merge into one line: the verdict is what a rule
+   computed over two results, and the reading is a person's, in their own words. #}
 {% extends "base.html" %}
 {% from "_strip.html" import strip %}
 {% from "_rows.html" import rows_table %}
@@ -21,6 +26,13 @@
   <p class="question__hint ink-2">the hint the set supplies: {{ page.evidence_text }}</p>
   {% endif %}
   <p class="verdict__reading">{{ page.verdict_reading }}</p>
+  {% if page.by_hand %}
+  <div class="by-hand">
+    <p class="by-hand__label">read by hand, {{ page.by_hand.date }}: <span class="chip chip--warn">{{ page.by_hand.classification }}</span></p>
+    <p class="by-hand__reason">{{ page.by_hand.reason }}</p>
+    <p class="by-hand__source ink-2">a maintainer's reading of this question, out of <a href="{{ root }}{{ page.by_hand.file }}">{{ page.by_hand.file }}</a>, copied from {{ page.by_hand.source }}. It is not a verdict and nothing above it was computed from it.</p>
+  </div>
+  {% endif %}
   {% if page.mismatched %}
   <p class="warn">the two records disagree on these preconditions, so they were not compared: {{ page.mismatched|join(', ') }}</p>
   {% endif %}

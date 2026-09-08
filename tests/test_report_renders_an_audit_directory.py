@@ -762,3 +762,119 @@ def test_the_method_page_s_two_accessors_state_what_the_private_tables_hold() ->
     assert all(meanings.values())
     assert len(session_preconditions()) == 7
     assert set(session_preconditions()) >= {"TimeZone", "work_mem", "datcollate"}
+
+
+def _copy_audit(rendered: Rendered, tmp_path: Path) -> Path:
+    """The demo's audit directory, copied so that files can be put beside its summary."""
+    audit = tmp_path / DEMO_AUDIT
+    shutil.copytree(rendered.audit, audit)
+    return audit
+
+
+def test_the_strip_names_the_database_when_a_questions_file_is_beside_the_summary(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """`db_id` reaches no file the audit writes, so a publisher may put it beside the summary.
+
+    A directory the audit wrote holds no such file and renders as it did before: the question
+    set alone. One that has it states the database in front of the set, and nothing else on
+    the page changes.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    (audit / "questions.json").write_text(
+        json.dumps([{"question_id": "879", "db_id": "formula_1", "question": "..."}]),
+        encoding="utf-8",
+    )
+
+    render_report(audit, tmp_path / "with")
+    render_report(rendered.audit, tmp_path / "without")
+
+    with_file = read(tmp_path / "with" / "q879" / PAGE_FILE)
+    without = read(tmp_path / "without" / "q879" / PAGE_FILE)
+    assert "formula_1" in with_file.text
+    assert "formula_1" not in without.text
+    # The one question the file names, and no other: a page states the database of its own.
+    assert "formula_1" not in read(tmp_path / "with" / "q207" / PAGE_FILE).text
+
+
+def test_a_question_a_maintainer_read_states_that_reading_beside_the_verdict_and_never_in_it(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """The row is on the question that has one, with the date of the file it was written in.
+
+    Two lines that never merge: the verdict's own words are what a rule computed over two
+    results, and the reading is a person's own. Both are on the page, and the reading is on
+    the one question the classification holds a row for.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    (audit / "classification.json").write_text(
+        json.dumps(
+            {
+                "per_file": {
+                    "a-model": {
+                        "rows": [
+                            {
+                                "question_id": 879,
+                                "class": "A",
+                                "reason": "the gold orders speeds as text",
+                            }
+                        ]
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    (audit / "classification-source.json").write_text(
+        json.dumps(
+            {
+                "source": "plans/reports/a-measurement/classification.json",
+                "date": "2026-09-04",
+                "shape": "per_file",
+                "key": "a-model",
+                "reason_field": "reason",
+                "keys": "per_file[<prediction file>].rows[]",
+            }
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "report"
+
+    render_report(audit, out)
+
+    page = read(out / "q879" / PAGE_FILE)
+    assert "read by hand, 2026-09-04" in page.text
+    assert "the gold orders speeds as text" in page.text
+    assert "../classification.json" in page.links
+    assert (out / "classification.json").is_file(), "the file the row was read from is beside it"
+    assert document(audit / "classification.json") == document(out / "classification.json")
+    # The verdict's own reading is still there and is a paragraph of its own.
+    assert "It does not state which of them is wrong." in page.text
+    assert "read by hand" not in read(out / "q207" / PAGE_FILE).text
+
+
+def test_a_run_published_as_a_release_asset_states_where_the_whole_of_it_is(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """What a site shows is a selection; this is the address of every question directory."""
+    audit = _copy_audit(rendered, tmp_path)
+    (audit / "published.json").write_text(
+        json.dumps(
+            {
+                "name": "a-benchmark-a-run.tar.gz",
+                "url": "https://example.invalid/a-benchmark-a-run.tar.gz",
+                "bytes": 1234567,
+                "sha256": "9" * 64,
+            }
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "report"
+
+    render_report(audit, out)
+
+    page = read(out / PAGE_FILE)
+    assert "https://example.invalid/a-benchmark-a-run.tar.gz" in page.links
+    assert "1,234,567 bytes" in page.text
+    assert "9" * 64 in page.text
+    assert "release asset" not in read(rendered.out / PAGE_FILE).text

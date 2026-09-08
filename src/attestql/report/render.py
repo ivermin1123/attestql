@@ -25,7 +25,7 @@ import json
 import re
 import shutil
 from collections import Counter
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import cast
@@ -45,6 +45,18 @@ STATIC = Path(__file__).parent / "static"
 directory this file can point at."""
 
 SUMMARY_FILE = "summary.json"
+QUESTIONS_FILE = "questions.json"
+CLASSIFICATION_FILE = "classification.json"
+CLASSIFICATION_SOURCE_FILE = "classification-source.json"
+PUBLISHED_FILE = "published.json"
+"""Three files a directory `attestql audit` wrote does not hold, which a publisher may put
+beside its summary and which a page states when they are there.
+
+`questions.json` names the database each question is about, which reaches no file the audit
+writes; the two classification files are a maintainer's own reading of some of the questions,
+kept apart from every verdict on the page; `published.json` is where the whole run was
+uploaded. A directory without them renders exactly as it does today."""
+
 COUNTEREXAMPLE_FILE = "counterexample.json"
 GOLD_RECORD_FILE = "evidence-gold.json"
 SECOND_RECORD_FILE = "evidence-second.json"
@@ -333,6 +345,33 @@ class Record:
 
 
 @dataclass(frozen=True)
+class HandReading:
+    """What a maintainer recorded about one question, read out of a classification file.
+
+    Never merged with the verdict. The tool's verdict is what a rule computed over two results
+    and states nothing about which statement answers the question; this is a person's reading
+    of the same question, in their own words, with the date of the file it was written in. They
+    are two lines on the page and the page keeps them apart.
+    """
+
+    classification: str
+    reason: str
+    date: str
+    source: str
+    file: str
+
+
+@dataclass(frozen=True)
+class Published:
+    """Where the whole run was uploaded, as the file beside the summary states it."""
+
+    name: str
+    url: str
+    size: str
+    digest: str
+
+
+@dataclass(frozen=True)
 class QuestionPage:
     """One question directory as one page, in the order the design spec fixes."""
 
@@ -362,6 +401,13 @@ class QuestionPage:
     figure: Figure | None = None
     """The drawing of this question's mechanism, where its class has one. Filled in after
     the page is built, because a figure is read off the page's own rows."""
+    db_id: str = ""
+    """Which database this question is about, out of the `questions.json` a publisher put
+    beside the summary. It reaches no file the audit writes, and a directory without that file
+    renders without it: the question set is named on its own, as it was before."""
+    by_hand: HandReading | None = None
+    """A maintainer's own reading of this question, where one of the two classification files
+    beside the summary holds a row for it, and nothing where it does not."""
 
     @property
     def title(self) -> str:
@@ -433,6 +479,10 @@ class RunPage:
     """The pre-rendered restrictions of the index above, each a page of its own. Filled in
     after the page is built, because a filter is the index with rows dropped and the index is
     what the page is built from."""
+    published: Published | None = None
+    """Where the whole of this run was uploaded, out of the `published.json` a publisher put
+    beside the summary. What a site shows of a run is a selection of its questions; this is the
+    address of all of them, so that nothing is lost by the selection."""
     verdict_figure: Figure | None = None
     probe_figure: Figure | None = None
     """The verdicts and the probes drawn, filled in after the page is built. ``counts``
@@ -482,12 +532,22 @@ def default_out(audit_directory: Path) -> Path:
     return resolved.parent / f"{resolved.name}{OUT_SUFFIX}"
 
 
-def render_report(audit_directory: Path, out: Path | None = None, *, banner: str = "") -> Report:
+def render_report(
+    audit_directory: Path, out: Path | None = None, *, banner: str = "", static_root: str = ""
+) -> Report:
     """Render one audit directory into ``out``, or into its sibling when there is none.
 
     ``banner`` is a line put above every page written here, for a caller building a whole
     site out of several runs and needing to say something about all of them at once. It is
     empty for ``attestql report``, whose pages state what their own directory holds.
+
+    ``static_root`` is for the same caller: the path from this report's own root to the
+    directory holding the shared ``static/``, as ``../../../``. Empty, which is what
+    ``attestql report`` passes, means this report carries its own copy of the stylesheet,
+    the script and the three font files, so that the directory it wrote opens on its own from
+    a file manager. A site is one tree and does not need a hundred and twenty of them: the
+    fonts alone are 60 kB, and copied per run they would take a tenth of everything the site
+    is allowed to weigh away from the evidence it is there to show.
 
     Every refusal comes before anything is written, and each names what was looked for: a
     directory holding no ``summary.json`` was not written by ``attestql audit``, an ``--out``
@@ -507,8 +567,9 @@ def render_report(audit_directory: Path, out: Path | None = None, *, banner: str
     directories = _question_directories(audit_directory)
     try:
         summary = _document(summary_path)
-        questions = [_question_page(directory) for directory in directories]
-        run = _run_page(summary, questions, directories)
+        beside = _beside(audit_directory)
+        questions = [_question_page(directory, beside) for directory in directories]
+        run = _run_page(summary, questions, directories, beside.published)
         verdicts, probes = run_figures(run)
         run = replace(
             run,
@@ -520,7 +581,9 @@ def render_report(audit_directory: Path, out: Path | None = None, *, banner: str
         raise ReportRefused(f"{audit_directory}: {unreadable}") from unreadable
     _clear_the_render_before_this_one(destination)
     try:
-        return _write(destination, run, questions, audit_directory, directories, banner)
+        return _write(
+            destination, run, questions, audit_directory, directories, banner, static_root
+        )
     except OSError as unwritable:
         # Everything below writes files, and a write that fails is this command failing to
         # do what it was asked rather than a directory it could not read: it is the same
@@ -597,13 +660,27 @@ def _write(
     audit_directory: Path,
     directories: Sequence[Path],
     banner: str,
+    static_root: str = "",
 ) -> Report:
     """The pages, the stylesheet and the script, and the JSON copied beside each page."""
     environment = _environment()
     pages: list[Path] = [
-        _page(out / PAGE_FILE, environment, "run.html", page=run, root="", banner=banner)
+        _page(
+            out / PAGE_FILE,
+            environment,
+            "run.html",
+            page=run,
+            root="",
+            banner=banner,
+            static_root=static_root,
+        )
     ]
     files: list[Path] = [_copy(audit_directory / SUMMARY_FILE, out / SUMMARY_FILE)]
+    files.extend(
+        _copy(audit_directory / name, out / name)
+        for name in (CLASSIFICATION_FILE, CLASSIFICATION_SOURCE_FILE)
+        if (audit_directory / name).is_file()
+    )
     for question, directory in zip(questions, directories, strict=True):
         beside = out / question.slug
         pages.append(
@@ -614,6 +691,7 @@ def _write(
                 page=question,
                 root="../",
                 banner=banner,
+                static_root=static_root,
             )
         )
         files.extend(
@@ -627,13 +705,15 @@ def _write(
             page=view,
             root=view.root,
             banner=banner,
+            static_root=static_root,
         )
         for view in run.filters
     ]
-    for static in sorted(path for path in STATIC.rglob("*") if path.is_file()):
-        # The whole tree, because the fonts are under a directory of their own: a stylesheet
-        # copied without them would ask a reader's browser for a file that is not there.
-        files.append(_copy(static, out / STATIC_DIRECTORY / static.relative_to(STATIC)))
+    if not static_root:
+        for static in sorted(path for path in STATIC.rglob("*") if path.is_file()):
+            # The whole tree, because the fonts are under a directory of their own: a stylesheet
+            # copied without them would ask a reader's browser for a file that is not there.
+            files.append(_copy(static, out / STATIC_DIRECTORY / static.relative_to(STATIC)))
     return Report(out=out, pages=tuple(pages), files=tuple(files), filters=tuple(filters))
 
 
@@ -664,9 +744,18 @@ def _page(
     page: object,
     root: str,
     banner: str = "",
+    static_root: str = "",
 ) -> Path:
+    """One page, with where the other pages are and where the stylesheet is told apart.
+
+    ``root`` reaches this report's own root from this page; ``static`` reaches the directory
+    holding ``static/``, which is that same root for a report that carries its own copy and a
+    directory above the whole report for a site that shares one.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    rendered = environment.get_template(template).render(page=page, root=root, banner=banner)
+    rendered = environment.get_template(template).render(
+        page=page, root=root, banner=banner, static=root + static_root
+    )
     path.write_text(rendered, encoding="utf-8")
     return path
 
@@ -687,7 +776,106 @@ def question_page(directory: Path) -> QuestionPage:
     directory. A second reader of ``counterexample.json`` written over there would be a
     second answer to what those rows are.
     """
-    return _question_page(directory)
+    return _question_page(directory, _beside(directory.parent))
+
+
+@dataclass(frozen=True)
+class Beside:
+    """The three files a publisher may put beside a summary, read once for the whole run.
+
+    Read once because two of them are about the run rather than about one question: a
+    question file of five hundred entries and a classification of a hundred and seventy rows
+    read again for every question directory would be the same two documents parsed a hundred
+    times over.
+    """
+
+    databases: Mapping[str, str]
+    by_hand: Mapping[str, HandReading]
+    published: Published | None
+
+
+def _beside(audit_directory: Path) -> Beside:
+    """What is beside the summary, or nothing, which is what a directory the audit wrote holds."""
+    return Beside(
+        databases=_databases(audit_directory),
+        by_hand=_by_hand(audit_directory),
+        published=_published(audit_directory),
+    )
+
+
+def _databases(audit_directory: Path) -> Mapping[str, str]:
+    """Which database each question is about, out of the file beside the summary."""
+    path = audit_directory / QUESTIONS_FILE
+    if not path.is_file():
+        return {}
+    return {
+        _as_text(entry.get("question_id")): _as_text(entry.get("db_id"))
+        for entry in _entry_list(path)
+    }
+
+
+def _by_hand(audit_directory: Path) -> Mapping[str, HandReading]:
+    """A maintainer's rows for this run, out of the classification and the note beside it.
+
+    Two files, because the classification is a copy of a document written for a measurement
+    and is kept byte for byte, and the note beside it says where that copy came from, what
+    date it carries and which of its rows are this run's. Both have to be there: a
+    classification with no note would be rows a page could not say the date of, and the date
+    is what makes a reading a reading rather than an opinion.
+    """
+    classification = audit_directory / CLASSIFICATION_FILE
+    note = audit_directory / CLASSIFICATION_SOURCE_FILE
+    if not classification.is_file() or not note.is_file():
+        return {}
+    where = _document(note)
+    rows = _classified(_document(classification), where)
+    field = _optional_text(where, "reason_field") or "reason"
+    return {
+        _as_text(row.get("question_id")): HandReading(
+            classification=_optional_text(row, "class"),
+            reason=_optional_text(row, field),
+            date=_optional_text(where, "date"),
+            source=_optional_text(where, "source"),
+            file=CLASSIFICATION_FILE,
+        )
+        for row in rows
+    }
+
+
+def _classified(document: Json, where: Json) -> list[Json]:
+    """The rows of one classification this run's page shows, by the join the note states.
+
+    Two shapes and no more, each named by the note: ``per_file`` is a document keyed by the
+    prediction file, whose ``key`` is this run's, and ``rows`` is one list whose rows name the
+    database they were read on. A note naming any other shape is refused rather than guessed
+    at: a join this module invented would put a person's reading on a question they never read.
+    """
+    shape = _optional_text(where, "shape")
+    key = _optional_text(where, "key")
+    if shape == "per_file":
+        files = _object(document, "per_file")
+        stated = files.get(key)
+        return [] if not isinstance(stated, dict) else _objects(cast("Json", stated), "rows")
+    if shape == "rows":
+        return [row for row in _objects(document, "rows") if _optional_text(row, "db") == key]
+    raise UnreadableRecord(
+        f"{CLASSIFICATION_SOURCE_FILE} states the shape {shape!r}, and the two this reads are "
+        f"'per_file', keyed by the prediction file, and 'rows', naming the database of each row"
+    )
+
+
+def _published(audit_directory: Path) -> Published | None:
+    """Where the whole of this run was uploaded, out of the file beside the summary."""
+    path = audit_directory / PUBLISHED_FILE
+    if not path.is_file():
+        return None
+    document = _document(path)
+    return Published(
+        name=_optional_text(document, "name"),
+        url=_optional_text(document, "url"),
+        size=f"{_integer(document, 'bytes'):,} bytes",
+        digest=_optional_text(document, "sha256"),
+    )
 
 
 def _question_directories(audit_directory: Path) -> tuple[Path, ...]:
@@ -704,11 +892,13 @@ def _question_directories(audit_directory: Path) -> tuple[Path, ...]:
     return tuple(path for _, path in sorted(found))
 
 
-def _question_page(directory: Path) -> QuestionPage:
+def _question_page(directory: Path, beside: Beside | None = None) -> QuestionPage:
     """One question directory as its page: a comparison when it holds one, a gold otherwise.
 
     The figure is attached here rather than inside the two builders because it is read off
     the finished page: the rows a slope chart draws are the rows the tables below it show.
+    The database and a maintainer's reading come from beside the summary rather than from
+    this directory, and are attached the same way and for the same reason.
     """
     counterexample = directory / COUNTEREXAMPLE_FILE
     smells = _document(directory / SMELLS_FILE)
@@ -717,7 +907,13 @@ def _question_page(directory: Path) -> QuestionPage:
         if counterexample.is_file()
         else _gold_only_page(directory, smells)
     )
-    return replace(page, figure=question_figure(page))
+    found = beside or Beside(databases={}, by_hand={}, published=None)
+    return replace(
+        page,
+        figure=question_figure(page),
+        db_id=found.databases.get(page.question_id, ""),
+        by_hand=found.by_hand.get(page.question_id),
+    )
 
 
 def _comparison_page(directory: Path, counterexample: Json, smells: Json) -> QuestionPage:
@@ -1148,7 +1344,10 @@ def _probes(smells: Json) -> tuple[Probe, ...]:
 
 
 def _run_page(
-    summary: Json, questions: Sequence[QuestionPage], directories: Sequence[Path]
+    summary: Json,
+    questions: Sequence[QuestionPage],
+    directories: Sequence[Path],
+    published: Published | None = None,
 ) -> RunPage:
     """``summary.json`` as the page a reader opens first: the counts, the run, the index."""
     question_set = _object(summary, "question_set")
@@ -1159,6 +1358,7 @@ def _run_page(
     session = _object(summary, "session_settings")
     verdicts = _object(summary, "verdicts")
     return RunPage(
+        published=published,
         run_id=_text(summary, "run_id"),
         format=_text(summary, "format"),
         exit_status=_integer(summary, "exit_status"),
@@ -1448,6 +1648,19 @@ def _document(path: Path) -> Json:
     if not isinstance(loaded, dict):
         raise ReportRefused(f"{path} does not hold a JSON object")
     return cast("Json", loaded)
+
+
+def _entry_list(path: Path) -> list[Json]:
+    """One JSON file holding a list of objects, which `questions.json` is and no audit file."""
+    try:
+        loaded = json.loads(path.read_text(encoding="utf-8"))
+    except OSError as unreadable:
+        raise ReportRefused(f"{path} could not be read: {unreadable}") from unreadable
+    except json.JSONDecodeError as unreadable:
+        raise ReportRefused(f"{path} does not hold JSON: {unreadable}") from unreadable
+    if not isinstance(loaded, list):
+        raise ReportRefused(f"{path} does not hold a JSON array")
+    return [_object_of(entry, path.name) for entry in cast("list[object]", loaded)]
 
 
 def _object(document: Json, key: str) -> Json:

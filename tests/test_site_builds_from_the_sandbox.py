@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import io
 import json
+import shutil
 import tomllib
 from contextlib import redirect_stdout
 from html.parser import HTMLParser
@@ -552,3 +553,88 @@ def test_a_budget_that_the_site_is_over_fails_the_build_and_names_the_offender(
     monkeypatch.setattr(site, "MAX_PAGE_BYTES", 100)
     with pytest.raises(site.BuildRefused, match=r"pages over 100 bytes: .*index\.html at "):
         build(tmp_path / "pages")
+
+
+def _publish(data: Path, slug: str, source: Path) -> Path:
+    """One published run at `slug` under `data`, copied from a rendered run's own directory.
+
+    The summary and the question directories, because what a published run is, is a directory
+    `attestql report` can render: a summary alone would test the index and not the pages under
+    it, which is where the address of a run of a group is measured.
+    """
+    run = data / slug
+    run.mkdir(parents=True)
+    shutil.copyfile(source / "summary.json", run / "summary.json")
+    for question in sorted(source.glob("q*")):
+        if question.is_dir():
+            shutil.copytree(question, run / question.name)
+    return run
+
+
+def test_a_benchmark_whose_runs_are_under_a_group_publishes_them_a_level_deeper(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, built: Path
+) -> None:
+    """The shape a SQLite benchmark has: a prediction file is a group of one run per database.
+
+    `--dsn` is one file there, so one prediction file is eleven invocations of the audit and
+    the group is that file. The group is a level in the address, a page of its own and a line
+    on the benchmark index; what it is never is a merged `summary.json`, because a summary no
+    audit wrote would be this site's own invention.
+    """
+    source = built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN
+    data = tmp_path / "data"
+    _publish(data, "grouped/a-model/first-db", source)
+    _publish(data, "grouped/a-model/second-db", source)
+    _publish(data, "flat/a-run", source)
+    monkeypatch.setattr(site, "DATA", data)
+    out = tmp_path / "site"
+
+    build(out)
+
+    runs = out / site.RUNS_DIRECTORY
+    assert (runs / "grouped" / "a-model" / "first-db" / PAGE_FILE).is_file()
+    assert (runs / "grouped" / "a-model" / "first-db" / site.DEMO_QUESTION / PAGE_FILE).is_file()
+    assert (runs / "grouped" / "a-model" / PAGE_FILE).is_file(), "the group has a page"
+    assert (runs / "flat" / "a-run" / PAGE_FILE).is_file()
+
+    index = read(runs / "grouped" / PAGE_FILE)
+    assert "runs/grouped/a-model/index.html" in [link.split("../")[-1] for link in index.links]
+    assert "2 runs" in "".join(index.text)
+    group = read(runs / "grouped" / "a-model" / PAGE_FILE)
+    assert "12" in "".join(group.text), "six questions in each of the two runs, added up"
+
+
+def test_every_page_takes_its_stylesheet_from_the_one_static_directory_of_the_site(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, built: Path
+) -> None:
+    """One `static/`, however deep a page is, and no copy of the fonts beside each run.
+
+    The three font files are 60 kB. Copied per run, a site of a hundred and twenty runs would
+    spend a tenth of everything it is allowed to weigh on the same eight files, which is weight
+    taken off the evidence the site exists to show. So every page's link is resolved here
+    against the page's own directory and has to land on the site's own copy.
+    """
+    source = built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN
+    data = tmp_path / "data"
+    _publish(data, "grouped/a-model/first-db", source)
+    _publish(data, "flat/a-run", source)
+    monkeypatch.setattr(site, "DATA", data)
+    out = tmp_path / "site"
+
+    build(out)
+
+    stylesheets = 0
+    for page in sorted(out.rglob(PAGE_FILE)):
+        for href in read(page).links:
+            assert not (page.parent / href).is_dir(), href
+        found = [
+            line
+            for line in page.read_text(encoding="utf-8").splitlines()
+            if 'rel="stylesheet"' in line
+        ]
+        assert len(found) == 1, page
+        href = found[0].split('href="')[1].split('"')[0]
+        assert (page.parent / href).resolve() == (out / "static" / "report.css"), page
+        stylesheets += 1
+    assert stylesheets > 4
+    assert sorted(path.name for path in out.rglob("static") if path.is_dir()) == ["static"]

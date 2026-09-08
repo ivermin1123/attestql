@@ -1,17 +1,58 @@
-{# One benchmark: its runs, each with the date, the engine and the question file it was made
-   from, read out of that run's own summary.json. #}
+{# One benchmark: what is under it, with the date, the engine and the question file each run
+   was made from, read out of that run's own summary.json.
+
+   Two shapes, because the engines differ. On PostgreSQL one invocation of the audit answers a
+   whole question set, so a prediction file is a run and this page lists runs. On SQLite a
+   connection is one database file, so a question set naming eleven databases is eleven
+   invocations and a prediction file is a group of them: this page then lists the groups, each
+   with the sums of its runs' counts, and the group's own page lists its eleven. #}
 {% extends "base.html" %}
 
 {% block strip %}
 <header class="strip strip--run">
   <h1 class="strip__title">{{ page.name }}</h1>
   <p class="strip__facts">
+    {% if page.groups %}
+    <span class="chip chip--rule">{{ page.groups|length }} groups</span>
+    {% endif %}
     <span class="chip chip--rule">{{ page.runs|length }} runs</span>
   </p>
 </header>
 {% endblock %}
 
 {% block content %}
+{% if page.groups %}
+<section class="index" id="groups">
+  <h2>The groups of this benchmark</h2>
+  <p>One row per prediction file, and one run per database it names, because a connection here is one file. The numbers are the sums of that group's runs, which they can be because no question is in two of them. <a href="{{ root }}runs/index.html">Every benchmark</a> is indexed a level up.</p>
+  <div class="rows__region">
+    <table class="index__table">
+      <thead>
+        <tr>
+          <th scope="col">group</th>
+          <th scope="col">runs</th>
+          {% for sum in page.groups[0].sums %}
+          <th scope="col">{{ sum.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for group in page.groups %}
+        <tr class="index__row">
+          <th scope="row" class="mono"><a href="{{ root }}{{ group.slug }}/index.html">{{ group.name }}</a></th>
+          <td class="mono">{{ group.runs|length }}</td>
+          {% for sum in group.sums %}
+          <td class="mono">{{ sum.value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% if page.direct %}
 <section class="index" id="runs">
   <h2>The runs of this benchmark</h2>
   <p>One row per CLI run: the audit writes one second statement per question per run, so a prediction file is a run. <a href="{{ root }}runs/index.html">Every benchmark</a> is indexed a level up.</p>
@@ -20,13 +61,13 @@
       <thead>
         <tr>
           <th scope="col">run</th>
-          {% for fact in page.runs[0].facts %}
+          {% for fact in page.direct[0].facts %}
           <th scope="col">{{ fact.name }}</th>
           {% endfor %}
         </tr>
       </thead>
       <tbody>
-        {% for run in page.runs %}
+        {% for run in page.direct %}
         <tr class="index__row">
           <th scope="row" class="mono"><a href="{{ root }}{{ run.slug }}/index.html">{{ run.name }}</a></th>
           {% for fact in run.facts %}
@@ -38,4 +79,5 @@
     </table>
   </div>
 </section>
+{% endif %}
 {% endblock %}

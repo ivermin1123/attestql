@@ -1,6 +1,11 @@
-{# Every benchmark the site holds, and every run under each. One row per CLI run, because
-   the audit writes one second statement per question per run and a prediction file is one
-   run. #}
+{# Every benchmark the site holds, and how much is under each: its runs, and the groups they
+   are gathered in where the benchmark has them.
+
+   A run is one invocation of the audit. On PostgreSQL that answers a whole question set, so a
+   prediction file is a run; on SQLite a connection is one database file, so a question set
+   naming eleven databases is eleven runs and a prediction file is a group of them. Both
+   numbers are stated, because a benchmark of nine and one of ninety-nine are not the same
+   size and a count of one of them alone would say they were. #}
 {% extends "base.html" %}
 
 {% block strip %}
@@ -15,10 +20,10 @@
 {% block content %}
 <section class="index" id="benchmarks">
   <h2>What is published here</h2>
-  <p>Each benchmark holds one run per prediction file, and each run its own page. <a href="{{ root }}index.html">The landing page</a> is where this site starts.</p>
+  <p>Each benchmark holds its runs, and each run its own page. <a href="{{ root }}index.html">The landing page</a> is where this site starts.</p>
   <ul class="files__list">
     {% for benchmark in page.benchmarks %}
-    <li><a href="{{ root }}{{ benchmark.slug }}/index.html">{{ benchmark.name }}</a> <span class="ink-2">{{ benchmark.runs|length }} runs</span></li>
+    <li><a href="{{ root }}{{ benchmark.slug }}/index.html">{{ benchmark.name }}</a> <span class="ink-2">{{ benchmark.runs|length }} runs{% if benchmark.groups %} in {{ benchmark.groups|length }} groups{% endif %}</span></li>
     {% endfor %}
   </ul>
 </section>
