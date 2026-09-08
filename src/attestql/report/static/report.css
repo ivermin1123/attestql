@@ -123,7 +123,12 @@
   --reserved: 400ms;
 
   --gutter: var(--space-4);
-  --measure: 66ch;
+  /* The prose column. `ch` is the advance of the digit zero, 0.6em in Plex Sans, so this is
+     528px at 16px. Measured in Chromium over the stress report: 75 characters on the first
+     line of the run page's longest paragraph and 56 on a question page's, both inside the
+     45 to 75 band the design reference names. It was 66ch, which measured 86 to 88 and is
+     outside that band; the owner decided this value on 2026-09-08. */
+  --measure: 55ch;
   /* The widest a page's content box gets: 1280 less the two 32px gutters the spec fixes
      for that breakpoint, which is the width the widest breakpoint is designed at. Not a
      value off a scale of its own; it is read off the gutter rule above. */
@@ -197,7 +202,7 @@ body {
   padding: var(--space-6) var(--gutter) var(--space-8);
 }
 
-/* The measure. Prose is held to 66ch; a table, a statement, a code block and a figure are
+/* The measure. Prose is held to 55ch; a table, a statement, a code block and a figure are
    content regions and take the column's whole width, which is what the spec means by
    escaping the measure. */
 .page p,
@@ -359,8 +364,8 @@ a:hover {
 /* The line under the chips: which question set, and where the run was told it came from.
    Secondary text and not a chip, because its length is a benchmark's to decide. */
 /* The strip's children are all one width, which is what puts their left edges on the page's
-   own. The 66ch measure is the prose column's and is not applied here: clamped to it, this
-   line would be a 634px box centred inside a 1152px one and would start 319px right of the
+   own. The 55ch measure is the prose column's and is not applied here: clamped to it, this
+   line would be a 528px box centred inside a 1152px one and would start 312px right of the
    title above it at 1280. */
 .strip__set {
   margin: var(--space-2) auto 0;

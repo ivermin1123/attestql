@@ -45,8 +45,12 @@ tests/test_report_tokens_meet_contrast.py. Chips carry a fill, not only a `--rul
 - Scale, in px: 13 (table cells, labels), 16 (body), 20 (section heads), 28 (page title). Four
   steps, no fifth.
 - Line height 1.5 for body, 1.35 for cells, 1.6 for SQL blocks.
-- Measure: prose column 66ch maximum. Tables and SQL blocks escape it inside their own
-  `overflow-x: auto` region; the page body never scrolls horizontally.
+- Measure: prose column 55ch maximum. Tables and SQL blocks escape it inside their own
+  `overflow-x: auto` region; the page body never scrolls horizontally. Owner decision of
+  2026-09-08, after the phase 2 verification measured the accepted value: `ch` is the advance
+  of the digit zero, which Plex Sans sets at 0.6em, so 66ch was 634px and set 86 to 88
+  characters a line, outside the 45 to 75 band the design reference names; 55ch is 528px and
+  sets 75 on the run page and 56 on a question page, inside it.
 
 ## Spacing, radius, elevation
 
@@ -57,7 +61,7 @@ tests/test_report_tokens_meet_contrast.py. Chips carry a fill, not only a `--rul
 
 ## Layout
 
-- Single column, 66ch prose, full-width content regions for tables and SQL, gutters 16px at 360,
+- Single column, 55ch prose, full-width content regions for tables and SQL, gutters 16px at 360,
   24px at 768, 32px at 1280.
 - Question page order, fixed (the martini glass stem): title line (q id, database, rule,
   verdict) as the sticky strip; question text and hint; the two statements side by side at 1280
