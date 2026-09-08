@@ -156,6 +156,10 @@ class Run:
     """The command that made this run and what it printed, filled in for the sandbox alone:
     the published runs were made by hand, months of machine time apart, and the landing states
     a command a reader can run rather than one it watched run."""
+    published: bool = False
+    """Whether this run came out of `data/` rather than out of this build's own audit. One
+    published run is what removes the banner, and an empty benchmark directory is not one: a
+    site saying its runs have arrived while it holds none would be the banner's own defect."""
 
     @property
     def slug(self) -> str:
@@ -301,8 +305,8 @@ def build(out: Path) -> Built:
     _clear(out)
     _clear(scratch)
     try:
-        banner = "" if benchmark_directories() else BANNER
         runs = _runs(scratch)
+        banner = "" if any(run.published for run in runs) else BANNER
         benchmarks = _benchmarks(runs)
         for run in runs:
             render_report(run.audit, out / run.slug, banner=banner)
@@ -400,6 +404,7 @@ def _runs(scratch: Path) -> tuple[Run, ...]:
             name=run.name,
             audit=run,
             summary=_document(run / SUMMARY_FILE),
+            published=True,
         )
         for benchmark in benchmark_directories()
         for run in sorted(path for path in benchmark.iterdir() if path.is_dir())

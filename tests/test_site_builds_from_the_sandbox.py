@@ -236,6 +236,27 @@ def test_the_banner_is_on_every_page_without_data_and_on_none_of_them_with_it(
     assert (out / site.RUNS_DIRECTORY / "a-benchmark" / "a-run" / PAGE_FILE).is_file()
 
 
+def test_a_benchmark_directory_holding_no_run_publishes_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """One published run removes the banner, and an empty directory is not one.
+
+    The failure this refuses is a site saying its runs have arrived while it holds none, which
+    is what a banner keyed to the directory rather than to a run would do on the first `mkdir`
+    of the next phase.
+    """
+    data = tmp_path / "data"
+    (data / "a-benchmark").mkdir(parents=True)
+    monkeypatch.setattr(site, "DATA", data)
+    out = tmp_path / "site"
+
+    build(out)
+
+    assert site.benchmark_directories() != ()
+    assert site.BANNER in (out / PAGE_FILE).read_text(encoding="utf-8")
+    assert not (out / site.RUNS_DIRECTORY / "a-benchmark").exists()
+
+
 def test_the_build_refuses_an_out_inside_the_live_page_s_directory(tmp_path: Path) -> None:
     """`site/` holds what attestql.com serves and belongs to another session."""
     with pytest.raises(site.BuildRefused, match="belongs to another session"):
