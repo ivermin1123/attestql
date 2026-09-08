@@ -850,6 +850,14 @@ def test_duplicate_full_row_is_quiet_when_every_row_came_back_once() -> None:
     assert found.counterexample_rows == ()
 
 
+def test_a_set_operation_is_named_in_the_evidence_and_not_folded_into_distinct() -> None:
+    """A UNION deduplicates without the outer select stating DISTINCT, so the evidence would
+    say a statement can repeat a row where it cannot. Both are stated, each as itself."""
+    found = _duplicates("SELECT name FROM players UNION SELECT name FROM t", (("Ana",),))
+    assert found.evidence["distinct_stated"] is False
+    assert found.evidence["set_operation"] is True
+
+
 def test_a_statement_that_states_distinct_has_no_repeat_to_find() -> None:
     found = _duplicates(DISTINCT_NAMES, (("Ana",), ("Bo",)))
     assert _smell(found) == (DUPLICATE_FULL_ROW, False, False)

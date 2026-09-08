@@ -828,6 +828,11 @@ def duplicate_full_row(parsed: ParsedStatement, baseline: ExecutionResult) -> Sm
     while its silence proves nothing about the rows beyond the cut. A statement that states
     DISTINCT cannot repeat a row at all, and a result of one row has nothing to repeat;
     both are not applicable rather than quiet.
+
+    ``distinct_stated`` is the outer select's own DISTINCT and nothing else, so a set
+    operation that deduplicates says ``false`` there. ``set_operation`` is stated beside it
+    rather than folded into it: the two are different reasons a result cannot repeat a row,
+    and a reader of the evidence should be told which one is in force.
     """
     counted: Counter[tuple[tuple[str, object], ...]] = Counter()
     first_seen: dict[tuple[tuple[str, object], ...], tuple[int, tuple[object, ...]]] = {}
@@ -843,6 +848,7 @@ def duplicate_full_row(parsed: ParsedStatement, baseline: ExecutionResult) -> Sm
         "largest_repeat": max((count for _, count in repeated), default=1),
         "result_bounded": baseline.truncated,
         "distinct_stated": parsed.distinct,
+        "set_operation": parsed.set_operation,
     }
     if repeated:
         order = sorted(repeated, key=lambda pair: (-pair[1], first_seen[pair[0]][0]))
