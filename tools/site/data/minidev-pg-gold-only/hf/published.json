@@ -2,5 +2,6 @@
  "name": "minidev-pg-gold-only-hf.tar.gz",
  "url": "https://github.com/ivermin1123/attestql/releases/download/v0.2.2/minidev-pg-gold-only-hf.tar.gz",
  "bytes": 59916,
- "sha256": "a15aa56fb0c278816bc42e7ef70e7f206295cfa1b7f2608a7cdbe12edd38cc2e"
+ "sha256": "a15aa56fb0c278816bc42e7ef70e7f206295cfa1b7f2608a7cdbe12edd38cc2e",
+ "directories": 28
 }

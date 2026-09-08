@@ -18,6 +18,25 @@
 {% endblock %}
 
 {% block content %}
+{% if page.published %}
+<section class="published" id="published">
+  <h2>The whole of this group is a release asset</h2>
+  {% if page.published.directories %}
+  <p>This site holds {{ page.directories }} of the {{ page.published.directories }} question directories these {{ page.runs|length }} runs wrote; the archive holds every one:</p>
+  {% else %}
+  <p>The pages here are a selection of this group's questions. Every question directory its runs wrote is in one archive:</p>
+  {% endif %}
+  <dl class="facts">
+    <dt>archive</dt>
+    <dd class="mono"><a href="{{ page.published.url }}">{{ page.published.name }}</a></dd>
+    <dt>size</dt>
+    <dd class="mono">{{ page.published.size }}</dd>
+    <dt>sha256</dt>
+    <dd class="mono">{{ page.published.digest }}</dd>
+  </dl>
+</section>
+{% endif %}
+
 <section class="counts" id="counts">
   <h2>The sums of the {{ page.runs|length }} runs</h2>
   <p>One prediction file, audited once per database it names, because a connection here is one file. Each run below states its own counts; these are those counts added up, which they can be because no question is in two of the runs.</p>

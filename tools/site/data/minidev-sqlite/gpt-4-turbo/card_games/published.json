@@ -2,5 +2,6 @@
  "name": "minidev-sqlite-gpt-4-turbo.tar.gz",
  "url": "https://github.com/ivermin1123/attestql/releases/download/v0.2.2/minidev-sqlite-gpt-4-turbo.tar.gz",
  "bytes": 12234405,
- "sha256": "4f44c336f425afe237d3fc1cb12c528c960d4f4a373a5f55d8c580eb73af4c63"
+ "sha256": "4f44c336f425afe237d3fc1cb12c528c960d4f4a373a5f55d8c580eb73af4c63",
+ "directories": 31
 }

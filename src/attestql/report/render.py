@@ -125,6 +125,11 @@ MARKER_TEXT = (
 )
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 
+ASSET_SCHEME = "https://"
+"""What the address in ``published.json`` has to begin with. It reaches an ``href`` on the run
+page, where a ``javascript:`` value would run on a reader's click; autoescaping puts the text
+safely inside the attribute and says nothing at all about what the scheme does."""
+
 BIRD_READING = "BIRD's own check"
 TEST_SUITE_READING = "the test-suite check"
 """What the two readings beside a verdict are called on a question page.
@@ -369,6 +374,10 @@ class Published:
     url: str
     size: str
     digest: str
+    directories: int | None = None
+    """How many question directories the archive holds for this run, where the file states it.
+    What a site shows is a selection; a page saying how many it shows without saying how many
+    there are states a number a reader cannot use."""
 
 
 @dataclass(frozen=True)
@@ -483,6 +492,9 @@ class RunPage:
     """Where the whole of this run was uploaded, out of the `published.json` a publisher put
     beside the summary. What a site shows of a run is a selection of its questions; this is the
     address of all of them, so that nothing is lost by the selection."""
+    directories: int = 0
+    """How many question directories this render found, which is how many of the run's
+    questions have a page here. Counted rather than read, so it is what was rendered."""
     verdict_figure: Figure | None = None
     probe_figure: Figure | None = None
     """The verdicts and the probes drawn, filled in after the page is built. ``counts``
@@ -569,7 +581,7 @@ def render_report(
         summary = _document(summary_path)
         beside = _beside(audit_directory)
         questions = [_question_page(directory, beside) for directory in directories]
-        run = _run_page(summary, questions, directories, beside.published)
+        run = _run_page(summary, questions, directories, beside.published, len(directories))
         verdicts, probes = run_figures(run)
         run = replace(
             run,
@@ -864,17 +876,35 @@ def _classified(document: Json, where: Json) -> list[Json]:
     )
 
 
+def published_asset(directory: Path) -> Published | None:
+    """Where the whole of one run or one group was uploaded, out of the file beside it.
+
+    The third accessor this package exposes for the site: a group has a `published.json` of its
+    own, holding the group's own count, and the group page is built over there. A second reader
+    of that file written in the site would be a second answer to what it says.
+    """
+    return _published(directory)
+
+
 def _published(audit_directory: Path) -> Published | None:
     """Where the whole of this run was uploaded, out of the file beside the summary."""
     path = audit_directory / PUBLISHED_FILE
     if not path.is_file():
         return None
     document = _document(path)
+    url = _optional_text(document, "url")
+    if not url.startswith(ASSET_SCHEME):
+        raise ReportRefused(
+            f"{path} states {url!r}, and this address is a link on the run page: it has to "
+            f"begin with {ASSET_SCHEME}, so that what a reader clicks fetches a file"
+        )
+    stated = document.get("directories")
     return Published(
         name=_optional_text(document, "name"),
-        url=_optional_text(document, "url"),
+        url=url,
         size=f"{_integer(document, 'bytes'):,} bytes",
         digest=_optional_text(document, "sha256"),
+        directories=(stated if isinstance(stated, int) and not isinstance(stated, bool) else None),
     )
 
 
@@ -1348,6 +1378,7 @@ def _run_page(
     questions: Sequence[QuestionPage],
     directories: Sequence[Path],
     published: Published | None = None,
+    found: int = 0,
 ) -> RunPage:
     """``summary.json`` as the page a reader opens first: the counts, the run, the index."""
     question_set = _object(summary, "question_set")
@@ -1359,6 +1390,7 @@ def _run_page(
     verdicts = _object(summary, "verdicts")
     return RunPage(
         published=published,
+        directories=found,
         run_id=_text(summary, "run_id"),
         format=_text(summary, "format"),
         exit_status=_integer(summary, "exit_status"),

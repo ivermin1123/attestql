@@ -19,6 +19,7 @@
 # run the statement bound stopped under three processes, kept in the work directory so that the
 # reconciliation can state both, and what is published is the rerun.
 set -uo pipefail
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RUNS_WORK="${RUNS_WORK:-/tmp/attestql-runs}"
 RUNS_WORK="$(cd "$RUNS_WORK" && pwd)"
 ASSETS="$RUNS_WORK/assets"
@@ -56,31 +57,12 @@ archives() {
   echo "archives in $ASSETS"
 }
 
-# The manifest select.py reads to write each run's published.json: what each asset is called,
-# where it is, how large it is and what it hashes to.
+# The manifest select.py reads to write each run's published.json. manifest.py counts what is
+# in each archive; this only says where the assets and the tag are.
 manifest() {  # manifest <tag>
   local tag="$1"
-  python3 - "$ASSETS" "$tag" "$REPOSITORY" > "$MANIFEST" <<'PY'
-import hashlib
-import json
-import sys
-from pathlib import Path
-
-assets, tag, repository = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
-found = []
-for archive in sorted(assets.glob("*.tar.gz")):
-    digest = hashlib.sha256(archive.read_bytes()).hexdigest()
-    found.append(
-        {
-            "name": archive.name,
-            "url": f"https://github.com/{repository}/releases/download/{tag}/{archive.name}",
-            "bytes": archive.stat().st_size,
-            "sha256": digest,
-        }
-    )
-json.dump({"tag": tag, "assets": found}, sys.stdout, indent=1)
-print()
-PY
+  python3 "$here/manifest.py" "$ASSETS" "$tag" "$REPOSITORY" > "$MANIFEST" || {
+    rm -f "$MANIFEST"; echo "the manifest could not be made" >&2; return 1; }
   echo "manifest: $MANIFEST"
 }
 

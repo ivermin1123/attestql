@@ -66,14 +66,17 @@ from attestql.report.render import (
     BIRD_READING,
     FILTER_SEGMENT,
     PAGE_FILE,
+    QUESTION_DIRECTORY,
     STATIC,
     STATIC_DIRECTORY,
     SUMMARY_FILE,
     TEMPLATES,
     TEST_SUITE_READING,
     Fact,
+    Published,
     QuestionPage,
     ReportRefused,
+    published_asset,
     question_page,
     render_report,
 )
@@ -267,10 +270,22 @@ class Group:
     name: str
     benchmark: str
     runs: tuple[Run, ...]
+    published: Published | None = None
+    """The release asset holding the whole of this group, out of the `published.json` beside
+    its runs. The benchmark index is where a reader of a group meets it, so the group's own
+    page is where the address of all of it belongs."""
 
     @property
     def slug(self) -> str:
         return f"{RUNS_DIRECTORY}/{self.benchmark}/{self.name}"
+
+    @property
+    def directories(self) -> int:
+        """How many question directories this site holds for the group: its runs', added up."""
+        return sum(
+            len([path for path in run.audit.iterdir() if QUESTION_DIRECTORY.match(path.name)])
+            for run in self.runs
+        )
 
     @property
     def title(self) -> str:
@@ -664,16 +679,28 @@ def _benchmarks(runs: Sequence[Run]) -> tuple[Benchmark, ...]:
                 name=name,
                 runs=under,
                 groups=tuple(
-                    Group(
-                        name=group,
-                        benchmark=name,
-                        runs=tuple(run for run in under if run.group == group),
-                    )
+                    _group(name, group, tuple(run for run in under if run.group == group))
                     for group in groups
                 ),
             )
         )
     return tuple(benchmarks)
+
+
+def _group(benchmark: str, name: str, runs: tuple[Run, ...]) -> Group:
+    """One group, with the release asset its own directory names where there is one.
+
+    Read from the group's directory rather than from a run's, because the two state different
+    numbers: a run's `published.json` counts that run's question directories and the group's
+    counts the group's, and the group page is about the group.
+    """
+    beside = runs[0].audit.parent if runs else None
+    return Group(
+        name=name,
+        benchmark=benchmark,
+        runs=runs,
+        published=None if beside is None else published_asset(beside),
+    )
 
 
 def _landing(runs: Sequence[Run], benchmarks: Sequence[Benchmark]) -> Landing:
