@@ -4,7 +4,9 @@
 directory per disagreement or fired probe, a summary line and `summary.json`. This page is the
 reference for its flags, its output and its keys; the README is the short version. The text here
 was the README's own until version 0.2.1 and moved when the README was cut down to what a first
-reader needs.
+reader needs. `attestql --version` prints the installed release, read off the installed
+distribution, and exits 0; it sits on the command rather than on a subcommand, because what it
+answers is which release is installed and not what one of the commands does.
 
 ## The demo
 
@@ -94,7 +96,11 @@ where each of the two files came from and what date its origin states, beside th
 computes for it, in `summary.json` and in every evidence record. The data the server holds came
 from a file too: `--data-file` names the dump it was loaded from, which this tool digests and
 never reads, and `--data-origin` and `--data-date` state where that file came from, so all three
-sources are recorded alike.
+sources are recorded alike. `--data-as-of` states the instant that data is as of, which every
+evidence record carries and `summary.json` states beside `data_as_of_source`; without it the
+instant the run started is used and the source says which of the two it was. It takes an ISO 8601
+instant that states an offset, refuses one that does not, and is recorded in UTC. Both engines
+take it alike.
 
 Two copies of the Mini-Dev question set exist and they differ: the `minidev.zip` linked from the
 GitHub README (498 distinct ids, q879 still ordering a text column as text) and the Hugging Face
@@ -121,11 +127,17 @@ q879  formula_1   R-ORD  GOLD-ONLY  smells=ordering-over-numeric-text  audit/q87
 
 Exit status is 0 with no disagreement, 1 with at least one, 2 on a tool error. `--fail-on-smell`
 makes a fired probe exit 1 too. An `ERROR` line is none of the three: the other questions decide
-the status, and only a run that answered no question at all exits 2. The line names the side that
-failed, `gold`, `prediction` or `run` for the measurement around the two, before the message.
+the status, and a run whose every question errored is the one that exits 2, because it audited
+nothing at all. A run with nothing to audit is not that case: a question file holding no question
+asked nothing and exits 0. An `--ids` naming no question the file holds is a different thing
+again, a tool error before the run starts, and exits 2. The line names the side that failed,
+`gold`, `prediction` or `run` for the measurement around the two, before the message.
 
-Every `audit/q<id>/` holds `counterexample.json`, the two evidence records (`evidence-gold.json`,
-`evidence-second.json`) and `smells.json`; `audit/summary.json` holds the counts, the fixture
+An `audit/q<id>/` written for a question that had a prediction holds four files:
+`counterexample.json`, the two evidence records (`evidence-gold.json`, `evidence-second.json`)
+and `smells.json`. A gold-only question was compared with nothing, so there is no counterexample
+and no second record, and its directory holds the two files there are: the gold's own record,
+`evidence-gold.json`, and `smells.json`. `audit/summary.json` holds the counts, the fixture
 digest, whether the shuffle ran, the session the run was made in (the server's version string
 beside its number) and the parser that judged every statement (the validator, the `postgast`
 release and the libpg_query grammar version). `fixture.unreadable_tables` names the tables a gold
@@ -153,6 +165,15 @@ server and the schema digest, stays, and so does anything else you put there. A 
 is used only when the server's own per-table counters still say what they said when it was taken,
 so data reloaded or edited under an unchanged schema is measured again rather than read back from
 the file.
+
+`--fixture-digest` says how deep that measurement goes. The default, `counts`, takes the schema
+digest and the exact row count of each table a statement names. `full` takes a digest of every row
+of those tables as well, which reads all of them: on Mini-Dev that costs about fourteen seconds
+against half a second for the other two. The depth is part of the cache key, so one depth is never
+served for the other, and `summary.json` states it under `fixture.depth`. Both engines digest the
+rows and not the order they are stored in, so a shuffled copy digests as the table it was copied
+from; the function differs and is written in front of the value, `md5` over the server's own row
+text on PostgreSQL and `sha256` over the rendered rows on SQLite.
 
 ## The statement budget
 
@@ -235,6 +256,21 @@ answer a copy gives depends on the plan it is read with, and the plan on the pla
 the run records `last_analyze`, `last_autoanalyze` and `n_mod_since_analyze` per table, in the
 probe's own evidence and in the summary, and never runs ANALYZE. A probe that fires on one run and
 is quiet on the next over the same data is that, and the two records show it.
+
+`--shuffle-seed`, 1 by default, is the seed those copies are ordered by, so one run reproduces
+another. The order it fixes is the engine's: a copy is written `ORDER BY md5(<seed> || t::text)`
+on PostgreSQL and in the order of a sha256 of the seed and the source row's rowid on SQLite, so
+one seed is one order per engine and not one order across the two. `--shuffle-row-limit`, 300,000
+rows by default, is the size above which a table is not copied at all; the skip is recorded with
+the count that caused it, and a limit below one row is refused.
+
+`--plan-variant` is off by default and adds a second rerun beside the shuffled one: the same
+statement over the same rows, with the engine steered away from the plan it chose. What the
+steering is belongs to the engine. On PostgreSQL it is `enable_seqscan`, `enable_hashjoin` and
+`enable_mergejoin` off for that statement alone; on SQLite it is the one plan control a reader can
+reach, the transient index the engine builds for a join it has no index for. Without the flag the
+probe records `plan_variant` as not run with that as its reason, and a gold that was reread
+neither way reports the probe as not applicable rather than as having survived a rerun.
 
 The duplicate-row probe is the one that asks the database nothing: it counts the rows the gold
 itself returned, under the keys the comparison counts them by, so two rows are one row here exactly

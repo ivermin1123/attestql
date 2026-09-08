@@ -337,9 +337,12 @@ def _fixtures(out: Path) -> Path:
     """Both fixtures, and the path of the one the run audits.
 
     The packaged sandbox is built once and copied, and this file's own tables go into both
-    copies. The second holds one row more, in a table no question reads: enough for the two
-    fixture digests to differ, which is the precondition two records have to disagree on for
-    the library to refuse to compare them, and no answer to any question changes.
+    copies. The second holds one row more, in `sequence`, which is the table the NOT_COMPARABLE
+    question reads: a fixture digest covers the tables a statement names, so a row anywhere else
+    would leave the two records comparable. The digests differ, which is the precondition two
+    records have to disagree on for the library to refuse to compare them, and the refusal comes
+    before either result is read. The audited run never opens the second copy, so no answer it
+    records changes.
     """
     built = build_fixture(out)
     shutil.copyfile(built, out / SECOND_FIXTURE)

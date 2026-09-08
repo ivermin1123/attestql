@@ -5,6 +5,11 @@ kept as history: drafted without the owner during the autonomous run of that day
 (`plans/reports/session-260904-autonomous-run.md`); nothing here is built, and the estimate
 below is a reading of the code as it stands at `9e4627d`, not a plan. What the owner accepted,
 the same day, is the decision below and the three answers under Resolved.
+**Amended:** 2026-09-09, one clause of point 1 is partly superseded by ADR-0013 and was already so
+when this record was drafted. Point 1 names the fixed clock among the pieces the record path keeps
+engine-neutral; ADR-0013 had removed the clock from the evidence record and put `contract/clock.py`
+off the product path two days earlier, its point 7, so there is no clock in a record for either
+engine to fork. The rest of point 1, and the inventory above it, are left standing as written.
 
 ## Context
 

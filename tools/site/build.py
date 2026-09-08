@@ -17,10 +17,13 @@ of that file and never edited; and the method page's rules, preconditions, probe
 are the strings the package itself holds. What is left, and it is short, is the connective
 prose in the two templates.
 
-Until phase 4 publishes the real runs there is nothing under `tools/site/data/`, so the build
-audits the packaged sandbox and shows that instead, under the benchmark `sandbox` and the run
-`demo`, with a banner on every page of the site saying so. The banner is dropped by the
-presence of a benchmark directory and not by an edit, so publishing the runs removes it.
+What a build renders depends on what `tools/site/data/` holds, and on nothing else. With a
+benchmark directory under it the published runs are the site and no page carries a banner; with
+none, the build audits the packaged sandbox and shows that instead, under the benchmark `sandbox`
+and the run `demo`, with a banner on every page saying the published runs have not arrived. The
+runs were published on 2026-09-08 and that directory holds them, so a build today is the first
+of the two; the second is still what happens in a tree without them, which is how the tests that
+are about it reach it.
 
 Run it with `uv run python tools/site/build.py`; `--out` defaults to `build/site/`, which git
 ignores, and an `--out` inside `site/` is refused, because that directory is the live page's
