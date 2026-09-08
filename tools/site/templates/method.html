@@ -52,13 +52,14 @@
 </section>
 
 <section class="preconditions" id="preconditions">
-  <h2>The {{ page.preconditions|length }} settings two records must agree on</h2>
-  <p>A record states the session it was made in. Where two records disagree on one of these, the verdict is NOT_COMPARABLE and the page names what differed, because the two were not made under one rule.</p>
+  <h2>The {{ page.preconditions|length }} settings two {{ page.preconditions_engine }} records must agree on</h2>
+  <p>A record states the session it was made in. Where two records disagree on one of these, the verdict is NOT_COMPARABLE and the page names what differed, because the two were not made under one rule. These {{ page.preconditions|length }} are named as {{ page.preconditions_engine }} names them, and they are that engine's.</p>
   <ul class="files__list">
     {% for name in page.preconditions %}
     <li class="mono">{{ name }}</li>
     {% endfor %}
   </ul>
+  <p class="ink-2">On the other engine the tool has, the backend states this of itself: {{ page.preconditions_elsewhere }}</p>
 </section>
 
 <section class="mechanism" id="classes">

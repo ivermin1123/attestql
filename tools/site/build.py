@@ -58,7 +58,9 @@ from attestql.audit.compare import (
 )
 from attestql.audit.postgres import session_preconditions
 from attestql.audit.smells import SMELLS_READING, probe_meanings
+from attestql.audit.sqlite import SqliteBackend
 from attestql.evidence.replay import compare_r_ord, compare_r_set
+from attestql.evidence.types import ENGINE_POSTGRESQL
 from attestql.report.figures import Figure, proportion_bar
 from attestql.report.render import (
     BIRD_READING,
@@ -70,6 +72,7 @@ from attestql.report.render import (
     TEST_SUITE_READING,
     Fact,
     QuestionPage,
+    ReportRefused,
     question_page,
     render_report,
 )
@@ -83,6 +86,12 @@ LIVE_PAGE = REPOSITORY / "site" / "index.html"
 README = REPOSITORY / "README.md"
 PYPROJECT = REPOSITORY / "pyproject.toml"
 
+SITE_MARKER = ".attestql-site"
+SITE_MARKER_TEXT = (
+    "written by tools/site/build.py: every build into this directory empties it first\n"
+)
+"""What says an output directory is a build's own and may be emptied by the next one."""
+
 RUNS_DIRECTORY = "runs"
 METHOD_DIRECTORY = "method"
 AGGREGATE_FILE = "aggregate.json"
@@ -95,7 +104,7 @@ MAX_BYTES = 40 * 1024 * 1024
 MAX_PAGE_BYTES = 2 * 1024 * 1024
 """The build's own budget, under the Free plan's limits (20,000 files a site, 25 MiB a file,
 owner 2026-09-07), so that a run can be added to a passing build without a re-plan. A build
-over any of the three fails and prints what pushed it over; the answer to that is a narrower
+over any of the three is refused, with what pushed it over named; the answer is a narrower
 selection and never a larger budget."""
 
 HEADLINE: tuple[tuple[str, str], ...] = (
@@ -250,6 +259,8 @@ class Method:
     rules: tuple[Rule, ...]
     serialization: tuple[Fact, ...]
     preconditions: tuple[str, ...]
+    preconditions_engine: str
+    preconditions_elsewhere: str
     probes: tuple[Fact, ...]
     probes_reading: str
     readings: tuple[Rule, ...]
@@ -309,7 +320,10 @@ def build(out: Path) -> Built:
         banner = "" if any(run.published for run in runs) else BANNER
         benchmarks = _benchmarks(runs)
         for run in runs:
-            render_report(run.audit, out / run.slug, banner=banner)
+            try:
+                render_report(run.audit, out / run.slug, banner=banner)
+            except ReportRefused as refused:
+                raise BuildRefused(f"{run.benchmark}/{run.name}: {refused}") from refused
         environment = _environment()
         for benchmark in benchmarks:
             _write(
@@ -368,9 +382,23 @@ def _refuse_an_out_inside_the_live_page(out: Path) -> None:
 
 
 def _clear(directory: Path) -> None:
-    """The directory this build writes into, empty before it writes anything."""
+    """The directory this build writes into, empty before it writes anything.
+
+    Only a directory this build wrote to, which is what the marker says, following the rule
+    `attestql report` follows for its own output. `--out` is a path a person types, and a
+    build that emptied whatever it was pointed at would cost somebody the files it did not
+    write. One that is empty is taken over and marked, one that holds the marker is emptied
+    and marked again, and one that holds anything else is refused untouched.
+    """
+    if directory.is_dir() and any(directory.iterdir()) and not (directory / SITE_MARKER).is_file():
+        raise BuildRefused(
+            f"{directory} is not empty and holds no {SITE_MARKER}, the file a build leaves in "
+            f"a directory of its own: nothing in it was removed. A build writes into a "
+            f"directory that is empty, that is not there yet, or that an earlier build wrote."
+        )
     shutil.rmtree(directory, ignore_errors=True)
     directory.mkdir(parents=True, exist_ok=True)
+    (directory / SITE_MARKER).write_text(SITE_MARKER_TEXT, encoding="utf-8")
 
 
 def benchmark_directories() -> tuple[Path, ...]:
@@ -410,6 +438,13 @@ def _runs(scratch: Path) -> tuple[Run, ...]:
         for run in sorted(path for path in benchmark.iterdir() if path.is_dir())
         if (run / SUMMARY_FILE).is_file()
     ]
+    taken = [run for run in published if run.slug == sandbox.slug]
+    if taken:
+        raise BuildRefused(
+            f"a published run is at {taken[0].slug}, which is where the sandbox this build "
+            f"audits goes: rename the benchmark or the run, because two runs at one address "
+            f"would mean the second overwrote the first"
+        )
     return (sandbox, *published)
 
 
@@ -569,14 +604,31 @@ def _numbers() -> tuple[tuple[Number, ...], str]:
 
 
 def _bar(numbers: Sequence[Number], source: str) -> Figure | None:
-    """The three numbers as one bar, drawn only where the aggregate put numbers there."""
-    if not numbers:
+    """One whole cut into the two parts it is made of, drawn where the aggregate is there.
+
+    Not the three numbers side by side. A bar states a proportion, so its parts have to be
+    disjoint and have to add up to the whole it draws: the second number is a subset of the
+    first, which its own words say, and the third counts a different benchmark's questions
+    altogether. Drawn as three segments they would double-count the subset and mix in an
+    unrelated population, which on this site would be the one thing a figure may not do. So
+    the bar is the first number cut into the part a maintainer classified and the rest, and
+    the third number stays a number in the list above it.
+    """
+    if len(numbers) < 2:
         return None
+    whole, part = numbers[0], numbers[1]
+    rest = whole.value - part.value
+    if rest < 0:
+        raise BuildRefused(
+            f"{source} states {part.value} for {part.name!r} and {whole.value} for "
+            f"{whole.name!r}, and the first is a part of the second: a bar cannot be drawn "
+            f"from a part larger than its whole"
+        )
     return proportion_bar(
         "headline",
-        [(number.name, number.value, index == 0) for index, number in enumerate(numbers)],
-        title=f"the three headline numbers, from {source}",
-        whole="the published runs",
+        [(part.name, part.value, True), ("the rest", rest, False)],
+        title=f"{whole.name}, cut into what was classified by hand and the rest, from {source}",
+        whole=whole.name,
     )
 
 
@@ -606,6 +658,8 @@ def _method() -> Method:
             Fact("encoding", SERIALIZATION.encoding),
         ),
         preconditions=session_preconditions(),
+        preconditions_engine=ENGINE_POSTGRESQL,
+        preconditions_elsewhere=_docstring(SqliteBackend.session_settings),
         probes=tuple(Fact(name, meaning) for name, meaning in sorted(probe_meanings().items())),
         probes_reading=SMELLS_READING,
         readings=(
@@ -737,8 +791,18 @@ def _mapping(document: Mapping[str, object], key: str) -> Mapping[str, object]:
 
 
 def _string(document: Mapping[str, object], key: str) -> str:
+    """One text field, absent as the empty string and refused where it is not text.
+
+    Refused rather than coerced, which is what `_mapping` and `_integer` do: an `engine` that
+    is a list would otherwise reach a table cell as `"['postgres']"`, which is a value no
+    document states rendered as though one did.
+    """
     value = document.get(key)
-    return "" if value is None else str(value)
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        raise BuildRefused(f"{key} is {type(value).__name__} where text was expected")
+    return value
 
 
 def _integer(document: Mapping[str, object], key: str) -> int:

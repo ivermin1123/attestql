@@ -381,6 +381,47 @@ def test_a_filter_no_question_of_this_run_satisfies_is_not_written(
     )
 
 
+def test_a_class_or_a_probe_that_is_not_a_name_writes_no_directory_and_nothing_outside(
+    tmp_path: Path,
+) -> None:
+    """The one place text out of a document becomes a path, and where it stops.
+
+    This command is documented to render a directory another machine produced, so a
+    ``mechanism.class`` and a probe ``name`` are untrusted text; both reach ``out / slug``.
+    Before the guard, a class of ``../../..`` wrote a page outside the ``--out`` the caller
+    chose, which a template engine does not prevent because a path is not markup. The name is
+    still a chip on both pages: what is dropped is a pre-rendered view, not a fact.
+    """
+    sandbox = tmp_path / "sandbox"
+    assert run(["demo", "--out", str(sandbox)])[0] == 1
+    audit = sandbox / DEMO_AUDIT
+    escape = "../../../../../../" + tmp_path.name + "-escaped"
+    counterexample = document(audit / "q879" / COUNTEREXAMPLE_FILE)
+    cast("dict[str, Any]", counterexample["mechanism"])["class"] = escape
+    write(audit / "q879" / COUNTEREXAMPLE_FILE, counterexample)
+    smells = document(audit / "q879" / SMELLS_FILE)
+    for probe in cast("list[dict[str, Any]]", smells["smells"]):
+        if probe["fired"]:
+            probe["name"] = escape
+    write(audit / "q879" / SMELLS_FILE, smells)
+    out = tmp_path / "report"
+
+    render_report(audit, out)
+
+    assert not list(tmp_path.parent.glob(f"{tmp_path.name}-escaped")), "nothing outside --out"
+    assert sorted(path.name for path in (out / BY_MECHANISM_DIRECTORY).iterdir()) == [
+        "other",
+        "truncation",
+    ], "q1029 is still an `other`; q879's class is not a name and got no directory"
+    assert escape not in {path.name for path in (out / BY_PROBE_DIRECTORY).iterdir()}
+    assert not any(".." in path.as_posix() for path in out.rglob("*")), (
+        "no path this render wrote climbs out of the directory it was given"
+    )
+    page = read(out / PAGE_FILE)
+    assert escape in page.text, "the class the document states is still on the run page"
+    assert not [link for link in page.links if "escaped" in link], "and reaches no link"
+
+
 def test_an_error_question_is_a_row_of_the_run_page_and_has_no_page(tmp_path: Path) -> None:
     """A statement the engine could not run wrote no directory, so the run page states it
     from the summary's own error list: the side that stopped and the message it stopped with.
