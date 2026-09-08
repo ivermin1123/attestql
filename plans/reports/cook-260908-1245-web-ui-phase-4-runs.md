@@ -103,7 +103,8 @@ scale, the read-by-hand row is on the one page that has one, and no page carries
   workers the float sum reproduces, so the other eight files agree to sixteen digits.
 
 **The preview**, by `curl`. The landing serves 164, 66 and 23 with the file each was read from in
-a `title`, and no banner. `runs/minidev-pg/gpt-4/q1029/`, its `evidence-gold.json`,
+a `title`, and no banner. (The second number is 69 after the second review below; 66 is how many
+of them have a page.) `runs/minidev-pg/gpt-4/q1029/`, its `evidence-gold.json`,
 `runs/minidev-sqlite/gpt-4/` (with "The sums of the 11 runs") and the read-by-hand page all
 answer 200. A run page's release-asset link resolves: the archive itself answers 200 from
 GitHub.
@@ -119,12 +120,66 @@ Actions deployment that goes with it, are the coordinator's step and were not to
 workflow was added, the `attestql` Cloudflare project, the domain and the DNS record were not
 reached, and `site/index.html` and `README.md` were not edited.
 
+## Second review, 2026-09-08
+
+The coordinator reviewed the published runs on Fable, with its own measurements in stage 1 and a
+code review in stage 2. Two findings were about what a page states and seven about the code that
+makes it. All are fixed, in four commits, each with tests.
+
+**The landing's second number was the file budget's, not the benchmark's.** `aggregate.json`
+stated 66 where the classification joined to the nine runs holds 69, because the three rows on
+questions too large to have a page were dropped from the count as well as from the site. Each key
+now carries `value` and `published`; the landing shows `value` and, under a number whose
+`published` is below it, one line saying how many have a page and how many are whole in the
+release assets. Nothing else is computed in the build: the line is one subtraction, and the
+proportion bar is still drawn from `value`.
+
+**The read-by-hand row said `A` and stopped.** The note beside each classification now carries
+what every class of it means, cut verbatim out of the legend of
+`plans/reports/measurement-260904-0046-prediction-mode-on-real-predictions.md` for the
+prediction-mode file and out of the BIRD dev file's own `reading` string for the other, with
+`classes_source` naming where each was cut from. A class no source defines renders as the value
+the row holds, escaped, and nothing beside it.
+
+**A run page said how many questions it showed and never how many the run wrote.**
+`release.sh manifest` now counts the question directories inside each archive, through a new
+`manifest.py`; each `published.json` carries the one count its page is about; and the run and
+group pages state "this site holds N of the M question directories this run wrote". The archives
+were not rebuilt: their digests are unchanged and nothing was re-uploaded.
+
+The six from the code review:
+
+| Finding | What was done |
+| --- | --- |
+| `postgres_up` ran the auditor-role pipeline and the dump load without checking either, under `set -uo pipefail` with no `-e` | both checked; the load is checked by its result, the 75 tables of schema `public` the Mini-Dev fixture holds, because psql exits non-zero on a whole load |
+| the container's teardown was registered after `postgres_up` returned, and the health loop had no deadline | `trap postgres_down EXIT` before `docker run`, and the 90 second deadline `tools/audit-sandbox/run.sh` uses, failing with the container's last lines |
+| the release asset's address reached an `href` unchecked, where a `javascript:` value would run on a click | refused unless it begins with `https://`, in the renderer and in the selection, each with its own refusal |
+| two rows for one question collapsed silently into whichever came last | identical rows collapse; rows that differ are refused and named, and `questions.json` is deduplicated by id, which is what the audit does with BIRD's repeated 137 and 138 |
+| a symlinked file inside a run was followed by `shutil.copyfile` | refused in both copies, with the words the build refuses a symlinked directory with |
+| the two scripts' three budgets could drift apart, and `release.sh` did not check its tar | a test compares the two files' own source; the tar is checked and the part-written archive removed |
+
+`select.py` is not imported by any test: its own name is the standard library's `select`, and
+`tests/test_boundary.py` forbids `importlib` in `src/` and `tests/` for the reason its one
+exemption states, that `importlib.metadata` imports no code. What the tests read instead is what
+it wrote, over the whole of it: 131 published lines, 22 classifications, 121 runs and the
+aggregate, plus the two files' budgets compared as source. The renderer's own copies of the same
+rules are tested by calling them.
+
+**Verified on the redeployed preview** (deployment `aa41fc9b`, the fifth): the landing serves 69
+with "66 of them have a page here; the other 3 are whole in the release assets";
+`/runs/minidev-pg/gpt-4/` serves "This site holds 26 of the 218 question directories this run
+wrote"; `/runs/minidev-sqlite/gpt-4/` serves the group's 7 of 269 and links
+`minidev-sqlite-gpt-4.tar.gz` on the release; `/runs/minidev-pg/gpt-4/q249/` states class A with
+the report's own words for it. `just check` green at 1,085 passed and 33 skipped. attestql.com
+was not touched.
+
 ## Unresolved
 
-- Three questions a maintainer read by hand are on no page: their evidence records are 4.5 to
-  8.8 MB, so a page of one would be 5 to 10 MB against a 2 MiB budget. They are whole in the
-  release assets, and `left-out.json` names them. Publishing them needs a renderer that bounds
-  the rows it draws from a record, which changes what a page is.
+- Three of the 69 questions a maintainer read by hand are on no page, so the site publishes 66
+  of them: their evidence records are 4.5 to 8.8 MB, and a page of one would be 5 to 10 MB
+  against a 2 MiB budget. They are whole in the release assets, and `left-out.json` names them.
+  The landing states 69 and says under it that 66 have a page here. Publishing the three needs a
+  renderer that bounds the rows it draws from a record, which changes what a page is.
 - `minidev-pg-gold-only/hf` states 38 probe fires where the 2026-09-03 summary states 39. The
   number of golds the shuffle probe fires on is unchanged in both copies; what moved is which of
   them are labelled `float-aggregate-order`, because a float sum that used to differ between two
