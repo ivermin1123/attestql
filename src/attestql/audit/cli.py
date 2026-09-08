@@ -13,7 +13,9 @@ keyed by question id. BIRD's own ``predict_*.json`` is keyed by the position of 
 in the question file, because its evaluation pairs prediction ``i`` with gold line ``i``,
 and ``--predictions-keyed-by position`` is what reads one; the two readings pair different
 statements, so a file whose keys are the positions of a question file that is not keyed by
-them is refused rather than guessed at. Where each file came from is recorded and never
+them is refused rather than guessed at. A file that holds one statement per line and no key
+at all is read by ``--predictions-format lines``, where a line's position is its key, so
+that reading is position keying and asking for the other one there is refused. Where each file came from is recorded and never
 inferred: the path and the digest are measured, and ``--questions-origin``,
 ``--questions-date``, ``--predictions-origin`` and ``--predictions-date`` are what the run
 was told, in the summary and in every record.
@@ -202,6 +204,18 @@ BIRD_PREDICTION_SUFFIX = "\t----- bird -----\t"
 """What BIRD's own ``predict_dev.json`` appends to each statement: a tab, a marker and
 the database it was written for. The statement is what comes before it."""
 
+JSON_PREDICTIONS = "json"
+"""A predictions file that is one JSON object, keyed by question id or by position."""
+
+LINE_PREDICTIONS = "lines"
+"""A predictions file that is one statement per line, keyed by the line's position.
+
+Which is how most published prediction files ship. The reading is the shape and nothing
+else: the tab suffix BIRD's own files append is taken off here as it is under ``json``,
+and an edit only one publisher's file needs, such as a comment cut or a database name
+appended to the statement, is prepared outside this tool rather than guessed at inside it.
+"""
+
 QUESTION_ID_KEYING = "question-id"
 """A key of the predictions file is the id of the question its prediction answers, which
 is what a file written for this tool holds."""
@@ -257,6 +271,7 @@ class AuditOptions:
     predictions_origin: str | None = None
     predictions_date: str | None = None
     predictions_keyed_by: str = QUESTION_ID_KEYING
+    predictions_format: str = JSON_PREDICTIONS
     data_file: Path | None = None
     data_origin: str | None = None
     data_date: str | None = None
@@ -491,8 +506,12 @@ class NoStatement:
     held: str
 
 
-def read_predictions(path: Path) -> Mapping[int, str | NoStatement]:
+def read_predictions(
+    path: Path, *, shape: str = JSON_PREDICTIONS
+) -> Mapping[int, str | NoStatement]:
     """The predictions by the number the file keys them under, whatever that number is.
+
+    ``shape`` is which of the two files this is: one JSON object, or one statement per line.
 
     A key is a whole number written as a string or as a number. Which question it names is
     ``resolve_predictions``'s answer and not this one's: reading the file and pairing its
@@ -512,6 +531,8 @@ def read_predictions(path: Path) -> Mapping[int, str | NoStatement]:
     value of any other type: each is the file itself being something else, which is a run that
     cannot start rather than one question that cannot be answered.
     """
+    if shape == LINE_PREDICTIONS:
+        return _predictions_from_lines(path)
     document = _read_json(path, "the predictions file")
     if not isinstance(document, dict):
         raise ToolError(f"{path} holds {type(document).__name__} and predictions are an object")
@@ -530,6 +551,37 @@ def read_predictions(path: Path) -> Mapping[int, str | NoStatement]:
             raise ToolError(f"{path}[{key}] is {type(value).__name__} and a prediction is SQL")
         statement = value.partition(BIRD_PREDICTION_SUFFIX)[0].strip()
         predictions[keyed_under] = statement or NoStatement("an empty string")
+    return predictions
+
+
+def _predictions_from_lines(path: Path) -> Mapping[int, str | NoStatement]:
+    """One statement per line, by the position of its line, counting from zero.
+
+    The positions are the ones ``--predictions-keyed-by position`` pairs with, because that
+    is what a line's place in a file is: the first line answers the first question of the
+    question file. A line that is empty once the BIRD suffix is off is the file saying the
+    model produced nothing for that question, as the number ``0`` is under the JSON shape.
+
+    Empty lines at the end of the file are not statements and not positions either: they
+    carry nothing, and a question whose prediction is absent is already a question with no
+    prediction. Empty lines between statements are kept, because every line after one of
+    them is at the position that line puts it at.
+    """
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as unreadable:
+        raise ToolError(f"the predictions file {path} cannot be read: {unreadable}") from unreadable
+    except ValueError as undecodable:
+        raise ToolError(
+            f"the predictions file {path} is not UTF-8 text: {undecodable}"
+        ) from undecodable
+    lines = text.splitlines()
+    while lines and not lines[-1].strip():
+        lines.pop()
+    predictions: dict[int, str | NoStatement] = {}
+    for position, line in enumerate(lines):
+        statement = line.partition(BIRD_PREDICTION_SUFFIX)[0].strip()
+        predictions[position] = statement or NoStatement("an empty line")
     return predictions
 
 
@@ -760,7 +812,9 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         date=options.questions_date,
     )
     keyed: Mapping[int, str | NoStatement] = (
-        read_predictions(options.predictions) if options.predictions else {}
+        read_predictions(options.predictions, shape=options.predictions_format)
+        if options.predictions
+        else {}
     )
     resolved = resolve_predictions(keyed, question_set, options.predictions_keyed_by)
     predictions_source = _predictions_source(options)
@@ -1371,6 +1425,7 @@ def _summary_json(
                 "origin": predictions_source.origin,
                 "date": predictions_source.date,
                 "keyed_by": options.predictions_keyed_by,
+                "format": options.predictions_format,
                 "statements": statements,
                 "positions_unused": list(positions_unused),
             }
@@ -1591,10 +1646,23 @@ def build_parser() -> argparse.ArgumentParser:
     audit.add_argument(
         "--predictions-keyed-by",
         choices=(QUESTION_ID_KEYING, POSITION_KEYING),
-        default=QUESTION_ID_KEYING,
+        default=None,
         help=(
             "what a key of the predictions file is: a question id, or the position of an entry "
-            "in the question file, which is what BIRD's own predict_*.json files hold"
+            "in the question file, which is what BIRD's own predict_*.json files hold; the "
+            f"default is {QUESTION_ID_KEYING} for a JSON file and {POSITION_KEYING} for a file "
+            "read line by line"
+        ),
+    )
+    audit.add_argument(
+        "--predictions-format",
+        choices=(JSON_PREDICTIONS, LINE_PREDICTIONS),
+        default=JSON_PREDICTIONS,
+        help=(
+            "the shape of the predictions file: one JSON object, or one statement per line, "
+            "which is how most published prediction files ship. A publisher's own edit, such "
+            "as a comment cut or a database name appended to the statement, is prepared before "
+            "the file reaches this tool"
         ),
     )
     audit.add_argument(
@@ -1710,6 +1778,15 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
             "--data-origin and --data-date state where the data file came from; "
             "name that file with --data-file"
         )
+    predictions_format = cast("str", parsed.predictions_format)
+    keyed_by = cast("str | None", parsed.predictions_keyed_by)
+    if keyed_by is None:
+        keyed_by = POSITION_KEYING if predictions_format == LINE_PREDICTIONS else QUESTION_ID_KEYING
+    elif predictions_format == LINE_PREDICTIONS and keyed_by == QUESTION_ID_KEYING:
+        parser.error(
+            "a predictions file read line by line holds no question id, so its keys are "
+            f"positions; drop --predictions-keyed-by or pass {POSITION_KEYING}"
+        )
     return AuditOptions(
         dsn=dsn,
         questions=cast("Path", parsed.questions),
@@ -1718,7 +1795,8 @@ def parse_arguments(argv: Sequence[str] | None = None) -> AuditOptions:
         predictions=cast("Path | None", parsed.predictions),
         predictions_origin=cast("str | None", parsed.predictions_origin),
         predictions_date=cast("str | None", parsed.predictions_date),
-        predictions_keyed_by=cast("str", parsed.predictions_keyed_by),
+        predictions_keyed_by=keyed_by,
+        predictions_format=predictions_format,
         data_file=cast("Path | None", parsed.data_file),
         data_origin=cast("str | None", parsed.data_origin),
         data_date=cast("str | None", parsed.data_date),
@@ -1868,6 +1946,8 @@ __all__ = [
     "DEMO_AUDIT_DIRECTORY",
     "ERROR",
     "GOLD_ONLY",
+    "JSON_PREDICTIONS",
+    "LINE_PREDICTIONS",
     "MARKER_FILE",
     "MARKER_TEXT",
     "POSITION_KEYING",
