@@ -176,10 +176,15 @@ is on the site; what is missing is those two models' own rows for it, and both a
 `minidev-pg-gpt-35-turbo.tar.gz` and `minidev-pg-gpt-35-turbo-instruct.tar.gz`.
 
 The three headline numbers `tools/site/data/aggregate.json` states, each the join of a
-classification to the runs that were published: `credited_but_not_equal` 164,
-`classified_by_hand` 66 and `bird_dev_classified_by_hand` 23. 66 rather than the classification's
-own 69 because three class-A rows are on the three questions above, which are not published; 23 is
-every `wrong` row of the BIRD dev classification.
+classification to the nine runs' own credited-and-NOT_EQUAL sets, with what this site publishes of
+it beside it: `credited_but_not_equal` **164**, of which 161 have a page; `classified_by_hand`
+**69**, of which 66; and `bird_dev_classified_by_hand` **23**, of which 23. The three without a
+page are the three questions above, whose records the page budget could not fit. The number is the
+join, not the published part of it: whether a question has a page is a fact about this site's file
+budget and not about the benchmark, and a site whose budget changed the number it reports would be
+reporting the budget. The landing shows 69 with one line under it saying that 66 have a page here
+and the other 3 are whole in the release assets, and the proportion bar is drawn from the join.
+23 is every `wrong` row of the BIRD dev classification.
 
 ## The built site
 
@@ -235,6 +240,42 @@ uploaded beside them. <https://github.com/ivermin1123/attestql/releases/tag/v0.2
 Each is at
 `https://github.com/ivermin1123/attestql/releases/download/v0.2.2/<name>`, which is what the
 `published.json` beside each summary states and what each run page links to.
+
+## Second review, 2026-09-08
+
+The coordinator reviewed the published runs and the code that made them. Three of the findings
+change a number on this page.
+
+**The second headline number is 69, not 66.** What the classification holds, joined to the nine
+runs' credited-and-NOT_EQUAL sets, is 69; 66 was that join minus the three questions the page
+budget left out. `aggregate.json` now states both per key, `value` and `published`:
+`credited_but_not_equal` 164 with 161 published, `classified_by_hand` 69 with 66,
+`bird_dev_classified_by_hand` 23 with 23. The landing shows `value` and puts one line under a
+number whose `published` is below it; the proportion bar is still drawn from `value`.
+
+**Every archive was counted.** `release.sh manifest` reads each `.tar.gz` and counts the question
+directories in it, in all and per run, and `select.py --published` copies into each
+`published.json` the one number its page is about: 3,957 question directories over the 21
+archives, of which this site holds 1,232. A run of a group states its own count and the group's
+own file states the archive's total, so no page states another page's number. The archives
+themselves were not rebuilt and not re-uploaded: every sha256 in the table above is unchanged,
+and the manifest is the only file that was made again.
+
+**19 `questions.json` files named a question twice.** BIRD's Mini-Dev question file repeats 137
+and 138, which the audit deduplicates before it runs anything and the selection did not: 5,288
+entries became 5,250, and no question id is now in one of those files twice.
+
+The site was built again over the regenerated data: **2,218 files, 40,673,308 bytes, 4.2 seconds**,
+against 8,000 files and 41,943,040 bytes. `grep -rl /Users/ tools/site/data build/site` still
+prints nothing.
+
+**Verified on the redeployed preview** (deployment `aa41fc9b`, the fifth):
+`https://attestql-ui.pages.dev/` serves 69 with "66 of them have a page here; the other 3 are
+whole in the release assets"; `/runs/minidev-pg/gpt-4/` serves "This site holds 26 of the 218
+question directories this run wrote"; `/runs/minidev-sqlite/gpt-4/` serves the same sentence for
+its 7 of 269 and links `minidev-sqlite-gpt-4.tar.gz` on the release; and
+`/runs/minidev-pg/gpt-4/q249/` states class A with the words the measurement report's own legend
+gives it. `just check` green at 1,085 passed and 33 skipped.
 
 ## Unresolved
 
