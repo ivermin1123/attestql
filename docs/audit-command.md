@@ -232,7 +232,8 @@ reason the default is a sibling.
 
 The output directory follows the rule the audit's own does. The first render leaves a
 `.attestql-report` marker in it; a render into a directory that has the marker removes what the
-render before it wrote (`index.html`, `summary.json`, every `q<id>/` and `static/`) before
+render before it wrote (`index.html`, `summary.json`, every `q<id>/`, `not-equal/`,
+`by-mechanism/`, `by-probe/` and `static/`) before
 writing anything, so what is in there is one report and not two, and anything else you put there
 stays. A non-empty directory without the marker is refused with nothing in it touched.
 
@@ -243,6 +244,13 @@ shuffle and the session as the engine reported it), the states the run has to st
 shuffle did not reach, statements the budget stopped), and an index of every question. A question
 whose statement could not be run wrote no directory, so it is a row of that index read from the
 summary's own error list, with the side that stopped and the engine's message, and has no page.
+
+The index is also written restricted, under an address for each restriction, because a static
+host reads no query string: `not-equal/index.html` holds the rows whose verdict is NOT_EQUAL,
+`by-mechanism/<class>/index.html` the rows a counterexample put in that class, and
+`by-probe/<name>/index.html` the rows whose gold fired that probe. Each is the run page's own
+index with rows left out, links back to the whole, and is written only where a row satisfies
+it.
 
 `q<id>/index.html` is one question, in a fixed order: what was asked, the two statements with the
 tokens they differ in marked, the rows the two results differ in, what BIRD's own check and the

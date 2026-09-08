@@ -1,0 +1,34 @@
+{# The question index, in one place, because the run page and every filter page hold it.
+
+   A filter page is the run page's index with rows left out, so the markup of that index
+   exists once and both callers render it through this macro. `root` is what a page has to
+   put in front of a question's own path to reach it: nothing on the run page, one step up
+   from `not-equal/`, two from `by-mechanism/<class>/`. #}
+{% macro index_table(entries, root) %}
+<div class="rows__region">
+  <table class="index__table">
+    <thead>
+      <tr>
+        <th scope="col">question</th>
+        <th scope="col">rule</th>
+        <th scope="col">verdict</th>
+        <th scope="col">class</th>
+        <th scope="col">probes</th>
+        <th scope="col">what was asked</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in entries %}
+      <tr class="index__row index__row--{{ entry.verdict|lower }}">
+        <th scope="row" class="mono">{% if entry.href %}<a href="{{ root }}{{ entry.href }}">q{{ entry.question_id }}</a>{% else %}q{{ entry.question_id }}{% endif %}</th>
+        <td>{{ entry.replay_rule }}</td>
+        <td><span class="chip chip--verdict chip--{{ entry.verdict|lower }}">{{ entry.verdict }}</span></td>
+        <td>{% if entry.mechanism %}<span class="chip chip--warn">{{ entry.mechanism }}</span>{% endif %}</td>
+        <td>{% for probe in entry.probes %}<span class="chip chip--warn">{{ probe }}</span> {% endfor %}</td>
+        <td>{% if entry.note %}<span class="warn">{{ entry.note }}</span>{% else %}{{ entry.question_text }}{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endmacro %}
