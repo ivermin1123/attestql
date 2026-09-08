@@ -191,6 +191,14 @@ WAL_IN_THE_HEADER = 2
 PRIVATE_COPY_PREFIX = "attestql-sqlite-"
 """The prefix of the private directory a WAL file on read-only media is copied into."""
 
+PRIVATE_COPY_READ = "a byte-identical private copy, removed when the run ended"
+"""What a record states when the data was read through a copy.
+
+The fact and not the path: the directory is made fresh under the temporary directory on
+every run, so recording it would move a record's hash between two runs over the same file
+and would carry the account name of anyone whose temporary directory sits under their home.
+The path is on stderr, where the person who is spending the disk can read it."""
+
 CANNOT_WRITE = ("attempt to write a readonly database", "unable to open database file")
 """What SQLite says when it cannot create the sidecars a WAL file needs to be read."""
 
@@ -385,13 +393,14 @@ def _numeric_text(pattern: str, value: object) -> bool | None:
     by the caller where it means to be, which is what PostgreSQL's ``!~`` does with the same
     text. A cell that is not text is answered about its own rendering, so a census over a
     column that turned out to hold a number counts it as the number it prints as.
+
+    A column holding text that does not decode never reaches this function: the driver
+    decodes an argument of a user-defined function itself and raises there, whatever the
+    connection's ``text_factory`` answers for a result. The census over such a column is
+    therefore refused, and the numeric-text smell records the refusal and stays quiet.
     """
     if value is None:
         return None
-    if isinstance(value, UndecodedText):
-        # Its bytes are not text and their hex is not the value: a census over a column
-        # holding one counts it as matching nothing, which keeps the smell conservative.
-        return False
     text = value.hex() if isinstance(value, bytes) else str(value)
     return re.search(pattern, text) is not None
 
@@ -452,7 +461,14 @@ class SqliteBackend:
             if not _needs_a_private_copy(refused, found):
                 raise
         copy = _private_copy(found)
-        return cls(_opened_and_read(copy), path=found, copy=copy)
+        try:
+            connection = _opened_and_read(copy)
+        except BaseException:
+            # The backend is what removes the copy, and there is no backend yet: a copy
+            # this run cannot read is a copy nobody will remove later.
+            shutil.rmtree(copy.parent, ignore_errors=True)
+            raise
+        return cls(connection, path=found, copy=copy)
 
     @property
     def scratch(self) -> str:
@@ -503,7 +519,8 @@ class SqliteBackend:
                 "case_sensitive_like": str(self._one(CASE_SENSITIVE_LIKE, step="session")[0]),
             }
             if self._copy is not None:
-                recorded[READ_THROUGH_PRIVATE_COPY] = str(self._copy)
+                recorded[READ_THROUGH_PRIVATE_COPY] = PRIVATE_COPY_READ
+
             self._session_settings = SessionSettings(
                 engine=ENGINE_SQLITE,
                 time_zone=None,
@@ -989,14 +1006,28 @@ def _private_copy(path: Path) -> Path:
 
     ``copyfile`` and not ``copy2``: the copy is read and thrown away, and the mode of the
     original is what made it unreadable in the first place.
+
+    A copy that cannot be made is this run failing to reach the database, which is what
+    ``BackendRefused`` is for, and it is named that way rather than raised as the operating
+    system's own error: a sidecar this process cannot read and a temporary directory too
+    small for the file are both ordinary, and a command that ended in a traceback would say
+    neither. Whatever was written before it failed goes with the directory.
     """
     directory = Path(tempfile.mkdtemp(prefix=PRIVATE_COPY_PREFIX))
     copy = directory / path.name
-    shutil.copyfile(path, copy)
-    for suffix in ("-wal", "-shm"):
-        sidecar = path.with_name(path.name + suffix)
-        if sidecar.is_file():
-            shutil.copyfile(sidecar, copy.with_name(copy.name + suffix))
+    try:
+        shutil.copyfile(path, copy)
+        for suffix in ("-wal", "-shm"):
+            sidecar = path.with_name(path.name + suffix)
+            if sidecar.is_file():
+                shutil.copyfile(sidecar, copy.with_name(copy.name + suffix))
+    except OSError as failed:
+        shutil.rmtree(directory, ignore_errors=True)
+        raise BackendRefused(
+            "private_copy",
+            f"{path} is in WAL mode and its directory is read-only, and the private copy "
+            f"this run reads it through could not be made: {failed}",
+        ) from failed
     return copy
 
 

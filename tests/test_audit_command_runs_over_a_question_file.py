@@ -1850,13 +1850,55 @@ def test_an_empty_line_is_the_file_saying_the_model_wrote_nothing(tmp_path: Path
     assert summary.verdicts == {"ERROR": 1, "EQUAL": 1}
 
 
-def test_blank_lines_at_the_end_of_the_file_are_not_positions(tmp_path: Path) -> None:
-    """A file that ends with a newline too many holds no prediction there, and a run that
-    refused it would refuse most of the files that ship this way."""
+def test_the_newline_that_ends_the_last_line_is_not_a_line_of_its_own(tmp_path: Path) -> None:
+    """A file that ends with a line feed holds as many predictions as it has statements: the
+    line feed terminates the last line rather than opening another one."""
     _duplicated_question_file(tmp_path)
-    path = _lines_file(tmp_path, f"{ELEMENTS_ONE_ROW}\n{TWO_ROWS}\n{ELEMENTS}\n\n\n")
+    path = _lines_file(tmp_path, f"{ELEMENTS_ONE_ROW}\n{TWO_ROWS}\n{ELEMENTS}\n")
     summary = run_audit(_lines_options(tmp_path, path), _two_question_backend(), Lines())
     assert summary_of(tmp_path)["predictions"]["statements"] == 3
+    assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1}
+
+
+def test_a_blank_line_at_the_end_of_the_file_is_the_position_it_holds(tmp_path: Path) -> None:
+    """The file wrote nothing for the last question, which is that question's error line and
+    not a question nobody wrote a prediction for: the two are counted differently, so a
+    reader that dropped the line would move one question from one count to the other."""
+    write(
+        tmp_path / "questions.json",
+        [
+            question(207, "toxicology", ELEMENTS),
+            question(94, "european_football_2", TWO_ROWS),
+            question(95, "european_football_2", TWO_ROWS),
+        ],
+    )
+    path = _lines_file(tmp_path, f"{ELEMENTS_ONE_ROW}\n{TWO_ROWS}\n\n")
+    lines = Lines()
+    summary = run_audit(_lines_options(tmp_path, path), _two_question_backend(), lines)
+
+    assert summary_of(tmp_path)["predictions"]["statements"] == 3
+    assert summary.errors[-1].side == "prediction"
+    assert "an empty line" in lines.written[2]
+    assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1, "ERROR": 1}
+
+
+def test_a_line_ends_at_a_line_feed_and_not_at_a_form_feed(tmp_path: Path) -> None:
+    """``str.splitlines`` also breaks at a form feed, a vertical tab and two Unicode
+    separators. Any of those inside a statement would push every later line onto the wrong
+    question, which is the one thing pairing by position must never do quietly."""
+    _duplicated_question_file(tmp_path)
+    path = _lines_file(tmp_path, f"{ELEMENTS_ONE_ROW}\n{TWO_ROWS}\n{ELEMENTS} \x0c\u2028\n")
+    summary = run_audit(_lines_options(tmp_path, path), _two_question_backend(), Lines())
+    assert summary_of(tmp_path)["predictions"]["statements"] == 3
+    assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1}
+
+
+def test_the_carriage_return_of_a_crlf_file_is_not_part_of_the_statement(
+    tmp_path: Path,
+) -> None:
+    _duplicated_question_file(tmp_path)
+    path = _lines_file(tmp_path, f"{ELEMENTS_ONE_ROW}\r\n{TWO_ROWS}\r\n{ELEMENTS}\r\n")
+    summary = run_audit(_lines_options(tmp_path, path), _two_question_backend(), Lines())
     assert summary.verdicts == {"NOT_EQUAL": 1, "EQUAL": 1}
 
 

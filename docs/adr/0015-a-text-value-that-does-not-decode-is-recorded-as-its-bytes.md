@@ -74,8 +74,9 @@ own type.
 - Two Spider golds and the predictions written for them can be compared.
 - The content digest of a table qualifies the class of such a cell (`TEXT-undecoded:<hex>`), so a
   table holding the byte `0xff` and one holding the text `ff` never digest alike.
-- A census over a column holding one counts it as matching nothing, which keeps the numeric-text
-  probe conservative where it cannot read the value.
+- The numeric-text census over a column holding one is refused rather than answered. The driver
+  decodes the argument of a user-defined function itself and raises there, whatever the connection
+  answers for a result, so the probe records the refusal and stays quiet on that column.
 - PostgreSQL is unaffected: its driver returns `str` for text, and nothing here changes what that
   backend produces.
 

@@ -61,6 +61,7 @@ import json
 import re
 import shutil
 import sys
+import tempfile
 import time
 import uuid
 from collections.abc import Generator, Mapping, Sequence
@@ -565,10 +566,15 @@ def _predictions_from_lines(path: Path) -> Mapping[int, str | NoStatement]:
     question file. A line that is empty once the BIRD suffix is off is the file saying the
     model produced nothing for that question, as the number ``0`` is under the JSON shape.
 
-    Empty lines at the end of the file are not statements and not positions either: they
-    carry nothing, and a question whose prediction is absent is already a question with no
-    prediction. Empty lines between statements are kept, because every line after one of
-    them is at the position that line puts it at.
+    A line ends at a line feed and at nothing else, and the carriage return of a CRLF file
+    is taken off the end of the line it terminates. ``str.splitlines`` is not what splits
+    them: it also breaks at a form feed, a vertical tab and two Unicode separators, any of
+    which inside a statement would push every later line onto the wrong question.
+
+    The newline that ends the last line is not a line of its own and is dropped. Every other
+    empty line is kept, at the end of the file as well as between statements: it is the file
+    saying the model produced nothing for the question at that position, and a reader that
+    dropped it would report that question as one nothing was written for.
     """
     try:
         text = path.read_text(encoding="utf-8")
@@ -578,12 +584,13 @@ def _predictions_from_lines(path: Path) -> Mapping[int, str | NoStatement]:
         raise ToolError(
             f"the predictions file {path} is not UTF-8 text: {undecodable}"
         ) from undecodable
-    lines = text.splitlines()
-    while lines and not lines[-1].strip():
+    lines = text.split("\n")
+    if lines and lines[-1] == "":
         lines.pop()
     predictions: dict[int, str | NoStatement] = {}
     for position, line in enumerate(lines):
-        statement = line.partition(BIRD_PREDICTION_SUFFIX)[0].strip()
+        ended = line[:-1] if line.endswith("\r") else line
+        statement = ended.partition(BIRD_PREDICTION_SUFFIX)[0].strip()
         predictions[position] = statement or NoStatement("an empty line")
     return predictions
 
@@ -1841,28 +1848,31 @@ def connect_and_audit(options: AuditOptions, writer: Writer) -> int:
     """
     try:
         backend = options.engine.connect(options.dsn, scratch=options.scratch_schema)
-        _say_what_was_copied(backend)
+        _say_what_was_copied(backend, options.dsn)
     except BackendRefused as refused:
         print(f"{PROGRAM}: the database could not be reached: {refused}", file=sys.stderr)
         return 2
     return audit(options, backend, writer)
 
 
-def _say_what_was_copied(backend: Backend) -> None:
+def _say_what_was_copied(backend: Backend, dsn: str) -> None:
     """One line on stderr when the data could only be read through a private copy.
 
     A copy costs what the data weighs and is made without being asked for, so a run says it
     where a person sees it rather than only in the records it writes. Which backends can
     need one is not asked here: the setting is the interface's, and a backend that read the
-    data where it lives states nothing.
+    data where it lives states nothing. The record states the fact and this line states the
+    disk, which is what a person watching a run needs and what a published record should not
+    carry.
     """
-    copy = backend.session_settings().recorded.get(READ_THROUGH_PRIVATE_COPY, "")
-    if not copy:
+    if not backend.session_settings().recorded.get(READ_THROUGH_PRIVATE_COPY, ""):
         return
-    weight = Path(copy).stat().st_size if Path(copy).is_file() else 0
+    source = Path(dsn)
+    weight = source.stat().st_size if source.is_file() else 0
     print(
         f"{PROGRAM}: the data could not be read where it is, so this run reads a private "
-        f"copy at {copy} ({weight} bytes), removed when the run ends",
+        f"copy of {dsn} ({weight} bytes) under {tempfile.gettempdir()}, removed when the "
+        "run ends",
         file=sys.stderr,
     )
 

@@ -43,6 +43,8 @@ from attestql.audit.parse import StatementRefused
 from attestql.audit.smells import NUMERIC_TEXT, SmellSettings, ordering_over_numeric_text
 from attestql.audit.sqlite import (
     NOT_IN_THIS_FILE,
+    PRIVATE_COPY_PREFIX,
+    PRIVATE_COPY_READ,
     QUALIFIED_NAME_IS_NOT_REACHED,
     UNOBSERVED,
     WITHOUT_A_ROW_IDENTITY,
@@ -1012,24 +1014,86 @@ def _read_only(directory: Path) -> Generator[Path]:
             entry.chmod(mode)
 
 
+def _private_copies() -> set[Path]:
+    """The private copy directories that exist now, which a test reads before and after."""
+    return set(Path(tempfile.gettempdir()).glob(f"{PRIVATE_COPY_PREFIX}*"))
+
+
 def test_a_wal_file_on_read_only_media_is_read_through_a_private_copy(tmp_path: Path) -> None:
+    home = tmp_path / "read-only"
+    home.mkdir()
+    path = _wal_file(home / "wal.sqlite")
+    before = _private_copies()
+    with _read_only(home):
+        backend = SqliteBackend.connect(str(path))
+        recorded = backend.session_settings().recorded
+
+        assert _rows(backend, "SELECT a FROM t ORDER BY a") == ((1,), (2,))
+        assert recorded[READ_THROUGH_PRIVATE_COPY] == PRIVATE_COPY_READ
+        assert str(path) in backend.identity(), "the identity names what was audited"
+        assert PRIVATE_COPY_PREFIX not in backend.identity(), "and never the copy"
+        made = _private_copies() - before
+        assert len(made) == 1, "one copy for the run"
+        copy = next(iter(made)) / path.name
+        assert copy.read_bytes() == path.read_bytes(), "the copy is the file, byte for byte"
+
+        del backend
+        gc.collect()
+        assert _private_copies() == before, "the copy goes with the run"
+
+
+def test_a_record_never_carries_the_path_the_copy_was_made_at(tmp_path: Path) -> None:
+    """The directory is fresh on every run, so a recorded path would move a record's hash
+    between two runs over the same file, and would carry the account name of anyone whose
+    temporary directory sits under their home. The fact is what a record states."""
     home = tmp_path / "read-only"
     home.mkdir()
     path = _wal_file(home / "wal.sqlite")
     with _read_only(home):
         backend = SqliteBackend.connect(str(path))
         recorded = backend.session_settings().recorded
-        copy = Path(recorded[READ_THROUGH_PRIVATE_COPY])
 
-        assert _rows(backend, "SELECT a FROM t ORDER BY a") == ((1,), (2,))
-        assert copy.is_file() and copy != path
-        assert copy.read_bytes() == path.read_bytes(), "the copy is the file, byte for byte"
-        assert str(path) in backend.identity(), "the identity names what was audited"
-        assert str(copy) not in backend.identity()
+    assert recorded[READ_THROUGH_PRIVATE_COPY] == PRIVATE_COPY_READ
+    assert PRIVATE_COPY_PREFIX not in json.dumps(dict(recorded))
 
-        del backend
-        gc.collect()
-        assert not copy.exists() and not copy.parent.exists(), "the copy goes with the run"
+
+def test_a_private_copy_that_cannot_be_made_is_a_refusal_and_leaves_nothing(
+    tmp_path: Path,
+) -> None:
+    """A sidecar this process cannot read is ordinary, and so is a temporary directory too
+    small for a 262 MB database. Either is this run failing to reach the data, which is a
+    refusal with a name; a traceback would say neither, and the half-written copy would stay
+    behind because the backend that removes one was never built."""
+    home = tmp_path / "read-only"
+    home.mkdir()
+    path = _wal_file(home / "wal.sqlite")
+    sidecar = home / "wal.sqlite-wal"
+    sidecar.write_bytes(b"\x00" * 32)
+    before = _private_copies()
+    with _read_only(home):
+        sidecar.chmod(0o000)
+        try:
+            with pytest.raises(BackendRefused, match="private copy"):
+                SqliteBackend.connect(str(path))
+        finally:
+            sidecar.chmod(0o444)
+
+    assert _private_copies() == before, "nothing of the copy is left behind"
+
+
+def test_a_file_whose_header_says_wal_and_fails_for_another_reason_is_not_copied(
+    tmp_path: Path,
+) -> None:
+    """Both halves of the test decide: SQLite's own message about writing beside the file,
+    and the header saying WAL. This file says WAL and fails for another reason."""
+    path = tmp_path / "wal-header-only.sqlite"
+    path.write_bytes(b"SQLite format 3\x00\x10\x00\x02\x02" + b"\x00" * 200)
+    before = _private_copies()
+
+    with pytest.raises(BackendRefused, match="not a database"):
+        SqliteBackend.connect(str(path))
+
+    assert _private_copies() == before
 
 
 def test_a_file_that_needs_no_copy_is_read_where_it_is(tmp_path: Path) -> None:

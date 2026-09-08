@@ -823,6 +823,17 @@ def test_duplicate_full_row_shows_the_most_repeated_rows_first() -> None:
     assert found.evidence["largest_repeat"] == 3
 
 
+def test_two_rows_repeated_alike_are_shown_in_the_order_the_result_holds_them() -> None:
+    """The rows shown are what a reader opens first and what a record repeats, so the order
+    of two rows repeated the same number of times is the order the result put them in."""
+    ascending = _duplicates(REPEATED, (("Ana",), ("Bo",), ("Ana",), ("Bo",)))
+    descending = _duplicates(REPEATED, (("Bo",), ("Ana",), ("Bo",), ("Ana",)))
+
+    assert ascending.counterexample_rows == (("Ana",), ("Bo",))
+    assert descending.counterexample_rows == (("Bo",), ("Ana",))
+    assert ascending.evidence["repeats_of_the_rows_shown"] == [2, 2]
+
+
 def test_duplicate_full_row_counts_two_rows_as_the_comparison_would() -> None:
     found = duplicate_full_row(
         parse_statement(REPEATED), fake_result((("id", "text"),), ((1,), ("1",), (1,)))
