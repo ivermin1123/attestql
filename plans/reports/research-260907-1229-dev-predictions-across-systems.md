@@ -1,16 +1,17 @@
 <!-- cspell:ignore ATLAS AlphaSQL AtlasCore CodeS DAIL DAMO GenaSQL GSR LHTB -->
 <!-- cspell:ignore Omni RUCKB RSL XiYan birdenv ucdigital Abhi Poluri Graphix UIUC -->
-<!-- cspell:ignore dev1106 dev minidev qid sqls fewshot questionmask PTY -->
+<!-- cspell:ignore dev1106 dev minidev qid sqls fewshot questionmask PTY azorius Takr -->
 # Research: BIRD dev predictions across systems
 
-Date 2026-09-08 12:29 +07, tree `a376007fcbe44c7c58e91002d1500460877624b6`. Artifact:
+Date 2026-09-08 12:49 +07, tree `a376007fcbe44c7c58e91002d1500460877624b6`. Artifact:
 [directory](research-260907-dev-predictions-across-systems/).
 
 ## Outcome and assumption
 
 The hunt accepted 21 full-dev files. On the 2024-06-27 gold, 1751 of 18627 credited predictions are
 NOT_EQUAL (9.4%), against A37's 10.0%. The pooled denominator counts file rows, not distinct
-systems: CodeS contributes 8 configurations and DAIL-SQL 5.
+systems: CodeS contributes 8 configurations and DAIL-SQL 5. In the hand-read sample of 50
+credited-but-NOT_EQUAL rows, 18 are wrong answers the benchmark credited (36.0%).
 
 The hand sample is assumed to mean both gold copies: its population is every (file, copy, id) row,
 ordered by file, copy and id. Credit movement is reported per file in both directions. No product
@@ -78,7 +79,7 @@ multiplicity.type.order.truncation.other, and TS0 is the test-suite reading refu
 
 The tool's BIRD EX reading and BIRD's unmodified evaluator agree on 64427 of 64428 readable rows
 across all file-copy pairs. Per-file official sums, errors, timeouts and every disagreement row are
-in `prediction-measurement.json`; there were 1 disagreements.
+in `prediction-measurement.json`; there was 1 disagreement.
 The one disagreement is `atlas2` q1126 on the new gold: the tool says EQUAL and BIRD's evaluator
 times out.
 Pooled ERROR sides are prediction 1424, gold 105, run 28; steps are execute 1437, statement 92,
@@ -92,45 +93,53 @@ files. Per-file movements range 70 to 203; every moved id and its rewritten-gold
 
 ## Hand sample
 
-Rule: all EX=1 and NOT_EQUAL rows ordered by (file, copy, id), every 69th row, first 50. Classes: A
-wrong answer BIRD credited, B harmless, C typed rule alone. The sample found 0 A, 49 B and 1 C; A is
-0.0% and A or B is 98.0%.
+Selection: all EX=1 and NOT_EQUAL rows ordered by (file, copy, id), every 69th row, first 50;
+population 3454. Each row was read by hand from the question, both statements, both results and the
+tool's differing-row summary; q635 and q44 were also checked in the database. A is a wrong answer
+the benchmark credited: a different question answered, a scalar repeated per row of an unrelated
+table, or the things asked for (names, ids, patients, events) listed at least twice over. B is
+harmless: one distinct row repeated, DISTINCT added to the gold's answer, or a list under twice the
+answer's length with every row present. C is the tool's rule alone: the same value under another
+declared type or storage class. The twice line is applied as written, so 2.2x and 2.35x rows (q1220,
+q758, q1447) are A.
 
-|File|Copy|Q|C|Reason|File|Copy|Q|C|Reason|
-|---|---|---:|---|---|---|---|---:|---|---|
-|`alpha`|dev1106|101|B|Same distinct values.|`alpha`|dev1106|1212|B|Same distinct values.|
-|`alpha`|old|845|B|Same distinct values.|`atlas1`|dev1106|473|B|Same distinct values.|
-|`atlas1`|old|483|B|Same distinct values.|`atlas2`|dev1106|407|B|Same distinct values.|
-|`atlas2`|old|521|B|Same distinct values.|`csc32`|dev1106|452|B|Same distinct values.|
-|`csc32`|dev1106|1447|B|Same distinct values.|`csc32`|old|1088|B|Same distinct values.|
-|`csc7`|dev1106|481|B|Same distinct values.|`csc7`|dev1106|1503|B|Same distinct values.|
-|`csc7`|old|1059|B|Same distinct values.|`dail7m80`|dev1106|452|B|Same distinct values.|
-|`dail7m80`|old|275|B|Same distinct values.|`dail7m80`|old|1514|B|Same distinct values.|
-|`dail7m85`|dev1106|1220|B|Same distinct values.|`dail7m85`|old|1066|B|Same distinct values.|
-|`dail7q`|dev1106|854|B|Same distinct values.|`dail7q`|old|681|B|Same distinct values.|
-|`dail9m`|dev1106|407|B|Same distinct values.|`dail9m`|old|206|B|Same distinct values.|
-|`dail9m`|old|1435|B|Same distinct values.|`dail9q`|dev1106|1214|B|Same distinct values.|
-|`dail9q`|old|1071|B|Same distinct values.|`gsr`|dev1106|610|B|Same distinct values.|
-|`gsr`|old|229|B|Same distinct values.|`gsr`|old|1071|B|Same distinct values.|
-|`codes15e`|dev1106|868|B|Same distinct values.|`codes15e`|old|522|B|Same distinct values.|
-|`codes15`|dev1106|355|B|Same distinct values.|`codes15`|old|321|B|Same distinct values.|
-|`codes1e`|dev1106|449|B|Same distinct values.|`codes1e`|old|355|B|Same distinct values.|
-|`codes1`|dev1106|316|B|Same distinct values.|`codes1`|old|635|B|Same distinct values.|
-|`codes3e`|dev1106|758|B|Same distinct values.|`codes3e`|old|390|B|Same distinct values.|
-|`codes3`|dev1106|257|B|Same distinct values.|`codes3`|old|44|C|Storage class only.|
-|`codes3`|old|1449|B|Same distinct values.|`codes7e`|dev1106|1209|B|Same distinct values.|
-|`codes7e`|old|1054|B|Same distinct values.|`codes7`|dev1106|622|B|Same distinct values.|
-|`codes7`|old|521|B|Same distinct values.|`rsl-ds`|dev1106|452|B|Same distinct values.|
-|`rsl-ds`|old|258|B|Same distinct values.|`rsl-ds`|old|1244|B|Same distinct values.|
-|`rsl-gpt`|dev1106|1051|B|Same distinct values.|`rsl-gpt`|old|470|B|Same distinct values.|
+The sample found 18 A, 31 B and 1 C; A is 36.0% and A or B is 98.0%. A first pass classed 49 rows B
+by template; this row-by-row reading replaced it on 2026-09-08. The 19 A and C rows:
+
+|File|Copy|Q|Gold|Pred|Pred distinct|C|Reason|
+|---|---|---:|---:|---:|---:|---|---|
+|`csc32`|dev1106|452|21738|56707|21738|A|Cards with a text box: 21,738 distinct names, prediction 56,707 rows (Forest 691x); 2.6x, asks for names.|
+|`csc32`|dev1106|1447|20|47|20|A|Events that underspend: 20 distinct (name, location), prediction 47 rows, one per budget line; 2.35x.|
+|`csc32`|old|1088|1105|15429|1105|A|Players with volleys and dribbling over 70: 1,105 distinct names, prediction 15,429 rows per snapshot; 14x.|
+|`csc7`|dev1106|1503|7|66|7|A|Products bought in EUR: 7 distinct descriptions, prediction 66 rows (Diesel 41x), one per transaction; 9x.|
+|`csc7`|old|1059|7258|120895|7165|A|Players taller than 180: gold 7,258 names (7,165 distinct), prediction joins attributes, 120,895 rows; 17x.|
+|`dail7m80`|dev1106|452|21738|56707|21738|A|Cards with a text box: 21,738 distinct names, prediction 56,707 rows (Forest 691x); 2.6x, asks for names.|
+|`dail7m80`|old|275|370|1844|370|A|Molecules with a double bond: 370 distinct ids, prediction 1,844 rows, one per bond (TR397 26x); 5x.|
+|`dail7m85`|dev1106|1220|20|44|20|A|Patients with UN = 29: 20 distinct (ID, sex, birthday), prediction 44 rows, one per lab test; 2.2x.|
+|`dail9q`|dev1106|1214|68|544|68|A|Patients with TP below 6: 68 distinct (ID, sex, birthday), prediction 544 rows, one per lab test; 8x.|
+|`gsr`|dev1106|610|80|456|80|A|Badges of the top-reputation user: 80 distinct names, prediction 456 rows (Nice Answer 205x); 5.7x.|
+|`codes15e`|old|522|2|66|2|A|EDHRec rank-1 cards and banned formats: gold 2 grouped (Sol Ring, format) rows, prediction 66, each 33x.|
+|`codes1e`|dev1106|449|250|1035|250|A|Language and type of azorius cards: 250 distinct pairs, prediction 1,035 rows, one per translation; 4x.|
+|`codes1`|dev1106|316|189|2000|189|A|Non-carcinogenic molecules with c: 189 distinct ids, prediction 2,000 rows, one per carbon atom; 10x.|
+|`codes1`|old|635|12|1|1|A|Posts by Matt Parker with over 4 votes: prediction counts his 5 bounty votes with BountyAmount > 4 instead.|
+|`codes3e`|dev1106|758|5|11|5|A|Hair colour of 185 cm human heroes: 5 distinct colours, prediction 11 rows, one per hero; 2.2x, at threshold.|
+|`codes3`|old|44|1|1|1|C|One row (435, Los Angeles) both sides; INTEGER 435 vs AVG() REAL 435.0; NumTstTakr picks the same record.|
+|`codes3`|old|1449|2|6|2|A|Members with an expense over 100: 2 distinct (name, major) rows, prediction 6, each member 3 times; 3x.|
+|`codes7e`|dev1106|1209|38|871|38|A|Diagnoses with GPT > 60: 38 distinct, prediction 871 rows (SLE 281x) per lab test, ordered DESC not ASC; 23x.|
+|`rsl-ds`|dev1106|452|21738|56707|21738|A|Cards with a text box: 21,738 distinct names, prediction 56,707 rows (Forest 691x); 2.6x, asks for names.|
+
+The 31 B rows (reasons in `classification.json`): `alpha` dev1106 q101, q1212, old q845; `atlas1`
+dev1106 q473, old q483; `atlas2` dev1106 q407, old q521; `csc7` dev1106 q481; `dail7m80` old q1514;
+`dail7m85` old q1066; `dail7q` dev1106 q854, old q681; `dail9m` dev1106 q407, old q206, q1435;
+`dail9q` old q1071; `gsr` old q229, q1071; `codes15e` dev1106 q868; `codes15` dev1106 q355, old
+q321; `codes1e` old q355; `codes3e` old q390; `codes3` dev1106 q257; `codes7e` old q1054; `codes7`
+dev1106 q622, old q521; `rsl-ds` old q258, q1244; `rsl-gpt` dev1106 q1051, old q470.
 
 ## Unresolved questions
 
-- Whether BIRD-Platinum's unlicensed full OmniSQL output can be replaced by an upstream file under a
-    clear licence.
-- Whether ATLAS Core's two runs use the same unnamed model; the shipped run directories do not state
-    it.
-- Whether the 12 plain-line wrappers belong in AttestQL or should stay a measurement-side adapter.
+- Whether a clearly licensed upstream file can replace BIRD-Platinum's unlicensed OmniSQL output.
+- Whether ATLAS Core's two runs use the same unnamed model; the run directories do not say.
+- Whether the 12 plain-line wrappers belong in AttestQL or stay a measurement-side adapter.
 
 ## What changes in AttestQL
 
