@@ -1,0 +1,11 @@
+{
+ "reading": "Byte-identical work copies of WAL databases, made only so SQLite can create its temporary sidecars outside the read-only inputs. Every digest is asserted.",
+ "copies": {
+  "card_games": {
+   "source": "data/dev/dev_databases/card_games/card_games.sqlite",
+   "copy": "data/dev/copies/card_games/card_games.sqlite",
+   "sha256": "c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227",
+   "reason": "WAL header; SQLite needs a writable directory for its sidecars"
+  }
+ }
+}
