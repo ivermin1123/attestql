@@ -468,7 +468,7 @@ def test_a_count_below_zero_is_refused_rather_than_drawn(
         build(tmp_path / "site")
 
 
-def test_theinstall_line_is_a_command_and_the_links_are_the_first_nav_s(
+def test_the_install_line_is_a_command_and_the_links_are_the_first_nav_s(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Two readings of two files the site does not own, each of which had a shape it took.
