@@ -1,4 +1,4 @@
-"""The four gold-only smells: mechanical reasons to read a gold statement again.
+"""The five gold-only smells: mechanical reasons to read a gold statement again.
 
 ADR-0013 point 2 and the four probes of
 ``plans/reports/mechanism-260902-2055-gold-audit-detection.md``, measured over all 498
@@ -36,6 +36,16 @@ types those are is the engine's own answer: PostgreSQL names ``float4`` and ``fl
 and SQLite names none, because it adds a REAL aggregate with a compensation and a changed
 REAL there is the statement depending on the storage order after all.
 
+``duplicate-full-row`` reads the result the gold itself returned and counts whole rows that
+came back more than once. It asks the database nothing: a statement that returns the same row
+twice and never says DISTINCT disagrees on multiplicity alone with an equally correct statement
+that returns each row once, and under a multiset comparison that disagreement is the whole
+verdict. Of the 399 dev golds BIRD rewrote on 2025-11-06, 23 whose answer changed are of this
+shape and 22 of them fire none of the other probes; of the credited predictions a typed
+comparison calls unequal, 1,697 of 1,751 differ by multiplicity alone. A repeat is not a defect:
+a question can ask for one row per occurrence, which is why this is a reading order like every
+other smell here.
+
 ``direction-against-question`` is experimental and off unless asked for. It reads the
 question text for words meaning a maximum or a minimum and fires on the contradiction
 with the first ordering key. Its precision on the measured corpus was 17 %, and it needs
@@ -49,6 +59,7 @@ copied, so a quiet smell never reads as a measurement that was taken.
 from __future__ import annotations
 
 import re
+from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from decimal import Decimal, localcontext
@@ -70,6 +81,7 @@ from attestql.kernel.types import ExecutionResult
 ORDERING_OVER_NUMERIC_TEXT = "ordering-over-numeric-text"
 ARBITRARY_CUT = "arbitrary-cut"
 NOT_A_FUNCTION_OF_THE_DATA = "not-a-function-of-the-data"
+DUPLICATE_FULL_ROW = "duplicate-full-row"
 FLOAT_AGGREGATE_ORDER = "float-aggregate-order"
 DIRECTION_AGAINST_QUESTION = "direction-against-question"
 
@@ -78,6 +90,7 @@ SMELL_NAMES: tuple[str, ...] = (
     ARBITRARY_CUT,
     NOT_A_FUNCTION_OF_THE_DATA,
     FLOAT_AGGREGATE_ORDER,
+    DUPLICATE_FULL_ROW,
     DIRECTION_AGAINST_QUESTION,
 )
 """Every name a smell can be reported under, so a summary can count them all at zero."""
@@ -152,6 +165,10 @@ _MEANS: Mapping[str, str] = {
     FLOAT_AGGREGATE_ORDER: (
         "this statement aggregates floating point numbers, so its last digits depend on "
         "the order the rows were summed in; the values agree to six significant digits"
+    ),
+    DUPLICATE_FULL_ROW: (
+        "this statement returns the same whole row more than once and never says DISTINCT, "
+        "so a statement answering the same question once per row disagrees on multiplicity alone"
     ),
     DIRECTION_AGAINST_QUESTION: (
         "the question asks for a maximum or a minimum and the statement orders the other "
@@ -795,6 +812,57 @@ def _float_order_only(
     return cells if cells else None
 
 
+def duplicate_full_row(parsed: ParsedStatement, baseline: ExecutionResult) -> Smell:
+    """Whether the gold's own result returns the same whole row more than once.
+
+    The one smell that asks the database nothing. Every other probe here runs a second
+    statement to find out what the first one depended on; this one reads the result that
+    is already in hand, because the hazard is in the answer and not in how it was reached.
+
+    The rows are counted through ``typed_row``, the keys a comparison counts them under, so
+    two rows are the same row here exactly when the comparator would hold them equal: a
+    TEXT ``1`` and an INTEGER ``1`` stay two rows.
+
+    A fire needs a repeat that was seen, which is why the bound is read afterwards and not
+    before: a result cut at a row cap can hold a repeat, and the repeat it holds is real,
+    while its silence proves nothing about the rows beyond the cut. A statement that states
+    DISTINCT cannot repeat a row at all, and a result of one row has nothing to repeat;
+    both are not applicable rather than quiet.
+    """
+    counted: Counter[tuple[tuple[str, object], ...]] = Counter()
+    first_seen: dict[tuple[tuple[str, object], ...], tuple[int, tuple[object, ...]]] = {}
+    for index, row in enumerate(baseline.rows):
+        key = typed_row(row)
+        counted[key] += 1
+        first_seen.setdefault(key, (index, row))
+    repeated = [(key, count) for key, count in counted.items() if count > 1]
+    payload: Json = {
+        "rows": len(baseline.rows),
+        "distinct_rows": len(counted),
+        "repeated_rows": len(repeated),
+        "largest_repeat": max((count for _, count in repeated), default=1),
+        "result_bounded": baseline.truncated,
+        "distinct_stated": parsed.distinct,
+    }
+    if repeated:
+        order = sorted(repeated, key=lambda pair: (-pair[1], first_seen[pair[0]][0]))
+        shown = order[:ROWS_IN_EVIDENCE]
+        payload["repeats_of_the_rows_shown"] = [count for _, count in shown]
+        return _fired(DUPLICATE_FULL_ROW, payload, [first_seen[key][1] for key, _ in shown])
+    if parsed.distinct:
+        payload["not_applicable"] = "the statement states DISTINCT, so it cannot repeat a row"
+        return _quiet(DUPLICATE_FULL_ROW, payload, applicable=False)
+    if baseline.truncated:
+        payload["not_applicable"] = (
+            "the result is bounded, so a repeat beyond the bound would not have been seen"
+        )
+        return _quiet(DUPLICATE_FULL_ROW, payload, applicable=False)
+    if len(baseline.rows) < 2:
+        payload["not_applicable"] = "a result of fewer than two rows has nothing to repeat"
+        return _quiet(DUPLICATE_FULL_ROW, payload, applicable=False)
+    return _quiet(DUPLICATE_FULL_ROW, payload, applicable=True)
+
+
 def direction_against_question(
     parsed: ParsedStatement,
     backend: Backend,
@@ -870,6 +938,7 @@ def all_smells(
         not_a_function_of_the_data(
             parsed, backend, baseline, settings=settings, shuffled=shuffled, no_shuffle=no_shuffle
         ),
+        duplicate_full_row(parsed, baseline),
     ]
     if settings.experimental_s2:
         found.append(
@@ -921,6 +990,7 @@ __all__ = [
     "DEFAULT_SHUFFLE_ROW_LIMIT",
     "DEFAULT_SHUFFLE_SEED",
     "DIRECTION_AGAINST_QUESTION",
+    "DUPLICATE_FULL_ROW",
     "FLOAT_AGGREGATE_ORDER",
     "MAX_INTENT",
     "MIN_INTENT",
@@ -939,6 +1009,7 @@ __all__ = [
     "all_smells",
     "arbitrary_cut",
     "direction_against_question",
+    "duplicate_full_row",
     "not_a_function_of_the_data",
     "ordering_over_numeric_text",
     "probe_meanings",

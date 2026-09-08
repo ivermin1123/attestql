@@ -353,7 +353,7 @@ def test_a_fired_smell_writes_the_gold_record_and_the_smells_beside_it(tmp_path:
     document = cast(
         "dict[str, Any]", json.loads((directory / SMELLS_FILE).read_text(encoding="utf-8"))
     )
-    assert [entry["fired"] for entry in document["smells"]] == [False, True, True]
+    assert [entry["fired"] for entry in document["smells"]] == [False, True, True, False]
     assert document["smells"][1]["evidence"]["heuristic"] is True
     assert backend.dropped == 1, "the scratch copies outlived the run"
 
@@ -876,7 +876,11 @@ def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism
     how many of those a run found and what makes them, which is the whole point of running
     both readings over one pair of results. The file also says what the third reading makes
     of the same pair: the test-suite evaluator counts rows, so it refuses this one with the
-    tool rather than crediting it with the benchmark."""
+    tool rather than crediting it with the benchmark.
+
+    The gold-only probe of the same shape fires here on the gold alone: a result holding one
+    row twice is what `duplicate-full-row` reads, and it names this gold before any
+    prediction has been compared with it."""
     write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
     write(tmp_path / "predictions.json", {"207": DISTINCT_ELEMENTS})
     backend = FakeBackend(
@@ -896,7 +900,7 @@ def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism
     )
 
     assert lines.written[1] == (
-        "1 questions: 1 NOT_EQUAL, 0 smells fired, 1 credited by BIRD but NOT_EQUAL "
+        "1 questions: 1 NOT_EQUAL, 1 smells fired, 1 credited by BIRD but NOT_EQUAL "
         "(1 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)"
     )
     assert summary.credited_but_not_equal is not None

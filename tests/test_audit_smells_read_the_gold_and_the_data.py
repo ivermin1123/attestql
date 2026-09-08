@@ -1,4 +1,4 @@
-"""The four smells, each on a gold that fires it, one that is quiet, and one it skips.
+"""The five smells, each on a gold that fires it, one that is quiet, and one it skips.
 
 No server: every rerun a smell makes is scripted, so what these tests observe is the
 smell's own decision and not a database's. The variant statements are built by the parse
@@ -24,6 +24,7 @@ from attestql.audit.backend import PlannerStatistics, ShuffledCopies, TableName,
 from attestql.audit.smells import (
     ARBITRARY_CUT,
     DIRECTION_AGAINST_QUESTION,
+    DUPLICATE_FULL_ROW,
     FLOAT_AGGREGATE_ORDER,
     NOT_A_FUNCTION_OF_THE_DATA,
     NUMERIC_TEXT,
@@ -35,6 +36,7 @@ from attestql.audit.smells import (
     all_smells,
     arbitrary_cut,
     direction_against_question,
+    duplicate_full_row,
     not_a_function_of_the_data,
     ordering_over_numeric_text,
     smells_json,
@@ -756,6 +758,7 @@ def test_the_experimental_smell_runs_only_when_it_was_asked_for() -> None:
         ORDERING_OVER_NUMERIC_TEXT,
         ARBITRARY_CUT,
         NOT_A_FUNCTION_OF_THE_DATA,
+        DUPLICATE_FULL_ROW,
     ]
     asked = all_smells(
         parsed,
@@ -785,3 +788,78 @@ def test_every_smell_says_that_it_is_a_heuristic_and_what_it_would_mean() -> Non
     document = smells_json(found)
     assert "heuristic" in str(document["reading"])
     assert [entry["name"] for entry in document["smells"]] == [smell.name for smell in found]
+
+
+# duplicate-full-row
+
+REPEATED = "SELECT name FROM players ORDER BY name"
+DISTINCT_NAMES = "SELECT DISTINCT name FROM players ORDER BY name"
+
+
+def _duplicates(
+    sql: str, rows: tuple[tuple[object, ...], ...], *, truncated: bool = False
+) -> Smell:
+    return duplicate_full_row(parse_statement(sql), fake_result(NAME, rows, truncated=truncated))
+
+
+def test_duplicate_full_row_fires_on_a_result_that_returns_a_row_twice() -> None:
+    found = _duplicates(REPEATED, (("Ana",), ("Ana",), ("Bo",)))
+    assert _smell(found) == (DUPLICATE_FULL_ROW, True, True)
+    assert found.counterexample_rows == (("Ana",),)
+    assert found.evidence["rows"] == 3
+    assert found.evidence["distinct_rows"] == 2
+    assert found.evidence["repeated_rows"] == 1
+    assert found.evidence["largest_repeat"] == 2
+    assert found.evidence["repeats_of_the_rows_shown"] == [2]
+    assert found.evidence["heuristic"] is True
+    assert "multiplicity" in str(found.evidence["means"])
+
+
+def test_duplicate_full_row_shows_the_most_repeated_rows_first() -> None:
+    rows = (("Ana",), ("Bo",), ("Bo",), ("Ana",), ("Bo",), ("Cy",))
+    found = _duplicates(REPEATED, rows)
+    assert found.counterexample_rows == (("Bo",), ("Ana",))
+    assert found.evidence["repeats_of_the_rows_shown"] == [3, 2]
+    assert found.evidence["largest_repeat"] == 3
+
+
+def test_duplicate_full_row_counts_two_rows_as_the_comparison_would() -> None:
+    found = duplicate_full_row(
+        parse_statement(REPEATED), fake_result((("id", "text"),), ((1,), ("1",), (1,)))
+    )
+    assert _smell(found) == (DUPLICATE_FULL_ROW, True, True)
+    assert found.evidence["distinct_rows"] == 2
+    assert found.counterexample_rows == ((1,),)
+
+
+def test_duplicate_full_row_is_quiet_when_every_row_came_back_once() -> None:
+    found = _duplicates(REPEATED, (("Ana",), ("Bo",)))
+    assert _smell(found) == (DUPLICATE_FULL_ROW, False, True)
+    assert found.evidence["distinct_rows"] == 2
+    assert found.counterexample_rows == ()
+
+
+def test_a_statement_that_states_distinct_has_no_repeat_to_find() -> None:
+    found = _duplicates(DISTINCT_NAMES, (("Ana",), ("Bo",)))
+    assert _smell(found) == (DUPLICATE_FULL_ROW, False, False)
+    assert found.evidence["distinct_stated"] is True
+    assert "DISTINCT" in str(found.evidence["not_applicable"])
+
+
+def test_a_bounded_result_with_no_repeat_in_it_was_not_asked_the_question() -> None:
+    found = _duplicates(REPEATED, (("Ana",), ("Bo",)), truncated=True)
+    assert _smell(found) == (DUPLICATE_FULL_ROW, False, False)
+    assert found.evidence["result_bounded"] is True
+    assert "beyond the bound" in str(found.evidence["not_applicable"])
+
+
+def test_a_repeat_inside_a_bounded_result_is_still_a_repeat_that_was_seen() -> None:
+    found = _duplicates(REPEATED, (("Ana",), ("Ana",)), truncated=True)
+    assert _smell(found) == (DUPLICATE_FULL_ROW, True, True)
+    assert found.evidence["result_bounded"] is True
+
+
+def test_a_result_of_one_row_has_nothing_to_repeat() -> None:
+    found = _duplicates(REPEATED, (("Ana",),))
+    assert _smell(found) == (DUPLICATE_FULL_ROW, False, False)
+    assert "fewer than two rows" in str(found.evidence["not_applicable"])
