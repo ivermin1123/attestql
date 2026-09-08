@@ -1,0 +1,1044 @@
+{
+ "cds_golds": {
+  "dev-20240627": [
+   {
+    "question_id": 5,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 6,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 7,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 8,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 9,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 10,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 12,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 13,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 15,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 16,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 17,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 18,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 19,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 24,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 25,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 27,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 36,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 37,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 38,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 39,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 40,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 41,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 42,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 43,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 44,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 45,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 50,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 51,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 52,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 53,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 57,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 88,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   }
+  ],
+  "dev-20251106": [
+   {
+    "question_id": 0,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 2,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 3,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 5,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 6,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 7,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 8,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 9,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 10,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 11,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 12,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 13,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 15,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 16,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 17,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 18,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 19,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 20,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 21,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 24,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 25,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 27,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 31,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 32,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 36,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 37,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 38,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 39,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 40,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 41,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 42,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 43,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 44,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 45,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 50,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 51,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 52,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 53,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 55,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 57,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 60,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 61,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 62,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 66,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 69,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 77,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 78,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 79,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 88,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   }
+  ],
+  "minidev-hf": [
+   {
+    "question_id": 5,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 12,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 17,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 24,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 25,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 27,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 37,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 36,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 39,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 40,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 41,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 45,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 50,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   }
+  ]
+ },
+ "height_golds": {
+  "dev-20240627": [
+   {
+    "question_id": 1021,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1033,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1040,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1058,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1059,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1068,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1069,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1079,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1087,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1116,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1131,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1132,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1148,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   }
+  ],
+  "dev-20251106": [
+   {
+    "question_id": 1021,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1033,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1040,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1058,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1059,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1068,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1069,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1079,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1087,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1116,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1131,
+    "present": true,
+    "answer_class": "error-or-timeout",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1132,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1148,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   }
+  ],
+  "minidev-hf": [
+   {
+    "question_id": 1040,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1058,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1068,
+    "present": true,
+    "answer_class": "different-rows",
+    "bird_set_equal": false,
+    "multiset_equal": false,
+    "typed_equal": false
+   },
+   {
+    "question_id": 1079,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1116,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   },
+   {
+    "question_id": 1148,
+    "present": true,
+    "answer_class": "identical-multiset",
+    "bird_set_equal": true,
+    "multiset_equal": true,
+    "typed_equal": true
+   }
+  ]
+ },
+ "player_height_storage": {
+  "dev": {
+   "storage_classes": {
+    "real": 11060
+   },
+   "example_first_row": 182.88
+  },
+  "minidev": {
+   "storage_classes": {
+    "integer": 11060
+   },
+   "example_first_row": 182
+  }
+ },
+ "height_source_check": {
+  "run": false,
+  "reason": "the European football dataset's Kaggle origin requires a login"
+ }
+}
