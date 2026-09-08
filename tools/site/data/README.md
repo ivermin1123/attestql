@@ -4,6 +4,11 @@ What `tools/site/build.py` renders. Everything here was written by `attestql aud
 in by `tools/site-select/select.py`; nothing in it is edited by hand, and remaking it is
 `tools/site-select/audits.sh` followed by that script.
 
+The question text, the evidence text and the gold SQL in these directories are BIRD Mini-Dev's
+and BIRD dev's, licensed under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); `NOTICE` at the repository root
+is the precise list.
+
 ## What a benchmark, a group and a run are
 
 ```text

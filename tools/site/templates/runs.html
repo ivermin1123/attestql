@@ -7,6 +7,7 @@
    numbers are stated, because a benchmark of nine and one of ninety-nine are not the same
    size and a count of one of them alone would say they were. #}
 {% extends "base.html" %}
+{% from "_credit.html" import credit_block %}
 
 {% block strip %}
 <header class="strip strip--run">
@@ -27,4 +28,5 @@
     {% endfor %}
   </ul>
 </section>
+{{ credit_block() }}
 {% endblock %}

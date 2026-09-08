@@ -149,7 +149,9 @@ review, and the gate, not the author, is what vouches for it.
 
 ## Licence
 
-Apache-2.0 for this repository (`LICENSE`). The material excerpted from BIRD Mini-Dev, listed in
-`NOTICE`, keeps its own CC BY-SA 4.0 licence. The PostgreSQL parser, `postgast`, is a BSD binding
-to `libpg_query`, PostgreSQL's own grammar as a library, and the PostgreSQL driver, `psycopg`, is
-LGPL. The SQLite parser, `sqlglot`, is MIT, and the SQLite driver is the standard library's.
+Apache-2.0 for this repository (`LICENSE`). The material excerpted from BIRD Mini-Dev and from
+Spider 1.0, listed in `NOTICE`, keeps its own CC BY-SA 4.0 licence. The PostgreSQL parser,
+`postgast`, is a BSD binding to `libpg_query`, PostgreSQL's own grammar as a library, and the
+PostgreSQL driver, `psycopg`, is LGPL. The SQLite parser, `sqlglot`, is MIT, the SQLite driver is
+the standard library's, and `jinja2`, which renders every page this project writes, is
+BSD-3-Clause.

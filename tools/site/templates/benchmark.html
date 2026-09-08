@@ -7,6 +7,7 @@
    invocations and a prediction file is a group of them: this page then lists the groups, each
    with the sums of its runs' counts, and the group's own page lists its eleven. #}
 {% extends "base.html" %}
+{% from "_credit.html" import credit_block %}
 
 {% block strip %}
 <header class="strip strip--run">
@@ -80,4 +81,5 @@
   </div>
 </section>
 {% endif %}
+{{ credit_block() }}
 {% endblock %}

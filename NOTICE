@@ -47,6 +47,18 @@ Apache License and keeps its own licence and attribution:
       those statements returned from the benchmark databases, inside the evidence records. The
       same licence and the same attribution apply to all of it.
 
+The following file contains material excerpted from Spider 1.0
+(https://yale-lily.github.io/spider, repository https://github.com/taoyds/spider), which is
+licensed under the Creative Commons Attribution-ShareAlike 4.0 International licence
+(CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/). That material is not covered by
+the Apache License and keeps its own licence and attribution:
+
+  plans/reports/research-260907-spider-dev-sqlite/corrections.json
+      the gold SQL of the 28 Spider dev golds whose statement Spider itself corrected on
+      2020-06-07, each held as the pair before and after that correction, extracted from
+      Spider's own evaluation_examples/dev.sql at the two commits either side of it; the
+      measurement around them is this repository's.
+
 The three woff2 files under src/attestql/report/static/fonts/ are Latin subsets of IBM Plex
 Sans and IBM Plex Mono, Copyright 2017 IBM Corp. with Reserved Font Name "Plex", licensed
 under the SIL Open Font License, Version 1.1. That licence is not the Apache License: its
@@ -54,5 +66,5 @@ text is beside the fonts as src/attestql/report/static/fonts/OFL.txt, and
 src/attestql/report/static/fonts/provenance.txt names the release each file came from and
 its sha256.
 
-Every other file, including the run outputs that carry only question ids, verdicts, hashes and
-counts, is this repository's own work under the Apache License.
+Every file not listed above, including the run outputs that carry only question ids,
+verdicts, hashes and counts, is this repository's own work under the Apache License.

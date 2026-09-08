@@ -6,6 +6,7 @@
    what a merged `summary.json` would be is a document no audit wrote, and every other number
    on this site is one an artifact states. #}
 {% extends "base.html" %}
+{% from "_credit.html" import credit_block %}
 
 {% block strip %}
 <header class="strip strip--run">
@@ -76,4 +77,5 @@
     </table>
   </div>
 </section>
+{{ credit_block() }}
 {% endblock %}

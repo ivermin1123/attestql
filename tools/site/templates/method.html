@@ -6,6 +6,7 @@
    this page, and the two benchmark readings are the tables the audit computes them with. A
    sentence typed here about any of them could disagree with the code; these cannot. #}
 {% extends "base.html" %}
+{% from "_credit.html" import credit_block %}
 
 {% block strip %}
 <header class="strip strip--run">
@@ -99,4 +100,5 @@
   <p><strong>{{ page.principle }}</strong></p>
   <p>Every flag, every default and every state the run writes about itself are in <a href="{{ page.docs }}">the audit command's documentation</a>. This site serves the pages and not the documentation, so that link leaves it.</p>
 </section>
+{{ credit_block() }}
 {% endblock %}
