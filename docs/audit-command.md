@@ -42,6 +42,15 @@ on the connection, so a statement that calls `load_extension` is refused by the 
 runs and loads nothing. One `--dsn` is one file, so a benchmark of eleven databases is eleven runs,
 each with `--ids` naming the questions that database answers.
 
+A SQLite file whose header says WAL, which BIRD's `card_games` is, needs a `-shm` and a `-wal`
+beside it before it can be read at all, so a directory that cannot be written to refuses the open.
+The run answers that one refusal by copying the file and any sidecars into a private directory and
+reading the copy: it says so on stderr with the size, names the copy in every record's session
+settings under `read_through_private_copy`, keeps the identity, the size and the content signal on
+the original because the original is what was audited, and removes the copy when the run ends. It
+costs what the file weighs, 262 MB for `card_games`. The alternative, telling SQLite the file is
+immutable, is not taken: it is a promise about the file that the run cannot check.
+
 The PostgreSQL parser is PostgreSQL 17's grammar (`libpg_query`), so a statement that only
 PostgreSQL 17 accepts parses here and then fails on a PostgreSQL 16 server; that failure is the
 question's own error line, not a verdict.

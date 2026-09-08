@@ -87,6 +87,16 @@ class TableName:
         return f"{self.schema}.{self.name}" if self.schema else self.name
 
 
+READ_THROUGH_PRIVATE_COPY = "read_through_private_copy"
+"""The session setting under which a backend names a private copy it had to read through.
+
+A backend that could not read the data where it lives, and copied it to read it, says so
+here rather than in its identity: the identity is what was audited and the copy is how it
+was reached. Absent on every run that read the data where it was. Stated in this interface
+because a reader of a run, and the command that prints one line about it, are engine-neutral.
+"""
+
+
 class BackendRefused(RuntimeError):
     """The backend will not produce a result it cannot state the provenance of.
 

@@ -69,6 +69,7 @@ from pathlib import Path
 from typing import Any, Protocol, TextIO, cast
 
 from attestql.audit.backend import (
+    READ_THROUGH_PRIVATE_COPY,
     Backend,
     BackendRefused,
     PlannerStatistics,
@@ -1759,10 +1760,30 @@ def connect_and_audit(options: AuditOptions, writer: Writer) -> int:
     """
     try:
         backend = options.engine.connect(options.dsn, scratch=options.scratch_schema)
+        _say_what_was_copied(backend)
     except BackendRefused as refused:
         print(f"{PROGRAM}: the database could not be reached: {refused}", file=sys.stderr)
         return 2
     return audit(options, backend, writer)
+
+
+def _say_what_was_copied(backend: Backend) -> None:
+    """One line on stderr when the data could only be read through a private copy.
+
+    A copy costs what the data weighs and is made without being asked for, so a run says it
+    where a person sees it rather than only in the records it writes. Which backends can
+    need one is not asked here: the setting is the interface's, and a backend that read the
+    data where it lives states nothing.
+    """
+    copy = backend.session_settings().recorded.get(READ_THROUGH_PRIVATE_COPY, "")
+    if not copy:
+        return
+    weight = Path(copy).stat().st_size if Path(copy).is_file() else 0
+    print(
+        f"{PROGRAM}: the data could not be read where it is, so this run reads a private "
+        f"copy at {copy} ({weight} bytes), removed when the run ends",
+        file=sys.stderr,
+    )
 
 
 def report(audit_directory: Path, out: Path | None, writer: Writer) -> int:
