@@ -7,14 +7,20 @@
    `banner` is a line a caller puts above every page of a whole site, and is empty for a
    report `attestql report` wrote: the site of phase 3 shows the packaged sandbox until the
    published runs exist, and a page that is not what it will be says so on itself rather
-   than in a note somewhere else. #}
+   than in a note somewhere else.
+
+   `static` is where the stylesheet, the script and the fonts are, and `root` is where the
+   pages are. They are the same for a report `attestql report` wrote, which carries its own
+   copy of them; a site rendering a hundred and twenty runs points every page at one shared
+   directory instead, because a hundred and twenty copies of three font files is a tenth of
+   what the whole site is allowed to weigh. #}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ page.title }}</title>
-<link rel="stylesheet" href="{{ root }}static/report.css">
+<link rel="stylesheet" href="{{ static }}static/report.css">
 </head>
 <body>
 {% if banner %}
@@ -24,6 +30,6 @@
 <main class="page">
 {% block content %}{% endblock %}
 </main>
-<script src="{{ root }}static/report.js" defer></script>
+<script src="{{ static }}static/report.js" defer></script>
 </body>
 </html>

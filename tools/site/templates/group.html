@@ -1,0 +1,60 @@
+{# One group: the eleven runs one prediction file is on an engine where a connection is one
+   database file, and the sums of their counts.
+
+   The sums are a line and never a summary of their own. No question id is in two of the
+   eleven, which is the merge rule the two SQLite measurement reports state, so the counts add;
+   what a merged `summary.json` would be is a document no audit wrote, and every other number
+   on this site is one an artifact states. #}
+{% extends "base.html" %}
+
+{% block strip %}
+<header class="strip strip--run">
+  <h1 class="strip__title">{{ page.name }}</h1>
+  <p class="strip__facts">
+    <span class="chip chip--set">{{ page.benchmark }}</span>
+    <span class="chip chip--rule">{{ page.runs|length }} runs</span>
+  </p>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="counts" id="counts">
+  <h2>The sums of the {{ page.runs|length }} runs</h2>
+  <p>One prediction file, audited once per database it names, because a connection here is one file. Each run below states its own counts; these are those counts added up, which they can be because no question is in two of the runs.</p>
+  <table class="counts__table">
+    <thead><tr><th scope="col">what</th><th scope="col">how many</th></tr></thead>
+    <tbody>
+      {% for sum in page.sums %}
+      <tr><th scope="row">{{ sum.name }}</th><td class="mono">{{ sum.value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="index" id="runs">
+  <h2>The runs</h2>
+  <p><a href="{{ root }}runs/{{ page.benchmark }}/index.html">Every group of {{ page.benchmark }}</a> is indexed a level up.</p>
+  <div class="rows__region">
+    <table class="index__table">
+      <thead>
+        <tr>
+          <th scope="col">database</th>
+          {% for fact in page.runs[0].facts %}
+          <th scope="col">{{ fact.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for run in page.runs %}
+        <tr class="index__row">
+          <th scope="row" class="mono"><a href="{{ root }}{{ run.slug }}/index.html">{{ run.name }}</a></th>
+          {% for fact in run.facts %}
+          <td class="mono">{{ fact.value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

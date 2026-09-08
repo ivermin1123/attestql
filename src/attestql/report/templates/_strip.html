@@ -6,7 +6,12 @@
    The verdict comes first and the question set last: the set is named by its file and, when
    the run was told one, by the origin that file came from, which can be a URL of any length,
    and a chip of two hundred characters would have been the loudest thing on the page. It is
-   a line of secondary text under the chips instead. #}
+   a line of secondary text under the chips instead.
+
+   The database this question is about goes in front of the set on that same line, where the
+   run was published with a `questions.json` naming it. It is not in any file the audit
+   writes, so a report of a directory the audit wrote states the set alone, exactly as it did
+   before there was such a file. #}
 {% macro strip(page) %}
 <header class="strip" data-verdict="{{ page.verdict }}">
   <h1 class="strip__title">q{{ page.question_id }}</h1>
@@ -20,6 +25,6 @@
     <span class="chip chip--warn chip--probe">{{ probe.name }}</span>
     {% endfor %}
   </p>
-  <p class="strip__set ink-2">{{ page.question_set }}</p>
+  <p class="strip__set ink-2">{% if page.db_id %}{{ page.db_id }} &middot; {% endif %}{{ page.question_set }}</p>
 </header>
 {% endmacro %}
