@@ -1,12 +1,13 @@
 # Phase 3: the site build, landing and method pages, a preview deployment
 
-Status: DONE 2026-09-08. Four commits on `ivermin1123/web-ui` (`6e0a896`, `dbf3f6a`, `0b770ef`,
-`daaf66f`), `just check` green at each. The build makes 55 files and 524,181 bytes in under a
-second, the preview serves it at <https://attestql-ui.pages.dev>, and attestql.com is byte
-identical to `site/index.html`. Report, with the browser measurements and the screenshots:
-`plans/reports/cook-260908-0932-web-ui-phase-3-site.md`. What is left is phase 4's data, the
-keyboard stop on a wide table, and the owner's switch; steps 3 and 4 below are done from one
-network, which the report states.
+Status: DONE 2026-09-08. Seven commits on `ivermin1123/web-ui` (`6e0a896` to `95b46d0`), with
+`just check` green at each. The build makes 56 files and 525,006 bytes in a tenth of a second, the
+preview serves it at <https://attestql-ui.pages.dev>, and attestql.com is byte identical to
+`site/index.html`. An in-worker review found fifteen things, the first a path traversal the filter
+pages introduced, reproduced and repaired in `95b46d0`. Report, with the browser measurements and
+the screenshots: `plans/reports/cook-260908-0932-web-ui-phase-3-site.md`. What is left is phase 4's
+data, the keyboard stop on a wide table, and the owner's switch; steps 3 and 4 below are done from
+one network, which the report states.
 
 ## Context
 

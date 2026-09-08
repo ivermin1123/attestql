@@ -76,7 +76,7 @@ gets the same pages by running `attestql report audit/`.
 | --- | --- | --- | --- |
 | 1 | `phase-1-report-renderer.md` | nothing | DONE: `attestql report`, templates, tests |
 | 2 | `phase-2-design-and-verification.md` | 1 | DONE: tokens applied, states designed, figures, rendered and measured at three widths |
-| 3 | `phase-3-site-build-and-deploy.md` | 2 | DONE 2026-09-08: `tools/site/` build, landing and method pages, the index filters, preview at <https://attestql-ui.pages.dev> |
+| 3 | `phase-3-site-build-and-deploy.md` | 2 | DONE 2026-09-08: `tools/site/` build, landing and method pages, the index filters, preview at <https://attestql-ui.pages.dev>, reviewed |
 | 4 | `phase-4-publish-runs.md` | 1 (data), 3 (deploy) | per-question JSON for the five runs, size budget met, site live with real rows |
 | 5 | `phase-5-in-browser-viewer.md` | 1, 3 | drop zone for private audits, one renderer via Pyodide; about 6.3 MB compressed, loaded on demand; hash verification lives in phase 1 |
 

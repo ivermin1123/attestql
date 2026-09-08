@@ -25,8 +25,8 @@ attestql.com serves today and belongs to another session, and an `--out` that is
 holds no `.attestql-site` marker is refused untouched, because a build empties only a directory
 of its own.
 
-The build fails, naming what pushed it over, at more than 8,000 files, more than 40 MB in total,
-or any single page over 2 MB. Those are under the Cloudflare Pages Free plan's own limits (20,000
+The build is refused, with what pushed it over named, at more than 8,000 files, more than 40 MB
+in total, or any single page over 2 MB. Those are under the Cloudflare Pages Free plan's own limits (20,000
 files a site, 25 MiB a file), so a run can be added to a passing build without a re-plan. The
 answer to a build over budget is a narrower selection of questions and never a larger budget.
 
@@ -48,8 +48,8 @@ npx --yes wrangler@4.129.0 pages deploy <repo>/build/site \
 ```
 
 Preview URL, deployed 2026-09-08: <https://attestql-ui.pages.dev>. Each deploy also prints an
-address of its own for that one deployment; the first was
-<https://843f9699.attestql-ui.pages.dev>.
+address of its own for that one deployment; the current one is
+<https://f6872917.attestql-ui.pages.dev>.
 
 ## What this does not touch
 
