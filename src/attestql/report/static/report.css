@@ -446,7 +446,13 @@ a:hover {
 
 .facts {
   display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
+  /* The name column takes what it needs and no more, but it may shrink below that: every
+     other list of facts on this site has a short name, and the landing's three have a
+     sentence apiece. A plain `max-content` made that sentence 409px wide at a 360px
+     viewport and pushed the whole page sideways, which is the one thing the layout may not
+     do; `minmax(0, max-content)` differs from it only where the name would not fit, and
+     there it wraps. */
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
   gap: var(--space-1) var(--space-4);
   margin: 0 0 var(--space-4);
   font-size: var(--text-cell);
