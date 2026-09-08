@@ -2,8 +2,8 @@
 
 Phase 3 of `plans/260907-1730-attestql-web-ui/plan.md`, on the branch `ivermin1123/web-ui` in the
 worktree `~/orca/workspaces/attestql/web-ui`, 2026-09-08 (Asia/Saigon), on Opus per the owner's
-model rule. Four commits on top of `ab4a99f`. The screenshots and the browser measurements are in
-`cook-260908-0932-web-ui-phase-3-site/` beside this file.
+model rule. Seven commits on top of `ab4a99f`. The screenshots and the browser measurements are
+in `cook-260908-0932-web-ui-phase-3-site/` beside this file.
 
 | Commit | What it is |
 | --- | --- |
@@ -11,6 +11,9 @@ model rule. Four commits on top of `ab4a99f`. The screenshots and the browser me
 | `dbf3f6a` | the pre-rendered filter pages in the package renderer |
 | `0b770ef` | `tools/site/build.py`, the four site templates, the two READMEs, the tests |
 | `daaf66f` | one paragraph in `docs/developer-environment.md` |
+| `1c8ddd2` | this report, its screenshots, the plan and phase status |
+| `e6381dd` | the banner keys to a published run, not to an empty directory |
+| `95b46d0` | the review's findings, the first of them a path traversal this cook introduced |
 
 ## Step 0: the three owner decisions of 2026-09-08
 
@@ -132,11 +135,11 @@ with no `pip install attestql` line is refused rather than a line being typed.
 
 ## What was measured
 
-**The build**, on the sandbox stand-in: **55 files, 524,181 bytes, 0.1 to 0.6 s.** Against the
-budget: 0.7 % of the 8,000 files, 1.3 % of the 40 MB, and the largest page is 31 KB against the
-2 MB bound. Plan criterion 4's two minutes is not close.
+**The build**, on the sandbox stand-in: **56 files, 525,006 bytes, 0.1 s.** Against the budget:
+0.7 % of the 8,000 files, 1.3 % of the 40 MB, and the largest page is 31 KB against the 2 MB
+bound. Plan criterion 4's two minutes is not close.
 
-**Determinism.** Two builds into the same output directory: 25 of 55 files byte identical; 14
+**Determinism.** Two builds into the same output directory: 25 of the files byte identical; 14
 differ only in the demo run's id and its timestamps; 16 differ also in a hash those two feed
 (`record_hash` is taken over a document that holds the run id and the executed-at) or in the
 audit's own `elapsed_seconds`. **Nothing else differs**, measured by masking the run id and the
@@ -163,18 +166,22 @@ this file with `site-measurements.json`, which holds every number above.
 
 **The preview.** Deployed from `$TMPDIR`, outside the repository, with
 `npx --yes wrangler@4.129.0 pages deploy <repo>/build/site --project-name attestql-ui --branch
-web-ui`, after confirming the project with `pages project list`. 55 files uploaded in 2.16 s.
+web-ui`, after confirming the project with `pages project list`. Deployed twice: once at `0b770ef`
+and again at `95b46d0`, which is what the preview serves now.
 
-- <https://attestql-ui.pages.dev> and the deployment's own address
-  <https://843f9699.attestql-ui.pages.dev> both answer 200. The first request answered 522 and the
-  second, fifteen seconds later, 200; a fresh Pages deployment takes a moment to be routable.
+- <https://attestql-ui.pages.dev> and the second deployment's own address
+  <https://f6872917.attestql-ui.pages.dev> both answer 200. The first request after a deploy
+  answered 522 and the next, fifteen seconds later, 200; a fresh Pages deployment takes a moment
+  to be routable.
 - The landing serves the one sentence (`grep` for the `pyproject.toml` description: found).
-- `/runs/sandbox/demo/q879/index.html`, `/runs/sandbox/demo/not-equal/index.html`, `/method/`,
-  `/runs/sandbox/demo/`, `/runs/`, `/runs/sandbox/` each answer 200 through one 308 that Pages adds
+- `/runs/sandbox/demo/q879/index.html`, `/runs/sandbox/demo/not-equal/index.html`,
+  `/runs/sandbox/demo/by-probe/arbitrary-cut/index.html`, `/method/`, `/runs/sandbox/demo/`,
+  `/runs/`, `/runs/sandbox/` each answer 200 through one 308 that Pages adds
   to drop `index.html` from the address. `/runs/sandbox/demo/q879/counterexample.json` answers 200
   as `application/json`, 5,488 bytes. `static/report.css` and the woff2 answer 200.
 - The question page carries "recomputed from this JSON: match" four times, the filter page carries
-  its restriction line, the method page names the probes, and the landing carries the banner.
+  its restriction line, the method page names the probes and says the seven preconditions are
+  PostgreSQL's, and the landing carries the banner.
 
 **attestql.com is unchanged.** `curl https://attestql.com/` returns 200, 5,284 bytes, and the
 sha256 of the body is `a2bacd52fdda77714b8d4b3a3f429776912674795f6c545cfea1f60519a38e93`, which is
@@ -191,24 +198,82 @@ local; nothing in this deployment is local, and the `pages.dev` address is Cloud
 
 `just check` green after each of the four commits. At the last: ruff, `pyright` strict over `src`,
 `tests` and `tools`, the three repository checks, markdownlint and cspell over 44 documents,
-**1,045 passed and 33 skipped**, the Docker PostgreSQL sandbox's 33 and the SQLite sandbox's 78.
-Phase 2 ended at 1,018; the 27 new are the filter pages, the site build and the copy rule extended
-to the site's templates.
+**1,053 passed and 33 skipped**, the Docker PostgreSQL sandbox's 33 and the SQLite sandbox's 86.
+Phase 2 ended at 1,018; the 35 new are the filter pages, the site build, the copy rule extended to
+the site's templates and to `build.py`, and the review's findings.
 
 New tests:
 
-- `tests/test_site_builds_from_the_sandbox.py`, ten tests: the site is built and every page is
+- `tests/test_site_builds_from_the_sandbox.py`, sixteen tests: the site is built and every page is
   where it should be; the landing states nothing it did not read out of `pyproject.toml`,
   `README.md` or `site/index.html`; it shows the rows of the question it names, read back out of
   that run's own `counterexample.json`; it shows no number and no bar without the aggregate and
   three numbers with their sources with it; the method page holds every probe, every meaning and
   all seven preconditions; the banner is on every page without data and on none with it; an `--out`
-  inside `site/` is refused; and each of the three budgets fails the build when crossed.
-- `tests/test_report_renders_an_audit_directory.py` gained three: the filter pages hold the rows
+  inside `site/` is refused; each of the three budgets refuses the build when crossed; a directory
+  the build did not write is refused untouched; a published run at the sandbox's own address is
+  refused; a run the renderer refuses is this build refusing, naming the run; the bar is one whole
+  cut into two parts and a part larger than its whole is refused; and the method page says whose
+  the seven preconditions are.
+- `tests/test_report_renders_an_audit_directory.py` gained four: the filter pages hold the rows
   the run page and the summary state, an empty filter is not written and is not linked, and a rerun
-  clears a filter the run before it wrote. Its byte-identical test now covers the filter pages too.
-- `tests/test_report_copy_never_judges.py` reads `tools/site/templates/*.html` under the same rule,
-  and refuses to pass if that directory is empty.
+  clears a filter the run before it wrote, and a class or a probe name that is not a name writes
+  no directory and nothing outside `--out`. Its byte-identical test now covers the filter pages too.
+- `tests/test_report_copy_never_judges.py` reads `tools/site/templates/*.html` and
+  `tools/site/build.py` under the same rule, with the principle sentence taken out by name before
+  the search the way the design spec allows it, and refuses to pass if the site's template
+  directory is empty.
+
+## The review, and what it found
+
+An in-worker `code-reviewer` read `ab4a99f..daaf66f` and returned fifteen findings. Fourteen were
+acted on in `95b46d0`; the rest are recorded below. The first is the one that matters.
+
+**A path traversal, introduced by this cook.** A counterexample's `mechanism.class` and a probe's
+`name` are text out of documents this command is documented to read from another machine, and the
+filter pages of `dbf3f6a` were the first code to put either into a path (`out / slug`). Reproduced
+before it was repaired: a `class` of `../../../../../../tmp/attestql-traversal-proof` on the
+packaged sandbox made `attestql report` write `index.html` into `/private/tmp/tmp/` , outside the
+`--out` the caller chose. Jinja's autoescaping does not touch this, because a path is not markup.
+
+The repair is `FILTER_SEGMENT`: a name becomes a directory only if it is a single segment starting
+with an alphanumeric, which drops `.`, `..`, anything empty and anything holding a separator. A
+name outside it gets no filter page and is still a chip on the run page and on the question page,
+so nothing a document states is lost; what is lost is a pre-rendered view of rows a reader can
+already see. Skipped rather than refused, so that a directory which rendered before still renders.
+Re-run against the repro: nothing outside `--out`, no directory for the hostile name, the name
+still on both pages and in no `href`. The test is the repro.
+
+The other thirteen acted on, briefly:
+
+| Finding | What was done |
+| --- | --- |
+| an empty probe name made a slug of `by-probe/` whose `root` climbed one level too far | the same guard drops it |
+| `ReportRefused` was uncaught in the site build, so one malformed published file would be a traceback | the build turns it into its own refusal, naming the run |
+| the proportion bar summed three quantities, two of them not disjoint and one from another benchmark | it draws one whole cut into two disjoint parts, and refuses a part larger than its whole |
+| the method page called the seven preconditions universal, and the landing's own demo is SQLite | it says they are PostgreSQL's, with what the SQLite backend states of itself beside them |
+| `_clear()` emptied whatever `--out` named | the marker discipline `attestql report` has, for the reason it has it |
+| a published benchmark named `sandbox` with a run `demo` would silently overwrite the stand-in | refused, naming the address |
+| `_string()` coerced a wrong-typed field instead of refusing, unlike its two siblings | it refuses |
+| the copy rule did not read `build.py`, where the banner and the number labels are | it does, with the principle sentence allowed by name |
+| `Report.line` read as though the filters were inside the page count | reworded, since the two are disjoint by design |
+| `.banner` took `--gold-tint`, which the spec scopes to rows carrying a label and a glyph | it takes `--rule`; `--ink` on it is 11.98:1 and 10.80:1 |
+| `import build` could resolve to the git-ignored `build/` directory as a namespace package | the test asserts the module it imported is the file it means |
+| `.wrangler/` was untracked and not ignored | ignored, with the reason |
+| the review's own credential warnings | false positives: every one is `rt_` inside an ordinary identifier such as `report_` or `start_`. Nothing to rotate |
+
+Two findings were recorded and not acted on:
+
+- **The static tree is copied into every run's directory as well as once at the site root.** That
+  is the renderer's own contract: a report is a directory a reader can move, serve or open with
+  nothing fetched from a network, and a run whose stylesheet lived a level up would not be one.
+  Eight files and about 120 KB per run; at phase 4's twenty-one runs that is 168 files and 2.5 MB
+  against budgets of 8,000 and 40 MB. It is measured by phase 4's dry run, which is where the
+  selection is decided.
+- **`question_page()`'s GOLD-ONLY branch is not covered through the public accessor**, and the
+  `banner` threading is nine call sites that a future one could omit. Both are maintainability,
+  not defects; the second is bounded by `StrictUndefined`, which raises on a template reading a
+  name the model does not have.
 
 ## Decisions taken, and the ones a reviewer should look at
 
