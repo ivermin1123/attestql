@@ -17,7 +17,13 @@ from attestql.report.cli import (
     REPORT_HELP,
     add_report_arguments,
 )
-from attestql.report.render import Report, ReportRefused, default_out, render_report
+from attestql.report.render import (
+    Report,
+    ReportRefused,
+    default_out,
+    question_page,
+    render_report,
+)
 
 __all__ = [
     "REPORT",
@@ -27,5 +33,6 @@ __all__ = [
     "ReportRefused",
     "add_report_arguments",
     "default_out",
+    "question_page",
     "render_report",
 ]

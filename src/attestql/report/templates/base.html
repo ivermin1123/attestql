@@ -2,7 +2,12 @@
 
    The script is loaded last and deferred, and nothing on the page waits for it: the
    marked tokens, the disclosure regions and the strip are HTML, and what the script adds
-   is the condensing of the strip and the switch that turns the marking off. #}
+   is the condensing of the strip and the switch that turns the marking off.
+
+   `banner` is a line a caller puts above every page of a whole site, and is empty for a
+   report `attestql report` wrote: the site of phase 3 shows the packaged sandbox until the
+   published runs exist, and a page that is not what it will be says so on itself rather
+   than in a note somewhere else. #}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +17,9 @@
 <link rel="stylesheet" href="{{ root }}static/report.css">
 </head>
 <body>
+{% if banner %}
+<div class="banner"><p class="banner__line">{{ banner }}</p></div>
+{% endif %}
 {% block strip %}{% endblock %}
 <main class="page">
 {% block content %}{% endblock %}

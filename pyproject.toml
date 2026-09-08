@@ -72,7 +72,7 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src", "tools"]
+pythonpath = ["src", "tools", "tools/site"]
 markers = [
     "sandbox: needs the audit sandbox (tools/audit-sandbox/run.sh); skipped when ATTESTQL_AUDIT_SANDBOX is absent",
     "sandbox_sqlite: the SQLite audit sandbox (src/attestql/demo/); needs no container and is never skipped",
@@ -106,4 +106,4 @@ ignore = ["E501"]
 typeCheckingMode = "strict"
 pythonVersion = "3.11"
 include = ["src", "tests", "tools"]
-extraPaths = ["src", "tools"]
+extraPaths = ["src", "tools", "tools/site"]

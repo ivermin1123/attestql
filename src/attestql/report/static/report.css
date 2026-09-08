@@ -283,6 +283,27 @@ a:hover {
    colour and no shadow, which is what the spec says elevation is here.
    --------------------------------------------------------------------------------------- */
 
+/* The line a site puts above every page of itself when the pages are not yet what they will
+   be. Not sticky and not a chip: it is read once, at the top, and then scrolled away. The
+   gold tint is the fill a state takes on this page, and `--ink` on it is 12.71:1 in light
+   and 11.66:1 in dark, both computed in tests/test_report_tokens_meet_contrast.py. */
+.banner {
+  padding: var(--space-3) var(--gutter);
+  background: var(--gold-tint);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* The line inside the band, given the strip's own width so that it starts on the same left
+   edge as the title and the prose under it. The prose measure is not applied, for the reason
+   `.strip__set` does not take it either: clamped, a short line would be centred in a wide
+   box and would start well right of everything below it. */
+.banner__line {
+  width: min(100%, calc(var(--content) - 2 * var(--gutter)));
+  margin: 0 auto;
+  font-size: var(--text-cell);
+  line-height: var(--leading-cell);
+}
+
 .strip {
   position: sticky;
   top: 0;
@@ -558,7 +579,11 @@ a:hover {
    --------------------------------------------------------------------------------------- */
 
 .sql,
-.json {
+.json,
+/* A command a reader copies, and what one printed. The same block as a statement's: it is
+   mono at the cell size, it scrolls rather than pushing the page, and it is the site's
+   pages that carry it. */
+.command {
   overflow-x: auto;
   max-width: 100%;
   margin: 0 0 var(--space-4);
@@ -884,6 +909,7 @@ details[open] > *:not(summary) {
   .figure,
   .rows__region,
   .sql,
+  .command,
   .json {
     overflow: visible;
   }

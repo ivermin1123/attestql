@@ -1,0 +1,41 @@
+{# One benchmark: its runs, each with the date, the engine and the question file it was made
+   from, read out of that run's own summary.json. #}
+{% extends "base.html" %}
+
+{% block strip %}
+<header class="strip strip--run">
+  <h1 class="strip__title">{{ page.name }}</h1>
+  <p class="strip__facts">
+    <span class="chip chip--rule">{{ page.runs|length }} runs</span>
+  </p>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="index" id="runs">
+  <h2>The runs of this benchmark</h2>
+  <p>One row per CLI run: the audit writes one second statement per question per run, so a prediction file is a run. <a href="{{ root }}runs/index.html">Every benchmark</a> is indexed a level up.</p>
+  <div class="rows__region">
+    <table class="index__table">
+      <thead>
+        <tr>
+          <th scope="col">run</th>
+          {% for fact in page.runs[0].facts %}
+          <th scope="col">{{ fact.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for run in page.runs %}
+        <tr class="index__row">
+          <th scope="row" class="mono"><a href="{{ root }}{{ run.slug }}/index.html">{{ run.name }}</a></th>
+          {% for fact in run.facts %}
+          <td class="mono">{{ fact.value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
