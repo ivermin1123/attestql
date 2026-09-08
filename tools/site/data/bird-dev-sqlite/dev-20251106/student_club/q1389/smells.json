@@ -1,0 +1,192 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "T3.cost",
+            "column": "expense.cost",
+            "declared_type": "REAL",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT T1.event_name, T3.cost AS attestql_ordering_key_0 FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget ORDER BY T3.cost",
+        "unbounded_rows": 32,
+        "projected_columns": [
+          "event_name"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "T3.cost",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2
+          ],
+          "tied_rows": 3,
+          "distinct_projected_answers": 3,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "November Speaker"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "October Speaker"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "September Speaker"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "November Speaker"
+          },
+          {
+            "type": "dec",
+            "value": "6.0"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "October Speaker"
+          },
+          {
+            "type": "dec",
+            "value": "6.0"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "September Speaker"
+          },
+          {
+            "type": "dec",
+            "value": "6.0"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:a64abae025d48878b3159093c209dd31eb9109bb35fef916a1b99a270439cda2",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "event_name",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "November Speaker"
+              }
+            ]
+          ],
+          "result_hash": "sha256:a64abae025d48878b3159093c209dd31eb9109bb35fef916a1b99a270439cda2"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "event",
+            "budget",
+            "expense"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {},
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:a64abae025d48878b3159093c209dd31eb9109bb35fef916a1b99a270439cda2",
+          "result": {
+            "columns": [
+              {
+                "name": "event_name",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "November Speaker"
+                }
+              ]
+            ],
+            "result_hash": "sha256:a64abae025d48878b3159093c209dd31eb9109bb35fef916a1b99a270439cda2"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

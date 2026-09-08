@@ -1,0 +1,8 @@
+{
+ "source": "plans/reports/prediction-mode-260904-real-predictions/classification.json",
+ "date": "2026-09-04",
+ "shape": "per_file",
+ "reason_field": "reason",
+ "keys": "per_file[<prediction file>].rows[], joined by the run name and question_id",
+ "key": "phi-3-medium-128k-instruct-1"
+}

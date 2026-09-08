@@ -1,0 +1,246 @@
+{
+ "reading": "Every gold BIRD left unchanged in its 2025-11-06 pass that a gold-only probe fired on, read by hand against the shipped data. 25 of them, under the 100 at which a sample would replace a full reading, so this is the whole group and not a sample. wrong: the gold does not answer its question on this data. harmless: the probe fired on something real and the answer is the same either way. rule: the tool's own rule, not the question's.",
+ "group": "the 963 golds unchanged between the 2024-06-27 copy and the 2025-11-06 pass",
+ "sampled": false,
+ "counts": {
+  "wrong": 23,
+  "rule": 1,
+  "harmless": 1
+ },
+ "rows": [
+  {
+   "question_id": 30,
+   "db": "california_schools",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "three cities tie at positions 3 to 5 of 1,022 with three different names; a LIMIT 5 returns two of the three and the data does not say which"
+  },
+  {
+   "question_id": 57,
+   "db": "california_schools",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "seven rows tie across positions 329 to 335 with seven different phone numbers; the 333rd is not a row the data picks out"
+  },
+  {
+   "question_id": 81,
+   "db": "california_schools",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "the ordering key is NULL in nine rows and SQLite sorts NULL first ascending, so the gold returns a school with no latitude rather than the lowest one, and nine different schools could come back"
+  },
+  {
+   "question_id": 82,
+   "db": "california_schools",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "two schools share the largest absolute longitude and offer different grade spans"
+  },
+  {
+   "question_id": 392,
+   "db": "card_games",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "418 cards share the earliest ruling date; the gold's three are three of 418 and any other three answer the question as well"
+  },
+  {
+   "question_id": 423,
+   "db": "card_games",
+   "probes": [
+    "ordering-over-numeric-text"
+   ],
+   "class": "rule",
+   "why": "the ordering key is a text column holding only numbers, which the probe reads as a numeric column sorted as text, but the question asks for alphabetical order, which is what a text sort is"
+  },
+  {
+   "question_id": 484,
+   "db": "card_games",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "the gold orders by converted mana cost and never cuts, returning all 155 Italian cards of the set where 12 carry the highest cost the question asks for"
+  },
+  {
+   "question_id": 523,
+   "db": "card_games",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "the gold groups by release date and cuts at the largest language count, and several dates share that count; the projected average is a sum of ids divided by a count of ids divided by four, which is not an annual number of sets either"
+  },
+  {
+   "question_id": 766,
+   "db": "superhero",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "63 rows tie on the largest strength value, 36 of them naming a different hero"
+  },
+  {
+   "question_id": 802,
+   "db": "superhero",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "two superheroes share the largest height"
+  },
+  {
+   "question_id": 847,
+   "db": "formula_1",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "the qualifying time is NULL in six of the 22 rows and sorts first ascending, so the gold returns a driver who set no time in that period rather than the best one"
+  },
+  {
+   "question_id": 879,
+   "db": "formula_1",
+   "probes": [
+    "ordering-over-numeric-text"
+   ],
+   "class": "wrong",
+   "why": "the ordering key is a text column of numbers, so 9.5 sorts above 10 and the fastest speed is not the one returned; reported upstream as mini_dev issue 24 and corrected in Mini-Dev's Hugging Face copy, still open in both copies of dev"
+  },
+  {
+   "question_id": 893,
+   "db": "formula_1",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "harmless",
+   "why": "the top two drivers hold the same points, so a shuffled copy returns the same three drivers in another order and BIRD compares them as a set"
+  },
+  {
+   "question_id": 906,
+   "db": "formula_1",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "the gold orders by year and cuts at one, and 17 races share the first year, so which of that season's races comes back is arbitrary"
+  },
+  {
+   "question_id": 927,
+   "db": "formula_1",
+   "probes": [
+    "ordering-over-numeric-text"
+   ],
+   "class": "wrong",
+   "why": "the same text-typed speed column as q879, with a NOT NULL filter added and the same wrong order"
+  },
+  {
+   "question_id": 1002,
+   "db": "formula_1",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "the join to the standings repeats each driver once per race, so 14 rows share the largest date of birth and name 14 different races"
+  },
+  {
+   "question_id": 1004,
+   "db": "formula_1",
+   "probes": [
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "a bare SUM with no GROUP BY beside two ungrouped columns: the total is every driver's wins added together (7,890) and the name beside it is one arbitrary row's"
+  },
+  {
+   "question_id": 1034,
+   "db": "european_football_2",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "three rows tie on the largest overall rating in that year and name two different players"
+  },
+  {
+   "question_id": 1090,
+   "db": "european_football_2",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "the oldest player has four attribute rows, two of which carry a different long-passing score"
+  },
+  {
+   "question_id": 1117,
+   "db": "european_football_2",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "three players tie at positions 8 to 10 of the weight order, so two of the ten ids are arbitrary"
+  },
+  {
+   "question_id": 1144,
+   "db": "european_football_2",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "two players share the largest weight, and the one the subquery picks has 14 attribute rows carrying three different (finishing, curve) pairs, which the outer LIMIT 1 cuts without an ordering"
+  },
+  {
+   "question_id": 1290,
+   "db": "thrombosis_prediction",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "four laboratory rows share the largest albumin value inside the stated range and carry four different dates"
+  },
+  {
+   "question_id": 1365,
+   "db": "student_club",
+   "probes": [
+    "arbitrary-cut",
+    "not-a-function-of-the-data"
+   ],
+   "class": "wrong",
+   "why": "two budgets share the lowest remaining amount and carry different expense descriptions; the question asks for expenses and the gold returns one"
+  },
+  {
+   "question_id": 1389,
+   "db": "student_club",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "three expenses share the lowest cost and belong to three different events"
+  },
+  {
+   "question_id": 1517,
+   "db": "debit_card_specializing",
+   "probes": [
+    "arbitrary-cut"
+   ],
+   "class": "wrong",
+   "why": "ten transactions share the earliest date and belong to customers in three different segments"
+  }
+ ]
+}

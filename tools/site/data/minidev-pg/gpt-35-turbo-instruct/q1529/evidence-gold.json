@@ -1,0 +1,106 @@
+{
+  "question_as_asked": "What is the amount spent by customer \"38508\" at the gas stations? How much had the customer spent in January 2012?",
+  "question": {
+    "question_id": "1529",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "What is the amount spent by customer \"38508\" at the gas stations? How much had the customer spent in January 2012?",
+    "evidence_text": "January 2012 refers to the Date value = '201201'"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "statement_source": {
+    "path": "data/questions/mini_dev_postgresql.json",
+    "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "date": "2024-06-19"
+  },
+  "executed_sql": "SELECT SUM(T1.Price ), SUM(CASE WHEN T3.Date = '201201' THEN T1.Price ELSE 0 END) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN yearmonth AS T3 ON T1.CustomerID = T3.CustomerID WHERE T1.CustomerID = '38508'",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "sum",
+        "declared_type": "float4"
+      },
+      {
+        "name": "sum",
+        "declared_type": "float4"
+      }
+    ],
+    "row_count": 1,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "dec",
+          "value": "68740.22"
+        },
+        {
+          "type": "dec",
+          "value": "3437.01"
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 120000
+  },
+  "row_count": 1,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:5e07655b83d94fa72caa1b5333d78e3761bd00586ea84507ce6102ef3aff6486",
+    "row_counts": {
+      "public.gasstations": 5716,
+      "public.transactions_1k": 1000,
+      "public.yearmonth": 383282
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-08T05:20:16.520067+00:00",
+  "executed_at": "2026-09-08T05:20:27.459453+00:00",
+  "run_id": "audit-b6efa569-00a2-4421-b91b-09d107e2dac3",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:abac40bcf8bcd1919ece362aaa46a30b6a2f8d5731b5198ed89de90803225106",
+  "record_hash": "sha256:db23a9daf8445047389afb924439c06374663af026cf46c500ffa60a0a6a66e5"
+}

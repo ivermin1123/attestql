@@ -1,0 +1,343 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "T1.AvgScrWrite",
+            "column": "satscores.AvgScrWrite",
+            "declared_type": "INTEGER",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 333,
+        "offset": 332,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT T2.Phone, T2.Ext, T1.AvgScrWrite AS attestql_ordering_key_0 FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.AvgScrWrite DESC",
+        "unbounded_rows": 2058,
+        "projected_columns": [
+          "Phone",
+          "Ext"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "T1.AvgScrWrite",
+            "direction": "desc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            329,
+            330,
+            331,
+            332,
+            333,
+            334,
+            335
+          ],
+          "tied_rows": 7,
+          "distinct_projected_answers": 7,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "(626) 451-5400"
+              },
+              {
+                "type": "null",
+                "value": null
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "(949) 461-1667"
+              },
+              {
+                "type": "null",
+                "value": null
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "(916) 714-8150"
+              },
+              {
+                "type": "null",
+                "value": null
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "(916) 395-5050"
+              },
+              {
+                "type": "null",
+                "value": null
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "(805) 771-1845"
+              },
+              {
+                "type": "null",
+                "value": null
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "(209) 533-8510"
+              },
+              {
+                "type": "str",
+                "value": "12"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "(805) 641-5000"
+              },
+              {
+                "type": "null",
+                "value": null
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "(626) 451-5400"
+          },
+          {
+            "type": "null",
+            "value": null
+          },
+          {
+            "type": "int",
+            "value": 512
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "(949) 461-1667"
+          },
+          {
+            "type": "null",
+            "value": null
+          },
+          {
+            "type": "int",
+            "value": 512
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "(916) 714-8150"
+          },
+          {
+            "type": "null",
+            "value": null
+          },
+          {
+            "type": "int",
+            "value": 512
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "(916) 395-5050"
+          },
+          {
+            "type": "null",
+            "value": null
+          },
+          {
+            "type": "int",
+            "value": 512
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "(805) 771-1845"
+          },
+          {
+            "type": "null",
+            "value": null
+          },
+          {
+            "type": "int",
+            "value": 512
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "(209) 533-8510"
+          },
+          {
+            "type": "str",
+            "value": "12"
+          },
+          {
+            "type": "int",
+            "value": 512
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "(805) 641-5000"
+          },
+          {
+            "type": "null",
+            "value": null
+          },
+          {
+            "type": "int",
+            "value": 512
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:12a3d952b9e9e8d1a9a503c0c475c14ed9da515f4f1f27f873473dd4f686cdaa",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "Phone",
+              "declared_type": "TEXT"
+            },
+            {
+              "name": "Ext",
+              "declared_type": "NULL"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "(916) 395-5050"
+              },
+              {
+                "type": "null",
+                "value": null
+              }
+            ]
+          ],
+          "result_hash": "sha256:12a3d952b9e9e8d1a9a503c0c475c14ed9da515f4f1f27f873473dd4f686cdaa"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "satscores",
+            "schools"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {},
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:094da8b2e77daf828f4c9e1ebede54c4e8a8b575d80686f1659076edb10c2529",
+          "result": {
+            "columns": [
+              {
+                "name": "Phone",
+                "declared_type": "TEXT"
+              },
+              {
+                "name": "Ext",
+                "declared_type": "NULL"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "(805) 641-5000"
+                },
+                {
+                  "type": "null",
+                  "value": null
+                }
+              ]
+            ],
+            "result_hash": "sha256:094da8b2e77daf828f4c9e1ebede54c4e8a8b575d80686f1659076edb10c2529"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "(805) 641-5000"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ]
+      ]
+    }
+  ]
+}

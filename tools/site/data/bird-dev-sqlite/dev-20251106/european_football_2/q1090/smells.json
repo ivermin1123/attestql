@@ -1,0 +1,222 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "keys": [
+          {
+            "key": "t1.birthday",
+            "column": "Player.birthday",
+            "declared_type": "TEXT",
+            "not_applicable": null,
+            "census": {
+              "rows": 11060,
+              "nulls": 0,
+              "empty_strings": 0,
+              "non_numeric": 11060,
+              "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+            },
+            "every_value_is_numeric": false
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t2.long_passing, t1.birthday AS attestql_ordering_key_0 FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id ORDER BY t1.birthday ASC",
+        "unbounded_rows": 183978,
+        "projected_columns": [
+          "long_passing"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t1.birthday",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "tied_rows": 4,
+          "distinct_projected_answers": 2,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 75
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 75
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 72
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 72
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 75
+          },
+          {
+            "type": "str",
+            "value": "1967-01-23 00:00:00"
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 75
+          },
+          {
+            "type": "str",
+            "value": "1967-01-23 00:00:00"
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 72
+          },
+          {
+            "type": "str",
+            "value": "1967-01-23 00:00:00"
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 72
+          },
+          {
+            "type": "str",
+            "value": "1967-01-23 00:00:00"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:898117bc8e6b1c729a20cf9c2a6e5dbc99f68a73f6724511bbb68d4bfeaeb51f",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "long_passing",
+              "declared_type": "INTEGER"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 75
+              }
+            ]
+          ],
+          "result_hash": "sha256:898117bc8e6b1c729a20cf9c2a6e5dbc99f68a73f6724511bbb68d4bfeaeb51f"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "Player",
+            "Player_Attributes"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {},
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:c481f061236220c8ff9facd1fcfb68d46c314bf811665f300b46a9720ea0c2e5",
+          "result": {
+            "columns": [
+              {
+                "name": "long_passing",
+                "declared_type": "INTEGER"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "int",
+                  "value": 72
+                }
+              ]
+            ],
+            "result_hash": "sha256:c481f061236220c8ff9facd1fcfb68d46c314bf811665f300b46a9720ea0c2e5"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 72
+          }
+        ]
+      ]
+    }
+  ]
+}

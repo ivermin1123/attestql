@@ -80,10 +80,27 @@ def build(out: Path) -> site.Built:
 
 @pytest.fixture(scope="module")
 def built(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """One build, for the readings that only look at what it wrote."""
-    out = tmp_path_factory.mktemp("site") / "site"
-    assert build(out).files > 0
+    """One build of the stand-in, for the readings that only look at what it wrote.
+
+    With `data/` pointed at a directory that is not there, which is the state this module is
+    about: what the build does when the published runs are not beside it. Since phase 4 that
+    directory holds a hundred and twenty audit directories and forty megabytes, and a fixture
+    that rebuilt them for every reading would be measuring the data rather than the build. The
+    published runs have two readings of their own below: the budget, which is measured over
+    them, and the two that put a run under `data/` themselves.
+    """
+    root = tmp_path_factory.mktemp("site")
+    with pytest.MonkeyPatch.context() as without_data:
+        without_data.setattr(site, "DATA", root / "not-published")
+        out = root / "site"
+        assert build(out).files > 0
     return out
+
+
+@pytest.fixture
+def without_data(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """`data/` pointed at a directory that is not there, for a reading about the build alone."""
+    monkeypatch.setattr(site, "DATA", tmp_path / "not-published")
 
 
 def test_the_build_renders_the_sandbox_as_a_benchmark_with_every_page_under_it(
@@ -148,7 +165,9 @@ def test_the_landing_shows_the_rows_of_the_question_it_names(built: Path) -> Non
     assert f"{site.RUNS_DIRECTORY}/{site.SANDBOX_BENCHMARK}" in " ".join(page.links)
 
 
-def test_the_landing_shows_no_number_while_the_aggregate_is_not_there(built: Path) -> None:
+def test_the_landing_shows_no_number_while_the_aggregate_is_not_there(
+    built: Path, without_data: None
+) -> None:
     """The three headline numbers are the aggregate's, so without it there is no number.
 
     The one thing a page of this project may not do is state a number nobody can open the
@@ -221,9 +240,6 @@ def test_the_banner_is_on_every_page_without_data_and_on_none_of_them_with_it(
     Not an edit to a template: phase 4 adds data and the sentence goes, which is the only way
     a line saying "this is a stand-in" cannot outlive the stand-in.
     """
-    for page in built.rglob(PAGE_FILE):
-        assert site.BANNER in page.read_text(encoding="utf-8"), page
-
     published = built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN
     data = tmp_path / "data"
     (data / "a-benchmark" / "a-run").mkdir(parents=True)
@@ -241,6 +257,12 @@ def test_the_banner_is_on_every_page_without_data_and_on_none_of_them_with_it(
     for page in written:
         assert site.BANNER not in page.read_text(encoding="utf-8"), page
     assert (out / site.RUNS_DIRECTORY / "a-benchmark" / "a-run" / PAGE_FILE).is_file()
+    # And the other half of the sentence: with no benchmark beside it, on every page.
+    monkeypatch.setattr(site, "DATA", tmp_path / "not-published")
+    empty = tmp_path / "empty-site"
+    build(empty)
+    for page in sorted(empty.rglob(PAGE_FILE)):
+        assert site.BANNER in page.read_text(encoding="utf-8"), page
 
 
 def test_a_benchmark_directory_holding_no_run_publishes_nothing(
@@ -265,7 +287,7 @@ def test_a_benchmark_directory_holding_no_run_publishes_nothing(
 
 
 def test_the_build_refuses_a_directory_it_did_not_write_and_takes_over_one_it_did(
-    tmp_path: Path,
+    tmp_path: Path, without_data: None
 ) -> None:
     """`--out` is a path a person types, so a build empties only a directory of its own.
 
@@ -524,7 +546,12 @@ def test_the_build_refuses_an_out_inside_the_live_page_s_directory(tmp_path: Pat
 def test_the_build_is_under_its_three_budgets_and_says_what_it_measured(
     tmp_path: Path,
 ) -> None:
-    """The build measures itself, and a build over any of the three fails naming the offender."""
+    """The build measures itself, over what `data/` actually holds.
+
+    The one reading here that builds the published runs rather than the stand-in, because the
+    budget is about them: the answer to a site over one of the three is a narrower selection of
+    questions, and this is where that is found out.
+    """
     out = tmp_path / "site"
     measured = build(out)
 
@@ -537,7 +564,7 @@ def test_the_build_is_under_its_three_budgets_and_says_what_it_measured(
 
 
 def test_a_budget_that_the_site_is_over_fails_the_build_and_names_the_offender(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, without_data: None
 ) -> None:
     """A checker never seen to fail is not known to work, so each of the three is failed."""
     monkeypatch.setattr(site, "MAX_FILES", 1)

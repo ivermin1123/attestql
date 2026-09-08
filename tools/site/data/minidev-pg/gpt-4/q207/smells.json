@@ -1,0 +1,233 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "reason": "the statement states no LIMIT"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:86a36104a8d53ec8bd73f49f3d83f044daf88dffa0b84975309b4b0882404937",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "element",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 13,
+          "truncated": false,
+          "rows_shown": 10,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "sn"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "ca"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "cu"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "p"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "h"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "cl"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "o"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "s"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "c"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "br"
+              }
+            ]
+          ],
+          "result_hash": "sha256:86a36104a8d53ec8bd73f49f3d83f044daf88dffa0b84975309b4b0882404937"
+        },
+        "planner_statistics": {
+          "connected": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:17.010277+00",
+            "n_mod_since_analyze": 0
+          },
+          "atom": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:10.04421+00",
+            "n_mod_since_analyze": 0
+          },
+          "bond": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:12.802916+00",
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "connected",
+            "atom",
+            "bond"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:5225012cf01a09444b64a3fddaa2f54cfbbb4168ca13d2e4b5a5e78d603c75c4",
+          "result": {
+            "columns": [
+              {
+                "name": "element",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 13,
+            "truncated": false,
+            "rows_shown": 10,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "n"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "ca"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "br"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "cu"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "cl"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "c"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "pb"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "h"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "o"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "s"
+                }
+              ]
+            ],
+            "result_hash": "sha256:5225012cf01a09444b64a3fddaa2f54cfbbb4168ca13d2e4b5a5e78d603c75c4"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

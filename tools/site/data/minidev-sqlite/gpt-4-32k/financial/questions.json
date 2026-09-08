@@ -1,0 +1,162 @@
+[
+ {
+  "question_id": "89",
+  "db_id": "financial",
+  "question": "How many accounts who choose issuance after transaction are staying in East Bohemia region?"
+ },
+ {
+  "question_id": "92",
+  "db_id": "financial",
+  "question": "List out the no. of districts that have female average salary is more than 6000 but less than 10000?"
+ },
+ {
+  "question_id": "93",
+  "db_id": "financial",
+  "question": "How many male customers who are living in North Bohemia have average salary greater than 8000?"
+ },
+ {
+  "question_id": "94",
+  "db_id": "financial",
+  "question": "List out the account numbers of female clients who are oldest and has lowest average salary, calculate the gap between this lowest average salary with the highest average salary?"
+ },
+ {
+  "question_id": "95",
+  "db_id": "financial",
+  "question": "List out the account numbers of clients who are youngest and have highest average salary?"
+ },
+ {
+  "question_id": "98",
+  "db_id": "financial",
+  "question": "Among the accounts who have approved loan date in 1997, list out the accounts that have the lowest approved amount and choose weekly issuance statement."
+ },
+ {
+  "question_id": "99",
+  "db_id": "financial",
+  "question": "Among the accounts who have loan validity more than 12 months, list out the accounts that have the highest approved amount and have account opening date in 1993."
+ },
+ {
+  "question_id": "100",
+  "db_id": "financial",
+  "question": "Among the account opened, how many female customers who were born before 1950 and stayed in Sokolov?"
+ },
+ {
+  "question_id": "112",
+  "db_id": "financial",
+  "question": "For the female client who was born in 1976/1/29, which district did she opened her account?"
+ },
+ {
+  "question_id": "115",
+  "db_id": "financial",
+  "question": "For the branch which located in the south Bohemia with biggest number of inhabitants, what is the percentage of the male clients?"
+ },
+ {
+  "question_id": "116",
+  "db_id": "financial",
+  "question": "For the client whose loan was approved first in 1993/7/5, what is the increase rate of his/her account balance from 1993/3/22 to 1998/12/27?"
+ },
+ {
+  "question_id": "117",
+  "db_id": "financial",
+  "question": "What is the percentage of loan amount that has been fully paid with no issue."
+ },
+ {
+  "question_id": "118",
+  "db_id": "financial",
+  "question": "For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue."
+ },
+ {
+  "question_id": "125",
+  "db_id": "financial",
+  "question": "For loans contracts which are still running where client are in debt, list the district of the and the state the percentage unemployment rate increment from year 1995 to 1996."
+ },
+ {
+  "question_id": "128",
+  "db_id": "financial",
+  "question": "List the top nine districts, by descending order, from the highest to the lowest, the number of female account holders."
+ },
+ {
+  "question_id": "136",
+  "db_id": "financial",
+  "question": "Between 1/1/1995 and 12/31/1997, how many loans in the amount of at least 250,000 per account that chose monthly statement issuance were approved?"
+ },
+ {
+  "question_id": "137",
+  "db_id": "financial",
+  "question": "How many accounts have running contracts in Branch location 1?"
+ },
+ {
+  "question_id": "138",
+  "db_id": "financial",
+  "question": "In the branch where the second-highest number of crimes were committed in 1995 occurred, how many male clients are there?"
+ },
+ {
+  "question_id": "129",
+  "db_id": "financial",
+  "question": "Which are the top ten withdrawals (non-credit card) by district names for the month of January 1996?"
+ },
+ {
+  "question_id": "137",
+  "db_id": "financial",
+  "question": "How many accounts have running contracts in Branch location 1?"
+ },
+ {
+  "question_id": "138",
+  "db_id": "financial",
+  "question": "In the branch where the second-highest number of crimes were committed in 1995 occurred, how many male clients are there?"
+ },
+ {
+  "question_id": "145",
+  "db_id": "financial",
+  "question": "Who are the account holder identification numbers whose who have transactions on the credit card with the amount is less than the average, in 1998?"
+ },
+ {
+  "question_id": "149",
+  "db_id": "financial",
+  "question": "Please list the account types that are not eligible for loans, and the average income of residents in the district where the account is located exceeds $8000 but is no more than $9000."
+ },
+ {
+  "question_id": "152",
+  "db_id": "financial",
+  "question": "What is the average number of crimes committed in 1995 in regions where the number exceeds 4000 and the region has accounts that are opened starting from the year 1997?"
+ },
+ {
+  "question_id": "159",
+  "db_id": "financial",
+  "question": "List all the withdrawals in cash transactions that the client with the id 3356 makes."
+ },
+ {
+  "question_id": "168",
+  "db_id": "financial",
+  "question": "What percentage of clients who opened their accounts in the district with an average salary of over 10000 are women?"
+ },
+ {
+  "question_id": "169",
+  "db_id": "financial",
+  "question": "What was the growth rate of the total amount of loans across all accounts for a male client between 1996 and 1997?"
+ },
+ {
+  "question_id": "173",
+  "db_id": "financial",
+  "question": "How often does account number 3 request an account statement to be released? What was the aim of debiting 3539 in total?"
+ },
+ {
+  "question_id": "186",
+  "db_id": "financial",
+  "question": "What percentage of male clients request for weekly statements to be issued?"
+ },
+ {
+  "question_id": "189",
+  "db_id": "financial",
+  "question": "Name the account numbers of female clients who are oldest and have lowest average salary?"
+ },
+ {
+  "question_id": "192",
+  "db_id": "financial",
+  "question": "What is the average amount of loan which are still on running contract with statement issuance after each transaction?"
+ },
+ {
+  "question_id": "194",
+  "db_id": "financial",
+  "question": "Provide the IDs and age of the client with high level credit card, which is eligible for loans."
+ }
+]

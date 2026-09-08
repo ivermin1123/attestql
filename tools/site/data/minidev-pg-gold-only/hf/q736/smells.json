@@ -1,0 +1,221 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "t2.attribute_value",
+            "column": "hero_attribute.attribute_value",
+            "declared_type": "bigint",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t1.superhero_name, t2.attribute_value AS attestql_ordering_key_0 FROM superhero t1 JOIN hero_attribute t2 ON t1.id = t2.hero_id JOIN attribute t3 ON t2.attribute_id = t3.id WHERE t3.attribute_name = 'Intelligence' ORDER BY t2.attribute_value NULLS FIRST",
+        "unbounded_rows": 623,
+        "projected_columns": [
+          "superhero_name"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t2.attribute_value",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2
+          ],
+          "tied_rows": 3,
+          "distinct_projected_answers": 3,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Ammo"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Jack-Jack"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Ando Masahashi"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Ammo"
+          },
+          {
+            "type": "int",
+            "value": 35
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Jack-Jack"
+          },
+          {
+            "type": "int",
+            "value": 35
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Ando Masahashi"
+          },
+          {
+            "type": "int",
+            "value": 35
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:c58fd60637a6677cc98abbe74ea8b745da3c6213017f5935773bb3e4a3d6177e",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "superhero_name",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Ammo"
+              }
+            ]
+          ],
+          "result_hash": "sha256:c58fd60637a6677cc98abbe74ea8b745da3c6213017f5935773bb3e4a3d6177e"
+        },
+        "planner_statistics": {
+          "attribute": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 6
+          },
+          "superhero": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:12.518866+00",
+            "n_mod_since_analyze": 0
+          },
+          "hero_attribute": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 3738
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "attribute",
+            "superhero",
+            "hero_attribute"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:e4a207112883b7b39b34cb7641405b3646153bf6487240f4d5b09afc08a78e3e",
+          "result": {
+            "columns": [
+              {
+                "name": "superhero_name",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Jack-Jack"
+                }
+              ]
+            ],
+            "result_hash": "sha256:e4a207112883b7b39b34cb7641405b3646153bf6487240f4d5b09afc08a78e3e"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Jack-Jack"
+          }
+        ]
+      ]
+    }
+  ]
+}

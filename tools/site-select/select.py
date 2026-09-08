@@ -82,9 +82,15 @@ SITE_RESERVE_BYTES = 900_000
 SITE_RESERVE_FILES = 80
 """What a run costs the built site beyond its questions -- its own page, its summary, the
 pre-rendered filters of its index and the marker -- and what the site costs beyond its runs: the
-landing, the method page, the two indexes, the shared static directory and the packaged sandbox
-the build always renders. Reserved rather than measured, because the selection is made before
-the build; the reconciliation report states the build's own measurement beside these."""
+landing, the method page, the two indexes, the group pages, the shared static directory and the
+packaged sandbox the build always renders.
+
+Reserved rather than measured, because the selection is made before the build. Calibrated
+against the build of 2026-09-08, which over 121 runs wrote 612 files and 5,179,098 bytes that
+were not a published question's, against the 1,048 files and 5,740,000 bytes reserved here: the
+byte reserve, which is the binding one, is 11 % above what it cost, and the file reserve is
+generous because files are nowhere near their budget. The build measures rather than predicts
+and is the authority; the reconciliation report states both numbers."""
 
 
 class SelectionRefused(Exception):

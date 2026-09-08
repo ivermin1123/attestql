@@ -1,0 +1,322 @@
+{
+  "format": "attestql/audit/counterexample/2",
+  "question": {
+    "question_id": "345",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "For artifact type of cards that do not have multiple faces on the same card, state its legalities status for vintage play format.",
+    "evidence_text": "Artifact type of cards refers to types = 'Artifact'; card does not have multiple faces on the same card refers to side is NULL'; vintage play format refers to format = 'vintage';"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "sources": {
+    "gold": {
+      "path": "data/questions/mini_dev_postgresql.json",
+      "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+      "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+      "date": "2024-06-19"
+    },
+    "second": {
+      "path": "data/preds-pg/predict_mini_dev_gpt-35-turbo_postgresql.json",
+      "digest": "sha256:fa363fe3c3fc45d97cb47e6ec15133b291acccd750e5136b6e7b4d1c8d13a4be",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo_postgresql.json",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "bird_ex": {
+    "value": 1,
+    "equal": true,
+    "method": "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 returns them, numeric as Decimal",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 3,
+    "second_rows": 3810,
+    "gold_distinct_rows": 3,
+    "second_distinct_rows": 3
+  },
+  "test_suite_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "result_eq: equal row counts and equal column counts, each row unordered as a quick rejection, then the two equal as a list when the gold text holds ORDER BY and as a multiset otherwise, under some permutation of the columns; DISTINCT is not stripped and re-executed, and the cells are PostgreSQL's as psycopg2 returns them",
+    "source": "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/48cb78ecf7f610620206283846c76751b18a1326/exec_eval.py",
+    "order_matters": false,
+    "gold_rows": 3,
+    "second_rows": 3810,
+    "gold_columns": 1,
+    "second_columns": 1
+  },
+  "mechanism": {
+    "class": "multiplicity",
+    "gold_types": [
+      "text"
+    ],
+    "second_types": [
+      "text"
+    ],
+    "multiset_equal": false,
+    "set_equal": true,
+    "order_equal": false,
+    "shorter_result_is_a_prefix": false,
+    "reading": "The class states what makes these two results unequal under this rule, read off the two results and nothing else. It does not state which of the two statements is wrong."
+  },
+  "gold": {
+    "executed_sql": "SELECT DISTINCT T2.status FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T1.type = 'Artifact' AND T2.format = 'vintage' AND T1.side IS NULL",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "status",
+          "declared_type": "text"
+        }
+      ],
+      "row_count": 3,
+      "truncated": false,
+      "rows_shown": 3,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "Banned"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Restricted"
+          }
+        ]
+      ],
+      "result_hash": "sha256:68bd946bbc8619370938bb2a4aaeb46f05cd2aa0d673e08da1cfb85ffc02cc56"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT \nlegalities.status\nFROM cards\nJOIN legalities ON cards.uuid = legalities.uuid\nWHERE cards.types = 'Artifact' AND cards.side IS NULL AND legalities.format = 'vintage'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "status",
+          "declared_type": "text"
+        }
+      ],
+      "row_count": 3810,
+      "truncated": false,
+      "rows_shown": 25,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ]
+      ],
+      "result_hash": "sha256:3ca6bce124b575c67ceccc1c3e4874ddff9623a67e8d2108c4ab673b1ebe8ad1"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Legal"
+          }
+        ],
+        "count": 3644
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Restricted"
+          }
+        ],
+        "count": 150
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Banned"
+          }
+        ],
+        "count": 13
+      }
+    ],
+    "in_second_not_in_gold_total": 3807,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:68bd946bbc8619370938bb2a4aaeb46f05cd2aa0d673e08da1cfb85ffc02cc56",
+    "second": "sha256:3ca6bce124b575c67ceccc1c3e4874ddff9623a67e8d2108c4ab673b1ebe8ad1"
+  },
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "fixture": {
+    "schema_digest": "sha256:7e73677b33d37c34666a99b17f3c1f66ac3f8dd4c317ce566d56ba34be5ab989",
+    "row_counts": {
+      "public.cards": 56822,
+      "public.legalities": 427907
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "run_id": "audit-a7e6b760-f8ad-479a-b956-9cd88ea91e18"
+}

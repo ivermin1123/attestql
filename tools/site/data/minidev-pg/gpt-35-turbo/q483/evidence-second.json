@@ -1,0 +1,1022 @@
+{
+  "question_as_asked": "Please list the Italian text ruling of all the cards in the set Coldsnap.",
+  "question": {
+    "question_id": "483",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "Please list the Italian text ruling of all the cards in the set Coldsnap.",
+    "evidence_text": "card set Coldsnap refers to name = 'Coldsnap'; Italian refers to language = 'Italian'"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "statement_source": {
+    "path": "data/preds-pg/predict_mini_dev_gpt-35-turbo_postgresql.json",
+    "digest": "sha256:fa363fe3c3fc45d97cb47e6ec15133b291acccd750e5136b6e7b4d1c8d13a4be",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo_postgresql.json",
+    "date": "2024-06-19"
+  },
+  "executed_sql": "SELECT foreign_data.text\nFROM cards\nJOIN foreign_data ON cards.uuid = foreign_data.uuid\nJOIN sets ON cards.setcode = sets.code\nWHERE sets.name = 'Coldsnap' AND foreign_data.language = 'Italian'",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "text",
+        "declared_type": "text"
+      }
+    ],
+    "row_count": 155,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "Volare, cautela\n{T}: Quando una creatura bersaglio diversa dalla Valchiria dell'Adarkar viene messa in un cimitero in questo turno, rimetti in gioco quella carta sotto il tuo controllo."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\n{S}: Il Grifone di Borealia guadagna attacco improvviso fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo {S} ({S} può essere pagato con un mana da un permanente neve.)\nSe una creatura sta per infliggere danno da combattimento a te e/o a una o più creature che controlli, previeni X di quei danni, dove X è pari al numero di segnalini ep"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ogniqualvolta ti viene inflitto danno, puoi mettere in gioco altrettante pedine creatura Soldato 1/1 bianche."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gli altri Soldati prendono +1/+1 e hanno attacco improvviso."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Incanta creatura\nLa creatura incantata non può bloccare e le sue abilità attivate non possono essere giocate.\n{S}: La creatura incantata guadagna difensore fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Incanta creatura\nMantenimento cumulativo {S} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso. {S} può essere pag"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo—Metti in fondo al grimorio del proprietario due carte bersaglio presenti in un singolo cimitero. (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di m"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo {W} o {U} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\nQuando il Guardiano dei Gufi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare, attacco improvviso\nOgniqualvolta il Gargoyle di Kjeldor infligge danno, guadagni altrettanti punti vita."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo {1} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\n{T}: La Giavellottiera di Kjeldor "
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{W}: Il Battipista di Kjeldor prende +0/+1 fino alla fine del turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Le creature che controlli prendono +X/+X fino alla fine del turno, dove X è pari a 1 più il numero di carte chiamate Grido di Guerra di Kjeldor presenti in tutti i cimiteri."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Previeni tutto il danno che le fonti nere e/o rosse infliggerebbero in questo turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{1}, Rivela X carte bianche dalla tua mano, Sacrifica la Martire della Sabbia: Guadagni per tre volte X punti vita."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sacrifica l'Unicorno di Ronom: Distruggi un incantesimo bersaglio."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\n{W}, {T}: TAPpa una creatura bersaglio."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Guadagni 4 punti vita.\nRecupero {1}{W} (Quando una creatura viene messa nel tuo cimitero dal gioco, puoi spendere {1}{W}. Se lo fai, riprendi in mano questa carta dal tuo cimitero. Altrimenti, rimuovi dal gioco questa carta.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Puoi rimuovere dal gioco due carte bianche presenti nella tua mano invece di pagare il costo di mana della Devastazione Solare.\nDistruggi tutte le creature."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Attacco improvviso\nPropagazione 4 (Quando giochi questa magia, puoi rivelare le prime quattro carte del tuo grimorio. Puoi giocare ogni carta rivelata che abbia lo stesso nome di questa magia senza pagare il suo costo di mana. Metti le rimanenti in fondo "
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Previeni i prossimi 2 danni che verrebbero inflitti a una creatura o a un giocatore bersaglio in questo turno.\nPesca una carta all'inizio del mantenimento del prossimo turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Il Fylgja Irsuto entra in gioco con quattro segnalini guarigione.\nRimuovi un segnalino guarigione dal Fylgja Irsuto: Previeni il prossimo punto danno che verrebbe inflitto al Fylgja Irsuto in questo turno.\n{2}{W}: Metti un segnalino guarigione sul Fylgja "
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Difensore, volare\nMantenimento cumulativo—Un avversario guadagna 1 punto vita. (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca prese"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Protezione dal nero\n{W}: Il Crociato Scudo Bianco guadagna volare fino alla fine del turno.\n{W}{W}: Il Crociato Scudo Bianco prende +1/+0 fino alla fine del turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Il Dorso-di-Rasoio Lanoso entra in gioco con tre segnalini ghiaccio.\nFintanto che il Dorso-di-Rasoio Lanoso ha almeno un segnalino ghiaccio, ha difensore e ogni danno da combattimento che infliggerebbe viene prevenuto.\nOgniqualvolta il Dorso-di-Rasoio Lan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\n{1}{S}: La creatura bersaglio perde volare fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{T}: Il controllore di una creatura artefatto bersaglio la sacrifica. Quel giocatore può passare in rassegna il proprio grimorio, scegliere una carta artefatto non creatura, metterla in gioco, poi rimescolare il proprio grimorio."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{U}, {T}: La terra neve bersaglio diventa una creatura Elementale 2/2 blu con volare. È ancora una terra."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Puoi rimuovere dal gioco due carte blu presenti nella tua mano invece di pagare il costo di mana di Requisire.\nPrendi il controllo di una magia non creatura bersaglio. Puoi scegliere nuovi bersagli per essa. (Se quella magia è un artefatto o un incantesim"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Neutralizza una magia bersaglio.\nRecupero {2}{U}{U} (Quando una creatura viene messa nel tuo cimitero dal gioco, puoi spendere {2}{U}{U}. Se lo fai, riprendi in mano questa carta dal tuo cimitero. Altrimenti, rimuovi dal gioco questa carta.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ogniqualvolta un avversario gioca una magia, puoi rivelare la prima carta del tuo grimorio. Se lo fai, neutralizza quella magia se ha lo stesso costo di mana convertito della carta rivelata."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ogniqualvolta il Drelnoch viene bloccato, puoi pescare due carte."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Neutralizza una magia bersaglio rossa o verde."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\n{S}{S}: Il Rapace del Gelo non può essere bersaglio di magie o abilità in questo turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Incanta creatura\nLa creatura incantata non STAPpa durante lo STAP del proprio controllore.\nQuando viene inflitto danno alla creatura incantata, distruggila."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{2}, {T}: Il proprietario riprende in mano un permanente bersaglio. Gioca questa abilità solo se controlli almeno quattro permanenti neve."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nJokulmorder entra in gioco TAPpato.\nQuando Jokulmorder entra in gioco, sacrificalo a meno che tu sacrifichi cinque terre.\nJokulmorder non STAPpa durante il tuo STAP.\nOgniqualvolta giochi un'Isola, puoi STAPpare Jokulmorder."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\nLa forza e la costituzione della Foschia di Krov sono pari ciascuna al numero di Illusioni in gioco."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Incanta creatura\nMantenimento cumulativo {U} o {B}\nTu controlli la creatura incantata.\nQuando i Sussurri di Krov vengono messi in un cimitero dal gioco, perdi 2 punti vita per ogni segnalino epoca presente su di essi."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{2}, Rivela X carte blu dalla tua mano, Sacrifica la Martire del Gelo: Neutralizza una magia bersaglio a meno che il suo controllore spenda {X}."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pesca due carte, poi sacrifica un permanente."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\nLa forza e la costituzione del Gufo Gelopiuma sono pari ciascuna al numero di permanenti neve in gioco.\n{1}{S}: Metti un segnalino ghiaccio su un permanente bersaglio.\nI permanenti con segnalini ghiaccio sono permanenti neve."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{1}, {T}: Neutralizza un'abilità attivata bersaglio Gioca questa abilità solo se controlli almeno quattro permanenti neve. (Le abilità di mana non possono essere scelte come bersaglio.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{1}, {T}: TAPpa o STAPpa un permanente bersaglio. Gioca questa abilità solo se controlli almeno quattro permanenti neve."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Il Serpente di Ronom non può attaccare a meno che il giocatore in difesa controlli almeno una terra neve.\nQuando non controlli terre neve, sacrifica il Serpente di Ronom."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Neutralizza una magia bersaglio a meno che il suo controllore spenda {2} più {2} aggiuntivo per ogni carta chiamata Strapparune presente in ogni cimitero."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Propagazione 4 (Quando giochi questa magia, puoi rivelare le prime quattro carte del tuo grimorio. Puoi giocare ogni carta rivelata che abbia lo stesso nome di questa magia senza pagare il suo costo di mana. Metti le rimanenti in fondo al tuo grimorio.)\nI"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo {2} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\n{T}: Pesca due carte, poi metti in"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Scegli una delle opzioni seguenti Il permanente non neve bersaglio diventa un permanente neve fino alla fine del turno; oppure il permanente neve bersaglio diventa non neve fino alla fine del turno.\nPesca una carta all'inizio del mantenimento del prossimo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\nMantenimento cumulativo—Scarta una carta. (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\nQuando la Sfi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo {1} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\nOgniqualvolta viene pagato il mant"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Distruggi una creatura non neve bersaglio."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\n{S}: La Bruma Raggelante prende +1/+1 fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Distruggi una creatura bersaglio verde o bianca."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{T}: La creatura bersaglio prende -1/-1 fino alla fine del turno.\n{4}{B}{B}, {T}, Sacrifica il Discepolo di Tevesh Szat: La creatura bersaglio prende -6/-6 fino alla fine del turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Il Banchetto di Carne infligge X danni a una creatura bersaglio e tu guadagni X punti vita, dove X è pari a 1 più il numero di carte chiamate Banchetto di Carne presenti in tutti i cimiteri."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sacrifica l'Assassino di Garza: Distruggi una creatura non nera bersaglio.\nRecupero—Paga metà dei tuoi punti vita, arrotondata per eccesso. (Quando un'altra creatura viene messa nel tuo cimitero dal gioco, puoi pagare metà dei tuoi punti vita, arrotondata"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Riprendi in mano una carta creatura bersaglio dal tuo cimitero.\nRecupero {2}{B} (Quando una creatura viene messa nel tuo cimitero dal gioco, puoi spendere {2}{B}. Se lo fai, riprendi in mano questa carta dal tuo cimitero. Altrimenti, rimuovi dal gioco que"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ogniqualvolta una creatura viene messa in un cimitero dal gioco, il Ghignante Cartilagivoro prende +2/+2 fino alla fine del turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{1}, Sacrifica una creatura: Guadagni 2 punti vita."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Puoi giocare Haakon, Flagello di Stromgald dal tuo cimitero, ma non da qualsiasi altra zona.\nFintanto che Haakon è in gioco, puoi giocare carte Cavaliere dal tuo cimitero.\nQuando Haakon viene messo in un cimitero dal gioco, perdi 2 punti vita."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\nMantenimento cumulativo—Prendi il controllo di una terra che non controlli.\nL'Araldo di Leshrac prende +1/+1 per ogni terra che controlli ma non possiedi.\nQuando l'Araldo di Leshrac lascia il gioco, ogni giocatore prende il controllo di tutte le te"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Distruggi una creatura bersaglio con forza pari o inferiore a 2.\nRecupero {1}{B}{B} (Quando una creatura viene messa nel tuo cimitero dal gioco, puoi spendere {1}{B}{B}. Se lo fai, riprendi in mano questa carta dal tuo cimitero. Altrimenti, rimuovi dal gi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": ""
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{1}, Rivela X carte nere dalla tua mano, Sacrifica la Martire delle Ossa: Rimuovi dal gioco fino a X carte bersaglio presenti in un singolo cimitero."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare, paura\nMantenimento cumulativo {B} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo {B} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\nAlla fine del tuo turno, pesca una"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Incanta creatura\nLa creatura incantata prende +2/+1 e ha \"{S}: Questa creatura non può essere bloccata in questo turno tranne che da creature neve.\" ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{S}: Rigenera i Morti di Gelomantato. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Puoi rimuovere dal gioco due carte nere presenti nella tua mano invece di pagare il costo di mana dell'Inchioda Anima.\nL'Inchioda Anima infligge 4 danni a una creatura o a un giocatore bersaglio e tu guadagni 4 punti vita."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Protezione dal bianco\n{B}: Il Crociato di Stromgald guadagna volare fino alla fine del turno.\n{B}{B}: Il Crociato di Stromgald prende +1/+0 fino alla fine del turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Propagazione 4 (Quando giochi questa magia, puoi rivelare le prime quattro carte del tuo grimorio. Puoi giocare ogni carta rivelata che abbia lo stesso nome di questa magia senza pagare il suo costo di mana. Metti le rimanenti in fondo al tuo grimorio.)\nI"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\nPrevieni tutto il danno che verrebbe inflitto al Cavalcacieli di Tresserhorn da creature con attacco improvviso."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nSe un'altra creatura sta per essere messa in un cimitero dal gioco, invece rimuovila dal gioco.\nMetti nel cimitero del suo proprietario una carta rimossa dal gioco con il Nulligozzo: Il Nulligozzo prende +2/+2 fino alla fine del turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Passa-terre neve\n{S}: Rigenera lo Zombie su Slitta. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Previeni tutto il danno che il Conciatore Goblin infliggerebbe a creature neve."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "La creatura attaccante bersaglio prende +X/+0 fino alla fine del turno.\nPesca una carta all'inizio del mantenimento del prossimo turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{T}: Rimuovi dal combattimento una creatura bloccante bersaglio. Le creature che ha bloccato e che non sono state bloccate da altre creature in questo combattimento diventano non bloccate, poi essa blocca una creatura attaccante a tua scelta. Gioca questa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo—Aggiungi {R} alla tua riserva di mana. (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Distruggi una Pianura o un'Isola bersaglio. Il Crioclasma infligge 3 danni al controllore di quella terra."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nMantenimento cumulativo {R} o {G} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\nIl Terraccio pren"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Puoi rimuovere dal gioco due carte rosse presenti nella tua mano invece di pagare il costo di mana della Furia dell'Orda.\nSTAPpa tutte le creature che hanno attaccato in questo turno. Dopo questa fase principale, c'è una fase di combattimento aggiuntiva s"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{T}: La creatura bersaglio non può bloccare in questo turno.\n{S}: Lo Scorrigelo Goblin guadagna rapidità fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lo Spirito della Pietra Superiore non può essere bloccato da creature con volare.\n{2}{R}: Fino alla fine del turno, la creatura bersaglio prende +0/+2 e guadagna \"{R}: Questa creatura prende +1/+0 fino alla fine del turno.\""
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Distruggi un artefatto o una terra bersaglio.\nRecupero {R}{R} (Quando una creatura viene messa nel tuo cimitero dal gioco, puoi spendere {R}{R}. Se lo fai, riprendi in mano questa carta dal tuo cimitero. Altrimenti, rimuovi dal gioco questa carta.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo—Lancia una moneta.\nOgniqualvolta vinci un lancio, il Minotauro di Karplusan infligge 1 danno a una creatura o a un giocatore bersaglio.\nOgniqualvolta perdi un lancio, il Minotauro di Karplusan infligge 1 danno a una creatura o a un"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ogniqualvolta il Ghiottone di Karplusan viene bloccato, puoi fargli infliggere 1 danno a una creatura o a un giocatore bersaglio."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere, rapidità\nIl Serpente Saetta entra in gioco con X segnalini +1/+0.\nAlla fine del turno, sacrifica il Serpente Saetta."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "La Tempesta di Fulmini infligge X danni a una creatura o a un giocatore bersaglio, dove X è pari a 3 più il numero di segnalini carica presenti su di esso.\nScarta una carta terra: Metti due segnalini carica sulla Tempesta di Fulmini. Puoi scegliere un nuo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "I Barbari, i Guerrieri e i Berserker prendono +2/+2 e hanno rapidità."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo {1} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\nAlla fine del tuo turno, il Nucleo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{2}, Rivela X carte rosse dalla tua mano, Sacrifica la Martire delle Ceneri: La Martire delle Ceneri infligge X danni a ogni creatura senza volare."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{2}{S}: La creatura neve bersaglio guadagna attacco improvviso fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{T}, Sacrifica una creatura: Il Pittasangue Orchesco infligge 1 danno a una creatura o a un giocatore bersaglio."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\n{2}{S}: TAPpa una creatura bersaglio e metti un segnalino ghiaccio su di essa. ({S} può essere pagato con un mana da un permanente neve.)\nLe creature con almeno un segnalino ghiaccio non STAPpano durante lo STAP dei loro controllori."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aggiungi {R}{R} alla tua riserva di mana, poi aggiungi {R} alla tua riserva di mana per ogni altra carta chiamata Rito della Fiamma presente in ogni cimitero."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lo Skred infligge a una creatura bersaglio un ammontare di danni pari al numero di permanenti neve che tu controlli."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Quando lo Yeti in Agguato entra in gioco, se è in gioco, infligge un ammontare di danni pari alla propria forza a una creatura bersaglio controllata da un avversario e quella creatura infligge un ammontare di danni pari alla propria forza allo Yeti in Agg"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Propagazione 4 (Quando giochi questa magia, puoi rivelare le prime quattro carte del tuo grimorio. Puoi giocare ogni carta rivelata che abbia lo stesso nome di questa magia senza pagare il suo costo di mana. Metti le rimanenti in fondo al tuo grimorio.)\nL"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{S}: Il Termopode guadagna rapidità fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)\nSacrifica una creatura: Aggiungi {R} alla tua riserva di mana."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Puoi rimuovere dal gioco due carte verdi presenti nella tua mano invece di pagare il costo di mana del Cavalca Allosauro.\nLa forza e la costituzione del Cavalca Allosauro sono pari ciascuna a 1 più il numero di terre che controlli."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nMantenimento cumulativo {G} o {W} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\nQuando il Nishoba"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nQuando la Mandria di Uri entra in gioco, puoi passare in rassegna il tuo grimorio, scegliere una carta Uri, rivelarla e aggiungerla alla tua mano. Se lo fai, rimescola il tuo grimorio\nOgniqualvolta la Mandria di Uri attacca, prende +1/+0 fino a"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{S}: Il Centauro Boreale prende +1/+1 fino alla fine del turno.. Gioca questa abilità solo una volta per turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{T}: Aggiungi {1} alla tua riserva di mana."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alla fine di ciascun turno, ogni giocatore prende il controllo di tutti i permanenti non pedina che possiede."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nOgniqualvolta il Maschio Uri attacca, prende +1/+0 fino alla fine del turno per ogni altro Uri che attacca."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo {2} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\nI permanenti neve non STAPpano dur"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Il Ragno Gelotela può bloccare come se avesse volare.\nOgniqualvolta il Ragno Gelotela blocca una creatura con volare, metti un segnalino +1/+1 sul Ragno Gelotela alla fine del combattimento."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo {1}\nOgniqualvolta paghi il mantenimento cumulativo della Fine dell'Ibernazione, puoi passare in rassegna il tuo grimorio, scegliere una carta creatura con costo di mana convertito pari al numero di segnalini epoca presenti sulla Fi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Passa in rassegna il tuo grimorio, scegli una carta terra neve e mettila in gioco TAPpata. Poi rimescola il tuo grimorio."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Il Ramingo di Karplusan non può essere bersaglio di magie blu o nere."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{1}, Rivela X carte verdi dalla tua mano, Sacrifica la Martire delle Spore: La creatura bersaglio prende +X/+X fino alla fine del turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Distruggi un artefatto o un incantesimo bersaglio.\nPesca una carta all'inizio del mantenimento del prossimo turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ogniqualvolta la Vipera di Ohran infligge danno da combattimento a una creatura, distruggi quella creatura alla fine del combattimento.\nOgniqualvolta la Vipera di Ohran infligge danno da combattimento a un giocatore, puoi pescare una carta."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nMentre stai passando in rassegna il tuo grimorio, puoi giocare il Wurm Panglaciale dal tuo grimorio."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "La creatura bersaglio prende +3/+3 fino alla fine del turno.\nRecupero {1}{G} (Quando una creatura viene messa nel tuo cimitero dal gioco, puoi spendere {1}{G}. Se lo fai, riprendi in mano questa carta dal tuo cimitero. Altrimenti, rimuovi dal gioco questa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nOgniqualvolta l'Uri Gelocorno attacca, prende +1/+0 fino alla fine del turno per ogni altro Uri attaccante.\n{2}{S}: La creatura bersaglio blocca una creatura bersaglio in questo turno se può farlo. ({S} può essere pagato con un mana da un perma"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Protezione dalla neve\nMantenimento cumulativo {1} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Incanta creatura\nQuando la Forma del Wiitigo entra in gioco, metti sei segnalini +1/+1 sulla creatura incantata.\nAll'inizio del tuo mantenimento, metti un segnalino +1/+1 sulla creatura incantata se ha attaccato o bloccato dal tuo mantenimento precedente."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nMantenimento cumulativo—Metti un segnalino +1/+1 su una creatura controllata da un avversario. (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Scarta una carta terra: Il Primate Lottatore prende +1/+1 fino alla fine del turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Metti in gioco una pedina creatura lupo 1/1 verde con \"Questa creatura prende +1/+1 per ogni carta chiamata Suono del Richiamo presente in ogni cimitero.\""
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lo Sputavapore può bloccare come se avesse volare.\n{R}: Lo Sputavapore prende +1/+0 fino alla fine del turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Incanta creatura\nLa creatura incantata prende +2/+2.\nPropagazione 4 (Quando giochi questa magia, puoi rivelare le prime quattro carte del tuo grimorio. Puoi giocare ogni carta rivelata che abbia lo stesso nome di questa magia senza pagare il suo costo di "
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\nOgniqualvolta lo Spettro della Bufera infligge danno da combattimento a un giocatore, scegli una delle opzioni seguenti Quel giocatore fa tornare un permanente che controlla in mano al proprietario; o quel giocatore scarta una carta."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{X}{X}{1}: Distruggi un artefatto o una creatura bersaglio con costo di mana convertito pari a X."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\n{1}{S}: Le creature neve che controlli prendono +1/+1 fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare, rapidità\nOgniqualvolta una creatura a cui sia stato inflitto danno da Garza Zol, Regina della Peste in questo turno viene messa in un cimitero, metti un segnalino +1/+1 su Garza Zol.\nOgniqualvolta Garza Zol infligge danno da combattimento a un gio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ogniqualvolta un'altra creatura entra in gioco sotto il tuo controllo, metti un segnalino +1/+1 su quella creatura e un segnalino +1/+1 sul Ranger dell'Ordine di Juniper."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ogniqualvolta un'altra creatura non pedina che controlli viene messa in un cimitero dal gioco, metti in gioco una pedina creatura Figlio della Tomba 3/1 nera e rossa con rapidità."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ogniqualvolta una fonte non creatura che controlli infligge danno, guadagni altrettanti punti vita."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rimuovi dal gioco una creatura bersaglio. Pesca un numero di carte pari alla forza di quella creatura. All'inizio del tuo prossimo mantenimento, rimetti in gioco quella carta sotto il controllo del suo proprietario. Se lo fai, scarta un numero di carte pa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Travolgere\nLa forza dell'Elementale della Terra Selvaggia è pari al numero di terre non base che i tuoi avversari controllano."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Volare\nOgniqualvolta Zur l'Incantatore attacca, puoi passare in rassegna il tuo grimorio, prendere una carta incantesimo con costo di mana convertito pari o inferiore a 3 e metterla in gioco. Se lo fai, rimescola il tuo grimorio."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Il Cuore di Gelacciaio entra in gioco TAPpato.\nMentre il Cuore di Gelacciaio entra in gioco, scegli un colore.\n{T}: Aggiungi un mana del colore scelto alla tua riserva di mana."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Quando lo Scettro del Giullare entra in gioco, rimuovi dal gioco a faccia in giù le prime cinque carte del grimorio di un giocatore bersaglio. Puoi guardare quelle carte fintanto che rimangono rimosse dal gioco.\n{2}, {T}, Metti nel cimitero del suo propri"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{T}, Sacrifica la Bolla di Mishra: Guarda la prima carta del grimorio di un giocatore bersaglio. Pesca una carta all'inizio del mantenimento del prossimo turno."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Il Ferropode di Phyrexia non STAPpa durante il tuo STAP.\n{1}{S}: STAPpa il Ferropode di Phyrexia. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lo Spaccaneve di Phyrexia attacca ogni turno se può farlo.\n{1}{S}: Lo Spaccaneve di Phyrexia prende +1/+0 fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mantenimento cumulativo—Sacrifica una creatura. (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Le magie che controlli hanno propagazione 4. (Ogniqualvolta giochi una magia, puoi rivelare le prime quattro carte del tuo grimorio. Puoi giocare ogni carta rivelata che abbia lo stesso nome della magia senza pagare il suo costo di mana. Metti le rimanent"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Le Distese Artiche entrano in gioco TAPpate.\n{T}: Aggiungi {G} o {W} alla tua riserva di mana."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "La Scogliera di Borealia entra in gioco TAPpata.\n{T}: Aggiungi {W} o {U} alla tua riserva di mana."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Le Profondità Oscure entrano in gioco con dieci segnalini ghiaccio.\n{3}: Rimuovi un segnalino ghiaccio dalle Profondità Oscure.\nQuando non ci sono segnalini ghiaccio sulle Profondità Oscure, sacrificale. Se lo fai, metti in gioco una pedina creatura legge"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "La Palude Ghiacciata entra in gioco TAPpata.\n{T}: Aggiungi {U} o {B} alla tua riserva di mana."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Il Bosco dell'Altopiano entra in gioco TAPpato.\n{T}: Aggiungi {R} o {G} alla tua riserva di mana."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{T}: Aggiungi {1} alla tua riserva di mana.\n{4}{S}, {T}, Sacrifica la Bocca di Ronom: La Bocca di Ronom infligge 4 danni a una creatura bersaglio. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "{T}: Aggiungi {1} alla tua riserva di mana.\n{1}{S}, {T}: Guarda la prima carta del tuo grimorio. Se quella carta è una carta neve, puoi rivelarla e aggiungerla alla tua mano. ({S} può essere pagato con un mana da un permanente neve.)"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "I Laghi Salati di Tresserhorn entrano in gioco TAPpati.\n{T}: Aggiungi {B} o {R} alla tua riserva di mana."
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": ""
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": ""
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": ""
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": ""
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": ""
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 120000
+  },
+  "row_count": 155,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:0cde918e2616a1491feebf7dcbd7a944f79e95709c8f827f4b74a559330da0c4",
+    "row_counts": {
+      "public.cards": 56822,
+      "public.foreign_data": 229186,
+      "public.sets": 551
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-08T05:21:06.155844+00:00",
+  "executed_at": "2026-09-08T05:21:40.676115+00:00",
+  "run_id": "audit-a7e6b760-f8ad-479a-b956-9cd88ea91e18",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:262bbdfd4f89b40579ca6cc5de4b1a320fd72a40e94a3fb264566cb19032f2bb",
+  "record_hash": "sha256:79eb4e39c07da5cbbfa0492823902366ec5069887c102514d48e8bbda6ed130a"
+}

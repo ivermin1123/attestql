@@ -1,0 +1,311 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "T2.attribute_value",
+            "column": "hero_attribute.attribute_value",
+            "declared_type": "INTEGER",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT T1.full_name, T2.attribute_value AS attestql_ordering_key_0 FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Strength' ORDER BY T2.attribute_value DESC",
+        "unbounded_rows": 623,
+        "projected_columns": [
+          "full_name"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "T2.attribute_value",
+            "direction": "desc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "tied_rows": 63,
+          "distinct_projected_answers": 36,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Richard Milhouse Jones"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Abraxas"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "-"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "-"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "En Sabah Nur"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "-"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "-"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "-"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Erik Stephan Josten"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Benjamin Kirby Tennyson"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Richard Milhouse Jones"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abraxas"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "-"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "-"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "En Sabah Nur"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "-"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "-"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "-"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Erik Stephan Josten"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Benjamin Kirby Tennyson"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:d66638124bfc89c4fdab1459171f13b89d00666fe33abb4f7db586b4d9dc31bf",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "full_name",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Richard Milhouse Jones"
+              }
+            ]
+          ],
+          "result_hash": "sha256:d66638124bfc89c4fdab1459171f13b89d00666fe33abb4f7db586b4d9dc31bf"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "superhero",
+            "hero_attribute",
+            "attribute"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {},
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:d66638124bfc89c4fdab1459171f13b89d00666fe33abb4f7db586b4d9dc31bf",
+          "result": {
+            "columns": [
+              {
+                "name": "full_name",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Richard Milhouse Jones"
+                }
+              ]
+            ],
+            "result_hash": "sha256:d66638124bfc89c4fdab1459171f13b89d00666fe33abb4f7db586b4d9dc31bf"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

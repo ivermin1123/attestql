@@ -1,0 +1,233 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "reason": "the statement states no LIMIT"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:b05f23e5daadcc120fc25ef72afd54e5cc82897ff51a06db7e035e89308b2308",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "description",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 21,
+          "truncated": false,
+          "rows_shown": 10,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Dalnic.popl."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Zpr.nakupu"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Autoprísluš."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Zboží nesp."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Diesel +"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Obcerstvení"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Nemrz.kapal."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Nafta"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Natural Plus"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Autokosmet."
+              }
+            ]
+          ],
+          "result_hash": "sha256:b05f23e5daadcc120fc25ef72afd54e5cc82897ff51a06db7e035e89308b2308"
+        },
+        "planner_statistics": {
+          "products": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:42.324323+00",
+            "n_mod_since_analyze": 0
+          },
+          "transactions_1k": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:51.57727+00",
+            "n_mod_since_analyze": 0
+          },
+          "gasstations": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:24.38603+00",
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "products",
+            "transactions_1k",
+            "gasstations"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:5c701fc5aff8bddbe39b591e40f52f2fee7b4d3ef5ed16ed761578876b7e8a94",
+          "result": {
+            "columns": [
+              {
+                "name": "description",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 21,
+            "truncated": false,
+            "rows_shown": 10,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Provoz.nápl."
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Oleje,tuky"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Nemrz.kapal."
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Potraviny"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Nafta"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Dalnic.popl."
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Zpr.nakupu"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Autoprísluš."
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Mytí vozidel"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "LPG"
+                }
+              ]
+            ],
+            "result_hash": "sha256:5c701fc5aff8bddbe39b591e40f52f2fee7b4d3ef5ed16ed761578876b7e8a94"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

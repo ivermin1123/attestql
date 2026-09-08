@@ -1,0 +1,8 @@
+{
+ "source": "plans/reports/bird-dev-sqlite-260907/classification.json",
+ "date": "2026-09-07",
+ "shape": "rows",
+ "reason_field": "why",
+ "keys": "rows[], joined by question_id and db",
+ "key": "thrombosis_prediction"
+}

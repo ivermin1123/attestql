@@ -1,0 +1,536 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "t2.birthday",
+            "column": "patient.birthday",
+            "declared_type": "date",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t1.date, extract ('year' FROM t2.\"First Date\") - extract ('year' FROM t2.birthday) AS age, t2.birthday, t2.birthday AS attestql_ordering_key_0 FROM laboratory t1 JOIN patient t2 ON t1.id = t2.id WHERE t2.diagnosis = 'SJS' AND t2.birthday IS NOT NULL ORDER BY t2.birthday ASC",
+        "unbounded_rows": 1086,
+        "projected_columns": [
+          "date",
+          "age",
+          "birthday"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t2.birthday",
+            "direction": "asc",
+            "nulls": "default",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "tied_rows": 10,
+          "distinct_projected_answers": 10,
+          "rows": [
+            [
+              {
+                "type": "date",
+                "value": "1986-01-07"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ],
+            [
+              {
+                "type": "date",
+                "value": "1981-07-31"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ],
+            [
+              {
+                "type": "date",
+                "value": "1981-12-11"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ],
+            [
+              {
+                "type": "date",
+                "value": "1982-05-01"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ],
+            [
+              {
+                "type": "date",
+                "value": "1982-12-02"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ],
+            [
+              {
+                "type": "date",
+                "value": "1984-01-28"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ],
+            [
+              {
+                "type": "date",
+                "value": "1984-02-02"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ],
+            [
+              {
+                "type": "date",
+                "value": "1984-04-26"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ],
+            [
+              {
+                "type": "date",
+                "value": "1985-04-20"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ],
+            [
+              {
+                "type": "date",
+                "value": "1985-11-26"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "date",
+            "value": "1986-01-07"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ],
+        [
+          {
+            "type": "date",
+            "value": "1981-07-31"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ],
+        [
+          {
+            "type": "date",
+            "value": "1981-12-11"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ],
+        [
+          {
+            "type": "date",
+            "value": "1982-05-01"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ],
+        [
+          {
+            "type": "date",
+            "value": "1982-12-02"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ],
+        [
+          {
+            "type": "date",
+            "value": "1984-01-28"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ],
+        [
+          {
+            "type": "date",
+            "value": "1984-02-02"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ],
+        [
+          {
+            "type": "date",
+            "value": "1984-04-26"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ],
+        [
+          {
+            "type": "date",
+            "value": "1985-04-20"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ],
+        [
+          {
+            "type": "date",
+            "value": "1985-11-26"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:6b55468927f94152e74429191a5e2d1782a5d8ec759b3952b9b50e54b9f08264",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "date",
+              "declared_type": "date"
+            },
+            {
+              "name": "age",
+              "declared_type": "numeric"
+            },
+            {
+              "name": "birthday",
+              "declared_type": "date"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "date",
+                "value": "1981-07-31"
+              },
+              {
+                "type": "dec",
+                "value": "69"
+              },
+              {
+                "type": "date",
+                "value": "1917-04-18"
+              }
+            ]
+          ],
+          "result_hash": "sha256:6b55468927f94152e74429191a5e2d1782a5d8ec759b3952b9b50e54b9f08264"
+        },
+        "planner_statistics": {
+          "laboratory": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 13908
+          },
+          "patient": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 1238
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "laboratory",
+            "patient"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:6be76dc0a41148c0f19499c6c1e337f281fb5b8d81d7e9a9a5b5ad0d19b83a40",
+          "result": {
+            "columns": [
+              {
+                "name": "date",
+                "declared_type": "date"
+              },
+              {
+                "name": "age",
+                "declared_type": "numeric"
+              },
+              {
+                "name": "birthday",
+                "declared_type": "date"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "date",
+                  "value": "1982-12-02"
+                },
+                {
+                  "type": "dec",
+                  "value": "69"
+                },
+                {
+                  "type": "date",
+                  "value": "1917-04-18"
+                }
+              ]
+            ],
+            "result_hash": "sha256:6be76dc0a41148c0f19499c6c1e337f281fb5b8d81d7e9a9a5b5ad0d19b83a40"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "date",
+            "value": "1982-12-02"
+          },
+          {
+            "type": "dec",
+            "value": "69"
+          },
+          {
+            "type": "date",
+            "value": "1917-04-18"
+          }
+        ]
+      ]
+    }
+  ]
+}

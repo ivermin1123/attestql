@@ -1,0 +1,727 @@
+[
+ {
+  "question_id": "195",
+  "db_id": "toxicology",
+  "question": "For the most common bond type in the database, provide comprehensive statistics including its total occurrences, how many molecules contain it, the average number of such bonds per molecule, the number of unique element pairs it connects, and which molecule labels (carcinogenic or non-carcinogenic) contain this bond type."
+ },
+ {
+  "question_id": "196",
+  "db_id": "toxicology",
+  "question": "For non-carcinogenic molecules containing chlorine, what are the statistics including the count of such molecules, average and maximum number of chlorine atoms, average number of bonds, count of molecules with more single bonds than double bonds, and average number of bonds involving chlorine?"
+ },
+ {
+  "question_id": "197",
+  "db_id": "toxicology",
+  "question": "Calculate the average number of oxygen atoms in single-bonded molecules."
+ },
+ {
+  "question_id": "198",
+  "db_id": "toxicology",
+  "question": "On average how many carcinogenic molecules are single bonded?"
+ },
+ {
+  "question_id": "199",
+  "db_id": "toxicology",
+  "question": "In the molecule containing sodium atoms, how many are non-carcinogenic?"
+ },
+ {
+  "question_id": "200",
+  "db_id": "toxicology",
+  "question": "For carcinogenic molecules that contain triple bonds, provide detailed statistics including atom counts, bond counts, carbon and nitrogen counts, and specifically identify how many nitrogen-to-nitrogen triple bonds and carbon-containing triple bonds exist in each molecule, categorizing them by their number of triple bonds."
+ },
+ {
+  "question_id": "201",
+  "db_id": "toxicology",
+  "question": "What is the percentage of carbon in double-bond molecules?"
+ },
+ {
+  "question_id": "202",
+  "db_id": "toxicology",
+  "question": "How many triple type bonds are there?"
+ },
+ {
+  "question_id": "203",
+  "db_id": "toxicology",
+  "question": "What is the average number of connections per non-bromine atom across molecules that have bonds or multiple atoms, and how many of these non-bromine atoms have more than 2 connections?"
+ },
+ {
+  "question_id": "204",
+  "db_id": "toxicology",
+  "question": "What are the average structural characteristics of carcinogenic molecules among the first 100 molecules, including the number of atoms, carbon atoms, bonds, double bonds, connected atoms, and the ratio of carbon-to-carbon connections?"
+ },
+ {
+  "question_id": "205",
+  "db_id": "toxicology",
+  "question": "For all molecules containing carbon, provide comprehensive statistics including the number of atoms, bonds, carbon atoms, chlorine atoms, and double bonds. Rank these molecules by their carbon content (highest first), and for ties, rank by total atom count. Also include the total number of atomic connections in each molecule."
+ },
+ {
+  "question_id": "206",
+  "db_id": "toxicology",
+  "question": "What elements are in the TR004_8_9 bond atoms?"
+ },
+ {
+  "question_id": "207",
+  "db_id": "toxicology",
+  "question": "For each element that participates in double bonds, what is the count of atoms, the number of molecules containing them, their percentage of all atoms in the database, and examples of up to 3 molecules (with labels) where they appear in double bonds?"
+ },
+ {
+  "question_id": "208",
+  "db_id": "toxicology",
+  "question": "For the label with the most hydrogen atoms, what are the total number of hydrogen atoms, average hydrogen atoms per molecule, average bonds per molecule, total single bonds, and total double bonds?"
+ },
+ {
+  "question_id": "209",
+  "db_id": "toxicology",
+  "question": "What are the different types of bonds that chlorine atoms form, ranked by their frequency, and how many non-chlorine atoms are involved in each bond type?"
+ },
+ {
+  "question_id": "210",
+  "db_id": "toxicology",
+  "question": "What atoms are connected in single type bonds?"
+ },
+ {
+  "question_id": "211",
+  "db_id": "toxicology",
+  "question": "Indicate which atoms are connected in non-carcinogenic type molecules."
+ },
+ {
+  "question_id": "212",
+  "db_id": "toxicology",
+  "question": "Which element is the least numerous in non-carcinogenic molecules?"
+ },
+ {
+  "question_id": "213",
+  "db_id": "toxicology",
+  "question": "What type of bond is there between the atoms TR004_8 and TR004_20?"
+ },
+ {
+  "question_id": "214",
+  "db_id": "toxicology",
+  "question": "What type of label is not on molecules with atoms with tin?"
+ },
+ {
+  "question_id": "215",
+  "db_id": "toxicology",
+  "question": "How many atoms with iodine and with sulfur type elements are there in single bond molecules?"
+ },
+ {
+  "question_id": "216",
+  "db_id": "toxicology",
+  "question": "Identify all connected atoms with a triple bond."
+ },
+ {
+  "question_id": "217",
+  "db_id": "toxicology",
+  "question": "Identify all the atoms that are connected to the atoms of the TR181 molecule."
+ },
+ {
+  "question_id": "218",
+  "db_id": "toxicology",
+  "question": "For carcinogenic molecules, what is the percentage that don't contain fluorine, the average number of atoms per molecule, the average number of bonds in molecules with and without fluorine, and the average bond strength?"
+ },
+ {
+  "question_id": "219",
+  "db_id": "toxicology",
+  "question": "What is the percentage of carcinogenic molecules in triple type bonds?"
+ },
+ {
+  "question_id": "220",
+  "db_id": "toxicology",
+  "question": "Please list the top three elements in the molecule TR000 in alphabetical order."
+ },
+ {
+  "question_id": "221",
+  "db_id": "toxicology",
+  "question": "What are the atoms that are bonded in the molecule TR001 with the bond ID of TR001_2_6?"
+ },
+ {
+  "question_id": "222",
+  "db_id": "toxicology",
+  "question": "What is the difference between the number of molecules that are carcinogenic and those that are not?"
+ },
+ {
+  "question_id": "223",
+  "db_id": "toxicology",
+  "question": "What are the atom IDs of the bond TR000_2_5?"
+ },
+ {
+  "question_id": "224",
+  "db_id": "toxicology",
+  "question": "For all bonds connected to atom TR000_2, what are the bond details including the connected atoms, their elements, bond types, bond classifications, and the molecule's atom and bond counts?"
+ },
+ {
+  "question_id": "225",
+  "db_id": "toxicology",
+  "question": "Please list top five molecules that have double bonds in alphabetical order."
+ },
+ {
+  "question_id": "226",
+  "db_id": "toxicology",
+  "question": "What is the percentage of double bonds in the molecule TR008? Please provide your answer as a percentage with five decimal places."
+ },
+ {
+  "question_id": "227",
+  "db_id": "toxicology",
+  "question": "What is the percentage of molecules that are carcinogenic? Please provide your answer as a percentage with three decimal places."
+ },
+ {
+  "question_id": "228",
+  "db_id": "toxicology",
+  "question": "How much of the hydrogen in molecule TR206 is accounted for? Please provide your answer as a percentage with four decimal places."
+ },
+ {
+  "question_id": "229",
+  "db_id": "toxicology",
+  "question": "For molecule TR000, what are the bond types ranked by frequency, how many times does each bond type occur, and how many unique element pairs are connected by each bond type? Also indicate whether each bond type appears multiple times or just once, and show the molecule's label."
+ },
+ {
+  "question_id": "230",
+  "db_id": "toxicology",
+  "question": "What are the elements of molecule TR060 and its label?"
+ },
+ {
+  "question_id": "231",
+  "db_id": "toxicology",
+  "question": "Which bond type accounted for the majority of the bonds found in molecule TR010 and state whether or not this molecule is carcinogenic?"
+ },
+ {
+  "question_id": "232",
+  "db_id": "toxicology",
+  "question": "Please list top three molecules that have single bonds between two atoms and are not carcinogenic in alphabetical order."
+ },
+ {
+  "question_id": "233",
+  "db_id": "toxicology",
+  "question": "Please list top two bonds that happened with the molecule TR006 in alphabetical order."
+ },
+ {
+  "question_id": "234",
+  "db_id": "toxicology",
+  "question": "How many bonds which involved atom 12 does molecule TR009 have?"
+ },
+ {
+  "question_id": "235",
+  "db_id": "toxicology",
+  "question": "How many molecules are carcinogenic and have the bromine element?"
+ },
+ {
+  "question_id": "236",
+  "db_id": "toxicology",
+  "question": "What are the bond type and the atoms of the bond ID of TR001_6_9?"
+ },
+ {
+  "question_id": "237",
+  "db_id": "toxicology",
+  "question": "Which molecule does the atom TR001_10 belong to? Please state whether this molecule is carcinogenic or not."
+ },
+ {
+  "question_id": "238",
+  "db_id": "toxicology",
+  "question": "How many molecules have a triple bond type?"
+ },
+ {
+  "question_id": "239",
+  "db_id": "toxicology",
+  "question": "How many connections does the atom 19 have?"
+ },
+ {
+  "question_id": "240",
+  "db_id": "toxicology",
+  "question": "List all the elements of the toxicology of the molecule \"TR004\"."
+ },
+ {
+  "question_id": "241",
+  "db_id": "toxicology",
+  "question": "How many of the molecules are not carcinogenic?"
+ },
+ {
+  "question_id": "242",
+  "db_id": "toxicology",
+  "question": "Among all the atoms from 21 to 25, list all the molecules that are carcinogenic."
+ },
+ {
+  "question_id": "243",
+  "db_id": "toxicology",
+  "question": "What are the bonds that have phosphorus and nitrogen as their atom elements?"
+ },
+ {
+  "question_id": "244",
+  "db_id": "toxicology",
+  "question": "Is the molecule with the most double bonds carcinogenic?"
+ },
+ {
+  "question_id": "245",
+  "db_id": "toxicology",
+  "question": "What is the average number of bonds the atoms with the element iodine have?"
+ },
+ {
+  "question_id": "246",
+  "db_id": "toxicology",
+  "question": "List the bond type and the bond ID of the atom 45."
+ },
+ {
+  "question_id": "247",
+  "db_id": "toxicology",
+  "question": "List all the elements of atoms that can not bond with any other atoms."
+ },
+ {
+  "question_id": "248",
+  "db_id": "toxicology",
+  "question": "What are the atoms of the triple bond with the molecule \"TR041\"?"
+ },
+ {
+  "question_id": "249",
+  "db_id": "toxicology",
+  "question": "What are the elements of the atoms of TR144_8_19?"
+ },
+ {
+  "question_id": "250",
+  "db_id": "toxicology",
+  "question": "Of all the carcinogenic molecules, which one has the most double bonds?"
+ },
+ {
+  "question_id": "251",
+  "db_id": "toxicology",
+  "question": "What is the least common element of all carcinogenic molecules?"
+ },
+ {
+  "question_id": "252",
+  "db_id": "toxicology",
+  "question": "What are the atoms that can bond with the atom that has the element lead?"
+ },
+ {
+  "question_id": "253",
+  "db_id": "toxicology",
+  "question": "List the elements of all the triple bonds."
+ },
+ {
+  "question_id": "254",
+  "db_id": "toxicology",
+  "question": "What percentage of bonds have the most common combination of atoms' elements?"
+ },
+ {
+  "question_id": "255",
+  "db_id": "toxicology",
+  "question": "What proportion of single bonds are carcinogenic? Please provide your answer as a percentage with five decimal places."
+ },
+ {
+  "question_id": "256",
+  "db_id": "toxicology",
+  "question": "Calculate the total atoms consisting of the element carbon and hydrogen."
+ },
+ {
+  "question_id": "257",
+  "db_id": "toxicology",
+  "question": "List down atom id2 for atoms with element sulfur."
+ },
+ {
+  "question_id": "258",
+  "db_id": "toxicology",
+  "question": "What are the bond type for atoms with element Tin?"
+ },
+ {
+  "question_id": "259",
+  "db_id": "toxicology",
+  "question": "How many elements are there for single bond molecules?"
+ },
+ {
+  "question_id": "260",
+  "db_id": "toxicology",
+  "question": "Calculate the total atoms with triple-bond molecules containing the element phosphorus or bromine."
+ },
+ {
+  "question_id": "261",
+  "db_id": "toxicology",
+  "question": "Write down bond id for molecules that are carcinogenic."
+ },
+ {
+  "question_id": "262",
+  "db_id": "toxicology",
+  "question": "Among the single bond molecule id, which molecules are not carcinogenic?"
+ },
+ {
+  "question_id": "263",
+  "db_id": "toxicology",
+  "question": "What is the composition of element chlorine in percentage among the single bond molecules?"
+ },
+ {
+  "question_id": "264",
+  "db_id": "toxicology",
+  "question": "What are the labels for TR000, TR001 and TR002?"
+ },
+ {
+  "question_id": "265",
+  "db_id": "toxicology",
+  "question": "List down the molecule id for non carcinogenic molecules."
+ },
+ {
+  "question_id": "266",
+  "db_id": "toxicology",
+  "question": "Calculate the total carcinogenic molecules for molecule id from TR000 to TR030."
+ },
+ {
+  "question_id": "267",
+  "db_id": "toxicology",
+  "question": "List down the bond type for molecules from molecule id TR000 to TR050."
+ },
+ {
+  "question_id": "268",
+  "db_id": "toxicology",
+  "question": "What are the elements for bond id TR001_10_11?"
+ },
+ {
+  "question_id": "269",
+  "db_id": "toxicology",
+  "question": "How many bond id have element iodine?"
+ },
+ {
+  "question_id": "270",
+  "db_id": "toxicology",
+  "question": "Among the molecules with element Calcium, are they mostly carcinogenic or non carcinogenic?"
+ },
+ {
+  "question_id": "271",
+  "db_id": "toxicology",
+  "question": "Does bond id TR001_1_8 have both element of chlorine and carbon?"
+ },
+ {
+  "question_id": "272",
+  "db_id": "toxicology",
+  "question": "List down two molecule id of triple bond non carcinogenic molecules with element carbon."
+ },
+ {
+  "question_id": "273",
+  "db_id": "toxicology",
+  "question": "What is the percentage of element chlorine in carcinogenic molecules?"
+ },
+ {
+  "question_id": "274",
+  "db_id": "toxicology",
+  "question": "List the toxicology elements associated with molecule TR001."
+ },
+ {
+  "question_id": "275",
+  "db_id": "toxicology",
+  "question": "Give me the molecule ID of the double bond type."
+ },
+ {
+  "question_id": "276",
+  "db_id": "toxicology",
+  "question": "Write down the atom IDs of the first and second atoms of triple bond type molecules."
+ },
+ {
+  "question_id": "277",
+  "db_id": "toxicology",
+  "question": "What are the toxicology elements associated with bond ID TR000_1_2?"
+ },
+ {
+  "question_id": "278",
+  "db_id": "toxicology",
+  "question": "How many of the single bond type molecules are non-carcinogenic?"
+ },
+ {
+  "question_id": "279",
+  "db_id": "toxicology",
+  "question": "What is the label for bond ID TR001_10_11?"
+ },
+ {
+  "question_id": "280",
+  "db_id": "toxicology",
+  "question": "Enumerate the bond ID of triple bond type molecules and tell me if they are carcinogenic or not."
+ },
+ {
+  "question_id": "281",
+  "db_id": "toxicology",
+  "question": "Tally the toxicology element of the 4th atom of each molecule that was carcinogenic."
+ },
+ {
+  "question_id": "282",
+  "db_id": "toxicology",
+  "question": "What is the ratio of Hydrogen elements in molecule ID TR006? List the ratio with its label."
+ },
+ {
+  "question_id": "283",
+  "db_id": "toxicology",
+  "question": "Identify whether the chemical compound that contains Calcium is carcinogenic."
+ },
+ {
+  "question_id": "284",
+  "db_id": "toxicology",
+  "question": "Determine the bond type that is formed in the chemical compound containing element Carbon."
+ },
+ {
+  "question_id": "285",
+  "db_id": "toxicology",
+  "question": "Name chemical elements that form a bond TR001_10_11."
+ },
+ {
+  "question_id": "286",
+  "db_id": "toxicology",
+  "question": "Among all chemical compounds identified in the database, what percent of compounds form a triple-bond."
+ },
+ {
+  "question_id": "287",
+  "db_id": "toxicology",
+  "question": "Among all chemical compounds that contain molecule TR047, identify the percent that form a double-bond."
+ },
+ {
+  "question_id": "288",
+  "db_id": "toxicology",
+  "question": "Identify whether the molecule that contains atom TR001_1 is carcinogenic."
+ },
+ {
+  "question_id": "289",
+  "db_id": "toxicology",
+  "question": "Is molecule TR151 carcinogenic?"
+ },
+ {
+  "question_id": "290",
+  "db_id": "toxicology",
+  "question": "Which toxic element can be found in the molecule TR151?"
+ },
+ {
+  "question_id": "291",
+  "db_id": "toxicology",
+  "question": "How many chemical compounds in the database are identified as carcinogenic."
+ },
+ {
+  "question_id": "292",
+  "db_id": "toxicology",
+  "question": "Identify the atoms belong to the molecule with ID between TR010 to TR050 that contain the element carbon."
+ },
+ {
+  "question_id": "293",
+  "db_id": "toxicology",
+  "question": "How many atoms belong to the molecule labeled with carcinogenic compounds?"
+ },
+ {
+  "question_id": "294",
+  "db_id": "toxicology",
+  "question": "Which bond ids are double-bond with carcinogenic compound?"
+ },
+ {
+  "question_id": "295",
+  "db_id": "toxicology",
+  "question": "How many atoms belong to the molecule that element is hydrogen and labeled with carcinogenic compound?"
+ },
+ {
+  "question_id": "296",
+  "db_id": "toxicology",
+  "question": "Indicate the molecule id is belonging to the TR000_1_2 bond that has the first atom named TR000_1."
+ },
+ {
+  "question_id": "297",
+  "db_id": "toxicology",
+  "question": "Which atoms contain element carbon and are part of non-carcinogenic compounds?"
+ },
+ {
+  "question_id": "298",
+  "db_id": "toxicology",
+  "question": "Calculate the percentage of molecules containing carcinogenic compounds that element is hydrogen."
+ },
+ {
+  "question_id": "299",
+  "db_id": "toxicology",
+  "question": "Is molecule TR124 carcinogenic?"
+ },
+ {
+  "question_id": "300",
+  "db_id": "toxicology",
+  "question": "What atoms comprise TR186?"
+ },
+ {
+  "question_id": "301",
+  "db_id": "toxicology",
+  "question": "What is the bond type of TR007_4_19?"
+ },
+ {
+  "question_id": "302",
+  "db_id": "toxicology",
+  "question": "Name the elements that comprise the atoms of bond TR001_2_4."
+ },
+ {
+  "question_id": "303",
+  "db_id": "toxicology",
+  "question": "How many double bonds does TR006 have and is it carcinogenic?"
+ },
+ {
+  "question_id": "304",
+  "db_id": "toxicology",
+  "question": "List all carcinogenic molecules and their elements."
+ },
+ {
+  "question_id": "305",
+  "db_id": "toxicology",
+  "question": "Name all bonds with single bond types and what atoms are connected to the molecules."
+ },
+ {
+  "question_id": "306",
+  "db_id": "toxicology",
+  "question": "Which molecules have triple bonds and list all the elements they contain."
+ },
+ {
+  "question_id": "307",
+  "db_id": "toxicology",
+  "question": "Name the atoms' elements that form bond TR000_2_3."
+ },
+ {
+  "question_id": "308",
+  "db_id": "toxicology",
+  "question": "How many bonds are created by bonding atoms with chlorine element?"
+ },
+ {
+  "question_id": "309",
+  "db_id": "toxicology",
+  "question": "List out the atom id that belongs to the TR346 molecule and how many bond type can be created by this molecule?"
+ },
+ {
+  "question_id": "310",
+  "db_id": "toxicology",
+  "question": "How many molecules have a double bond type and among these molecule, how many are labeled as carcinogenic compound?"
+ },
+ {
+  "question_id": "311",
+  "db_id": "toxicology",
+  "question": "How many molecules without sulphur element is not having double bond?"
+ },
+ {
+  "question_id": "312",
+  "db_id": "toxicology",
+  "question": "What is the carcinogenic label for bond TR001_2_4?"
+ },
+ {
+  "question_id": "313",
+  "db_id": "toxicology",
+  "question": "How many atoms belong to molecule id TR001?"
+ },
+ {
+  "question_id": "314",
+  "db_id": "toxicology",
+  "question": "How many single bonds are there in the list?"
+ },
+ {
+  "question_id": "315",
+  "db_id": "toxicology",
+  "question": "Among the molecules which contain \"cl\" element, which of them are carcinogenic?"
+ },
+ {
+  "question_id": "316",
+  "db_id": "toxicology",
+  "question": "Among the molecules which contain \"c\" element, which of them are not carcinogenic?"
+ },
+ {
+  "question_id": "317",
+  "db_id": "toxicology",
+  "question": "Calculate the percentage of carcinogenic molecules which contain the Chlorine element."
+ },
+ {
+  "question_id": "318",
+  "db_id": "toxicology",
+  "question": "What is the molecule id of bond id TR001_1_7?"
+ },
+ {
+  "question_id": "319",
+  "db_id": "toxicology",
+  "question": "How many elements are contained in bond_id TR001_3_4?"
+ },
+ {
+  "question_id": "320",
+  "db_id": "toxicology",
+  "question": "What is the type of the bond which is presenting the connection between two atoms TR000_1 and TR000_2?"
+ },
+ {
+  "question_id": "321",
+  "db_id": "toxicology",
+  "question": "What is the molecule of atom id \"TR000_2\" and atom id 2 \"TR000_4\"?"
+ },
+ {
+  "question_id": "322",
+  "db_id": "toxicology",
+  "question": "What is the element of toxicology for the atom with the ID of TR000_1?"
+ },
+ {
+  "question_id": "323",
+  "db_id": "toxicology",
+  "question": "Is molecule TR000 is carcinogenic or not?"
+ },
+ {
+  "question_id": "324",
+  "db_id": "toxicology",
+  "question": "Find the percentage of atoms with single bond."
+ },
+ {
+  "question_id": "325",
+  "db_id": "toxicology",
+  "question": "How many carcinogenic molecules that consisted of Nitrogen?"
+ },
+ {
+  "question_id": "326",
+  "db_id": "toxicology",
+  "question": "Which molecule consisted of Sulphur atom with double bond?"
+ },
+ {
+  "question_id": "327",
+  "db_id": "toxicology",
+  "question": "Which non-carcinogenic molecules consisted more than 5 atoms?"
+ },
+ {
+  "question_id": "328",
+  "db_id": "toxicology",
+  "question": "List all the elements with double bond, consisted in molecule TR024."
+ },
+ {
+  "question_id": "329",
+  "db_id": "toxicology",
+  "question": "Which carcinogenic molecule have the highest number of atoms consisted in it?"
+ },
+ {
+  "question_id": "330",
+  "db_id": "toxicology",
+  "question": "Calculate the percentage of carcinogenic molecules with triple bonded Hidrogen atoms."
+ },
+ {
+  "question_id": "331",
+  "db_id": "toxicology",
+  "question": "How many of the molecules are carcinogenic?"
+ },
+ {
+  "question_id": "332",
+  "db_id": "toxicology",
+  "question": "Among the molecules between TR004 to TR010, how many of them has single bonds?"
+ },
+ {
+  "question_id": "333",
+  "db_id": "toxicology",
+  "question": "In the molecule TR008, how many carbons are present?"
+ },
+ {
+  "question_id": "334",
+  "db_id": "toxicology",
+  "question": "What is the element with the atom ID of TR004_7 in molecule that is not carcinogenic?"
+ },
+ {
+  "question_id": "335",
+  "db_id": "toxicology",
+  "question": "What is the total number of molecules with double bonded oxygen?"
+ },
+ {
+  "question_id": "336",
+  "db_id": "toxicology",
+  "question": "in molecules with triple bonds, how many of them are not carcinogenic?"
+ },
+ {
+  "question_id": "337",
+  "db_id": "toxicology",
+  "question": "List the element and bond type included in the molecule with molecule ID of TR002."
+ },
+ {
+  "question_id": "338",
+  "db_id": "toxicology",
+  "question": "What is the atom ID of double bonded carbon in TR012 molecule?"
+ },
+ {
+  "question_id": "339",
+  "db_id": "toxicology",
+  "question": "List the atom ID of the carcinogenic molecule that contains oxygen?"
+ }
+]

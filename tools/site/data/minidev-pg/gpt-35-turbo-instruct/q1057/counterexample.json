@@ -1,0 +1,147 @@
+{
+  "format": "attestql/audit/counterexample/2",
+  "question": {
+    "question_id": "1057",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "Calculate the average home team goal in the 2010/2011 season in the country of Poland.",
+    "evidence_text": "average home team goal = AVG(home_team_goal)= SUM(home_team_goal) / COUNT(DISTINCT Match.id) WHERE name = 'Poland' and season = '2010/2011';"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "sources": {
+    "gold": {
+      "path": "data/questions/mini_dev_postgresql.json",
+      "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+      "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+      "date": "2024-06-19"
+    },
+    "second": {
+      "path": "data/preds-pg/predict_mini_dev_gpt-35-turbo-instruct_postgresql.json",
+      "digest": "sha256:df1edf6aac3c01cf93041bcd7b60378efe6f7359f19add6d2af2345bef092bf9",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo-instruct_postgresql.json",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "projection_names_differ": {
+    "gold": [
+      "?column?"
+    ],
+    "second": [
+      "avg"
+    ],
+    "reading": "The two statements name their result columns differently. A projection is compared by position and declared type, so these names did not decide the verdict. They are part of the canonical rendering each result is hashed under, so the two result hashes differ with them."
+  },
+  "bird_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 returns them, numeric as Decimal",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 1,
+    "second_rows": 1,
+    "gold_distinct_rows": 1,
+    "second_distinct_rows": 1
+  },
+  "test_suite_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "result_eq: equal row counts and equal column counts, each row unordered as a quick rejection, then the two equal as a list when the gold text holds ORDER BY and as a multiset otherwise, under some permutation of the columns; DISTINCT is not stripped and re-executed, and the cells are PostgreSQL's as psycopg2 returns them",
+    "source": "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/48cb78ecf7f610620206283846c76751b18a1326/exec_eval.py",
+    "order_matters": false,
+    "gold_rows": 1,
+    "second_rows": 1,
+    "gold_columns": 1,
+    "second_columns": 1
+  },
+  "mechanism": {
+    "class": "type",
+    "gold_types": [
+      "float8"
+    ],
+    "second_types": [
+      "numeric"
+    ],
+    "multiset_equal": true,
+    "set_equal": true,
+    "order_equal": true,
+    "shorter_result_is_a_prefix": false,
+    "reading": "The class states what makes these two results unequal under this rule, read off the two results and nothing else. It does not state which of the two statements is wrong."
+  },
+  "gold": {
+    "executed_sql": "SELECT CAST(SUM(t2.home_team_goal) AS REAL) / NULLIF(COUNT(t2.id), 0) FROM Country AS t1 INNER JOIN Match AS t2 ON t1.id = t2.country_id WHERE t1.name = 'Poland' AND t2.season = '2010/2011'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "?column?",
+          "declared_type": "float8"
+        }
+      ],
+      "row_count": 1,
+      "truncated": false,
+      "rows_shown": 1,
+      "rows": [
+        [
+          {
+            "type": "dec",
+            "value": "1.5041666666666667"
+          }
+        ]
+      ],
+      "result_hash": "sha256:feb548ca558659d70baf9aab83e665019608eafdd426be117d842def12ad86db"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT  AVG(home_team_goal)\nFROM Match\nWHERE country_id = (SELECT id FROM Country WHERE name = 'Poland')\nAND season = '2010/2011'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "avg",
+          "declared_type": "numeric"
+        }
+      ],
+      "row_count": 1,
+      "truncated": false,
+      "rows_shown": 1,
+      "rows": [
+        [
+          {
+            "type": "dec",
+            "value": "1.5041666666666667"
+          }
+        ]
+      ],
+      "result_hash": "sha256:29acb50a435e876c0e06ee6b02070d50d2be53f2966d5c41412838239a3e97e0"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [],
+    "in_second_not_in_gold_total": 0,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:feb548ca558659d70baf9aab83e665019608eafdd426be117d842def12ad86db",
+    "second": "sha256:29acb50a435e876c0e06ee6b02070d50d2be53f2966d5c41412838239a3e97e0"
+  },
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "fixture": {
+    "schema_digest": "sha256:c9e88e0e72a41fa80b1d818c96fdc678cfa6a8e934dd4aa0e4297514d1da88d9",
+    "row_counts": {
+      "public.country": 11,
+      "public.match": 25979
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "run_id": "audit-b6efa569-00a2-4421-b91b-09d107e2dac3"
+}

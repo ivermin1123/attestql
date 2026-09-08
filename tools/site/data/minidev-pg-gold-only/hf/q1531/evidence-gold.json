@@ -1,0 +1,114 @@
+{
+  "question_as_asked": "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?",
+  "question": {
+    "question_id": "1531",
+    "question_set": "mini_dev_pg-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-08)",
+    "question_text": "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?",
+    "evidence_text": "average price per single item = Total(price) / Total(amount)"
+  },
+  "question_set_version": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+  "statement_source": {
+    "path": "data/questions/mini_dev_pg-00000-of-00001.json",
+    "digest": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-08)",
+    "date": "2026-01-18T08:44:25Z"
+  },
+  "executed_sql": "SELECT T2.CustomerID, SUM(T2.Price / NULLIF(T2.Amount, 0)), T1.Currency FROM customers AS T1 INNER JOIN transactions_1k AS T2 ON T1.CustomerID = T2.CustomerID WHERE T2.CustomerID = (SELECT CustomerID FROM yearmonth ORDER BY Consumption DESC NULLS LAST LIMIT 1) GROUP BY T2.CustomerID, T1.Currency",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "customerid",
+        "declared_type": "int8"
+      },
+      {
+        "name": "sum",
+        "declared_type": "float8"
+      },
+      {
+        "name": "currency",
+        "declared_type": "text"
+      }
+    ],
+    "row_count": 1,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "int",
+          "value": 12459
+        },
+        {
+          "type": "dec",
+          "value": "203.85607635517042"
+        },
+        {
+          "type": "str",
+          "value": "CZK"
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 30000
+  },
+  "row_count": 1,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:108b7a82d641dfa111970327d665bfeb00d88f1d7d92e39ae60e24609e539faf",
+    "row_counts": {
+      "public.customers": 32461,
+      "public.transactions_1k": 1000,
+      "public.yearmonth": 383282
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-08T05:18:53.188748+00:00",
+  "executed_at": "2026-09-08T05:19:04.683522+00:00",
+  "run_id": "audit-ed50a84a-c286-4cbb-ac89-ab3111058ad5",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:8fef12f188ec1b51bd959b2f141e478d9cf5b3492dc09e7852a39fc8f874e72b",
+  "record_hash": "sha256:16c92c1f9e927f5d87f10c6a1358dc4fcb925605dae99969ec29514255acae4c"
+}
