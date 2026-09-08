@@ -1,5 +1,13 @@
 # Phase 3: the site build, landing and method pages, a preview deployment
 
+Status: DONE 2026-09-08. Four commits on `ivermin1123/web-ui` (`6e0a896`, `dbf3f6a`, `0b770ef`,
+`daaf66f`), `just check` green at each. The build makes 55 files and 524,181 bytes in under a
+second, the preview serves it at <https://attestql-ui.pages.dev>, and attestql.com is byte
+identical to `site/index.html`. Report, with the browser measurements and the screenshots:
+`plans/reports/cook-260908-0932-web-ui-phase-3-site.md`. What is left is phase 4's data, the
+keyboard stop on a wide table, and the owner's switch; steps 3 and 4 below are done from one
+network, which the report states.
+
 ## Context
 
 attestql.com is live (main session, 2026-09-07 18:05): Cloudflare Pages project `attestql` under
