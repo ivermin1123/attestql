@@ -15,10 +15,13 @@ second connection that the audited one cannot see.
 
 from __future__ import annotations
 
+import gc
 import json
 import sqlite3
+import tempfile
 import time
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Generator, Sequence
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -27,6 +30,7 @@ from typing import Any, cast
 import pytest
 
 from attestql.audit.backend import (
+    READ_THROUGH_PRIVATE_COPY,
     BackendRefused,
     ReadBackDrift,
     StatementTimedOut,
@@ -929,3 +933,80 @@ def test_the_gold_and_its_correction_land_on_two_drivers_over_this_file(
 
     assert _rows(backend, gold) == (("Norwegian",),), "'93.175' is the largest string"
     assert _rows(backend, corrected) == (("Peruvian",),), "259.870 is the largest number"
+
+
+# a file in WAL mode on read-only media
+
+
+WAL_ROWS = "CREATE TABLE t (a INTEGER); INSERT INTO t VALUES (1), (2);"
+
+
+def _wal_file(path: Path) -> Path:
+    """A database whose own header says WAL, with no sidecar left beside it.
+
+    Which is what BIRD's `card_games` ships as: closing the last connection checkpoints the
+    log and removes the two sidecars, and the mode stays in the header, so the next reader
+    has to create them again before it can read a row.
+    """
+    connection = sqlite3.connect(path)
+    with connection:
+        connection.execute("PRAGMA journal_mode=WAL")
+        connection.executescript(WAL_ROWS)
+    connection.close()
+    assert path.read_bytes()[18:20] == b"\x02\x02", "the header should say WAL"
+    return path
+
+
+@contextmanager
+def _read_only(directory: Path) -> Generator[Path]:
+    """That directory with nothing writable in it, put back so the test can clean up."""
+    modes = {entry: entry.stat().st_mode for entry in directory.iterdir()}
+    for entry in modes:
+        entry.chmod(0o444)
+    directory.chmod(0o555)
+    try:
+        yield directory
+    finally:
+        directory.chmod(0o755)
+        for entry, mode in modes.items():
+            entry.chmod(mode)
+
+
+def test_a_wal_file_on_read_only_media_is_read_through_a_private_copy(tmp_path: Path) -> None:
+    home = tmp_path / "read-only"
+    home.mkdir()
+    path = _wal_file(home / "wal.sqlite")
+    with _read_only(home):
+        backend = SqliteBackend.connect(str(path))
+        recorded = backend.session_settings().recorded
+        copy = Path(recorded[READ_THROUGH_PRIVATE_COPY])
+
+        assert _rows(backend, "SELECT a FROM t ORDER BY a") == ((1,), (2,))
+        assert copy.is_file() and copy != path
+        assert copy.read_bytes() == path.read_bytes(), "the copy is the file, byte for byte"
+        assert str(path) in backend.identity(), "the identity names what was audited"
+        assert str(copy) not in backend.identity()
+
+        del backend
+        gc.collect()
+        assert not copy.exists() and not copy.parent.exists(), "the copy goes with the run"
+
+
+def test_a_file_that_needs_no_copy_is_read_where_it_is(tmp_path: Path) -> None:
+    home = tmp_path / "read-only-rollback"
+    home.mkdir()
+    path = _build(home / "rollback.sqlite", WAL_ROWS)
+    with _read_only(home):
+        backend = SqliteBackend.connect(str(path))
+        assert _rows(backend, "SELECT a FROM t ORDER BY a") == ((1,), (2,))
+        assert READ_THROUGH_PRIVATE_COPY not in backend.session_settings().recorded
+
+
+def test_a_file_that_is_not_a_database_is_refused_and_never_copied(tmp_path: Path) -> None:
+    """The copy answers one refusal and not every one: a file SQLite cannot read at all is
+    a run that cannot start, and copying it would only fail again somewhere else."""
+    path = tmp_path / "prose.sqlite"
+    path.write_text("this is not a database", encoding="utf-8")
+    with pytest.raises(BackendRefused, match="not a database"):
+        SqliteBackend.connect(str(path))
+    assert not list(Path(tempfile.gettempdir()).glob("attestql-sqlite-*/prose.sqlite"))

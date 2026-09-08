@@ -27,6 +27,15 @@ the record is told the column was.
 PostgreSQL backend reads its ``SET LOCAL``s back, and drift is refused the same way. Both
 refuse a write with SQLite's own ``attempt to write a readonly database``.
 
+**A file in WAL mode on read-only media is read through a private copy.** SQLite creates a
+``-shm`` and a ``-wal`` beside a database whose header says WAL, even to read it, so a directory
+that cannot be written to refuses the open with ``attempt to write a readonly database``. Rather
+than tell SQLite the file is immutable, which is a promise a run cannot check, the whole file and
+whatever sidecars it has are copied into a private directory and the copy is opened. The original
+is what the identity, the size and the content signal are read from, because the original is what
+was audited; the copy is named in the session settings under ``read_through_private_copy`` and goes
+when the run does. It costs what the file weighs, which is 262 MB for BIRD's ``card_games``.
+
 **The shuffled copies live in TEMP, on a connection of their own.** SQLite resolves an
 unqualified name in ``temp`` before ``main``, so a copy named like the table shadows it for
 the gold's own text, which is what the PostgreSQL scratch schema on the search path
@@ -50,8 +59,11 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shutil
 import sqlite3
+import tempfile
 import time
+import weakref
 from collections.abc import Callable, Generator, Iterable, Mapping, Sequence
 from contextlib import contextmanager, suppress
 from decimal import Decimal
@@ -60,6 +72,7 @@ from typing import Any
 from urllib.parse import quote
 
 from attestql.audit.backend import (
+    READ_THROUGH_PRIVATE_COPY,
     BackendRefused,
     PlannerStatistics,
     ReadBackDrift,
@@ -159,6 +172,15 @@ SQLite has no statement timeout to set and read back, so the bound is enforced h
 progress handler is asked this often and aborts the statement once the deadline has passed.
 Small enough that a runaway statement is stopped promptly and large enough that the check is
 not what the statement spends its time on."""
+
+WAL_IN_THE_HEADER = 2
+"""What bytes 18 and 19 of a SQLite file hold when the file is in WAL mode."""
+
+PRIVATE_COPY_PREFIX = "attestql-sqlite-"
+"""The prefix of the private directory a WAL file on read-only media is copied into."""
+
+CANNOT_WRITE = ("attempt to write a readonly database", "unable to open database file")
+"""What SQLite says when it cannot create the sidecars a WAL file needs to be read."""
 
 RECORDED_PRAGMAS: tuple[str, ...] = (
     "encoding",
@@ -368,9 +390,17 @@ class SqliteBackend:
     managing one underneath would hold a read lock across the whole run.
     """
 
-    def __init__(self, connection: sqlite3.Connection, *, path: Path) -> None:
+    def __init__(
+        self, connection: sqlite3.Connection, *, path: Path, copy: Path | None = None
+    ) -> None:
         self._connection = connection
         self._path = path
+        self._file = path if copy is None else copy
+        self._copy = copy
+        if copy is not None:
+            # The run holds the only reference to the copy, so it goes when the run does,
+            # at the end of the process as well as under an exception that unwinds past here.
+            weakref.finalize(self, shutil.rmtree, str(copy.parent), ignore_errors=True)
         self._shuffle_connection: sqlite3.Connection | None = None
         self._shuffled: ShuffledCopies | None = None
         self._identity: str | None = None
@@ -391,7 +421,13 @@ class SqliteBackend:
         if not path.is_file():
             raise BackendRefused("connect", f"there is no SQLite file at {path}")
         found = path.resolve()
-        return cls(_open(found, step="connect"), path=found)
+        try:
+            return cls(_opened_and_read(found), path=found)
+        except BackendRefused as refused:
+            if not _needs_a_private_copy(refused, found):
+                raise
+        copy = _private_copy(found)
+        return cls(_opened_and_read(copy), path=found, copy=copy)
 
     @property
     def scratch(self) -> str:
@@ -441,6 +477,8 @@ class SqliteBackend:
                 "collation_list": self._pragma_list("collation_list", column=1),
                 "case_sensitive_like": str(self._one(CASE_SENSITIVE_LIKE, step="session")[0]),
             }
+            if self._copy is not None:
+                recorded[READ_THROUGH_PRIVATE_COPY] = str(self._copy)
             self._session_settings = SessionSettings(
                 engine=ENGINE_SQLITE,
                 time_zone=None,
@@ -820,7 +858,7 @@ class SqliteBackend:
         every execution then proves.
         """
         if self._shuffle_connection is None:
-            self._shuffle_connection = _open(self._path, step="prepare_shuffled_copies")
+            self._shuffle_connection = _open(self._file, step="prepare_shuffled_copies")
         _run(self._shuffle_connection, f"{QUERY_ONLY} = 0", step="prepare_shuffled_copies")
         return self._shuffle_connection
 
@@ -883,6 +921,58 @@ class SqliteBackend:
         if not rows:
             raise BackendRefused(step, "the file returned no row for a question it always answers")
         return rows[0]
+
+
+def _opened_and_read(path: Path, *, step: str = "connect") -> sqlite3.Connection:
+    """One read-only connection that has read from the file, not one that only holds it.
+
+    ``sqlite3.connect`` opens nothing: the driver reaches the file at the first statement,
+    and a file this process cannot read is therefore a connection that succeeds and a
+    question that fails. The schema is read here so that a caller which asked to connect is
+    told at that point, and so that the one refusal a WAL file on read-only media gives is
+    raised where it can still be answered with a copy.
+    """
+    connection = _open(path, step=step)
+    try:
+        _all(connection, "SELECT 1 FROM sqlite_master LIMIT 1", step=step)
+    except BackendRefused:
+        with suppress(sqlite3.Error):
+            connection.close()
+        raise
+    return connection
+
+
+def _needs_a_private_copy(refused: BackendRefused, path: Path) -> bool:
+    """Whether that refusal is SQLite asking for the sidecars a WAL file is read through.
+
+    Both halves are required: the message SQLite gives when it cannot write beside the file,
+    and the file's own header saying it is in WAL mode. A refusal for any other reason, and a
+    file that is not in WAL mode, are the file this run cannot read.
+    """
+    if not any(said in str(refused) for said in CANNOT_WRITE):
+        return False
+    try:
+        with path.open("rb") as opened:
+            header = opened.read(20)
+    except OSError:
+        return False
+    return len(header) >= 20 and WAL_IN_THE_HEADER in (header[18], header[19])
+
+
+def _private_copy(path: Path) -> Path:
+    """That file and its sidecars in a private directory, as the bytes they are.
+
+    ``copyfile`` and not ``copy2``: the copy is read and thrown away, and the mode of the
+    original is what made it unreadable in the first place.
+    """
+    directory = Path(tempfile.mkdtemp(prefix=PRIVATE_COPY_PREFIX))
+    copy = directory / path.name
+    shutil.copyfile(path, copy)
+    for suffix in ("-wal", "-shm"):
+        sidecar = path.with_name(path.name + suffix)
+        if sidecar.is_file():
+            shutil.copyfile(sidecar, copy.with_name(copy.name + suffix))
+    return copy
 
 
 def _open(path: Path, *, step: str) -> sqlite3.Connection:
