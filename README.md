@@ -1,5 +1,10 @@
 # AttestQL
 
+[![PyPI version](https://img.shields.io/pypi/v/attestql.svg)](https://pypi.org/project/attestql/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/attestql.svg)](https://pypi.org/project/attestql/)
+[![Licence](https://img.shields.io/pypi/l/attestql.svg)](LICENSE)
+[![CI](https://github.com/ivermin1123/attestql/actions/workflows/ci.yml/badge.svg)](https://github.com/ivermin1123/attestql/actions/workflows/ci.yml)
+
 You have a text-to-SQL prediction file and a benchmark that scored it. Run one command and get,
 per question, whether the prediction and the gold disagree on the shipped data, the rows that
 differ, and what the benchmark's own scorer would have said: for a question scored 0, the rows
@@ -108,6 +113,16 @@ replaces the old gold. The 25 fires on golds BIRD did not touch were read by han
 that do not answer their question on this data, one is harmless, one is the tool's own rule
 ([report](plans/reports/measurement-260907-1435-bird-dev-sqlite.md)).
 
+## Where the runs are published
+
+[attestql.com](https://attestql.com) is this repository's own site, and it publishes the runs
+behind the three measurements above. Each run has its own page with what it was made of and what
+it found, and under it a page for every question the run's published selection carries: the two
+statements, the rows they differ in, both evidence records and what each probe said. It is built
+by `tools/site/build.py` out of the run directories committed under `tools/site/data/`, through
+the same `attestql report` a reader runs locally, so a page there is a page you can make again;
+`.github/workflows/site.yml` rebuilds and deploys it on every push to `main`.
+
 ## What was reported upstream
 
 Six reports, filed under the owner's own GitHub and Hugging Face identity, each with its
@@ -132,6 +147,9 @@ counterexample. The replies, as of 2026-09-07:
   precise on Mini-Dev and is off by default.
 - It proves nothing about correctness, security, or production use. It runs as the role you give
   it; give it a read-only one.
+- It offers no Python API. The `attestql` command, its flags, its output and the JSON it writes
+  are this project's only public surface, so the modules under `attestql.` are internal and their
+  signatures can change in any 0.x release without notice.
 
 ## How to check rather than believe
 
@@ -146,6 +164,15 @@ The history is short and stated: this repository was developed privately from 20
 different product direction; it was reoriented on 2026-09-02 by ADR-0013 to the problem above, and
 the public history starts after that. The code was written with AI assistance under the owner's
 review, and the gate, not the author, is what vouches for it.
+
+## Running the gate
+
+`just check` is the whole of it, and it is what a change has to be green under: ruff, pyright
+strict, the three repository checks, markdownlint and cspell over the documents, pytest, and then
+both audit sandboxes, the PostgreSQL one in Docker on port 5497 and the SQLite one on a file. It
+needs uv, `just` and Node.js, and Docker for that one recipe.
+[docs/developer-environment.md](docs/developer-environment.md) is the document that owns all of
+it: what each tool is there for, what the sandboxes do, and how tags and releases are cut.
 
 ## Licence
 

@@ -9,6 +9,15 @@ the contract: a cohort window is never a trend's lower bound, Q15 now declares
 `trend_lower_bound_phrase="the last 12 complete months"` beside the cohort window it keeps, and
 the rule, that the bound is read from `trend_lower_bound_phrase` only and must decompose at the
 trend's grain, is ADR-0011 (in the private history before publication)'s.
+**Amended:** 2026-09-09, recording what ADR-0013 did on 2026-09-02. That record leaves this one
+standing, and says so in its point 7, but it partly supersedes it: the evidence record was re-cut
+for a benchmark comparison and the evaluation clock went with the product path it served, so the
+sentence under Decision that says the clock is recorded in every evidence record, and the second
+bullet under Consequences, are left standing as a record and no longer describe the contract.
+`src/attestql/evidence/record.py` states the twenty-one fields that replaced the old set and holds
+no clock among them; what a record now states about the data it read is `fixture` and
+`data_as_of`. `contract/clock.py` is still here and still what this record decided, off the
+audit's path by ADR-0013 point 7.
 
 ## Context
 
