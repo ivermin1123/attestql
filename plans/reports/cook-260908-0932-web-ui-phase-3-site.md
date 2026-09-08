@@ -139,15 +139,13 @@ with no `pip install attestql` line is refused rather than a line being typed.
 0.7 % of the 8,000 files, 1.3 % of the 40 MB, and the largest page is 31 KB against the 2 MB
 bound. Plan criterion 4's two minutes is not close.
 
-**Determinism.** Two builds into the same output directory: 25 of the files byte identical; 14
-differ only in the demo run's id and its timestamps; 16 differ also in a hash those two feed
-(`record_hash` is taken over a document that holds the run id and the executed-at) or in the
-audit's own `elapsed_seconds`. **Nothing else differs**, measured by masking the run id and the
-timestamps and diffing what was left. Two builds into two *different* output directories differ
-additionally in the recorded backend identity, which is `SQLite <version> | file=<absolute path> |
-size=<bytes>` and therefore carries the scratch directory's own path; the build's own `--out` is
-fixed at `build/site`, so on one machine the path is fixed too. It is the audit's recorded value
-and this phase does not change what a record states.
+**Determinism**, re-measured after the second review moved the scratch directory. Two builds into
+two *different* output directories: 26 of the files byte identical; 13 differ only in the demo
+run's id and its timestamps; 17 differ also in a hash those two feed (`record_hash` is taken over a
+document that holds the run id and the executed-at) or in the audit's own `elapsed_seconds`.
+**Nothing else differs**, measured by masking the run id and the timestamps and diffing what was
+left. The recorded backend identity is now the same in both, because the demo is audited at a fixed
+path; before, it carried the output directory's own location and differed with every `--out`.
 
 **In the browser.** Chromium 1228 through Playwright 1.58.0, five pages (the landing, the method
 page, a run page, a question page, a filter page) at 360, 768 and 1280 in both themes, thirty
@@ -274,6 +272,42 @@ Two findings were recorded and not acted on:
   `banner` threading is nine call sites that a future one could omit. Both are maintainability,
   not defects; the second is bounded by `StrictUndefined`, which raises on a template reading a
   name the model does not have.
+
+## Second review, 2026-09-08
+
+The coordinator reviewed the branch on Fable, with its own measurements in stage 1 and an
+independent stage 2 reviewer. The traversal guard held against nine adversarial inputs, no Critical
+defect was found, and six things were. All six are fixed; each has a test.
+
+**Important: every page published the builder's own home directory.** The SQLite backend records
+the absolute path of the file it opened, and that path is the "server" fact on the run page and
+both "backend" facts on every question page. The demo was audited in `out.parent /
+f"{out.name}-sandbox"`, so the pages read
+`SQLite 3.53.4 | file=/Users/<name>/orca/workspaces/attestql/web-ui/build/site-sandbox/demo/fixture.sqlite`,
+and the preview was serving exactly that, confirmed with `curl` before the repair. The record is
+the audit's and is not edited; what the build controls is where the demo runs. It runs at
+`/tmp/attestql-site-sandbox` now, cleared and marked like the output directory, and chosen for what
+the record will say rather than for where it is convenient: it names no user, no repository and no
+build location. Every page states
+`SQLite 3.53.4 | file=/private/tmp/attestql-site-sandbox/demo/fixture.sqlite | size=69632`, which is
+macOS's spelling of that path, and a test refuses any built page holding `str(REPOSITORY)`,
+`str(Path.home())` or `/Users/`.
+
+The five smaller ones:
+
+| Finding | What was done |
+| --- | --- |
+| the method page carried `compare_r_set`'s second paragraph, an owner decision note of a particular date about a rounding step | a rule is its docstring's opening paragraph; the page is asserted to hold no "Owner decision" |
+| a benchmark or run directory name under `data/` reached the links of three templates unconstrained, and a symlink there was followed | the renderer's own `FILTER_SEGMENT`, and a symlink refused; `data/` is a maintainer's, so a bad name is refused and named rather than skipped |
+| a negative count was accepted, and two negatives satisfy the bar's part-no-larger-than-whole check and are drawn | `_integer` refuses a number below zero |
+| the install line was any README line holding `pip install attestql`, which a sentence of prose above the block satisfies | a line that begins with one of the two commands; the nav parser stops at the first `nav` and refuses a link with no words on it |
+| `tools/site` on the two paths makes `import build` the script under pytest and pyright, and the git-ignored `build/` directory under a plain `python` | a comment beside both entries saying so, and that the test asserts which module it imported |
+
+**Verified on the redeployed preview** (deployment `79f77b57`, the third):
+`https://attestql-ui.pages.dev/runs/sandbox/demo/q879/` answers 200 at 31,132 bytes and holds no
+`/Users/`; it states the neutral identity above; `/method/` holds no "Owner decision"; and
+attestql.com is still byte identical to `site/index.html`. `just check` green at 1,059 passed and
+33 skipped.
 
 ## Decisions taken, and the ones a reviewer should look at
 

@@ -72,6 +72,10 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# `tools/site` is on the path so that `tools/site/build.py` imports as `build`. Beware: a
+# plain `python` started in the repository root resolves that name to the git-ignored `build/`
+# output directory instead, as an empty namespace package, so
+# tests/test_site_builds_from_the_sandbox.py asserts which module it got.
 pythonpath = ["src", "tools", "tools/site"]
 markers = [
     "sandbox: needs the audit sandbox (tools/audit-sandbox/run.sh); skipped when ATTESTQL_AUDIT_SANDBOX is absent",
@@ -106,4 +110,6 @@ ignore = ["E501"]
 typeCheckingMode = "strict"
 pythonVersion = "3.11"
 include = ["src", "tests", "tools"]
+# `tools/site` for the same reason the pytest `pythonpath` above carries it, and with the
+# same ambiguity against the git-ignored `build/` directory, which the test guards.
 extraPaths = ["src", "tools", "tools/site"]
