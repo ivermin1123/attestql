@@ -631,6 +631,20 @@ def test_a_benchmark_whose_runs_are_under_a_group_publishes_them_a_level_deeper(
     assert "12" in "".join(group.text), "six questions in each of the two runs, added up"
 
 
+def test_the_static_directory_is_served_revalidated_on_every_load(built: Path) -> None:
+    """A page is fresh on every load; its stylesheet has to be as fresh, or the two disagree.
+
+    Pages keeps `static/` for four hours by default and a page for none, so a deploy that
+    changed a rule left readers with the new page and the old stylesheet until the hour was
+    up. The site tells Pages to revalidate the static directory on every load, as it does a
+    page.
+    """
+    stated = (built / site.HEADERS_FILE).read_text(encoding="utf-8")
+
+    assert stated.startswith("/static/*\n"), stated
+    assert "max-age=0, must-revalidate" in stated
+
+
 def test_every_page_takes_its_stylesheet_from_the_one_static_directory_of_the_site(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, built: Path
 ) -> None:

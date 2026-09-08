@@ -124,6 +124,15 @@ CREDITED_COUNT = "credited by BIRD and NOT_EQUAL"
 a group's line. A gold-only question was audited without a second statement and an errored one
 never reached the comparison, so neither is compared; the three that are, are these."""
 
+HEADERS_FILE = "_headers"
+HEADERS = "/static/*\n  Cache-Control: public, max-age=0, must-revalidate\n"
+"""What Cloudflare Pages is told about the stylesheet, the script and the fonts: revalidate on
+every load, as it already does for a page. A page was served fresh while `static/` was kept for
+four hours by default, so for four hours after a deploy a new page could arrive with the old
+stylesheet, which is what a reader saw on 2026-09-08. A conditional request answers 304 when
+nothing changed, so this costs one round trip and never pairs a page with a rule it was not
+written for."""
+
 MAX_FILES = 8_000
 MAX_BYTES = 40 * 1024 * 1024
 MAX_PAGE_BYTES = 2 * 1024 * 1024
@@ -499,6 +508,7 @@ def build(out: Path) -> Built:
         )
         for static in sorted(path for path in STATIC.rglob("*") if path.is_file()):
             _copy(static, out / STATIC_DIRECTORY / static.relative_to(STATIC))
+        (out / HEADERS_FILE).write_text(HEADERS, encoding="utf-8")
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
     return _measure(out, time.perf_counter() - started)
