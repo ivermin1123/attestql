@@ -482,14 +482,26 @@ def _hand_rows(classification: Classification | None, run: Run) -> Mapping[str, 
         rows = [
             row for row in _list(classification.document, "rows") if _text(row, "db") == run.name
         ]
-    return {
-        _text(row, "question_id"): {
+    found: dict[str, Mapping[str, str]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        question_id = _text(row, "question_id")
+        read = {
             "class": _text(row, "class"),
             "reason": _text(row, classification.reason_field),
         }
-        for row in rows
-        if isinstance(row, dict)
-    }
+        # Two rows for one question is a file this cannot join: BIRD's zip repeats 137 and 138,
+        # and a classification written against it could hold a row per repeat. Identical rows
+        # collapse, because they say one thing; rows that differ are two readings of one
+        # question and a comprehension would have kept whichever came last, silently.
+        if found.get(question_id, read) != read:
+            raise SelectionRefused(
+                f"{classification.relative} holds two rows for question {question_id} in "
+                f"{run.slug} that do not say the same thing: {found[question_id]} and {read}"
+            )
+        found[question_id] = read
+    return found
 
 
 def read_unjust() -> Mapping[tuple[str, str], frozenset[str]]:
@@ -618,7 +630,7 @@ def write(
             beside = destination / question.directory.name
             beside.mkdir(parents=True, exist_ok=True)
             for name in question.files:
-                shutil.copyfile(question.directory / name, beside / name)
+                _copy(question.directory / name, beside / name)
         _write_json(destination / QUESTIONS_FILE, _questions_of(run, work))
         classification = classifications.get(run.benchmark)
         if classification is not None:
@@ -632,6 +644,21 @@ def write(
     _write_json(out / AGGREGATE_FILE, _aggregate(runs, questions, kept, classifications))
     _write_json(out / SELECTION_FILE, _selection(runs, kept))
     _write_json(out / LEFT_OUT_FILE, _left_out(dropped))
+
+
+def _copy(source: Path, destination: Path) -> None:
+    """One file of an audit copied into the site's own directory, and never a link followed.
+
+    `tools/site/build.py` refuses a symlinked directory under `data/` because a link there
+    would publish whatever it points at, from wherever that is. A link to a file inside a run
+    is the same thing one level down, and `shutil.copyfile` would follow it without a word.
+    """
+    if source.is_symlink():
+        raise SelectionRefused(
+            f"{source} is a symlink, and everything published here is read out of the run's "
+            f"own directory: a link would publish whatever it points at, from wherever that is"
+        )
+    shutil.copyfile(source, destination)
 
 
 def _clear(out: Path) -> None:
@@ -666,15 +693,23 @@ def _questions_of(run: Run, work: Path) -> list[Mapping[str, object]]:
         )
     wanted = {str(found) for found in _list(question_set, "ids")}
     entries = cast("list[Mapping[str, object]]", json.loads(path.read_text(encoding="utf-8")))
-    return [
-        {
-            "question_id": str(entry["question_id"]),
-            "db_id": str(entry["db_id"]),
-            "question": str(entry["question"]),
-        }
-        for entry in entries
-        if not wanted or str(entry["question_id"]) in wanted
-    ]
+    # By id and once each. The GitHub zip's question file holds 137 and 138 twice, which is its
+    # own shape and which the audit deduplicates before it runs anything; a file here that named
+    # a question twice would be two rows a reader could not tell apart.
+    found: dict[str, Mapping[str, object]] = {}
+    for entry in entries:
+        question_id = str(entry["question_id"])
+        if wanted and question_id not in wanted:
+            continue
+        found.setdefault(
+            question_id,
+            {
+                "question_id": question_id,
+                "db_id": str(entry["db_id"]),
+                "question": str(entry["question"]),
+            },
+        )
+    return list(found.values())
 
 
 def _source_of(classification: Classification, run: Run | None) -> Mapping[str, object]:

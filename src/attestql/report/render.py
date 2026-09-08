@@ -777,7 +777,17 @@ def _page(
 
 
 def _copy(source: Path, destination: Path) -> Path:
-    """One file beside the page that renders it, byte for byte and by copy, not by move."""
+    """One file beside the page that renders it, byte for byte and by copy, not by move.
+
+    Never a link followed. ``shutil.copyfile`` reads through a symlink without a word, so a
+    link inside an audit directory would put whatever it points at, from wherever that is,
+    beside a published page.
+    """
+    if source.is_symlink():
+        raise ReportRefused(
+            f"{source} is a symlink, and everything beside a page is read out of the audit "
+            f"directory: a link would publish whatever it points at, from wherever that is"
+        )
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source, destination)
     return destination

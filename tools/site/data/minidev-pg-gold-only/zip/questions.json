@@ -2435,16 +2435,6 @@
   "question": "Which are the top ten withdrawals (non-credit card) by district names for the month of January 1996?"
  },
  {
-  "question_id": "137",
-  "db_id": "financial",
-  "question": "How many accounts have running contracts in Branch location 1?"
- },
- {
-  "question_id": "138",
-  "db_id": "financial",
-  "question": "In the branch where the second-highest number of crimes were committed in 1995 occurred, how many male clients are there?"
- },
- {
   "question_id": "145",
   "db_id": "financial",
   "question": "Who are the account holder identification numbers whose who have transactions on the credit card with the amount is less than the average, in 1998?"

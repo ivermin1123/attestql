@@ -935,6 +935,26 @@ def test_a_release_asset_the_page_could_not_fetch_is_refused_rather_than_linked(
         render_report(audit, tmp_path / "report")
 
 
+def test_a_symlinked_file_inside_an_audit_is_refused_rather_than_followed(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """A link beside a page would publish whatever it points at, from wherever that is.
+
+    ``shutil.copyfile`` reads through one without a word, so the file is refused with the
+    words a symlinked directory is refused with a level up. The link here points at a copy of
+    the file it replaced, so what stops the render is the link and not what it holds.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    summary = audit / SUMMARY_FILE
+    outside = tmp_path / "outside.json"
+    outside.write_bytes(summary.read_bytes())
+    summary.unlink()
+    summary.symlink_to(outside)
+
+    with pytest.raises(ReportRefused, match="is a symlink"):
+        render_report(audit, tmp_path / "report")
+
+
 def _classify(audit: Path, stated: dict[str, Any], note: dict[str, Any]) -> None:
     """One hand classification and the note beside it, for the question the demo has at 879."""
     (audit / "classification.json").write_text(
@@ -979,3 +999,46 @@ def test_the_class_a_maintainer_recorded_is_read_with_what_its_own_source_says_i
     undefined = read(tmp_path / "undefined" / "q879" / PAGE_FILE).text
     assert meaning not in undefined
     assert "read by hand, 2026-09-04: A" in undefined
+
+
+def test_every_line_a_publisher_put_beside_a_run_is_escaped_where_it_is_rendered(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """Four strings a page renders that no writer of this package put in the file they are in.
+
+    The database comes from the ``questions.json`` a publisher writes and the class and the
+    reason from a hand classification, which is a copy of a document written elsewhere; the
+    question text is the benchmark's own words, carried through the audit. A class outside
+    the set the note defines is rendered verbatim, which is the case where a value nobody
+    chose for this page reaches the markup.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    counterexample = document(audit / "q879" / COUNTEREXAMPLE_FILE)
+    cast("dict[str, Any]", counterexample["question"])["question_text"] = (
+        "<script>alert('question')</script>"
+    )
+    write(audit / "q879" / COUNTEREXAMPLE_FILE, counterexample)
+    (audit / "questions.json").write_text(
+        json.dumps([{"question_id": "879", "db_id": "<script>alert('db')</script>"}]),
+        encoding="utf-8",
+    )
+    _classify(
+        audit,
+        {
+            "question_id": 879,
+            "class": "<script>alert('class')</script>",
+            "reason": "<script>alert('reason')</script>",
+        },
+        {"classes": {"A": "a class this row is not"}},
+    )
+    out = tmp_path / "report"
+
+    render_report(audit, out)
+
+    markup = (out / "q879" / PAGE_FILE).read_text(encoding="utf-8")
+    page = read(out / "q879" / PAGE_FILE)
+    for value in ("db", "question", "class", "reason"):
+        assert f"<script>alert('{value}')</script>" not in markup, value
+        assert f"<script>alert('{value}')</script>" in page.text, value
+    assert "&lt;script&gt;" in markup
+    assert "a class this row is not" not in page.text, "a class the note does not define"
