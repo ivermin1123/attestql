@@ -37,6 +37,11 @@ CACHE="${ATTESTQL_INPUTS:-$HOME/.cache/attestql-measure/inputs}"
 CONTAINER=attestql-minidev
 IMAGE="postgres@sha256:c1b3783309b6499c795eed7c20135a1a4d25cae1b575c3d52c6f536129a1b109"
 PORT=5498
+# How long the server may take to answer, and how many tables of schema `public` a whole
+# Mini-Dev dump leaves behind: 75, which is how many `fixture.row_counts` names in
+# plans/reports/audit-260902-minidev-gold-only/summary.json. A partial load must not run audits.
+HEALTH_DEADLINE=90
+DUMP_TABLES=75
 PRED_COMMIT=b3d4bcbbae9a96934ad812551eb400c7a3b23c12
 PRED_BASE="https://raw.githubusercontent.com/bird-bench/mini_dev/$PRED_COMMIT/llm/exp_result/sql_output_kg"
 TODAY="$(date +%F)"
@@ -271,19 +276,46 @@ print(', '.join(f'{side}: {\",\".join(str(q) for q in ids)}' for side, ids in st
 # read-only auditor role and the two scratch schemas the two lanes write their shuffles in.
 postgres_up() {
   cd "$RUNS_WORK"
-  local password auditor_password
+  local password auditor_password deadline loaded
   docker rm --force --volumes "$CONTAINER" >/dev/null 2>&1 || true
+  # Registered before the container exists rather than after this function returns: from
+  # `docker run` onward there is something to remove, and a Ctrl-C during the start, the load
+  # or the role setup used to leave `attestql-minidev` holding port 5498.
+  trap postgres_down EXIT
   password="$(openssl rand -hex 24)"; POSTGRES_PASSWORD="$password"; export POSTGRES_PASSWORD
   docker run --detach --name "$CONTAINER" --publish "127.0.0.1:$PORT:5432" \
     --env POSTGRES_PASSWORD --env POSTGRES_DB=bird \
     --health-cmd "pg_isready --host=127.0.0.1 --username=postgres --dbname=bird --quiet" \
-    --health-interval=1s --health-timeout=5s --health-retries=90 "$IMAGE" >/dev/null || return 1
-  until [ "$(docker inspect --format '{{.State.Health.Status}}' "$CONTAINER" 2>/dev/null)" = "healthy" ]; do sleep 1; done
+    --health-interval=1s --health-timeout=5s --health-retries=$HEALTH_DEADLINE "$IMAGE" >/dev/null || return 1
+  # With a deadline, as tools/audit-sandbox/run.sh has one: a server that never answers used to
+  # be a loop with nothing to say.
+  deadline=$((SECONDS + HEALTH_DEADLINE))
+  until [ "$(docker inspect --format '{{.State.Health.Status}}' "$CONTAINER" 2>/dev/null)" = "healthy" ]; do
+    if [ "$SECONDS" -ge "$deadline" ]; then
+      echo "the server did not answer within ${HEALTH_DEADLINE}s" >&2
+      docker logs --tail 20 "$CONTAINER" >&2 || true
+      return 1
+    fi
+    sleep 1
+  done
   echo "== loading the dump; psql's output goes to out/load.txt"
+  # psql's own status is not the check: the dump names a role this server does not have, so it
+  # reports an error per ALTER OWNER and exits non-zero on a load that is otherwise whole. What
+  # is checked is the result, which is the tables.
   docker exec --interactive "$CONTAINER" psql --username=postgres --dbname=bird --no-psqlrc \
     --quiet --file=- < data/minidev/BIRD_dev.sql > out/load.txt 2>&1 || true
+  loaded="$(docker exec "$CONTAINER" psql --username=postgres --dbname=bird --no-psqlrc \
+    --tuples-only --no-align --command \
+    "select count(*) from information_schema.tables where table_schema = 'public'" 2>/dev/null)"
+  if [ "$loaded" != "$DUMP_TABLES" ]; then
+    echo "the dump loaded $loaded tables of the $DUMP_TABLES the Mini-Dev fixture holds; the log is out/load.txt" >&2
+    return 1
+  fi
+  echo "the dump loaded $loaded tables"
   auditor_password="$(openssl rand -hex 24)"
-  { printf "\\set auditor_password '%s'\n" "$auditor_password"; cat <<'SQL'
+  # Checked, because this script runs without `set -e`: a role that was not made leaves every
+  # audit below failing to authenticate, and this function used to print "server up" anyway.
+  if ! { printf "\\set auditor_password '%s'\n" "$auditor_password"; cat <<'SQL'
 CREATE ROLE auditor LOGIN PASSWORD :'auditor_password' NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;
 REVOKE CREATE ON SCHEMA public FROM PUBLIC; REVOKE CREATE ON SCHEMA public FROM auditor;
 GRANT USAGE ON SCHEMA public TO auditor; GRANT SELECT ON ALL TABLES IN SCHEMA public TO auditor;
@@ -291,7 +323,10 @@ ALTER ROLE auditor SET default_transaction_read_only = on;
 CREATE SCHEMA attestql_scratch AUTHORIZATION auditor; CREATE SCHEMA attestql_scratch2 AUTHORIZATION auditor;
 SQL
   } | docker exec --interactive "$CONTAINER" psql --username=postgres --dbname=bird --no-psqlrc \
-      --set=ON_ERROR_STOP=1 --file=- >> out/load.txt 2>&1
+      --set=ON_ERROR_STOP=1 --file=- >> out/load.txt 2>&1; then
+    echo "the read-only auditor role was not created; the log is out/load.txt" >&2
+    return 1
+  fi
   unset POSTGRES_PASSWORD
   PGPASSWORD="$auditor_password"; export PGPASSWORD
   echo "server up on 127.0.0.1:$PORT"
@@ -360,7 +395,6 @@ case "${1:-}" in
   inputs) inputs ;;
   sqlite) sqlite_runs; rerun_timeouts runs/bird-dev-sqlite/; rerun_timeouts runs/minidev-sqlite/ ;;
   postgres) postgres_up || { echo "the server did not start" >&2; exit 1; }
-            trap postgres_down EXIT
             postgres_runs
             rerun_timeouts runs/minidev-pg-gold-only/; rerun_timeouts runs/minidev-pg/ ;;
   rerun) rerun_timeouts "${2:-runs/}" ;;

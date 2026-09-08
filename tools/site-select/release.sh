@@ -40,7 +40,14 @@ archives() {
       [ -f "$path/summary.json" ] || [ -n "$(find "$path" -maxdepth 2 -name summary.json -print -quit)" ] || continue
       archive="$ASSETS/$benchmark-$name.tar.gz"
       if [ ! -f "$archive" ]; then
-        COPYFILE_DISABLE=1 tar --exclude='*.under-load' -czf "$archive" "runs/$benchmark/$name"
+        # Checked, because this script runs without `set -e`: a tar that failed would leave
+        # part of an archive or none, and the shasum and the byte count below would then be
+        # taken of a file nobody can unpack, or of one that is not there.
+        if ! COPYFILE_DISABLE=1 tar --exclude='*.under-load' -czf "$archive" "runs/$benchmark/$name"; then
+          rm -f "$archive"
+          echo "could not archive runs/$benchmark/$name" >&2
+          return 1
+        fi
       fi
       ( cd "$ASSETS" && shasum -a 256 "$benchmark-$name.tar.gz" >> SHA256SUMS )
       echo "$(basename "$archive") $(wc -c < "$archive" | tr -d ' ') bytes"
