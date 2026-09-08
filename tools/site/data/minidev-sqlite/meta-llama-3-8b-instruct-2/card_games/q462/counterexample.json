@@ -1,0 +1,167 @@
+{
+  "format": "attestql/audit/counterexample/2",
+  "question": {
+    "question_id": "462",
+    "question_set": "mini_dev_sqlite from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+    "question_text": "What's the Italian name of the set of cards with \"Ancestor's Chosen\" is in?",
+    "evidence_text": "Italian is a language which refers to language = 'Italian'; with \"Ancestor's Chosen\" in the card set refers to name = 'Ancestor''s Chosen'"
+  },
+  "question_set_version": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+  "sources": {
+    "gold": {
+      "path": "data/questions/mini_dev_sqlite.json",
+      "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+      "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+      "date": "2024-06-19"
+    },
+    "second": {
+      "path": "data/preds-sqlite/predict_mini_dev_meta-llama-3-8b-instruct-2_sqlite.json",
+      "digest": "sha256:e1bd066794d120ff766d010a5cf4e4118e48404c4b0168fce4dfaf362a975301",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_meta-llama-3-8b-instruct-2_sqlite.json",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "bird_ex": {
+    "value": 1,
+    "equal": true,
+    "method": "set(second_rows) == set(gold_rows), REAL cells as Python float as sqlite3 returns them, so Python equality holds 1 == 1.0 == True as the benchmark's own scorer does",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 2,
+    "second_rows": 3,
+    "gold_distinct_rows": 2,
+    "second_distinct_rows": 2
+  },
+  "test_suite_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "result_eq: equal row counts and equal column counts, each row unordered as a quick rejection, then the two equal as a list when the gold text holds ORDER BY and as a multiset otherwise, under some permutation of the columns; DISTINCT is not stripped and re-executed, and the cells are SQLite's as sqlite3 returns them",
+    "source": "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/48cb78ecf7f610620206283846c76751b18a1326/exec_eval.py",
+    "order_matters": false,
+    "gold_rows": 2,
+    "second_rows": 3,
+    "gold_columns": 1,
+    "second_columns": 1
+  },
+  "mechanism": {
+    "class": "multiplicity",
+    "gold_types": [
+      "TEXT"
+    ],
+    "second_types": [
+      "TEXT"
+    ],
+    "multiset_equal": false,
+    "set_equal": true,
+    "order_equal": false,
+    "shorter_result_is_a_prefix": false,
+    "reading": "The class states what makes these two results unequal under this rule, read off the two results and nothing else. It does not state which of the two statements is wrong."
+  },
+  "gold": {
+    "executed_sql": "SELECT translation FROM set_translations WHERE setCode IN ( SELECT setCode FROM cards WHERE name = 'Ancestor''s Chosen' ) AND language = 'Italian'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "translation",
+          "declared_type": "TEXT"
+        }
+      ],
+      "row_count": 2,
+      "truncated": false,
+      "rows_shown": 2,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "Set Base Decima Edizione"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Sentenza"
+          }
+        ]
+      ],
+      "result_hash": "sha256:2fa72388e061cfd367573c101feccfb827cf9e534314f1de4e132764d498cef6"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT st.translation\nFROM set_translations st\nJOIN sets s ON st.setCode = s.code\nJOIN cards c ON s.code = c.setCode\nWHERE c.name = 'Ancestor''s Chosen' AND st.language = 'Italian';",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "translation",
+          "declared_type": "TEXT"
+        }
+      ],
+      "row_count": 3,
+      "truncated": false,
+      "rows_shown": 3,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "Set Base Decima Edizione"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Set Base Decima Edizione"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Sentenza"
+          }
+        ]
+      ],
+      "result_hash": "sha256:087b4d996d9a38a72e96a86998335f2bf86d9139c3698952dbea5bf8e013ec87"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Set Base Decima Edizione"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "in_second_not_in_gold_total": 1,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:2fa72388e061cfd367573c101feccfb827cf9e534314f1de4e132764d498cef6",
+    "second": "sha256:087b4d996d9a38a72e96a86998335f2bf86d9139c3698952dbea5bf8e013ec87"
+  },
+  "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/card_games/card_games.sqlite | size=261820416",
+  "fixture": {
+    "schema_digest": "sha256:4121b71a7e4200bb456e5e3aa60521e923e0834a76225a18ff1dbb4006e13aba",
+    "row_counts": {
+      "main.cards": 56822,
+      "main.set_translations": 1210,
+      "main.sets": 551
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227"
+  },
+  "run_id": "audit-15027561-7049-44cf-8283-c2d0463d3d2c"
+}

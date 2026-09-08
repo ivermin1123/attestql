@@ -1,0 +1,214 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "t3.cost",
+            "column": "expense.cost",
+            "declared_type": "real",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t1.event_name, t3.cost AS attestql_ordering_key_0 FROM event t1 JOIN budget t2 ON t1.event_id = t2.link_to_event JOIN expense t3 ON t2.budget_id = t3.link_to_budget ORDER BY t3.cost NULLS FIRST",
+        "unbounded_rows": 32,
+        "projected_columns": [
+          "event_name"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t3.cost",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2
+          ],
+          "tied_rows": 3,
+          "distinct_projected_answers": 3,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "September Speaker"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "November Speaker"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "October Speaker"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "September Speaker"
+          },
+          {
+            "type": "dec",
+            "value": "6"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "November Speaker"
+          },
+          {
+            "type": "dec",
+            "value": "6"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "October Speaker"
+          },
+          {
+            "type": "dec",
+            "value": "6"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:56406324bb087daab39eca2d80eb40a285f0ba16585dc9ae96e7e4c82cf0b7c5",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "event_name",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "November Speaker"
+              }
+            ]
+          ],
+          "result_hash": "sha256:56406324bb087daab39eca2d80eb40a285f0ba16585dc9ae96e7e4c82cf0b7c5"
+        },
+        "planner_statistics": {
+          "expense": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 32
+          },
+          "event": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 42
+          },
+          "budget": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 52
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "expense",
+            "event",
+            "budget"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:56406324bb087daab39eca2d80eb40a285f0ba16585dc9ae96e7e4c82cf0b7c5",
+          "result": {
+            "columns": [
+              {
+                "name": "event_name",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "November Speaker"
+                }
+              ]
+            ],
+            "result_hash": "sha256:56406324bb087daab39eca2d80eb40a285f0ba16585dc9ae96e7e4c82cf0b7c5"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

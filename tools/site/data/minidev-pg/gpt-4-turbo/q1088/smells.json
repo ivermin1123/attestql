@@ -1,0 +1,227 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "reason": "the statement states no LIMIT"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:ede92fd07294d5fdbe2d0cc6ba6d1da26dfce89677c75f64c27a319e31f0de82",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "player_name",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 1105,
+          "truncated": false,
+          "rows_shown": 10,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Antonio Candreva"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Peter Whittingham"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Marco Ruben"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Raul Meireles"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Felipe Gedoz"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Francesco Lodi"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Ahmed El Mohamady"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Elliot Grandin"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Moi Gomez"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Benoit Cheyrou"
+              }
+            ]
+          ],
+          "result_hash": "sha256:ede92fd07294d5fdbe2d0cc6ba6d1da26dfce89677c75f64c27a319e31f0de82"
+        },
+        "planner_statistics": {
+          "player": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:42.607944+00",
+            "n_mod_since_analyze": 0
+          },
+          "player_attributes": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:47.072684+00",
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "player",
+            "player_attributes"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:1347e3322b131f00d0485e7b730d6dfd26397d376831d72397a53604a902496c",
+          "result": {
+            "columns": [
+              {
+                "name": "player_name",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 1105,
+            "truncated": false,
+            "rows_shown": 10,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Bebe"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Giuseppe De Luca"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Antonio Candreva"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Baye Oumar Niasse"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Mounir El Hamdaoui"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Peter Whittingham"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Josip Ilicic"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Andre Hahn"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Nwankwo Kanu"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Oleg Iachtchouk"
+                }
+              ]
+            ],
+            "result_hash": "sha256:1347e3322b131f00d0485e7b730d6dfd26397d376831d72397a53604a902496c"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

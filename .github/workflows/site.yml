@@ -1,0 +1,46 @@
+# Builds the site from tools/site/ and publishes it to Cloudflare Pages. A push to main goes to the
+# project `attestql`, which is what attestql.com serves; a manual run goes to the preview project
+# `attestql-ui`, from whichever ref it is started on, so a branch can be looked at before it is
+# merged. The build is the same command a maintainer runs locally, and it refuses its own budgets.
+#
+# Two repository secrets: CLOUDFLARE_ACCOUNT_ID, and CLOUDFLARE_API_TOKEN, an API token holding
+# "Cloudflare Pages: Edit" on this account and nothing else. Wrangler reads both from the
+# environment; neither reaches a log, and a pull request from a fork has neither.
+name: site
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: site-${{ github.event_name == 'push' && 'production' || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          python-version: "3.13"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - run: uv sync --locked
+      - run: uv run python tools/site/build.py --out build/site
+      - name: Publish
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          PROJECT: ${{ github.event_name == 'push' && 'attestql' || 'attestql-ui' }}
+          BRANCH: ${{ github.event_name == 'push' && 'main' || 'web-ui' }}
+        # From a directory outside the checkout: wrangler leaves a .wrangler/ cache where it runs.
+        run: |
+          cd "$RUNNER_TEMP"
+          npx --yes wrangler@4.129.0 pages deploy "$GITHUB_WORKSPACE/build/site" \
+            --project-name "$PROJECT" --branch "$BRANCH" --commit-dirty=true

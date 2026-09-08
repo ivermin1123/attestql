@@ -1,0 +1,410 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "T1.year",
+            "column": "races.year",
+            "declared_type": "INTEGER",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT T1.name, T2.points, T1.year AS attestql_ordering_key_0 FROM races AS T1 INNER JOIN driverStandings AS T2 ON T2.raceId = T1.raceId INNER JOIN drivers AS T3 ON T3.driverId = T2.driverId WHERE T3.forename = 'Lewis' AND T3.surname = 'Hamilton' ORDER BY T1.year ASC",
+        "unbounded_rows": 201,
+        "projected_columns": [
+          "name",
+          "points"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "T1.year",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "tied_rows": 17,
+          "distinct_projected_answers": 17,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Australian Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "6.0"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Malaysian Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "14.0"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Bahrain Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "22.0"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Spanish Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "30.0"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Monaco Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "38.0"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Canadian Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "48.0"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "United States Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "58.0"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "French Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "64.0"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "British Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "70.0"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "European Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "70.0"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Australian Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "6.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Malaysian Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "14.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Bahrain Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "22.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Spanish Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "30.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Monaco Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "38.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Canadian Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "48.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "United States Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "58.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "French Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "64.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "British Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "70.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "European Grand Prix"
+          },
+          {
+            "type": "dec",
+            "value": "70.0"
+          },
+          {
+            "type": "int",
+            "value": 2007
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:972af0b8ff1f4947ddd04a73f352f7e5ca4d34807b0d5e9d32c2bb7fa3fd63f6",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "name",
+              "declared_type": "TEXT"
+            },
+            {
+              "name": "points",
+              "declared_type": "REAL"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Australian Grand Prix"
+              },
+              {
+                "type": "dec",
+                "value": "6.0"
+              }
+            ]
+          ],
+          "result_hash": "sha256:972af0b8ff1f4947ddd04a73f352f7e5ca4d34807b0d5e9d32c2bb7fa3fd63f6"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "races",
+            "driverStandings",
+            "drivers"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "lapTimes": 420369
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:972af0b8ff1f4947ddd04a73f352f7e5ca4d34807b0d5e9d32c2bb7fa3fd63f6",
+          "result": {
+            "columns": [
+              {
+                "name": "name",
+                "declared_type": "TEXT"
+              },
+              {
+                "name": "points",
+                "declared_type": "REAL"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Australian Grand Prix"
+                },
+                {
+                  "type": "dec",
+                  "value": "6.0"
+                }
+              ]
+            ],
+            "result_hash": "sha256:972af0b8ff1f4947ddd04a73f352f7e5ca4d34807b0d5e9d32c2bb7fa3fd63f6"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

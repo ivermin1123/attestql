@@ -1,0 +1,427 @@
+{
+  "question_as_asked": "What are the short name of team who played safe while creating chance of passing?",
+  "question": {
+    "question_id": "1130",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "What are the short name of team who played safe while creating chance of passing?",
+    "evidence_text": "played safe while creating chance of passing refers to chanceCreationPassingClass = 'Safe'; short name of team refers to team_short_name"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "statement_source": {
+    "path": "data/preds-pg/predict_mini_dev_gpt-4_postgresql.json",
+    "digest": "sha256:cd39466740516d2d4672e8421010edab4816ff9875781f44df100840b41eaa49",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4_postgresql.json",
+    "date": "2024-06-19"
+  },
+  "executed_sql": "SELECT Team.team_short_name\nFROM Team\nJOIN Team_Attributes ON Team.team_api_id = Team_Attributes.team_api_id\nWHERE Team_Attributes.chanceCreationPassingClass = 'Safe'",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "team_short_name",
+        "declared_type": "text"
+      }
+    ],
+    "row_count": 56,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "HAA"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "ARK"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "ARL"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "ARS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "ARS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "ARS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "BAR"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "BMU"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "BOL"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "BOL"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "BOL"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "BRE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "CAG"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "CAG"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "CAT"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "COR"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "DUF"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "EMP"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "COT"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "UTR"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "FRE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "FRO"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "GEN"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "GEN"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "GEN"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "GRF"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "HER"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "LIV"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "LIV"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "LOK"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "LOR"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "MCI"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "NAC"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "NAC"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "PAL"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "PSV"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "BET"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "HUE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "REG"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "REG"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SIE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "ROD"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SAM"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SAS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SPA"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "NAP"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "STK"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "UDI"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "WAA"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "WHU"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "WHU"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "WII"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "WIS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "WIS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "WIS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "ZAG"
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 120000
+  },
+  "row_count": 56,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:9569693beaecfb53a614c6a17fa15de9183779d44aa279a4c366cb75b289dc45",
+    "row_counts": {
+      "public.team": 299,
+      "public.team_attributes": 1458
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-08T05:23:23.924963+00:00",
+  "executed_at": "2026-09-08T05:23:36.268500+00:00",
+  "run_id": "audit-34520748-ce64-4674-9cd7-6d6fac5b9805",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:00e1ae76585ce49c99428a6eae93166d84cbf7ad4afa7ecbc7c6747eea11e5ee",
+  "record_hash": "sha256:0f5b31327e88f21edfa22751176eab3e6e84c353a24e83109da4eb4243e0beda"
+}

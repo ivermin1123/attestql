@@ -39,6 +39,20 @@ Apache License and keeps its own licence and attribution:
       text and gold SQL as Mini-Dev's SQLite copy writes them, a prediction from BIRD's own
       llm/exp_result/sql_output_kg files, and the rows both returned from the Mini-Dev SQLite
       databases.
+  tools/site/data/
+      the audit directories the published site is built from: the question text, the evidence
+      text and the gold SQL of the questions the site shows, of BIRD Mini-Dev and of BIRD dev
+      (https://github.com/AlibabaResearch/DAMO-ConvAI/tree/main/bird, the same licence), the
+      predictions BIRD's own llm/exp_result/sql_output_kg files hold for them, and the rows
+      those statements returned from the benchmark databases, inside the evidence records. The
+      same licence and the same attribution apply to all of it.
+
+The three woff2 files under src/attestql/report/static/fonts/ are Latin subsets of IBM Plex
+Sans and IBM Plex Mono, Copyright 2017 IBM Corp. with Reserved Font Name "Plex", licensed
+under the SIL Open Font License, Version 1.1. That licence is not the Apache License: its
+text is beside the fonts as src/attestql/report/static/fonts/OFL.txt, and
+src/attestql/report/static/fonts/provenance.txt names the release each file came from and
+its sha256.
 
 Every other file, including the run outputs that carry only question ids, verdicts, hashes and
 counts, is this repository's own work under the Apache License.

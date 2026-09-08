@@ -1,0 +1,322 @@
+[
+ {
+  "question_id": "1470",
+  "db_id": "debit_card_specializing",
+  "question": "How many gas stations in CZE has Premium gas?"
+ },
+ {
+  "question_id": "1471",
+  "db_id": "debit_card_specializing",
+  "question": "What is the ratio of customers who pay in EUR against customers who pay in CZK?"
+ },
+ {
+  "question_id": "1472",
+  "db_id": "debit_card_specializing",
+  "question": "In 2012, who had the least consumption in LAM?"
+ },
+ {
+  "question_id": "1473",
+  "db_id": "debit_card_specializing",
+  "question": "What was the average monthly consumption of customers in SME for the year 2013?"
+ },
+ {
+  "question_id": "1474",
+  "db_id": "debit_card_specializing",
+  "question": "Which customers, paying in CZK, consumed the most gas in 2011?"
+ },
+ {
+  "question_id": "1475",
+  "db_id": "debit_card_specializing",
+  "question": "How many customers in KAM had a consumption of less than 30,000 for the year 2012?"
+ },
+ {
+  "question_id": "1476",
+  "db_id": "debit_card_specializing",
+  "question": "What was the difference in gas consumption between CZK-paying customers and EUR-paying customers in 2012?"
+ },
+ {
+  "question_id": "1477",
+  "db_id": "debit_card_specializing",
+  "question": "Which year recorded the most gas use paid in EUR?"
+ },
+ {
+  "question_id": "1478",
+  "db_id": "debit_card_specializing",
+  "question": "Which segment had the least consumption?"
+ },
+ {
+  "question_id": "1479",
+  "db_id": "debit_card_specializing",
+  "question": "Which year recorded the most consumption of gas paid in CZK?"
+ },
+ {
+  "question_id": "1480",
+  "db_id": "debit_card_specializing",
+  "question": "What was the gas consumption peak month for SME customers in 2013?"
+ },
+ {
+  "question_id": "1481",
+  "db_id": "debit_card_specializing",
+  "question": "What is the difference in the annual average consumption of the customers with the least amount of consumption paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?"
+ },
+ {
+  "question_id": "1482",
+  "db_id": "debit_card_specializing",
+  "question": "Which of the three segments—SME, LAM and KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?"
+ },
+ {
+  "question_id": "1483",
+  "db_id": "debit_card_specializing",
+  "question": "How much did customer 6 consume in total between August and November 2013?"
+ },
+ {
+  "question_id": "1484",
+  "db_id": "debit_card_specializing",
+  "question": "How many more \"discount\" gas stations does the Czech Republic have compared to Slovakia?"
+ },
+ {
+  "question_id": "1485",
+  "db_id": "debit_card_specializing",
+  "question": "How much more was customer 7 consuming in April 2013 than customer 5?"
+ },
+ {
+  "question_id": "1486",
+  "db_id": "debit_card_specializing",
+  "question": "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?"
+ },
+ {
+  "question_id": "1487",
+  "db_id": "debit_card_specializing",
+  "question": "Which LAM customer used the Euro as their currency and had the highest consumption in October 2013?"
+ },
+ {
+  "question_id": "1488",
+  "db_id": "debit_card_specializing",
+  "question": "Who among KAM's customers consumed the most? How much did it consume?"
+ },
+ {
+  "question_id": "1489",
+  "db_id": "debit_card_specializing",
+  "question": "How much did the KAM customers consume in total in May 2013?"
+ },
+ {
+  "question_id": "1490",
+  "db_id": "debit_card_specializing",
+  "question": "How many percent of LAM customer consumed more than 46.73?"
+ },
+ {
+  "question_id": "1491",
+  "db_id": "debit_card_specializing",
+  "question": "Which country has more 'value for money' gas stations? Please give a total number of 'value for money' gas stations in each country."
+ },
+ {
+  "question_id": "1492",
+  "db_id": "debit_card_specializing",
+  "question": "What percentage of KAM customers pay in euros?"
+ },
+ {
+  "question_id": "1493",
+  "db_id": "debit_card_specializing",
+  "question": "In February 2012, what percentage of customers consumed more than 528.3?"
+ },
+ {
+  "question_id": "1494",
+  "db_id": "debit_card_specializing",
+  "question": "What percentage of Slovakian gas stations are premium?"
+ },
+ {
+  "question_id": "1495",
+  "db_id": "debit_card_specializing",
+  "question": "Which client ID consumed the most in September 2013?"
+ },
+ {
+  "question_id": "1496",
+  "db_id": "debit_card_specializing",
+  "question": "Which client segment consumed the least in September 2013?"
+ },
+ {
+  "question_id": "1497",
+  "db_id": "debit_card_specializing",
+  "question": "Which SME customer consumed the least in June 2012?"
+ },
+ {
+  "question_id": "1498",
+  "db_id": "debit_card_specializing",
+  "question": "What is the highest monthly consumption in the year 2012?"
+ },
+ {
+  "question_id": "1499",
+  "db_id": "debit_card_specializing",
+  "question": "What is the biggest monthly consumption of the customers who use euro as their currency?"
+ },
+ {
+  "question_id": "1500",
+  "db_id": "debit_card_specializing",
+  "question": "Please list the product description of the products consumed in September, 2013."
+ },
+ {
+  "question_id": "1501",
+  "db_id": "debit_card_specializing",
+  "question": "Please list the countries of the gas stations with transactions taken place in August, 2012."
+ },
+ {
+  "question_id": "1502",
+  "db_id": "debit_card_specializing",
+  "question": "Please list the chains of the gas stations with transactions in euro."
+ },
+ {
+  "question_id": "1503",
+  "db_id": "debit_card_specializing",
+  "question": "Please list the product description of the products bought in transactions in euro."
+ },
+ {
+  "question_id": "1504",
+  "db_id": "debit_card_specializing",
+  "question": "What is the average total price of the transactions taken place in January, 2012?"
+ },
+ {
+  "question_id": "1505",
+  "db_id": "debit_card_specializing",
+  "question": "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?"
+ },
+ {
+  "question_id": "1506",
+  "db_id": "debit_card_specializing",
+  "question": "Please list the product descriptions of the transactions taken place in the gas stations in the Czech Republic."
+ },
+ {
+  "question_id": "1507",
+  "db_id": "debit_card_specializing",
+  "question": "Please list the disparate time of the transactions taken place in the gas stations from chain no. 11."
+ },
+ {
+  "question_id": "1508",
+  "db_id": "debit_card_specializing",
+  "question": "How many transactions taken place in the gas station in the Czech Republic are with a price of over 1000?"
+ },
+ {
+  "question_id": "1509",
+  "db_id": "debit_card_specializing",
+  "question": "Among the transactions made in the gas stations in the Czech Republic, how many of them are taken place after 2012/1/1?"
+ },
+ {
+  "question_id": "1510",
+  "db_id": "debit_card_specializing",
+  "question": "What is the average total price of the transactions taken place in gas stations in the Czech Republic?"
+ },
+ {
+  "question_id": "1511",
+  "db_id": "debit_card_specializing",
+  "question": "For the customers who paid with euros, what is their average total price of the transactions?"
+ },
+ {
+  "question_id": "1512",
+  "db_id": "debit_card_specializing",
+  "question": "Which customer paid the most in 2012/8/25? If there is a tie, list any one customer."
+ },
+ {
+  "question_id": "1513",
+  "db_id": "debit_card_specializing",
+  "question": "Which country's gas station had the first paid cusomer in 2012/8/25?"
+ },
+ {
+  "question_id": "1514",
+  "db_id": "debit_card_specializing",
+  "question": "What kind of currency did the customer paid at 16:25:00 in 2012/8/24?"
+ },
+ {
+  "question_id": "1515",
+  "db_id": "debit_card_specializing",
+  "question": "What segment did the customer have at 2012/8/23 21:20:00?"
+ },
+ {
+  "question_id": "1516",
+  "db_id": "debit_card_specializing",
+  "question": "How many transactions were paid in CZK in the morning of 2012/8/26?"
+ },
+ {
+  "question_id": "1517",
+  "db_id": "debit_card_specializing",
+  "question": "For the earliest customer, what segment did he/she have?"
+ },
+ {
+  "question_id": "1518",
+  "db_id": "debit_card_specializing",
+  "question": "For the deal happened at 2012/8/24 12:42:00, which country was it?"
+ },
+ {
+  "question_id": "1519",
+  "db_id": "debit_card_specializing",
+  "question": "What was the product id of the transaction happened at 2012/8/23 21:20:00?"
+ },
+ {
+  "question_id": "1520",
+  "db_id": "debit_card_specializing",
+  "question": "For the customer who paid 124.05 in 2012/8/24, how much did he/she spend during the January of 2012? And what is the date and expenses exactly?"
+ },
+ {
+  "question_id": "1521",
+  "db_id": "debit_card_specializing",
+  "question": "For all the transactions happened during 8:00-9:00 in 2012/8/26, how many happened in CZE?"
+ },
+ {
+  "question_id": "1522",
+  "db_id": "debit_card_specializing",
+  "question": "There's one customer spent 214582.17 in the June of 2013, which currency did he/she use?"
+ },
+ {
+  "question_id": "1523",
+  "db_id": "debit_card_specializing",
+  "question": "Which country was the card owner of No.667467 in?"
+ },
+ {
+  "question_id": "1524",
+  "db_id": "debit_card_specializing",
+  "question": "In which country did the customer who spent 548.4 on 2012/8/24 make this transaction?"
+ },
+ {
+  "question_id": "1525",
+  "db_id": "debit_card_specializing",
+  "question": "What is the percentage of the customers who used EUR in 2012/8/25?"
+ },
+ {
+  "question_id": "1526",
+  "db_id": "debit_card_specializing",
+  "question": "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?"
+ },
+ {
+  "question_id": "1527",
+  "db_id": "debit_card_specializing",
+  "question": "Which gas station has the highest amount of revenue?"
+ },
+ {
+  "question_id": "1528",
+  "db_id": "debit_card_specializing",
+  "question": "What is the percentage of \"premium\" against the overall segment in Country = \"SVK\"?"
+ },
+ {
+  "question_id": "1529",
+  "db_id": "debit_card_specializing",
+  "question": "What is the amount spent by customer 38508 at the gas stations? How much had the customer spent in January 2012?"
+ },
+ {
+  "question_id": "1530",
+  "db_id": "debit_card_specializing",
+  "question": "Which are the top five best selling products? Please state the full name of them."
+ },
+ {
+  "question_id": "1531",
+  "db_id": "debit_card_specializing",
+  "question": "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?"
+ },
+ {
+  "question_id": "1532",
+  "db_id": "debit_card_specializing",
+  "question": "Which country had the gas station that sold the most expensive product id No.2 for one unit?"
+ },
+ {
+  "question_id": "1533",
+  "db_id": "debit_card_specializing",
+  "question": "For all the people who paid more than 29.00 per unit of product id No.5. Give their consumption status in the August of 2012."
+ }
+]

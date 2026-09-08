@@ -1,0 +1,447 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "t2.a11",
+            "column": "district.a11",
+            "declared_type": "bigint",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t1.account_id, (SELECT max(a11) - min(a11) FROM district), t2.a11 AS attestql_ordering_key_0 FROM account t1 JOIN district t2 ON t1.district_id = t2.district_id JOIN disp t3 ON t1.account_id = t3.account_id JOIN client t4 ON t3.client_id = t4.client_id WHERE t2.district_id = (SELECT district_id FROM client WHERE gender = 'F' ORDER BY birth_date ASC NULLS FIRST LIMIT 1) ORDER BY t2.a11 DESC NULLS LAST",
+        "unbounded_rows": 55,
+        "projected_columns": [
+          "account_id",
+          "?column?"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t2.a11",
+            "direction": "desc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "tied_rows": 55,
+          "distinct_projected_answers": 49,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 6
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 142
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 142
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 361
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 463
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 646
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 758
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 1353
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 1506
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 1509
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 6
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 142
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 142
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 361
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 463
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 646
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 758
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1353
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1506
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 1509
+          },
+          {
+            "type": "int",
+            "value": 4431
+          },
+          {
+            "type": "int",
+            "value": 8541
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:b3c895538cef01fc149e8542efe6fa9f0bdcf3c1c697e67c83b9e9578d8761ea",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "account_id",
+              "declared_type": "int8"
+            },
+            {
+              "name": "?column?",
+              "declared_type": "int8"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 6
+              },
+              {
+                "type": "int",
+                "value": 4431
+              }
+            ]
+          ],
+          "result_hash": "sha256:b3c895538cef01fc149e8542efe6fa9f0bdcf3c1c697e67c83b9e9578d8761ea"
+        },
+        "planner_statistics": {
+          "client": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:12.822716+00",
+            "n_mod_since_analyze": 0
+          },
+          "disp": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:17.037279+00",
+            "n_mod_since_analyze": 0
+          },
+          "district": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:24.361355+00",
+            "n_mod_since_analyze": 0
+          },
+          "account": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:16.907324+00",
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "client",
+            "disp",
+            "district",
+            "account"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:8cdedd85a14afc490dbc9ec61a088741b845ca51b224a6763fc44a7b272816b0",
+          "result": {
+            "columns": [
+              {
+                "name": "account_id",
+                "declared_type": "int8"
+              },
+              {
+                "name": "?column?",
+                "declared_type": "int8"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "int",
+                  "value": 3491
+                },
+                {
+                  "type": "int",
+                  "value": 4431
+                }
+              ]
+            ],
+            "result_hash": "sha256:8cdedd85a14afc490dbc9ec61a088741b845ca51b224a6763fc44a7b272816b0"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 3491
+          },
+          {
+            "type": "int",
+            "value": 4431
+          }
+        ]
+      ]
+    }
+  ]
+}

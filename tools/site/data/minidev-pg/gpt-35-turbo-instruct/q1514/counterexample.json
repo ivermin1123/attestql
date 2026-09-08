@@ -1,0 +1,161 @@
+{
+  "format": "attestql/audit/counterexample/2",
+  "question": {
+    "question_id": "1514",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "What kind of currency did the customer paid at 16:25:00 in 2012/8/24?",
+    "evidence_text": "'2012/8/24' can be represented by '2012-08-24'; "
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "sources": {
+    "gold": {
+      "path": "data/questions/mini_dev_postgresql.json",
+      "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+      "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+      "date": "2024-06-19"
+    },
+    "second": {
+      "path": "data/preds-pg/predict_mini_dev_gpt-35-turbo-instruct_postgresql.json",
+      "digest": "sha256:df1edf6aac3c01cf93041bcd7b60378efe6f7359f19add6d2af2345bef092bf9",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo-instruct_postgresql.json",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "bird_ex": {
+    "value": 1,
+    "equal": true,
+    "method": "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 returns them, numeric as Decimal",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 1,
+    "second_rows": 3,
+    "gold_distinct_rows": 1,
+    "second_distinct_rows": 1
+  },
+  "test_suite_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "result_eq: equal row counts and equal column counts, each row unordered as a quick rejection, then the two equal as a list when the gold text holds ORDER BY and as a multiset otherwise, under some permutation of the columns; DISTINCT is not stripped and re-executed, and the cells are PostgreSQL's as psycopg2 returns them",
+    "source": "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/48cb78ecf7f610620206283846c76751b18a1326/exec_eval.py",
+    "order_matters": false,
+    "gold_rows": 1,
+    "second_rows": 3,
+    "gold_columns": 1,
+    "second_columns": 1
+  },
+  "mechanism": {
+    "class": "multiplicity",
+    "gold_types": [
+      "text"
+    ],
+    "second_types": [
+      "text"
+    ],
+    "multiset_equal": false,
+    "set_equal": true,
+    "order_equal": false,
+    "shorter_result_is_a_prefix": true,
+    "reading": "The class states what makes these two results unequal under this rule, read off the two results and nothing else. It does not state which of the two statements is wrong."
+  },
+  "gold": {
+    "executed_sql": "SELECT DISTINCT T3.Currency FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN customers AS T3 ON T1.CustomerID = T3.CustomerID WHERE T1.Date = '2012-08-24' AND T1.Time = '16:25:00'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "currency",
+          "declared_type": "text"
+        }
+      ],
+      "row_count": 1,
+      "truncated": false,
+      "rows_shown": 1,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "CZK"
+          }
+        ]
+      ],
+      "result_hash": "sha256:5e913c3ad740aabf73bc88f3cb5effaf7eca81df4dafe47230a75c0ebd2c0891"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT  c.currency\nFROM transactions_1k t\nINNER JOIN customers c ON t.customerid = c.customerid\nWHERE t.time = '16:25:00' AND t.date = '2012-08-24'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "currency",
+          "declared_type": "text"
+        }
+      ],
+      "row_count": 3,
+      "truncated": false,
+      "rows_shown": 3,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "CZK"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "CZK"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "CZK"
+          }
+        ]
+      ],
+      "result_hash": "sha256:9126b8036e4f97cf0d8bd2e27ffe1ae5f16fa92266bef521d48e36008ed57d6a"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "CZK"
+          }
+        ],
+        "count": 2
+      }
+    ],
+    "in_second_not_in_gold_total": 2,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:5e913c3ad740aabf73bc88f3cb5effaf7eca81df4dafe47230a75c0ebd2c0891",
+    "second": "sha256:9126b8036e4f97cf0d8bd2e27ffe1ae5f16fa92266bef521d48e36008ed57d6a"
+  },
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "fixture": {
+    "schema_digest": "sha256:a50ea912b92dd0082686d8912fdf0329b3bb88e01bcd55a985c0cecb2be6fad2",
+    "row_counts": {
+      "public.customers": 32461,
+      "public.gasstations": 5716,
+      "public.transactions_1k": 1000
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "run_id": "audit-b6efa569-00a2-4421-b91b-09d107e2dac3"
+}

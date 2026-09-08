@@ -1,0 +1,257 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-eca4c25d-8d0b-48b4-baef-a8c0f13a5638",
+  "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/superhero/superhero.sqlite | size=237568",
+  "effective_database_role": "file",
+  "session_settings": {
+    "engine": "sqlite",
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "parser": {
+    "validator": "audit:sqlglot-sqlite-parse",
+    "sqlglot": "30.18.0",
+    "dialect": "sqlite"
+  },
+  "question_set": {
+    "path": "data/questions/mini_dev_sqlite.json",
+    "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+    "date": "2024-06-19",
+    "entries": 500,
+    "audited": 52,
+    "duplicate_ids": [
+      137,
+      138
+    ],
+    "ids": [
+      717,
+      719,
+      723,
+      724,
+      726,
+      728,
+      730,
+      732,
+      733,
+      736,
+      737,
+      738,
+      739,
+      740,
+      743,
+      744,
+      745,
+      747,
+      750,
+      751,
+      753,
+      758,
+      760,
+      761,
+      764,
+      765,
+      766,
+      769,
+      772,
+      773,
+      775,
+      779,
+      781,
+      782,
+      785,
+      786,
+      788,
+      790,
+      791,
+      792,
+      794,
+      796,
+      797,
+      798,
+      800,
+      801,
+      806,
+      819,
+      822,
+      824,
+      825,
+      829
+    ]
+  },
+  "predictions": {
+    "path": "data/preds-sqlite/predict_mini_dev_phi-3-medium-128k-instruct-1_sqlite.json",
+    "digest": "sha256:5e1a3a37cb174cbe62ff3bd269b293b6473c99da34f3fe3ac6f186dd5a1a7ff5",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_phi-3-medium-128k-instruct-1_sqlite.json",
+    "date": "2024-06-19",
+    "keyed_by": "position",
+    "statements": 500,
+    "positions_unused": [
+      487,
+      488
+    ]
+  },
+  "verdicts": {
+    "EQUAL": 30,
+    "NOT_EQUAL": 15,
+    "ERROR": 7
+  },
+  "smells": {
+    "ordering-over-numeric-text": 0,
+    "arbitrary-cut": 3,
+    "not-a-function-of-the-data": 0,
+    "float-aggregate-order": 0,
+    "direction-against-question": 0
+  },
+  "smells_fired": 3,
+  "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+      "multiplicity": 0,
+      "type": 0,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 0,
+      "0": 0
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "runs/minidev-sqlite/phi-3-medium-128k-instruct-1/superhero/fixture.json",
+    "source": {
+      "path": "data/minidev/dev_databases/superhero/superhero.sqlite",
+      "digest": "sha256:75e94a2c3236ee3bb2c01fb97a1c4b4c1c269bcefd4eab1d04be323d2d0825b1",
+      "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV/dev_databases, superhero/superhero.sqlite",
+      "date": "2024-06-13"
+    },
+    "schema_digest": "sha256:921b79dd088877e3b6090a31ab919676ab6b45adf398a468edc025b74a77f750",
+    "row_counts": {
+      "main.alignment": 4,
+      "main.attribute": 6,
+      "main.colour": 35,
+      "main.gender": 3,
+      "main.hero_attribute": 3738,
+      "main.hero_power": 5825,
+      "main.publisher": 25,
+      "main.race": 61,
+      "main.superhero": 750,
+      "main.superpower": 167
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "superhero",
+      "hero_power",
+      "superpower",
+      "colour",
+      "publisher",
+      "hero_attribute",
+      "attribute",
+      "race",
+      "gender",
+      "alignment"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {},
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "temp",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "alignment",
+      "attribute",
+      "colour",
+      "gender",
+      "hero_attribute",
+      "hero_power",
+      "publisher",
+      "race",
+      "superhero",
+      "superpower"
+    ],
+    "skipped": {},
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 30,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "runs/minidev-sqlite/phi-3-medium-128k-instruct-1/superhero",
+    "serialization": "attestql/audit/2",
+    "work_mem": null,
+    "hash_mem_multiplier": null
+  },
+  "data_as_of": "2026-09-08T05:05:36.076079+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.589,
+    "shuffle": 0.01
+  },
+  "errors": [
+    {
+      "question_id": 738,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: attribute.attribute_value"
+    },
+    {
+      "question_id": 745,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: publisher_id"
+    },
+    {
+      "question_id": 761,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such function: MULTIPLY"
+    },
+    {
+      "question_id": 764,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: hero_power.power_name"
+    },
+    {
+      "question_id": 775,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: gender_id"
+    },
+    {
+      "question_id": 788,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: gender"
+    },
+    {
+      "question_id": 796,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: a.attribute_name"
+    }
+  ],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 1
+}

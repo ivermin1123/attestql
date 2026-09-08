@@ -1,0 +1,1330 @@
+{
+ "benchmark-1280-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1780,
+   "tag": "TABLE"
+  }
+ },
+ "benchmark-1280-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1780,
+   "tag": "TABLE"
+  }
+ },
+ "benchmark-360-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1732,
+   "tag": "TABLE"
+  }
+ },
+ "benchmark-360-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1732,
+   "tag": "TABLE"
+  }
+ },
+ "benchmark-768-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1740,
+   "tag": "TABLE"
+  }
+ },
+ "benchmark-768-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1740,
+   "tag": "TABLE"
+  }
+ },
+ "filter-1280-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "filter-1280-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "filter-360-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 659,
+   "tag": "TABLE"
+  }
+ },
+ "filter-360-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 659,
+   "tag": "TABLE"
+  }
+ },
+ "filter-768-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "filter-768-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "group-1280-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1687,
+   "tag": "TABLE"
+  }
+ },
+ "group-1280-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1687,
+   "tag": "TABLE"
+  }
+ },
+ "group-360-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1639,
+   "tag": "TABLE"
+  }
+ },
+ "group-360-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1639,
+   "tag": "TABLE"
+  }
+ },
+ "group-768-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1647,
+   "tag": "TABLE"
+  }
+ },
+ "group-768-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1647,
+   "tag": "TABLE"
+  }
+ },
+ "hand-question-1280-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": "read by hand, 2026-09-04: B one distinct row (black) repeated, once per printing a maintainer's reading of this question, out of classification.json, copied fro",
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "hand-question-1280-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": "read by hand, 2026-09-04: B one distinct row (black) repeated, once per printing a maintainer's reading of this question, out of classification.json, copied fro",
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "hand-question-360-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": "read by hand, 2026-09-04: B one distinct row (black) repeated, once per printing a maintainer's reading of this question, out of classification.json, copied fro",
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "figure__svg figure__svg--multiplicity",
+   "right": 669,
+   "tag": "svg"
+  }
+ },
+ "hand-question-360-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": "read by hand, 2026-09-04: B one distinct row (black) repeated, once per printing a maintainer's reading of this question, out of classification.json, copied fro",
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "figure__svg figure__svg--multiplicity",
+   "right": 669,
+   "tag": "svg"
+  }
+ },
+ "hand-question-768-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": "read by hand, 2026-09-04: B one distinct row (black) repeated, once per printing a maintainer's reading of this question, out of classification.json, copied fro",
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "hand-question-768-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": "read by hand, 2026-09-04: B one distinct row (black) repeated, once per printing a maintainer's reading of this question, out of classification.json, copied fro",
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "landing-1280-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1991,
+   "tag": "TABLE"
+  }
+ },
+ "landing-1280-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1991,
+   "tag": "TABLE"
+  }
+ },
+ "landing-360-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1943,
+   "tag": "TABLE"
+  }
+ },
+ "landing-360-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1943,
+   "tag": "TABLE"
+  }
+ },
+ "landing-768-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1951,
+   "tag": "TABLE"
+  }
+ },
+ "landing-768-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "index__table",
+   "right": 1951,
+   "tag": "TABLE"
+  }
+ },
+ "method-1280-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "method-1280-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "method-360-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "figure__svg figure__svg--method",
+   "right": 656,
+   "tag": "svg"
+  }
+ },
+ "method-360-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": {
+   "cls": "figure__svg figure__svg--method",
+   "right": 656,
+   "tag": "svg"
+  }
+ },
+ "method-768-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "method-768-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "plain-question-1280-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "plain-question-1280-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "plain-question-360-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "plain-question-360-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "plain-question-768-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "plain-question-768-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "runs-1280-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "runs-1280-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 1280,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 64,
+  "scrollWidth": 1280,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "runs-360-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "runs-360-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 360,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 16,
+  "scrollWidth": 360,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "runs-768-dark": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ },
+ "runs-768-light": {
+  "banner": null,
+  "bannerLeft": null,
+  "byHand": null,
+  "clientWidth": 768,
+  "fontSizes": [
+   "13px",
+   "16px",
+   "20px",
+   "28px"
+  ],
+  "overflows": false,
+  "proseLeft": 24,
+  "scrollWidth": 768,
+  "spacing": [
+   "4px",
+   "8px",
+   "12px",
+   "16px",
+   "24px",
+   "32px",
+   "48px",
+   "64px"
+  ],
+  "widestElement": null
+ }
+}

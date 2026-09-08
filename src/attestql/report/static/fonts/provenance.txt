@@ -1,0 +1,37 @@
+The fonts on these pages, where they came from, and under what licence.
+
+Three Latin subsets of IBM Plex, self-hosted so that a rendered report needs nothing from a
+network and states nothing to one. The licence is beside them in OFL.txt, whole and
+unaltered, which is what the SIL Open Font License 1.1 asks of anyone who redistributes the
+files. NOTICE names them too.
+
+  IBMPlexSans-Regular-Latin1.woff2   20,984 bytes
+    sha256 b5ad7bd39f996144915f0ad9849a90183b27d8c28ad97ed98af5b1bebc51f6b1
+  IBMPlexSans-SemiBold-Latin1.woff2  22,260 bytes
+    sha256 fff0ab3a88b0b4aa0b693e4f0201359a15183b08e3fa5696d1918d8f0ade8ad5
+  IBMPlexMono-Regular-Latin1.woff2   17,544 bytes
+    sha256 e8993d946649b9d01abb1ed06d574b19d8ea3e66b5c3948602db335c44c18e56
+  OFL.txt                             4,360 bytes
+    sha256 91c25c350d3cac39da2736d74f7ba37ef648f5237a4e330a240615bc8d8c4360
+
+Where they were taken from, on 2026-09-07:
+
+  the two sans faces and OFL.txt   npm @ibm/plex-sans 1.1.0
+                                   https://registry.npmjs.org/@ibm/plex-sans/-/plex-sans-1.1.0.tgz
+                                   tarball sha256
+                                   c3818979c2a2c82927ea3e7c485e389a18de0b7462887dd4f7acc9a525568962
+                                   package/fonts/split/woff2/
+  the mono face                    npm @ibm/plex-mono 2.5.0
+                                   https://registry.npmjs.org/@ibm/plex-mono/-/plex-mono-2.5.0.tgz
+                                   tarball sha256
+                                   55b5ffcfcd5e9db36ef2070b2b07a573434ca02c6f3be2b921c0b88fff29acad
+                                   package/fonts/split/woff2/
+
+The files are the packages' own pre-split Latin subsets, copied byte for byte and not
+resubset here. The subset covers U+0000, U+000D, U+0020-007E, U+00A0-00FF, U+0131,
+U+0152-0153, U+02C6, U+02DA, U+02DC, U+2013-2014, U+2018-201A, U+201C-201E, U+2020-2022,
+U+2026, U+2030, U+2039-203A, U+2044, U+20AC, U+2122, U+2212, U+FB01-FB02: every character
+these pages write except the two triangles that mark the gold and the second side, which
+the reader's own system font draws.
+
+Copyright 2017 IBM Corp. with Reserved Font Name "Plex".

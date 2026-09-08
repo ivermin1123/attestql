@@ -1,0 +1,273 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "case": "no-ordering",
+        "cut": 1,
+        "why": "the statement bounds its result and states no ORDER BY, so which rows it returns is whichever ones the plan produced first",
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "player_attributes",
+            "player"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "verdict": "not_equal",
+        "gold_result": {
+          "columns": [
+            {
+              "name": "id",
+              "declared_type": "int8"
+            },
+            {
+              "name": "finishing",
+              "declared_type": "int8"
+            },
+            {
+              "name": "curve",
+              "declared_type": "int8"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 98022
+              },
+              {
+                "type": "int",
+                "value": 13
+              },
+              {
+                "type": "int",
+                "value": 13
+              }
+            ]
+          ],
+          "result_hash": "sha256:577f267d2b9adb961a67b8d5ad4e3639064f95ae71915ad10159bba1e8332aa1"
+        },
+        "shuffled_result": {
+          "columns": [
+            {
+              "name": "id",
+              "declared_type": "int8"
+            },
+            {
+              "name": "finishing",
+              "declared_type": "int8"
+            },
+            {
+              "name": "curve",
+              "declared_type": "int8"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 171980
+              },
+              {
+                "type": "int",
+                "value": 11
+              },
+              {
+                "type": "int",
+                "value": 9
+              }
+            ]
+          ],
+          "result_hash": "sha256:b6c193d116edd39b4c6252edf2a615e3505f2f6050e72c641aeac7737c8e8ac6"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 171980
+          },
+          {
+            "type": "int",
+            "value": 11
+          },
+          {
+            "type": "int",
+            "value": 9
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:577f267d2b9adb961a67b8d5ad4e3639064f95ae71915ad10159bba1e8332aa1",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "id",
+              "declared_type": "int8"
+            },
+            {
+              "name": "finishing",
+              "declared_type": "int8"
+            },
+            {
+              "name": "curve",
+              "declared_type": "int8"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 98022
+              },
+              {
+                "type": "int",
+                "value": 13
+              },
+              {
+                "type": "int",
+                "value": 13
+              }
+            ]
+          ],
+          "result_hash": "sha256:577f267d2b9adb961a67b8d5ad4e3639064f95ae71915ad10159bba1e8332aa1"
+        },
+        "planner_statistics": {
+          "player_attributes": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 183978
+          },
+          "player": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 11060
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "player_attributes",
+            "player"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:b6c193d116edd39b4c6252edf2a615e3505f2f6050e72c641aeac7737c8e8ac6",
+          "result": {
+            "columns": [
+              {
+                "name": "id",
+                "declared_type": "int8"
+              },
+              {
+                "name": "finishing",
+                "declared_type": "int8"
+              },
+              {
+                "name": "curve",
+                "declared_type": "int8"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "int",
+                  "value": 171980
+                },
+                {
+                  "type": "int",
+                  "value": 11
+                },
+                {
+                  "type": "int",
+                  "value": 9
+                }
+              ]
+            ],
+            "result_hash": "sha256:b6c193d116edd39b4c6252edf2a615e3505f2f6050e72c641aeac7737c8e8ac6"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 171980
+          },
+          {
+            "type": "int",
+            "value": 11
+          },
+          {
+            "type": "int",
+            "value": 9
+          }
+        ]
+      ]
+    }
+  ]
+}

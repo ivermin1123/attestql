@@ -1,0 +1,340 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "t2.attribute_value",
+            "column": "hero_attribute.attribute_value",
+            "declared_type": "bigint",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t1.superhero_name, t2.attribute_value AS attestql_ordering_key_0 FROM superhero t1 JOIN hero_attribute t2 ON t1.id = t2.hero_id JOIN attribute t3 ON t2.attribute_id = t3.id WHERE t3.attribute_name = 'Speed' ORDER BY t2.attribute_value DESC NULLS LAST",
+        "unbounded_rows": 623,
+        "projected_columns": [
+          "superhero_name"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t2.attribute_value",
+            "direction": "desc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "tied_rows": 40,
+          "distinct_projected_answers": 40,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Bizarro"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Beyonder"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Air-Walker"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Ben 10"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Silver Surfer"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Spectre"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Angela"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Stardust"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Jack of Hearts"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Living Tribunal"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Bizarro"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Beyonder"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Air-Walker"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Ben 10"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Silver Surfer"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Spectre"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angela"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Stardust"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Jack of Hearts"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Living Tribunal"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:0a763f3ca83468d41b2589495f0a57996a35f4573c68ad1be233e093446566b2",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "superhero_name",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Air-Walker"
+              }
+            ]
+          ],
+          "result_hash": "sha256:0a763f3ca83468d41b2589495f0a57996a35f4573c68ad1be233e093446566b2"
+        },
+        "planner_statistics": {
+          "attribute": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 6
+          },
+          "superhero": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:12.518866+00",
+            "n_mod_since_analyze": 0
+          },
+          "hero_attribute": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 3738
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "attribute",
+            "superhero",
+            "hero_attribute"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:9d5e11be80ae58af70c6b3552619d568094411d8d154e5c0a822c22a333242a1",
+          "result": {
+            "columns": [
+              {
+                "name": "superhero_name",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "One-Above-All"
+                }
+              ]
+            ],
+            "result_hash": "sha256:9d5e11be80ae58af70c6b3552619d568094411d8d154e5c0a822c22a333242a1"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "One-Above-All"
+          }
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{# Every probe that ran on the gold: the ones that fired, the ones that stayed quiet and
+   the ones that did not apply, each with what the file says the probe means. #}
+{% macro probe_list(page, rows_table) %}
+<section class="probes" id="probes">
+  <h2>The probes</h2>
+  <p class="probes__reading">{{ page.probes_reading }}</p>
+  {% for probe in page.probes %}
+  <article class="probe probe--{{ probe.state|replace(' ', '-') }}">
+    <h3 class="probe__name">
+      {% if probe.fired %}
+      <span class="chip chip--warn">{{ probe.name }}</span>
+      {% else %}
+      <span class="chip chip--quiet ink-2">{{ probe.name }}</span>
+      {% endif %}
+      <span class="probe__state ink-2">{{ probe.state }}</span>
+    </h3>
+    {% if probe.means %}<p class="probe__means">{{ probe.means }}</p>{% endif %}
+    {% if probe.reason %}<p class="probe__reason ink-2">{{ probe.reason }}</p>{% endif %}
+    {% if probe.rows %}
+    {{ rows_table(probe.rows) }}
+    {% endif %}
+    <details class="probe__evidence">
+      <summary>what it measured</summary>
+      <pre class="json mono"><code>{{ probe.evidence }}</code></pre>
+    </details>
+  </article>
+  {% endfor %}
+</section>
+{% endmacro %}

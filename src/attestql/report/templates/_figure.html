@@ -1,0 +1,11 @@
+{# One figure, and the same numbers in words under it.
+
+   The drawing carries no number a reader cannot also read here, and the caption is what
+   the SVG points at with aria-describedby, so a reader who does not see the picture is
+   told what it holds rather than that there is a picture. #}
+{% macro figure_block(figure) %}
+<figure class="figure figure--{{ figure.name }}">
+  {{ figure.svg|safe }}
+  <figcaption class="figure__text" id="{{ figure.described_by }}">{{ figure.alternative }}</figcaption>
+</figure>
+{% endmacro %}

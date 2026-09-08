@@ -1,0 +1,130 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "reason": "the statement states no LIMIT"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "float-aggregate-order",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement aggregates floating point numbers, so its last digits depend on the order the rows were summed in; the values agree to six significant digits",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:0755eee7cb5f3b509bba8df2e532e80cca0094942fe7905c819842bbede6fd84",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "sum",
+              "declared_type": "float4"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "dec",
+                "value": "600.11"
+              }
+            ]
+          ],
+          "result_hash": "sha256:0755eee7cb5f3b509bba8df2e532e80cca0094942fe7905c819842bbede6fd84"
+        },
+        "planner_statistics": {
+          "expense": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 32
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "expense"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:28a33fd0933dc8c2b7eb34dc1b147cee178aa7665999cce122d919d75a4750d2",
+          "result": {
+            "columns": [
+              {
+                "name": "sum",
+                "declared_type": "float4"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "dec",
+                  "value": "600.11005"
+                }
+              ]
+            ],
+            "result_hash": "sha256:28a33fd0933dc8c2b7eb34dc1b147cee178aa7665999cce122d919d75a4750d2"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        },
+        "float_cells": [
+          {
+            "row": 0,
+            "column": "sum",
+            "declared_type": "float4",
+            "baseline": "600.11",
+            "rerun": "600.11005"
+          }
+        ],
+        "significant_digits": 6
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "dec",
+            "value": "600.11005"
+          }
+        ]
+      ]
+    }
+  ]
+}

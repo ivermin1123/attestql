@@ -1,0 +1,1026 @@
+{
+  "question_as_asked": "Please list the Italian names of the cards in the set Coldsnap with the highest converted mana cost.",
+  "question": {
+    "question_id": "484",
+    "question_set": "dev_20251106-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07)",
+    "question_text": "Please list the Italian names of the cards in the set Coldsnap with the highest converted mana cost.",
+    "evidence_text": "card set Coldsnap refers to name = 'Coldsnap'; Italian refers to language = 'Italian'; highest converted mana cost refers to MAX(convertedManaCost)"
+  },
+  "question_set_version": "sha256:ffd8018378ddb1a8794753e0a31cfc81862ff7318a5184c22f3dc4ce03a03feb",
+  "statement_source": {
+    "path": "data/questions/dev_20251106-00000-of-00001.json",
+    "digest": "sha256:ffd8018378ddb1a8794753e0a31cfc81862ff7318a5184c22f3dc4ce03a03feb",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07)",
+    "date": "2026-01-18T08:51:02Z"
+  },
+  "executed_sql": "SELECT T2.name FROM foreign_data AS T1 INNER JOIN cards AS T2 ON T2.uuid = T1.uuid INNER JOIN sets AS T3 ON T3.code = T2.setCode WHERE T3.name = 'Coldsnap' AND T1.language = 'Italian' ORDER BY T2.convertedManaCost DESC",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:sqlglot-sqlite-parse",
+  "effective_database_role": "file",
+  "backend_identity_at_checkout": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/card_games/card_games.sqlite | size=261820416",
+  "session_settings_in_force": {
+    "engine": "sqlite",
+    "time_zone": null,
+    "date_style": null,
+    "interval_style": null,
+    "extra_float_digits": null,
+    "database_collation": null,
+    "work_mem": null,
+    "hash_mem_multiplier": null,
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "wal",
+      "data_version": "3",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "name",
+        "declared_type": "TEXT"
+      }
+    ],
+    "row_count": 155,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "Sunscour"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Commandeer"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jokulmorder"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rimefeather Owl"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Herald of Leshrac"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Soul Spike"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tresserhorn Skyknight"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fury of the Horde"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rimescale Dragon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Allosaurus Rider"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Panglacial Wurm"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Garza Zol, Plague Queen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adarkar Valkyrie"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Darien, King of Kjeldor"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kjeldoran Gargoyle"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ronom Serpent"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Void Maw"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Greater Stone Spirit"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Arctic Nishoba"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aurochs Herd"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Shape of the Wiitigo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Deepfire Elemental"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Phyrexian Snowcrusher"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Boreal Griffin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ursine Fylgja"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adarkar Windform"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Drelnoch"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Heidar, Rimewind Master"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gristle Grinner"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lovisa Coldeyes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thermopod"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hibernation's End"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rimehorn Aurochs"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ronom Hulk"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Steam Spitter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Diamond Faerie"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juniper Order Ranger"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sek'Kuar, Deathkeeper"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thrumming Stone"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Glacial Plating"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Woolly Razorback"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Arcum Dagsson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Controvert"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Krovikan Whispers"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rimewind Cryomancer"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Surging Aether"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Balduvian Fallen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Chill to the Bone"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Disciple of Tevesh Szat"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Zombie Musher"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Balduvian Warlord"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Icefall"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Karplusan Minotaur"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Magmatic Core"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ohran Yeti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stalking Yeti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Brooding Saurian"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Karplusan Strider"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mystic Melting"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Simian Brawler"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Blizzard Specter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vanish into Memory"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Zur the Enchanter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cover of Winter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Field Marshal"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jötun Owl Keeper"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Surging Sentinels"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Balduvian Frostwaker"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Frost Raptor"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Frozen Solid"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Survivor of the Unseen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vexing Sphinx"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Chilling Shade"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Garza's Assassin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gutless Ghoul"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Haakon, Stromgald Scourge"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Krovikan Rot"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Phobian Phantasm"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Phyrexian Etchings"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cryoclasm"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Earthen Goo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Goblin Rimerunner"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lightning Storm"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Orcish Bloodpainter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Frostweb Spider"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ohran Viper"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sound the Call"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Surging Might"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tamanoa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wilderness Elemental"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jester's Scepter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Phyrexian Ironfoot"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Phyrexian Soulgorger"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jötun Grunt"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kjeldoran Outrider"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kjeldoran War Cry"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ronom Unicorn"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Squall Drifter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sun's Bounty"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Swift Maneuver"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wall of Shards"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "White Shield Crusader"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Counterbalance"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Flashfreeze"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Krovikan Mist"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Perilous Research"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rimewind Taskmage"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rune Snag"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Grim Harvest"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Krovikan Scoundrel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rime Transfusion"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stromgald Crusader"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Surging Dementia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Braid of Fire"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Goblin Furrier"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Surging Flame"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Boreal Centaur"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bull Aurochs"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Freyalise's Radiance"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Into the North"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Resize"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sheltering Ancient"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Coldsteel Heart"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gelid Shackles"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kjeldoran Javelineer"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luminesce"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Martyr of Sands"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Martyr of Frost"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thermal Flux"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Deathmark"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Feast of Flesh"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Martyr of Bones"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rimebound Dead"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Balduvian Rage"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Karplusan Wolverine"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lightning Serpent"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Martyr of Ashes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rite of Flame"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Skred"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Boreal Druid"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Martyr of Spores"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mishra's Bauble"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Arctic Flats"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Boreal Shelf"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dark Depths"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Frost Marsh"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Highland Weald"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mouth of Ronom"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Scrying Sheets"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tresserhorn Sinks"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Snow-Covered Plains"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Snow-Covered Island"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Snow-Covered Swamp"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Snow-Covered Mountain"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Snow-Covered Forest"
+        }
+      ]
+    ],
+    "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/card_games/card_games.sqlite | size=261820416",
+    "statement_timeout_ms": 30000
+  },
+  "row_count": 155,
+  "canonical_ordering": [
+    {
+      "column": "T2.convertedManaCost",
+      "descending": true
+    }
+  ],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-ORD",
+  "fixture": {
+    "schema_digest": "sha256:aea1e6e4c91d9274726f0173213118a3451faf7ab6b445c045722b3d3818474f",
+    "row_counts": {
+      "main.cards": 56822,
+      "main.foreign_data": 229186,
+      "main.sets": 551
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227"
+  },
+  "data_as_of": "2026-09-08T05:11:02.685988+00:00",
+  "executed_at": "2026-09-08T05:11:32.241356+00:00",
+  "run_id": "audit-dab499aa-0142-4d84-a27a-cf354e9e38e3",
+  "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/card_games/card_games.sqlite | size=261820416 under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
+  "result_hash": "sha256:6cb177cf8db2129b664ce2b6fe965cdb03d2d86213a5fe3be577041b134a28a1",
+  "record_hash": "sha256:af1c96a1252797e3c9d8b4aaec758e7f9898eb0abd70bbef4e3e879f65711f06"
+}

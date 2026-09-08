@@ -880,6 +880,17 @@ def all_smells(
     return tuple(found)
 
 
+def probe_meanings() -> Mapping[str, str]:
+    """What each probe would mean if it fired, by name, as its evidence states it.
+
+    The same strings ``_evidence`` writes into every probe's ``means``. They are read from
+    here by a page that lists the probes a run can make before it has made any -- a method
+    page has no ``smells.json`` to read them out of -- and the mapping is returned as a copy
+    so that what a reader is shown and what a probe writes cannot come apart.
+    """
+    return dict(_MEANS)
+
+
 def smells_json(found: Sequence[Smell]) -> Json:
     """Every smell that ran on one gold, as one document a maintainer reads."""
     return {
@@ -930,5 +941,6 @@ __all__ = [
     "direction_against_question",
     "not_a_function_of_the_data",
     "ordering_over_numeric_text",
+    "probe_meanings",
     "smells_json",
 ]

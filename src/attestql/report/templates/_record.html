@@ -1,0 +1,71 @@
+{# One evidence record, whole, with its two hashes taken again from the file it is in.
+
+   The record holds every row of its result, so the rows are inside a disclosure and the
+   count is on the summary line: a reader who wants them opens them, and a reader who
+   wants the hash reads it without waiting for a thousand rows. #}
+{% macro record_block(record, rows_table) %}
+<article class="record record--{{ record.side }}" id="record-{{ record.side }}">
+  <h3 class="record__name">{{ record.side }}: <span class="mono">{{ record.file }}</span></h3>
+  <pre class="sql mono"><code>{{ record.executed_sql }}</code></pre>
+  <dl class="facts facts--source">
+    <dt>statement read from</dt>
+    <dd class="mono">{{ record.source.path }}</dd>
+    <dt>digest</dt>
+    <dd class="mono">{{ record.source.digest }}</dd>
+    <dt>origin</dt>
+    <dd>{% if record.source.origin %}{{ record.source.origin }}{% if record.source.date %}, {{ record.source.date }}{% endif %}{% else %}the run was told none{% endif %}</dd>
+  </dl>
+  {% for hash in record.hashes %}
+  <p class="record__hash">
+    <span class="mono">{{ hash.name }} {{ hash.stated }}</span>
+    {% if hash.match %}
+    <span class="recomputed recomputed--match">recomputed from this JSON: match</span>
+    {% else %}
+    <span class="recomputed recomputed--differs warn">recomputed from this JSON: <span class="mono">{{ hash.recomputed }}</span>, and this file states <span class="mono">{{ hash.stated }}</span></span>
+    {% endif %}
+  </p>
+  {% endfor %}
+  <details class="record__result">
+    <summary>the result this record holds, {{ record.result.total }}</summary>
+    {{ rows_table(record.result) }}
+  </details>
+  <details class="record__block">
+    <summary>what ran, and where</summary>
+    <dl class="facts">
+      {% for fact in record.identity %}
+      <dt>{{ fact.name }}</dt>
+      <dd class="mono">{{ fact.value }}</dd>
+      {% endfor %}
+    </dl>
+  </details>
+  <details class="record__block">
+    <summary>the session it ran under</summary>
+    <dl class="facts">
+      {% for fact in record.session %}
+      <dt>{{ fact.name }}</dt>
+      <dd class="mono">{{ fact.value }}</dd>
+      {% endfor %}
+    </dl>
+    <h4>recorded beside them</h4>
+    <dl class="facts">
+      {% for fact in record.recorded %}
+      <dt>{{ fact.name }}</dt>
+      <dd class="mono">{{ fact.value }}</dd>
+      {% endfor %}
+    </dl>
+  </details>
+  <details class="record__block">
+    <summary>the rendering and the data</summary>
+    <dl class="facts">
+      {% for fact in record.serialization %}
+      <dt>{{ fact.name }}</dt>
+      <dd class="mono">{{ fact.value }}</dd>
+      {% endfor %}
+      {% for fact in record.fixture %}
+      <dt>{{ fact.name }}</dt>
+      <dd class="mono">{{ fact.value }}</dd>
+      {% endfor %}
+    </dl>
+  </details>
+</article>
+{% endmacro %}

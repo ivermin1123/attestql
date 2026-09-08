@@ -1,0 +1,254 @@
+{
+  "question_as_asked": "Give the full name and contact number of members who had to spend more than average on each expense.",
+  "question": {
+    "question_id": "1457",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "Give the full name and contact number of members who had to spend more than average on each expense.",
+    "evidence_text": "full name refers to first_name, last_name; contact number refers to phone; had spent more than average on each expense refers to cost > AVG(cost)"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "statement_source": {
+    "path": "data/preds-pg/predict_mini_dev_gpt-35-turbo-instruct_postgresql.json",
+    "digest": "sha256:df1edf6aac3c01cf93041bcd7b60378efe6f7359f19add6d2af2345bef092bf9",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo-instruct_postgresql.json",
+    "date": "2024-06-19"
+  },
+  "executed_sql": "SELECT  member.first_name, member.last_name, member.phone\nFROM member\nINNER JOIN expense ON member.member_id = expense.link_to_member\nWHERE expense.cost > (SELECT AVG(cost) FROM expense)",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "first_name",
+        "declared_type": "text"
+      },
+      {
+        "name": "last_name",
+        "declared_type": "text"
+      },
+      {
+        "name": "phone",
+        "declared_type": "text"
+      }
+    ],
+    "row_count": 11,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "Sacha"
+        },
+        {
+          "type": "str",
+          "value": "Harrison"
+        },
+        {
+          "type": "str",
+          "value": "840-555-4781"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sacha"
+        },
+        {
+          "type": "str",
+          "value": "Harrison"
+        },
+        {
+          "type": "str",
+          "value": "840-555-4781"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sacha"
+        },
+        {
+          "type": "str",
+          "value": "Harrison"
+        },
+        {
+          "type": "str",
+          "value": "840-555-4781"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sacha"
+        },
+        {
+          "type": "str",
+          "value": "Harrison"
+        },
+        {
+          "type": "str",
+          "value": "840-555-4781"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sacha"
+        },
+        {
+          "type": "str",
+          "value": "Harrison"
+        },
+        {
+          "type": "str",
+          "value": "840-555-4781"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sacha"
+        },
+        {
+          "type": "str",
+          "value": "Harrison"
+        },
+        {
+          "type": "str",
+          "value": "840-555-4781"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Phillip"
+        },
+        {
+          "type": "str",
+          "value": "Cullen"
+        },
+        {
+          "type": "str",
+          "value": "905-555-5035"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Phillip"
+        },
+        {
+          "type": "str",
+          "value": "Cullen"
+        },
+        {
+          "type": "str",
+          "value": "905-555-5035"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Elijah"
+        },
+        {
+          "type": "str",
+          "value": "Allen"
+        },
+        {
+          "type": "str",
+          "value": "724-555-5721"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Elijah"
+        },
+        {
+          "type": "str",
+          "value": "Allen"
+        },
+        {
+          "type": "str",
+          "value": "724-555-5721"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Elijah"
+        },
+        {
+          "type": "str",
+          "value": "Allen"
+        },
+        {
+          "type": "str",
+          "value": "724-555-5721"
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 120000
+  },
+  "row_count": 11,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:506753b73f2c658b0c540e99204705002216f0bd04ef2d9d2b06d63b796b1a73",
+    "row_counts": {
+      "public.budget": 52,
+      "public.expense": 32,
+      "public.member": 33
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-08T05:20:16.520067+00:00",
+  "executed_at": "2026-09-08T05:20:28.485689+00:00",
+  "run_id": "audit-b6efa569-00a2-4421-b91b-09d107e2dac3",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:a9afa38c74cefb93b25a34cb9590c6d259cd7cc2d05bd52912d9407edcfd4890",
+  "record_hash": "sha256:9b6cd42d30f0ba85540734888bb8ce55780cb60bdf2cbbc873f89e0b34dd2815"
+}

@@ -1,0 +1,47 @@
+{# One table of rows, under the columns of the result it came from.
+
+   The header cell states the column name and, under it, the type the engine declared for
+   it. A cell states its own type tag only where the rows of its column disagree, which is
+   what a storage class makes real. The whole table is inside a region of its own that
+   scrolls sideways, so a wide result never makes the page scroll.
+
+   A table asked for the entrance carries each row's place on the row itself, which is what
+   the stylesheet staggers the one animation of the page by. It is asked for on the rows
+   two results differ in and nowhere else: a record's own table holds every row it has, and
+   ten thousand style attributes would be paid for on every page. #}
+{% macro rows_table(rows, entrance=false) %}
+<div class="rows" data-source="{{ rows.source }}">
+  <p class="rows__source ink-2">{{ rows.source }}{% if rows.partial %}, {{ rows.rows_shown }} on this page{% endif %}</p>
+  {% if rows.truncated %}
+  <p class="rows__truncated warn">this result is a bounded reading of what the statement returned: the record states truncated</p>
+  {% endif %}
+  <div class="rows__region">
+    <table class="rows__table">
+      {% if rows.columns %}
+      <thead>
+        <tr>
+          {% if rows.labelled %}<th scope="col" class="rows__label">side</th>{% endif %}
+          {% if rows.counted %}<th scope="col" class="rows__count">times</th>{% endif %}
+          {% for column in rows.columns %}
+          <th scope="col"><span class="rows__name">{{ column.name }}</span><span class="rows__type ink-2 mono">{{ column.declared_type }}</span></th>
+          {% endfor %}
+        </tr>
+      </thead>
+      {% endif %}
+      <tbody>
+        {% for row in rows.rows %}
+        <tr class="rows__row{% if row.label %} rows__row--{{ row.label }}{% endif %}"{% if entrance %} style="--row: {{ loop.index0 }}"{% endif %}>
+          {% if rows.labelled %}<td class="rows__label"><span class="glyph" aria-hidden="true">{{ row.glyph }}</span> {{ row.label }}</td>{% endif %}
+          {% if rows.counted %}<td class="rows__count mono">{{ row.count }}</td>{% endif %}
+          {% for cell in row.cells %}
+          <td class="cell cell--{{ cell.tag }}{% if cell.is_null %} cell--null{% endif %} mono">{{ cell.text }}{% if cell.show_tag %} <span class="cell__tag ink-2">{{ cell.tag }}</span>{% endif %}</td>
+          {% endfor %}
+        </tr>
+        {% else %}
+        <tr><td class="rows__none ink-2">no rows</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endmacro %}

@@ -1,0 +1,932 @@
+[
+ {
+  "question_id": "531",
+  "db_id": "codebase_community",
+  "question": "Which user has a higher reputation, Harlan or Jarrod Dixon?"
+ },
+ {
+  "question_id": "532",
+  "db_id": "codebase_community",
+  "question": "Please list the display names of all the users whose accounts were created in the year 2011."
+ },
+ {
+  "question_id": "533",
+  "db_id": "codebase_community",
+  "question": "How many users last accessed the website after 2014/9/1?"
+ },
+ {
+  "question_id": "534",
+  "db_id": "codebase_community",
+  "question": "What is the display name of the user who has the most number of views?"
+ },
+ {
+  "question_id": "535",
+  "db_id": "codebase_community",
+  "question": "Among the users who have more than 100 upvotes, how many of them have more then 1 downvotes?"
+ },
+ {
+  "question_id": "536",
+  "db_id": "codebase_community",
+  "question": "How many users with more than 10 views created their account after the year 2013?"
+ },
+ {
+  "question_id": "537",
+  "db_id": "codebase_community",
+  "question": "How many posts does the user csgillespie own?"
+ },
+ {
+  "question_id": "538",
+  "db_id": "codebase_community",
+  "question": "Please list the titles of the posts owned by the user csgillespie?"
+ },
+ {
+  "question_id": "539",
+  "db_id": "codebase_community",
+  "question": "Who is the owner of the post \"Eliciting priors from experts\"?"
+ },
+ {
+  "question_id": "540",
+  "db_id": "codebase_community",
+  "question": "What is the title of the post that is owned by csgillespie and has the highest popularity?"
+ },
+ {
+  "question_id": "541",
+  "db_id": "codebase_community",
+  "question": "What is the display name of the user who is the owner of the most valuable post?"
+ },
+ {
+  "question_id": "542",
+  "db_id": "codebase_community",
+  "question": "What is the total number of comments of all the posts owned by csgillespie?"
+ },
+ {
+  "question_id": "543",
+  "db_id": "codebase_community",
+  "question": "For the post that got the most number of answers owned by csgillespie, how many answers did it get?"
+ },
+ {
+  "question_id": "544",
+  "db_id": "codebase_community",
+  "question": "What is the display name of the user who last edited the post \"Examples for teaching: Correlation does not mean causation\"?"
+ },
+ {
+  "question_id": "545",
+  "db_id": "codebase_community",
+  "question": "Among the posts owned by csgillespie, how many of them are root posts?"
+ },
+ {
+  "question_id": "546",
+  "db_id": "codebase_community",
+  "question": "Please list the display names of all the users who owns a post that is well-finished."
+ },
+ {
+  "question_id": "547",
+  "db_id": "codebase_community",
+  "question": "Among the posts owned by an elder user, how many of them have a score of over 19?"
+ },
+ {
+  "question_id": "548",
+  "db_id": "codebase_community",
+  "question": "What is the location of the owner of the post \"Eliciting priors from experts\"?"
+ },
+ {
+  "question_id": "549",
+  "db_id": "codebase_community",
+  "question": "From which post is the tag \"bayesian\" excerpted from? Please give the body of the post."
+ },
+ {
+  "question_id": "550",
+  "db_id": "codebase_community",
+  "question": "From which post is the most popular tag excerpted from? Please give the body of the post."
+ },
+ {
+  "question_id": "551",
+  "db_id": "codebase_community",
+  "question": "How many badges has the user csgillespie obtained?"
+ },
+ {
+  "question_id": "552",
+  "db_id": "codebase_community",
+  "question": "Please list the names of the badges obtained by csgillespie."
+ },
+ {
+  "question_id": "553",
+  "db_id": "codebase_community",
+  "question": "Among the badges obtained by csgillespie, how many of them were obtained in the year 2011?"
+ },
+ {
+  "question_id": "554",
+  "db_id": "codebase_community",
+  "question": "What is the display name of the user who has obtained the most number of badges?"
+ },
+ {
+  "question_id": "555",
+  "db_id": "codebase_community",
+  "question": "What is the average score of the posts owned by the user csgillespie?"
+ },
+ {
+  "question_id": "556",
+  "db_id": "codebase_community",
+  "question": "What is the average number of badges obtained by a user with over 200 views?"
+ },
+ {
+  "question_id": "557",
+  "db_id": "codebase_community",
+  "question": "Among the posts with a score of over 5, what is the percentage of them being owned by an elder user?"
+ },
+ {
+  "question_id": "558",
+  "db_id": "codebase_community",
+  "question": "How many votes did the user No.58 take on 2010/7/19?"
+ },
+ {
+  "question_id": "559",
+  "db_id": "codebase_community",
+  "question": "Indicate the creation date of the maximum number of votes."
+ },
+ {
+  "question_id": "560",
+  "db_id": "codebase_community",
+  "question": "Give the number of \"Revival\" badges."
+ },
+ {
+  "question_id": "561",
+  "db_id": "codebase_community",
+  "question": "What are the titles of all posts that have comments with the highest score?"
+ },
+ {
+  "question_id": "562",
+  "db_id": "codebase_community",
+  "question": "For the post which got 1910 view counts, how many comments does it get?"
+ },
+ {
+  "question_id": "563",
+  "db_id": "codebase_community",
+  "question": "User No.3025 gave a comment at 20:29:39 on 2014/4/23 to a post, how many favorite counts did that post get?"
+ },
+ {
+  "question_id": "564",
+  "db_id": "codebase_community",
+  "question": "Give the comment text of the post with only one comment and parent id 107829."
+ },
+ {
+  "question_id": "565",
+  "db_id": "codebase_community",
+  "question": "User No.23853 gave a comment to a post at 9:08:18 on 2013/7/12, was that post well-finished?"
+ },
+ {
+  "question_id": "566",
+  "db_id": "codebase_community",
+  "question": "For the owner user of post No. 65041, what is his/her reputation points?"
+ },
+ {
+  "question_id": "567",
+  "db_id": "codebase_community",
+  "question": "For the user with the display name of \"Tiago Pasqualini\", how many posts did he/she own?"
+ },
+ {
+  "question_id": "568",
+  "db_id": "codebase_community",
+  "question": "Provide the display name of the user who made the vote No.6347."
+ },
+ {
+  "question_id": "569",
+  "db_id": "codebase_community",
+  "question": "Give the number of votes for the post about data visualization."
+ },
+ {
+  "question_id": "570",
+  "db_id": "codebase_community",
+  "question": "For the user whose display name is \"DatEpicCoderGuyWhoPrograms\", what is his/her badge's name?"
+ },
+ {
+  "question_id": "571",
+  "db_id": "codebase_community",
+  "question": "For the user No.24, how many times is the number of his/her posts compared to his/her votes?"
+ },
+ {
+  "question_id": "572",
+  "db_id": "codebase_community",
+  "question": "How many views did the post titled 'Integration of Weka and/or RapidMiner into Informatica PowerCenter/Developer' get?"
+ },
+ {
+  "question_id": "573",
+  "db_id": "codebase_community",
+  "question": "Write the contents of comments with a score of 17."
+ },
+ {
+  "question_id": "574",
+  "db_id": "codebase_community",
+  "question": "Which user has the website URL listed at 'http://stackoverflow.com'"
+ },
+ {
+  "question_id": "575",
+  "db_id": "codebase_community",
+  "question": "What is the badge name that user 'SilentGhost' obtained?"
+ },
+ {
+  "question_id": "576",
+  "db_id": "codebase_community",
+  "question": "Name the user that commented 'thank you user93!'"
+ },
+ {
+  "question_id": "577",
+  "db_id": "codebase_community",
+  "question": "Write all comments made by user 'A Lion.'"
+ },
+ {
+  "question_id": "578",
+  "db_id": "codebase_community",
+  "question": "Which user made a post titled 'Understanding what Dassault iSight is doing?' and how much is the reputation of the user?"
+ },
+ {
+  "question_id": "579",
+  "db_id": "codebase_community",
+  "question": "Write all comments made on the post titled 'How does gentle boosting differ from AdaBoost?'"
+ },
+ {
+  "question_id": "580",
+  "db_id": "codebase_community",
+  "question": "Name 10 users with the badge name 'Necromancer.'"
+ },
+ {
+  "question_id": "581",
+  "db_id": "codebase_community",
+  "question": "Who is the editor of the post titled 'Open source tools for visualizing multi-dimensional data?'"
+ },
+ {
+  "question_id": "582",
+  "db_id": "codebase_community",
+  "question": "List the title of posts which were edited by Vebjorn Ljosa."
+ },
+ {
+  "question_id": "583",
+  "db_id": "codebase_community",
+  "question": "What is the total score of the posts edited by Yevgeny and include the user's website URL."
+ },
+ {
+  "question_id": "584",
+  "db_id": "codebase_community",
+  "question": "Write all the comments left by users who edited the post titled 'Why square the difference instead of taking the absolute value in standard deviation?'"
+ },
+ {
+  "question_id": "585",
+  "db_id": "codebase_community",
+  "question": "How much is the total bounty amount of the post titled about 'data'"
+ },
+ {
+  "question_id": "586",
+  "db_id": "codebase_community",
+  "question": "Which user added a bounty amount of 50 to the post title mentioning variance?"
+ },
+ {
+  "question_id": "587",
+  "db_id": "codebase_community",
+  "question": "Calculate the average view count of each post tagged as 'humor' and list the title and the comment of each post."
+ },
+ {
+  "question_id": "588",
+  "db_id": "codebase_community",
+  "question": "Give the total number of comments posted by user ID 13."
+ },
+ {
+  "question_id": "589",
+  "db_id": "codebase_community",
+  "question": "Which user ID has the highest reputation?"
+ },
+ {
+  "question_id": "590",
+  "db_id": "codebase_community",
+  "question": "Which user ID has the lowest view?"
+ },
+ {
+  "question_id": "591",
+  "db_id": "codebase_community",
+  "question": "How many users are awarded with supporter badge during year 2011?"
+ },
+ {
+  "question_id": "592",
+  "db_id": "codebase_community",
+  "question": "How many users are awarded with more than 5 badges?"
+ },
+ {
+  "question_id": "593",
+  "db_id": "codebase_community",
+  "question": "How many users from New York have a teacher and supporter badge?"
+ },
+ {
+  "question_id": "594",
+  "db_id": "codebase_community",
+  "question": "Which user created post ID 1 and what is the reputation of this user?"
+ },
+ {
+  "question_id": "595",
+  "db_id": "codebase_community",
+  "question": "Which users have used only one post history type across all posts having at least 1000 views?"
+ },
+ {
+  "question_id": "596",
+  "db_id": "codebase_community",
+  "question": "Which user has posted the most comments? List out all the user's badge."
+ },
+ {
+  "question_id": "597",
+  "db_id": "codebase_community",
+  "question": "How many users from India have the teacher badges?"
+ },
+ {
+  "question_id": "598",
+  "db_id": "codebase_community",
+  "question": "What is the percentage difference of student badges given during 2010 and 2011?"
+ },
+ {
+  "question_id": "599",
+  "db_id": "codebase_community",
+  "question": "What are the post history type IDs for post ID 3720 and how many unique users have commented on the post?"
+ },
+ {
+  "question_id": "600",
+  "db_id": "codebase_community",
+  "question": "List out all post that are related to post ID 61217 and what is the popularity of this post?"
+ },
+ {
+  "question_id": "601",
+  "db_id": "codebase_community",
+  "question": "What is the score and the link type ID for post ID 395?"
+ },
+ {
+  "question_id": "602",
+  "db_id": "codebase_community",
+  "question": "List out all post ID with score more than 60 and list out all the user ID that created these post."
+ },
+ {
+  "question_id": "603",
+  "db_id": "codebase_community",
+  "question": "What is the sum of favourite count gained by user ID 686 in 2011?"
+ },
+ {
+  "question_id": "604",
+  "db_id": "codebase_community",
+  "question": "What is the average of the up votes and the average user age for users creating more than 10 posts?"
+ },
+ {
+  "question_id": "605",
+  "db_id": "codebase_community",
+  "question": "How many users obtained the \"Announcer\" badge?"
+ },
+ {
+  "question_id": "606",
+  "db_id": "codebase_community",
+  "question": "List out the name of badges that users obtained on 7/19/2010 7:39:08 PM."
+ },
+ {
+  "question_id": "607",
+  "db_id": "codebase_community",
+  "question": "How many positive comments are there on the list?"
+ },
+ {
+  "question_id": "608",
+  "db_id": "codebase_community",
+  "question": "State the detailed content of the comment which was created on 7/19/2010 7:25:47 PM."
+ },
+ {
+  "question_id": "609",
+  "db_id": "codebase_community",
+  "question": "How many posts have a score of 10 on the list?"
+ },
+ {
+  "question_id": "610",
+  "db_id": "codebase_community",
+  "question": "What are the name of badge that users who have the highest reputation obtained?"
+ },
+ {
+  "question_id": "611",
+  "db_id": "codebase_community",
+  "question": "Mention the reputation of users who had obtained the badge on 7/19/2010 7:39:08 PM."
+ },
+ {
+  "question_id": "612",
+  "db_id": "codebase_community",
+  "question": "What is the name of badge that the user whose display name is \"Pierre\" obtained?"
+ },
+ {
+  "question_id": "613",
+  "db_id": "codebase_community",
+  "question": "List out the dates that users who are located in Rochester, NY obtained their badges?"
+ },
+ {
+  "question_id": "614",
+  "db_id": "codebase_community",
+  "question": "Among the users who obtained the \"Teacher\" badge, calculate their percentage of users"
+ },
+ {
+  "question_id": "615",
+  "db_id": "codebase_community",
+  "question": "Among the users who obtained the \"Organizer\" badges, calculate the percentage of users who are teenagers."
+ },
+ {
+  "question_id": "616",
+  "db_id": "codebase_community",
+  "question": "What is the comment's rating score of the post which was created on 7/19/2010 7:19:56 PM"
+ },
+ {
+  "question_id": "617",
+  "db_id": "codebase_community",
+  "question": "What is the detailed content of the comment of the post which was created on 7/19/2010 7:37:33 PM?"
+ },
+ {
+  "question_id": "618",
+  "db_id": "codebase_community",
+  "question": "List the ages of users located in Vienna, Austria who have obtained badges."
+ },
+ {
+  "question_id": "619",
+  "db_id": "codebase_community",
+  "question": "How many adults who obtained the badge Supporter?"
+ },
+ {
+  "question_id": "620",
+  "db_id": "codebase_community",
+  "question": "State the number of views of users who obtained the badge on 7/19/2010 7:39:08 PM."
+ },
+ {
+  "question_id": "621",
+  "db_id": "codebase_community",
+  "question": "What are the name of badges that users who have the lowest reputation obtained?"
+ },
+ {
+  "question_id": "622",
+  "db_id": "codebase_community",
+  "question": "State the name of badge that the user whose display name is \"Sharpie\" obtained."
+ },
+ {
+  "question_id": "623",
+  "db_id": "codebase_community",
+  "question": "How many elders obtained the \"Supporter\" badge?"
+ },
+ {
+  "question_id": "624",
+  "db_id": "codebase_community",
+  "question": "What is the name of user with the ID of 30?"
+ },
+ {
+  "question_id": "625",
+  "db_id": "codebase_community",
+  "question": "How many users were from New York?"
+ },
+ {
+  "question_id": "626",
+  "db_id": "codebase_community",
+  "question": "How many votes were made in 2010?"
+ },
+ {
+  "question_id": "627",
+  "db_id": "codebase_community",
+  "question": "How many users were adult?"
+ },
+ {
+  "question_id": "628",
+  "db_id": "codebase_community",
+  "question": "Which users have the highest number of views?"
+ },
+ {
+  "question_id": "629",
+  "db_id": "codebase_community",
+  "question": "Calculate the ratio of votes in 2010 and 2011."
+ },
+ {
+  "question_id": "630",
+  "db_id": "codebase_community",
+  "question": "What is the name of tags used by John Salvatier's?"
+ },
+ {
+  "question_id": "631",
+  "db_id": "codebase_community",
+  "question": "How many posts were created by Daniel Vassallo?"
+ },
+ {
+  "question_id": "632",
+  "db_id": "codebase_community",
+  "question": "How many votes were made by Harlan?"
+ },
+ {
+  "question_id": "633",
+  "db_id": "codebase_community",
+  "question": "Which post by slashnick has the most answers count? State the post ID."
+ },
+ {
+  "question_id": "634",
+  "db_id": "codebase_community",
+  "question": "Among posts by Harvey Motulsky and Noah Snyder, which one has higher popularity?"
+ },
+ {
+  "question_id": "635",
+  "db_id": "codebase_community",
+  "question": "How many posts by Matt Parker have more than 4 votes?"
+ },
+ {
+  "question_id": "636",
+  "db_id": "codebase_community",
+  "question": "How many negative comments did Neil McGuigan get in his posts?"
+ },
+ {
+  "question_id": "637",
+  "db_id": "codebase_community",
+  "question": "State all the tags used by Mark Meckes in his posts that doesn't have comments."
+ },
+ {
+  "question_id": "638",
+  "db_id": "codebase_community",
+  "question": "List all the name of users that obtained the Organizer Badges."
+ },
+ {
+  "question_id": "639",
+  "db_id": "codebase_community",
+  "question": "Based on posts posted by Community, calculate the percentage of posts that use the R language."
+ },
+ {
+  "question_id": "640",
+  "db_id": "codebase_community",
+  "question": "Calculate the difference in view count of posts posted by Mornington and view count of posts posted by Amos."
+ },
+ {
+  "question_id": "641",
+  "db_id": "codebase_community",
+  "question": "How many users received commentator badges in 2014?"
+ },
+ {
+  "question_id": "642",
+  "db_id": "codebase_community",
+  "question": "How many posts were created on 21st July, 2010?"
+ },
+ {
+  "question_id": "643",
+  "db_id": "codebase_community",
+  "question": "What are the display names and ages of user who got the highest in views?"
+ },
+ {
+  "question_id": "644",
+  "db_id": "codebase_community",
+  "question": "Provide the last edit date and last edit user ID for the post \"Detecting a given face in a database of facial images\"."
+ },
+ {
+  "question_id": "645",
+  "db_id": "codebase_community",
+  "question": "How many negative comments were given by user ID 13?"
+ },
+ {
+  "question_id": "646",
+  "db_id": "codebase_community",
+  "question": "Describe the post title which got positive comments and display names of the users who posted those comments."
+ },
+ {
+  "question_id": "647",
+  "db_id": "codebase_community",
+  "question": "Provide the badge names received in 2011 for the user whose location is in the North Pole."
+ },
+ {
+  "question_id": "648",
+  "db_id": "codebase_community",
+  "question": "Provide the users' display names and available website URLs of the post with favorite count of more than 150."
+ },
+ {
+  "question_id": "649",
+  "db_id": "codebase_community",
+  "question": "Describe the post history counts and last edit date of the post title \"What is the best introductory Bayesian statistics textbook?\""
+ },
+ {
+  "question_id": "650",
+  "db_id": "codebase_community",
+  "question": "Describe the last accessed date and location of the users who received the outliers badge."
+ },
+ {
+  "question_id": "651",
+  "db_id": "codebase_community",
+  "question": "Provide the related post title of \"How to tell if something happened in a data set which monitors a value over time\"."
+ },
+ {
+  "question_id": "652",
+  "db_id": "codebase_community",
+  "question": "List the post IDs and badge names of the user Samuel in 2013."
+ },
+ {
+  "question_id": "653",
+  "db_id": "codebase_community",
+  "question": "What is the owner's display name of the most popular post?"
+ },
+ {
+  "question_id": "654",
+  "db_id": "codebase_community",
+  "question": "Mention the display name and location of the user who owned the excerpt post with hypothesis-testing tag."
+ },
+ {
+  "question_id": "655",
+  "db_id": "codebase_community",
+  "question": "Write down the related posts titles and link type IDs of the post \"What are principal component scores?\"."
+ },
+ {
+  "question_id": "656",
+  "db_id": "codebase_community",
+  "question": "Describe the display name of the parent ID for child post with the highest score."
+ },
+ {
+  "question_id": "657",
+  "db_id": "codebase_community",
+  "question": "Under the vote type of 8, provide the display names and websites URLs of the user who got the highest bounty amount."
+ },
+ {
+  "question_id": "658",
+  "db_id": "codebase_community",
+  "question": "What are the titles of the top 5 posts with the highest popularity?"
+ },
+ {
+  "question_id": "659",
+  "db_id": "codebase_community",
+  "question": "How many tags have post count between 5,000 to 7,000?"
+ },
+ {
+  "question_id": "660",
+  "db_id": "codebase_community",
+  "question": "What is the owner user id of the most valuable post?"
+ },
+ {
+  "question_id": "661",
+  "db_id": "codebase_community",
+  "question": "How old is the most influential user?"
+ },
+ {
+  "question_id": "662",
+  "db_id": "codebase_community",
+  "question": "How many posts with votes that were created in 2011 have a bounty of 50?"
+ },
+ {
+  "question_id": "663",
+  "db_id": "codebase_community",
+  "question": "What is the id of the youngest user?"
+ },
+ {
+  "question_id": "664",
+  "db_id": "codebase_community",
+  "question": "What is the sum of score of the post on 2010-07-19?"
+ },
+ {
+  "question_id": "665",
+  "db_id": "codebase_community",
+  "question": "What is the average monthly number of links created in 2010 for posts that have no more than 2 answers?"
+ },
+ {
+  "question_id": "666",
+  "db_id": "codebase_community",
+  "question": "Among the posts that were voted by user 1465, what is the id of the most valuable post?"
+ },
+ {
+  "question_id": "667",
+  "db_id": "codebase_community",
+  "question": "What is the title of the post with the oldest post link?"
+ },
+ {
+  "question_id": "668",
+  "db_id": "codebase_community",
+  "question": "What is the display name of the user who acquired the highest amount of badges?"
+ },
+ {
+  "question_id": "669",
+  "db_id": "codebase_community",
+  "question": "When did 'chl' cast its first vote in a post?"
+ },
+ {
+  "question_id": "670",
+  "db_id": "codebase_community",
+  "question": "What is the date when the youngest user made his or her first post?"
+ },
+ {
+  "question_id": "671",
+  "db_id": "codebase_community",
+  "question": "What is the display name of the user who acquired the first Autobiographer badge?"
+ },
+ {
+  "question_id": "672",
+  "db_id": "codebase_community",
+  "question": "Among the users located in United Kingdom, how many users whose post have a total favorite amount of 4 or more?"
+ },
+ {
+  "question_id": "673",
+  "db_id": "codebase_community",
+  "question": "What is the average number of posts voted by the oldest users?"
+ },
+ {
+  "question_id": "674",
+  "db_id": "codebase_community",
+  "question": "Who has the highest reputation? Please give the display name."
+ },
+ {
+  "question_id": "675",
+  "db_id": "codebase_community",
+  "question": "How many users whose reputations are higher than 2000 and the number of views is higher than 1000?"
+ },
+ {
+  "question_id": "676",
+  "db_id": "codebase_community",
+  "question": "Please list all display names of users who are adults."
+ },
+ {
+  "question_id": "677",
+  "db_id": "codebase_community",
+  "question": "How many posts did Jay Stevens have in 2010?"
+ },
+ {
+  "question_id": "678",
+  "db_id": "codebase_community",
+  "question": "Which post by Harvey Motulsky has the most views? Please give the id and title of this post."
+ },
+ {
+  "question_id": "679",
+  "db_id": "codebase_community",
+  "question": "Which post has the highest score? Please give its id and title's name."
+ },
+ {
+  "question_id": "680",
+  "db_id": "codebase_community",
+  "question": "What is the average score of Stephen Turner's posts?"
+ },
+ {
+  "question_id": "681",
+  "db_id": "codebase_community",
+  "question": "Please list the users' display names whose posts had over 20000 views in 2011."
+ },
+ {
+  "question_id": "682",
+  "db_id": "codebase_community",
+  "question": "Which is the most valuable post in 2010? Please give its id and the owner's display name."
+ },
+ {
+  "question_id": "683",
+  "db_id": "codebase_community",
+  "question": "What is the percentage of posts whose owners had a reputation of over 1000 in 2011?"
+ },
+ {
+  "question_id": "684",
+  "db_id": "codebase_community",
+  "question": "Identify the percentage of teenage users."
+ },
+ {
+  "question_id": "685",
+  "db_id": "codebase_community",
+  "question": "Identify the total views on the post 'Computer Game Datasets'. Name the user who posted it last time."
+ },
+ {
+  "question_id": "686",
+  "db_id": "codebase_community",
+  "question": "Identify the total number of posts with views above average."
+ },
+ {
+  "question_id": "687",
+  "db_id": "codebase_community",
+  "question": "How many comments were added to the post with the highest score?"
+ },
+ {
+  "question_id": "688",
+  "db_id": "codebase_community",
+  "question": "Identify the number of posts that have been viewed over 35000 times but have received no comments from other users."
+ },
+ {
+  "question_id": "689",
+  "db_id": "codebase_community",
+  "question": "Identify the display name and location of the user, who was the last to edit the post with ID 183."
+ },
+ {
+  "question_id": "690",
+  "db_id": "codebase_community",
+  "question": "Identify the latest badge awarded to the user with the display name Emmett."
+ },
+ {
+  "question_id": "691",
+  "db_id": "codebase_community",
+  "question": "Identify the number of adult users who have cast over 5000 upvotes."
+ },
+ {
+  "question_id": "692",
+  "db_id": "codebase_community",
+  "question": "How long did it take the user, known by his or her display name 'Zolomon' to get the badge? Count from the date the user's account was created."
+ },
+ {
+  "question_id": "693",
+  "db_id": "codebase_community",
+  "question": "Identify the number of posts and comments left by the user, who has the latest created user account."
+ },
+ {
+  "question_id": "694",
+  "db_id": "codebase_community",
+  "question": "Provide the text of the latest 10 comments to the post with the title 'Analysing wind data with R' and the display name of the user who left it."
+ },
+ {
+  "question_id": "695",
+  "db_id": "codebase_community",
+  "question": "How many users were awarded with 'Citizen Patrol' badge?"
+ },
+ {
+  "question_id": "696",
+  "db_id": "codebase_community",
+  "question": "Count the number of posts with a tag specified as 'careers'."
+ },
+ {
+  "question_id": "697",
+  "db_id": "codebase_community",
+  "question": "What is the reputation and view count of the user, who is known by his or her display name 'Jarrod Dixon'?"
+ },
+ {
+  "question_id": "698",
+  "db_id": "codebase_community",
+  "question": "How many comments and answers were left by the users on the post with the title 'Clustering 1D data'?"
+ },
+ {
+  "question_id": "699",
+  "db_id": "codebase_community",
+  "question": "When did the user known as 'IrishStat' create his or her account?"
+ },
+ {
+  "question_id": "700",
+  "db_id": "codebase_community",
+  "question": "Identify the number of posts that offer a bounty amount over 30."
+ },
+ {
+  "question_id": "701",
+  "db_id": "codebase_community",
+  "question": "Among all the posts posted by the most influential user, identify the percentage with a score above 50."
+ },
+ {
+  "question_id": "702",
+  "db_id": "codebase_community",
+  "question": "How many posts have a score less than 20?"
+ },
+ {
+  "question_id": "703",
+  "db_id": "codebase_community",
+  "question": "Among the tags with tag ID below 15, how many of them have 20 count of posts and below?"
+ },
+ {
+  "question_id": "704",
+  "db_id": "codebase_community",
+  "question": "What is the excerpt post ID and wiki post ID of the tag named sample?"
+ },
+ {
+  "question_id": "705",
+  "db_id": "codebase_community",
+  "question": "Give the user's reputation and up vote number of the user that commented \"fine, you win :)\"."
+ },
+ {
+  "question_id": "706",
+  "db_id": "codebase_community",
+  "question": "Give the texts commented on the post about linear regression."
+ },
+ {
+  "question_id": "707",
+  "db_id": "codebase_community",
+  "question": "Among the posts with views ranging from 100 to 150, what is the comment with the highest score?"
+ },
+ {
+  "question_id": "708",
+  "db_id": "codebase_community",
+  "question": "List the creation date and age of the user that commented with webiste."
+ },
+ {
+  "question_id": "709",
+  "db_id": "codebase_community",
+  "question": "In comments with 0 score, how many of the posts have view count lower than 5?"
+ },
+ {
+  "question_id": "710",
+  "db_id": "codebase_community",
+  "question": "In posts with 1 comment, how many of the comments have 0 score?"
+ },
+ {
+  "question_id": "711",
+  "db_id": "codebase_community",
+  "question": "Among product comments with 0 score, what is the total number of users aged 40 years old?"
+ },
+ {
+  "question_id": "712",
+  "db_id": "codebase_community",
+  "question": "What is the post ID and the comments commented in the post titled by \"Group differences on a five point Likert item\"?"
+ },
+ {
+  "question_id": "713",
+  "db_id": "codebase_community",
+  "question": "What is the up vote number of the user that commented \"R is also lazy evaluated.\"?"
+ },
+ {
+  "question_id": "714",
+  "db_id": "codebase_community",
+  "question": "List the comments commented by the user with a username of Harvey Motulsky."
+ },
+ {
+  "question_id": "715",
+  "db_id": "codebase_community",
+  "question": "In comments with score between 1 to 5, list down the display names of the users with 0 down votes."
+ },
+ {
+  "question_id": "716",
+  "db_id": "codebase_community",
+  "question": "Among the comments with scores between 5 to 10, what is the percentage of the users with 0 up votes?"
+ }
+]

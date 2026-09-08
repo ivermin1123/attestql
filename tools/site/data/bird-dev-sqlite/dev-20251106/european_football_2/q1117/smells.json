@@ -1,0 +1,359 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "weight",
+            "column": "Player.weight",
+            "declared_type": "INTEGER",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 10,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT player_api_id, weight AS attestql_ordering_key_0 FROM Player ORDER BY weight DESC",
+        "unbounded_rows": 11060,
+        "projected_columns": [
+          "player_api_id"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "weight",
+            "direction": "desc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            8,
+            9,
+            10
+          ],
+          "tied_rows": 3,
+          "distinct_projected_answers": 3,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 40005
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 33060
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 93450
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 40005
+          },
+          {
+            "type": "int",
+            "value": 218
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 33060
+          },
+          {
+            "type": "int",
+            "value": 218
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 93450
+          },
+          {
+            "type": "int",
+            "value": 218
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:9c862969bd013e05ff1ea75a57d2694534e7e3c323e621be154562fbb327bb68",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "player_api_id",
+              "declared_type": "INTEGER"
+            }
+          ],
+          "row_count": 10,
+          "truncated": false,
+          "rows_shown": 10,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 148325
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 27313
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 5044
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 27267
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 101584
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 19020
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 210822
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 30669
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 40005
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 33060
+              }
+            ]
+          ],
+          "result_hash": "sha256:9c862969bd013e05ff1ea75a57d2694534e7e3c323e621be154562fbb327bb68"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "Player"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {},
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:00277151e5b74d307cf3e7fa4c6687c33f340b77231a3a4ef5eca2ca1c2b274d",
+          "result": {
+            "columns": [
+              {
+                "name": "player_api_id",
+                "declared_type": "INTEGER"
+              }
+            ],
+            "row_count": 10,
+            "truncated": false,
+            "rows_shown": 10,
+            "rows": [
+              [
+                {
+                  "type": "int",
+                  "value": 148325
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 27313
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 5044
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 27267
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 101584
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 19020
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 30669
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 210822
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 33060
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 93450
+                }
+              ]
+            ],
+            "result_hash": "sha256:00277151e5b74d307cf3e7fa4c6687c33f340b77231a3a4ef5eca2ca1c2b274d"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 148325
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 27313
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 5044
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 27267
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 101584
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 19020
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 30669
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 210822
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 33060
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 93450
+          }
+        ]
+      ]
+    }
+  ]
+}

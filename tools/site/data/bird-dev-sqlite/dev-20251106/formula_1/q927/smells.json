@@ -1,0 +1,226 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "keys": [
+          {
+            "key": "T2.fastestLapSpeed",
+            "column": "results.fastestLapSpeed",
+            "declared_type": "TEXT",
+            "not_applicable": null,
+            "census": {
+              "rows": 23657,
+              "nulls": 18389,
+              "empty_strings": 0,
+              "non_numeric": 0,
+              "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+            },
+            "every_value_is_numeric": true,
+            "cast_sql": "SELECT T1.forename, T1.surname FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId WHERE NOT T2.fastestLapTime IS NULL ORDER BY CAST(T2.fastestLapSpeed AS REAL) DESC LIMIT 1",
+            "verdict": "not_equal",
+            "gold_result": {
+              "columns": [
+                {
+                  "name": "forename",
+                  "declared_type": "TEXT"
+                },
+                {
+                  "name": "surname",
+                  "declared_type": "TEXT"
+                }
+              ],
+              "row_count": 1,
+              "truncated": false,
+              "rows_shown": 1,
+              "rows": [
+                [
+                  {
+                    "type": "str",
+                    "value": "Vitantonio"
+                  },
+                  {
+                    "type": "str",
+                    "value": "Liuzzi"
+                  }
+                ]
+              ],
+              "result_hash": "sha256:c124758891509a969f09ce394905a4de870ccf83ae03ea374f801663cc98b9a2"
+            },
+            "cast_result": {
+              "columns": [
+                {
+                  "name": "forename",
+                  "declared_type": "TEXT"
+                },
+                {
+                  "name": "surname",
+                  "declared_type": "TEXT"
+                }
+              ],
+              "row_count": 1,
+              "truncated": false,
+              "rows_shown": 1,
+              "rows": [
+                [
+                  {
+                    "type": "str",
+                    "value": "Rubens"
+                  },
+                  {
+                    "type": "str",
+                    "value": "Barrichello"
+                  }
+                ]
+              ],
+              "result_hash": "sha256:c0b3d9e79971b9f82143ba698481a24d963b30626cc7083366a3be5a230cb9c9"
+            }
+          }
+        ]
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Vitantonio"
+          },
+          {
+            "type": "str",
+            "value": "Liuzzi"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT T1.forename, T1.surname, T2.fastestLapSpeed AS attestql_ordering_key_0 FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId WHERE NOT T2.fastestLapTime IS NULL ORDER BY T2.fastestLapSpeed DESC",
+        "unbounded_rows": 5268,
+        "projected_columns": [
+          "forename",
+          "surname"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "T2.fastestLapSpeed",
+            "direction": "desc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "case": null
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:c124758891509a969f09ce394905a4de870ccf83ae03ea374f801663cc98b9a2",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "forename",
+              "declared_type": "TEXT"
+            },
+            {
+              "name": "surname",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Vitantonio"
+              },
+              {
+                "type": "str",
+                "value": "Liuzzi"
+              }
+            ]
+          ],
+          "result_hash": "sha256:c124758891509a969f09ce394905a4de870ccf83ae03ea374f801663cc98b9a2"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "drivers",
+            "results"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "lapTimes": 420369
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:c124758891509a969f09ce394905a4de870ccf83ae03ea374f801663cc98b9a2",
+          "result": {
+            "columns": [
+              {
+                "name": "forename",
+                "declared_type": "TEXT"
+              },
+              {
+                "name": "surname",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Vitantonio"
+                },
+                {
+                  "type": "str",
+                  "value": "Liuzzi"
+                }
+              ]
+            ],
+            "result_hash": "sha256:c124758891509a969f09ce394905a4de870ccf83ae03ea374f801663cc98b9a2"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

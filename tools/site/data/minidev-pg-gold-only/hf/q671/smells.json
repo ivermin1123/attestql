@@ -1,0 +1,327 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "t2.date",
+            "column": "badges.date",
+            "declared_type": "timestamp with time zone",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t1.displayname, t2.date AS attestql_ordering_key_0 FROM users t1 JOIN badges t2 ON t1.id = t2.userid WHERE t2.name = 'Autobiographer' ORDER BY t2.date",
+        "unbounded_rows": 4480,
+        "projected_columns": [
+          "displayname"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t2.date",
+            "direction": "asc",
+            "nulls": "default",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "tied_rows": 12,
+          "distinct_projected_answers": 12,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Geoff Dalgas"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Jarrod Dixon"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Vince"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "csgillespie"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Pierre"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "wahalulu"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Jin"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Sharpie"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "grokus"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Noah Snyder"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Geoff Dalgas"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Jarrod Dixon"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Vince"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "csgillespie"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Pierre"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "wahalulu"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Jin"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Sharpie"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "grokus"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Noah Snyder"
+          },
+          {
+            "type": "ts",
+            "value": "2010-07-19T11:39:09+00:00"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:ee5b899354aa38abbfb2efd2e0b9ff079e09e3f44a5d712fdce7903a7cc6ca0b",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "displayname",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Geoff Dalgas"
+              }
+            ]
+          ],
+          "result_hash": "sha256:ee5b899354aa38abbfb2efd2e0b9ff079e09e3f44a5d712fdce7903a7cc6ca0b"
+        },
+        "planner_statistics": {
+          "users": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 40325
+          },
+          "badges": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:12.766008+00",
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "users",
+            "badges"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:ee5b899354aa38abbfb2efd2e0b9ff079e09e3f44a5d712fdce7903a7cc6ca0b",
+          "result": {
+            "columns": [
+              {
+                "name": "displayname",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Geoff Dalgas"
+                }
+              ]
+            ],
+            "result_hash": "sha256:ee5b899354aa38abbfb2efd2e0b9ff079e09e3f44a5d712fdce7903a7cc6ca0b"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

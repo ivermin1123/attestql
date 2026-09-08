@@ -1,0 +1,2226 @@
+{
+  "question_as_asked": "Give the team_fifa_api_id of teams with more than 50 but less than 60 build-up play speed.",
+  "question": {
+    "question_id": "1035",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "Give the team_fifa_api_id of teams with more than 50 but less than 60 build-up play speed.",
+    "evidence_text": "teams with more than 50 but less than 60 build-up play speed refers to buildUpPlaySpeed >50 AND buildUpPlaySpeed <60; "
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "statement_source": {
+    "path": "data/preds-pg/predict_mini_dev_gpt-35-turbo_postgresql.json",
+    "digest": "sha256:fa363fe3c3fc45d97cb47e6ec15133b291acccd750e5136b6e7b4d1c8d13a4be",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo_postgresql.json",
+    "date": "2024-06-19"
+  },
+  "executed_sql": "SELECT team_fifa_api_id\nFROM Team_Attributes\nWHERE buildUpPlaySpeed > 50 AND buildUpPlaySpeed < 60",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "team_fifa_api_id",
+        "declared_type": "int8"
+      }
+    ],
+    "row_count": 356,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "int",
+          "value": 434
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 77
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 77
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 77
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 614
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 614
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 614
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 614
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1901
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1901
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 650
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 650
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 650
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1861
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 229
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 229
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 229
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 229
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111989
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 240
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 240
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100409
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100409
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1906
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1906
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1848
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1848
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1848
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 32
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 21
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 675
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1889
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1889
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 234
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 88
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 88
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 88
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 88
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 3
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 3
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 3
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 160
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 4
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 4
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 4
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 4
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 4
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 59
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 23
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1943
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1896
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1896
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1896
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 378
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 378
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 378
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1796
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1796
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 450
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 450
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 450
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 450
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 78
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 78
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1750
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1750
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1750
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1867
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110747
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1799
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1799
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110502
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 242
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 242
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 242
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 242
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 242
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110569
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110569
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110569
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110569
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110569
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 181
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 182
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1824
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1824
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 468
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 468
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 468
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 468
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1746
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 452
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 10020
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 7
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 7
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111271
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111271
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111271
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1971
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 31
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 31
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 31
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 31
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 31
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1915
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1915
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 236
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 236
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 236
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 286
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 246
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110374
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110636
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 25
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 25
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 25
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 144
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 144
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 144
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 673
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 673
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 673
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 673
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 674
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1860
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110744
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110744
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110744
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100632
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100632
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110832
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110832
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110832
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110832
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 165
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 165
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 165
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 165
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 62
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 62
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 28
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 485
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 485
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 80
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 80
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 80
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100879
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100879
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100879
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100879
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 166
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 81
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 81
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1952
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1952
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111239
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111239
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111239
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111239
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 44
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 44
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 44
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110745
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110745
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1832
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1832
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1832
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1832
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 82
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 82
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 82
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111083
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110724
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110724
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110724
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110724
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 472
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1862
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 46
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1738
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1739
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1739
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 873
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1871
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1871
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1853
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1853
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1853
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1844
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1844
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1844
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 217
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 573
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 453
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 453
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 10
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 10
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 219
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 219
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 219
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 68
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 68
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 69
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 69
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 69
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 69
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1747
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 70
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 70
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 70
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 70
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1904
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 71
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 13
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 13
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 13
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 13
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 13
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 112225
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 112225
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 477
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 682
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 682
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 479
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100087
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100087
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100087
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 10030
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1914
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100741
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 200
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111087
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111087
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1790
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1790
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 247
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 15
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 15
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 15
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 15
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 456
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 86
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 86
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 480
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 449
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 449
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 449
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 449
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 243
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 243
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 457
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 203
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 203
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 203
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 203
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1905
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1902
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 52
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 874
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 874
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 874
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1819
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1819
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111974
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111974
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 111974
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1913
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1913
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 34
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 481
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 17
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 17
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 237
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 237
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 237
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 237
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 459
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 459
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 459
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 459
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 48
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 898
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 898
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 898
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100805
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110329
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110329
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110329
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110329
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100804
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 100804
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 680
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 680
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 232
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 232
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 232
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 232
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 106
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 106
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 260
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 260
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 260
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1715
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1715
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1715
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1715
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1715
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1908
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 462
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 462
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 462
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 462
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 462
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 206
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 206
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 36
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 36
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 36
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1909
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1909
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 665
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 665
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 665
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 665
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 38
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 38
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 109
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 109
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 19
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 681
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 681
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1917
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1917
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 1907
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 175
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 175
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 175
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 435
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 900
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 900
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 900
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 900
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 900
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110749
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 110749
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 244
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 112512
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 112512
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 15005
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 15005
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 15005
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 15005
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 15005
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 120000
+  },
+  "row_count": 356,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:98bc0cba85d167faa0d5bb8e4db8801339559c93568b09cfd7c9a911f2c12123",
+    "row_counts": {
+      "public.team_attributes": 1458
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-08T05:21:06.155844+00:00",
+  "executed_at": "2026-09-08T05:21:17.313715+00:00",
+  "run_id": "audit-a7e6b760-f8ad-479a-b956-9cd88ea91e18",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:1d5fb5460cba8d3b98439e43146df64c792a0e1c0f82b8cf5e922b2b48ba88c2",
+  "record_hash": "sha256:65e5385b42b4d4232ee77d3eedfd98280f8ac554ed11f8ce0d78099d858673a0"
+}

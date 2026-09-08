@@ -1,0 +1,102 @@
+{# What the tool computes, stated in the tool's own words.
+
+   Every string on this page was read out of the package by the build: the two rules are the
+   two comparison functions' own text, the descriptor is the one every result is rendered
+   under, the preconditions and the probes come from the two accessors the package exposes for
+   this page, and the two benchmark readings are the tables the audit computes them with. A
+   sentence typed here about any of them could disagree with the code; these cannot. #}
+{% extends "base.html" %}
+
+{% block strip %}
+<header class="strip strip--run">
+  <h1 class="strip__title">The method</h1>
+  <p class="strip__facts">
+    <span class="chip chip--rule">what is computed beside every verdict</span>
+  </p>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="figure-section" id="what-happens">
+  <h2>What one question is put through</h2>
+  <figure class="figure figure--method">
+    {{ page.figure|safe }}
+    {# The same words the drawing carries as its own `desc`, shown for a reader who has the
+       picture and cannot read it. Hidden from assistive technology because the drawing has
+       already given them: repeated, they would be read twice in one figure. #}
+    <figcaption class="figure__text" aria-hidden="true">{{ page.figure_text }}</figcaption>
+  </figure>
+</section>
+
+<section class="rules" id="rules">
+  <h2>The two replay rules</h2>
+  <p>A question declares one of these, and the comparison is performed under the one the gold declared. The two paragraphs below are the two comparisons' own text.</p>
+  <dl class="facts">
+    {% for rule in page.rules %}
+    <dt class="mono">{{ rule.name }}</dt>
+    <dd>{{ rule.reading }}</dd>
+    {% endfor %}
+  </dl>
+  <p>{{ page.verdict_reading }}</p>
+</section>
+
+<section class="serialization" id="serialization">
+  <h2>The rendering both results are compared under</h2>
+  <p>One descriptor for the whole tool, restated in every record it writes: two results rendered under different rules are not two results a reader may compare.</p>
+  <dl class="facts">
+    {% for fact in page.serialization %}
+    <dt>{{ fact.name }}</dt>
+    <dd class="mono">{{ fact.value }}</dd>
+    {% endfor %}
+  </dl>
+</section>
+
+<section class="preconditions" id="preconditions">
+  <h2>The {{ page.preconditions|length }} settings two {{ page.preconditions_engine }} records must agree on</h2>
+  <p>A record states the session it was made in. Where two records disagree on one of these, the verdict is NOT_COMPARABLE and the page names what differed, because the two were not made under one rule. These {{ page.preconditions|length }} are named as {{ page.preconditions_engine }} names them, and they are that engine's.</p>
+  <ul class="files__list">
+    {% for name in page.preconditions %}
+    <li class="mono">{{ name }}</li>
+    {% endfor %}
+  </ul>
+  <p class="ink-2">On the other engine the tool has, the backend states this of itself: {{ page.preconditions_elsewhere }}</p>
+</section>
+
+<section class="mechanism" id="classes">
+  <h2>What makes two results unequal</h2>
+  <p>{{ page.mechanism_reading }}</p>
+  <ul class="files__list">
+    {% for name in page.classes %}
+    <li class="mono">{{ name }}</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="probes" id="probes">
+  <h2>The probes, and what each would mean</h2>
+  <p>{{ page.probes_reading }}</p>
+  <dl class="facts">
+    {% for probe in page.probes %}
+    <dt class="mono">{{ probe.name }}</dt>
+    <dd>{{ probe.value }}</dd>
+    {% endfor %}
+  </dl>
+</section>
+
+<section class="readings" id="readings">
+  <h2>The two benchmark readings computed beside every verdict</h2>
+  <p>Neither decides anything here. They are what another evaluator's own check says about the same two results, so a reader can see where a benchmark's answer and this comparison part company.</p>
+  <dl class="facts">
+    {% for reading in page.readings %}
+    <dt>{{ reading.name }}</dt>
+    <dd>{{ reading.reading }}</dd>
+    {% endfor %}
+  </dl>
+</section>
+
+<section class="principle" id="principle">
+  <h2>The principle</h2>
+  <p><strong>{{ page.principle }}</strong></p>
+  <p>Every flag, every default and every state the run writes about itself are in <a href="{{ page.docs }}">the audit command's documentation</a>. This site serves the pages and not the documentation, so that link leaves it.</p>
+</section>
+{% endblock %}
