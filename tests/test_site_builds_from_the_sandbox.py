@@ -377,6 +377,140 @@ def test_the_method_page_says_whose_preconditions_those_seven_are(built: Path) -
     assert "a SQLite record states no session setting that decides comparability" in text
 
 
+def test_no_page_of_the_built_site_names_a_user_a_home_or_this_checkout(built: Path) -> None:
+    """The pages are published, and the SQLite backend records the file it opened.
+
+    That identity is the "server" fact on the run page and both "backend" facts on every
+    question page, so wherever the demo is audited ends up on a public page. Audited under
+    `build/` it published the builder's own home directory and repository layout and changed
+    with every `--out`; the scratch directory is fixed and neutral for that reason.
+    """
+    for page in built.rglob("*.html"):
+        markup = page.read_text(encoding="utf-8")
+        for named in (str(REPOSITORY), str(Path.home()), "/Users/"):
+            assert named not in markup, f"{page.relative_to(built)} names {named}"
+    identity = (
+        built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN / PAGE_FILE
+    ).read_text(encoding="utf-8")
+    assert str(site.SANDBOX_SCRATCH.resolve()) in identity, "the neutral path is what it states"
+
+
+def test_the_method_page_states_a_rule_and_not_the_notes_under_it(built: Path) -> None:
+    """A rule is its docstring's opening paragraph; what follows is written for a maintainer.
+
+    `compare_r_set`'s second paragraph records an owner's decision of a particular date about
+    a rounding step, which is a note to whoever changes that code and not something a reader
+    meeting this project on its method page has any use for.
+    """
+    text = " ".join("".join(read(built / site.METHOD_DIRECTORY / PAGE_FILE).text).split())
+
+    assert "Owner decision" not in text
+    assert "typed semantic equality of the row multiset, order disregarded" in text
+    assert "byte-identical canonical rendering under the recorded ordering" in text
+
+
+def test_a_name_under_data_that_cannot_be_a_url_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A benchmark and a run are the two segments of every URL a run has.
+
+    `data/` is a maintainer's directory, so an unusable name is refused and named rather than
+    left out of the site quietly, which is where this differs from the renderer's own rule
+    over names it reads out of a document.
+    """
+    data = tmp_path / "data"
+    (data / "a benchmark").mkdir(parents=True)
+    monkeypatch.setattr(site, "DATA", data)
+
+    with pytest.raises(site.BuildRefused, match="is not a name this site can publish"):
+        build(tmp_path / "site")
+
+    (data / "a benchmark").rmdir()
+    (data / "fine" / "a run").mkdir(parents=True)
+    with pytest.raises(site.BuildRefused, match="is not a name this site can publish"):
+        build(tmp_path / "site")
+
+
+def test_a_symlink_under_data_is_refused_rather_than_followed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Everything published is read out of `data/`, so nothing here points out of it."""
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / "benchmark").symlink_to(elsewhere, target_is_directory=True)
+    monkeypatch.setattr(site, "DATA", data)
+
+    with pytest.raises(site.BuildRefused, match="is a symlink"):
+        build(tmp_path / "site")
+
+
+def test_a_count_below_zero_is_refused_rather_than_drawn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Two negatives satisfy the bar's part-no-larger-than-its-whole check and are drawn."""
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / site.AGGREGATE_FILE).write_text(
+        json.dumps(
+            {
+                "credited_but_not_equal": {"value": -1, "source": "a.json"},
+                "classified_by_hand": {"value": -5, "source": "b.json"},
+                "bird_dev_classified_by_hand": {"value": 3, "source": "c.json"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(site, "DATA", data)
+
+    with pytest.raises(site.BuildRefused, match="every number this page states is a count"):
+        build(tmp_path / "site")
+
+
+def test_theinstall_line_is_a_command_and_the_links_are_the_first_nav_s(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Two readings of two files the site does not own, each of which had a shape it took.
+
+    The install line was any line holding `pip install attestql`, which a sentence of prose
+    above the block satisfies; a page built from it would have offered a reader a paragraph
+    to paste into a shell. The navigation merged every `nav` on the page and carried a link
+    with no words on it, which on the built page is a link a reader cannot read.
+    """
+    readme = tmp_path / "README.md"
+    readme.write_text(
+        "Install it with `pip install attestql` if you prefer pip.\n\n"
+        "```sh\nuv tool install attestql        # or: pip install attestql\n```\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(site, "README", readme)
+
+    assert site.install_line() == "uv tool install attestql        # or: pip install attestql"
+
+    page = tmp_path / "index.html"
+    page.write_text(
+        '<!DOCTYPE html><html lang="en"><body>'
+        '<nav><a href="/one">One</a><a href="/two">Two</a></nav>'
+        "<p>the page</p>"
+        '<nav><a href="/three">Three</a></nav>'
+        "</body></html>",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(site, "LIVE_PAGE", page)
+
+    assert site.live_links() == (("/one", "One"), ("/two", "Two")), "the first nav, whole"
+
+    page.write_text(
+        '<!DOCTYPE html><html lang="en"><body>'
+        '<nav><a href="/one">One</a><a href="/icon"><img src="i.png" alt=""></a></nav>'
+        "</body></html>",
+        encoding="utf-8",
+    )
+    with pytest.raises(site.BuildRefused, match="with no words on it"):
+        site.live_links()
+
+
 def test_the_build_refuses_an_out_inside_the_live_page_s_directory(tmp_path: Path) -> None:
     """`site/` holds what attestql.com serves and belongs to another session."""
     with pytest.raises(site.BuildRefused, match="belongs to another session"):

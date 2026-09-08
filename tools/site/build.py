@@ -64,6 +64,7 @@ from attestql.evidence.types import ENGINE_POSTGRESQL
 from attestql.report.figures import Figure, proportion_bar
 from attestql.report.render import (
     BIRD_READING,
+    FILTER_SEGMENT,
     PAGE_FILE,
     STATIC,
     STATIC_DIRECTORY,
@@ -85,6 +86,21 @@ DEFAULT_OUT = REPOSITORY / "build" / "site"
 LIVE_PAGE = REPOSITORY / "site" / "index.html"
 README = REPOSITORY / "README.md"
 PYPROJECT = REPOSITORY / "pyproject.toml"
+
+SANDBOX_SCRATCH = Path("/tmp/attestql-site-sandbox")  # noqa: S108
+"""Where the demo this site shows is audited. Fixed, and outside the repository.
+
+Not a temporary directory and not a path derived from `--out`, because it is not private to
+the build: the SQLite backend records the absolute path of the file it opened, every question
+page states that identity as the server that answered, and the page is published. A scratch
+directory under `build/` put the builder's own home directory and repository layout on a
+public page and made it differ with every `--out` and every machine.
+
+So the path is chosen for what it will say rather than for where it is convenient: it names
+no user, no repository and no build location. It is emptied and marked before every build the
+way the output directory is. On macOS `/tmp` is a symlink and the recorded path reads
+`/private/tmp/attestql-site-sandbox/...`, which is that machine's spelling of the same
+neutral place."""
 
 SITE_MARKER = ".attestql-site"
 SITE_MARKER_TEXT = (
@@ -119,6 +135,9 @@ HEADLINE: tuple[tuple[str, str], ...] = (
 each. The words are this file's and the numbers are the aggregate's: a page of this project
 states no number an artifact does not, and `data/README.md` states the shape of the file the
 next phase writes. The order is the order they are read in and is not the file's."""
+
+INSTALL_COMMANDS = ("uv tool install attestql", "pip install attestql")
+"""How the install line begins. The line the README holds is the line this page shows."""
 
 SANDBOX_BENCHMARK = "sandbox"
 SANDBOX_RUN = "demo"
@@ -312,7 +331,7 @@ def build(out: Path) -> Built:
     """Render every run, then the two pages of the site's own, then measure the result."""
     started = time.perf_counter()
     _refuse_an_out_inside_the_live_page(out)
-    scratch = out.parent / f"{out.name}-sandbox"
+    scratch = SANDBOX_SCRATCH
     _clear(out)
     _clear(scratch)
     try:
@@ -405,7 +424,34 @@ def benchmark_directories() -> tuple[Path, ...]:
     """Every benchmark under `data/`, which is what says the published runs have arrived."""
     if not DATA.is_dir():
         return ()
-    return tuple(sorted(path for path in DATA.iterdir() if path.is_dir()))
+    return tuple(sorted(_nameable(path) for path in DATA.iterdir() if path.is_dir()))
+
+
+def _nameable(directory: Path) -> Path:
+    """One directory under `data/`, refused unless its name can be a path and a link.
+
+    A benchmark's name and a run's are the two segments of every URL this site publishes for
+    a run, and they reach an href in three templates. The renderer applies this rule to the
+    names it takes out of a document; the same rule holds here for the same reason, and the
+    answer differs: `data/` is a maintainer's directory, so a name outside the shape is a
+    mistake to correct rather than a page to leave out quietly.
+
+    A symlink is refused with it. `data/` names what this site publishes, and a link out of
+    it would publish whatever it points at, from wherever that is.
+    """
+    if directory.is_symlink():
+        raise BuildRefused(
+            f"{directory} is a symlink, and everything published here is read out of "
+            f"{DATA}: a link would publish whatever it points at, from wherever that is"
+        )
+    if not FILTER_SEGMENT.fullmatch(directory.name):
+        raise BuildRefused(
+            f"{directory.name} is not a name this site can publish: a benchmark and a run "
+            f"are the two segments of every URL a run has, so a name has to begin with a "
+            f"letter or a digit and hold only letters, digits, dots, dashes and underscores. "
+            f"Rename {directory}."
+        )
+    return directory
 
 
 def _runs(scratch: Path) -> tuple[Run, ...]:
@@ -435,7 +481,7 @@ def _runs(scratch: Path) -> tuple[Run, ...]:
             published=True,
         )
         for benchmark in benchmark_directories()
-        for run in sorted(path for path in benchmark.iterdir() if path.is_dir())
+        for run in sorted(_nameable(path) for path in benchmark.iterdir() if path.is_dir())
         if (run / SUMMARY_FILE).is_file()
     ]
     taken = [run for run in published if run.slug == sandbox.slug]
@@ -452,10 +498,14 @@ def _demo(scratch: Path) -> tuple[Path, str, str]:
     """`attestql demo` run here: the audit it wrote, the command, and what it printed.
 
     The output is the command's own, unedited and not reformatted: the landing shows what a
-    reader will see on their own machine, and the one thing that will differ is the run id and
-    the time, which the page says are this build's. It is run from inside the scratch
-    directory and told `--out demo`, so the paths it prints are the relative ones a reader
-    following the command would see rather than this machine's own.
+    reader will see on their own machine. What differs between two builds is the run id, the
+    times, the hashes those two feed, and the audit's own `elapsed_seconds`; the page says the
+    run id and the time are this build's. The backend identity is not among them, because the
+    scratch directory is fixed: see `SANDBOX_SCRATCH` for why that matters on a page.
+
+    It is run from inside the scratch directory and told `--out demo`, so the paths it prints
+    are the relative ones a reader following the command would see rather than this machine's
+    own.
     """
     printed = io.StringIO()
     with chdir(scratch), redirect_stdout(printed):
@@ -497,7 +547,7 @@ def _landing(runs: Sequence[Run], benchmarks: Sequence[Benchmark]) -> Landing:
         numbers=numbers,
         no_numbers="" if numbers else NO_NUMBERS,
         bar=_bar(numbers, source),
-        install=_install_line(),
+        install=install_line(),
         benchmarks=tuple(benchmarks),
         links=live_links(),
     )
@@ -517,18 +567,23 @@ def docs_url() -> str:
     return f"{_string(urls, 'Repository')}/blob/main/docs/audit-command.md"
 
 
-def _install_line() -> str:
+def install_line() -> str:
     """The install line `README.md` holds, so the page and the README cannot drift.
 
     The line and not a paraphrase of it: what a reader copies off this page is what a reader
     copies off the README, and if that line changes there this page changes with it.
+
+    A line that *starts* with one of the two commands, because a sentence of prose above the
+    block ("...or `pip install attestql` if you prefer") holds the same words and is not a
+    command: the page would have offered a reader a paragraph to paste into a shell.
     """
     for line in README.read_text(encoding="utf-8").splitlines():
-        if "pip install attestql" in line:
-            return line.strip()
+        stripped = line.strip()
+        if stripped.startswith(INSTALL_COMMANDS):
+            return stripped
     raise BuildRefused(
-        f"{README} holds no line with `pip install attestql`, which is the install line this "
-        f"page is built from rather than typing one of its own"
+        f"{README} holds no line beginning with one of {INSTALL_COMMANDS}, which is the "
+        f"install line this page is built from rather than typing one of its own"
     )
 
 
@@ -543,21 +598,34 @@ def live_links() -> tuple[tuple[str, str], ...]:
     found.close()
     if not found.links:
         raise BuildRefused(f"{LIVE_PAGE} holds no navigation links to carry over")
+    unlabelled = [href for href, words in found.links if not words]
+    if unlabelled:
+        raise BuildRefused(
+            f"{LIVE_PAGE} has a link to {unlabelled[0]} with no words on it, which this page "
+            f"would carry over as a link a reader cannot read: an icon or an image is not a "
+            f"label a second page can reuse"
+        )
     return tuple(found.links)
 
 
 class _Links(HTMLParser):
-    """The `nav` of the live page: each link's target and the words on it."""
+    """The first `nav` of the live page: each link's target and the words on it.
+
+    The first and not every one: a page with a second `nav` in its footer would otherwise
+    have both merged into one list here, and the reading would be of a page nobody wrote.
+    Reading stops when that `nav` closes.
+    """
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.links: list[tuple[str, str]] = []
         self.inside = False
+        self.done = False
         self.href = ""
         self.text: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag == "nav":
+        if tag == "nav" and not self.done:
             self.inside = True
         if tag == "a" and self.inside:
             self.href = str(dict(attrs).get("href") or "")
@@ -567,8 +635,9 @@ class _Links(HTMLParser):
         if tag == "a" and self.inside and self.href:
             self.links.append((self.href, "".join(self.text).strip()))
             self.href = ""
-        if tag == "nav":
+        if tag == "nav" and self.inside:
             self.inside = False
+            self.done = True
 
     def handle_data(self, data: str) -> None:
         if self.href:
@@ -646,8 +715,8 @@ def _method() -> Method:
         figure=figure,
         figure_text=alternative,
         rules=(
-            Rule(name="R-ORD", reading=_docstring(compare_r_ord)),
-            Rule(name="R-SET", reading=_docstring(compare_r_set)),
+            Rule(name="R-ORD", reading=_opening(compare_r_ord)),
+            Rule(name="R-SET", reading=_opening(compare_r_set)),
         ),
         serialization=(
             Fact("version", SERIALIZATION.version),
@@ -686,12 +755,25 @@ def _figure() -> tuple[str, str]:
 
 
 def _docstring(of: object) -> str:
-    """One function's own docstring as one paragraph, which is where its rule is written.
+    """One docstring as one paragraph: a function's own, or a string already taken out of one.
 
-    The doubled backticks are the source's own markup for a name and are dropped: what is
-    wanted here is the sentence, and nothing else about it is changed.
+    The doubled backticks are the source's own markup for a name and are dropped, and the
+    line breaks the source wraps at become spaces: what is wanted here is the sentence, and
+    nothing else about it is changed.
     """
-    return " ".join((of.__doc__ or "").replace("``", "").split())
+    text = of if isinstance(of, str) else (of.__doc__ or "")
+    return " ".join(text.replace("``", "").split())
+
+
+def _opening(of: object) -> str:
+    """The first paragraph of one function's docstring: the rule, and not the notes under it.
+
+    What a rule is, is its opening statement. The paragraphs after it are written for whoever
+    maintains the code -- `compare_r_set`'s second one records an owner decision of a
+    particular date about a rounding step -- and a page explaining the method to a reader who
+    has never seen this repository is not where an internal decision note belongs.
+    """
+    return _docstring((of.__doc__ or "").split("\n\n")[0])
 
 
 def _per_engine(method: Mapping[str, str], source: str) -> str:
@@ -806,9 +888,17 @@ def _string(document: Mapping[str, object], key: str) -> str:
 
 
 def _integer(document: Mapping[str, object], key: str) -> int:
+    """One count, refused where it is not a whole number or where it is below zero.
+
+    Every number this reads is a count of questions, and a count below zero is a file that
+    cannot be right. Two negatives would also pass the bar's own check that a part is no
+    larger than its whole, and be drawn.
+    """
     value = document.get(key)
     if not isinstance(value, int) or isinstance(value, bool):
         raise BuildRefused(f"{key} is {type(value).__name__} where a whole number was expected")
+    if value < 0:
+        raise BuildRefused(f"{key} is {value}, and every number this page states is a count")
     return value
 
 
