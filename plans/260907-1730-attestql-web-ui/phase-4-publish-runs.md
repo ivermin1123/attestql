@@ -1,5 +1,12 @@
 # Phase 4: regenerate the published runs with per-question evidence
 
+Status: DONE 2026-09-08. 121 runs made again by `tools/site-select/audits.sh`, 348 questions
+selected into `tools/site/data/` by `tools/site-select/select.py` under the build's three
+budgets, 21 release assets holding the whole of every run on the `v0.2.2` release, and the
+preview serving the real rows with no banner. Every count reconciles with the measurement report
+that first made it, nineteen of twenty-one rows at zero difference and the other two explained:
+`plans/reports/measurement-260908-site-publish-runs.md`. attestql.com is unchanged.
+
 ## Context
 
 The runs this repository has reported (`plans/reports/`) were made before the site existed.

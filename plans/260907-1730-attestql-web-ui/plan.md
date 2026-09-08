@@ -80,7 +80,7 @@ gets the same pages by running `attestql report audit/`.
 | 1 | `phase-1-report-renderer.md` | nothing | DONE: `attestql report`, templates, tests |
 | 2 | `phase-2-design-and-verification.md` | 1 | DONE: tokens applied, states designed, figures, rendered and measured at three widths |
 | 3 | `phase-3-site-build-and-deploy.md` | 2 | DONE 2026-09-08: `tools/site/` build, landing and method pages, the index filters, preview at <https://attestql-ui.pages.dev>, reviewed |
-| 4 | `phase-4-publish-runs.md` | 1 (data), 3 (deploy) | per-question JSON for the five runs, size budget met, site live with real rows |
+| 4 | `phase-4-publish-runs.md` | 1 (data), 3 (deploy) | DONE 2026-09-08: 121 runs published and reconciled, 348 questions selected under the budget, the whole runs as release assets on `v0.2.2`, preview at <https://attestql-ui.pages.dev> with the real rows and no banner |
 | 5 | `phase-5-in-browser-viewer.md` | 1, 3 | drop zone for private audits, one renderer via Pyodide; about 6.3 MB compressed, loaded on demand; hash verification lives in phase 1 |
 
 Order: 1, 2, 3, 4, 5. Phase 4 comes before 5 because the published rows are what visitors come
