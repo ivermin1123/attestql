@@ -49,6 +49,7 @@ from attestql.audit.sqlite import (
     UNOBSERVED,
     WITHOUT_A_ROW_IDENTITY,
     SqliteBackend,
+    _catalogue_text,  # pyright: ignore[reportPrivateUsage]  # no public path reaches it
 )
 from attestql.audit.sqlite_statements import PARSER as SQLITE_PARSER
 from attestql.audit.sqlite_statements import parse_statement
@@ -1079,6 +1080,16 @@ def test_a_private_copy_that_cannot_be_made_is_a_refusal_and_leaves_nothing(
             sidecar.chmod(0o444)
 
     assert _private_copies() == before, "nothing of the copy is left behind"
+
+
+def test_a_catalogue_name_that_did_not_decode_is_refused_and_never_quoted() -> None:
+    """A result value the connection could not decode is answered with its bytes, which is
+    right for a result and impossible for a name: a name is quoted into statements and
+    digested, and the text of those bytes would be their repr in both. Asked directly,
+    because a file whose catalogue holds one cannot be built through this driver."""
+    assert _catalogue_text("players") == "players"
+    with pytest.raises(BackendRefused, match="cannot quote or digest"):
+        _catalogue_text(UndecodedText(b"\xff"))
 
 
 def test_a_file_whose_header_says_wal_and_fails_for_another_reason_is_not_copied(

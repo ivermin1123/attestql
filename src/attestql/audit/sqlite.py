@@ -345,6 +345,23 @@ def _as_recorded(value: object) -> object:
     return value
 
 
+def _catalogue_text(value: object) -> str:
+    """One name or one piece of DDL the catalogue returned, as the text it has to be.
+
+    The connection answers a TEXT value it could not decode with its bytes, which is right
+    for a result and impossible for a name: a name is what a statement is quoted with and
+    what a digest is taken over, and ``str`` of those bytes would put their repr into both.
+    A file whose catalogue this reader cannot read is named as such instead.
+    """
+    if isinstance(value, str):
+        return value
+    raise BackendRefused(
+        "existing_tables",
+        f"the catalogue of this file holds a {type(value).__name__} where a name or its DDL "
+        "should be, which this reader cannot quote or digest",
+    )
+
+
 def _declared_type(observed: Iterable[str]) -> str:
     """What a result column is typed as, from the storage classes its cells were seen at."""
     classes = sorted(set(observed))
@@ -653,7 +670,7 @@ class SqliteBackend:
             "WHERE type IN ('table', 'view')",
             step="existing_tables",
         )
-        return {str(row[0]): str(row[1]) for row in rows}
+        return {_catalogue_text(row[0]): _catalogue_text(row[1]) for row in rows}
 
     def _measured(self, tables: Sequence[TableName]) -> tuple[TableName, ...]:
         """Those names as the file spells them, deduplicated and in a fixed order.
