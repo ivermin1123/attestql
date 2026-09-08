@@ -194,8 +194,9 @@ finish inside 30 s there alone.
 Gold-only probes, all heuristics and labelled so: ordering over numeric-looking text; an arbitrary
 or null-first cut that changes the answer; a result that is not a function of the data (a seeded
 shuffle of the referenced tables, copied into scratch storage, changes it), with float aggregates
-whose value depends on summation order reported under their own name; and, off by default behind
-`--experimental-s2`, direction against the question. All five run on either engine and read the
+whose value depends on summation order reported under their own name; a result that returns the
+same whole row more than once where the statement never said DISTINCT; and, off by default behind
+`--experimental-s2`, direction against the question. All six run on either engine and read the
 engine's own rules rather than PostgreSQL's: where the nulls of an ordering key go without a
 `NULLS FIRST` or `NULLS LAST` to say (last under `ASC` on PostgreSQL, first on SQLite), what a
 numeric cast of an ordering key is written as, and which result types hold an aggregate whose last
@@ -210,11 +211,18 @@ the run records `last_analyze`, `last_autoanalyze` and `n_mod_since_analyze` per
 probe's own evidence and in the summary, and never runs ANALYZE. A probe that fires on one run and
 is quiet on the next over the same data is that, and the two records show it.
 
+The duplicate-row probe is the one that asks the database nothing: it counts the rows the gold
+itself returned, under the keys the comparison counts them by, so two rows are one row here exactly
+when the comparator holds them equal. It fires on a repeat that was seen, which a bounded result can
+still hold, and reports itself not applicable when the statement states DISTINCT, when the result
+was cut and held no repeat, or when it holds fewer than two rows.
+
 The precision of each probe, measured over all 498 Mini-Dev golds with every fired row classified
 by hand, is in
 [the measurement report](../plans/reports/measurement-260902-2226-gold-only-probes-mini-dev.md):
 67 % actionable over the fires, and the direction probe alone 17 %, which is why it is off by
-default.
+default. That measurement predates the duplicate-row probe; what it fires on, and how often, is in
+the claims register.
 
 ## The report command
 
