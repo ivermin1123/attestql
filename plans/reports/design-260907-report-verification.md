@@ -110,19 +110,27 @@ paragraph under its colour table.
 Measured in the browser by walking a `Range` character by character over the longest paragraph
 of each page and counting the characters before the client rect's top changes.
 
+Re-measured on 2026-09-08 at `55ch`, the owner's decision of that day, on the same pages and
+by the same act:
+
 | Width | Prose column | Characters on the first line |
 | --- | --- | --- |
 | 360 | 315 to 328 px | 40 to 44 |
-| 768 | 634 px | 86 to 88 |
-| 1280 | 634 px | 86 to 88 |
+| 768 | 528 px | 56 to 75 |
+| 1280 | 528 px | 56 to 75 |
 
-The column is `66ch`, the spec's value, and `ch` is the advance of the digit zero, which in
-Plex Sans is 0.6em: 66ch is 634px at 16px, and 634px of this page's own prose is 86 to 88
-characters. **This is a review finding, not a repair.** The design reference names 45 to 75
-characters as the readable band, and 86 is outside it; `66ch` is what the accepted spec states,
-and `design-spec.md` is not in this phase's edit list. The arithmetic for the owner: `55ch` is
-528px, which measures 72 characters on the same paragraphs. One line in `report.css`
-(`--measure`) and one line in the spec.
+`ch` is the advance of the digit zero, which Plex Sans sets at 0.6em, so `55ch` is 528px at
+16px and `66ch` was 634px. At 634px the same walk read 86 to 88 characters, outside the 45 to
+75 band the design reference names; at 528px it reads 75 on the run page's longest paragraph
+and 56 on a question page's, both inside it. The swing between the two is the paragraphs and
+not the measure: the longest paragraph on a question page is the rerun line, which holds a
+file path with nowhere to break, so its first line ends where that path does not fit rather
+than where the column does. At 360 nothing moved, because below 768 the gutters and not the
+measure decide the column.
+
+The 66ch numbers were a review finding of 2026-09-07 and are kept above as the measurement the
+decision was made against. The estimate offered to the owner then was 72 characters, scaled
+from 86 by the ratio of the two widths; measured, it is 75.
 
 ### The type scale
 
@@ -152,6 +160,11 @@ number.
 | the run page | 360 = 360 | 768 = 768 | 1280 = 1280 |
 | q800003, order | 360 = 360 | 768 = 768 | 1280 = 1280 |
 | q800002, q800004, q800005, q800011, q800012, q800013, q800014 | 360 = 360 | not shot | 1280 = 1280 |
+
+Measured again at `55ch` on 2026-09-08, over the whole set: every page equal at every width in
+both themes, and the strip's three children still start on the same left edge as the first
+heading under them, at 360, 768, 1280 and 1440 (16, 24, 64 and 144 px, `getBoundingClientRect`
+on each).
 
 Three defects were found by this measurement and repaired, each re-measured after the fix:
 
@@ -255,7 +268,7 @@ not from memory.
 | glassmorphism, neon glow, gradient text | absent. No gradient anywhere in the stylesheet |
 | emoji as icons or bullets | absent. The two marks are geometric triangles, and they are `aria-hidden` beside a word |
 | decoration stacking | absent. No shadow, no gradient; radius is 3px on chips and code blocks and 0 on tables |
-| centre-aligned paragraphs, full-width text lines | absent. Prose is left aligned and held to 66ch; measured above |
+| centre-aligned paragraphs, full-width text lines | absent. Prose is left aligned and held to 55ch; measured above |
 | grey-on-grey body text failing contrast | absent. Computed: lowest pair 4.53:1 |
 | five font sizes where three would do; values off the scale | absent. Four steps, measured in the render |
 | animating everything; motion that communicates nothing | one animation on the page, on the rows two results differ in, once |
@@ -296,8 +309,10 @@ Applying it moved the title and left the two lines under it where they were, bec
 `.strip__facts` and `.strip__set` restate `margin` as a shorthand and dropped the auto inline
 margins that do the centring; that half was found by measuring all three children rather than
 the title alone. Both were repaired: the two rules keep their auto inline margins, and
-`.strip__set` no longer clamps itself to the 66ch prose measure, which would otherwise have
-centred a 634px line inside a 1152px box and started it 319px right of the title at 1280.
+`.strip__set` no longer clamps itself to the prose measure, which would otherwise have centred
+a 634px line inside a 1152px box and started it 319px right of the title at 1280 (the numbers
+of the 66ch measure this was repaired under; at 55ch the same clamp would centre a 528px line
+and start it 312px right).
 
 Measured again after the repair, on the run page and on the order and multiplicity question
 pages, at five widths, reading `getBoundingClientRect().left` off each of the strip's three
@@ -335,15 +350,30 @@ directory. The 768 pair shows no change, and was re-shot for the record.
 - `uv build` produces a wheel carrying the three woff2 files, the licence, the provenance note
   and `method.svg`.
 
+## The three questions the owner decided, 2026-09-08
+
+The three items this report left open for a decision were answered by the owner on 2026-09-08,
+and the first is applied here.
+
+1. **The measure is `55ch`.** 66ch set 86 to 88 characters a line, outside the 45 to 75 band;
+   55ch sets 75 and 56, inside it. `--measure` in `report.css` and the Typography and Layout
+   entries of `design-spec.md` carry the new value with the decision beside it, and every
+   screenshot in this directory was shot again at it: the measure changes the width of the
+   prose on every page, so a screenshot taken before it is a screenshot of another design. The
+   measurements above are the re-measurement, not the earlier one.
+2. **Figures stay a fixed 640px in their own scroll region**, with the caption carrying the
+   numbers. On a 360px screen a figure is a region that scrolls sideways, the way a wide table
+   is; nothing about it is redrawn for the width, because a figure scaled to a phone column
+   would set the numbers on its axes at seven pixels. The text alternative under every figure
+   holds the same numbers, so a reader who does not scroll loses none of them.
+3. **The committed screenshots stay in the repository.** They are the evidence the design was
+   verified against, and a report whose evidence lives outside the tree is a report nobody can
+   check later.
+
 ## What is left for the owner
 
-1. **The measure.** 66ch measures 86 characters. The band the design reference names is 45 to
-   75. Changing `--measure` to `55ch` measures 72. One line here and one line in
-   `design-spec.md`; not done, because the spec is accepted and is not this phase's to edit.
-2. **The dark tints.** `design-spec.md` still states `#2e2416` and `#16252b`; `report.css` and
-   its test hold `#352a19` and `#1b2e35`, for the reason computed above.
-3. **A scrollable region has no keyboard stop.** A table wider than its column scrolls with a
+1. **A scrollable region has no keyboard stop.** A table wider than its column scrolls with a
    pointer and, in Chromium, not with a keyboard. Giving every `.rows__region` a `tabindex`
    would put ten tab stops on a question page, so it is recorded rather than done: the fix
-   belongs with phase 3, which can give the region a stop only where the table is wide.
-4. **Non-Latin text and safe-area insets**, as recorded in the checklist above.
+   belongs with the site, which can give the region a stop only where the table is wide.
+2. **Non-Latin text and safe-area insets**, as recorded in the checklist above.

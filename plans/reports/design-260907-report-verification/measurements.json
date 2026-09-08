@@ -15,8 +15,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 88,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 75,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -24,7 +24,6 @@
    "4px",
    "8px",
    "12px",
-   "13px",
    "16px",
    "24px",
    "32px",
@@ -75,8 +74,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 81,
-   "columnWidth": 591,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 493,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -90,7 +89,7 @@
    "48px",
    "64px"
   ],
-  "stripHeight": 202,
+  "stripHeight": 167,
   "widestElement": null
  },
  "gold-only-1280-light": {
@@ -109,8 +108,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -124,7 +123,7 @@
    "48px",
    "64px"
   ],
-  "stripHeight": 185,
+  "stripHeight": 167,
   "widestElement": null
  },
  "gold-only-360-dark": {
@@ -177,8 +176,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -192,7 +191,7 @@
    "48px",
    "64px"
   ],
-  "stripHeight": 185,
+  "stripHeight": 167,
   "widestElement": null
  },
  "multiplicity-360-dark": {
@@ -249,8 +248,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -317,8 +316,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -332,7 +331,7 @@
    "48px",
    "64px"
   ],
-  "stripHeight": 185,
+  "stripHeight": 167,
   "widestElement": null
  },
  "order-10000-360-dark": {
@@ -389,8 +388,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -404,7 +403,7 @@
    "48px",
    "64px"
   ],
-  "stripHeight": 185,
+  "stripHeight": 167,
   "widestElement": null
  },
  "order-1280-light": {
@@ -423,8 +422,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -438,7 +437,7 @@
    "48px",
    "64px"
   ],
-  "stripHeight": 185,
+  "stripHeight": 167,
   "widestElement": null
  },
  "order-360-dark": {
@@ -533,8 +532,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 768,
@@ -567,8 +566,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 768,
@@ -601,8 +600,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -616,7 +615,7 @@
    "48px",
    "64px"
   ],
-  "stripHeight": 185,
+  "stripHeight": 167,
   "widestElement": {
    "cls": "rows__table",
    "right": 1849,
@@ -684,11 +683,11 @@
   ],
   "opacities": [
    "1",
-   "0.997553",
-   "0.983438",
-   "0.953411",
-   "0.901498",
-   "0.816835"
+   "0.99637",
+   "0.980269",
+   "0.947588",
+   "0.891877",
+   "0.801167"
   ],
   "transforms": [
    "none"
@@ -713,8 +712,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 88,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 75,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -747,8 +746,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 88,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 75,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -857,8 +856,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 88,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 75,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 768,
@@ -895,8 +894,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 88,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 75,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 768,
@@ -933,8 +932,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -948,7 +947,7 @@
    "48px",
    "64px"
   ],
-  "stripHeight": 185,
+  "stripHeight": 167,
   "widestElement": null
  },
  "truncation-360-dark": {
@@ -1005,8 +1004,8 @@
   ],
   "overflows": false,
   "prose": {
-   "charactersOnTheFirstLine": 86,
-   "columnWidth": 634,
+   "charactersOnTheFirstLine": 56,
+   "columnWidth": 528,
    "fontSize": "16px"
   },
   "scrollWidth": 1280,
@@ -1020,7 +1019,7 @@
    "48px",
    "64px"
   ],
-  "stripHeight": 185,
+  "stripHeight": 167,
   "widestElement": null
  },
  "type-360-dark": {
