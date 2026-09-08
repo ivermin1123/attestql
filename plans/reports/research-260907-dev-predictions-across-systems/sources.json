@@ -1,0 +1,581 @@
+{
+ "reading": "Public full BIRD dev prediction hunt, stopped after the CodeS eight plus the candidates two hours of GitHub and Hugging Face search found.",
+ "searched": {
+  "github_code": [
+   "predict_dev bird",
+   "filename:predict_dev.json bird",
+   "\"----- bird -----\"",
+   "\"predict_dev-codes\"",
+   "path:results predict_dev bird json",
+   "predict_dev_bird json",
+   "predict_dev bird evidence",
+   "BIRD dev predictions json 1534",
+   "dev_20240627 predictions json",
+   "BIRD benchmark prediction json db_id",
+   "dev_pred_sqls.json",
+   "BIRD_DEV final_sql.txt",
+   "bird/dev/dev.json predictions",
+   "bird-bench predict_dev.json",
+   "GSR-dev.sql",
+   "sampling_think_sql_merge_pred_major_voting_sqls.sql",
+   "BIRD_WITH_EVIDENCE-TEST_SQL",
+   "bird_dev predicted_sql",
+   "BIRD dev pred_sqls",
+   "filename:predict.sql bird",
+   "filename:final_sql.txt bird",
+   "filename:dev_pred_sqls.json",
+   "filename:GSR-dev.sql",
+   "filename:bird_predict.sql",
+   "filename:bird_pred.sql",
+   "filename:predict_dev_bird.json",
+   "filename:predictions_bird.json",
+   "filename:bird_predictions.json",
+   "filename:generated_queries.json bird",
+   "filename:predict_dev.sql bird",
+   "filename:bird_dev_predictions.json",
+   "filename:bird_dev_predictions.jsonl",
+   "filename:dev_predictions.json bird",
+   "filename:predictions_dev.json bird",
+   "filename:predict_bird_dev.json",
+   "BIRD_WITH_EVIDENCE, including SQLFixAgent, MATS-SQL, GenLink, KaSLA and LangSQL candidates"
+  ],
+  "github_repositories": [
+   "topic:text-to-sql",
+   "BIRD text-to-SQL",
+   "named CHESS, OmniSQL, MAC-SQL, DTS-SQL, XiYan-SQL, NL2SQL360, SQL-R1, E-SQL, MAG-SQL, RSL-SQL, TA-SQL, N-rep, Middleware, NL2SQL-Benchmark, LHTB and ontology2sql searches",
+   "repository trees of 122 candidates from those searches",
+   "updated BIRD-SQL repository search, including AgentSQL-Asym, QueryMind and Chase-SQL candidates"
+  ],
+  "hugging_face": [
+   "dataset and model API searches: bird dev prediction, bird_sql_dev, BIRD-SQL, BIRD text-to-SQL, bird benchmark prediction, bird dev sql, text-to-sql bird dev",
+   "full-text pages for the BIRD suffix and prediction filenames",
+   "BIRD Platinum generated sql",
+   "bird original 600 generated sql",
+   "text to sql benchmark predictions",
+   "BIRD leaderboard",
+   "Bird predict.sql",
+   "BIRD dev predict"
+  ],
+  "stop": "2026-09-07 22:20 +07; accepted set was fixed by 21:46, and the extra 34 minutes checked candidate families and duplicates while measurement processes were suspended"
+ },
+ "accepted": [
+  {
+   "name": "predict_dev-codes-1b-bird.json",
+   "system": "CodeS",
+   "model": "CodeS-1b",
+   "variant": "without evidence",
+   "repository": "RUCKBReasoning/codes",
+   "commit": "11a9f1ceb292d6e9887990e7b108204d94c82cb0",
+   "commit_date": "2024-11-20",
+   "path": "results/predict_dev-codes-1b-bird.json",
+   "url": "https://raw.githubusercontent.com/RUCKBReasoning/codes/11a9f1ceb292d6e9887990e7b108204d94c82cb0/results/predict_dev-codes-1b-bird.json",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "80afb3ce3829e76635e7e490d12526c2e28b743076fe525344b41770d569c429",
+   "format": "JSON object of 1,534 strings",
+   "keying": "position, each value ends in BIRD db_id suffix",
+   "pairing": "suffix db_id equals dev.json db_id at all 1,534 positions"
+  },
+  {
+   "name": "predict_dev-codes-1b-bird-with-evidence.json",
+   "system": "CodeS",
+   "model": "CodeS-1b",
+   "variant": "with evidence",
+   "repository": "RUCKBReasoning/codes",
+   "commit": "11a9f1ceb292d6e9887990e7b108204d94c82cb0",
+   "commit_date": "2024-11-20",
+   "path": "results/predict_dev-codes-1b-bird-with-evidence.json",
+   "url": "https://raw.githubusercontent.com/RUCKBReasoning/codes/11a9f1ceb292d6e9887990e7b108204d94c82cb0/results/predict_dev-codes-1b-bird-with-evidence.json",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "9725513ad316009f6c02da28a58d3703de83f1e792cb300a0a1c752a213cf295",
+   "format": "JSON object of 1,534 strings",
+   "keying": "position, each value ends in BIRD db_id suffix",
+   "pairing": "suffix db_id equals dev.json db_id at all 1,534 positions"
+  },
+  {
+   "name": "predict_dev-codes-3b-bird.json",
+   "system": "CodeS",
+   "model": "CodeS-3b",
+   "variant": "without evidence",
+   "repository": "RUCKBReasoning/codes",
+   "commit": "11a9f1ceb292d6e9887990e7b108204d94c82cb0",
+   "commit_date": "2024-11-20",
+   "path": "results/predict_dev-codes-3b-bird.json",
+   "url": "https://raw.githubusercontent.com/RUCKBReasoning/codes/11a9f1ceb292d6e9887990e7b108204d94c82cb0/results/predict_dev-codes-3b-bird.json",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "8f1b28b06ff8110e92cc3ceabb3593f837de86a130f069db49c29e815df21ace",
+   "format": "JSON object of 1,534 strings",
+   "keying": "position, each value ends in BIRD db_id suffix",
+   "pairing": "suffix db_id equals dev.json db_id at all 1,534 positions"
+  },
+  {
+   "name": "predict_dev-codes-3b-bird-with-evidence.json",
+   "system": "CodeS",
+   "model": "CodeS-3b",
+   "variant": "with evidence",
+   "repository": "RUCKBReasoning/codes",
+   "commit": "11a9f1ceb292d6e9887990e7b108204d94c82cb0",
+   "commit_date": "2024-11-20",
+   "path": "results/predict_dev-codes-3b-bird-with-evidence.json",
+   "url": "https://raw.githubusercontent.com/RUCKBReasoning/codes/11a9f1ceb292d6e9887990e7b108204d94c82cb0/results/predict_dev-codes-3b-bird-with-evidence.json",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "cc6bad409feb8e6dc3dc5ef91346a1687df9b3f6559b57f364036666962c3b99",
+   "format": "JSON object of 1,534 strings",
+   "keying": "position, each value ends in BIRD db_id suffix",
+   "pairing": "suffix db_id equals dev.json db_id at all 1,534 positions"
+  },
+  {
+   "name": "predict_dev-codes-7b-bird.json",
+   "system": "CodeS",
+   "model": "CodeS-7b",
+   "variant": "without evidence",
+   "repository": "RUCKBReasoning/codes",
+   "commit": "11a9f1ceb292d6e9887990e7b108204d94c82cb0",
+   "commit_date": "2024-11-20",
+   "path": "results/predict_dev-codes-7b-bird.json",
+   "url": "https://raw.githubusercontent.com/RUCKBReasoning/codes/11a9f1ceb292d6e9887990e7b108204d94c82cb0/results/predict_dev-codes-7b-bird.json",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "a061e413b583e611ca7a59bdb352b8e25ea8f7ff5dfd3c32372160f494201b01",
+   "format": "JSON object of 1,534 strings",
+   "keying": "position, each value ends in BIRD db_id suffix",
+   "pairing": "suffix db_id equals dev.json db_id at all 1,534 positions"
+  },
+  {
+   "name": "predict_dev-codes-7b-bird-with-evidence.json",
+   "system": "CodeS",
+   "model": "CodeS-7b",
+   "variant": "with evidence",
+   "repository": "RUCKBReasoning/codes",
+   "commit": "11a9f1ceb292d6e9887990e7b108204d94c82cb0",
+   "commit_date": "2024-11-20",
+   "path": "results/predict_dev-codes-7b-bird-with-evidence.json",
+   "url": "https://raw.githubusercontent.com/RUCKBReasoning/codes/11a9f1ceb292d6e9887990e7b108204d94c82cb0/results/predict_dev-codes-7b-bird-with-evidence.json",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "21b3e162d0437ec1fa18fb949a4a3b0e740386c70545a241a79de51712e7e741",
+   "format": "JSON object of 1,534 strings",
+   "keying": "position, each value ends in BIRD db_id suffix",
+   "pairing": "suffix db_id equals dev.json db_id at all 1,534 positions"
+  },
+  {
+   "name": "predict_dev-codes-15b-bird.json",
+   "system": "CodeS",
+   "model": "CodeS-15b",
+   "variant": "without evidence",
+   "repository": "RUCKBReasoning/codes",
+   "commit": "11a9f1ceb292d6e9887990e7b108204d94c82cb0",
+   "commit_date": "2024-11-20",
+   "path": "results/predict_dev-codes-15b-bird.json",
+   "url": "https://raw.githubusercontent.com/RUCKBReasoning/codes/11a9f1ceb292d6e9887990e7b108204d94c82cb0/results/predict_dev-codes-15b-bird.json",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "222ccc008541d5e6f98eaf3785952bea40a0a50d50b5841156efd0a7c07ae87f",
+   "format": "JSON object of 1,534 strings",
+   "keying": "position, each value ends in BIRD db_id suffix",
+   "pairing": "suffix db_id equals dev.json db_id at all 1,534 positions"
+  },
+  {
+   "name": "predict_dev-codes-15b-bird-with-evidence.json",
+   "system": "CodeS",
+   "model": "CodeS-15b",
+   "variant": "with evidence",
+   "repository": "RUCKBReasoning/codes",
+   "commit": "11a9f1ceb292d6e9887990e7b108204d94c82cb0",
+   "commit_date": "2024-11-20",
+   "path": "results/predict_dev-codes-15b-bird-with-evidence.json",
+   "url": "https://raw.githubusercontent.com/RUCKBReasoning/codes/11a9f1ceb292d6e9887990e7b108204d94c82cb0/results/predict_dev-codes-15b-bird-with-evidence.json",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "84ca36ab5e5d8edf33b464b2c7867770aff057bdab74ecd004ccd16833e5ac0a",
+   "format": "JSON object of 1,534 strings",
+   "keying": "position, each value ends in BIRD db_id suffix",
+   "pairing": "suffix db_id equals dev.json db_id at all 1,534 positions"
+  },
+  {
+   "name": "alpha-sql-dev.json",
+   "system": "Alpha-SQL",
+   "model": "Qwen2.5-Coder-32B-Instruct with MCTS",
+   "repository": "HKUSTDial/Alpha-SQL",
+   "commit": "216e61fc86467591fa1dc5b7031ca536577b4d21",
+   "commit_date": "2026-06-10",
+   "path": "results/dev_pred_sqls.json",
+   "url": "https://raw.githubusercontent.com/HKUSTDial/Alpha-SQL/216e61fc86467591fa1dc5b7031ca536577b4d21/results/dev_pred_sqls.json",
+   "licence": {
+    "spdx": "MIT",
+    "source": "repository LICENSE"
+   },
+   "sha256": "b7b2045469551fc4126c2cbf8ec686c4c053125e05515bd36cb732d7916e5cfa",
+   "format": "JSON object of 1,534 strings",
+   "keying": "BIRD question id",
+   "pairing": "key set is exactly the 1,534 dev ids; repository names it the BIRD dev result"
+  },
+  {
+   "name": "rsl-sql-deepseek.txt",
+   "system": "RSL-SQL",
+   "model": "DeepSeek, named only by the upstream folder",
+   "repository": "Laqcce-cao/RSL-SQL",
+   "commit": "fb1dcf02923e5fd89171cc6cfe1ae3e4e5bc3b94",
+   "commit_date": "2025-09-17",
+   "path": "main_result/BIRD_DEV/deepseek/step4/final_sql.txt",
+   "url": "https://raw.githubusercontent.com/Laqcce-cao/RSL-SQL/fb1dcf02923e5fd89171cc6cfe1ae3e4e5bc3b94/main_result/BIRD_DEV/deepseek/step4/final_sql.txt",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "24210e41b9cc995d09164e00301fee49c5d0434cffa8fabdbf08c8a60637f176",
+   "format": "1,534 SQL lines",
+   "keying": "position",
+   "pairing": "src/data_construct.py preserves dev.json order and step_4_self_correction.py zips that list with output line i"
+  },
+  {
+   "name": "rsl-sql-gpt-4o.txt",
+   "system": "RSL-SQL",
+   "model": "GPT-4o",
+   "repository": "Laqcce-cao/RSL-SQL",
+   "commit": "fb1dcf02923e5fd89171cc6cfe1ae3e4e5bc3b94",
+   "commit_date": "2025-09-17",
+   "path": "main_result/BIRD_DEV/gpt-4o/step4/final_sql.txt",
+   "url": "https://raw.githubusercontent.com/Laqcce-cao/RSL-SQL/fb1dcf02923e5fd89171cc6cfe1ae3e4e5bc3b94/main_result/BIRD_DEV/gpt-4o/step4/final_sql.txt",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "33efedab4db239721c8a6c2ef6727c06e8b6537ece86788d6e8daa5e5af3c6e8",
+   "format": "1,534 SQL lines",
+   "keying": "position",
+   "pairing": "src/data_construct.py preserves dev.json order and step_4_self_correction.py zips that list with output line i"
+  },
+  {
+   "name": "dail-sql-gpt-4-7shot-mask-thr-0.8.txt",
+   "system": "DAIL-SQL",
+   "model": "GPT-4",
+   "repository": "BeachWang/DAIL-SQL",
+   "commit": "2061f68112222083134a0c9e2877961ff315ff44",
+   "commit_date": "2025-03-07",
+   "path": "results/BIRD_WITH_EVIDENCE-TEST_SQL_7-SHOT_EUCDISMASKPRESKLSIMTHR_QA-EXAMPLE_CTX-150_ANS-4096_TH-0.8.txt",
+   "url": "https://raw.githubusercontent.com/BeachWang/DAIL-SQL/2061f68112222083134a0c9e2877961ff315ff44/results/BIRD_WITH_EVIDENCE-TEST_SQL_7-SHOT_EUCDISMASKPRESKLSIMTHR_QA-EXAMPLE_CTX-150_ANS-4096_TH-0.8.txt",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "6354073394f50bddd1221324b63ca17512d5d2f863c0c75ab9318b77e9c57b3a",
+   "format": "1,534 SQL lines",
+   "keying": "BIRD question id after upstream to_bird_output.py",
+   "pairing": "ask_llm.py writes prompts without shuffle and to_bird_output.py asserts equal lengths then zips query i with dev entry i",
+   "model_evidence": "file-history commit 2965e8da names the outputs \"exp for bird in GPT-4\""
+  },
+  {
+   "name": "dail-sql-gpt-4-7shot-mask-thr-0.85.txt",
+   "system": "DAIL-SQL",
+   "model": "GPT-4",
+   "repository": "BeachWang/DAIL-SQL",
+   "commit": "2061f68112222083134a0c9e2877961ff315ff44",
+   "commit_date": "2025-03-07",
+   "path": "results/BIRD_WITH_EVIDENCE-TEST_SQL_7-SHOT_EUCDISMASKPRESKLSIMTHR_QA-EXAMPLE_CTX-150_ANS-4096_TH-0.85.txt",
+   "url": "https://raw.githubusercontent.com/BeachWang/DAIL-SQL/2061f68112222083134a0c9e2877961ff315ff44/results/BIRD_WITH_EVIDENCE-TEST_SQL_7-SHOT_EUCDISMASKPRESKLSIMTHR_QA-EXAMPLE_CTX-150_ANS-4096_TH-0.85.txt",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "1605806506c2ddfc10f9f749368649bc9e92ecc4f692b405aab1e93d5d099e83",
+   "format": "1,534 SQL lines",
+   "keying": "BIRD question id after upstream to_bird_output.py",
+   "pairing": "ask_llm.py writes prompts without shuffle and to_bird_output.py asserts equal lengths then zips query i with dev entry i",
+   "model_evidence": "file-history commit 2965e8da names the outputs \"exp for bird in GPT-4\""
+  },
+  {
+   "name": "dail-sql-gpt-4-7shot-questionmask.txt",
+   "system": "DAIL-SQL",
+   "model": "GPT-4",
+   "repository": "BeachWang/DAIL-SQL",
+   "commit": "2061f68112222083134a0c9e2877961ff315ff44",
+   "commit_date": "2025-03-07",
+   "path": "results/BIRD_WITH_EVIDENCE-TEST_SQL_7-SHOT_EUCDISQUESTIONMASK_QA-EXAMPLE_CTX-150_ANS-4096.txt",
+   "url": "https://raw.githubusercontent.com/BeachWang/DAIL-SQL/2061f68112222083134a0c9e2877961ff315ff44/results/BIRD_WITH_EVIDENCE-TEST_SQL_7-SHOT_EUCDISQUESTIONMASK_QA-EXAMPLE_CTX-150_ANS-4096.txt",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "4ca71fdb42c6e168407f95a838501f08dcdd747aff378bc1c8b296d613fd0da6",
+   "format": "1,534 SQL lines",
+   "keying": "BIRD question id after upstream to_bird_output.py",
+   "pairing": "ask_llm.py writes prompts without shuffle and to_bird_output.py asserts equal lengths then zips query i with dev entry i",
+   "model_evidence": "file-history commit 2965e8da names the outputs \"exp for bird in GPT-4\""
+  },
+  {
+   "name": "dail-sql-gpt-4-9shot-mask-thr.txt",
+   "system": "DAIL-SQL",
+   "model": "GPT-4",
+   "repository": "BeachWang/DAIL-SQL",
+   "commit": "2061f68112222083134a0c9e2877961ff315ff44",
+   "commit_date": "2025-03-07",
+   "path": "results/BIRD_WITH_EVIDENCE-TEST_SQL_9-SHOT_EUCDISMASKPRESKLSIMTHR_QA-EXAMPLE_CTX-150_ANS-4096.txt",
+   "url": "https://raw.githubusercontent.com/BeachWang/DAIL-SQL/2061f68112222083134a0c9e2877961ff315ff44/results/BIRD_WITH_EVIDENCE-TEST_SQL_9-SHOT_EUCDISMASKPRESKLSIMTHR_QA-EXAMPLE_CTX-150_ANS-4096.txt",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "01d5204a02cbc415abb2afcbc6d8762ad9e0dd3e45207001a97d20e51763c385",
+   "format": "1,534 SQL lines",
+   "keying": "BIRD question id after upstream to_bird_output.py",
+   "pairing": "ask_llm.py writes prompts without shuffle and to_bird_output.py asserts equal lengths then zips query i with dev entry i",
+   "model_evidence": "file-history commit 2965e8da names the outputs \"exp for bird in GPT-4\""
+  },
+  {
+   "name": "dail-sql-gpt-4-9shot-questionmask.txt",
+   "system": "DAIL-SQL",
+   "model": "GPT-4",
+   "repository": "BeachWang/DAIL-SQL",
+   "commit": "2061f68112222083134a0c9e2877961ff315ff44",
+   "commit_date": "2025-03-07",
+   "path": "results/BIRD_WITH_EVIDENCE-TEST_SQL_9-SHOT_EUCDISQUESTIONMASK_QA-EXAMPLE_CTX-150_ANS-4096.txt",
+   "url": "https://raw.githubusercontent.com/BeachWang/DAIL-SQL/2061f68112222083134a0c9e2877961ff315ff44/results/BIRD_WITH_EVIDENCE-TEST_SQL_9-SHOT_EUCDISQUESTIONMASK_QA-EXAMPLE_CTX-150_ANS-4096.txt",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "ef72fd98ab7ae12bb626e68e4295514091a05009fe0156ad683ef98867598f03",
+   "format": "1,534 SQL lines",
+   "keying": "BIRD question id after upstream to_bird_output.py",
+   "pairing": "ask_llm.py writes prompts without shuffle and to_bird_output.py asserts equal lengths then zips query i with dev entry i",
+   "model_evidence": "file-history commit 2965e8da names the outputs \"exp for bird in GPT-4\""
+  },
+  {
+   "name": "gsr-gpt-4o.sql",
+   "system": "GSR",
+   "model": "GPT-4o",
+   "repository": "GSR-SQL/GSR",
+   "commit": "7d1a06550d5757636d3838edd3927ae6a49f0f95",
+   "commit_date": "2025-02-19",
+   "path": "output/GSR-dev.sql",
+   "url": "https://raw.githubusercontent.com/GSR-SQL/GSR/7d1a06550d5757636d3838edd3927ae6a49f0f95/output/GSR-dev.sql",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "ad50cad6368d8990cda081d0eeb020f3b1e0329a1d5120284e8af6dba6c4e59b",
+   "format": "1,534 SQL lines",
+   "keying": "position",
+   "pairing": "GSR.py enumerates prepared BIRD inputs in order and appends each final SQL to output_sql_list before writing it"
+  },
+  {
+   "name": "csc-sql-7b.sql",
+   "system": "CSC-SQL",
+   "model": "Qwen2.5-Coder-7b pipeline",
+   "repository": "CycloneBoy/csc_sql",
+   "commit": "0fafdf3ee7f334bb11653d890b6e818bf813be1d",
+   "commit_date": "2025-08-12",
+   "path": "data/bird_dev/7b/sampling_think_sql_merge_pred_major_voting_sqls.sql",
+   "url": "https://raw.githubusercontent.com/CycloneBoy/csc_sql/0fafdf3ee7f334bb11653d890b6e818bf813be1d/data/bird_dev/7b/sampling_think_sql_merge_pred_major_voting_sqls.sql",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "693e879685fd6b7137a33cba060c92bdde53ce82ffe23b3fc3c9248a591cad0e",
+   "format": "1,534 SQL lines",
+   "keying": "position",
+   "pairing": "README names BIRD Dev; evaluation package_sqls maps line idx to db_id_list[idx] when the line has no db suffix"
+  },
+  {
+   "name": "csc-sql-32b.sql",
+   "system": "CSC-SQL",
+   "model": "Qwen2.5-Coder-32b pipeline",
+   "repository": "CycloneBoy/csc_sql",
+   "commit": "0fafdf3ee7f334bb11653d890b6e818bf813be1d",
+   "commit_date": "2025-08-12",
+   "path": "data/bird_dev/32b/sampling_think_sql_merge_pred_major_voting_sqls.sql",
+   "url": "https://raw.githubusercontent.com/CycloneBoy/csc_sql/0fafdf3ee7f334bb11653d890b6e818bf813be1d/data/bird_dev/32b/sampling_think_sql_merge_pred_major_voting_sqls.sql",
+   "licence": {
+    "spdx": "Apache-2.0",
+    "source": "repository LICENSE"
+   },
+   "sha256": "0e86b73ee0e856d09078d2761afe6a4c5f4ce03f90c79cb48e64029b8fe4b3f3",
+   "format": "1,534 SQL lines",
+   "keying": "position",
+   "pairing": "README names BIRD Dev; evaluation package_sqls maps line idx to db_id_list[idx] when the line has no db suffix"
+  },
+  {
+   "name": "atlas-core-20260301.sql",
+   "system": "ATLAS Core",
+   "model": "model not named by the shipped run; ReAct plus rich context plus clarification",
+   "repository": "Zqzqsb/AtlasCore",
+   "commit": "2373e9734d0506e178a808ccde9316b13b173a4e",
+   "commit_date": "2026-09-02",
+   "run_date": "2026-03-01",
+   "path": "open_results/20260301_180516_react%2Brich_context%2Bclarify/predict.sql",
+   "url": "https://raw.githubusercontent.com/Zqzqsb/AtlasCore/2373e9734d0506e178a808ccde9316b13b173a4e/open_results/20260301_180516_react%2Brich_context%2Bclarify/predict.sql",
+   "licence": {
+    "spdx": "MIT",
+    "source": "repository LICENSE"
+   },
+   "sha256": "081bc573e42a88ffe86a5dc0af2a23a962f799757979f32b6a1632d28367f8af",
+   "format": "1,534 SQL<TAB>db_id lines",
+   "keying": "position",
+   "pairing": "the shipped results.json is a 1,534-entry list in dev order; each predict.sql db_id equals dev.json at that position",
+   "pairing_note": "results.json generated_sql differs only at 17 error-status positions where predict.sql substitutes SELECT 1; ids and tab db_id still align"
+  },
+  {
+   "name": "atlas-core-20260324.sql",
+   "system": "ATLAS Core",
+   "model": "model not named by the shipped run; ReAct plus rich context plus clarification",
+   "repository": "Zqzqsb/AtlasCore",
+   "commit": "2373e9734d0506e178a808ccde9316b13b173a4e",
+   "commit_date": "2026-09-02",
+   "run_date": "2026-03-24",
+   "path": "open_results/20260324_151835_react%2Brich_context%2Bclarify/predict.sql",
+   "url": "https://raw.githubusercontent.com/Zqzqsb/AtlasCore/2373e9734d0506e178a808ccde9316b13b173a4e/open_results/20260324_151835_react%2Brich_context%2Bclarify/predict.sql",
+   "licence": {
+    "spdx": "MIT",
+    "source": "repository LICENSE"
+   },
+   "sha256": "4990087f406e71444467ae91a1baa25f9f9f1b642534bf1db4698019ce80f93b",
+   "format": "1,534 SQL<TAB>db_id lines",
+   "keying": "position",
+   "pairing": "the shipped results.json is a 1,534-entry list in dev order; each predict.sql db_id equals dev.json at that position",
+   "pairing_note": "results.json generated_sql differs only at 2 error-status positions where predict.sql substitutes SELECT 1; ids and tab db_id still align"
+  }
+ ],
+ "refused_or_not_usable": [
+  {
+   "repository": "RUCKBReasoning/OmniSQL",
+   "reason": "no LICENSE file"
+  },
+  {
+   "repository": "wbbeyourself/MAC-SQL",
+   "reason": "no LICENSE file"
+  },
+  {
+   "repository": "E-SQL upstream",
+   "reason": "no LICENSE file"
+  },
+  {
+   "repository": "TA-SQL upstream",
+   "reason": "no LICENSE file; a 1,534-entry predict_dev.json is vendored under uiuc-kang-lab/text_to_sql_benchmarks, but the aggregate licence cannot cure the unlicensed upstream file"
+  },
+  {
+   "repository": "Middleware upstream",
+   "reason": "no LICENSE file"
+  },
+  {
+   "repository": "ArjunNargolwala04/hill-climb-RL",
+   "reason": "no LICENSE file; full 1,534-entry results exist"
+  },
+  {
+   "repository": "AbhiPoluri/sql-r1",
+   "reason": "no LICENSE file; 1,534-entry result JSON files exist"
+  },
+  {
+   "repository": "Lancelot-Xie/MAG-SQL",
+   "reason": "MIT, but output/gpt4_mag.json holds 24 examples, not full dev"
+  },
+  {
+   "repository": "MohammadrezaPourreza/DTS-SQL",
+   "reason": "Apache-2.0, but committed outputs are Spider validation/test only"
+  },
+  {
+   "repository": "XGenerationLab/XiYan-SQL and alibaba/XiYan-SQL",
+   "reason": "Apache-2.0, no full dev prediction file in the repository tree"
+  },
+  {
+   "repository": "HKUSTDial/NL2SQL360",
+   "reason": "MIT, no prediction file in the repository tree"
+  },
+  {
+   "repository": "DataArcTech/SQL-R1",
+   "reason": "Apache-2.0, no prediction file in the repository tree"
+  },
+  {
+   "repository": "uiuc-kang-lab/text_to_sql_benchmarks results/dev.json files",
+   "reason": "CC-BY-SA-4.0 aggregate, but each holds the paper\u2019s corrected 100-question subset rather than 1,534 entries"
+  },
+  {
+   "path": "text_to_sql_agents/OpenSearch-SQL/Bird/bird_dev.json",
+   "reason": "nested MIT, but README calls it fewshot source data, not system predictions"
+  },
+  {
+   "path": "DAIL QUESTIONMASK_GPT-4_for_bird.txt",
+   "reason": "byte-identical duplicate of dail-sql-gpt-4-7shot-questionmask.txt; measured once"
+  },
+  {
+   "path": "DAIL/DIN Spider 1,034-line files",
+   "reason": "Spider dev, not BIRD dev"
+  },
+  {
+   "repository": "uiuc-kang-lab/BIRD-Platinum",
+   "reason": "no root LICENSE; its own evaluation outputs are 100, 500 or 600 questions, not full dev, and vendored OmniSQL output has no nested licence"
+  },
+  {
+   "repository": "AlibabaResearch/DAMO-ConvAI",
+   "path": "graphix/dev_result/predict.sql",
+   "reason": "MIT, but 1,034 Spider lines, not BIRD dev"
+  },
+  {
+   "repository": "huggingface.co/AravindS373/Best_checkpoint_bird_bench_leaderboard",
+   "path": "dev_predicted.sql",
+   "reason": "the model is gated manually; unauthenticated download returns HTTP 401, so it is not a public prediction file"
+  },
+  {
+   "repository": "uiuc-kang-lab/text_to_sql_benchmarks",
+   "path": "text_to_sql_agents/CHESS",
+   "reason": "nested MIT, but only the 100-question corrected-subset outputs are present"
+  },
+  {
+   "repository": "N-rep",
+   "reason": "GitHub repository and code searches exposed no full dev prediction file"
+  },
+  {
+   "repository": "Middleware",
+   "reason": "no LICENSE file and no full dev prediction file found"
+  },
+  {
+   "repository": "LHTB",
+   "reason": "repository and code searches exposed no full dev prediction file"
+  },
+  {
+   "repository": "khang3004/AgentSQL-Asym",
+   "reason": "README badge says MIT but the repository has no LICENSE file; its committed evaluation JSON is Mini-Dev, not full dev"
+  },
+  {
+   "repository": "Cen-Jipeng-SUDA/SQLFixAgent",
+   "reason": "MIT, but no prediction file; only an execution-error record JSONL"
+  },
+  {
+   "repository": "thanhdath/mats-sql",
+   "reason": "no LICENSE file and no prediction file in the tree"
+  },
+  {
+   "repository": "DMIRLAB-Group/GenLink",
+   "reason": "no LICENSE file and no prediction file in the tree"
+  },
+  {
+   "repository": "DEEP-PolyU/KaSLA",
+   "reason": "MIT, but its BIRD files are inputs and schema-linking outputs, not final SQL predictions"
+  }
+ ],
+ "duplicate_note": {
+  "dail-sql-gpt-4-7shot-questionmask.txt": "QUESTIONMASK_GPT-4_for_bird.txt has the same sha256 4ca71fdb42c6e168407f95a838501f08dcdd747aff378bc1c8b296d613fd0da6a",
+  "alpha-sql-dev.json": "Ahm-rgb/Alpha-SQL at 08d43a0370356cbdc512e369db4b44d8b8024529 ships the same sha256 b7b2045469551fc4126c2cbf8ec686c4c053125e05515bd36cb732d7916e5cfa; measured once from HKUSTDial",
+  "predict_dev-codes-1b-bird.json": "RoxanneWAAANG/LangSQL at 1e586eb1806d6a1d1c869052e88ff171e59614a5 ships the same sha256 80afb3ce3829e76635e7e490d12526c2e28b743076fe525344b41770d569c429",
+  "predict_dev-codes-1b-bird-with-evidence.json": "RoxanneWAAANG/LangSQL at the same commit ships the same sha256 9725513ad316009f6c02da28a58d3703de83f1e792cb300a0a1c752a213cf295"
+ }
+}
