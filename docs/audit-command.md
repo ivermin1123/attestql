@@ -259,6 +259,17 @@ evidence records and the instruction for running each statement again. The page 
 verdict, the mechanism and every `reading` string as the JSON holds them and adds no judgement of
 its own; a test reads the templates' own literals and forbids a short list of phrases there.
 
+Three files no audit writes are read where a publisher put them beside the summary. A
+`questions.json` holding `question_id`, `db_id` and the question text names the database each
+question is about, which reaches no file the audit writes, and the strip of a question page then
+states that database in front of the question set. A `classification.json` with a
+`classification-source.json` beside it, saying where the copy came from, what date it carries and
+which of its rows are this run's, puts one "read by hand" row on each question it holds a row
+for, showing the class and the reason verbatim with that date; the tool's verdict and a person's
+reading are two blocks on the page and are never merged. A `published.json` holding a name, a
+URL, a size and a sha256 puts the address of the whole run on the run page. A directory this tool
+wrote holds none of the three and renders exactly as it did before they existed.
+
 Beside every record's two hashes the page states `recomputed from this JSON: match`, or the two
 values when they differ. The line is not a repetition of the file: `attestql.evidence.load` reads
 the record back into the result and the descriptor it was rendered under, takes `result_hash`

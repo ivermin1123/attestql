@@ -26,6 +26,12 @@ question directories that the site shows are copied into `site/data/`.
   `summary.json` whole and the question directories the selection names. Benchmarks:
   `bird-dev-sqlite` (one run), `minidev-sqlite` (nine), `minidev-pg-gold-only` (two runs, the
   zip and the Hugging Face file), `minidev-pg` (nine, against the gold copy the selection states).
+  Amended 2026-09-08: on SQLite `--dsn` is one database file, so a question set naming eleven
+  databases is eleven runs and a prediction file is a **group** of them, which adds one level
+  to those two benchmarks (`<benchmark>/<group>/<db_id>/summary.json`, and the group is one
+  line of sums on the benchmark index and a page of its own); `bird-dev-sqlite` is one group of
+  eleven and `minidev-sqlite` nine groups of eleven, so the counts above are groups and not
+  runs.
 - Selection, because Pages holds 20,000 files on the Free plan and NOT_EQUAL alone is about
   1,700 predictions per gold copy: the `credited_but_not_equal` questions of each prediction run,
   every fired-probe gold, every hand-classified row, and the unjust-zero and unjust-one cases
