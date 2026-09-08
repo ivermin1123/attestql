@@ -82,6 +82,8 @@ repository secrets, `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`, the toke
 "Cloudflare Pages: Edit" on that account and nothing else; wrangler takes both from the
 environment and neither reaches a log. The first deployment was made by hand from outside the
 repository with the command of the previous section and `--project-name attestql --branch main`.
+The build writes a `_headers` file telling Pages to revalidate `static/` on every load, as it
+does a page: without it a page arrived fresh with a stylesheet up to four hours old.
 The domain and the DNS record were not touched: the project already held them. `site/index.html`
 is no longer what the domain serves; it stays in the repository as the source of the three links
 the landing carries until the session that owns it retires it.
