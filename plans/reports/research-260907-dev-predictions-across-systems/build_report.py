@@ -91,10 +91,28 @@ def main() -> None:
         for disagreement in row["crosscheck"]["rows"]
     ]
     plain_files = sum(record["source_shape"] != "JSON object" for record in readable["files"])
+    disagree_count = sum(row["crosscheck"]["disagree"] for row in rows.values())
+    disagree_text = (
+        "there was 1 disagreement"
+        if disagree_count == 1
+        else f"there were {disagree_count} disagreements"
+    )
+    sample = classified["sample"]
+    judged_rows = [row for row in classified["rows"] if row["class"] != "B"]
+    harmless: dict[str, dict[str, list[str]]] = {}
+    for row in classified["rows"]:
+        if row["class"] == "B":
+            harmless.setdefault(CODES[row["file"]], {}).setdefault(row["copy"], []).append(
+                f"q{row['question_id']}"
+            )
+    harmless_text = "; ".join(
+        f"`{code}` " + ", ".join(f"{copy} " + ", ".join(ids) for copy, ids in copies.items())
+        for code, copies in harmless.items()
+    )
     lines = [
         "<!-- cspell:ignore ATLAS AlphaSQL AtlasCore CodeS DAIL DAMO GenaSQL GSR LHTB -->",
         "<!-- cspell:ignore Omni RUCKB RSL XiYan birdenv ucdigital Abhi Poluri Graphix UIUC -->",
-        "<!-- cspell:ignore dev1106 dev minidev qid sqls fewshot questionmask PTY -->",
+        "<!-- cspell:ignore dev1106 dev minidev qid sqls fewshot questionmask PTY azorius Takr -->",
         "# Research: BIRD dev predictions across systems",
         "",
         f"Date {datetime.now().strftime('%Y-%m-%d %H:%M')} +07, tree "
@@ -109,7 +127,9 @@ def main() -> None:
         f"({measured['pooled_old']['share']:.1%}), against A37's "
         f"{measured['baseline_a37']['share']:.1%}. The pooled denominator counts file rows, "
         f"not distinct systems: CodeS contributes {code_s_count} configurations and "
-        f"DAIL-SQL {dail_count}.",
+        f"DAIL-SQL {dail_count}. In the hand-read sample of {sample['sampled']} "
+        f"credited-but-NOT_EQUAL rows, {sample['A']} are wrong answers the benchmark "
+        f"credited ({sample['A_share']:.1%}).",
         "",
         "The hand sample is assumed to mean both gold copies: its population is every "
         "(file, copy, id) row, ordered by file, copy and id. Credit movement is reported per "
@@ -182,8 +202,7 @@ def main() -> None:
             f"The tool's BIRD EX reading and BIRD's unmodified evaluator agree on "
             f"{agreement} of {readable_count} readable rows across all file-copy pairs. "
             "Per-file official sums, errors, timeouts and every disagreement row are in "
-            "`prediction-measurement.json`; there were "
-            f"{sum(row['crosscheck']['disagree'] for row in rows.values())} disagreements.",
+            f"`prediction-measurement.json`; {disagree_text}.",
             f"The one disagreement is `{CODES[disagreement_rows[0][0]]}` "
             f"q{disagreement_rows[0][1]['question_id']} on the new gold: the tool says EQUAL "
             "and BIRD's evaluator times out.",
@@ -208,42 +227,51 @@ def main() -> None:
             "",
             "## Hand sample",
             "",
-            f"Rule: {classified['sample']['selection']}. Classes: A wrong answer BIRD "
-            "credited, B harmless, C typed rule alone. The sample found "
-            f"{classified['sample']['A']} A, {classified['sample']['B']} B and "
-            f"{classified['sample']['C']} C; A is {classified['sample']['A_share']:.1%} and "
-            f"A or B is {classified['sample']['A_or_B_share']:.1%}.",
+            f"Selection: {sample['selection']}; population {sample['population']}. "
+            f"{classified['rule']}",
             "",
-            "| File | Copy | Q | C | Reason | File | Copy | Q | C | Reason |",
-            "|---|---|---:|---|---|---|---|---:|---|---|",
+            f"The sample found {sample['A']} A, {sample['B']} B and {sample['C']} C; A is "
+            f"{sample['A_share']:.1%} and A or B is {sample['A_or_B_share']:.1%}. "
+            f"{classified['first_pass']} The {len(judged_rows)} A and C rows:",
+            "",
+            "| File | Copy | Q | Gold | Pred | Pred distinct | C | Reason |",
+            "|---|---|---:|---:|---:|---:|---|---|",
         ]
     )
-    for number in range(0, len(classified["rows"]), 2):
-        cells = []
-        for row in classified["rows"][number : number + 2]:
-            cells.extend(
+    for row in judged_rows:
+        lines.append(
+            "|"
+            + "|".join(
                 (
                     f"`{CODES[row['file']]}`",
                     row["copy"],
                     str(row["question_id"]),
+                    str(row["gold_rows"]),
+                    str(row["prediction_rows"]),
+                    str(row["distinct_rows"]),
                     row["class"],
                     row["reason"],
                 )
             )
-        while len(cells) < 10:
-            cells.extend(("", "", "", "", ""))
-        lines.append("|" + "|".join(cells) + "|")
+            + "|"
+        )
+    lines.extend(
+        [
+            "",
+            f"The {sample['B']} B rows (reasons in `classification.json`): {harmless_text}.",
+        ]
+    )
     lines.extend(
         [
             "",
             "## Unresolved questions",
             "",
-            "- Whether BIRD-Platinum's unlicensed full OmniSQL output can be replaced by an "
-            "upstream file under a clear licence.",
-            "- Whether ATLAS Core's two runs use the same unnamed model; the shipped run "
-            "directories do not state it.",
-            "- Whether the 12 plain-line wrappers belong in AttestQL or should stay a "
-            "measurement-side adapter.",
+            "- Whether a clearly licensed upstream file can replace BIRD-Platinum's unlicensed "
+            "OmniSQL output.",
+            "- Whether ATLAS Core's two runs use the same unnamed model; the run directories do "
+            "not say.",
+            "- Whether the 12 plain-line wrappers belong in AttestQL or stay a measurement-side "
+            "adapter.",
             "",
             "## What changes in AttestQL",
             "",
