@@ -1,0 +1,305 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-6d8d0e18-7d46-4a00-88ab-8c209953260e",
+  "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/toxicology/toxicology.sqlite | size=2678784",
+  "effective_database_role": "file",
+  "session_settings": {
+    "engine": "sqlite",
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "parser": {
+    "validator": "audit:sqlglot-sqlite-parse",
+    "sqlglot": "30.18.0",
+    "dialect": "sqlite"
+  },
+  "question_set": {
+    "path": "data/questions/mini_dev_sqlite.json",
+    "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+    "date": "2024-06-19",
+    "entries": 500,
+    "audited": 40,
+    "duplicate_ids": [
+      137,
+      138
+    ],
+    "ids": [
+      195,
+      197,
+      198,
+      200,
+      201,
+      206,
+      207,
+      208,
+      212,
+      213,
+      215,
+      218,
+      219,
+      220,
+      226,
+      227,
+      228,
+      230,
+      231,
+      232,
+      234,
+      236,
+      239,
+      240,
+      242,
+      243,
+      244,
+      245,
+      247,
+      248,
+      249,
+      253,
+      255,
+      260,
+      263,
+      268,
+      273,
+      281,
+      282,
+      327
+    ]
+  },
+  "predictions": {
+    "path": "data/preds-sqlite/predict_mini_dev_gpt-4-turbo_sqlite.json",
+    "digest": "sha256:ef9fcb0470d9710c8a9674fd35874ec0986925e27a4d5d9ccece8bff606fb5df",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4-turbo_sqlite.json",
+    "date": "2024-06-19",
+    "keyed_by": "position",
+    "statements": 500,
+    "positions_unused": [
+      487,
+      488
+    ]
+  },
+  "verdicts": {
+    "EQUAL": 7,
+    "NOT_EQUAL": 13,
+    "ERROR": 20
+  },
+  "smells": {
+    "ordering-over-numeric-text": 0,
+    "arbitrary-cut": 0,
+    "not-a-function-of-the-data": 0,
+    "float-aggregate-order": 0,
+    "direction-against-question": 0
+  },
+  "smells_fired": 0,
+  "credited_but_not_equal": {
+    "total": 3,
+    "by_mechanism": {
+      "multiplicity": 3,
+      "type": 0,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 0,
+      "0": 3
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "runs/minidev-sqlite/gpt-4-turbo/toxicology/fixture.json",
+    "source": {
+      "path": "data/minidev/dev_databases/toxicology/toxicology.sqlite",
+      "digest": "sha256:35ef27ae6bdfda530e125ed369666ac0abb8bc8c0bcc0ad09407f547ecb61a93",
+      "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV/dev_databases, toxicology/toxicology.sqlite",
+      "date": "2024-06-13"
+    },
+    "schema_digest": "sha256:e31e13a0dd8834a30b867b1b7f46a0da62573bc5318da4230b24d801f34a519a",
+    "row_counts": {
+      "main.atom": 9111,
+      "main.bond": 9156,
+      "main.connected": 18312,
+      "main.molecule": 343
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "bond",
+      "atom",
+      "molecule",
+      "connected"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {},
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "temp",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "atom",
+      "bond",
+      "connected",
+      "molecule"
+    ],
+    "skipped": {},
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 30,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "runs/minidev-sqlite/gpt-4-turbo/toxicology",
+    "serialization": "attestql/audit/2",
+    "work_mem": null,
+    "hash_mem_multiplier": null
+  },
+  "data_as_of": "2026-09-08T05:02:34.692321+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.573,
+    "shuffle": 0.046
+  },
+  "errors": [
+    {
+      "question_id": 200,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing '.molecule_id = b.molecule_id WHERE b.bond_type = '"
+    },
+    {
+      "question_id": 207,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement is a COLUMN and not a SELECT"
+    },
+    {
+      "question_id": 212,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'OUP BY element ORDER BY COUNT(element) ASC LIMIT '"
+    },
+    {
+      "question_id": 215,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement is a COLUMN and not a SELECT"
+    },
+    {
+      "question_id": 218,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'le_id AND a.element = 'f' WHERE m.label = '+'"
+    },
+    {
+      "question_id": 219,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing '0 / (SELECT COUNT(*) FROM bond WHERE bond_type = '"
+    },
+    {
+      "question_id": 220,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'lecule_id = 'TR000' ORDER BY element ASC LIMIT '"
+    },
+    {
+      "question_id": 227,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing '_id)), 3) AS percentage_carcinogenic FROM molecul'"
+    },
+    {
+      "question_id": 231,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'ROUP BY bond_type ORDER BY bond_count DESC LIMIT '"
+    },
+    {
+      "question_id": 232,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'D b.bond_type = '-' ORDER BY m.molecule_id LIMIT '"
+    },
+    {
+      "question_id": 240,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'CT element FROM atom WHERE molecule_id = 'TR004'"
+    },
+    {
+      "question_id": 242,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing '_id, 7, 2) BETWEEN '21' AND '25' AND m.label = '+'"
+    },
+    {
+      "question_id": 244,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'UP BY m.molecule_id ORDER BY COUNT(*) DESC LIMIT '"
+    },
+    {
+      "question_id": 247,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement is a COLUMN and not a SELECT"
+    },
+    {
+      "question_id": 248,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing ' WHERE b.molecule_id = 'TR041' AND b.bond_type = '"
+    },
+    {
+      "question_id": 253,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'ed.bond_id = bond.bond_id WHERE bond.bond_type = '"
+    },
+    {
+      "question_id": 255,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement is a COLUMN and not a SELECT"
+    },
+    {
+      "question_id": 260,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing ' c ON a.atom_id = c.atom_id WHERE b.bond_type = '"
+    },
+    {
+      "question_id": 281,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement is a COLUMN and not a SELECT"
+    },
+    {
+      "question_id": 282,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing '.molecule_id = 'TR006' GROUP BY m.molecule_i'"
+    }
+  ],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 1
+}

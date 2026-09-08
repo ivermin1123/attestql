@@ -1,0 +1,274 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "keys": [
+          {
+            "key": "t1.q2",
+            "column": "qualifying.q2",
+            "declared_type": "text",
+            "not_applicable": null,
+            "census": {
+              "rows": 6967,
+              "nulls": 3577,
+              "empty_strings": 23,
+              "non_numeric": 3367,
+              "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+            },
+            "every_value_is_numeric": false
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t2.surname, t1.q2 AS attestql_ordering_key_0 FROM qualifying t1 JOIN drivers t2 ON t2.driverid = t1.driverid WHERE t1.raceid = 19 ORDER BY t1.q2 ASC NULLS FIRST",
+        "unbounded_rows": 22,
+        "projected_columns": [
+          "surname"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t1.q2",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 1,
+            "fires": true
+          }
+        ],
+        "returned_rows_with_a_null_key": [
+          [
+            {
+              "type": "str",
+              "value": "Bourdais"
+            }
+          ]
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "tied_rows": 6,
+          "distinct_projected_answers": 6,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Bourdais"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Sutil"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Fisichella"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Sato"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Davidson"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Nakajima"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut, null-first"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Bourdais"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Sutil"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Fisichella"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Sato"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Davidson"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Nakajima"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:d59eb77c2f24c993fe26e83c88535e8193aa710e94a81ed438c648ec0bda4379",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "surname",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Nakajima"
+              }
+            ]
+          ],
+          "result_hash": "sha256:d59eb77c2f24c993fe26e83c88535e8193aa710e94a81ed438c648ec0bda4379"
+        },
+        "planner_statistics": {
+          "qualifying": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 6967
+          },
+          "drivers": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 840
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "qualifying",
+            "drivers"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:d59eb77c2f24c993fe26e83c88535e8193aa710e94a81ed438c648ec0bda4379",
+          "result": {
+            "columns": [
+              {
+                "name": "surname",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Nakajima"
+                }
+              ]
+            ],
+            "result_hash": "sha256:d59eb77c2f24c993fe26e83c88535e8193aa710e94a81ed438c648ec0bda4379"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "keys": [
+          {
+            "key": "t2.a4",
+            "column": "district.a4",
+            "declared_type": "text",
+            "not_applicable": null,
+            "census": {
+              "rows": 77,
+              "nulls": 0,
+              "empty_strings": 0,
+              "non_numeric": 0,
+              "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+            },
+            "every_value_is_numeric": true,
+            "cast_sql": "SELECT (sum(CASE WHEN t1.gender = 'M' THEN 1 ELSE 0 END)::real * 100) / (NULLIF(count(t1.client_id), 0)) FROM client t1 JOIN district t2 ON t1.district_id = t2.district_id WHERE t2.a3 = 'south Bohemia' GROUP BY t2.a4 ORDER BY t2.a4::numeric DESC LIMIT 1",
+            "verdict": "not_equal",
+            "gold_result": {
+              "columns": [
+                {
+                  "name": "?column?",
+                  "declared_type": "float8"
+                }
+              ],
+              "row_count": 1,
+              "truncated": false,
+              "rows_shown": 1,
+              "rows": [
+                [
+                  {
+                    "type": "dec",
+                    "value": "44.26229508196721"
+                  }
+                ]
+              ],
+              "result_hash": "sha256:1d5676188a69cac3b71ac5c29370f9191b860ef40ad9d4105d05a96dc911c589"
+            },
+            "cast_result": {
+              "columns": [
+                {
+                  "name": "?column?",
+                  "declared_type": "float8"
+                }
+              ],
+              "row_count": 1,
+              "truncated": false,
+              "rows_shown": 1,
+              "rows": [
+                [
+                  {
+                    "type": "dec",
+                    "value": "40"
+                  }
+                ]
+              ],
+              "result_hash": "sha256:a7e3633399ec0b1665099a8c2dd8f54ef1b3e40567181c4dc8be09e2b9d0f10e"
+            }
+          }
+        ]
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "dec",
+            "value": "44.26229508196721"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT (sum(CASE WHEN t1.gender = 'M' THEN 1 ELSE 0 END)::real * 100) / (NULLIF(count(t1.client_id), 0)), t2.a4 AS attestql_ordering_key_0 FROM client t1 JOIN district t2 ON t1.district_id = t2.district_id WHERE t2.a3 = 'south Bohemia' GROUP BY t2.a4 ORDER BY t2.a4 DESC",
+        "unbounded_rows": 8,
+        "projected_columns": [
+          "?column?"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t2.a4",
+            "direction": "desc",
+            "nulls": "default",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "case": null
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:1d5676188a69cac3b71ac5c29370f9191b860ef40ad9d4105d05a96dc911c589",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "?column?",
+              "declared_type": "float8"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "dec",
+                "value": "44.26229508196721"
+              }
+            ]
+          ],
+          "result_hash": "sha256:1d5676188a69cac3b71ac5c29370f9191b860ef40ad9d4105d05a96dc911c589"
+        },
+        "planner_statistics": {
+          "client": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:12.822716+00",
+            "n_mod_since_analyze": 0
+          },
+          "district": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:24.361355+00",
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "client",
+            "district"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:1d5676188a69cac3b71ac5c29370f9191b860ef40ad9d4105d05a96dc911c589",
+          "result": {
+            "columns": [
+              {
+                "name": "?column?",
+                "declared_type": "float8"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "dec",
+                  "value": "44.26229508196721"
+                }
+              ]
+            ],
+            "result_hash": "sha256:1d5676188a69cac3b71ac5c29370f9191b860ef40ad9d4105d05a96dc911c589"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

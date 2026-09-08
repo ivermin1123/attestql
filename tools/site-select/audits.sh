@@ -205,20 +205,34 @@ sqlite_runs() {
   echo "SQLITE_DONE"
 }
 
-# Every run whose stdout holds a timeout line, made again alone into a fresh directory, the
-# crowded answer kept beside it as `<name>.under-load`. What is published is the rerun.
-rerun_timeouts() {
+# Every run whose summary names a question the statement bound stopped, made again alone into a
+# fresh directory, the crowded answer kept beside it as `<name>.under-load`. What is published
+# is the rerun; the report states how many were made again.
+#
+# Read off `timed_out` in the summary and not off a grep of stdout, which is what the two
+# measurement scripts did: the run's closing line now states "0 timed out (0 gold, 0
+# prediction)" whether anything did or not, so a grep for the words matches every run and would
+# rerun all hundred and ten of them alone. The summary names the questions.
+rerun_timeouts() {  # rerun_timeouts [path prefix]
   cd "$RUNS_WORK"
   export ATTESTQL="${ATTESTQL:-$RUNS_WORK/venv/bin/attestql}"
-  local stdout out found=0 name group benchmark
-  for stdout in runs/*/*/*/stdout.txt runs/*/*/stdout.txt; do
-    [ -f "$stdout" ] || continue
-    out="$(dirname "$stdout")"
+  local only="${1:-runs/}" summary out found=0 name group benchmark stopped
+  # The prefix is what keeps the two stages out of each other: each reruns its own engine's
+  # runs, so the SQLite pass and the PostgreSQL pass can overlap without one moving a
+  # directory the other is writing into.
+  for summary in runs/*/*/*/summary.json runs/*/*/summary.json; do
+    [ -f "$summary" ] || continue
+    out="$(dirname "$summary")"
     case "$out" in *.under-load) continue;; esac
-    grep -qiE 'timeout|timed out' "$stdout" || continue
+    case "$out" in "$only"*) ;; *) continue;; esac
+    stopped="$(python3 -c "
+import json, sys
+stated = json.load(open(sys.argv[1])).get('timed_out') or {}
+print(', '.join(f'{side}: {\",\".join(str(q) for q in ids)}' for side, ids in stated.items() if ids))
+" "$summary")"
+    [ -n "$stopped" ] || continue
     found=$((found + 1))
-    echo "timeout under load: $out"
-    grep -inE 'timeout|timed out' "$stdout" | sed 's/^/    /'
+    echo "timed out under load: $out ($stopped)"
     name="$(basename "$out")"; group="$(basename "$(dirname "$out")")"
     benchmark="$(basename "$(dirname "$(dirname "$out")")")"
     case "$benchmark" in
@@ -238,12 +252,18 @@ rerun_timeouts() {
       minidev-pg/*) pg_prediction "$name" attestql_scratch ;;
       *) echo "  no rule for $out" >&2; mv "$out.under-load" "$out"; continue ;;
     esac
-    if grep -qiE 'timeout|timed out' "$out/stdout.txt"; then
-      echo "  TIMEOUT SURVIVED THE SERIAL RERUN"
-      grep -inE 'timeout|timed out' "$out/stdout.txt" | sed 's/^/    /'
+    stopped="$(python3 -c "
+import json, sys
+stated = json.load(open(sys.argv[1])).get('timed_out') or {}
+print(', '.join(f'{side}: {\",\".join(str(q) for q in ids)}' for side, ids in stated.items() if ids))
+" "$out/summary.json" 2>/dev/null || echo unreadable)"
+    if [ -n "$stopped" ]; then
+      echo "  the bound stopped the same questions alone: $stopped"
+    else
+      echo "  nothing reached the bound when it ran alone"
     fi
   done
-  echo "runs holding a timeout line: $found"
+  echo "runs the bound stopped something in: $found"
 }
 
 # The server the two PostgreSQL benchmarks are audited on: the image digest the merge gate's
@@ -338,11 +358,12 @@ postgres_runs() {
 
 case "${1:-}" in
   inputs) inputs ;;
-  sqlite) sqlite_runs; rerun_timeouts ;;
+  sqlite) sqlite_runs; rerun_timeouts runs/bird-dev-sqlite/; rerun_timeouts runs/minidev-sqlite/ ;;
   postgres) postgres_up || { echo "the server did not start" >&2; exit 1; }
             trap postgres_down EXIT
-            postgres_runs; rerun_timeouts ;;
-  rerun) rerun_timeouts ;;
+            postgres_runs
+            rerun_timeouts runs/minidev-pg-gold-only/; rerun_timeouts runs/minidev-pg/ ;;
+  rerun) rerun_timeouts "${2:-runs/}" ;;
   teardown) postgres_down ;;
   *) sed -n '2,30p' "$0"; exit 2 ;;
 esac

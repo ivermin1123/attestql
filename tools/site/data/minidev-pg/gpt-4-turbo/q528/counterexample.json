@@ -1,0 +1,974 @@
+{
+  "format": "attestql/audit/counterexample/2",
+  "question": {
+    "question_id": "528",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "List the names of all the cards in the set Hour of Devastation and find the formats in which these cards are legal.",
+    "evidence_text": "the set Hour of Devastation refers to set.name = 'Hour of Devastation'; names of all the cards in the set refers to cards.name; legal cards refers to status = 'Legal'; the formats refers to format"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "sources": {
+    "gold": {
+      "path": "data/questions/mini_dev_postgresql.json",
+      "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+      "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+      "date": "2024-06-19"
+    },
+    "second": {
+      "path": "data/preds-pg/predict_mini_dev_gpt-4-turbo_postgresql.json",
+      "digest": "sha256:428fd115a67a76d6312ea205aab64764b5a09444587588eda442a94cfee65211",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4-turbo_postgresql.json",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "projection_names_differ": {
+    "gold": [
+      "name",
+      "case"
+    ],
+    "second": [
+      "name",
+      "format"
+    ],
+    "reading": "The two statements name their result columns differently. A projection is compared by position and declared type, so these names did not decide the verdict. They are part of the canonical rendering each result is hashed under, so the two result hashes differ with them."
+  },
+  "bird_ex": {
+    "value": 1,
+    "equal": true,
+    "method": "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 returns them, numeric as Decimal",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 1664,
+    "second_rows": 1890,
+    "gold_distinct_rows": 1664,
+    "second_distinct_rows": 1664
+  },
+  "test_suite_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "result_eq: equal row counts and equal column counts, each row unordered as a quick rejection, then the two equal as a list when the gold text holds ORDER BY and as a multiset otherwise, under some permutation of the columns; DISTINCT is not stripped and re-executed, and the cells are PostgreSQL's as psycopg2 returns them",
+    "source": "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/48cb78ecf7f610620206283846c76751b18a1326/exec_eval.py",
+    "order_matters": false,
+    "gold_rows": 1664,
+    "second_rows": 1890,
+    "gold_columns": 2,
+    "second_columns": 2
+  },
+  "mechanism": {
+    "class": "multiplicity",
+    "gold_types": [
+      "text",
+      "text"
+    ],
+    "second_types": [
+      "text",
+      "text"
+    ],
+    "multiset_equal": false,
+    "set_equal": true,
+    "order_equal": false,
+    "shorter_result_is_a_prefix": false,
+    "reading": "The class states what makes these two results unequal under this rule, read off the two results and nothing else. It does not state which of the two statements is wrong."
+  },
+  "gold": {
+    "executed_sql": "SELECT DISTINCT T2.name, CASE WHEN T1.status = 'Legal' THEN T1.format ELSE NULL END FROM legalities AS T1 INNER JOIN cards AS T2 ON T2.uuid = T1.uuid WHERE T2.setCode IN (SELECT code FROM sets WHERE name = 'Hour of Devastation')",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "name",
+          "declared_type": "text"
+        },
+        {
+          "name": "case",
+          "declared_type": "text"
+        }
+      ],
+      "row_count": 1664,
+      "truncated": false,
+      "rows_shown": 25,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "Abandoned Sarcophagus"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abandoned Sarcophagus"
+          },
+          {
+            "type": "str",
+            "value": "duel"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abandoned Sarcophagus"
+          },
+          {
+            "type": "str",
+            "value": "gladiator"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abandoned Sarcophagus"
+          },
+          {
+            "type": "str",
+            "value": "historic"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abandoned Sarcophagus"
+          },
+          {
+            "type": "str",
+            "value": "legacy"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abandoned Sarcophagus"
+          },
+          {
+            "type": "str",
+            "value": "modern"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abandoned Sarcophagus"
+          },
+          {
+            "type": "str",
+            "value": "penny"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abandoned Sarcophagus"
+          },
+          {
+            "type": "str",
+            "value": "pioneer"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abandoned Sarcophagus"
+          },
+          {
+            "type": "str",
+            "value": "vintage"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abrade"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abrade"
+          },
+          {
+            "type": "str",
+            "value": "duel"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abrade"
+          },
+          {
+            "type": "str",
+            "value": "gladiator"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abrade"
+          },
+          {
+            "type": "str",
+            "value": "historic"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abrade"
+          },
+          {
+            "type": "str",
+            "value": "legacy"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abrade"
+          },
+          {
+            "type": "str",
+            "value": "modern"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abrade"
+          },
+          {
+            "type": "str",
+            "value": "pauper"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abrade"
+          },
+          {
+            "type": "str",
+            "value": "pioneer"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Abrade"
+          },
+          {
+            "type": "str",
+            "value": "vintage"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Accursed Horde"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Accursed Horde"
+          },
+          {
+            "type": "str",
+            "value": "duel"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Accursed Horde"
+          },
+          {
+            "type": "str",
+            "value": "legacy"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Accursed Horde"
+          },
+          {
+            "type": "str",
+            "value": "modern"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Accursed Horde"
+          },
+          {
+            "type": "str",
+            "value": "pioneer"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Accursed Horde"
+          },
+          {
+            "type": "str",
+            "value": "vintage"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Act of Heroism"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ]
+      ],
+      "result_hash": "sha256:6bb0c8fffa0d2b634d3bcb0f3e9e098e10e76ad9355793bd451e43c1f7b8b296"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT cards.name, legalities.format\nFROM cards\nJOIN sets ON cards.setcode = sets.code\nJOIN legalities ON cards.uuid = legalities.uuid\nWHERE sets.name = 'Hour of Devastation' AND legalities.status = 'Legal'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "name",
+          "declared_type": "text"
+        },
+        {
+          "name": "format",
+          "declared_type": "text"
+        }
+      ],
+      "row_count": 1890,
+      "truncated": false,
+      "rows_shown": 25,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "Act of Heroism"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Act of Heroism"
+          },
+          {
+            "type": "str",
+            "value": "duel"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Act of Heroism"
+          },
+          {
+            "type": "str",
+            "value": "legacy"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Act of Heroism"
+          },
+          {
+            "type": "str",
+            "value": "modern"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Act of Heroism"
+          },
+          {
+            "type": "str",
+            "value": "pauper"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Act of Heroism"
+          },
+          {
+            "type": "str",
+            "value": "penny"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Act of Heroism"
+          },
+          {
+            "type": "str",
+            "value": "pioneer"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Act of Heroism"
+          },
+          {
+            "type": "str",
+            "value": "vintage"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Adorned Pouncer"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Adorned Pouncer"
+          },
+          {
+            "type": "str",
+            "value": "duel"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Adorned Pouncer"
+          },
+          {
+            "type": "str",
+            "value": "legacy"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Adorned Pouncer"
+          },
+          {
+            "type": "str",
+            "value": "modern"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Adorned Pouncer"
+          },
+          {
+            "type": "str",
+            "value": "penny"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Adorned Pouncer"
+          },
+          {
+            "type": "str",
+            "value": "pioneer"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Adorned Pouncer"
+          },
+          {
+            "type": "str",
+            "value": "vintage"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of Condemnation"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of Condemnation"
+          },
+          {
+            "type": "str",
+            "value": "duel"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of Condemnation"
+          },
+          {
+            "type": "str",
+            "value": "legacy"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of Condemnation"
+          },
+          {
+            "type": "str",
+            "value": "modern"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of Condemnation"
+          },
+          {
+            "type": "str",
+            "value": "penny"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of Condemnation"
+          },
+          {
+            "type": "str",
+            "value": "pioneer"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of Condemnation"
+          },
+          {
+            "type": "str",
+            "value": "vintage"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of the God-Pharaoh"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of the God-Pharaoh"
+          },
+          {
+            "type": "str",
+            "value": "duel"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Angel of the God-Pharaoh"
+          },
+          {
+            "type": "str",
+            "value": "legacy"
+          }
+        ]
+      ],
+      "result_hash": "sha256:8518c95a914a668f4fbae66fdfc2aaeebddec54e19bdad6d090a6b8ec461cbd6"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "brawl"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "duel"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "future"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "gladiator"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "historic"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "legacy"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "modern"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "pauper"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "penny"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "pioneer"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "premodern"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "standard"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Forest"
+          },
+          {
+            "type": "str",
+            "value": "vintage"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "brawl"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "commander"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "duel"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "future"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "gladiator"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "historic"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "legacy"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "modern"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "pauper"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "penny"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "Island"
+          },
+          {
+            "type": "str",
+            "value": "pioneer"
+          }
+        ],
+        "count": 2
+      }
+    ],
+    "in_second_not_in_gold_total": 226,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:6bb0c8fffa0d2b634d3bcb0f3e9e098e10e76ad9355793bd451e43c1f7b8b296",
+    "second": "sha256:8518c95a914a668f4fbae66fdfc2aaeebddec54e19bdad6d090a6b8ec461cbd6"
+  },
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "fixture": {
+    "schema_digest": "sha256:1d09188e444dd9b585346db663f2f82a346ff524d295735eeb1899b50bcb2b00",
+    "row_counts": {
+      "public.cards": 56822,
+      "public.legalities": 427907,
+      "public.sets": 551
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "run_id": "audit-7912134a-3f9b-4113-a6b6-ebaf8b6a2bc0"
+}

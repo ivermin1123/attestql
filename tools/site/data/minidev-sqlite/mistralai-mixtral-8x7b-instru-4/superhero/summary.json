@@ -1,0 +1,425 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-ceef14ee-7aab-4fc2-a493-981dcc90708e",
+  "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/superhero/superhero.sqlite | size=237568",
+  "effective_database_role": "file",
+  "session_settings": {
+    "engine": "sqlite",
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "parser": {
+    "validator": "audit:sqlglot-sqlite-parse",
+    "sqlglot": "30.18.0",
+    "dialect": "sqlite"
+  },
+  "question_set": {
+    "path": "data/questions/mini_dev_sqlite.json",
+    "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+    "date": "2024-06-19",
+    "entries": 500,
+    "audited": 52,
+    "duplicate_ids": [
+      137,
+      138
+    ],
+    "ids": [
+      717,
+      719,
+      723,
+      724,
+      726,
+      728,
+      730,
+      732,
+      733,
+      736,
+      737,
+      738,
+      739,
+      740,
+      743,
+      744,
+      745,
+      747,
+      750,
+      751,
+      753,
+      758,
+      760,
+      761,
+      764,
+      765,
+      766,
+      769,
+      772,
+      773,
+      775,
+      779,
+      781,
+      782,
+      785,
+      786,
+      788,
+      790,
+      791,
+      792,
+      794,
+      796,
+      797,
+      798,
+      800,
+      801,
+      806,
+      819,
+      822,
+      824,
+      825,
+      829
+    ]
+  },
+  "predictions": {
+    "path": "data/preds-sqlite/predict_mini_dev_mistralai-mixtral-8x7b-instru-4_sqlite.json",
+    "digest": "sha256:53cdf9142e3f2e49941eb7b50ebbea90361b2c5b46de37d5ba1c244187d643a2",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_mistralai-mixtral-8x7b-instru-4_sqlite.json",
+    "date": "2024-06-19",
+    "keyed_by": "position",
+    "statements": 500,
+    "positions_unused": [
+      487,
+      488
+    ]
+  },
+  "verdicts": {
+    "ERROR": 35,
+    "EQUAL": 12,
+    "NOT_EQUAL": 5
+  },
+  "smells": {
+    "ordering-over-numeric-text": 0,
+    "arbitrary-cut": 1,
+    "not-a-function-of-the-data": 0,
+    "float-aggregate-order": 0,
+    "direction-against-question": 0
+  },
+  "smells_fired": 1,
+  "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+      "multiplicity": 0,
+      "type": 0,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 0,
+      "0": 0
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "runs/minidev-sqlite/mistralai-mixtral-8x7b-instru-4/superhero/fixture.json",
+    "source": {
+      "path": "data/minidev/dev_databases/superhero/superhero.sqlite",
+      "digest": "sha256:75e94a2c3236ee3bb2c01fb97a1c4b4c1c269bcefd4eab1d04be323d2d0825b1",
+      "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV/dev_databases, superhero/superhero.sqlite",
+      "date": "2024-06-13"
+    },
+    "schema_digest": "sha256:921b79dd088877e3b6090a31ab919676ab6b45adf398a468edc025b74a77f750",
+    "row_counts": {
+      "main.alignment": 4,
+      "main.attribute": 6,
+      "main.colour": 35,
+      "main.gender": 3,
+      "main.hero_attribute": 3738,
+      "main.hero_power": 5825,
+      "main.publisher": 25,
+      "main.race": 61,
+      "main.superhero": 750,
+      "main.superpower": 167
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "superhero",
+      "hero_power",
+      "superpower",
+      "colour",
+      "publisher",
+      "hero_attribute",
+      "attribute",
+      "race",
+      "gender",
+      "alignment"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {},
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "temp",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "alignment",
+      "attribute",
+      "colour",
+      "gender",
+      "hero_attribute",
+      "hero_power",
+      "publisher",
+      "race",
+      "superhero",
+      "superpower"
+    ],
+    "skipped": {},
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 30,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "runs/minidev-sqlite/mistralai-mixtral-8x7b-instru-4/superhero",
+    "serialization": "attestql/audit/2",
+    "work_mem": null,
+    "hash_mem_multiplier": null
+  },
+  "data_as_of": "2026-09-08T05:04:59.960649+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.665,
+    "shuffle": 0.013
+  },
+  "errors": [
+    {
+      "question_id": 717,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 16. SELECT sp.power\u001b[4m\\\u001b[0m_name FROM superhero sh JOIN hero\\_power hp ON sh.id = hp.hero\\_id JOIN superpower sp ON hp.power\\_i"
+    },
+    {
+      "question_id": 719,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 5, Col: 15. o s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power\u001b[4m\\\u001b[0m_name = 'Super Strength' AND s.height\\_cm > 200;"
+    },
+    {
+      "question_id": 723,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'power.id AND superpower.power_name = 'Agility'; ``'"
+    },
+    {
+      "question_id": 728,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 11. SELECT eye\u001b[4m\\\u001b[0m_colour\\_id, COUNT(*) as eye\\_color\\_count FROM superhero WHERE publisher\\_id = (SELECT id FROM publ"
+    },
+    {
+      "question_id": 730,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'ND publisher.publisher\\_name = 'Marvel Comics'; ``'"
+    },
+    {
+      "question_id": 732,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: publisher_name"
+    },
+    {
+      "question_id": 733,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 5, Col: 53. lisher ON superhero.publisher_id = publisher.id WHERE colour.colour = 'Gold' AND publisher.publisher\u001b[4m\\\u001b[0m_name = 'Marvel Comics';"
+    },
+    {
+      "question_id": 736,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: hero_attribute.attribute_name"
+    },
+    {
+      "question_id": 737,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'id = race.id WHERE superhero_name = 'Copycat'; ``'"
+    },
+    {
+      "question_id": 739,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 5, Col: 23. d = hero_power.hero_id JOIN superpower ON hero_power.power_id = superpower.id WHERE superpower.power\u001b[4m\\\u001b[0m_name = 'Death Touch';"
+    },
+    {
+      "question_id": 743,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: alignment"
+    },
+    {
+      "question_id": 744,
+      "side": "prediction",
+      "step": "statement",
+      "message": "2 statements in one text; an audit runs one"
+    },
+    {
+      "question_id": 745,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 3, Col: 16. SELECT id FROM publisher WHERE publisher\u001b[4m\\\u001b[0m_name = 'Star Trek'; ``` **Note**: The above SQL query will return the publisher ID for 'Star Trek'"
+    },
+    {
+      "question_id": 751,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 16. SELECT sp.power\u001b[4m\\\u001b[0m_name FROM superhero sh JOIN hero\\_power hp ON sh.id = hp.hero\\_id JOIN superpower sp ON hp.power\\_i"
+    },
+    {
+      "question_id": 760,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: incomplete input"
+    },
+    {
+      "question_id": 761,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Expecting ). Line 4, Col: 69. uperhero.gender_id = gender.id WHERE gender.gender = 'Male' AND weight_kg > (SELECT AVG(weight_kg) \u001b[4m\\\u001b[0m* 0.79 FROM superhero);"
+    },
+    {
+      "question_id": 764,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 13. SELECT power\u001b[4m\\\u001b[0m_name FROM superpower JOIN hero\\_power ON superpower.id = hero\\_power.power\\_id WHERE hero\\_power.he"
+    },
+    {
+      "question_id": 766,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: ha.attribute_name"
+    },
+    {
+      "question_id": 769,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 19. SELECT s.superhero\u001b[4m\\\u001b[0m_name FROM superhero s JOIN hero\\_attribute ha ON s.id = ha.hero\\_id JOIN attribute a ON ha.attribut"
+    },
+    {
+      "question_id": 772,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 20. SELECT s.eye_colour\u001b[4m\\\u001b[0m_id AS eyes, s.hair\\_colour\\_id AS hair, s.skin\\_colour\\_id AS skin\\_colour FROM superhero s JOIN ge"
+    },
+    {
+      "question_id": 773,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 19. SELECT s.superhero\u001b[4m\\\u001b[0m_name, s.publisher\\_id, c1.colour as eye\\_colour, c2.colour as hair\\_colour, c3.colour as skin\\_colo"
+    },
+    {
+      "question_id": 775,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: incomplete input"
+    },
+    {
+      "question_id": 781,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 14. SELECT height\u001b[4m\\\u001b[0m_cm FROM superhero JOIN colour ON superhero.eye\\_colour\\_id = colour.id WHERE colour.colour = 'Am"
+    },
+    {
+      "question_id": 782,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 3, Col: 10. SELECT superhero_name FROM superhero WHERE eye\u001b[4m\\\u001b[0m_colour\\_id = (SELECT id FROM colour WHERE colour = 'Black') AND hair\\_colour\\_id = (SELECT id FROM"
+    },
+    {
+      "question_id": 785,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'id FROM alignment WHERE alignment = 'Neutral'); ``'"
+    },
+    {
+      "question_id": 788,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: incomplete input"
+    },
+    {
+      "question_id": 792,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 16. SELECT sp.power\u001b[4m\\\u001b[0m_name FROM superhero sh JOIN hero\\_power hp ON sh.id = hp.hero\\_id JOIN superpower sp ON hp.power\\_i"
+    },
+    {
+      "question_id": 796,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 19. SELECT a.attribute\u001b[4m\\\u001b[0m_name, ha.attribute\\_value FROM attribute a JOIN hero\\_attribute ha ON a.id = ha.attribute\\_id JOIN"
+    },
+    {
+      "question_id": 800,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 23. Here is the SQLite \u001b[4mcode\u001b[0m to calculate the percentage of superheroes with blue eyes: ```sql SELECT ROUND(100.0 *"
+    },
+    {
+      "question_id": 801,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such function: DIVIDE"
+    },
+    {
+      "question_id": 806,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 4, Col: 21. colour.color FROM superhero JOIN colour ON superhero.eye_colour_id = colour.id WHERE superhero.full\u001b[4m\\\u001b[0m_name = 'Karen Beecher-Duncan';"
+    },
+    {
+      "question_id": 819,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such function: SUBTRACT"
+    },
+    {
+      "question_id": 824,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 5, Col: 23. = hero_power.hero_id JOIN superpower ON hero_power.power_id = superpower.id WHERE superpower.power\u001b[4m\\\u001b[0m_name = 'Wind Control' ORDER BY superhero\\_name;"
+    },
+    {
+      "question_id": 825,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 7, Col: 15. ero_id JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name = 'Phoenix Force'; This query \u001b[4mwill\u001b[0m return the gender\\_id of the superhero who has the ability of Phoenix Force. If you need to get the"
+    },
+    {
+      "question_id": 829,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: publisher_name"
+    }
+  ],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 1
+}

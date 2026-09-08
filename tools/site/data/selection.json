@@ -1,0 +1,5225 @@
+{
+ "runs": [
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/california_schools",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "california_schools",
+   "run_id": "audit-cf217358-b543-48ea-95b9-81bb7a1f9fdc",
+   "audited": 89,
+   "verdicts": {
+    "GOLD-ONLY": 89
+   },
+   "smells_fired": 10,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 2.508,
+    "shuffle": 0.12
+   },
+   "published_questions": 4,
+   "published_ids": [
+    "30",
+    "57",
+    "81",
+    "82"
+   ],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/card_games",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "card_games",
+   "run_id": "audit-dab499aa-0142-4d84-a27a-cf354e9e38e3",
+   "audited": 191,
+   "verdicts": {
+    "GOLD-ONLY": 190,
+    "ERROR": 1
+   },
+   "smells_fired": 6,
+   "credited_but_not_equal": null,
+   "errors": 1,
+   "timed_out": {
+    "gold": [
+     518
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.028,
+    "questions": 72.593,
+    "shuffle": 1.183
+   },
+   "published_questions": 4,
+   "published_ids": [
+    "392",
+    "423",
+    "484",
+    "523"
+   ],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/codebase_community",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "codebase_community",
+   "run_id": "audit-ff6edbda-1c00-4398-9495-bcfff9d1aa86",
+   "audited": 186,
+   "verdicts": {
+    "GOLD-ONLY": 185,
+    "ERROR": 1
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": null,
+   "errors": 1,
+   "timed_out": {
+    "gold": [
+     701
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.011,
+    "questions": 96.049,
+    "shuffle": 1.223
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/debit_card_specializing",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "debit_card_specializing",
+   "run_id": "audit-63118ad9-0d09-4659-b872-f27fea977091",
+   "audited": 64,
+   "verdicts": {
+    "GOLD-ONLY": 64
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 3.588,
+    "shuffle": 0.041
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1517"
+   ],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/european_football_2",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "european_football_2",
+   "run_id": "audit-9d69a29b-e497-49b3-976c-18ac8e4f0c76",
+   "audited": 129,
+   "verdicts": {
+    "GOLD-ONLY": 128,
+    "ERROR": 1
+   },
+   "smells_fired": 11,
+   "credited_but_not_equal": null,
+   "errors": 1,
+   "timed_out": {
+    "gold": [
+     1131
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.01,
+    "questions": 107.925,
+    "shuffle": 2.04
+   },
+   "published_questions": 5,
+   "published_ids": [
+    "1034",
+    "1090",
+    "1117",
+    "1135",
+    "1144"
+   ],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/financial",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "financial",
+   "run_id": "audit-c8b2684b-ae24-4be1-90ab-9bf41ff5682a",
+   "audited": 106,
+   "verdicts": {
+    "GOLD-ONLY": 106
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.016,
+    "questions": 49.224,
+    "shuffle": 0.045
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "94"
+   ],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/formula_1",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "formula_1",
+   "run_id": "audit-12a6eeae-04a4-45ea-866b-f75095ba654b",
+   "audited": 174,
+   "verdicts": {
+    "GOLD-ONLY": 174
+   },
+   "smells_fired": 7,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 11.056,
+    "shuffle": 0.128
+   },
+   "published_questions": 7,
+   "published_ids": [
+    "847",
+    "879",
+    "893",
+    "906",
+    "927",
+    "1002",
+    "1004"
+   ],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/student_club",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "student_club",
+   "run_id": "audit-f8b407cc-6e5d-46a1-aa9e-ab46497258ed",
+   "audited": 158,
+   "verdicts": {
+    "GOLD-ONLY": 158
+   },
+   "smells_fired": 5,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 0.359,
+    "shuffle": 0.063
+   },
+   "published_questions": 4,
+   "published_ids": [
+    "1318",
+    "1365",
+    "1388",
+    "1389"
+   ],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/superhero",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "superhero",
+   "run_id": "audit-d3f8ac37-674e-4d02-9bef-e01383ae49a0",
+   "audited": 129,
+   "verdicts": {
+    "GOLD-ONLY": 129
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.6,
+    "shuffle": 0.01
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "766",
+    "802"
+   ],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/thrombosis_prediction",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-81b79d57-0fa4-459a-9c7a-72e804752908",
+   "audited": 163,
+   "verdicts": {
+    "GOLD-ONLY": 163
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.759,
+    "shuffle": 0.051
+   },
+   "published_questions": 3,
+   "published_ids": [
+    "1209",
+    "1284",
+    "1290"
+   ],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/toxicology",
+   "benchmark": "bird-dev-sqlite",
+   "group": "dev-20251106",
+   "run": "toxicology",
+   "run_id": "audit-81503b04-4c0f-4190-852f-051b20e5247a",
+   "audited": 145,
+   "verdicts": {
+    "GOLD-ONLY": 145
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 12.378,
+    "shuffle": 0.051
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "benchmark": "minidev-pg",
+   "group": "",
+   "run": "gpt-35-turbo",
+   "run_id": "audit-a7e6b760-f8ad-479a-b956-9cd88ea91e18",
+   "audited": 498,
+   "verdicts": {
+    "NOT_EQUAL": 197,
+    "ERROR": 185,
+    "EQUAL": 116
+   },
+   "smells_fired": 27,
+   "credited_but_not_equal": {
+    "total": 23,
+    "by_mechanism": {
+     "multiplicity": 20,
+     "type": 3,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 3,
+     "0": 20
+    }
+   },
+   "errors": 185,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.249,
+    "questions": 34.257,
+    "shuffle": 5.541
+   },
+   "published_questions": 26,
+   "published_ids": [
+    "82",
+    "149",
+    "206",
+    "240",
+    "281",
+    "345",
+    "358",
+    "391",
+    "462",
+    "477",
+    "483",
+    "528",
+    "565",
+    "850",
+    "854",
+    "857",
+    "879",
+    "1035",
+    "1134",
+    "1331",
+    "1361",
+    "1380",
+    "1435",
+    "1501",
+    "1506",
+    "1507"
+   ],
+   "archive": "minidev-pg-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "benchmark": "minidev-pg",
+   "group": "",
+   "run": "gpt-35-turbo-instruct",
+   "run_id": "audit-b6efa569-00a2-4421-b91b-09d107e2dac3",
+   "audited": 498,
+   "verdicts": {
+    "NOT_EQUAL": 193,
+    "ERROR": 189,
+    "EQUAL": 116
+   },
+   "smells_fired": 31,
+   "credited_but_not_equal": {
+    "total": 18,
+    "by_mechanism": {
+     "multiplicity": 17,
+     "type": 1,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 1,
+     "0": 17
+    }
+   },
+   "errors": 189,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.396,
+    "questions": 40.297,
+    "shuffle": 7.717
+   },
+   "published_questions": 23,
+   "published_ids": [
+    "45",
+    "82",
+    "230",
+    "345",
+    "358",
+    "414",
+    "850",
+    "854",
+    "857",
+    "879",
+    "978",
+    "1035",
+    "1057",
+    "1088",
+    "1122",
+    "1147",
+    "1361",
+    "1380",
+    "1435",
+    "1457",
+    "1506",
+    "1514",
+    "1529"
+   ],
+   "archive": "minidev-pg-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "benchmark": "minidev-pg",
+   "group": "",
+   "run": "gpt-4",
+   "run_id": "audit-34520748-ce64-4674-9cd7-6d6fac5b9805",
+   "audited": 498,
+   "verdicts": {
+    "EQUAL": 164,
+    "ERROR": 122,
+    "NOT_EQUAL": 212
+   },
+   "smells_fired": 32,
+   "credited_but_not_equal": {
+    "total": 17,
+    "by_mechanism": {
+     "multiplicity": 14,
+     "type": 3,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 3,
+     "0": 14
+    }
+   },
+   "errors": 122,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.236,
+    "questions": 39.352,
+    "shuffle": 5.481
+   },
+   "published_questions": 26,
+   "published_ids": [
+    "45",
+    "82",
+    "207",
+    "249",
+    "345",
+    "358",
+    "459",
+    "462",
+    "522",
+    "736",
+    "800",
+    "850",
+    "854",
+    "857",
+    "960",
+    "1029",
+    "1035",
+    "1130",
+    "1141",
+    "1331",
+    "1340",
+    "1361",
+    "1380",
+    "1432",
+    "1435",
+    "1514"
+   ],
+   "archive": "minidev-pg-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "benchmark": "minidev-pg",
+   "group": "",
+   "run": "gpt-4-32k",
+   "run_id": "audit-eacac37d-7cc4-4d44-9121-67cecbf29b75",
+   "audited": 498,
+   "verdicts": {
+    "NOT_EQUAL": 210,
+    "ERROR": 134,
+    "EQUAL": 154
+   },
+   "smells_fired": 32,
+   "credited_but_not_equal": {
+    "total": 23,
+    "by_mechanism": {
+     "multiplicity": 18,
+     "type": 5,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 5,
+     "0": 18
+    }
+   },
+   "errors": 134,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.253,
+    "questions": 30.853,
+    "shuffle": 5.484
+   },
+   "published_questions": 31,
+   "published_ids": [
+    "45",
+    "149",
+    "168",
+    "173",
+    "206",
+    "240",
+    "245",
+    "249",
+    "255",
+    "268",
+    "440",
+    "462",
+    "477",
+    "487",
+    "790",
+    "800",
+    "850",
+    "857",
+    "879",
+    "1035",
+    "1130",
+    "1340",
+    "1361",
+    "1380",
+    "1410",
+    "1432",
+    "1435",
+    "1457",
+    "1506",
+    "1514",
+    "1529"
+   ],
+   "archive": "minidev-pg-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "benchmark": "minidev-pg",
+   "group": "",
+   "run": "gpt-4-turbo",
+   "run_id": "audit-7912134a-3f9b-4113-a6b6-ebaf8b6a2bc0",
+   "audited": 498,
+   "verdicts": {
+    "EQUAL": 154,
+    "NOT_EQUAL": 216,
+    "ERROR": 128
+   },
+   "smells_fired": 30,
+   "credited_but_not_equal": {
+    "total": 27,
+    "by_mechanism": {
+     "multiplicity": 22,
+     "type": 5,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 5,
+     "0": 22
+    }
+   },
+   "errors": 128,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.258,
+    "questions": 37.185,
+    "shuffle": 5.64
+   },
+   "published_questions": 33,
+   "published_ids": [
+    "112",
+    "206",
+    "207",
+    "240",
+    "245",
+    "358",
+    "440",
+    "462",
+    "477",
+    "522",
+    "528",
+    "565",
+    "790",
+    "850",
+    "854",
+    "857",
+    "960",
+    "978",
+    "1029",
+    "1035",
+    "1088",
+    "1122",
+    "1130",
+    "1141",
+    "1331",
+    "1340",
+    "1361",
+    "1380",
+    "1389",
+    "1432",
+    "1435",
+    "1506",
+    "1514"
+   ],
+   "archive": "minidev-pg-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "benchmark": "minidev-pg",
+   "group": "",
+   "run": "meta-llama-3-70b-instruct-2",
+   "run_id": "audit-5057e95b-76d8-4d53-a20b-a2de3d1eb19a",
+   "audited": 498,
+   "verdicts": {
+    "NOT_EQUAL": 209,
+    "EQUAL": 131,
+    "ERROR": 158
+   },
+   "smells_fired": 28,
+   "credited_but_not_equal": {
+    "total": 19,
+    "by_mechanism": {
+     "multiplicity": 16,
+     "type": 3,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 3,
+     "0": 16
+    }
+   },
+   "errors": 158,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.396,
+    "questions": 91.784,
+    "shuffle": 7.714
+   },
+   "published_questions": 23,
+   "published_ids": [
+    "240",
+    "253",
+    "345",
+    "358",
+    "440",
+    "459",
+    "462",
+    "487",
+    "522",
+    "528",
+    "565",
+    "850",
+    "857",
+    "868",
+    "879",
+    "1134",
+    "1361",
+    "1380",
+    "1389",
+    "1435",
+    "1457",
+    "1506",
+    "1514"
+   ],
+   "archive": "minidev-pg-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-8b-instruct-2",
+   "benchmark": "minidev-pg",
+   "group": "",
+   "run": "meta-llama-3-8b-instruct-2",
+   "run_id": "audit-2ed41f69-8e39-4e9d-9cd1-737fad320828",
+   "audited": 498,
+   "verdicts": {
+    "ERROR": 258,
+    "NOT_EQUAL": 158,
+    "EQUAL": 82
+   },
+   "smells_fired": 15,
+   "credited_but_not_equal": {
+    "total": 12,
+    "by_mechanism": {
+     "multiplicity": 10,
+     "type": 2,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 2,
+     "0": 10
+    }
+   },
+   "errors": 258,
+   "timed_out": {
+    "gold": [],
+    "prediction": [
+     694
+    ]
+   },
+   "elapsed_seconds": {
+    "fixture": 0.268,
+    "questions": 147.934,
+    "shuffle": 5.843
+   },
+   "published_questions": 15,
+   "published_ids": [
+    "82",
+    "249",
+    "345",
+    "358",
+    "440",
+    "565",
+    "850",
+    "868",
+    "1035",
+    "1331",
+    "1361",
+    "1380",
+    "1422",
+    "1457",
+    "1506"
+   ],
+   "archive": "minidev-pg-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-pg/mistralai-mixtral-8x7b-instru-4",
+   "benchmark": "minidev-pg",
+   "group": "",
+   "run": "mistralai-mixtral-8x7b-instru-4",
+   "run_id": "audit-caa3d3fc-17d4-4f05-9ebf-50f46afc1202",
+   "audited": 498,
+   "verdicts": {
+    "NOT_EQUAL": 111,
+    "ERROR": 328,
+    "EQUAL": 59
+   },
+   "smells_fired": 8,
+   "credited_but_not_equal": {
+    "total": 14,
+    "by_mechanism": {
+     "multiplicity": 11,
+     "type": 3,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 3,
+     "0": 11
+    }
+   },
+   "errors": 328,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.219,
+    "questions": 35.971,
+    "shuffle": 5.058
+   },
+   "published_questions": 16,
+   "published_ids": [
+    "200",
+    "206",
+    "230",
+    "268",
+    "371",
+    "565",
+    "850",
+    "854",
+    "857",
+    "868",
+    "1331",
+    "1361",
+    "1380",
+    "1435",
+    "1506",
+    "1507"
+   ],
+   "archive": "minidev-pg-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "benchmark": "minidev-pg",
+   "group": "",
+   "run": "phi-3-medium-128k-instruct-1",
+   "run_id": "audit-715e02b9-6229-4aab-aa2e-7df62f68e7a4",
+   "audited": 498,
+   "verdicts": {
+    "ERROR": 219,
+    "NOT_EQUAL": 179,
+    "EQUAL": 100
+   },
+   "smells_fired": 27,
+   "credited_but_not_equal": {
+    "total": 11,
+    "by_mechanism": {
+     "multiplicity": 10,
+     "type": 1,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 1,
+     "0": 10
+    }
+   },
+   "errors": 219,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.249,
+    "questions": 31.059,
+    "shuffle": 4.949
+   },
+   "published_questions": 15,
+   "published_ids": [
+    "82",
+    "206",
+    "345",
+    "358",
+    "736",
+    "790",
+    "850",
+    "854",
+    "868",
+    "1361",
+    "1380",
+    "1435",
+    "1457",
+    "1506",
+    "1514"
+   ],
+   "archive": "minidev-pg-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-pg-gold-only/hf",
+   "benchmark": "minidev-pg-gold-only",
+   "group": "",
+   "run": "hf",
+   "run_id": "audit-ed50a84a-c286-4cbb-ac89-ab3111058ad5",
+   "audited": 500,
+   "verdicts": {
+    "GOLD-ONLY": 500
+   },
+   "smells_fired": 38,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.314,
+    "questions": 63.371,
+    "shuffle": 8.185
+   },
+   "published_questions": 24,
+   "published_ids": [
+    "37",
+    "82",
+    "94",
+    "115",
+    "349",
+    "671",
+    "736",
+    "751",
+    "766",
+    "794",
+    "847",
+    "906",
+    "1002",
+    "1028",
+    "1135",
+    "1144",
+    "1168",
+    "1340",
+    "1361",
+    "1380",
+    "1389",
+    "1410",
+    "1529",
+    "1531"
+   ],
+   "archive": "minidev-pg-gold-only-hf.tar.gz"
+  },
+  {
+   "slug": "minidev-pg-gold-only/zip",
+   "benchmark": "minidev-pg-gold-only",
+   "group": "",
+   "run": "zip",
+   "run_id": "audit-adbef1a5-9f41-4a8f-ac55-8c3d8df71394",
+   "audited": 498,
+   "verdicts": {
+    "GOLD-ONLY": 498
+   },
+   "smells_fired": 39,
+   "credited_but_not_equal": null,
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.315,
+    "questions": 63.174,
+    "shuffle": 8.185
+   },
+   "published_questions": 25,
+   "published_ids": [
+    "37",
+    "82",
+    "94",
+    "115",
+    "349",
+    "671",
+    "736",
+    "751",
+    "766",
+    "794",
+    "847",
+    "879",
+    "906",
+    "1002",
+    "1028",
+    "1135",
+    "1144",
+    "1168",
+    "1340",
+    "1361",
+    "1380",
+    "1389",
+    "1410",
+    "1529",
+    "1531"
+   ],
+   "archive": "minidev-pg-gold-only-zip.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/california_schools",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "california_schools",
+   "run_id": "audit-b29a0db8-17ca-424a-b3e5-82ac6c1fcaba",
+   "audited": 30,
+   "verdicts": {
+    "EQUAL": 7,
+    "NOT_EQUAL": 19,
+    "ERROR": 4
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 4,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 1.167,
+    "shuffle": 0.135
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "82"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/card_games",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "card_games",
+   "run_id": "audit-f9d04203-64fb-4cb6-85da-984fd2792670",
+   "audited": 52,
+   "verdicts": {
+    "NOT_EQUAL": 27,
+    "EQUAL": 14,
+    "ERROR": 11
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 7,
+    "by_mechanism": {
+     "multiplicity": 7,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 7
+    }
+   },
+   "errors": 11,
+   "timed_out": {
+    "gold": [
+     518
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.028,
+    "questions": 46.592,
+    "shuffle": 1.213
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "358",
+    "440"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/codebase_community",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "codebase_community",
+   "run_id": "audit-a5d2eca3-708b-4b71-9b4a-58fc67c3cb36",
+   "audited": 49,
+   "verdicts": {
+    "NOT_EQUAL": 20,
+    "EQUAL": 20,
+    "ERROR": 9
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 9,
+   "timed_out": {
+    "gold": [
+     701
+    ],
+    "prediction": [
+     682
+    ]
+   },
+   "elapsed_seconds": {
+    "fixture": 0.012,
+    "questions": 74.202,
+    "shuffle": 1.23
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/debit_card_specializing",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "debit_card_specializing",
+   "run_id": "audit-d8858f68-df7a-4b55-9481-b567fbdaa5e9",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 20,
+    "EQUAL": 6,
+    "ERROR": 4
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 3,
+    "by_mechanism": {
+     "multiplicity": 3,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 3
+    }
+   },
+   "errors": 4,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 9.398,
+    "shuffle": 0.056
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "1507",
+    "1514"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/european_football_2",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "european_football_2",
+   "run_id": "audit-31033482-88c5-4cd0-bcd9-cd5e69618fdc",
+   "audited": 51,
+   "verdicts": {
+    "EQUAL": 25,
+    "NOT_EQUAL": 22,
+    "ERROR": 4
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 5,
+    "by_mechanism": {
+     "multiplicity": 5,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 5
+    }
+   },
+   "errors": 4,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.015,
+    "questions": 11.164,
+    "shuffle": 3.058
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/financial",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "financial",
+   "run_id": "audit-f6b1cc1f-56b0-4e6f-9f13-a98c98bb32f9",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 16,
+    "ERROR": 8,
+    "EQUAL": 6
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 8,
+   "timed_out": {
+    "gold": [],
+    "prediction": [
+     145
+    ]
+   },
+   "elapsed_seconds": {
+    "fixture": 0.012,
+    "questions": 31.975,
+    "shuffle": 0.032
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/formula_1",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "formula_1",
+   "run_id": "audit-fdf541cd-89ce-4d08-950a-6f3d607db617",
+   "audited": 66,
+   "verdicts": {
+    "NOT_EQUAL": 43,
+    "EQUAL": 15,
+    "ERROR": 8
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 3,
+    "by_mechanism": {
+     "multiplicity": 3,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 3
+    }
+   },
+   "errors": 8,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.004,
+    "questions": 5.43,
+    "shuffle": 0.128
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/student_club",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "student_club",
+   "run_id": "audit-d166184e-4991-4992-9ccb-60428cf6e856",
+   "audited": 48,
+   "verdicts": {
+    "EQUAL": 21,
+    "ERROR": 10,
+    "NOT_EQUAL": 17
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 10,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 0.088,
+    "shuffle": 0.074
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1435"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/superhero",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "superhero",
+   "run_id": "audit-41ea1294-2046-41d0-9c60-5d69916f6283",
+   "audited": 52,
+   "verdicts": {
+    "EQUAL": 32,
+    "NOT_EQUAL": 18,
+    "ERROR": 2
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 2,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.641,
+    "shuffle": 0.013
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/thrombosis_prediction",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-8048dae1-0757-4488-97c7-2c9771c75d39",
+   "audited": 50,
+   "verdicts": {
+    "ERROR": 14,
+    "EQUAL": 10,
+    "NOT_EQUAL": 26
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 14,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.31,
+    "shuffle": 0.048
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/toxicology",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo",
+   "run": "toxicology",
+   "run_id": "audit-0f6a76ed-cc4f-4374-b4b8-dbb94647da4a",
+   "audited": 40,
+   "verdicts": {
+    "NOT_EQUAL": 17,
+    "ERROR": 15,
+    "EQUAL": 8
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 15,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 14.218,
+    "shuffle": 0.05
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "206"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/california_schools",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "california_schools",
+   "run_id": "audit-902a3f61-a864-43be-9746-b3258a4d81f0",
+   "audited": 30,
+   "verdicts": {
+    "EQUAL": 4,
+    "NOT_EQUAL": 19,
+    "ERROR": 7
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 1,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 1,
+     "0": 0
+    }
+   },
+   "errors": 7,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 1.097,
+    "shuffle": 0.191
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "82"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/card_games",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "card_games",
+   "run_id": "audit-c5d2a00f-9672-44f6-8630-2ef70e03da01",
+   "audited": 52,
+   "verdicts": {
+    "NOT_EQUAL": 29,
+    "ERROR": 10,
+    "EQUAL": 13
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 8,
+    "by_mechanism": {
+     "multiplicity": 8,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 8
+    }
+   },
+   "errors": 10,
+   "timed_out": {
+    "gold": [
+     518
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.025,
+    "questions": 46.924,
+    "shuffle": 1.079
+   },
+   "published_questions": 3,
+   "published_ids": [
+    "358",
+    "440",
+    "462"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/codebase_community",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "codebase_community",
+   "run_id": "audit-49215ef1-ae35-4207-99a0-4538f9872bc4",
+   "audited": 49,
+   "verdicts": {
+    "NOT_EQUAL": 19,
+    "EQUAL": 17,
+    "ERROR": 13
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 13,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.021,
+    "questions": 14.561,
+    "shuffle": 1.92
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/debit_card_specializing",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "debit_card_specializing",
+   "run_id": "audit-bd55a89c-7256-488a-b0b3-6f728a87b89d",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 18,
+    "ERROR": 6,
+    "EQUAL": 6
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 3,
+    "by_mechanism": {
+     "multiplicity": 3,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 3
+    }
+   },
+   "errors": 6,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.005,
+    "questions": 3.421,
+    "shuffle": 0.07
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "1507",
+    "1514"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/european_football_2",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "european_football_2",
+   "run_id": "audit-3fae206f-78fa-4453-a443-5cd9d8023e55",
+   "audited": 51,
+   "verdicts": {
+    "EQUAL": 23,
+    "NOT_EQUAL": 16,
+    "ERROR": 12
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 12,
+   "timed_out": {
+    "gold": [],
+    "prediction": [
+     1040
+    ]
+   },
+   "elapsed_seconds": {
+    "fixture": 0.01,
+    "questions": 36.175,
+    "shuffle": 2.31
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/financial",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "financial",
+   "run_id": "audit-4bf3f4e3-f34f-4099-9e52-802a9f3f8136",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 21,
+    "ERROR": 5,
+    "EQUAL": 4
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 5,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.013,
+    "questions": 3.118,
+    "shuffle": 0.045
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/formula_1",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "formula_1",
+   "run_id": "audit-e531ef38-5061-4c26-ac1b-a0c61be3ab37",
+   "audited": 66,
+   "verdicts": {
+    "ERROR": 10,
+    "NOT_EQUAL": 39,
+    "EQUAL": 17
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 10,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.005,
+    "questions": 5.555,
+    "shuffle": 0.135
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/student_club",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "student_club",
+   "run_id": "audit-42355325-8654-4129-93e5-4ace747fc880",
+   "audited": 48,
+   "verdicts": {
+    "EQUAL": 17,
+    "ERROR": 12,
+    "NOT_EQUAL": 19
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 12,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 0.089,
+    "shuffle": 0.069
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1435"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/superhero",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "superhero",
+   "run_id": "audit-acc4c30d-830a-4ac7-b122-2f07f8c70ebb",
+   "audited": 52,
+   "verdicts": {
+    "ERROR": 11,
+    "EQUAL": 28,
+    "NOT_EQUAL": 13
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 11,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.575,
+    "shuffle": 0.011
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/thrombosis_prediction",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-d16b452a-f082-4eda-b34a-013e7ee05d2a",
+   "audited": 50,
+   "verdicts": {
+    "NOT_EQUAL": 19,
+    "ERROR": 24,
+    "EQUAL": 7
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 24,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.248,
+    "shuffle": 0.048
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/toxicology",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-35-turbo-instruct",
+   "run": "toxicology",
+   "run_id": "audit-03289090-4bb5-4d9f-a3a3-4c52632ff8c1",
+   "audited": 40,
+   "verdicts": {
+    "EQUAL": 8,
+    "NOT_EQUAL": 16,
+    "ERROR": 16
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 16,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.528,
+    "shuffle": 0.045
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "206"
+   ],
+   "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/california_schools",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "california_schools",
+   "run_id": "audit-4e6b7b56-7da3-4835-9f05-4544e8e4a5b5",
+   "audited": 30,
+   "verdicts": {
+    "EQUAL": 10,
+    "NOT_EQUAL": 18,
+    "ERROR": 2
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 1,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 1,
+     "0": 0
+    }
+   },
+   "errors": 2,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 1.188,
+    "shuffle": 0.14
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "82"
+   ],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/card_games",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "card_games",
+   "run_id": "audit-4e13ba00-25fc-4dee-9812-b6b3a5bbb88f",
+   "audited": 52,
+   "verdicts": {
+    "NOT_EQUAL": 32,
+    "EQUAL": 19,
+    "ERROR": 1
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 6,
+    "by_mechanism": {
+     "multiplicity": 6,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 6
+    }
+   },
+   "errors": 1,
+   "timed_out": {
+    "gold": [
+     518
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.034,
+    "questions": 51.653,
+    "shuffle": 1.319
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "358",
+    "462"
+   ],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/codebase_community",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "codebase_community",
+   "run_id": "audit-8dd62574-ec6d-4476-bddb-2811a2a0a7b0",
+   "audited": 49,
+   "verdicts": {
+    "NOT_EQUAL": 23,
+    "EQUAL": 24,
+    "ERROR": 2
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 2,
+   "timed_out": {
+    "gold": [
+     701
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.013,
+    "questions": 43.1,
+    "shuffle": 1.557
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/debit_card_specializing",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "debit_card_specializing",
+   "run_id": "audit-b6df2160-40de-4549-b5c3-016093f6c38e",
+   "audited": 30,
+   "verdicts": {
+    "EQUAL": 12,
+    "ERROR": 1,
+    "NOT_EQUAL": 17
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 1,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.007,
+    "questions": 4.202,
+    "shuffle": 0.059
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1514"
+   ],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "european_football_2",
+   "run_id": "audit-0170c46a-5392-44ab-aeac-a6373c0dea60",
+   "audited": 51,
+   "verdicts": {
+    "EQUAL": 22,
+    "NOT_EQUAL": 26,
+    "ERROR": 3
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 7,
+    "by_mechanism": {
+     "multiplicity": 7,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 7
+    }
+   },
+   "errors": 3,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.024,
+    "questions": 10.909,
+    "shuffle": 3.097
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/financial",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "financial",
+   "run_id": "audit-3fc0d8db-d144-4c4e-ada3-dfb9d08e61e1",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 21,
+    "EQUAL": 8,
+    "ERROR": 1
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 1,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.02,
+    "questions": 3.424,
+    "shuffle": 0.043
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "formula_1",
+   "run_id": "audit-cc4c3ff9-f9a7-4a5d-b0ef-a38e9a8c5ea4",
+   "audited": 66,
+   "verdicts": {
+    "NOT_EQUAL": 43,
+    "EQUAL": 20,
+    "ERROR": 3
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 6,
+    "by_mechanism": {
+     "multiplicity": 5,
+     "type": 0,
+     "order": 1,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 6
+    }
+   },
+   "errors": 3,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.007,
+    "questions": 5.525,
+    "shuffle": 0.146
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/student_club",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "student_club",
+   "run_id": "audit-c8a23211-745e-4ff1-a2bf-8db4b1670f09",
+   "audited": 48,
+   "verdicts": {
+    "EQUAL": 27,
+    "ERROR": 3,
+    "NOT_EQUAL": 18
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 3,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 0.083,
+    "shuffle": 0.078
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1435"
+   ],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/superhero",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "superhero",
+   "run_id": "audit-9e3b938b-84f9-45f0-bf0a-6ad4986dc7ab",
+   "audited": 52,
+   "verdicts": {
+    "EQUAL": 40,
+    "NOT_EQUAL": 11,
+    "ERROR": 1
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 1,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.58,
+    "shuffle": 0.009
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/thrombosis_prediction",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-147f1124-b030-48ad-a74c-cd800cf1a32c",
+   "audited": 50,
+   "verdicts": {
+    "NOT_EQUAL": 30,
+    "EQUAL": 16,
+    "ERROR": 4
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 4,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.357,
+    "shuffle": 0.048
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/toxicology",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4",
+   "run": "toxicology",
+   "run_id": "audit-1e841461-ed08-433e-85d7-830d98ce6ade",
+   "audited": 40,
+   "verdicts": {
+    "EQUAL": 11,
+    "NOT_EQUAL": 24,
+    "ERROR": 5
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 5,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.846,
+    "shuffle": 0.04
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "206",
+    "249"
+   ],
+   "archive": "minidev-sqlite-gpt-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/california_schools",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "california_schools",
+   "run_id": "audit-d92b0844-d4d3-4a1e-9f3a-0ab9296f53fe",
+   "audited": 30,
+   "verdicts": {
+    "EQUAL": 9,
+    "NOT_EQUAL": 20,
+    "ERROR": 1
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 1,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 1,
+     "0": 0
+    }
+   },
+   "errors": 1,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 1.413,
+    "shuffle": 0.131
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "82"
+   ],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/card_games",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "card_games",
+   "run_id": "audit-d31cab82-3889-46c1-9da6-defca398afc6",
+   "audited": 52,
+   "verdicts": {
+    "NOT_EQUAL": 36,
+    "EQUAL": 15,
+    "ERROR": 1
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 6,
+    "by_mechanism": {
+     "multiplicity": 6,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 6
+    }
+   },
+   "errors": 1,
+   "timed_out": {
+    "gold": [
+     518
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.037,
+    "questions": 45.912,
+    "shuffle": 1.224
+   },
+   "published_questions": 3,
+   "published_ids": [
+    "358",
+    "440",
+    "462"
+   ],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/codebase_community",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "codebase_community",
+   "run_id": "audit-23069b57-2e1a-4068-b152-9cd41104f31b",
+   "audited": 49,
+   "verdicts": {
+    "NOT_EQUAL": 23,
+    "EQUAL": 23,
+    "ERROR": 3
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 3,
+   "timed_out": {
+    "gold": [
+     701
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.011,
+    "questions": 45.355,
+    "shuffle": 1.315
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/debit_card_specializing",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "debit_card_specializing",
+   "run_id": "audit-3e5adc79-54df-43ec-b04d-d17f8bc48ba5",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 20,
+    "ERROR": 1,
+    "EQUAL": 9
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 1,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 11.339,
+    "shuffle": 0.061
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1514"
+   ],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "european_football_2",
+   "run_id": "audit-24c394ae-aaff-488c-8753-e8c800d85f0b",
+   "audited": 51,
+   "verdicts": {
+    "EQUAL": 26,
+    "NOT_EQUAL": 23,
+    "ERROR": 2
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 6,
+    "by_mechanism": {
+     "multiplicity": 6,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 6
+    }
+   },
+   "errors": 2,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.014,
+    "questions": 11.627,
+    "shuffle": 3.066
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/financial",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "financial",
+   "run_id": "audit-3445351e-bdc4-49f1-b501-e7e5d3312d0a",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 18,
+    "ERROR": 3,
+    "EQUAL": 9
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 3,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.025,
+    "questions": 3.369,
+    "shuffle": 0.038
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/formula_1",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "formula_1",
+   "run_id": "audit-25d5d40f-3fc8-4b0f-800e-6546b3c11f7e",
+   "audited": 66,
+   "verdicts": {
+    "EQUAL": 25,
+    "NOT_EQUAL": 35,
+    "ERROR": 6
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 6,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.008,
+    "questions": 5.577,
+    "shuffle": 0.136
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/student_club",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "student_club",
+   "run_id": "audit-c7efddca-88a8-47a2-ab99-8b894a00c808",
+   "audited": 48,
+   "verdicts": {
+    "EQUAL": 31,
+    "ERROR": 5,
+    "NOT_EQUAL": 12
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 5,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 0.083,
+    "shuffle": 0.077
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1435"
+   ],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/superhero",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "superhero",
+   "run_id": "audit-6e8823c0-2c9a-4f1f-a1da-943e1f5ea07b",
+   "audited": 52,
+   "verdicts": {
+    "EQUAL": 37,
+    "NOT_EQUAL": 14,
+    "ERROR": 1
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 1,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 1,
+     "0": 0
+    }
+   },
+   "errors": 1,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 0.648,
+    "shuffle": 0.011
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/thrombosis_prediction",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-5e8d44db-a40f-4883-a03a-2ff7a4a276cf",
+   "audited": 50,
+   "verdicts": {
+    "NOT_EQUAL": 31,
+    "EQUAL": 12,
+    "ERROR": 7
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 5,
+    "by_mechanism": {
+     "multiplicity": 5,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 5
+    }
+   },
+   "errors": 7,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.413,
+    "shuffle": 0.037
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/toxicology",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-32k",
+   "run": "toxicology",
+   "run_id": "audit-f58b0212-bc37-4061-b2c0-64297a07a1cc",
+   "audited": 40,
+   "verdicts": {
+    "EQUAL": 9,
+    "ERROR": 8,
+    "NOT_EQUAL": 23
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 5,
+    "by_mechanism": {
+     "multiplicity": 5,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 5
+    }
+   },
+   "errors": 8,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.822,
+    "shuffle": 0.049
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "206",
+    "268"
+   ],
+   "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/california_schools",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "california_schools",
+   "run_id": "audit-91c892ea-1216-430e-8275-2ba08ac3f0bb",
+   "audited": 30,
+   "verdicts": {
+    "EQUAL": 11,
+    "NOT_EQUAL": 19
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 1.244,
+    "shuffle": 0.119
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "82"
+   ],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/card_games",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "card_games",
+   "run_id": "audit-fb23ec3b-e8c5-4809-a8bc-a5db5787fee3",
+   "audited": 52,
+   "verdicts": {
+    "NOT_EQUAL": 31,
+    "EQUAL": 18,
+    "ERROR": 3
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 9,
+    "by_mechanism": {
+     "multiplicity": 9,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 9
+    }
+   },
+   "errors": 3,
+   "timed_out": {
+    "gold": [
+     518
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.03,
+    "questions": 51.034,
+    "shuffle": 1.252
+   },
+   "published_questions": 3,
+   "published_ids": [
+    "358",
+    "440",
+    "462"
+   ],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/codebase_community",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "codebase_community",
+   "run_id": "audit-5e0765be-3cca-4d9b-b227-abcb845c81cc",
+   "audited": 49,
+   "verdicts": {
+    "NOT_EQUAL": 21,
+    "EQUAL": 24,
+    "ERROR": 4
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 4,
+   "timed_out": {
+    "gold": [
+     701
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.012,
+    "questions": 42.398,
+    "shuffle": 1.3
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/debit_card_specializing",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "debit_card_specializing",
+   "run_id": "audit-7e580d3a-8a50-44e6-a970-3d8a0f13f396",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 20,
+    "EQUAL": 10
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 4.001,
+    "shuffle": 0.048
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1514"
+   ],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "european_football_2",
+   "run_id": "audit-caf3f5cc-33f2-4843-8b6d-7df9d4cf8f30",
+   "audited": 51,
+   "verdicts": {
+    "EQUAL": 20,
+    "NOT_EQUAL": 29,
+    "ERROR": 2
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 8,
+    "by_mechanism": {
+     "multiplicity": 8,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 8
+    }
+   },
+   "errors": 2,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.022,
+    "questions": 12.695,
+    "shuffle": 3.911
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/financial",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "financial",
+   "run_id": "audit-a62b9450-e229-48fa-be8c-cdeeaabf490d",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 13,
+    "EQUAL": 9,
+    "ERROR": 8
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 8,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.018,
+    "questions": 2.26,
+    "shuffle": 0.042
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/formula_1",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "formula_1",
+   "run_id": "audit-d7f733e7-2723-448a-9d61-9fbb4f2a3d53",
+   "audited": 66,
+   "verdicts": {
+    "EQUAL": 25,
+    "ERROR": 7,
+    "NOT_EQUAL": 34
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 7,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.006,
+    "questions": 4.815,
+    "shuffle": 0.127
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/student_club",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "student_club",
+   "run_id": "audit-66d23471-2e30-4bc8-8cda-2c7d92b266c9",
+   "audited": 48,
+   "verdicts": {
+    "EQUAL": 22,
+    "ERROR": 12,
+    "NOT_EQUAL": 14
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 12,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 0.077,
+    "shuffle": 0.07
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1435"
+   ],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/superhero",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "superhero",
+   "run_id": "audit-538af6d0-dd05-4616-9cc2-56966727220a",
+   "audited": 52,
+   "verdicts": {
+    "EQUAL": 29,
+    "NOT_EQUAL": 9,
+    "ERROR": 14
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 14,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.512,
+    "shuffle": 0.01
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/thrombosis_prediction",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-8ba87c68-edea-492e-89a3-385b27e034dc",
+   "audited": 50,
+   "verdicts": {
+    "ERROR": 6,
+    "NOT_EQUAL": 29,
+    "EQUAL": 15
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 6,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.367,
+    "shuffle": 0.056
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/toxicology",
+   "benchmark": "minidev-sqlite",
+   "group": "gpt-4-turbo",
+   "run": "toxicology",
+   "run_id": "audit-6d8d0e18-7d46-4a00-88ab-8c209953260e",
+   "audited": 40,
+   "verdicts": {
+    "EQUAL": 7,
+    "NOT_EQUAL": 13,
+    "ERROR": 20
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 3,
+    "by_mechanism": {
+     "multiplicity": 3,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 3
+    }
+   },
+   "errors": 20,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.573,
+    "shuffle": 0.046
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "206",
+    "268"
+   ],
+   "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/california_schools",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "california_schools",
+   "run_id": "audit-a296b4a7-6dd1-4a2a-9567-854a87c8251b",
+   "audited": 30,
+   "verdicts": {
+    "EQUAL": 6,
+    "NOT_EQUAL": 19,
+    "ERROR": 5
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 1,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 1,
+     "0": 0
+    }
+   },
+   "errors": 5,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 1.103,
+    "shuffle": 0.131
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/card_games",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "card_games",
+   "run_id": "audit-81ba61cb-98ab-453b-91d2-dcdb8427ebe3",
+   "audited": 52,
+   "verdicts": {
+    "NOT_EQUAL": 36,
+    "EQUAL": 13,
+    "ERROR": 3
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 6,
+    "by_mechanism": {
+     "multiplicity": 6,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 6
+    }
+   },
+   "errors": 3,
+   "timed_out": {
+    "gold": [
+     518
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.027,
+    "questions": 48.751,
+    "shuffle": 1.103
+   },
+   "published_questions": 3,
+   "published_ids": [
+    "358",
+    "440",
+    "462"
+   ],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/codebase_community",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "codebase_community",
+   "run_id": "audit-b6ba9caf-17d7-490f-92fb-2cd95f6815bd",
+   "audited": 49,
+   "verdicts": {
+    "NOT_EQUAL": 22,
+    "ERROR": 8,
+    "EQUAL": 19
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 8,
+   "timed_out": {
+    "gold": [
+     701
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.01,
+    "questions": 44.079,
+    "shuffle": 1.193
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/debit_card_specializing",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "debit_card_specializing",
+   "run_id": "audit-8d432337-f2f3-458d-ab13-d0ad22a2fcf2",
+   "audited": 30,
+   "verdicts": {
+    "EQUAL": 10,
+    "NOT_EQUAL": 17,
+    "ERROR": 3
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 3,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 3.5,
+    "shuffle": 0.051
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1514"
+   ],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "european_football_2",
+   "run_id": "audit-4ab2e1b5-7583-4706-9301-9aa2192eaf25",
+   "audited": 51,
+   "verdicts": {
+    "EQUAL": 21,
+    "NOT_EQUAL": 25,
+    "ERROR": 5
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 8,
+    "by_mechanism": {
+     "multiplicity": 8,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 8
+    }
+   },
+   "errors": 5,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.013,
+    "questions": 10.025,
+    "shuffle": 3.911
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/financial",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "financial",
+   "run_id": "audit-37b4e4c2-8c68-420b-854a-341f0bbe450b",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 21,
+    "ERROR": 5,
+    "EQUAL": 4
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 5,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.016,
+    "questions": 3.414,
+    "shuffle": 0.047
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/formula_1",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "formula_1",
+   "run_id": "audit-99c59178-a979-4e88-8ed7-6de682614822",
+   "audited": 66,
+   "verdicts": {
+    "NOT_EQUAL": 30,
+    "EQUAL": 26,
+    "ERROR": 10
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 10,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.007,
+    "questions": 5.27,
+    "shuffle": 0.143
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/student_club",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "student_club",
+   "run_id": "audit-ec2218eb-4561-4b99-9772-20200255aa0c",
+   "audited": 48,
+   "verdicts": {
+    "EQUAL": 25,
+    "NOT_EQUAL": 19,
+    "ERROR": 4
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 4,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 0.098,
+    "shuffle": 0.071
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1435"
+   ],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/superhero",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "superhero",
+   "run_id": "audit-e8bd48bc-864a-4d06-bc3c-74fda70421d0",
+   "audited": 52,
+   "verdicts": {
+    "EQUAL": 35,
+    "NOT_EQUAL": 17
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 0,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.646,
+    "shuffle": 0.012
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/thrombosis_prediction",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-f6cba8a3-b3e1-4994-879d-ce07c007e233",
+   "audited": 50,
+   "verdicts": {
+    "NOT_EQUAL": 28,
+    "ERROR": 13,
+    "EQUAL": 9
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 5,
+    "by_mechanism": {
+     "multiplicity": 5,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 5
+    }
+   },
+   "errors": 13,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.281,
+    "shuffle": 0.047
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/toxicology",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-70b-instruct-2",
+   "run": "toxicology",
+   "run_id": "audit-d08e73dd-8518-4814-afbd-46796fd2c056",
+   "audited": 40,
+   "verdicts": {
+    "EQUAL": 9,
+    "NOT_EQUAL": 29,
+    "ERROR": 2
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 5,
+    "by_mechanism": {
+     "multiplicity": 5,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 5
+    }
+   },
+   "errors": 2,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.787,
+    "shuffle": 0.04
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "249",
+    "268"
+   ],
+   "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/california_schools",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "california_schools",
+   "run_id": "audit-df9bb5f6-31b9-42a7-b84e-4f7361da1168",
+   "audited": 30,
+   "verdicts": {
+    "ERROR": 16,
+    "NOT_EQUAL": 13,
+    "EQUAL": 1
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 16,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.378,
+    "shuffle": 0.122
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/card_games",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "card_games",
+   "run_id": "audit-15027561-7049-44cf-8283-c2d0463d3d2c",
+   "audited": 52,
+   "verdicts": {
+    "NOT_EQUAL": 28,
+    "ERROR": 16,
+    "EQUAL": 8
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 5,
+    "by_mechanism": {
+     "multiplicity": 5,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 5
+    }
+   },
+   "errors": 16,
+   "timed_out": {
+    "gold": [
+     518
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.029,
+    "questions": 44.781,
+    "shuffle": 1.156
+   },
+   "published_questions": 3,
+   "published_ids": [
+    "358",
+    "440",
+    "462"
+   ],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/codebase_community",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "codebase_community",
+   "run_id": "audit-464f1d92-8ec8-4639-b79f-c446a9b8f9b5",
+   "audited": 49,
+   "verdicts": {
+    "NOT_EQUAL": 20,
+    "ERROR": 15,
+    "EQUAL": 14
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 15,
+   "timed_out": {
+    "gold": [
+     701
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.013,
+    "questions": 45.247,
+    "shuffle": 1.212
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/debit_card_specializing",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "debit_card_specializing",
+   "run_id": "audit-2513425b-0020-46a5-87dd-683e71776b18",
+   "audited": 30,
+   "verdicts": {
+    "ERROR": 8,
+    "EQUAL": 5,
+    "NOT_EQUAL": 17
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 8,
+   "timed_out": {
+    "gold": [],
+    "prediction": [
+     1472
+    ]
+   },
+   "elapsed_seconds": {
+    "fixture": 0.002,
+    "questions": 32.61,
+    "shuffle": 0.04
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1514"
+   ],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "european_football_2",
+   "run_id": "audit-5cc2ec0f-cd89-4d64-b7f5-90a23137ee39",
+   "audited": 51,
+   "verdicts": {
+    "ERROR": 21,
+    "NOT_EQUAL": 19,
+    "EQUAL": 11
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 6,
+    "by_mechanism": {
+     "multiplicity": 6,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 6
+    }
+   },
+   "errors": 21,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.014,
+    "questions": 16.218,
+    "shuffle": 2.832
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/financial",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "financial",
+   "run_id": "audit-d775a04d-3e35-454a-8eaa-a94a22de811f",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 15,
+    "EQUAL": 4,
+    "ERROR": 11
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 11,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.013,
+    "questions": 4.009,
+    "shuffle": 0.037
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/formula_1",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "formula_1",
+   "run_id": "audit-8a2aed3c-d3bd-4ece-b104-f4b22760efbd",
+   "audited": 66,
+   "verdicts": {
+    "NOT_EQUAL": 32,
+    "EQUAL": 14,
+    "ERROR": 20
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 20,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.004,
+    "questions": 4.989,
+    "shuffle": 0.15
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/student_club",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "student_club",
+   "run_id": "audit-dc409a9a-3e75-4424-b1d2-608e49d811b9",
+   "audited": 48,
+   "verdicts": {
+    "ERROR": 19,
+    "EQUAL": 15,
+    "NOT_EQUAL": 14
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 19,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.075,
+    "shuffle": 0.065
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1435"
+   ],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/superhero",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "superhero",
+   "run_id": "audit-067df9d1-605a-4fad-9957-639cd9a5dc6c",
+   "audited": 52,
+   "verdicts": {
+    "ERROR": 16,
+    "EQUAL": 26,
+    "NOT_EQUAL": 10
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 16,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.584,
+    "shuffle": 0.012
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/thrombosis_prediction",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-3d3519f1-c5fa-4de8-8bc6-f6d7d5da23ae",
+   "audited": 50,
+   "verdicts": {
+    "ERROR": 29,
+    "NOT_EQUAL": 21
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 29,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.225,
+    "shuffle": 0.043
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/toxicology",
+   "benchmark": "minidev-sqlite",
+   "group": "meta-llama-3-8b-instruct-2",
+   "run": "toxicology",
+   "run_id": "audit-fc082afa-0748-4507-be68-10405b048b27",
+   "audited": 40,
+   "verdicts": {
+    "NOT_EQUAL": 18,
+    "ERROR": 16,
+    "EQUAL": 6
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 1,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 1,
+     "0": 1
+    }
+   },
+   "errors": 16,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.797,
+    "shuffle": 0.044
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/california_schools",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "california_schools",
+   "run_id": "audit-bc01e4d4-3912-463e-a9b2-bc616e056475",
+   "audited": 30,
+   "verdicts": {
+    "ERROR": 16,
+    "NOT_EQUAL": 13,
+    "EQUAL": 1
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 16,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.683,
+    "shuffle": 0.117
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/card_games",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "card_games",
+   "run_id": "audit-e0b6d4d0-9118-49d5-9353-48cfd978097e",
+   "audited": 52,
+   "verdicts": {
+    "ERROR": 29,
+    "NOT_EQUAL": 14,
+    "EQUAL": 9
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 3,
+    "by_mechanism": {
+     "multiplicity": 3,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 3
+    }
+   },
+   "errors": 29,
+   "timed_out": {
+    "gold": [
+     518
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.024,
+    "questions": 33.309,
+    "shuffle": 1.142
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "462"
+   ],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/codebase_community",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "codebase_community",
+   "run_id": "audit-7d7e763d-a218-426c-8687-86848f5983a5",
+   "audited": 49,
+   "verdicts": {
+    "ERROR": 20,
+    "NOT_EQUAL": 21,
+    "EQUAL": 8
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 20,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.017,
+    "questions": 11.851,
+    "shuffle": 1.522
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/debit_card_specializing",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "debit_card_specializing",
+   "run_id": "audit-13cf0492-cbc3-4df7-96f5-bedeafd4f2c5",
+   "audited": 30,
+   "verdicts": {
+    "EQUAL": 5,
+    "ERROR": 11,
+    "NOT_EQUAL": 14
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 11,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 1.721,
+    "shuffle": 0.053
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "1507",
+    "1514"
+   ],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/european_football_2",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "european_football_2",
+   "run_id": "audit-fa26f81a-cce0-4423-814f-6c1c690ef447",
+   "audited": 51,
+   "verdicts": {
+    "EQUAL": 13,
+    "ERROR": 23,
+    "NOT_EQUAL": 15
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 23,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.023,
+    "questions": 9.506,
+    "shuffle": 3.135
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/financial",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "financial",
+   "run_id": "audit-91b4d389-5897-4df0-8417-7c6f3e046757",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 9,
+    "ERROR": 18,
+    "EQUAL": 3
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 18,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.01,
+    "questions": 25.136,
+    "shuffle": 0.03
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/formula_1",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "formula_1",
+   "run_id": "audit-a9fc8296-fc59-4760-a04f-d45621b64d4d",
+   "audited": 66,
+   "verdicts": {
+    "ERROR": 27,
+    "NOT_EQUAL": 27,
+    "EQUAL": 12
+   },
+   "smells_fired": 2,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 27,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.004,
+    "questions": 4.966,
+    "shuffle": 0.15
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/student_club",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "student_club",
+   "run_id": "audit-856da5a8-6a71-40a2-b306-8cbcd21e9060",
+   "audited": 48,
+   "verdicts": {
+    "EQUAL": 12,
+    "ERROR": 28,
+    "NOT_EQUAL": 8
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+     "multiplicity": 1,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 1
+    }
+   },
+   "errors": 28,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 0.055,
+    "shuffle": 0.073
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1435"
+   ],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/superhero",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "superhero",
+   "run_id": "audit-ceef14ee-7aab-4fc2-a493-981dcc90708e",
+   "audited": 52,
+   "verdicts": {
+    "ERROR": 35,
+    "EQUAL": 12,
+    "NOT_EQUAL": 5
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 35,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.665,
+    "shuffle": 0.013
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/thrombosis_prediction",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-b68452b6-171f-402e-b881-1718b15970bc",
+   "audited": 50,
+   "verdicts": {
+    "NOT_EQUAL": 21,
+    "EQUAL": 7,
+    "ERROR": 22
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 22,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.194,
+    "shuffle": 0.042
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/toxicology",
+   "benchmark": "minidev-sqlite",
+   "group": "mistralai-mixtral-8x7b-instru-4",
+   "run": "toxicology",
+   "run_id": "audit-2d4ec9d4-28e3-4b98-9d28-d020a587bb34",
+   "audited": 40,
+   "verdicts": {
+    "NOT_EQUAL": 10,
+    "ERROR": 21,
+    "EQUAL": 9
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 21,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 2.681,
+    "shuffle": 0.039
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "206"
+   ],
+   "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/california_schools",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "california_schools",
+   "run_id": "audit-78e008cd-53d7-4ce6-b3c9-46dc0b7a6391",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 17,
+    "EQUAL": 1,
+    "ERROR": 12
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 12,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.888,
+    "shuffle": 0.12
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/card_games",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "card_games",
+   "run_id": "audit-82fc97c5-4082-4d4e-9a7b-9963798f6328",
+   "audited": 52,
+   "verdicts": {
+    "NOT_EQUAL": 37,
+    "EQUAL": 9,
+    "ERROR": 6
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 5,
+    "by_mechanism": {
+     "multiplicity": 5,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 5
+    }
+   },
+   "errors": 6,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.047,
+    "questions": 27.232,
+    "shuffle": 1.465
+   },
+   "published_questions": 2,
+   "published_ids": [
+    "358",
+    "440"
+   ],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/codebase_community",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "codebase_community",
+   "run_id": "audit-2febf83d-7b33-4160-834c-006f1e33cbb2",
+   "audited": 49,
+   "verdicts": {
+    "NOT_EQUAL": 19,
+    "EQUAL": 17,
+    "ERROR": 13
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 13,
+   "timed_out": {
+    "gold": [
+     701
+    ],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.01,
+    "questions": 40.394,
+    "shuffle": 1.206
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/debit_card_specializing",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "debit_card_specializing",
+   "run_id": "audit-25310ec1-176a-493b-876d-056be8b8190b",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 16,
+    "ERROR": 8,
+    "EQUAL": 6
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 8,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.004,
+    "questions": 2.551,
+    "shuffle": 0.044
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1514"
+   ],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "european_football_2",
+   "run_id": "audit-15fea0db-f7ac-4bd6-b2ba-2161dc9c2d93",
+   "audited": 51,
+   "verdicts": {
+    "EQUAL": 21,
+    "NOT_EQUAL": 24,
+    "ERROR": 6
+   },
+   "smells_fired": 4,
+   "credited_but_not_equal": {
+    "total": 7,
+    "by_mechanism": {
+     "multiplicity": 7,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 7
+    }
+   },
+   "errors": 6,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.018,
+    "questions": 10.91,
+    "shuffle": 3.037
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/financial",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "financial",
+   "run_id": "audit-e68aafff-7739-4280-b3dc-d30f0144b6d4",
+   "audited": 30,
+   "verdicts": {
+    "NOT_EQUAL": 13,
+    "ERROR": 13,
+    "EQUAL": 4
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 13,
+   "timed_out": {
+    "gold": [],
+    "prediction": [
+     138
+    ]
+   },
+   "elapsed_seconds": {
+    "fixture": 0.01,
+    "questions": 31.889,
+    "shuffle": 0.028
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/formula_1",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "formula_1",
+   "run_id": "audit-30bc63cf-2630-4cad-b46a-51686307e05f",
+   "audited": 66,
+   "verdicts": {
+    "NOT_EQUAL": 33,
+    "EQUAL": 11,
+    "ERROR": 22
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 3,
+    "by_mechanism": {
+     "multiplicity": 3,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 3
+    }
+   },
+   "errors": 22,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.004,
+    "questions": 6.055,
+    "shuffle": 0.135
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/student_club",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "student_club",
+   "run_id": "audit-6a653158-9488-4507-89d0-e5883e452240",
+   "audited": 48,
+   "verdicts": {
+    "NOT_EQUAL": 17,
+    "EQUAL": 21,
+    "ERROR": 10
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 10,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.082,
+    "shuffle": 0.065
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "1435"
+   ],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/superhero",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "superhero",
+   "run_id": "audit-eca4c25d-8d0b-48b4-baef-a8c0f13a5638",
+   "audited": 52,
+   "verdicts": {
+    "EQUAL": 30,
+    "NOT_EQUAL": 15,
+    "ERROR": 7
+   },
+   "smells_fired": 3,
+   "credited_but_not_equal": {
+    "total": 0,
+    "by_mechanism": {
+     "multiplicity": 0,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 0
+    }
+   },
+   "errors": 7,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.589,
+    "shuffle": 0.01
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/thrombosis_prediction",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "thrombosis_prediction",
+   "run_id": "audit-ded23b77-3c17-4553-8fd1-5ced98c4920f",
+   "audited": 50,
+   "verdicts": {
+    "ERROR": 24,
+    "NOT_EQUAL": 22,
+    "EQUAL": 4
+   },
+   "smells_fired": 1,
+   "credited_but_not_equal": {
+    "total": 4,
+    "by_mechanism": {
+     "multiplicity": 4,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 4
+    }
+   },
+   "errors": 24,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 0.291,
+    "shuffle": 0.043
+   },
+   "published_questions": 0,
+   "published_ids": [],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/toxicology",
+   "benchmark": "minidev-sqlite",
+   "group": "phi-3-medium-128k-instruct-1",
+   "run": "toxicology",
+   "run_id": "audit-0ffdadee-5674-483e-9046-75f1f64a26ae",
+   "audited": 40,
+   "verdicts": {
+    "EQUAL": 7,
+    "NOT_EQUAL": 22,
+    "ERROR": 11
+   },
+   "smells_fired": 0,
+   "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+     "multiplicity": 2,
+     "type": 0,
+     "order": 0,
+     "truncation": 0,
+     "other": 0
+    },
+    "by_test_suite_ex": {
+     "1": 0,
+     "0": 2
+    }
+   },
+   "errors": 11,
+   "timed_out": {
+    "gold": [],
+    "prediction": []
+   },
+   "elapsed_seconds": {
+    "fixture": 0.001,
+    "questions": 13.022,
+    "shuffle": 0.046
+   },
+   "published_questions": 1,
+   "published_ids": [
+    "213"
+   ],
+   "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
+  }
+ ]
+}

@@ -1,0 +1,1503 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-7912134a-3f9b-4113-a6b6-ebaf8b6a2bc0",
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "effective_database_role": "auditor",
+  "session_settings": {
+    "engine": "postgresql",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "parser": {
+    "validator": "audit:libpg_query-parse",
+    "postgast": "0.1.0",
+    "grammar_version": 170007
+  },
+  "question_set": {
+    "path": "data/questions/mini_dev_postgresql.json",
+    "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "date": "2024-06-19",
+    "entries": 500,
+    "audited": 498,
+    "duplicate_ids": [
+      137,
+      138
+    ],
+    "ids": []
+  },
+  "predictions": {
+    "path": "data/preds-pg/predict_mini_dev_gpt-4-turbo_postgresql.json",
+    "digest": "sha256:428fd115a67a76d6312ea205aab64764b5a09444587588eda442a94cfee65211",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4-turbo_postgresql.json",
+    "date": "2024-06-19",
+    "keyed_by": "position",
+    "statements": 500,
+    "positions_unused": [
+      487,
+      488
+    ]
+  },
+  "verdicts": {
+    "EQUAL": 154,
+    "NOT_EQUAL": 216,
+    "ERROR": 128
+  },
+  "smells": {
+    "ordering-over-numeric-text": 1,
+    "arbitrary-cut": 12,
+    "not-a-function-of-the-data": 12,
+    "float-aggregate-order": 5,
+    "direction-against-question": 0
+  },
+  "smells_fired": 30,
+  "credited_but_not_equal": {
+    "total": 27,
+    "by_mechanism": {
+      "multiplicity": 22,
+      "type": 5,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 5,
+      "0": 22
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "runs/minidev-pg/gpt-4-turbo/fixture.json",
+    "source": {
+      "path": "data/minidev/BIRD_dev.sql",
+      "digest": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec",
+      "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV_postgresql/BIRD_dev.sql",
+      "date": "2024-06-13"
+    },
+    "schema_digest": "sha256:25aabd5763d7a18135a8741194c4a704141761bd0c7fdbfbf3f7c2bc9e0bf08c",
+    "row_counts": {
+      "public.account": 4500,
+      "public.alignment": 4,
+      "public.atom": 9111,
+      "public.attendance": 326,
+      "public.attribute": 6,
+      "public.badges": 79851,
+      "public.bond": 9156,
+      "public.budget": 52,
+      "public.card": 892,
+      "public.cards": 56822,
+      "public.circuits": 72,
+      "public.client": 5369,
+      "public.colour": 35,
+      "public.comments": 174285,
+      "public.connected": 18312,
+      "public.constructorresults": 11082,
+      "public.constructors": 208,
+      "public.constructorstandings": 11836,
+      "public.country": 11,
+      "public.customers": 32461,
+      "public.disp": 5369,
+      "public.district": 77,
+      "public.drivers": 840,
+      "public.driverstandings": 31578,
+      "public.event": 42,
+      "public.examination": 106,
+      "public.expense": 32,
+      "public.foreign_data": 229186,
+      "public.frpm": 9986,
+      "public.gasstations": 5716,
+      "public.gender": 3,
+      "public.hero_attribute": 3738,
+      "public.hero_power": 5825,
+      "public.income": 36,
+      "public.laboratory": 13908,
+      "public.laptimes": 400524,
+      "public.league": 11,
+      "public.legalities": 427907,
+      "public.loan": 682,
+      "public.major": 113,
+      "public.match": 25979,
+      "public.member": 33,
+      "public.molecule": 343,
+      "public.order": 6471,
+      "public.patient": 1238,
+      "public.pitstops": 5815,
+      "public.player": 11060,
+      "public.player_attributes": 183978,
+      "public.posthistory": 303155,
+      "public.postlinks": 11102,
+      "public.posts": 91966,
+      "public.products": 591,
+      "public.publisher": 25,
+      "public.qualifying": 6967,
+      "public.race": 61,
+      "public.races": 954,
+      "public.results": 23179,
+      "public.rulings": 87769,
+      "public.satscores": 2269,
+      "public.schools": 17686,
+      "public.seasons": 68,
+      "public.set_translations": 1210,
+      "public.sets": 551,
+      "public.status": 134,
+      "public.superhero": 750,
+      "public.superpower": 167,
+      "public.tags": 1032,
+      "public.team": 299,
+      "public.team_attributes": 1458,
+      "public.trans": 1056320,
+      "public.transactions_1k": 1000,
+      "public.users": 40325,
+      "public.votes": 38930,
+      "public.yearmonth": 383282,
+      "public.zip_code": 41877
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "customers",
+      "yearmonth",
+      "gasstations",
+      "products",
+      "transactions_1k",
+      "member",
+      "major",
+      "event",
+      "attendance",
+      "income",
+      "zip_code",
+      "expense",
+      "budget",
+      "patient",
+      "laboratory",
+      "examination",
+      "match",
+      "league",
+      "team",
+      "team_attributes",
+      "player_attributes",
+      "player",
+      "country",
+      "qualifying",
+      "drivers",
+      "circuits",
+      "races",
+      "results",
+      "laptimes",
+      "constructorresults",
+      "constructors",
+      "seasons",
+      "driverstandings",
+      "constructorstandings",
+      "pitstops",
+      "superpower",
+      "superhero",
+      "hero_power",
+      "status",
+      "colour",
+      "publisher",
+      "attribute",
+      "hero_attribute",
+      "race",
+      "gender",
+      "alignment",
+      "users",
+      "posts",
+      "tags",
+      "comments",
+      "votes",
+      "posthistory",
+      "badges",
+      "postlinks",
+      "cards",
+      "legalities",
+      "rulings",
+      "foreign_data",
+      "sets",
+      "set_translations",
+      "bond",
+      "atom",
+      "molecule",
+      "connected",
+      "satscores",
+      "schools",
+      "frpm",
+      "district",
+      "account",
+      "client",
+      "disp",
+      "loan",
+      "trans",
+      "order",
+      "card"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {
+    "customers": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.424716+00",
+      "n_mod_since_analyze": 0
+    },
+    "yearmonth": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:53.2103+00",
+      "n_mod_since_analyze": 0
+    },
+    "gasstations": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:24.38603+00",
+      "n_mod_since_analyze": 0
+    },
+    "products": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.324323+00",
+      "n_mod_since_analyze": 0
+    },
+    "transactions_1k": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.57727+00",
+      "n_mod_since_analyze": 0
+    },
+    "member": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 33
+    },
+    "major": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.215199+00",
+      "n_mod_since_analyze": 0
+    },
+    "event": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 42
+    },
+    "attendance": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.51989+00",
+      "n_mod_since_analyze": 0
+    },
+    "income": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 36
+    },
+    "zip_code": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:53.56429+00",
+      "n_mod_since_analyze": 0
+    },
+    "expense": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 32
+    },
+    "budget": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 52
+    },
+    "patient": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.997559+00",
+      "n_mod_since_analyze": 0
+    },
+    "laboratory": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:24.536007+00",
+      "n_mod_since_analyze": 0
+    },
+    "examination": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:17.016088+00",
+      "n_mod_since_analyze": 0
+    },
+    "match": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:30.556119+00",
+      "n_mod_since_analyze": 0
+    },
+    "league": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 11
+    },
+    "team": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.569042+00",
+      "n_mod_since_analyze": 0
+    },
+    "team_attributes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:47.099723+00",
+      "n_mod_since_analyze": 0
+    },
+    "player_attributes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:47.072684+00",
+      "n_mod_since_analyze": 0
+    },
+    "player": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.607944+00",
+      "n_mod_since_analyze": 0
+    },
+    "country": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 11
+    },
+    "qualifying": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.323203+00",
+      "n_mod_since_analyze": 0
+    },
+    "drivers": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:17.015092+00",
+      "n_mod_since_analyze": 0
+    },
+    "circuits": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.766783+00",
+      "n_mod_since_analyze": 0
+    },
+    "races": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:43.698656+00",
+      "n_mod_since_analyze": 0
+    },
+    "results": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.521079+00",
+      "n_mod_since_analyze": 0
+    },
+    "laptimes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:26.095384+00",
+      "n_mod_since_analyze": 0
+    },
+    "constructorresults": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.019426+00",
+      "n_mod_since_analyze": 0
+    },
+    "constructors": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:10.045536+00",
+      "n_mod_since_analyze": 0
+    },
+    "seasons": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.572102+00",
+      "n_mod_since_analyze": 0
+    },
+    "driverstandings": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.213972+00",
+      "n_mod_since_analyze": 0
+    },
+    "constructorstandings": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.075421+00",
+      "n_mod_since_analyze": 0
+    },
+    "pitstops": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:30.59473+00",
+      "n_mod_since_analyze": 0
+    },
+    "superpower": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.563746+00",
+      "n_mod_since_analyze": 0
+    },
+    "superhero": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.518866+00",
+      "n_mod_since_analyze": 0
+    },
+    "hero_power": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.99269+00",
+      "n_mod_since_analyze": 0
+    },
+    "status": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:47.073755+00",
+      "n_mod_since_analyze": 0
+    },
+    "colour": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 35
+    },
+    "publisher": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 25
+    },
+    "attribute": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 6
+    },
+    "hero_attribute": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.977203+00",
+      "n_mod_since_analyze": 0
+    },
+    "race": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.324734+00",
+      "n_mod_since_analyze": 0
+    },
+    "gender": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 3
+    },
+    "alignment": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 4
+    },
+    "users": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:53.980066+00",
+      "n_mod_since_analyze": 0
+    },
+    "posts": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.214641+00",
+      "n_mod_since_analyze": 0
+    },
+    "tags": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.571344+00",
+      "n_mod_since_analyze": 0
+    },
+    "comments": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.355095+00",
+      "n_mod_since_analyze": 0
+    },
+    "votes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:53.353415+00",
+      "n_mod_since_analyze": 0
+    },
+    "posthistory": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:38.302835+00",
+      "n_mod_since_analyze": 0
+    },
+    "badges": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.766008+00",
+      "n_mod_since_analyze": 0
+    },
+    "postlinks": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.257312+00",
+      "n_mod_since_analyze": 0
+    },
+    "cards": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:16.814042+00",
+      "n_mod_since_analyze": 0
+    },
+    "legalities": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.765085+00",
+      "n_mod_since_analyze": 0
+    },
+    "rulings": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:43.694404+00",
+      "n_mod_since_analyze": 0
+    },
+    "foreign_data": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:24.359437+00",
+      "n_mod_since_analyze": 0
+    },
+    "sets": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:52.284481+00",
+      "n_mod_since_analyze": 0
+    },
+    "set_translations": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.217612+00",
+      "n_mod_since_analyze": 0
+    },
+    "bond": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.802916+00",
+      "n_mod_since_analyze": 0
+    },
+    "atom": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:10.04421+00",
+      "n_mod_since_analyze": 0
+    },
+    "molecule": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:30.558409+00",
+      "n_mod_since_analyze": 0
+    },
+    "connected": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:17.010277+00",
+      "n_mod_since_analyze": 0
+    },
+    "satscores": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.562503+00",
+      "n_mod_since_analyze": 0
+    },
+    "schools": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:52.240861+00",
+      "n_mod_since_analyze": 0
+    },
+    "frpm": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.964858+00",
+      "n_mod_since_analyze": 0
+    },
+    "district": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:24.361355+00",
+      "n_mod_since_analyze": 0
+    },
+    "account": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:16.907324+00",
+      "n_mod_since_analyze": 0
+    },
+    "client": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.822716+00",
+      "n_mod_since_analyze": 0
+    },
+    "disp": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:17.037279+00",
+      "n_mod_since_analyze": 0
+    },
+    "loan": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.994147+00",
+      "n_mod_since_analyze": 0
+    },
+    "trans": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.531334+00",
+      "n_mod_since_analyze": 0
+    },
+    "order": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.516523+00",
+      "n_mod_since_analyze": 0
+    },
+    "card": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.803807+00",
+      "n_mod_since_analyze": 0
+    }
+  },
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "attestql_scratch",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "account",
+      "alignment",
+      "atom",
+      "attendance",
+      "attribute",
+      "badges",
+      "bond",
+      "budget",
+      "card",
+      "cards",
+      "circuits",
+      "client",
+      "colour",
+      "comments",
+      "connected",
+      "constructorresults",
+      "constructors",
+      "constructorstandings",
+      "country",
+      "customers",
+      "disp",
+      "district",
+      "drivers",
+      "driverstandings",
+      "event",
+      "examination",
+      "expense",
+      "foreign_data",
+      "frpm",
+      "gasstations",
+      "gender",
+      "hero_attribute",
+      "hero_power",
+      "income",
+      "laboratory",
+      "league",
+      "loan",
+      "major",
+      "match",
+      "member",
+      "molecule",
+      "order",
+      "patient",
+      "pitstops",
+      "player",
+      "player_attributes",
+      "postlinks",
+      "posts",
+      "products",
+      "publisher",
+      "qualifying",
+      "race",
+      "races",
+      "results",
+      "rulings",
+      "satscores",
+      "schools",
+      "seasons",
+      "set_translations",
+      "sets",
+      "status",
+      "superhero",
+      "superpower",
+      "tags",
+      "team",
+      "team_attributes",
+      "transactions_1k",
+      "users",
+      "votes",
+      "zip_code"
+    ],
+    "skipped": {
+      "laptimes": 400524,
+      "legalities": 427907,
+      "posthistory": 303155,
+      "trans": 1056320,
+      "yearmonth": 383282
+    },
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 120,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "runs/minidev-pg/gpt-4-turbo",
+    "serialization": "attestql/audit/2",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2"
+  },
+  "data_as_of": "2026-09-08T05:22:38.535771+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.258,
+    "questions": 37.185,
+    "shuffle": 5.64
+  },
+  "errors": [
+    {
+      "question_id": 1481,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 1482,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 1490,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function round(double precision, integer) does not exist LINE 1: SELECT ROUND( ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 1493,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 1505,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"customerid\" is ambiguous LINE 1: SELECT COUNT(DISTINCT customerid) ^"
+    },
+    {
+      "question_id": 1525,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"customerid\" is ambiguous LINE 1: SELECT COUNT(DISTINCT customerid) FILTER (WHERE currency = '... ^"
+    },
+    {
+      "question_id": 1526,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 1531,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"customerid\" is ambiguous LINE 1: SELECT customerid, currency, SUM(price) AS total_spent, (SUM... ^"
+    },
+    {
+      "question_id": 1533,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: division by zero"
+    },
+    {
+      "question_id": 1317,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"s\""
+    },
+    {
+      "question_id": 1338,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column expense.link_to_event does not exist LINE 3: JOIN event ON expense.link_to_event = event.event_id ^"
+    },
+    {
+      "question_id": 1359,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function divide(numeric, numeric) does not exist LINE 1: SELECT DIVIDE( ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 1390,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"link_to_event\" does not exist LINE 1: SELECT (SELECT SUM(cost) FROM expense WHERE link_to_event IN... ^"
+    },
+    {
+      "question_id": 1153,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"disease\" does not exist LINE 1: SELECT disease ^"
+    },
+    {
+      "question_id": 1155,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Examination ON Patient.patient_id = Examination.patient... ^"
+    },
+    {
+      "question_id": 1156,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.ID = Examination.Patient_ID ^"
+    },
+    {
+      "question_id": 1157,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.ID = Examination.patient_id ^"
+    },
+    {
+      "question_id": 1162,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patientid does not exist LINE 3: JOIN Examination ON Patient.PatientID = Examination.PatientI... ^"
+    },
+    {
+      "question_id": 1164,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Examination ON Patient.patient_id = Examination.patient... ^"
+    },
+    {
+      "question_id": 1166,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Patient ON Examination.patient_id = Patient.id ^"
+    },
+    {
+      "question_id": 1168,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column laboratory.examination_id does not exist LINE 4: JOIN Examination ON Laboratory.examination_id = Examination.... ^"
+    },
+    {
+      "question_id": 1169,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 4: JOIN Examination ON Patient.patient_id = Examination.patient... ^"
+    },
+    {
+      "question_id": 1171,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Examination ON Patient.Patient_ID = Examination.Patient... ^"
+    },
+    {
+      "question_id": 1175,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.Patient ID does not exist LINE 4: JOIN Examination ON Patient.\"Patient ID\" = Examination.\"Pati... ^"
+    },
+    {
+      "question_id": 1179,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column laboratory.examination_id does not exist LINE 3: JOIN Examination ON Laboratory.Examination_ID = Examination.... ^"
+    },
+    {
+      "question_id": 1185,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"ELSE\""
+    },
+    {
+      "question_id": 1187,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patientid does not exist LINE 3: JOIN Examination ON Patient.ID = Examination.PatientID ^"
+    },
+    {
+      "question_id": 1189,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"`\""
+    },
+    {
+      "question_id": 1192,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Examination ON Patient.patient_id = Examination.patient... ^"
+    },
+    {
+      "question_id": 1195,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Examination ON Patient.patient_id = Examination.patient... ^"
+    },
+    {
+      "question_id": 1198,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Examination ON Patient.Patient_ID = Examination.Patient... ^"
+    },
+    {
+      "question_id": 1201,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Examination ON Patient.patient_id = Examination.patient... ^"
+    },
+    {
+      "question_id": 1205,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"sex\" does not exist LINE 2: WHEN SEX = 'M' AND UA > 8.0 THEN 'Yes' ^"
+    },
+    {
+      "question_id": 1208,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.ID = Examination.Patient_ID ^"
+    },
+    {
+      "question_id": 1209,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.id = Examination.patient_id ^"
+    },
+    {
+      "question_id": 1220,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column laboratory.patient_id does not exist LINE 3: JOIN Laboratory ON Patient.id = Laboratory.patient_id ^"
+    },
+    {
+      "question_id": 1225,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Patient ON Examination.patient_id = Patient.id ^"
+    },
+    {
+      "question_id": 1227,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.ID = Examination.patient_id ^"
+    },
+    {
+      "question_id": 1229,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.id = Examination.patient_id ^"
+    },
+    {
+      "question_id": 1231,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.id = Examination.patient_id ^"
+    },
+    {
+      "question_id": 1232,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.ID = Examination.Patient_ID ^"
+    },
+    {
+      "question_id": 1235,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 5: JOIN Examination ON Patient.ID = Examination.Patient_ID ^"
+    },
+    {
+      "question_id": 1238,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patientid does not exist LINE 3: JOIN Examination ON Patient.ID = Examination.PatientID ^"
+    },
+    {
+      "question_id": 1239,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column l.patient_id does not exist LINE 3: JOIN Laboratory L ON P.ID = L.Patient_ID ^"
+    },
+    {
+      "question_id": 1242,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patientid does not exist LINE 3: JOIN Examination ON Patient.PatientID = Examination.PatientI... ^"
+    },
+    {
+      "question_id": 1243,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patientid does not exist LINE 12: JOIN Examination ON Patient.PatientID = Examination.PatientI... ^"
+    },
+    {
+      "question_id": 1247,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patient_id does not exist LINE 3: JOIN Examination e ON p.patient_id = e.patient_id ^"
+    },
+    {
+      "question_id": 1251,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Laboratory ON Patient.patient_id = Laboratory.patient_i... ^"
+    },
+    {
+      "question_id": 1252,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patient_id does not exist LINE 3: JOIN Laboratory l ON p.patient_id = l.patient_id ^"
+    },
+    {
+      "question_id": 1254,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Examination ON Patient.patient_id = Examination.patient... ^"
+    },
+    {
+      "question_id": 1255,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patientid does not exist LINE 3: JOIN Laboratory ON Examination.PatientID = Laboratory.Patien... ^"
+    },
+    {
+      "question_id": 1256,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.id = Examination.patient_id ^"
+    },
+    {
+      "question_id": 1257,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Laboratory ON Patient.patient_id = Laboratory.patient_i... ^"
+    },
+    {
+      "question_id": 1265,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patient_id does not exist LINE 3: JOIN Examination ON Patient.patient_id = Examination.patient... ^"
+    },
+    {
+      "question_id": 1267,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patient_id does not exist LINE 3: JOIN Examination e ON p.patient_id = e.patient_id ^"
+    },
+    {
+      "question_id": 1270,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column patient.patientid does not exist LINE 3: JOIN Examination ON Patient.PatientID = Examination.PatientI... ^"
+    },
+    {
+      "question_id": 1275,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.id = Examination.patient_id ^"
+    },
+    {
+      "question_id": 1281,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patient_id does not exist LINE 3: JOIN Examination ON Patient.id = Examination.patient_id ^"
+    },
+    {
+      "question_id": 1302,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patient_id does not exist LINE 3: JOIN Examination e ON p.patient_id = e.patient_id ^"
+    },
+    {
+      "question_id": 1031,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column pa.player_id does not exist LINE 3: JOIN Player_Attributes pa ON p.id = pa.player_id ^"
+    },
+    {
+      "question_id": 1036,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function strftime(unknown, text) does not exist LINE 5: WHERE strftime('%Y', Team_Attributes.date) = '2012' ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 1037,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function year(text) does not exist LINE 9: WHERE YEAR(birthday) BETWEEN 1987 AND 1992 ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 1048,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function strftime(unknown, text) does not exist LINE 5: AND strftime('%Y', Player_Attributes.date) = '2011' ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 1058,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_id\" does not exist LINE 1: SELECT player_id, AVG(finishing) AS avg_finishing_rate ^"
+    },
+    {
+      "question_id": 1068,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column pa.player_id does not exist LINE 3: JOIN Player_Attributes pa ON p.id = pa.player_id ^"
+    },
+    {
+      "question_id": 1076,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_name\" does not exist LINE 1: SELECT (SUM(CASE WHEN player_name = 'Abdou Diallo' THEN ball... ^"
+    },
+    {
+      "question_id": 1079,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_id\" does not exist LINE 1: SELECT player_id, height FROM Player_Attributes ORDER BY hei... ^"
+    },
+    {
+      "question_id": 1084,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_id\" does not exist LINE 1: SELECT COUNT(DISTINCT player_id) ^"
+    },
+    {
+      "question_id": 1092,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"league_name\" does not exist LINE 1: SELECT league_name ^"
+    },
+    {
+      "question_id": 1094,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_name\" does not exist LINE 2: ...ELECT overall_rating FROM Player_Attributes WHERE player_nam... ^"
+    },
+    {
+      "question_id": 1098,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"ta.chancecreationpassingclass\" must appear in the GROUP BY clause or be used in an aggregate function LINE 2: ta.chanceCreationPassingClass AS classification ^"
+    },
+    {
+      "question_id": 1102,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column player.name does not exist LINE 1: SELECT Player.name ^"
+    },
+    {
+      "question_id": 1113,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"defence_aggression_class\" does not exist LINE 1: SELECT defence_aggression_class ^ HINT: Perhaps you meant to reference the column \"team_attributes.defenceaggressionclass\"."
+    },
+    {
+      "question_id": 1114,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column player_attributes.player_id does not exist LINE 3: JOIN Player ON Player_Attributes.player_id = Player.player_i... ^"
+    },
+    {
+      "question_id": 1115,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_name\" does not exist LINE 2: ...ELECT overall_rating FROM Player_Attributes WHERE player_nam... ^"
+    },
+    {
+      "question_id": 1116,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column player.player_id does not exist LINE 3: JOIN Player_Attributes ON Player.player_id = Player_Attribut... ^"
+    },
+    {
+      "question_id": 1134,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_id\" does not exist LINE 1: ...LECT (SELECT jumping FROM Player_Attributes WHERE player_id ... ^"
+    },
+    {
+      "question_id": 1135,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_id\" does not exist LINE 1: SELECT player_id ^"
+    },
+    {
+      "question_id": 1136,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.player_id does not exist LINE 3: JOIN Player_Attributes pa ON p.player_id = pa.player_id ^"
+    },
+    {
+      "question_id": 1144,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: more than one row returned by a subquery used as an expression"
+    },
+    {
+      "question_id": 1148,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column player_attributes.player_id does not exist LINE 3: JOIN Player_Attributes ON Player.id = Player_Attributes.play... ^"
+    },
+    {
+      "question_id": 880,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"AS\""
+    },
+    {
+      "question_id": 881,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"time\" is ambiguous LINE 1: SELECT COUNT(driverid) FILTER (WHERE time IS NOT NULL) * 100... ^"
+    },
+    {
+      "question_id": 898,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function year(timestamp with time zone) does not exist LINE 1: SELECT MIN(YEAR(CURRENT_TIMESTAMP) - YEAR(dob)) AS age, fore... ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 909,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"country\" does not exist LINE 1: SELECT (COUNT(*) FILTER (WHERE country = 'Germany' AND name ... ^"
+    },
+    {
+      "question_id": 915,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"country\" does not exist LINE 1: SELECT country ^"
+    },
+    {
+      "question_id": 937,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"time\" is ambiguous LINE 1: SELECT time FROM results ^"
+    },
+    {
+      "question_id": 944,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: interval / interval LINE 2: ... INTERVAL) - MIN(CAST(results.time AS INTERVAL))) / MIN(CAST... ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 954,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function round(double precision, integer) does not exist LINE 1: SELECT ROUND( ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 962,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column r.date does not exist LINE 5: ...TINCT d.driverid) FILTER (WHERE EXTRACT(YEAR FROM r.date) BE... ^"
+    },
+    {
+      "question_id": 981,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: more than one row returned by a subquery used as an expression"
+    },
+    {
+      "question_id": 988,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function avg(text) does not exist LINE 1: ...vers.driverid, drivers.forename, drivers.surname, AVG(pitSto... ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 994,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: missing FROM-clause entry for table \"constructor\" LINE 1: SELECT constructor.name, constructor.nationality, SUM(result... ^"
+    },
+    {
+      "question_id": 743,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 772,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: invalid reference to FROM-clause entry for table \"colour\" LINE 1: SELECT colour.eye_colour AS \"Eye Colour\", ^ HINT: Perhaps you meant to reference the table alias \"eye_colour\"."
+    },
+    {
+      "question_id": 633,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"id\" is ambiguous LINE 1: SELECT id FROM posts ^"
+    },
+    {
+      "question_id": 634,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: aggregate function calls cannot be nested LINE 1: SELECT MAX(SUM(viewcount)) AS max_views, ownerdisplayname ^"
+    },
+    {
+      "question_id": 669,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"creationdate\" is ambiguous LINE 1: SELECT MIN(creationdate) AS first_vote_date ^"
+    },
+    {
+      "question_id": 701,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 704,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \",\""
+    },
+    {
+      "question_id": 415,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: division by zero"
+    },
+    {
+      "question_id": 469,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"mtgocode\" does not exist LINE 5: AND mtgocode IS NOT NULL ^ HINT: Perhaps you meant to reference the column \"cards.mtgoid\"."
+    },
+    {
+      "question_id": 483,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column rulings.language does not exist LINE 5: WHERE sets.name = 'Coldsnap' AND rulings.language = 'Italian... ^"
+    },
+    {
+      "question_id": 518,
+      "side": "prediction",
+      "step": "statement",
+      "message": "no canonical rendering is stated for a value of type list"
+    },
+    {
+      "question_id": 200,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: unterminated quoted string at or near \"'\""
+    },
+    {
+      "question_id": 218,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 219,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 228,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function round(double precision, integer) does not exist LINE 1: SELECT ROUND( ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 248,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: unterminated quoted string at or near \"'\""
+    },
+    {
+      "question_id": 253,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: unterminated quoted string at or near \"'\""
+    },
+    {
+      "question_id": 260,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: unterminated quoted string at or near \"'\""
+    },
+    {
+      "question_id": 12,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"%\""
+    },
+    {
+      "question_id": 24,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column s.school_name does not exist LINE 1: SELECT s.school_name, s.district_name, s.county_name ^"
+    },
+    {
+      "question_id": 26,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"`\""
+    },
+    {
+      "question_id": 28,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"`\""
+    },
+    {
+      "question_id": 31,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"`\""
+    },
+    {
+      "question_id": 32,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"soc\" does not exist LINE 3: WHERE \"soc\" = '66' AND \"gsoffered\" LIKE '%1-12%' ^"
+    },
+    {
+      "question_id": 36,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column s.adminfname1 does not exist LINE 1: SELECT s.adminfname1 || ' ' || s.admlname1 AS Admin1FullName... ^ HINT: Perhaps you meant to reference the column \"s.admfname1\"."
+    },
+    {
+      "question_id": 45,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column s.sname does not exist LINE 1: SELECT s.sname AS School_Name, ^ HINT: Perhaps you meant to reference the column \"s.state\"."
+    },
+    {
+      "question_id": 46,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"enrollment\" does not exist LINE 1: SELECT school, enrollment ^"
+    },
+    {
+      "question_id": 62,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"`\""
+    },
+    {
+      "question_id": 72,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"5\""
+    },
+    {
+      "question_id": 77,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"`\""
+    },
+    {
+      "question_id": 82,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"FROM\""
+    },
+    {
+      "question_id": 94,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"client.birth_date\" must appear in the GROUP BY clause or be used in an aggregate function LINE 8: ORDER BY client.birth_date DESC, district.a11 ASC ^"
+    },
+    {
+      "question_id": 115,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 116,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 129,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: date ~~ unknown LINE 7: AND t.date LIKE '1996-01%' ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    }
+  ],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 1
+}

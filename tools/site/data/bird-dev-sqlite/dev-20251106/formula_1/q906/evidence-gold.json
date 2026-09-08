@@ -1,0 +1,110 @@
+{
+  "question_as_asked": "Which was Lewis Hamilton first race? What was his points recorded for his first race event?",
+  "question": {
+    "question_id": "906",
+    "question_set": "dev_20251106-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07)",
+    "question_text": "Which was Lewis Hamilton first race? What was his points recorded for his first race event?",
+    "evidence_text": "first race refers to min(Year); Lewis Hamiltonrefers to the full name of the driver; Full name of the driver refers to drivers.forename and drivers.surname;"
+  },
+  "question_set_version": "sha256:ffd8018378ddb1a8794753e0a31cfc81862ff7318a5184c22f3dc4ce03a03feb",
+  "statement_source": {
+    "path": "data/questions/dev_20251106-00000-of-00001.json",
+    "digest": "sha256:ffd8018378ddb1a8794753e0a31cfc81862ff7318a5184c22f3dc4ce03a03feb",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07)",
+    "date": "2026-01-18T08:51:02Z"
+  },
+  "executed_sql": "SELECT T1.name, T2.points FROM races AS T1 INNER JOIN driverStandings AS T2 ON T2.raceId = T1.raceId INNER JOIN drivers AS T3 ON T3.driverId = T2.driverId WHERE T3.forename = 'Lewis' AND T3.surname = 'Hamilton' ORDER BY T1.year ASC LIMIT 1",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:sqlglot-sqlite-parse",
+  "effective_database_role": "file",
+  "backend_identity_at_checkout": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/formula_1/formula_1.sqlite | size=22360064",
+  "session_settings_in_force": {
+    "engine": "sqlite",
+    "time_zone": null,
+    "date_style": null,
+    "interval_style": null,
+    "extra_float_digits": null,
+    "database_collation": null,
+    "work_mem": null,
+    "hash_mem_multiplier": null,
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "name",
+        "declared_type": "TEXT"
+      },
+      {
+        "name": "points",
+        "declared_type": "REAL"
+      }
+    ],
+    "row_count": 1,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "Australian Grand Prix"
+        },
+        {
+          "type": "dec",
+          "value": "6.0"
+        }
+      ]
+    ],
+    "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/formula_1/formula_1.sqlite | size=22360064",
+    "statement_timeout_ms": 30000
+  },
+  "row_count": 1,
+  "canonical_ordering": [
+    {
+      "column": "T1.year",
+      "descending": false
+    }
+  ],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-ORD",
+  "fixture": {
+    "schema_digest": "sha256:67c56a3c07442f2d94a088f0a1ccd1c503a9e93d5bb81bb4cd0a0e0537e3c1e5",
+    "row_counts": {
+      "main.driverStandings": 31578,
+      "main.drivers": 840,
+      "main.races": 976
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:17185981cd747f6cdc374cb02a6096db3130e6ec2ddc582fe1686a28fb4c4c8a"
+  },
+  "data_as_of": "2026-09-08T04:57:31.494463+00:00",
+  "executed_at": "2026-09-08T04:57:33.984302+00:00",
+  "run_id": "audit-12a6eeae-04a4-45ea-866b-f75095ba654b",
+  "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/formula_1/formula_1.sqlite | size=22360064 under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
+  "result_hash": "sha256:972af0b8ff1f4947ddd04a73f352f7e5ca4d34807b0d5e9d32c2bb7fa3fd63f6",
+  "record_hash": "sha256:559e282ad98596315598975d2ff62f46a628142ba13fa0d9dc6c9f95b5f077b0"
+}

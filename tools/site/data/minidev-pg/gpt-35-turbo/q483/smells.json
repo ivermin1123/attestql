@@ -1,0 +1,233 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "reason": "the statement states no LIMIT"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:fd3d7da33c053ac1630da93a664795510a4016a8153508d18d6e3ad68f20f38c",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "text",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 149,
+          "truncated": false,
+          "rows_shown": 10,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": ""
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "{1}, Rivela X carte bianche dalla tua mano, Sacrifica la Martire della Sabbia: Guadagni per tre volte X punti vita."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "{1}, Rivela X carte nere dalla tua mano, Sacrifica la Martire delle Ossa: Rimuovi dal gioco fino a X carte bersaglio presenti in un singolo cimitero."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "{1}, Rivela X carte verdi dalla tua mano, Sacrifica la Martire delle Spore: La creatura bersaglio prende +X/+X fino alla fine del turno."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "{1}, Sacrifica una creatura: Guadagni 2 punti vita."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "{1}, {T}: Neutralizza un'abilità attivata bersaglio Gioca questa abilità solo se controlli almeno quattro permanenti neve. (Le abilità di mana non possono essere scelte come bersaglio.)"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "{1}, {T}: TAPpa o STAPpa un permanente bersaglio. Gioca questa abilità solo se controlli almeno quattro permanenti neve."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "{2}, Rivela X carte blu dalla tua mano, Sacrifica la Martire del Gelo: Neutralizza una magia bersaglio a meno che il suo controllore spenda {X}."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "{2}, Rivela X carte rosse dalla tua mano, Sacrifica la Martire delle Ceneri: La Martire delle Ceneri infligge X danni a ogni creatura senza volare."
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "{2}{S}: La creatura neve bersaglio guadagna attacco improvviso fino alla fine del turno. ({S} può essere pagato con un mana da un permanente neve.)"
+              }
+            ]
+          ],
+          "result_hash": "sha256:fd3d7da33c053ac1630da93a664795510a4016a8153508d18d6e3ad68f20f38c"
+        },
+        "planner_statistics": {
+          "sets": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:52.284481+00",
+            "n_mod_since_analyze": 0
+          },
+          "foreign_data": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:24.359437+00",
+            "n_mod_since_analyze": 0
+          },
+          "cards": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:16.814042+00",
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "sets",
+            "foreign_data",
+            "cards"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:16781557b7ca1f95d4526e7ee8060b678a658eff464dc436d14b440eedaf5e5a",
+          "result": {
+            "columns": [
+              {
+                "name": "text",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 149,
+            "truncated": false,
+            "rows_shown": 10,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Incanta creatura\nMantenimento cumulativo {U} o {B}\nTu controlli la creatura incantata.\nQuando i Sussurri di Krov vengono messi in un cimitero dal gioco, perdi 2 punti vita per ogni segnalino epoca presente su di essi."
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "{2}, Rivela X carte rosse dalla tua mano, Sacrifica la Martire delle Ceneri: La Martire delle Ceneri infligge X danni a ogni creatura senza volare."
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Mantenimento cumulativo—Metti in fondo al grimorio del proprietario due carte bersaglio presenti in un singolo cimitero. (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di m"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "{1}, Rivela X carte bianche dalla tua mano, Sacrifica la Martire della Sabbia: Guadagni per tre volte X punti vita."
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Travolgere\nOgniqualvolta l'Uri Gelocorno attacca, prende +1/+0 fino alla fine del turno per ogni altro Uri attaccante.\n{2}{S}: La creatura bersaglio blocca una creatura bersaglio in questo turno se può farlo. ({S} può essere pagato con un mana da un perma"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Quando lo Yeti in Agguato entra in gioco, se è in gioco, infligge un ammontare di danni pari alla propria forza a una creatura bersaglio controllata da un avversario e quella creatura infligge un ammontare di danni pari alla propria forza allo Yeti in Agg"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Il Bosco dell'Altopiano entra in gioco TAPpato.\n{T}: Aggiungi {R} o {G} alla tua riserva di mana."
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Volare\nOgniqualvolta lo Spettro della Bufera infligge danno da combattimento a un giocatore, scegli una delle opzioni seguenti Quel giocatore fa tornare un permanente che controlla in mano al proprietario; o quel giocatore scarta una carta."
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Le Profondità Oscure entrano in gioco con dieci segnalini ghiaccio.\n{3}: Rimuovi un segnalino ghiaccio dalle Profondità Oscure.\nQuando non ci sono segnalini ghiaccio sulle Profondità Oscure, sacrificale. Se lo fai, metti in gioco una pedina creatura legge"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Mantenimento cumulativo {1} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso.)\nAlla fine del tuo turno, il Nucleo"
+                }
+              ]
+            ],
+            "result_hash": "sha256:16781557b7ca1f95d4526e7ee8060b678a658eff464dc436d14b440eedaf5e5a"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

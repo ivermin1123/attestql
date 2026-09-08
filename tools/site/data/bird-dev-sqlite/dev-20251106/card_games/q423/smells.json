@@ -1,0 +1,325 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "keys": [
+          {
+            "key": "cardKingdomFoilId",
+            "column": "cards.cardKingdomFoilId",
+            "declared_type": "TEXT",
+            "not_applicable": null,
+            "census": {
+              "rows": 56822,
+              "nulls": 27910,
+              "empty_strings": 0,
+              "non_numeric": 0,
+              "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+            },
+            "every_value_is_numeric": true,
+            "cast_sql": "SELECT cardKingdomFoilId, cardKingdomId FROM cards WHERE NOT cardKingdomFoilId IS NULL AND NOT cardKingdomId IS NULL ORDER BY CAST(cardKingdomFoilId AS REAL) LIMIT 3",
+            "verdict": "not_equal",
+            "gold_result": {
+              "columns": [
+                {
+                  "name": "cardKingdomFoilId",
+                  "declared_type": "TEXT"
+                },
+                {
+                  "name": "cardKingdomId",
+                  "declared_type": "TEXT"
+                }
+              ],
+              "row_count": 3,
+              "truncated": false,
+              "rows_shown": 3,
+              "rows": [
+                [
+                  {
+                    "type": "str",
+                    "value": "110502"
+                  },
+                  {
+                    "type": "str",
+                    "value": "110332"
+                  }
+                ],
+                [
+                  {
+                    "type": "str",
+                    "value": "110503"
+                  },
+                  {
+                    "type": "str",
+                    "value": "110333"
+                  }
+                ],
+                [
+                  {
+                    "type": "str",
+                    "value": "110504"
+                  },
+                  {
+                    "type": "str",
+                    "value": "110334"
+                  }
+                ]
+              ],
+              "result_hash": "sha256:cf3619f90bbfc4d17c5f79435fdd953483007fdc42bd2bd280405612561842a3"
+            },
+            "cast_result": {
+              "columns": [
+                {
+                  "name": "cardKingdomFoilId",
+                  "declared_type": "TEXT"
+                },
+                {
+                  "name": "cardKingdomId",
+                  "declared_type": "TEXT"
+                }
+              ],
+              "row_count": 3,
+              "truncated": false,
+              "rows_shown": 3,
+              "rows": [
+                [
+                  {
+                    "type": "str",
+                    "value": "39000"
+                  },
+                  {
+                    "type": "str",
+                    "value": "38000"
+                  }
+                ],
+                [
+                  {
+                    "type": "str",
+                    "value": "39001"
+                  },
+                  {
+                    "type": "str",
+                    "value": "38001"
+                  }
+                ],
+                [
+                  {
+                    "type": "str",
+                    "value": "39002"
+                  },
+                  {
+                    "type": "str",
+                    "value": "38002"
+                  }
+                ]
+              ],
+              "result_hash": "sha256:88845c6cd8ae3163c6a4ad3a8628b24291e159ada9bb17ecebbc2029b556ea84"
+            }
+          }
+        ]
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "110502"
+          },
+          {
+            "type": "str",
+            "value": "110332"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "110503"
+          },
+          {
+            "type": "str",
+            "value": "110333"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "110504"
+          },
+          {
+            "type": "str",
+            "value": "110334"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 3,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT cardKingdomFoilId, cardKingdomId, cardKingdomFoilId AS attestql_ordering_key_0 FROM cards WHERE NOT cardKingdomFoilId IS NULL AND NOT cardKingdomId IS NULL ORDER BY cardKingdomFoilId",
+        "unbounded_rows": 25061,
+        "projected_columns": [
+          "cardKingdomFoilId",
+          "cardKingdomId"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "cardKingdomFoilId",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "case": null
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:cf3619f90bbfc4d17c5f79435fdd953483007fdc42bd2bd280405612561842a3",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "cardKingdomFoilId",
+              "declared_type": "TEXT"
+            },
+            {
+              "name": "cardKingdomId",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 3,
+          "truncated": false,
+          "rows_shown": 3,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "110502"
+              },
+              {
+                "type": "str",
+                "value": "110332"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "110503"
+              },
+              {
+                "type": "str",
+                "value": "110333"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "110504"
+              },
+              {
+                "type": "str",
+                "value": "110334"
+              }
+            ]
+          ],
+          "result_hash": "sha256:cf3619f90bbfc4d17c5f79435fdd953483007fdc42bd2bd280405612561842a3"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "cards"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "legalities": 427907
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:cf3619f90bbfc4d17c5f79435fdd953483007fdc42bd2bd280405612561842a3",
+          "result": {
+            "columns": [
+              {
+                "name": "cardKingdomFoilId",
+                "declared_type": "TEXT"
+              },
+              {
+                "name": "cardKingdomId",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 3,
+            "truncated": false,
+            "rows_shown": 3,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "110502"
+                },
+                {
+                  "type": "str",
+                  "value": "110332"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "110503"
+                },
+                {
+                  "type": "str",
+                  "value": "110333"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "110504"
+                },
+                {
+                  "type": "str",
+                  "value": "110334"
+                }
+              ]
+            ],
+            "result_hash": "sha256:cf3619f90bbfc4d17c5f79435fdd953483007fdc42bd2bd280405612561842a3"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

@@ -1,40 +1,64 @@
 # The published runs the site is built from
 
-This directory is empty of runs. Phase 4 of `plans/260907-1730-attestql-web-ui/plan.md` fills it,
-and until it does `tools/site/build.py` audits the sandbox the package carries and shows that
-instead, with a banner on every page of the built site saying so. The banner is removed by a
-benchmark directory appearing here and not by an edit to a template, so publishing the runs is
-what retires it.
+What `tools/site/build.py` renders. Everything here was written by `attestql audit` and copied
+in by `tools/site-select/select.py`; nothing in it is edited by hand, and remaking it is
+`tools/site-select/audits.sh` followed by that script.
 
-## What a benchmark and a run are
+## What a benchmark, a group and a run are
 
 ```text
-tools/site/data/<benchmark>/<run>/summary.json
-tools/site/data/<benchmark>/<run>/q<id>/...
+tools/site/data/<benchmark>/<run>/summary.json                 PostgreSQL
+tools/site/data/<benchmark>/<group>/<db_id>/summary.json       SQLite
 ```
 
 A **benchmark** is a question set and the engine it was audited on: `bird-dev-sqlite`,
 `minidev-sqlite`, `minidev-pg-gold-only`, `minidev-pg`. A **run** is one invocation of
-`attestql audit`, which is one prediction file, because the audit writes one second statement per
-question per run; a benchmark with nine prediction files has nine runs.
+`attestql audit`, which writes one second statement per question.
+
+On PostgreSQL one invocation answers a whole question set, so a prediction file is a run and a
+benchmark of nine prediction files has nine runs. On SQLite `--dsn` is one database file, so a
+question set naming eleven databases is eleven invocations: a prediction file is a **group** of
+eleven runs, one per database, and the group is a level in the address. `build.py` reads both
+shapes; a directory holding a `summary.json` is a run, and one holding runs and no summary is a
+group.
+
+A group is a line and a page stating the **sums** of its runs' counts, by the merge rule
+`plans/reports/measurement-260907-1106-minidev-sqlite.md` and
+`plans/reports/measurement-260907-1435-bird-dev-sqlite.md` state: no question id is in two of
+the eleven, so the counts add. It is never a merged `summary.json`, because a summary no audit
+wrote would be this site's own invention.
 
 A run directory is an audit directory. It holds that run's whole `summary.json` and the question
-directories phase 4's selection names, each with the files the audit wrote for that question
+directories the selection names, each with the files the audit wrote for that question
 (`counterexample.json`, `evidence-gold.json`, `evidence-second.json`, `smells.json`). The build
 hands each run directory to `attestql report`, so a directory here is a directory that command
 can render, and nothing about its shape is this site's invention. A question whose statement
 could not be run has no directory and is a row of the run page read from the summary.
 
+## The three files beside a summary that no audit writes
+
+- `questions.json`: `question_id`, `db_id` and the question text of every question that run
+  audited, read out of the question file the run's own summary names. The database a question
+  is about reaches no file the audit writes, and the question page states it in its strip.
+- `classification.json` and `classification-source.json`: a copy, byte for byte, of a hand
+  classification committed under `plans/reports/`, and a note saying where that copy came from,
+  what date the measurement report states for it, and which of its rows are this run's. The
+  question page shows one "read by hand" row where the file holds a row for that question, with
+  the class and the reason verbatim and that date. The tool's verdict and a person's reading are
+  two blocks and never one.
+- `published.json`: the name, the URL, the size and the sha256 of the release asset holding the
+  whole of that run or group. What is here is a selection; that archive is all of it.
+
 ## `aggregate.json`
 
 Beside the benchmarks, one file the landing page reads for its three headline numbers. It is
-written by phase 4's selection script and never by hand. Each key holds an object with two
+written by `tools/site-select/select.py` and never by hand. Each key holds an object with two
 fields: `value`, the number, and `source`, the file the number was read out of, which the landing
 puts in a `title` attribute beside it so a reader can see what to open.
 
 ```json
 {
-  "credited_but_not_equal": {"value": 0, "source": "minidev-pg/<run>/aggregate.json"},
+  "credited_but_not_equal": {"value": 0, "source": "minidev-pg/<run>/summary.json ..."},
   "classified_by_hand": {"value": 0, "source": "minidev-pg/classification.json"},
   "bird_dev_classified_by_hand": {"value": 0, "source": "bird-dev-sqlite/classification.json"}
 }
@@ -57,9 +81,41 @@ rest. It does not draw the three side by side, because two of them are not disjo
 counts another benchmark's questions, and a bar over all three would state a proportion nothing
 holds. A `classified_by_hand` larger than `credited_but_not_equal` is refused.
 
+## `selection.json` and `left-out.json`
+
+What the selection did, so that the reconciliation report is read out of a file rather than
+retyped: one row per run with the counts its summary states, the questions published from it and
+their ids; and every question the budget left out, largest first, with its size. A question left
+out of the site is in that run's release asset, whole.
+
+## How these were made
+
+```sh
+tools/site-select/audits.sh inputs      # verify the cached inputs, fetch the predictions
+tools/site-select/audits.sh sqlite      # bird-dev-sqlite, then minidev-sqlite
+tools/site-select/audits.sh postgres    # the container, the dump, minidev-pg-gold-only, minidev-pg
+uv run python tools/site-select/select.py --dry-run
+uv run python tools/site-select/select.py
+```
+
+Every flag each run was given, with the origin strings and the dates, is in `audits.sh`; the
+digest of every file a run read is in that run's own `summary.json`, measured by the run rather
+than stated by the script. The four inputs and their digests:
+
+| Input | sha256 |
+| --- | --- |
+| `minidev.zip`, members `mini_dev_sqlite.json`, `mini_dev_postgresql.json`, `dev_databases/`, `MINIDEV_postgresql/BIRD_dev.sql` | `cc48ba16…` |
+| `dev.zip`, member `dev_20240627/dev_databases.zip` | `cdd6d19f…` |
+| `dev_20251106-00000-of-00001.json`, BIRD's 2025-11-06 pass at dataset commit `3c11fb19` | `ffd80183…` |
+| `mini_dev_pg-00000-of-00001.json`, the Hugging Face PostgreSQL golds at commit `f65faf4a` | `7fa740ef…` |
+| the nine `predict_mini_dev_*_sqlite.json` and nine `_postgresql.json` at `b3d4bcbb` | in `audits.sh` and `plans/reports/minidev-sqlite-260907/SHA256SUMS.predictions` |
+
+The reconciliation of every count against the measurement reports that first made it is
+`plans/reports/measurement-260908-site-publish-runs.md`.
+
 ## What is not here
 
-Nothing generated by a build. The stand-in the build audits is written to a scratch directory
-under `build/`, which git ignores, and is never copied into this directory. Full runs, every
-question directory of them, are release assets that each run page links to; what lives here is
-the selection the site shows.
+Nothing generated by a build. The stand-in the build audits when this directory holds no
+benchmark is written to a scratch directory under `/tmp`, which is never copied in here. Full
+runs, every question directory of them, are release assets that each run page links to; what
+lives here is the selection the site shows.

@@ -1,0 +1,373 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-856da5a8-6a71-40a2-b306-8cbcd21e9060",
+  "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/student_club/student_club.sqlite | size=2641920",
+  "effective_database_role": "file",
+  "session_settings": {
+    "engine": "sqlite",
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "parser": {
+    "validator": "audit:sqlglot-sqlite-parse",
+    "sqlglot": "30.18.0",
+    "dialect": "sqlite"
+  },
+  "question_set": {
+    "path": "data/questions/mini_dev_sqlite.json",
+    "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+    "date": "2024-06-19",
+    "entries": 500,
+    "audited": 48,
+    "duplicate_ids": [
+      137,
+      138
+    ],
+    "ids": [
+      1312,
+      1317,
+      1322,
+      1323,
+      1331,
+      1334,
+      1338,
+      1339,
+      1340,
+      1344,
+      1346,
+      1350,
+      1351,
+      1352,
+      1356,
+      1357,
+      1359,
+      1361,
+      1362,
+      1368,
+      1371,
+      1375,
+      1376,
+      1378,
+      1380,
+      1381,
+      1387,
+      1389,
+      1390,
+      1392,
+      1394,
+      1398,
+      1399,
+      1401,
+      1403,
+      1404,
+      1405,
+      1409,
+      1410,
+      1411,
+      1422,
+      1426,
+      1427,
+      1432,
+      1435,
+      1457,
+      1460,
+      1464
+    ]
+  },
+  "predictions": {
+    "path": "data/preds-sqlite/predict_mini_dev_mistralai-mixtral-8x7b-instru-4_sqlite.json",
+    "digest": "sha256:53cdf9142e3f2e49941eb7b50ebbea90361b2c5b46de37d5ba1c244187d643a2",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_mistralai-mixtral-8x7b-instru-4_sqlite.json",
+    "date": "2024-06-19",
+    "keyed_by": "position",
+    "statements": 500,
+    "positions_unused": [
+      487,
+      488
+    ]
+  },
+  "verdicts": {
+    "EQUAL": 12,
+    "ERROR": 28,
+    "NOT_EQUAL": 8
+  },
+  "smells": {
+    "ordering-over-numeric-text": 0,
+    "arbitrary-cut": 0,
+    "not-a-function-of-the-data": 0,
+    "float-aggregate-order": 0,
+    "direction-against-question": 0
+  },
+  "smells_fired": 0,
+  "credited_but_not_equal": {
+    "total": 1,
+    "by_mechanism": {
+      "multiplicity": 1,
+      "type": 0,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 0,
+      "0": 1
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "runs/minidev-sqlite/mistralai-mixtral-8x7b-instru-4/student_club/fixture.json",
+    "source": {
+      "path": "data/minidev/dev_databases/student_club/student_club.sqlite",
+      "digest": "sha256:eb89bcfe97eefa386a27904ec5aa15159811a7eac894ec659a36e48fa9f76b77",
+      "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV/dev_databases, student_club/student_club.sqlite",
+      "date": "2024-06-13"
+    },
+    "schema_digest": "sha256:64709a2781d4c388f2169ca190cab020ca6914e9e9af8101899b2f8f3746abf4",
+    "row_counts": {
+      "main.attendance": 326,
+      "main.budget": 52,
+      "main.event": 42,
+      "main.expense": 32,
+      "main.income": 36,
+      "main.major": 113,
+      "main.member": 33,
+      "main.zip_code": 41877
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "member",
+      "major",
+      "event",
+      "attendance",
+      "income",
+      "zip_code",
+      "budget",
+      "expense"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {},
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "temp",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "attendance",
+      "budget",
+      "event",
+      "expense",
+      "income",
+      "major",
+      "member",
+      "zip_code"
+    ],
+    "skipped": {},
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 30,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "runs/minidev-sqlite/mistralai-mixtral-8x7b-instru-4/student_club",
+    "serialization": "attestql/audit/2",
+    "work_mem": null,
+    "hash_mem_multiplier": null
+  },
+  "data_as_of": "2026-09-08T05:04:59.467125+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 0.055,
+    "shuffle": 0.073
+  },
+  "errors": [
+    {
+      "question_id": 1317,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing '= 'Women\\'s Soccer' AND m.t_shirt_size = 'Medium''"
+    },
+    {
+      "question_id": 1323,
+      "side": "prediction",
+      "step": "statement",
+      "message": "2 statements in one text; an audit runs one"
+    },
+    {
+      "question_id": 1334,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 13. SELECT first\u001b[4m\\\u001b[0m_name, last\\_name FROM member WHERE zip IN ( SELECT zip\\_code FROM zip\\_code WHERE state = 'Illinois"
+    },
+    {
+      "question_id": 1339,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 6, Col: 12. budget ON link_to_budget = budget_id JOIN event ON budget.link_to_event = event.event_id WHERE first\u001b[4m\\\u001b[0m_name = 'Elijah' AND last\\_name = 'Allen' AND (month(expense\\_date) = 9 OR month(expense\\_date) = 10"
+    },
+    {
+      "question_id": 1346,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 3, Col: 19. SELECT member.phone FROM member WHERE member.first\u001b[4m\\\u001b[0m_name = 'Carlo' AND member.last\\_name = 'Jacobs';"
+    },
+    {
+      "question_id": 1356,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: department"
+    },
+    {
+      "question_id": 1357,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 12. SELECT date\u001b[4m\\\u001b[0m_received FROM member JOIN income ON member.member\\_id = income.link\\_to\\_member WHERE first\\_name ="
+    },
+    {
+      "question_id": 1359,
+      "side": "prediction",
+      "step": "statement",
+      "message": "2 statements in one text; an audit runs one"
+    },
+    {
+      "question_id": 1361,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 29. SELECT SUM(e1.cost) as total\u001b[4m\\\u001b[0m_cost FROM expense e1 JOIN budget b1 ON e1.link\\_to\\_budget = b1.budget\\_id WHERE e1.expense\\_descri"
+    },
+    {
+      "question_id": 1371,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing 'ent_id WHERE event.event_name = 'Women\\'s Soccer''"
+    },
+    {
+      "question_id": 1375,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 13. SELECT first\u001b[4m\\\u001b[0m_name || ' ' || last\\_name AS full\\_name FROM member WHERE link\\_to\\_major IN ( SELECT major\\_id FRO"
+    },
+    {
+      "question_id": 1376,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 15. SELECT e.event\u001b[4m\\\u001b[0m_name, MAX(b.spent/b.amount) as spend\\_to\\_budget\\_ratio FROM event as e JOIN budget as b ON e.event"
+    },
+    {
+      "question_id": 1378,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 31. SELECT MAX(b.spent) as highest\u001b[4m\\\u001b[0m_budget\\_spend FROM budget b JOIN event e ON b.link\\_to\\_event = e.event\\_id;"
+    },
+    {
+      "question_id": 1381,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 13. SELECT first\u001b[4m\\\u001b[0m_name || ' ' || last\\_name AS name FROM member JOIN attendance ON member.member\\_id = attendance.lin"
+    },
+    {
+      "question_id": 1387,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 15. SELECT m.first\u001b[4m\\\u001b[0m_name, m.last\\_name FROM member m JOIN budget b ON m.member\\_id = b.link\\_to\\_member JOIN event e ON"
+    },
+    {
+      "question_id": 1389,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 6, Col: 21. ROM expense e JOIN budget b ON e.link_to_budget = b.budget_id GROUP BY e.link_to_event; This query \u001b[4mcalculates\u001b[0m the minimum cost for each event by joining the expense and budget tables, then grouping by the even"
+    },
+    {
+      "question_id": 1390,
+      "side": "prediction",
+      "step": "statement",
+      "message": "2 statements in one text; an audit runs one"
+    },
+    {
+      "question_id": 1392,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 34. SELECT source, MAX(amount) as max\u001b[4m\\\u001b[0m_amount FROM income WHERE date\\_received BETWEEN '2019-09-01' AND '2019-09-30' GROUP BY source;"
+    },
+    {
+      "question_id": 1399,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Error tokenizing ''Mclean' AND event.event_name = 'Women\\'s Soccer''"
+    },
+    {
+      "question_id": 1401,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: link_to_event"
+    },
+    {
+      "question_id": 1403,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 15. SELECT e.event\u001b[4m\\\u001b[0m_name FROM event e JOIN budget b ON e.event\\_id = b.link\\_to\\_event JOIN attendance a ON e.event\\_id"
+    },
+    {
+      "question_id": 1405,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 39. SELECT category, SUM(amount) as amount\u001b[4m\\\u001b[0m_budgeted FROM budget JOIN event ON budget.link\\_to\\_event = event.event\\_id WHERE event.event\\_name"
+    },
+    {
+      "question_id": 1410,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 20. SELECT member.first\u001b[4m\\\u001b[0m_name || ' ' || member.last\\_name AS full\\_name, SUM(expense.cost) AS total\\_cost FROM member JOIN e"
+    },
+    {
+      "question_id": 1426,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 12. SELECT last\u001b[4m\\\u001b[0m_name, major\\_name, department, college FROM member JOIN major ON member.link\\_to\\_major = major.maj"
+    },
+    {
+      "question_id": 1432,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 6, Col: 14. ncome.link_to_member WHERE member.t_shirt_size = 'Medium' AND member.position = 'Member'; This SQL \u001b[4mquery\u001b[0m calculates the percentage of the amount 50 received by the members with t-shirt size of medium in t"
+    },
+    {
+      "question_id": 1457,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 13. SELECT first\u001b[4m\\\u001b[0m_name, last\\_name, phone FROM member JOIN ( SELECT link\\_to\\_member FROM expense JOIN ( SELECT AVG(c"
+    },
+    {
+      "question_id": 1460,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: Invalid expression / Unexpected token. Line 1, Col: 20. SELECT member.first\u001b[4m\\\u001b[0m_name || ' ' || member.last\\_name AS full\\_name, expense.cost FROM member JOIN expense ON member.mem"
+    },
+    {
+      "question_id": 1464,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: incomplete input"
+    }
+  ],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 1
+}

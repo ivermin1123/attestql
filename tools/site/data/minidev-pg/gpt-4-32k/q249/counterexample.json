@@ -1,0 +1,181 @@
+{
+  "format": "attestql/audit/counterexample/2",
+  "question": {
+    "question_id": "249",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "What are the elements of the atoms of TR144_8_19?",
+    "evidence_text": "TR144_8_19 is the bond id; "
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "sources": {
+    "gold": {
+      "path": "data/questions/mini_dev_postgresql.json",
+      "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+      "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+      "date": "2024-06-19"
+    },
+    "second": {
+      "path": "data/preds-pg/predict_mini_dev_gpt-4-32k_postgresql.json",
+      "digest": "sha256:0fba1bfbeb487d641c8ae1e8bb01f762b2d29ddfb7c14dbd94e832f53cc10270",
+      "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4-32k_postgresql.json",
+      "date": "2024-06-19"
+    }
+  },
+  "replay_rule": "R-SET",
+  "verdict": {
+    "result": "not_equal",
+    "mismatched": [],
+    "reading": "NOT_EQUAL states that these two statements disagree on this data under this rule. It does not state which of them is wrong."
+  },
+  "bird_ex": {
+    "value": 1,
+    "equal": true,
+    "method": "set(second_rows) == set(gold_rows), float4/float8 cells as Python float as psycopg2 returns them, numeric as Decimal",
+    "source": "https://github.com/bird-bench/mini_dev/blob/main/evaluation/evaluation_ex.py",
+    "gold_rows": 2,
+    "second_rows": 4,
+    "gold_distinct_rows": 2,
+    "second_distinct_rows": 2
+  },
+  "test_suite_ex": {
+    "value": 0,
+    "equal": false,
+    "method": "result_eq: equal row counts and equal column counts, each row unordered as a quick rejection, then the two equal as a list when the gold text holds ORDER BY and as a multiset otherwise, under some permutation of the columns; DISTINCT is not stripped and re-executed, and the cells are PostgreSQL's as psycopg2 returns them",
+    "source": "ruiqi-zhong/test-suite-sql-eval, exec_eval.py, result_eq, at commit 48cb78ec: https://github.com/ruiqi-zhong/test-suite-sql-eval/blob/48cb78ecf7f610620206283846c76751b18a1326/exec_eval.py",
+    "order_matters": false,
+    "gold_rows": 2,
+    "second_rows": 4,
+    "gold_columns": 1,
+    "second_columns": 1
+  },
+  "mechanism": {
+    "class": "multiplicity",
+    "gold_types": [
+      "text"
+    ],
+    "second_types": [
+      "text"
+    ],
+    "multiset_equal": false,
+    "set_equal": true,
+    "order_equal": false,
+    "shorter_result_is_a_prefix": true,
+    "reading": "The class states what makes these two results unequal under this rule, read off the two results and nothing else. It does not state which of the two statements is wrong."
+  },
+  "gold": {
+    "executed_sql": "SELECT T2.element FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T1.bond_id = 'TR144_8_19'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "element",
+          "declared_type": "text"
+        }
+      ],
+      "row_count": 2,
+      "truncated": false,
+      "rows_shown": 2,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "h"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "c"
+          }
+        ]
+      ],
+      "result_hash": "sha256:056bfbe3f84f76e0210370f0fe4d35219e9204e62660d8549875ba48fc8629e9"
+    },
+    "record": "evidence-gold.json"
+  },
+  "second": {
+    "executed_sql": "SELECT atom.element\nFROM atom\nJOIN connected ON atom.atom_id = connected.atom_id OR atom.atom_id = connected.atom_id2\nWHERE connected.bond_id = 'TR144_8_19'",
+    "own_ordering": [],
+    "result": {
+      "columns": [
+        {
+          "name": "element",
+          "declared_type": "text"
+        }
+      ],
+      "row_count": 4,
+      "truncated": false,
+      "rows_shown": 4,
+      "rows": [
+        [
+          {
+            "type": "str",
+            "value": "h"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "c"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "h"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "c"
+          }
+        ]
+      ],
+      "result_hash": "sha256:4c02636ae59bdaa68e84e7d7b884b014df7a74e8363619582cd2669636d35112"
+    },
+    "record": "evidence-second.json"
+  },
+  "canonical_ordering": [],
+  "differing_rows": {
+    "in_gold_not_in_second": [],
+    "in_gold_not_in_second_total": 0,
+    "in_second_not_in_gold": [
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "c"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "row": [
+          {
+            "type": "str",
+            "value": "h"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "in_second_not_in_gold_total": 2,
+    "rows_shown_per_side": 25
+  },
+  "result_hashes": {
+    "gold": "sha256:056bfbe3f84f76e0210370f0fe4d35219e9204e62660d8549875ba48fc8629e9",
+    "second": "sha256:4c02636ae59bdaa68e84e7d7b884b014df7a74e8363619582cd2669636d35112"
+  },
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "fixture": {
+    "schema_digest": "sha256:b41d9e720b709635cf4beced75e13ef51dd088494cb2cec3bcec374509f6708c",
+    "row_counts": {
+      "public.atom": 9111,
+      "public.connected": 18312
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "run_id": "audit-eacac37d-7cc4-4d44-9121-67cecbf29b75"
+}

@@ -1,0 +1,182 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "T2.dob",
+            "column": "drivers.dob",
+            "declared_type": "DATE",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT SUM(T1.wins), T2.forename, T2.surname, T2.dob AS attestql_ordering_key_0 FROM driverStandings AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId ORDER BY T2.dob ASC",
+        "unbounded_rows": 1,
+        "projected_columns": [
+          "SUM(T1.wins)",
+          "forename",
+          "surname"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "T2.dob",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "case": null
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:95586ad9cbebd6bd17ab272e5754212cef9669f964611847cfb7439ea72fc8eb",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "SUM(T1.wins)",
+              "declared_type": "INTEGER"
+            },
+            {
+              "name": "forename",
+              "declared_type": "TEXT"
+            },
+            {
+              "name": "surname",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 7890
+              },
+              {
+                "type": "str",
+                "value": "Lewis"
+              },
+              {
+                "type": "str",
+                "value": "Hamilton"
+              }
+            ]
+          ],
+          "result_hash": "sha256:95586ad9cbebd6bd17ab272e5754212cef9669f964611847cfb7439ea72fc8eb"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "driverStandings",
+            "drivers"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "lapTimes": 420369
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:48b715a576c7daabcc6b152a00c646773a078aee93f3589e7050878d7b0972cb",
+          "result": {
+            "columns": [
+              {
+                "name": "SUM(T1.wins)",
+                "declared_type": "INTEGER"
+              },
+              {
+                "name": "forename",
+                "declared_type": "TEXT"
+              },
+              {
+                "name": "surname",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "int",
+                  "value": 7890
+                },
+                {
+                  "type": "str",
+                  "value": "Volker"
+                },
+                {
+                  "type": "str",
+                  "value": "Weidler"
+                }
+              ]
+            ],
+            "result_hash": "sha256:48b715a576c7daabcc6b152a00c646773a078aee93f3589e7050878d7b0972cb"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 7890
+          },
+          {
+            "type": "str",
+            "value": "Volker"
+          },
+          {
+            "type": "str",
+            "value": "Weidler"
+          }
+        ]
+      ]
+    }
+  ]
+}

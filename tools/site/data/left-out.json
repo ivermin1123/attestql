@@ -1,0 +1,4780 @@
+{
+ "questions": [
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "question_id": "1144",
+   "data_bytes": 55536413,
+   "page_bytes": 63875874,
+   "reasons": [
+    "over-page",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/card_games",
+   "question_id": "346",
+   "data_bytes": 10499385,
+   "page_bytes": 12083292,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/card_games",
+   "question_id": "346",
+   "data_bytes": 10499315,
+   "page_bytes": 12083212,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "207",
+   "data_bytes": 8848846,
+   "page_bytes": 10185172,
+   "reasons": [
+    "credited",
+    "hand",
+    "over-page",
+    "unjust"
+   ]
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/california_schools",
+   "question_id": "11",
+   "data_bytes": 4572612,
+   "page_bytes": 5267503,
+   "reasons": [
+    "over-page",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/european_football_2",
+   "question_id": "1124",
+   "data_bytes": 4535243,
+   "page_bytes": 5224529,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1124",
+   "data_bytes": 4535185,
+   "page_bytes": 5224462,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1124",
+   "data_bytes": 4535163,
+   "page_bytes": 5224437,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "question_id": "1124",
+   "data_bytes": 4535153,
+   "page_bytes": 5224425,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "question_id": "1124",
+   "data_bytes": 4535153,
+   "page_bytes": 5224425,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/european_football_2",
+   "question_id": "1124",
+   "data_bytes": 4535147,
+   "page_bytes": 5224419,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1124",
+   "data_bytes": 4535137,
+   "page_bytes": 5224407,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1124",
+   "data_bytes": 4535111,
+   "page_bytes": 5224377,
+   "reasons": [
+    "credited",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "1124",
+   "data_bytes": 4533888,
+   "page_bytes": 5222971,
+   "reasons": [
+    "credited",
+    "hand",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "1124",
+   "data_bytes": 4533755,
+   "page_bytes": 5222818,
+   "reasons": [
+    "credited",
+    "hand",
+    "over-page"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1088",
+   "data_bytes": 1644528,
+   "page_bytes": 1900207,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/european_football_2",
+   "question_id": "1088",
+   "data_bytes": 1644462,
+   "page_bytes": 1900131,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1088",
+   "data_bytes": 1644444,
+   "page_bytes": 1900110,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "question_id": "1088",
+   "data_bytes": 1644420,
+   "page_bytes": 1900082,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1088",
+   "data_bytes": 1644378,
+   "page_bytes": 1900034,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "question_id": "1088",
+   "data_bytes": 1644374,
+   "page_bytes": 1900030,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1088",
+   "data_bytes": 1644334,
+   "page_bytes": 1899984,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-8b-instruct-2",
+   "question_id": "751",
+   "data_bytes": 790221,
+   "page_bytes": 917754,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/card_games",
+   "question_id": "528",
+   "data_bytes": 660012,
+   "page_bytes": 768013,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/card_games",
+   "question_id": "528",
+   "data_bytes": 660008,
+   "page_bytes": 768009,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/card_games",
+   "question_id": "528",
+   "data_bytes": 659946,
+   "page_bytes": 767937,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/card_games",
+   "question_id": "528",
+   "data_bytes": 659938,
+   "page_bytes": 767928,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/card_games",
+   "question_id": "528",
+   "data_bytes": 659934,
+   "page_bytes": 767924,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/card_games",
+   "question_id": "528",
+   "data_bytes": 659864,
+   "page_bytes": 767843,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/card_games",
+   "question_id": "528",
+   "data_bytes": 659850,
+   "page_bytes": 767827,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "751",
+   "data_bytes": 450735,
+   "page_bytes": 527345,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "751",
+   "data_bytes": 450635,
+   "page_bytes": 527230,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "751",
+   "data_bytes": 450573,
+   "page_bytes": 527158,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/card_games",
+   "question_id": "407",
+   "data_bytes": 397144,
+   "page_bytes": 465715,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/thrombosis_prediction",
+   "question_id": "1155",
+   "data_bytes": 373849,
+   "page_bytes": 438926,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/thrombosis_prediction",
+   "question_id": "1155",
+   "data_bytes": 373837,
+   "page_bytes": 438912,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/thrombosis_prediction",
+   "question_id": "1155",
+   "data_bytes": 373821,
+   "page_bytes": 438894,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/thrombosis_prediction",
+   "question_id": "1155",
+   "data_bytes": 373771,
+   "page_bytes": 438836,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/thrombosis_prediction",
+   "question_id": "1155",
+   "data_bytes": 373767,
+   "page_bytes": 438832,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/thrombosis_prediction",
+   "question_id": "1155",
+   "data_bytes": 373763,
+   "page_bytes": 438827,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/thrombosis_prediction",
+   "question_id": "1155",
+   "data_bytes": 373761,
+   "page_bytes": 438825,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/thrombosis_prediction",
+   "question_id": "1155",
+   "data_bytes": 373753,
+   "page_bytes": 438815,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/thrombosis_prediction",
+   "question_id": "1155",
+   "data_bytes": 373743,
+   "page_bytes": 438804,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-8b-instruct-2",
+   "question_id": "1002",
+   "data_bytes": 367608,
+   "page_bytes": 431749,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/card_games",
+   "question_id": "345",
+   "data_bytes": 363611,
+   "page_bytes": 427152,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/card_games",
+   "question_id": "345",
+   "data_bytes": 363569,
+   "page_bytes": 427104,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/card_games",
+   "question_id": "345",
+   "data_bytes": 363561,
+   "page_bytes": 427095,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/card_games",
+   "question_id": "345",
+   "data_bytes": 363559,
+   "page_bytes": 427092,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/card_games",
+   "question_id": "345",
+   "data_bytes": 363487,
+   "page_bytes": 427010,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/card_games",
+   "question_id": "345",
+   "data_bytes": 363467,
+   "page_bytes": 426987,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/card_games",
+   "question_id": "527",
+   "data_bytes": 352859,
+   "page_bytes": 414787,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/thrombosis_prediction",
+   "question_id": "1209",
+   "data_bytes": 321944,
+   "page_bytes": 379235,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/card_games",
+   "question_id": "345",
+   "data_bytes": 289418,
+   "page_bytes": 341830,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/card_games",
+   "question_id": "345",
+   "data_bytes": 289416,
+   "page_bytes": 341828,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/thrombosis_prediction",
+   "question_id": "1209",
+   "data_bytes": 258209,
+   "page_bytes": 305940,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/thrombosis_prediction",
+   "question_id": "1209",
+   "data_bytes": 258199,
+   "page_bytes": 305928,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/european_football_2",
+   "question_id": "1088",
+   "data_bytes": 244051,
+   "page_bytes": 289658,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/thrombosis_prediction",
+   "question_id": "1209",
+   "data_bytes": 190427,
+   "page_bytes": 227991,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/toxicology",
+   "question_id": "230",
+   "data_bytes": 126620,
+   "page_bytes": 154613,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/debit_card_specializing",
+   "question_id": "1500",
+   "data_bytes": 122052,
+   "page_bytes": 149359,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/debit_card_specializing",
+   "question_id": "1506",
+   "data_bytes": 116452,
+   "page_bytes": 142919,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/debit_card_specializing",
+   "question_id": "1506",
+   "data_bytes": 116402,
+   "page_bytes": 142862,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/debit_card_specializing",
+   "question_id": "1506",
+   "data_bytes": 116390,
+   "page_bytes": 142848,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/debit_card_specializing",
+   "question_id": "1506",
+   "data_bytes": 116344,
+   "page_bytes": 142795,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/debit_card_specializing",
+   "question_id": "1506",
+   "data_bytes": 116340,
+   "page_bytes": 142791,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/debit_card_specializing",
+   "question_id": "1506",
+   "data_bytes": 116336,
+   "page_bytes": 142786,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/debit_card_specializing",
+   "question_id": "1506",
+   "data_bytes": 116274,
+   "page_bytes": 142715,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/thrombosis_prediction",
+   "question_id": "1209",
+   "data_bytes": 113870,
+   "page_bytes": 139950,
+   "reasons": [
+    "credited",
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/thrombosis_prediction",
+   "question_id": "1209",
+   "data_bytes": 113846,
+   "page_bytes": 139922,
+   "reasons": [
+    "credited",
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/mistralai-mixtral-8x7b-instru-4",
+   "question_id": "1482",
+   "data_bytes": 102244,
+   "page_bytes": 126580,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/thrombosis_prediction",
+   "question_id": "1187",
+   "data_bytes": 77594,
+   "page_bytes": 98233,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/thrombosis_prediction",
+   "question_id": "1187",
+   "data_bytes": 77590,
+   "page_bytes": 98228,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/thrombosis_prediction",
+   "question_id": "1187",
+   "data_bytes": 77572,
+   "page_bytes": 98207,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/thrombosis_prediction",
+   "question_id": "1187",
+   "data_bytes": 77426,
+   "page_bytes": 98039,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/european_football_2",
+   "question_id": "1035",
+   "data_bytes": 73984,
+   "page_bytes": 94081,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1035",
+   "data_bytes": 73968,
+   "page_bytes": 94063,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1035",
+   "data_bytes": 73968,
+   "page_bytes": 94063,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/european_football_2",
+   "question_id": "1035",
+   "data_bytes": 73940,
+   "page_bytes": 94031,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/european_football_2",
+   "question_id": "1035",
+   "data_bytes": 73922,
+   "page_bytes": 94010,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1035",
+   "data_bytes": 73902,
+   "page_bytes": 93987,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "question_id": "1035",
+   "data_bytes": 73894,
+   "page_bytes": 93978,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1035",
+   "data_bytes": 73870,
+   "page_bytes": 93950,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/financial",
+   "question_id": "149",
+   "data_bytes": 68319,
+   "page_bytes": 87566,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/toxicology",
+   "question_id": "242",
+   "data_bytes": 66511,
+   "page_bytes": 85487,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-8b-instruct-2",
+   "question_id": "1011",
+   "data_bytes": 64508,
+   "page_bytes": 83184,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/thrombosis_prediction",
+   "question_id": "1232",
+   "data_bytes": 59474,
+   "page_bytes": 77395,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/thrombosis_prediction",
+   "question_id": "1232",
+   "data_bytes": 59440,
+   "page_bytes": 77356,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "955",
+   "data_bytes": 59393,
+   "page_bytes": 77301,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/thrombosis_prediction",
+   "question_id": "1232",
+   "data_bytes": 59374,
+   "page_bytes": 77280,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/thrombosis_prediction",
+   "question_id": "1232",
+   "data_bytes": 59370,
+   "page_bytes": 77275,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/thrombosis_prediction",
+   "question_id": "1232",
+   "data_bytes": 59362,
+   "page_bytes": 77266,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/thrombosis_prediction",
+   "question_id": "1232",
+   "data_bytes": 59342,
+   "page_bytes": 77243,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "1011",
+   "data_bytes": 59319,
+   "page_bytes": 77216,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "955",
+   "data_bytes": 59283,
+   "page_bytes": 77175,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/thrombosis_prediction",
+   "question_id": "1232",
+   "data_bytes": 59252,
+   "page_bytes": 77139,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/thrombosis_prediction",
+   "question_id": "1220",
+   "data_bytes": 56723,
+   "page_bytes": 74231,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/thrombosis_prediction",
+   "question_id": "1220",
+   "data_bytes": 56711,
+   "page_bytes": 74217,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/thrombosis_prediction",
+   "question_id": "1220",
+   "data_bytes": 56695,
+   "page_bytes": 74199,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/thrombosis_prediction",
+   "question_id": "1220",
+   "data_bytes": 56645,
+   "page_bytes": 74141,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/thrombosis_prediction",
+   "question_id": "1220",
+   "data_bytes": 56641,
+   "page_bytes": 74137,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/thrombosis_prediction",
+   "question_id": "1220",
+   "data_bytes": 56637,
+   "page_bytes": 74132,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/thrombosis_prediction",
+   "question_id": "1220",
+   "data_bytes": 56633,
+   "page_bytes": 74127,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/thrombosis_prediction",
+   "question_id": "1220",
+   "data_bytes": 56627,
+   "page_bytes": 74121,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/thrombosis_prediction",
+   "question_id": "1220",
+   "data_bytes": 56541,
+   "page_bytes": 74022,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/codebase_community",
+   "question_id": "694",
+   "data_bytes": 55062,
+   "page_bytes": 72321,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "1011",
+   "data_bytes": 54444,
+   "page_bytes": 71610,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "1011",
+   "data_bytes": 54421,
+   "page_bytes": 71584,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "1011",
+   "data_bytes": 54351,
+   "page_bytes": 71503,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "694",
+   "data_bytes": 54052,
+   "page_bytes": 71159,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "972",
+   "data_bytes": 53933,
+   "page_bytes": 71022,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/toxicology",
+   "question_id": "227",
+   "data_bytes": 53792,
+   "page_bytes": 70860,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1036",
+   "data_bytes": 53764,
+   "page_bytes": 70828,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1036",
+   "data_bytes": 53602,
+   "page_bytes": 70642,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1036",
+   "data_bytes": 53532,
+   "page_bytes": 70561,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "question_id": "1036",
+   "data_bytes": 53452,
+   "page_bytes": 70469,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1036",
+   "data_bytes": 53450,
+   "page_bytes": 70467,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "question_id": "1036",
+   "data_bytes": 53400,
+   "page_bytes": 70409,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/codebase_community",
+   "question_id": "694",
+   "data_bytes": 51776,
+   "page_bytes": 68542,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/codebase_community",
+   "question_id": "694",
+   "data_bytes": 51702,
+   "page_bytes": 68457,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/codebase_community",
+   "question_id": "694",
+   "data_bytes": 51693,
+   "page_bytes": 68446,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/codebase_community",
+   "question_id": "694",
+   "data_bytes": 51690,
+   "page_bytes": 68443,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/codebase_community",
+   "question_id": "694",
+   "data_bytes": 51685,
+   "page_bytes": 68437,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/codebase_community",
+   "question_id": "694",
+   "data_bytes": 51677,
+   "page_bytes": 68428,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/codebase_community",
+   "question_id": "694",
+   "data_bytes": 51657,
+   "page_bytes": 68405,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/codebase_community",
+   "question_id": "694",
+   "data_bytes": 51591,
+   "page_bytes": 68329,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "694",
+   "data_bytes": 50682,
+   "page_bytes": 67284,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/mistralai-mixtral-8x7b-instru-4",
+   "question_id": "694",
+   "data_bytes": 50663,
+   "page_bytes": 67262,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "694",
+   "data_bytes": 50631,
+   "page_bytes": 67225,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "694",
+   "data_bytes": 50620,
+   "page_bytes": 67212,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "694",
+   "data_bytes": 50608,
+   "page_bytes": 67199,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "694",
+   "data_bytes": 50599,
+   "page_bytes": 67188,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "694",
+   "data_bytes": 50509,
+   "page_bytes": 67085,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/card_games",
+   "question_id": "484",
+   "data_bytes": 50447,
+   "page_bytes": 67014,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/card_games",
+   "question_id": "484",
+   "data_bytes": 50373,
+   "page_bytes": 66928,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/card_games",
+   "question_id": "484",
+   "data_bytes": 50353,
+   "page_bytes": 66905,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "1002",
+   "data_bytes": 49776,
+   "page_bytes": 66242,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "484",
+   "data_bytes": 49405,
+   "page_bytes": 65815,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "484",
+   "data_bytes": 49397,
+   "page_bytes": 65806,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/thrombosis_prediction",
+   "question_id": "1208",
+   "data_bytes": 48828,
+   "page_bytes": 65152,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/thrombosis_prediction",
+   "question_id": "1208",
+   "data_bytes": 48762,
+   "page_bytes": 65076,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/thrombosis_prediction",
+   "question_id": "1208",
+   "data_bytes": 48760,
+   "page_bytes": 65073,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/thrombosis_prediction",
+   "question_id": "1208",
+   "data_bytes": 48756,
+   "page_bytes": 65069,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/thrombosis_prediction",
+   "question_id": "1208",
+   "data_bytes": 48750,
+   "page_bytes": 65062,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "1011",
+   "data_bytes": 48498,
+   "page_bytes": 64772,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/european_football_2",
+   "question_id": "1144",
+   "data_bytes": 48021,
+   "page_bytes": 64224,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "1011",
+   "data_bytes": 47965,
+   "page_bytes": 64159,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "1011",
+   "data_bytes": 47748,
+   "page_bytes": 63910,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/card_games",
+   "question_id": "484",
+   "data_bytes": 47460,
+   "page_bytes": 63578,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/card_games",
+   "question_id": "484",
+   "data_bytes": 46600,
+   "page_bytes": 62589,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/card_games",
+   "question_id": "484",
+   "data_bytes": 46027,
+   "page_bytes": 61931,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/card_games",
+   "question_id": "484",
+   "data_bytes": 45941,
+   "page_bytes": 61832,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "484",
+   "data_bytes": 45885,
+   "page_bytes": 61767,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "484",
+   "data_bytes": 45535,
+   "page_bytes": 61365,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "484",
+   "data_bytes": 45465,
+   "page_bytes": 61284,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/formula_1",
+   "question_id": "1002",
+   "data_bytes": 45438,
+   "page_bytes": 61253,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "484",
+   "data_bytes": 45215,
+   "page_bytes": 60997,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "484",
+   "data_bytes": 45206,
+   "page_bytes": 60986,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "1002",
+   "data_bytes": 44534,
+   "page_bytes": 60214,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/toxicology",
+   "question_id": "230",
+   "data_bytes": 43966,
+   "page_bytes": 59560,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/toxicology",
+   "question_id": "230",
+   "data_bytes": 43938,
+   "page_bytes": 59528,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/toxicology",
+   "question_id": "230",
+   "data_bytes": 43936,
+   "page_bytes": 59526,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/toxicology",
+   "question_id": "230",
+   "data_bytes": 43924,
+   "page_bytes": 59512,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/toxicology",
+   "question_id": "230",
+   "data_bytes": 43910,
+   "page_bytes": 59496,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/toxicology",
+   "question_id": "230",
+   "data_bytes": 43884,
+   "page_bytes": 59466,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/toxicology",
+   "question_id": "230",
+   "data_bytes": 43824,
+   "page_bytes": 59397,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/thrombosis_prediction",
+   "question_id": "1209",
+   "data_bytes": 43758,
+   "page_bytes": 59321,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/thrombosis_prediction",
+   "question_id": "1209",
+   "data_bytes": 43608,
+   "page_bytes": 59149,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1144",
+   "data_bytes": 42697,
+   "page_bytes": 58101,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "question_id": "1144",
+   "data_bytes": 42619,
+   "page_bytes": 58011,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/thrombosis_prediction",
+   "question_id": "1209",
+   "data_bytes": 40681,
+   "page_bytes": 55783,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "906",
+   "data_bytes": 37575,
+   "page_bytes": 52211,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/card_games",
+   "question_id": "522",
+   "data_bytes": 37306,
+   "page_bytes": 51901,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/card_games",
+   "question_id": "522",
+   "data_bytes": 37211,
+   "page_bytes": 51792,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/card_games",
+   "question_id": "522",
+   "data_bytes": 37163,
+   "page_bytes": 51737,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/card_games",
+   "question_id": "522",
+   "data_bytes": 37153,
+   "page_bytes": 51725,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/card_games",
+   "question_id": "522",
+   "data_bytes": 37149,
+   "page_bytes": 51721,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/card_games",
+   "question_id": "522",
+   "data_bytes": 37149,
+   "page_bytes": 51721,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/card_games",
+   "question_id": "522",
+   "data_bytes": 37087,
+   "page_bytes": 51650,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/card_games",
+   "question_id": "522",
+   "data_bytes": 37063,
+   "page_bytes": 51622,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1130",
+   "data_bytes": 36575,
+   "page_bytes": 51061,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "question_id": "1130",
+   "data_bytes": 36525,
+   "page_bytes": 51003,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1130",
+   "data_bytes": 36523,
+   "page_bytes": 51001,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/european_football_2",
+   "question_id": "1130",
+   "data_bytes": 36509,
+   "page_bytes": 50985,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1130",
+   "data_bytes": 36505,
+   "page_bytes": 50980,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/european_football_2",
+   "question_id": "1144",
+   "data_bytes": 36490,
+   "page_bytes": 50963,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1130",
+   "data_bytes": 36481,
+   "page_bytes": 50953,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "question_id": "1130",
+   "data_bytes": 36461,
+   "page_bytes": 50930,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1144",
+   "data_bytes": 36411,
+   "page_bytes": 50872,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/european_football_2",
+   "question_id": "1144",
+   "data_bytes": 36406,
+   "page_bytes": 50866,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/california_schools",
+   "question_id": "37",
+   "data_bytes": 36386,
+   "page_bytes": 50843,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1144",
+   "data_bytes": 36370,
+   "page_bytes": 50825,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/california_schools",
+   "question_id": "37",
+   "data_bytes": 36028,
+   "page_bytes": 50432,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/california_schools",
+   "question_id": "37",
+   "data_bytes": 36026,
+   "page_bytes": 50429,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/california_schools",
+   "question_id": "37",
+   "data_bytes": 35934,
+   "page_bytes": 50324,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/california_schools",
+   "question_id": "37",
+   "data_bytes": 35876,
+   "page_bytes": 50257,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/california_schools",
+   "question_id": "37",
+   "data_bytes": 35860,
+   "page_bytes": 50239,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/california_schools",
+   "question_id": "37",
+   "data_bytes": 35739,
+   "page_bytes": 50099,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-8b-instruct-2",
+   "question_id": "879",
+   "data_bytes": 35143,
+   "page_bytes": 49414,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/formula_1",
+   "question_id": "1002",
+   "data_bytes": 35097,
+   "page_bytes": 49361,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "1002",
+   "data_bytes": 35073,
+   "page_bytes": 49333,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/card_games",
+   "question_id": "391",
+   "data_bytes": 35049,
+   "page_bytes": 49306,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/card_games",
+   "question_id": "391",
+   "data_bytes": 35037,
+   "page_bytes": 49292,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/formula_1",
+   "question_id": "1002",
+   "data_bytes": 35012,
+   "page_bytes": 49263,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/formula_1",
+   "question_id": "1002",
+   "data_bytes": 35005,
+   "page_bytes": 49255,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "37",
+   "data_bytes": 34862,
+   "page_bytes": 49091,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "37",
+   "data_bytes": 34794,
+   "page_bytes": 49013,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/superhero",
+   "question_id": "794",
+   "data_bytes": 34709,
+   "page_bytes": 48915,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/european_football_2",
+   "question_id": "1041",
+   "data_bytes": 34688,
+   "page_bytes": 48891,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "37",
+   "data_bytes": 34577,
+   "page_bytes": 48763,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "37",
+   "data_bytes": 34455,
+   "page_bytes": 48623,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "37",
+   "data_bytes": 34427,
+   "page_bytes": 48591,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "37",
+   "data_bytes": 34415,
+   "page_bytes": 48577,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/european_football_2",
+   "question_id": "1130",
+   "data_bytes": 34398,
+   "page_bytes": 48557,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "37",
+   "data_bytes": 34349,
+   "page_bytes": 48501,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/card_games",
+   "question_id": "459",
+   "data_bytes": 34209,
+   "page_bytes": 48340,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/card_games",
+   "question_id": "459",
+   "data_bytes": 34128,
+   "page_bytes": 48247,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/california_schools",
+   "question_id": "37",
+   "data_bytes": 34094,
+   "page_bytes": 48208,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "1002",
+   "data_bytes": 34081,
+   "page_bytes": 48193,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "1002",
+   "data_bytes": 34045,
+   "page_bytes": 48151,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "794",
+   "data_bytes": 33784,
+   "page_bytes": 47851,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/thrombosis_prediction",
+   "question_id": "1168",
+   "data_bytes": 32753,
+   "page_bytes": 46665,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "1002",
+   "data_bytes": 32652,
+   "page_bytes": 46549,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/thrombosis_prediction",
+   "question_id": "1168",
+   "data_bytes": 32377,
+   "page_bytes": 46233,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/thrombosis_prediction",
+   "question_id": "1168",
+   "data_bytes": 32372,
+   "page_bytes": 46227,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/student_club",
+   "question_id": "1457",
+   "data_bytes": 31045,
+   "page_bytes": 44701,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/formula_1",
+   "question_id": "850",
+   "data_bytes": 30926,
+   "page_bytes": 44564,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/formula_1",
+   "question_id": "850",
+   "data_bytes": 30892,
+   "page_bytes": 44525,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/formula_1",
+   "question_id": "850",
+   "data_bytes": 30888,
+   "page_bytes": 44521,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/formula_1",
+   "question_id": "850",
+   "data_bytes": 30860,
+   "page_bytes": 44489,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/formula_1",
+   "question_id": "850",
+   "data_bytes": 30858,
+   "page_bytes": 44486,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/formula_1",
+   "question_id": "850",
+   "data_bytes": 30856,
+   "page_bytes": 44484,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "850",
+   "data_bytes": 30832,
+   "page_bytes": 44456,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/financial",
+   "question_id": "94",
+   "data_bytes": 30707,
+   "page_bytes": 44313,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/financial",
+   "question_id": "94",
+   "data_bytes": 30554,
+   "page_bytes": 44137,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1144",
+   "data_bytes": 29902,
+   "page_bytes": 43387,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/financial",
+   "question_id": "94",
+   "data_bytes": 29600,
+   "page_bytes": 43040,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "906",
+   "data_bytes": 29530,
+   "page_bytes": 42959,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/formula_1",
+   "question_id": "906",
+   "data_bytes": 29424,
+   "page_bytes": 42837,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/formula_1",
+   "question_id": "906",
+   "data_bytes": 29154,
+   "page_bytes": 42527,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/formula_1",
+   "question_id": "906",
+   "data_bytes": 28709,
+   "page_bytes": 42015,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/formula_1",
+   "question_id": "906",
+   "data_bytes": 28635,
+   "page_bytes": 41930,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/formula_1",
+   "question_id": "906",
+   "data_bytes": 28631,
+   "page_bytes": 41925,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/codebase_community",
+   "question_id": "671",
+   "data_bytes": 28393,
+   "page_bytes": 41651,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/codebase_community",
+   "question_id": "671",
+   "data_bytes": 28337,
+   "page_bytes": 41587,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/toxicology",
+   "question_id": "240",
+   "data_bytes": 28310,
+   "page_bytes": 41556,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "906",
+   "data_bytes": 28293,
+   "page_bytes": 41536,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "906",
+   "data_bytes": 28007,
+   "page_bytes": 41208,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "906",
+   "data_bytes": 27973,
+   "page_bytes": 41168,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "906",
+   "data_bytes": 27903,
+   "page_bytes": 41088,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "906",
+   "data_bytes": 27849,
+   "page_bytes": 41026,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg-gold-only/zip",
+   "question_id": "484",
+   "data_bytes": 27839,
+   "page_bytes": 41014,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg-gold-only/hf",
+   "question_id": "484",
+   "data_bytes": 27815,
+   "page_bytes": 40987,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "906",
+   "data_bytes": 27767,
+   "page_bytes": 40932,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "1482",
+   "data_bytes": 27078,
+   "page_bytes": 40139,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/mistralai-mixtral-8x7b-instru-4",
+   "question_id": "671",
+   "data_bytes": 27025,
+   "page_bytes": 40078,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "751",
+   "data_bytes": 26975,
+   "page_bytes": 40021,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/formula_1",
+   "question_id": "868",
+   "data_bytes": 26969,
+   "page_bytes": 40014,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/formula_1",
+   "question_id": "868",
+   "data_bytes": 26957,
+   "page_bytes": 40000,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/formula_1",
+   "question_id": "868",
+   "data_bytes": 26941,
+   "page_bytes": 39982,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/formula_1",
+   "question_id": "868",
+   "data_bytes": 26879,
+   "page_bytes": 39910,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/card_games",
+   "question_id": "349",
+   "data_bytes": 26859,
+   "page_bytes": 39887,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/card_games",
+   "question_id": "349",
+   "data_bytes": 26799,
+   "page_bytes": 39818,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "1482",
+   "data_bytes": 26613,
+   "page_bytes": 39604,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/financial",
+   "question_id": "112",
+   "data_bytes": 26374,
+   "page_bytes": 39330,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/card_games",
+   "question_id": "349",
+   "data_bytes": 25978,
+   "page_bytes": 38874,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "349",
+   "data_bytes": 25880,
+   "page_bytes": 38761,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/card_games",
+   "question_id": "349",
+   "data_bytes": 25854,
+   "page_bytes": 38732,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/card_games",
+   "question_id": "349",
+   "data_bytes": 25835,
+   "page_bytes": 38710,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/card_games",
+   "question_id": "349",
+   "data_bytes": 25817,
+   "page_bytes": 38689,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/card_games",
+   "question_id": "349",
+   "data_bytes": 25775,
+   "page_bytes": 38641,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/card_games",
+   "question_id": "349",
+   "data_bytes": 25751,
+   "page_bytes": 38613,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/toxicology",
+   "question_id": "240",
+   "data_bytes": 25742,
+   "page_bytes": 38603,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "1482",
+   "data_bytes": 25684,
+   "page_bytes": 38536,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/toxicology",
+   "question_id": "240",
+   "data_bytes": 25638,
+   "page_bytes": 38483,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/toxicology",
+   "question_id": "240",
+   "data_bytes": 25536,
+   "page_bytes": 38366,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/financial",
+   "question_id": "173",
+   "data_bytes": 25532,
+   "page_bytes": 38361,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/toxicology",
+   "question_id": "240",
+   "data_bytes": 25478,
+   "page_bytes": 38299,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "751",
+   "data_bytes": 25118,
+   "page_bytes": 37885,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "751",
+   "data_bytes": 25110,
+   "page_bytes": 37876,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "751",
+   "data_bytes": 25100,
+   "page_bytes": 37864,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "1145",
+   "data_bytes": 25018,
+   "page_bytes": 37770,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "349",
+   "data_bytes": 24956,
+   "page_bytes": 37699,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "1145",
+   "data_bytes": 24952,
+   "page_bytes": 37694,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/financial",
+   "question_id": "115",
+   "data_bytes": 24943,
+   "page_bytes": 37684,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "question_id": "1135",
+   "data_bytes": 24926,
+   "page_bytes": 37664,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "1145",
+   "data_bytes": 24924,
+   "page_bytes": 37662,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "349",
+   "data_bytes": 24906,
+   "page_bytes": 37641,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "349",
+   "data_bytes": 24902,
+   "page_bytes": 37637,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "349",
+   "data_bytes": 24894,
+   "page_bytes": 37628,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/superhero",
+   "question_id": "766",
+   "data_bytes": 24887,
+   "page_bytes": 37620,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "1145",
+   "data_bytes": 24862,
+   "page_bytes": 37591,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/superhero",
+   "question_id": "766",
+   "data_bytes": 24840,
+   "page_bytes": 37565,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "349",
+   "data_bytes": 24834,
+   "page_bytes": 37559,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/superhero",
+   "question_id": "766",
+   "data_bytes": 24789,
+   "page_bytes": 37507,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "question_id": "1135",
+   "data_bytes": 24787,
+   "page_bytes": 37505,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1135",
+   "data_bytes": 24787,
+   "page_bytes": 37505,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/superhero",
+   "question_id": "766",
+   "data_bytes": 24785,
+   "page_bytes": 37502,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/superhero",
+   "question_id": "766",
+   "data_bytes": 24777,
+   "page_bytes": 37493,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/superhero",
+   "question_id": "766",
+   "data_bytes": 24721,
+   "page_bytes": 37429,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/financial",
+   "question_id": "115",
+   "data_bytes": 24712,
+   "page_bytes": 37418,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "question_id": "1028",
+   "data_bytes": 24699,
+   "page_bytes": 37403,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/superhero",
+   "question_id": "766",
+   "data_bytes": 24627,
+   "page_bytes": 37321,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/financial",
+   "question_id": "115",
+   "data_bytes": 24575,
+   "page_bytes": 37261,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg-gold-only/zip",
+   "question_id": "1011",
+   "data_bytes": 24570,
+   "page_bytes": 37255,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg-gold-only/zip",
+   "question_id": "694",
+   "data_bytes": 24566,
+   "page_bytes": 37250,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg-gold-only/hf",
+   "question_id": "1011",
+   "data_bytes": 24546,
+   "page_bytes": 37227,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg-gold-only/hf",
+   "question_id": "694",
+   "data_bytes": 24542,
+   "page_bytes": 37223,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1028",
+   "data_bytes": 24503,
+   "page_bytes": 37178,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-8b-instruct-2",
+   "question_id": "766",
+   "data_bytes": 24447,
+   "page_bytes": 37114,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "349",
+   "data_bytes": 24302,
+   "page_bytes": 36947,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/formula_1",
+   "question_id": "854",
+   "data_bytes": 24292,
+   "page_bytes": 36935,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/formula_1",
+   "question_id": "854",
+   "data_bytes": 24280,
+   "page_bytes": 36921,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/superhero",
+   "question_id": "794",
+   "data_bytes": 24265,
+   "page_bytes": 36904,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/formula_1",
+   "question_id": "854",
+   "data_bytes": 24264,
+   "page_bytes": 36903,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/superhero",
+   "question_id": "794",
+   "data_bytes": 24249,
+   "page_bytes": 36886,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "question_id": "1028",
+   "data_bytes": 24240,
+   "page_bytes": 36875,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/formula_1",
+   "question_id": "854",
+   "data_bytes": 24214,
+   "page_bytes": 36846,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/formula_1",
+   "question_id": "854",
+   "data_bytes": 24208,
+   "page_bytes": 36839,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/superhero",
+   "question_id": "794",
+   "data_bytes": 24203,
+   "page_bytes": 36833,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/codebase_community",
+   "question_id": "671",
+   "data_bytes": 24202,
+   "page_bytes": 36832,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/superhero",
+   "question_id": "794",
+   "data_bytes": 24199,
+   "page_bytes": 36828,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/superhero",
+   "question_id": "794",
+   "data_bytes": 24192,
+   "page_bytes": 36820,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/superhero",
+   "question_id": "794",
+   "data_bytes": 24191,
+   "page_bytes": 36819,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "854",
+   "data_bytes": 24186,
+   "page_bytes": 36813,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/superhero",
+   "question_id": "794",
+   "data_bytes": 24175,
+   "page_bytes": 36801,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/codebase_community",
+   "question_id": "671",
+   "data_bytes": 24175,
+   "page_bytes": 36801,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/codebase_community",
+   "question_id": "671",
+   "data_bytes": 24173,
+   "page_bytes": 36798,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/codebase_community",
+   "question_id": "671",
+   "data_bytes": 24148,
+   "page_bytes": 36770,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/codebase_community",
+   "question_id": "671",
+   "data_bytes": 24144,
+   "page_bytes": 36765,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/superhero",
+   "question_id": "794",
+   "data_bytes": 24127,
+   "page_bytes": 36746,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/european_football_2",
+   "question_id": "1135",
+   "data_bytes": 24117,
+   "page_bytes": 36734,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/codebase_community",
+   "question_id": "671",
+   "data_bytes": 24073,
+   "page_bytes": 36683,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/superhero",
+   "question_id": "743",
+   "data_bytes": 24064,
+   "page_bytes": 36673,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1028",
+   "data_bytes": 24041,
+   "page_bytes": 36647,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/codebase_community",
+   "question_id": "671",
+   "data_bytes": 24040,
+   "page_bytes": 36645,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1028",
+   "data_bytes": 24031,
+   "page_bytes": 36635,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/european_football_2",
+   "question_id": "1135",
+   "data_bytes": 24025,
+   "page_bytes": 36628,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/european_football_2",
+   "question_id": "1135",
+   "data_bytes": 23993,
+   "page_bytes": 36591,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "766",
+   "data_bytes": 23984,
+   "page_bytes": 36581,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "766",
+   "data_bytes": 23970,
+   "page_bytes": 36565,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/financial",
+   "question_id": "115",
+   "data_bytes": 23968,
+   "page_bytes": 36563,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "1531",
+   "data_bytes": 23952,
+   "page_bytes": 36544,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/financial",
+   "question_id": "115",
+   "data_bytes": 23947,
+   "page_bytes": 36539,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "766",
+   "data_bytes": 23918,
+   "page_bytes": 36505,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/formula_1",
+   "question_id": "847",
+   "data_bytes": 23913,
+   "page_bytes": 36499,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "846",
+   "data_bytes": 23905,
+   "page_bytes": 36490,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1135",
+   "data_bytes": 23881,
+   "page_bytes": 36463,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "766",
+   "data_bytes": 23854,
+   "page_bytes": 36432,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1028",
+   "data_bytes": 23833,
+   "page_bytes": 36407,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/formula_1",
+   "question_id": "847",
+   "data_bytes": 23826,
+   "page_bytes": 36399,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/european_football_2",
+   "question_id": "1028",
+   "data_bytes": 23812,
+   "page_bytes": 36383,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/financial",
+   "question_id": "115",
+   "data_bytes": 23807,
+   "page_bytes": 36378,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "766",
+   "data_bytes": 23788,
+   "page_bytes": 36356,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/financial",
+   "question_id": "115",
+   "data_bytes": 23785,
+   "page_bytes": 36352,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "766",
+   "data_bytes": 23776,
+   "page_bytes": 36342,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "766",
+   "data_bytes": 23766,
+   "page_bytes": 36330,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/formula_1",
+   "question_id": "978",
+   "data_bytes": 23706,
+   "page_bytes": 36261,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/formula_1",
+   "question_id": "847",
+   "data_bytes": 23637,
+   "page_bytes": 36182,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/formula_1",
+   "question_id": "847",
+   "data_bytes": 23608,
+   "page_bytes": 36149,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/formula_1",
+   "question_id": "847",
+   "data_bytes": 23602,
+   "page_bytes": 36142,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/formula_1",
+   "question_id": "847",
+   "data_bytes": 23600,
+   "page_bytes": 36139,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/formula_1",
+   "question_id": "978",
+   "data_bytes": 23588,
+   "page_bytes": 36126,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "847",
+   "data_bytes": 23579,
+   "page_bytes": 36115,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "978",
+   "data_bytes": 23564,
+   "page_bytes": 36098,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "794",
+   "data_bytes": 23505,
+   "page_bytes": 36030,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "794",
+   "data_bytes": 23501,
+   "page_bytes": 36026,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/formula_1",
+   "question_id": "847",
+   "data_bytes": 23455,
+   "page_bytes": 35973,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "794",
+   "data_bytes": 23439,
+   "page_bytes": 35954,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "794",
+   "data_bytes": 23435,
+   "page_bytes": 35950,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "794",
+   "data_bytes": 23427,
+   "page_bytes": 35941,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1135",
+   "data_bytes": 23419,
+   "page_bytes": 35931,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "115",
+   "data_bytes": 23398,
+   "page_bytes": 35907,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/formula_1",
+   "question_id": "857",
+   "data_bytes": 23371,
+   "page_bytes": 35876,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/formula_1",
+   "question_id": "857",
+   "data_bytes": 23321,
+   "page_bytes": 35819,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-8b-instruct-2",
+   "question_id": "794",
+   "data_bytes": 23314,
+   "page_bytes": 35811,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/formula_1",
+   "question_id": "857",
+   "data_bytes": 23309,
+   "page_bytes": 35805,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "857",
+   "data_bytes": 23293,
+   "page_bytes": 35786,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "794",
+   "data_bytes": 23283,
+   "page_bytes": 35775,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/superhero",
+   "question_id": "736",
+   "data_bytes": 23283,
+   "page_bytes": 35775,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/european_football_2",
+   "question_id": "1028",
+   "data_bytes": 23243,
+   "page_bytes": 35729,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "115",
+   "data_bytes": 23230,
+   "page_bytes": 35714,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "115",
+   "data_bytes": 23211,
+   "page_bytes": 35692,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1135",
+   "data_bytes": 23162,
+   "page_bytes": 35636,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "847",
+   "data_bytes": 22855,
+   "page_bytes": 35283,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "671",
+   "data_bytes": 22836,
+   "page_bytes": 35261,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "671",
+   "data_bytes": 22809,
+   "page_bytes": 35230,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "671",
+   "data_bytes": 22802,
+   "page_bytes": 35222,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "671",
+   "data_bytes": 22778,
+   "page_bytes": 35194,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-8b-instruct-2",
+   "question_id": "671",
+   "data_bytes": 22778,
+   "page_bytes": 35194,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "671",
+   "data_bytes": 22776,
+   "page_bytes": 35192,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "1028",
+   "data_bytes": 22765,
+   "page_bytes": 35179,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "847",
+   "data_bytes": 22745,
+   "page_bytes": 35156,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "671",
+   "data_bytes": 22739,
+   "page_bytes": 35149,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "1028",
+   "data_bytes": 22729,
+   "page_bytes": 35138,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "671",
+   "data_bytes": 22715,
+   "page_bytes": 35122,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/mistralai-mixtral-8x7b-instru-4",
+   "question_id": "847",
+   "data_bytes": 22660,
+   "page_bytes": 35058,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "847",
+   "data_bytes": 22636,
+   "page_bytes": 35031,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "847",
+   "data_bytes": 22620,
+   "page_bytes": 35012,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "847",
+   "data_bytes": 22618,
+   "page_bytes": 35010,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "847",
+   "data_bytes": 22561,
+   "page_bytes": 34945,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/student_club",
+   "question_id": "1389",
+   "data_bytes": 22553,
+   "page_bytes": 34935,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/formula_1",
+   "question_id": "879",
+   "data_bytes": 22530,
+   "page_bytes": 34909,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "736",
+   "data_bytes": 22481,
+   "page_bytes": 34853,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/formula_1",
+   "question_id": "879",
+   "data_bytes": 22453,
+   "page_bytes": 34820,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-8b-instruct-2",
+   "question_id": "847",
+   "data_bytes": 22408,
+   "page_bytes": 34769,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/toxicology",
+   "question_id": "253",
+   "data_bytes": 22324,
+   "page_bytes": 34672,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "1028",
+   "data_bytes": 22272,
+   "page_bytes": 34612,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/california_schools",
+   "question_id": "45",
+   "data_bytes": 22130,
+   "page_bytes": 34449,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg-gold-only/zip",
+   "question_id": "955",
+   "data_bytes": 22123,
+   "page_bytes": 34441,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg-gold-only/hf",
+   "question_id": "955",
+   "data_bytes": 22099,
+   "page_bytes": 34413,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "1028",
+   "data_bytes": 22095,
+   "page_bytes": 34409,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "1028",
+   "data_bytes": 22083,
+   "page_bytes": 34395,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/california_schools",
+   "question_id": "45",
+   "data_bytes": 22067,
+   "page_bytes": 34377,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/superhero",
+   "question_id": "736",
+   "data_bytes": 22066,
+   "page_bytes": 34375,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1147",
+   "data_bytes": 22026,
+   "page_bytes": 34329,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "1028",
+   "data_bytes": 22019,
+   "page_bytes": 34321,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "question_id": "1147",
+   "data_bytes": 21996,
+   "page_bytes": 34295,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1122",
+   "data_bytes": 21990,
+   "page_bytes": 34288,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1147",
+   "data_bytes": 21960,
+   "page_bytes": 34253,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/formula_1",
+   "question_id": "879",
+   "data_bytes": 21952,
+   "page_bytes": 34244,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/california_schools",
+   "question_id": "45",
+   "data_bytes": 21944,
+   "page_bytes": 34235,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/california_schools",
+   "question_id": "82",
+   "data_bytes": 21943,
+   "page_bytes": 34234,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1122",
+   "data_bytes": 21920,
+   "page_bytes": 34207,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/european_football_2",
+   "question_id": "1122",
+   "data_bytes": 21908,
+   "page_bytes": 34194,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/superhero",
+   "question_id": "736",
+   "data_bytes": 21887,
+   "page_bytes": 34170,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/superhero",
+   "question_id": "736",
+   "data_bytes": 21883,
+   "page_bytes": 34165,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/superhero",
+   "question_id": "736",
+   "data_bytes": 21879,
+   "page_bytes": 34160,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/california_schools",
+   "question_id": "82",
+   "data_bytes": 21867,
+   "page_bytes": 34147,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/formula_1",
+   "question_id": "879",
+   "data_bytes": 21856,
+   "page_bytes": 34134,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1122",
+   "data_bytes": 21856,
+   "page_bytes": 34134,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/california_schools",
+   "question_id": "45",
+   "data_bytes": 21843,
+   "page_bytes": 34119,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1122",
+   "data_bytes": 21824,
+   "page_bytes": 34097,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/superhero",
+   "question_id": "736",
+   "data_bytes": 21823,
+   "page_bytes": 34096,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/superhero",
+   "question_id": "736",
+   "data_bytes": 21807,
+   "page_bytes": 34078,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/formula_1",
+   "question_id": "879",
+   "data_bytes": 21798,
+   "page_bytes": 34067,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "1145",
+   "data_bytes": 21797,
+   "page_bytes": 34066,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/superhero",
+   "question_id": "736",
+   "data_bytes": 21778,
+   "page_bytes": 34044,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/formula_1",
+   "question_id": "879",
+   "data_bytes": 21772,
+   "page_bytes": 34037,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/formula_1",
+   "question_id": "879",
+   "data_bytes": 21760,
+   "page_bytes": 34023,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "1145",
+   "data_bytes": 21747,
+   "page_bytes": 34009,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "1410",
+   "data_bytes": 21723,
+   "page_bytes": 33981,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "1145",
+   "data_bytes": 21717,
+   "page_bytes": 33974,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "1410",
+   "data_bytes": 21713,
+   "page_bytes": 33969,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "1410",
+   "data_bytes": 21709,
+   "page_bytes": 33965,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "1410",
+   "data_bytes": 21677,
+   "page_bytes": 33928,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "1410",
+   "data_bytes": 21647,
+   "page_bytes": 33894,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "1410",
+   "data_bytes": 21619,
+   "page_bytes": 33861,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/toxicology",
+   "question_id": "218",
+   "data_bytes": 21586,
+   "page_bytes": 33823,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/phi-3-medium-128k-instruct-1",
+   "question_id": "1529",
+   "data_bytes": 21551,
+   "page_bytes": 33783,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/card_games",
+   "question_id": "477",
+   "data_bytes": 21534,
+   "page_bytes": 33764,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/card_games",
+   "question_id": "477",
+   "data_bytes": 21522,
+   "page_bytes": 33750,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "bird-dev-sqlite/dev-20251106/california_schools",
+   "question_id": "37",
+   "data_bytes": 21477,
+   "page_bytes": 33698,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "1389",
+   "data_bytes": 21470,
+   "page_bytes": 33690,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/mistralai-mixtral-8x7b-instru-4",
+   "question_id": "879",
+   "data_bytes": 21453,
+   "page_bytes": 33670,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/card_games",
+   "question_id": "477",
+   "data_bytes": 21446,
+   "page_bytes": 33662,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/student_club",
+   "question_id": "1389",
+   "data_bytes": 21430,
+   "page_bytes": 33644,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "879",
+   "data_bytes": 21415,
+   "page_bytes": 33627,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/student_club",
+   "question_id": "1389",
+   "data_bytes": 21402,
+   "page_bytes": 33612,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "879",
+   "data_bytes": 21393,
+   "page_bytes": 33601,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/student_club",
+   "question_id": "1389",
+   "data_bytes": 21378,
+   "page_bytes": 33584,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-8b-instruct-2/california_schools",
+   "question_id": "82",
+   "data_bytes": 21376,
+   "page_bytes": 33582,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/california_schools",
+   "question_id": "82",
+   "data_bytes": 21343,
+   "page_bytes": 33544,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/meta-llama-3-70b-instruct-2/european_football_2",
+   "question_id": "1141",
+   "data_bytes": 21338,
+   "page_bytes": 33538,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/phi-3-medium-128k-instruct-1/european_football_2",
+   "question_id": "1141",
+   "data_bytes": 21330,
+   "page_bytes": 33529,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "1389",
+   "data_bytes": 21318,
+   "page_bytes": 33515,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "1529",
+   "data_bytes": 21307,
+   "page_bytes": 33503,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo/european_football_2",
+   "question_id": "1141",
+   "data_bytes": 21284,
+   "page_bytes": 33476,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-35-turbo-instruct/european_football_2",
+   "question_id": "1141",
+   "data_bytes": 21240,
+   "page_bytes": 33425,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-32k/european_football_2",
+   "question_id": "1141",
+   "data_bytes": 21234,
+   "page_bytes": 33419,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4",
+   "question_id": "1529",
+   "data_bytes": 21228,
+   "page_bytes": 33412,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "question_id": "1529",
+   "data_bytes": 21212,
+   "page_bytes": 33393,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4-turbo/european_football_2",
+   "question_id": "1141",
+   "data_bytes": 21208,
+   "page_bytes": 33389,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-sqlite/gpt-4/european_football_2",
+   "question_id": "1141",
+   "data_bytes": 21170,
+   "page_bytes": 33345,
+   "reasons": [
+    "credited",
+    "over-budget"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo-instruct",
+   "question_id": "736",
+   "data_bytes": 21153,
+   "page_bytes": 33325,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-turbo",
+   "question_id": "736",
+   "data_bytes": 21087,
+   "page_bytes": 33250,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-35-turbo",
+   "question_id": "736",
+   "data_bytes": 21083,
+   "page_bytes": 33245,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  },
+  {
+   "slug": "minidev-pg/gpt-4-32k",
+   "question_id": "736",
+   "data_bytes": 21079,
+   "page_bytes": 33240,
+   "reasons": [
+    "over-budget",
+    "probe"
+   ]
+  }
+ ]
+}
