@@ -1,0 +1,975 @@
+/* The design spec applied: every colour, size, space and duration below is a token, and
+   every token is a value from `plans/260907-1730-attestql-web-ui/design-spec.md`.
+
+   The register is a lab notebook: one column of prose at a readable measure, tables and SQL
+   in regions of their own, one accent, one warning colour, no elevation and no decoration.
+   Nothing here is chosen for effect. A value that is not on one of the scales below is a
+   finding in review, which is why the scales are declared once, at the top, and used by
+   name everywhere else.
+
+   Two things are worth knowing before reading further. The dark theme is a second decision
+   and not an inversion: its values are the spec's own, and the contrast of every text pair
+   in both themes is computed in `tests/test_report_tokens_meet_contrast.py`, which reads
+   the numbers out of this file so the stylesheet and the test cannot drift apart. And the
+   figures carry classes rather than colours, because `var()` is not a value an SVG
+   presentation attribute reads: their marks are given the tokens here, which is what makes
+   one committed SVG hold in light, in dark and on paper. */
+
+/* ---------------------------------------------------------------------------------------
+   The fonts. Latin subsets of IBM Plex, self-hosted beside this file under the SIL Open
+   Font License 1.1 (`fonts/OFL.txt`, `fonts/provenance.txt`). `font-display: swap` shows
+   the fallback immediately and swaps when the file lands; the two fallback faces below
+   carry the metrics that keep the swap from moving the text, measured in Chromium against
+   the faces they stand in for.
+   --------------------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-Regular-Latin1.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-SemiBold-Latin1.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexMono-Regular-Latin1.woff2") format("woff2");
+}
+
+/* The measure of the fallback, matched to Plex rather than left to the machine. Plex Sans
+   is 1.002 of Helvetica Neue and 1.012 of Arial over a sentence of this page's own text at
+   16px; 100.7% sits between them, so the same sentence occupies the same width whichever
+   of the two the reader has, and the line the text is on does not move when the woff2
+   arrives. The vertical overrides are Plex's own hhea metrics, 1025 and 275 per 1000. */
+@font-face {
+  font-family: "Plex Sans fallback";
+  src:
+    local("Helvetica Neue"),
+    local("Arial"),
+    local("Roboto"),
+    local("Segoe UI"),
+    local("Liberation Sans");
+  size-adjust: 100.7%;
+  ascent-override: 102.5%;
+  descent-override: 27.5%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Plex Mono fallback";
+  src:
+    local("Menlo"),
+    local("Consolas"),
+    local("DejaVu Sans Mono"),
+    local("Liberation Mono"),
+    local("Courier New");
+  size-adjust: 99.8%;
+  ascent-override: 102.5%;
+  descent-override: 27.5%;
+  line-gap-override: 0%;
+}
+
+/* ---------------------------------------------------------------------------------------
+   The tokens.
+   --------------------------------------------------------------------------------------- */
+
+:root {
+  --paper: #faf9f6;
+  --ink: #1c1b18;
+  --ink-2: #5a5750;
+  --rule: #dad7cf;
+  --accent: #1f5f7a;
+  --warn: #9a4b00;
+  --gold-tint: #f3dba6;
+  --second-tint: #ccdfea;
+
+  --sans: "IBM Plex Sans", "Plex Sans fallback", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", "Plex Mono fallback", ui-monospace, monospace;
+
+  --text-cell: 13px;
+  --text-body: 16px;
+  --text-head: 20px;
+  --text-title: 28px;
+
+  --leading-body: 1.5;
+  --leading-cell: 1.35;
+  --leading-sql: 1.6;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --radius: 3px;
+
+  --easing: cubic-bezier(0.2, 0, 0, 1);
+  --fast: 120ms;
+  --slow: 240ms;
+  --reserved: 400ms;
+
+  --gutter: var(--space-4);
+  /* The prose column. `ch` is the advance of the digit zero, 0.6em in Plex Sans, so this is
+     528px at 16px. Measured in Chromium over the stress report: 75 characters on the first
+     line of the run page's longest paragraph and 56 on a question page's, both inside the
+     45 to 75 band the design reference names. It was 66ch, which measured 86 to 88 and is
+     outside that band; the owner decided this value on 2026-09-08. */
+  --measure: 55ch;
+  /* The widest a page's content box gets: 1280 less the two 32px gutters the spec fixes
+     for that breakpoint, which is the width the widest breakpoint is designed at. Not a
+     value off a scale of its own; it is read off the gutter rule above. */
+  --content: 1216px;
+
+  color-scheme: light dark;
+}
+
+/* The dark theme, re-decided rather than inverted: the paper is warm and near black, the
+   ink is off white, and the accent and the warning are lifted so that both stay above 4.5:1
+   on it. The two tints are deep and low, because a light tint on a dark paper would be the
+   brightest thing on the page and the rows it marks are not the loudest thing on it. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #151412;
+    --ink: #eceae4;
+    --ink-2: #a9a59b;
+    --rule: #33312c;
+    --accent: #7fb6cf;
+    --warn: #e8a24c;
+    /* Deepened from the spec's #2e2416 and #16252b, which sat at 1.21:1 and 1.17:1
+       against this paper: the light tints are 1.29:1 and 1.30:1, and a tint a reader
+       cannot see marks nothing. These two are 1.31:1, the same hues lifted, and every
+       text colour on them stays above 5.7:1. Moved together with
+       tests/test_report_tokens_meet_contrast.py, which is what holds them there. */
+    --gold-tint: #352a19;
+    --second-tint: #1b2e35;
+  }
+}
+
+/* The gutters the spec fixes, at the widths it fixes them for. */
+@media (min-width: 768px) {
+  :root {
+    --gutter: var(--space-5);
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --gutter: var(--space-6);
+  }
+}
+
+/* ---------------------------------------------------------------------------------------
+   The page.
+   --------------------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  /* A digest, a URL and a backend identity are single words with nowhere to break, and a
+     page carries them in prose as well as in tables. `break-word` breaks one only where it
+     would otherwise push the page sideways, and leaves a table's own columns alone, which is
+     why a wide result still scrolls in its region rather than wrapping in place. */
+  overflow-wrap: break-word;
+}
+
+.page {
+  width: min(100%, var(--content));
+  margin: 0 auto;
+  padding: var(--space-6) var(--gutter) var(--space-8);
+}
+
+/* The measure. Prose is held to 55ch; a table, a statement, a code block and a figure are
+   content regions and take the column's whole width, which is what the spec means by
+   escaping the measure. */
+.page p,
+.page ul,
+.page ol,
+.page dl,
+.page h2,
+.page h3,
+.page h4,
+.page summary,
+.page figcaption {
+  max-width: var(--measure);
+}
+
+section {
+  margin: 0 0 var(--space-7);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  line-height: var(--leading-cell);
+  margin: 0 0 var(--space-3);
+}
+
+h2 {
+  font-size: var(--text-head);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--rule);
+}
+
+h3 {
+  font-size: var(--text-body);
+  margin-top: var(--space-5);
+}
+
+h4 {
+  font-size: var(--text-cell);
+  margin-top: var(--space-4);
+}
+
+p {
+  margin: 0 0 var(--space-3);
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+.ink-2 {
+  color: var(--ink-2);
+}
+
+.warn {
+  color: var(--warn);
+}
+
+/* ---------------------------------------------------------------------------------------
+   The strip: which question, under which rule, and what came of it. It stays at the top of
+   the window and condenses once the reader has scrolled past the question text, so that the
+   verdict is on the screen while the rows are being read. One rule under it, the paper's own
+   colour and no shadow, which is what the spec says elevation is here.
+   --------------------------------------------------------------------------------------- */
+
+/* The line a site puts above every page of itself when the pages are not yet what they will
+   be. Not sticky and not a chip: it is read once, at the top, and then scrolled away.
+   `--rule` and not a tint: the two tints belong to rows of a result and the spec never lets
+   one appear without its label column and its glyph, which a banner has neither of. `--ink`
+   on `--rule` is 11.98:1 in light and 10.80:1 in dark, both computed in
+   tests/test_report_tokens_meet_contrast.py. */
+.banner {
+  padding: var(--space-3) var(--gutter);
+  background: var(--rule);
+  border-bottom: 1px solid var(--ink-2);
+}
+
+/* The line inside the band, given the strip's own width so that it starts on the same left
+   edge as the title and the prose under it. The prose measure is not applied, for the reason
+   `.strip__set` does not take it either: clamped, a short line would be centred in a wide
+   box and would start well right of everything below it. */
+.banner__line {
+  width: min(100%, calc(var(--content) - 2 * var(--gutter)));
+  margin: 0 auto;
+  font-size: var(--text-cell);
+  line-height: var(--leading-cell);
+}
+
+.strip {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  padding: var(--space-4) var(--gutter);
+  transition: padding var(--slow) var(--easing);
+}
+
+/* The strip's own padding is outside this box while `.page` carries its gutter inside its
+   border box, so the two share a left edge only if this width takes the gutters off. Without
+   the subtraction the strip's title starts one gutter left of the first heading under it once
+   `--content` binds, which is 32px against 64px at 1280 and 384 against 416 at 1920. */
+.strip > * {
+  width: min(100%, calc(var(--content) - 2 * var(--gutter)));
+  margin: 0 auto;
+}
+
+.strip--condensed {
+  padding-block: var(--space-2);
+}
+
+/* Once the reader has scrolled past the question, the strip is the verdict and nothing
+   else. The question set is named by its file and its origin, which a benchmark may write
+   as a URL of any length, and a sticky header that covers a phone screen while the rows
+   under it are being read is the header failing at its one job. The same line is under
+   "This question's run" further down the page, whole. */
+.strip--condensed .strip__set {
+  display: none;
+}
+
+.strip__title {
+  font-size: var(--text-title);
+  margin-bottom: var(--space-2);
+  transition: font-size var(--slow) var(--easing);
+}
+
+.strip--condensed .strip__title {
+  font-size: var(--text-head);
+}
+
+/* The auto inline margins are `.strip > *`'s and are restated here rather than dropped: a
+   `margin: 0` shorthand would centre the title and leave the chips under it at the padding
+   edge, which is the misalignment one gutter wide that this pair of rules is here to avoid. */
+.strip__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin: 0 auto;
+  max-width: none;
+}
+
+/* ---------------------------------------------------------------------------------------
+   Chips. A chip states a thing; the one chip that does a thing is a button and says so by
+   the cursor, the hover and the pressed state. Every chip carries a fill, because `--rule`
+   as an edge alone is 1.37:1 against the paper and would read as decoration.
+   --------------------------------------------------------------------------------------- */
+
+.chip {
+  display: inline-block;
+  border: 1px solid var(--rule);
+  background: var(--rule);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--sans);
+  font-size: var(--text-cell);
+  line-height: var(--leading-cell);
+  color: var(--ink);
+  /* A chip is as wide as its word and no narrower: the page's own `break-word` breaks a
+     word only where nothing else can give, and a column of the question index sized down to
+     one character would print NOT_COMPARABLE down the side of a cell. */
+  max-width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* The line under the chips: which question set, and where the run was told it came from.
+   Secondary text and not a chip, because its length is a benchmark's to decide. */
+/* The strip's children are all one width, which is what puts their left edges on the page's
+   own. The 55ch measure is the prose column's and is not applied here: clamped to it, this
+   line would be a 528px box centred inside a 1152px one and would start 312px right of the
+   title above it at 1280. */
+.strip__set {
+  margin: var(--space-2) auto 0;
+  font-size: var(--text-cell);
+  line-height: var(--leading-cell);
+}
+
+.chip--verdict {
+  font-weight: 600;
+}
+
+/* Every state `--warn` marks: NOT_EQUAL, NOT_COMPARABLE, ERROR, a fired probe, a timed-out
+   side. The word is always beside the colour. The fill is the gold tint rather than the
+   rule, because `--warn` on `--rule` is 4.32:1 in light and this text is not large. */
+.chip--warn,
+.chip--not_equal,
+.chip--not_comparable,
+.chip--error {
+  background: var(--gold-tint);
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+.chip--quiet {
+  background: none;
+  color: var(--ink-2);
+}
+
+.chip--mechanism {
+  position: relative;
+  cursor: pointer;
+  transition: background-color var(--fast) var(--easing);
+}
+
+/* The visible chip is the height of the line it sits on; what a finger has to hit is 44px.
+   The two are not the same box, and this is the second one. */
+.chip--mechanism::before {
+  content: "";
+  position: absolute;
+  inset: -10px -4px;
+}
+
+.chip--mechanism:hover {
+  background: var(--warn);
+  color: var(--paper);
+}
+
+.chip--mechanism[aria-pressed="false"] {
+  background: none;
+}
+
+/* ---------------------------------------------------------------------------------------
+   Facts: the named values a reader reads as a list.
+   --------------------------------------------------------------------------------------- */
+
+.facts {
+  display: grid;
+  /* The name column takes what it needs and no more, but it may shrink below that: every
+     other list of facts on this site has a short name, and the landing's three have a
+     sentence apiece. A plain `max-content` made that sentence 409px wide at a 360px
+     viewport and pushed the whole page sideways, which is the one thing the layout may not
+     do; `minmax(0, max-content)` differs from it only where the name would not fit, and
+     there it wraps. */
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  gap: var(--space-1) var(--space-4);
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-cell);
+  line-height: var(--leading-cell);
+}
+
+.facts dt {
+  color: var(--ink-2);
+}
+
+.facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------------------------------
+   Tables. A header cell states the column's name and, under it, the type the engine
+   declared. Numbers are right aligned on tabular figures, so a column of counts reads down
+   the page. The whole table is inside a region that scrolls sideways on its own.
+   --------------------------------------------------------------------------------------- */
+
+.rows {
+  margin-bottom: var(--space-4);
+}
+
+.rows__source,
+.rows__truncated {
+  font-size: var(--text-cell);
+  margin-bottom: var(--space-2);
+}
+
+.rows__region {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.rows__table,
+.counts__table,
+.index__table {
+  border-collapse: collapse;
+  font-size: var(--text-cell);
+  line-height: var(--leading-cell);
+}
+
+.rows__table th,
+.rows__table td,
+.counts__table th,
+.counts__table td,
+.index__table th,
+.index__table td {
+  border: 1px solid var(--rule);
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+  vertical-align: top;
+}
+
+.rows__table th,
+.counts__table th,
+.index__table th {
+  font-weight: 600;
+}
+
+.rows__name {
+  display: block;
+}
+
+.rows__type {
+  display: block;
+  font-size: var(--text-cell);
+  font-weight: 400;
+}
+
+.rows__count {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.rows__none {
+  color: var(--ink-2);
+}
+
+/* The two sides, each with its tint and its glyph. Neither tint appears without the label
+   column beside it, which is what keeps the difference in grayscale and on paper. */
+.rows__row--gold td {
+  background: var(--gold-tint);
+}
+
+.rows__row--second td {
+  background: var(--second-tint);
+}
+
+.glyph {
+  color: var(--ink-2);
+}
+
+.cell {
+  font-variant-numeric: tabular-nums;
+}
+
+.cell--int,
+.cell--dec {
+  text-align: right;
+}
+
+.cell--null {
+  color: var(--ink-2);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.cell__tag {
+  font-size: var(--text-cell);
+}
+
+.counts__table th[scope="row"] {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.counts__table td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.index__table td:first-of-type,
+.index__table th[scope="row"] {
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------------------
+   SQL, JSON and the marked tokens.
+   --------------------------------------------------------------------------------------- */
+
+.sql,
+.json,
+/* A command a reader copies, and what one printed. The same block as a statement's: it is
+   mono at the cell size, it scrolls rather than pushing the page, and it is the site's
+   pages that carry it. */
+.command {
+  overflow-x: auto;
+  max-width: 100%;
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-family: var(--mono);
+  font-size: var(--text-cell);
+  line-height: var(--leading-sql);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.token--differs {
+  background: var(--gold-tint);
+  border-radius: var(--radius);
+  transition: background-color var(--fast) var(--easing);
+}
+
+[data-marking="off"] .token--differs {
+  background: none;
+}
+
+/* The two statements: side by side where the spec gives them the room, stacked below it. */
+.statements__pair {
+  display: grid;
+  gap: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+@media (min-width: 1280px) {
+  .statements__pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.statement__side {
+  margin-top: 0;
+}
+
+.statement__hash {
+  font-size: var(--text-cell);
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------------------------------
+   The rows the two results differ in: the one region of the page that moves, once, on
+   arrival, so the eye lands where the disagreement is.
+   --------------------------------------------------------------------------------------- */
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.differing .rows__row {
+  animation: row-in var(--slow) var(--easing) both;
+  animation-delay: min(calc(var(--row, 0) * 30ms), 300ms);
+}
+
+.differing__side {
+  margin-bottom: var(--space-5);
+}
+
+/* ---------------------------------------------------------------------------------------
+   Disclosures: what a reader opens when they want more than the page states.
+   --------------------------------------------------------------------------------------- */
+
+details {
+  margin-bottom: var(--space-4);
+}
+
+summary {
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  color: var(--accent);
+  font-size: var(--text-body);
+}
+
+summary:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+details[open] > *:not(summary) {
+  animation: fade-in var(--slow) var(--easing) both;
+}
+
+/* ---------------------------------------------------------------------------------------
+   The probes, the records and the run's own blocks.
+   --------------------------------------------------------------------------------------- */
+
+.probe,
+.record,
+.reading,
+.mechanism,
+.rerun__side {
+  margin-bottom: var(--space-5);
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--rule);
+}
+
+.probe__name {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.probe__state {
+  font-size: var(--text-cell);
+  font-weight: 400;
+}
+
+.record__hash {
+  font-size: var(--text-cell);
+  overflow-wrap: anywhere;
+}
+
+.recomputed--match {
+  color: var(--ink-2);
+}
+
+.files__list {
+  list-style: none;
+  /* The margin as well as the padding: a list at 13px keeps the browser's own 1em, which is
+     13px, and 13 is a type step and not a space one. */
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  font-size: var(--text-cell);
+}
+
+.files__list li {
+  margin-bottom: var(--space-2);
+}
+
+/* The links to the pre-rendered restrictions of the index. A list and not a row of chips:
+   each one is a destination, and a chip on this page states a state rather than going
+   somewhere. The count beside each is secondary, the way every count beside a name is. */
+.filters {
+  list-style: none;
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  font-size: var(--text-cell);
+}
+
+.filters li {
+  margin-bottom: var(--space-2);
+}
+
+.projection {
+  border-left: 1px solid var(--warn);
+  padding-left: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* A maintainer's own reading of a question, where one exists. Marked off the way the
+   projection block is, and never merged into the verdict above it: the rule is what the tool
+   computed over two results, and this is what a person made of the same question. Its own
+   border, so that a reader can see at a glance which of the two they are reading. */
+.by-hand {
+  border-left: 1px solid var(--rule);
+  padding-left: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.by-hand__label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.by-hand__reason,
+.by-hand__source {
+  margin-bottom: var(--space-2);
+}
+
+/* What the class a maintainer recorded means, in the words of the file that defines it. Beside
+   the chip and not inside it: the chip is the value the row holds and this is its reading. */
+.by-hand__class {
+  color: var(--ink-2);
+}
+
+/* How many of a headline number have a page here, under the number. Its own line rather than a
+   row of its own, because it is about the number above it and not a fourth number; the family
+   and the size come off the monospace the count is set in. */
+.headline__published {
+  display: block;
+  margin-top: var(--space-1);
+  font-family: var(--sans);
+  font-size: var(--text-cell);
+  line-height: var(--leading-cell);
+}
+
+/* ---------------------------------------------------------------------------------------
+   Figures. The marks carry classes and take their colours here: an SVG presentation
+   attribute does not read `var()`, and a figure that carried its own colours would be
+   wrong in one of the three renderings a page has (light, dark, paper). The figure sits in
+   a region that scrolls the way a table's does, because its text is 13px whatever the
+   window is and a figure scaled to a phone would state its numbers at seven.
+   --------------------------------------------------------------------------------------- */
+
+.figure {
+  margin: 0 0 var(--space-5);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.figure__svg {
+  display: block;
+}
+
+.figure__text {
+  font-size: var(--text-cell);
+  color: var(--ink-2);
+  margin-top: var(--space-2);
+}
+
+.figure__frame {
+  fill: none;
+  stroke: var(--rule);
+}
+
+.figure__bar {
+  fill: var(--rule);
+}
+
+.figure__bar--marked {
+  fill: var(--warn);
+}
+
+.figure__axis {
+  stroke: var(--rule);
+}
+
+.figure__line {
+  stroke: var(--ink-2);
+  fill: none;
+}
+
+.figure__line--moved {
+  stroke: var(--warn);
+  stroke-width: 2;
+}
+
+.figure__mark {
+  stroke: var(--warn);
+  stroke-width: 2;
+  stroke-dasharray: 3 3;
+}
+
+.figure__label {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-cell);
+  font-weight: 600;
+}
+
+.figure__number {
+  fill: var(--ink-2);
+  font-family: var(--mono);
+  font-size: var(--text-cell);
+  font-variant-numeric: tabular-nums;
+}
+
+.figure__number--warn {
+  fill: var(--warn);
+}
+
+/* The second line inside a box of the method figure: what the step is, under its name. */
+.figure__note {
+  fill: var(--ink-2);
+  font-family: var(--sans);
+  font-size: var(--text-cell);
+}
+
+.figure__label--warn {
+  fill: var(--warn);
+}
+
+/* An arrowhead is filled and a rule is stroked, which is why the two are not one class. */
+.figure__head {
+  fill: var(--ink-2);
+  stroke: none;
+}
+
+/* ---------------------------------------------------------------------------------------
+   The two renderings that are not a window: a reader who asked for less motion, and paper.
+   --------------------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Opacity and nothing else. The declarations this overrides are more specific than a
+     universal selector, so this is one of the two places in the file that raises its
+     priority rather than losing to them. */
+  *,
+  *::before,
+  *::after {
+    transition-property: opacity !important;
+  }
+
+  /* The one entrance keeps its timing and loses its movement. */
+  .differing .rows__row {
+    animation-name: fade-in;
+  }
+}
+
+@media print {
+  .strip {
+    position: static;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .page {
+    width: auto;
+    padding: 0;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  /* Every disclosure open, so a printed page holds what the screen would have held after a
+     reader opened all of them. `details::details-content` is what a browser gives to reach
+     the region a closed disclosure hides; `report.js` sets the `open` attribute as well,
+     for a browser that does not. */
+  details::details-content {
+    content-visibility: visible;
+    display: block;
+  }
+
+  /* A link on paper is the text of a link and nothing a reader can follow, unless the page
+     prints where it goes. Every href on these pages is a file beside the page or a URL. */
+  a[href]::after {
+    content: " <" attr(href) ">";
+    font-family: var(--mono);
+    font-size: var(--text-cell);
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+  }
+
+  .figure,
+  .rows__region,
+  .sql,
+  .command,
+  .json {
+    overflow: visible;
+  }
+
+  .rows__table {
+    /* A table cut across a page break is a table a reader has to hold in their head. */
+    break-inside: auto;
+  }
+
+  .rows__row,
+  .probe,
+  .record {
+    break-inside: avoid;
+  }
+}

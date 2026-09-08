@@ -1,0 +1,2703 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-caa3d3fc-17d4-4f05-9ebf-50f46afc1202",
+  "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "effective_database_role": "auditor",
+  "session_settings": {
+    "engine": "postgresql",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "parser": {
+    "validator": "audit:libpg_query-parse",
+    "postgast": "0.1.0",
+    "grammar_version": 170007
+  },
+  "question_set": {
+    "path": "data/questions/mini_dev_postgresql.json",
+    "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "date": "2024-06-19",
+    "entries": 500,
+    "audited": 498,
+    "duplicate_ids": [
+      137,
+      138
+    ],
+    "ids": []
+  },
+  "predictions": {
+    "path": "data/preds-pg/predict_mini_dev_mistralai-mixtral-8x7b-instru-4_postgresql.json",
+    "digest": "sha256:862dffc4cdca4875650841a456b698e515e978125f5b28f798022e88176562cb",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_mistralai-mixtral-8x7b-instru-4_postgresql.json",
+    "date": "2024-06-19",
+    "keyed_by": "position",
+    "statements": 500,
+    "positions_unused": [
+      487,
+      488
+    ]
+  },
+  "verdicts": {
+    "NOT_EQUAL": 111,
+    "ERROR": 328,
+    "EQUAL": 59
+  },
+  "smells": {
+    "ordering-over-numeric-text": 1,
+    "arbitrary-cut": 2,
+    "not-a-function-of-the-data": 3,
+    "float-aggregate-order": 2,
+    "direction-against-question": 0
+  },
+  "smells_fired": 8,
+  "credited_but_not_equal": {
+    "total": 14,
+    "by_mechanism": {
+      "multiplicity": 11,
+      "type": 3,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 3,
+      "0": 11
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "runs/minidev-pg/mistralai-mixtral-8x7b-instru-4/fixture.json",
+    "source": {
+      "path": "data/minidev/BIRD_dev.sql",
+      "digest": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec",
+      "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV_postgresql/BIRD_dev.sql",
+      "date": "2024-06-13"
+    },
+    "schema_digest": "sha256:25aabd5763d7a18135a8741194c4a704141761bd0c7fdbfbf3f7c2bc9e0bf08c",
+    "row_counts": {
+      "public.account": 4500,
+      "public.alignment": 4,
+      "public.atom": 9111,
+      "public.attendance": 326,
+      "public.attribute": 6,
+      "public.badges": 79851,
+      "public.bond": 9156,
+      "public.budget": 52,
+      "public.card": 892,
+      "public.cards": 56822,
+      "public.circuits": 72,
+      "public.client": 5369,
+      "public.colour": 35,
+      "public.comments": 174285,
+      "public.connected": 18312,
+      "public.constructorresults": 11082,
+      "public.constructors": 208,
+      "public.constructorstandings": 11836,
+      "public.country": 11,
+      "public.customers": 32461,
+      "public.disp": 5369,
+      "public.district": 77,
+      "public.drivers": 840,
+      "public.driverstandings": 31578,
+      "public.event": 42,
+      "public.examination": 106,
+      "public.expense": 32,
+      "public.foreign_data": 229186,
+      "public.frpm": 9986,
+      "public.gasstations": 5716,
+      "public.gender": 3,
+      "public.hero_attribute": 3738,
+      "public.hero_power": 5825,
+      "public.income": 36,
+      "public.laboratory": 13908,
+      "public.laptimes": 400524,
+      "public.league": 11,
+      "public.legalities": 427907,
+      "public.loan": 682,
+      "public.major": 113,
+      "public.match": 25979,
+      "public.member": 33,
+      "public.molecule": 343,
+      "public.order": 6471,
+      "public.patient": 1238,
+      "public.pitstops": 5815,
+      "public.player": 11060,
+      "public.player_attributes": 183978,
+      "public.posthistory": 303155,
+      "public.postlinks": 11102,
+      "public.posts": 91966,
+      "public.products": 591,
+      "public.publisher": 25,
+      "public.qualifying": 6967,
+      "public.race": 61,
+      "public.races": 954,
+      "public.results": 23179,
+      "public.rulings": 87769,
+      "public.satscores": 2269,
+      "public.schools": 17686,
+      "public.seasons": 68,
+      "public.set_translations": 1210,
+      "public.sets": 551,
+      "public.status": 134,
+      "public.superhero": 750,
+      "public.superpower": 167,
+      "public.tags": 1032,
+      "public.team": 299,
+      "public.team_attributes": 1458,
+      "public.trans": 1056320,
+      "public.transactions_1k": 1000,
+      "public.users": 40325,
+      "public.votes": 38930,
+      "public.yearmonth": 383282,
+      "public.zip_code": 41877
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "customers",
+      "yearmonth",
+      "gasstations",
+      "products",
+      "transactions_1k",
+      "member",
+      "major",
+      "event",
+      "attendance",
+      "income",
+      "zip_code",
+      "expense",
+      "budget",
+      "patient",
+      "laboratory",
+      "examination",
+      "match",
+      "league",
+      "team",
+      "team_attributes",
+      "player_attributes",
+      "player",
+      "country",
+      "qualifying",
+      "drivers",
+      "circuits",
+      "races",
+      "results",
+      "laptimes",
+      "constructorresults",
+      "constructors",
+      "seasons",
+      "driverstandings",
+      "constructorstandings",
+      "pitstops",
+      "superpower",
+      "superhero",
+      "hero_power",
+      "status",
+      "colour",
+      "publisher",
+      "attribute",
+      "hero_attribute",
+      "race",
+      "gender",
+      "alignment",
+      "users",
+      "posts",
+      "tags",
+      "comments",
+      "votes",
+      "posthistory",
+      "badges",
+      "postlinks",
+      "cards",
+      "legalities",
+      "rulings",
+      "foreign_data",
+      "sets",
+      "set_translations",
+      "bond",
+      "atom",
+      "molecule",
+      "connected",
+      "satscores",
+      "schools",
+      "frpm",
+      "district",
+      "account",
+      "client",
+      "disp",
+      "loan",
+      "trans",
+      "order",
+      "card"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {
+    "customers": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.424716+00",
+      "n_mod_since_analyze": 0
+    },
+    "yearmonth": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:53.2103+00",
+      "n_mod_since_analyze": 0
+    },
+    "gasstations": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:24.38603+00",
+      "n_mod_since_analyze": 0
+    },
+    "products": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.324323+00",
+      "n_mod_since_analyze": 0
+    },
+    "transactions_1k": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.57727+00",
+      "n_mod_since_analyze": 0
+    },
+    "member": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 33
+    },
+    "major": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.215199+00",
+      "n_mod_since_analyze": 0
+    },
+    "event": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 42
+    },
+    "attendance": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.51989+00",
+      "n_mod_since_analyze": 0
+    },
+    "income": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 36
+    },
+    "zip_code": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:53.56429+00",
+      "n_mod_since_analyze": 0
+    },
+    "expense": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 32
+    },
+    "budget": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 52
+    },
+    "patient": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.997559+00",
+      "n_mod_since_analyze": 0
+    },
+    "laboratory": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:24.536007+00",
+      "n_mod_since_analyze": 0
+    },
+    "examination": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:17.016088+00",
+      "n_mod_since_analyze": 0
+    },
+    "match": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:30.556119+00",
+      "n_mod_since_analyze": 0
+    },
+    "league": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 11
+    },
+    "team": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.569042+00",
+      "n_mod_since_analyze": 0
+    },
+    "team_attributes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:47.099723+00",
+      "n_mod_since_analyze": 0
+    },
+    "player_attributes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:47.072684+00",
+      "n_mod_since_analyze": 0
+    },
+    "player": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.607944+00",
+      "n_mod_since_analyze": 0
+    },
+    "country": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 11
+    },
+    "qualifying": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.323203+00",
+      "n_mod_since_analyze": 0
+    },
+    "drivers": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:17.015092+00",
+      "n_mod_since_analyze": 0
+    },
+    "circuits": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.766783+00",
+      "n_mod_since_analyze": 0
+    },
+    "races": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:43.698656+00",
+      "n_mod_since_analyze": 0
+    },
+    "results": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.521079+00",
+      "n_mod_since_analyze": 0
+    },
+    "laptimes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:26.095384+00",
+      "n_mod_since_analyze": 0
+    },
+    "constructorresults": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.019426+00",
+      "n_mod_since_analyze": 0
+    },
+    "constructors": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:10.045536+00",
+      "n_mod_since_analyze": 0
+    },
+    "seasons": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.572102+00",
+      "n_mod_since_analyze": 0
+    },
+    "driverstandings": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.213972+00",
+      "n_mod_since_analyze": 0
+    },
+    "constructorstandings": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.075421+00",
+      "n_mod_since_analyze": 0
+    },
+    "pitstops": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:30.59473+00",
+      "n_mod_since_analyze": 0
+    },
+    "superpower": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.563746+00",
+      "n_mod_since_analyze": 0
+    },
+    "superhero": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.518866+00",
+      "n_mod_since_analyze": 0
+    },
+    "hero_power": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.99269+00",
+      "n_mod_since_analyze": 0
+    },
+    "status": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:47.073755+00",
+      "n_mod_since_analyze": 0
+    },
+    "colour": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 35
+    },
+    "publisher": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 25
+    },
+    "attribute": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 6
+    },
+    "hero_attribute": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.977203+00",
+      "n_mod_since_analyze": 0
+    },
+    "race": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.324734+00",
+      "n_mod_since_analyze": 0
+    },
+    "gender": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 3
+    },
+    "alignment": {
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "n_mod_since_analyze": 4
+    },
+    "users": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:53.980066+00",
+      "n_mod_since_analyze": 0
+    },
+    "posts": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.214641+00",
+      "n_mod_since_analyze": 0
+    },
+    "tags": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.571344+00",
+      "n_mod_since_analyze": 0
+    },
+    "comments": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.355095+00",
+      "n_mod_since_analyze": 0
+    },
+    "votes": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:53.353415+00",
+      "n_mod_since_analyze": 0
+    },
+    "posthistory": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:38.302835+00",
+      "n_mod_since_analyze": 0
+    },
+    "badges": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.766008+00",
+      "n_mod_since_analyze": 0
+    },
+    "postlinks": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:42.257312+00",
+      "n_mod_since_analyze": 0
+    },
+    "cards": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:16.814042+00",
+      "n_mod_since_analyze": 0
+    },
+    "legalities": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.765085+00",
+      "n_mod_since_analyze": 0
+    },
+    "rulings": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:43.694404+00",
+      "n_mod_since_analyze": 0
+    },
+    "foreign_data": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:24.359437+00",
+      "n_mod_since_analyze": 0
+    },
+    "sets": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:52.284481+00",
+      "n_mod_since_analyze": 0
+    },
+    "set_translations": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:54.217612+00",
+      "n_mod_since_analyze": 0
+    },
+    "bond": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.802916+00",
+      "n_mod_since_analyze": 0
+    },
+    "atom": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:10.04421+00",
+      "n_mod_since_analyze": 0
+    },
+    "molecule": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:30.558409+00",
+      "n_mod_since_analyze": 0
+    },
+    "connected": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:17.010277+00",
+      "n_mod_since_analyze": 0
+    },
+    "satscores": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.562503+00",
+      "n_mod_since_analyze": 0
+    },
+    "schools": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:52.240861+00",
+      "n_mod_since_analyze": 0
+    },
+    "frpm": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.964858+00",
+      "n_mod_since_analyze": 0
+    },
+    "district": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:24.361355+00",
+      "n_mod_since_analyze": 0
+    },
+    "account": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:16.907324+00",
+      "n_mod_since_analyze": 0
+    },
+    "client": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.822716+00",
+      "n_mod_since_analyze": 0
+    },
+    "disp": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:17.037279+00",
+      "n_mod_since_analyze": 0
+    },
+    "loan": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:27.994147+00",
+      "n_mod_since_analyze": 0
+    },
+    "trans": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:51.531334+00",
+      "n_mod_since_analyze": 0
+    },
+    "order": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.516523+00",
+      "n_mod_since_analyze": 0
+    },
+    "card": {
+      "last_analyze": null,
+      "last_autoanalyze": "2026-09-08 05:19:12.803807+00",
+      "n_mod_since_analyze": 0
+    }
+  },
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "attestql_scratch2",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "account",
+      "alignment",
+      "atom",
+      "attendance",
+      "attribute",
+      "badges",
+      "bond",
+      "budget",
+      "card",
+      "cards",
+      "circuits",
+      "client",
+      "colour",
+      "comments",
+      "connected",
+      "constructorresults",
+      "constructors",
+      "constructorstandings",
+      "country",
+      "customers",
+      "disp",
+      "district",
+      "drivers",
+      "driverstandings",
+      "event",
+      "examination",
+      "expense",
+      "foreign_data",
+      "frpm",
+      "gasstations",
+      "gender",
+      "hero_attribute",
+      "hero_power",
+      "income",
+      "laboratory",
+      "league",
+      "loan",
+      "major",
+      "match",
+      "member",
+      "molecule",
+      "order",
+      "patient",
+      "pitstops",
+      "player",
+      "player_attributes",
+      "postlinks",
+      "posts",
+      "products",
+      "publisher",
+      "qualifying",
+      "race",
+      "races",
+      "results",
+      "rulings",
+      "satscores",
+      "schools",
+      "seasons",
+      "set_translations",
+      "sets",
+      "status",
+      "superhero",
+      "superpower",
+      "tags",
+      "team",
+      "team_attributes",
+      "transactions_1k",
+      "users",
+      "votes",
+      "zip_code"
+    ],
+    "skipped": {
+      "laptimes": 400524,
+      "legalities": 427907,
+      "posthistory": 303155,
+      "trans": 1056320,
+      "yearmonth": 383282
+    },
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 120,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "runs/minidev-pg/mistralai-mixtral-8x7b-instru-4",
+    "serialization": "attestql/audit/2",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2"
+  },
+  "data_as_of": "2026-09-08T05:24:33.608370+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.219,
+    "questions": 35.971,
+    "shuffle": 5.058
+  },
+  "errors": [
+    {
+      "question_id": 1472,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"segment\" does not exist LINE 3: WHERE date BETWEEN '201201' AND '201212' AND segment = 'LAM' ^"
+    },
+    {
+      "question_id": 1473,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"segment\" does not exist LINE 3: WHERE date BETWEEN '201301' AND '201312' AND segment = 'SME'... ^"
+    },
+    {
+      "question_id": 1476,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"customerid\" is ambiguous LINE 5: customerid, ^"
+    },
+    {
+      "question_id": 1479,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"currency\" does not exist LINE 6: WHERE currency = 'CZK' ^"
+    },
+    {
+      "question_id": 1481,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"currency\" does not exist LINE 6: ...tomerid FROM customers WHERE segment = 'SME') AND currency =... ^"
+    },
+    {
+      "question_id": 1486,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1490,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"segment\" does not exist LINE 10: segment = 'LAM' ^"
+    },
+    {
+      "question_id": 1498,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1500,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"FROM\""
+    },
+    {
+      "question_id": 1505,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1528,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: date = text LINE 11: ...armonth y ON t.customerid = y.customerid AND t.date = y.date ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 1529,
+      "side": "prediction",
+      "step": "statement",
+      "message": "2 statements in one text; an audit runs one"
+    },
+    {
+      "question_id": 1531,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1533,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: division by zero"
+    },
+    {
+      "question_id": 1317,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1322,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1323,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: window functions are not allowed in WHERE LINE 5: COUNT(a.link_to_member) OVER (PARTITION BY a.link_to_event) ... ^"
+    },
+    {
+      "question_id": 1334,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1338,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column e.link_to_event does not exist LINE 3: JOIN event ev ON e.link_to_event = ev.event_id ^"
+    },
+    {
+      "question_id": 1339,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: text = integer LINE 4: ..._name = 'Allen' AND SUBSTRING(expense_date, 4, 2) IN (9, 10)... ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 1340,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function pg_catalog.extract(unknown, text) does not exist LINE 2: SUM(CASE WHEN EXTRACT(YEAR FROM event_date) = 2019 THEN spen... ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 1350,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column expense.link_to_event does not exist LINE 3: JOIN expense ON event.event_id = expense.link_to_event ^"
+    },
+    {
+      "question_id": 1359,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1371,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"s\""
+    },
+    {
+      "question_id": 1375,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1376,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1381,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1387,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1389,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1390,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"event_name\" does not exist LINE 2: ROUND(DIVIDE(SUM(cost) FILTER (WHERE event_name = 'Yearly Ki... ^"
+    },
+    {
+      "question_id": 1398,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"event_name\" does not exist LINE 1: SELECT event_name ^"
+    },
+    {
+      "question_id": 1399,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1401,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"link_to_event\" does not exist LINE 3: WHERE expense_description = 'Posters' AND link_to_event = ( ^"
+    },
+    {
+      "question_id": 1410,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1422,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"event_location\" does not exist LINE 3: WHERE event_location = 'MU 215'; ^"
+    },
+    {
+      "question_id": 1426,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1427,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: text = bigint LINE 4: JOIN zip_code z ON e.location = z.zip_code ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 1432,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 1457,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1460,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1464,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1149,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column e.patient_id does not exist LINE 16: JOIN examination e ON s.id = e.patient_id; ^"
+    },
+    {
+      "question_id": 1150,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 1152,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"admission\" does not exist LINE 3: COUNT(ID) FILTER (WHERE Diagnosis = 'SLE' AND Admission = '-... ^"
+    },
+    {
+      "question_id": 1153,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column laboratory.examinationid does not exist LINE 3: JOIN Examination ON Laboratory.ExaminationID = Examination.E... ^"
+    },
+    {
+      "question_id": 1155,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1156,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patientid does not exist LINE 3: JOIN Examination ON Patient.ID = Examination.PatientID ^"
+    },
+    {
+      "question_id": 1157,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1162,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1164,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1166,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1168,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patientid does not exist LINE 2: JOIN Examination e ON p.PatientID = e.PatientID ^"
+    },
+    {
+      "question_id": 1169,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1171,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1175,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1179,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"Date\""
+    },
+    {
+      "question_id": 1185,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"date\" does not exist LINE 2: EXTRACT(YEAR FROM Date) AS Year, ^"
+    },
+    {
+      "question_id": 1187,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column e.patientid does not exist LINE 3: JOIN Examination e ON p.ID = e.PatientID ^"
+    },
+    {
+      "question_id": 1189,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1192,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1195,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column examination.patientid does not exist LINE 3: JOIN Examination ON Patient.ID = Examination.PatientID ^"
+    },
+    {
+      "question_id": 1198,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1201,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1205,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1208,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patient_id does not exist LINE 3: JOIN Examination e ON p.PATIENT_ID = e.PATIENT_ID ^"
+    },
+    {
+      "question_id": 1209,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1220,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1225,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: cannot use DISTINCT with WITHIN GROUP"
+    },
+    {
+      "question_id": 1227,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"t_cho\" does not exist LINE 5: WHERE sex = 'M' AND T_CHO >= 250 ^"
+    },
+    {
+      "question_id": 1229,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"FROM\""
+    },
+    {
+      "question_id": 1231,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1232,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \")\""
+    },
+    {
+      "question_id": 1235,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 1238,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1239,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column e.patientid does not exist LINE 3: JOIN Examination e ON p.ID = e.PatientID ^"
+    },
+    {
+      "question_id": 1241,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1242,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patientid does not exist LINE 3: JOIN Examination e ON p.PatientID = e.PatientID ^"
+    },
+    {
+      "question_id": 1243,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1247,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patientid does not exist LINE 3: JOIN Examination e ON p.PatientID = e.PatientID ^"
+    },
+    {
+      "question_id": 1251,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1252,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1254,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1255,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column laboratory.examinationid does not exist LINE 5: JOIN Examination ON Laboratory.ExaminationID = Examinati... ^"
+    },
+    {
+      "question_id": 1256,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: unterminated quoted string at or near \"'+'' AND l.Description IS NULL;\""
+    },
+    {
+      "question_id": 1257,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1265,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patientid does not exist LINE 3: JOIN Examination e ON p.PatientID = e.PatientID ^"
+    },
+    {
+      "question_id": 1267,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1270,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patientid does not exist LINE 3: JOIN Examination e ON p.PatientId = e.PatientId ^"
+    },
+    {
+      "question_id": 1275,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.patientid does not exist LINE 3: JOIN Examination e ON p.PatientID = e.PatientID ^"
+    },
+    {
+      "question_id": 1281,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1302,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1025,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1028,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1029,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column player_attributes.teamid does not exist LINE 3: JOIN Player_Attributes ON Team.id = Player_Attributes.teamId ^"
+    },
+    {
+      "question_id": 1030,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column l.league_id does not exist LINE 3: JOIN Match m ON l.league_id = m.league_id ^ HINT: Perhaps you meant to reference the column \"m.league_id\"."
+    },
+    {
+      "question_id": 1031,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1032,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1035,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1036,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"team_long_name\" does not exist LINE 1: SELECT team_long_name ^"
+    },
+    {
+      "question_id": 1037,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1039,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1040,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.name does not exist LINE 2: P.name, ^ HINT: Perhaps you meant to reference the column \"pa.date\"."
+    },
+    {
+      "question_id": 1048,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_name\" does not exist LINE 3: WHERE player_name = 'Gabriel Tamas' AND strftime('%Y', year)... ^"
+    },
+    {
+      "question_id": 1057,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1058,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1068,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1076,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1078,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 1079,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 1080,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1084,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.player_id does not exist LINE 3: JOIN Player_Attributes pa ON p.player_id = pa.player_id ^"
+    },
+    {
+      "question_id": 1088,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1091,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1092,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1094,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_name\" does not exist LINE 3: ...ELECT overall_rating FROM Player_Attributes WHERE player_nam... ^"
+    },
+    {
+      "question_id": 1096,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1098,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1102,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1103,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_name\" does not exist LINE 3: WHERE player_name = 'Aaron Mooy' AND date LIKE '2016-02-04%'... ^"
+    },
+    {
+      "question_id": 1105,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1107,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1110,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1113,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1114,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"player_name\" does not exist LINE 3: WHERE player_name = 'Marko Arnautovic' AND ^"
+    },
+    {
+      "question_id": 1115,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1116,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column player_attributes.player_id does not exist LINE 3: JOIN Player_Attributes ON Player.id = Player_Attributes.play... ^"
+    },
+    {
+      "question_id": 1122,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1124,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column player_attributes.player_id does not exist LINE 3: JOIN Player_Attributes ON Player.id = Player_Attributes.play... ^"
+    },
+    {
+      "question_id": 1130,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column team.team_id does not exist LINE 3: JOIN Player_Attributes ON Team.team_id = Player_Attributes.t... ^"
+    },
+    {
+      "question_id": 1133,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1134,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1135,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1136,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1139,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1141,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1144,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1145,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1147,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column player_attributes.player_id does not exist LINE 3: JOIN Player_Attributes ON Player.id = Player_Attributes.play... ^"
+    },
+    {
+      "question_id": 1148,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 861,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"number\" is ambiguous LINE 1: SELECT number ^"
+    },
+    {
+      "question_id": 862,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 875,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"url\" is ambiguous LINE 1: SELECT url ^"
+    },
+    {
+      "question_id": 880,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at end of input"
+    },
+    {
+      "question_id": 881,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"driverid\" is ambiguous LINE 2: driverid, ^"
+    },
+    {
+      "question_id": 892,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"drivers.forename\" must appear in the GROUP BY clause or be used in an aggregate function LINE 2: drivers.forename, ^"
+    },
+    {
+      "question_id": 895,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column laptimes.resultid does not exist LINE 4: JOIN lapTimes ON results.resultid = lapTimes.resultid ^"
+    },
+    {
+      "question_id": 896,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column r.position does not exist LINE 2: ....raceid) FILTER (WHERE d.surname = 'Hamilton' AND r.position... ^ HINT: Perhaps you meant to reference the column \"res.position\"."
+    },
+    {
+      "question_id": 897,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 898,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function year(timestamp with time zone) does not exist LINE 1: SELECT d.driverid, d.forename, d.surname, YEAR(CURRENT_TIMES... ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 901,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 902,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 904,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column r.name does not exist LINE 1: SELECT r.name, r.year ^ HINT: Perhaps you meant to reference the column \"r.time\"."
+    },
+    {
+      "question_id": 906,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column r.name does not exist LINE 1: SELECT r.name, r.points ^ HINT: Perhaps you meant to reference the column \"r.time\"."
+    },
+    {
+      "question_id": 909,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column races.country does not exist LINE 2: 100.0 * COUNT(races.raceid) FILTER (WHERE races.country = 'G... ^"
+    },
+    {
+      "question_id": 912,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 928,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column results.year does not exist LINE 5: WHERE races.name = 'Canadian Grand Prix' AND results.year = ... ^"
+    },
+    {
+      "question_id": 930,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 933,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at end of input"
+    },
+    {
+      "question_id": 940,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 944,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 945,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 954,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column r.driverid does not exist LINE 2: 100.0 * COUNT(DISTINCT r.driverid) FILTER (WHERE r.time ... ^"
+    },
+    {
+      "question_id": 955,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"TIME_TO_SEC\""
+    },
+    {
+      "question_id": 960,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function avg(text) does not exist LINE 1: SELECT AVG(fastestlapspeed) ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 962,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"driverid\" is ambiguous LINE 4: SELECT driverid ^"
+    },
+    {
+      "question_id": 972,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 981,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 988,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column pitstops.resultid does not exist LINE 8: pitStops ON results.resultid = pitStops.resultid ^"
+    },
+    {
+      "question_id": 989,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column r.name does not exist LINE 1: SELECT r.name, r.date, d.forename, d.surname, rr.time ^ HINT: Perhaps you meant to reference the column \"r.time\" or the column \"rce.name\"."
+    },
+    {
+      "question_id": 990,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column cr.resultid does not exist LINE 6: JOIN results res ON cr.resultid = res.resultid ^ HINT: Perhaps you meant to reference the column \"res.resultid\"."
+    },
+    {
+      "question_id": 717,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 994,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"constructorid\" is ambiguous LINE 1: SELECT constructorid, SUM(points) as total_points, name, nat... ^"
+    },
+    {
+      "question_id": 1001,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1002,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 1003,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: missing FROM-clause entry for table \"races\" LINE 6: WHERE status.status = '3' AND races.name = 'Canadian Gra... ^"
+    },
+    {
+      "question_id": 1011,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 719,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 723,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 724,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 728,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 730,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 733,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 736,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"attribute_name\" does not exist LINE 4: WHERE attribute_name = 'Intelligence' ^ HINT: Perhaps you meant to reference the column \"hero_attribute.attribute_value\"."
+    },
+    {
+      "question_id": 737,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"race\" does not exist LINE 1: SELECT race ^"
+    },
+    {
+      "question_id": 738,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 739,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 740,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 743,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 744,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"publisher_name\" does not exist LINE 2: SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN 1 ELSE 0... ^"
+    },
+    {
+      "question_id": 745,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 751,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 758,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 760,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 761,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 764,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 766,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 769,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 772,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: table name \"h\" specified more than once"
+    },
+    {
+      "question_id": 773,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 782,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 786,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 788,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"gender\" does not exist LINE 2: ROUND(100 * SUM(CASE WHEN gender = 'Female' AND publisher_na... ^ HINT: Perhaps you meant to reference the column \"superhero.gender_id\"."
+    },
+    {
+      "question_id": 790,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 794,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column ha.attribute_name does not exist LINE 4: WHERE ha.attribute_name = 'Speed' ^ HINT: Perhaps you meant to reference the column \"ha.attribute_value\"."
+    },
+    {
+      "question_id": 796,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 797,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 800,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 806,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column colour.color does not exist LINE 1: SELECT colour.color ^ HINT: Perhaps you meant to reference the column \"colour.colour\"."
+    },
+    {
+      "question_id": 822,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 825,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 829,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function sum(boolean) does not exist LINE 2: SUM(publisher_id = (SELECT id FROM publisher WHERE publishe... ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 531,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 537,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 547,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 555,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 584,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"Here\""
+    },
+    {
+      "question_id": 587,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 598,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p1.creationdate does not exist LINE 2: ...d WHERE b1.name = 'Student' AND DATE_PART('year', p1.creatio... ^ HINT: Perhaps you meant to reference the column \"p1.creaiondate\"."
+    },
+    {
+      "question_id": 604,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 629,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function divide(bigint, bigint) does not exist LINE 1: SELECT DIVIDE(COUNT(votes.id) FILTER (WHERE EXTRACT(YEAR FRO... ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 634,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: aggregate function calls cannot be nested LINE 1: SELECT MAX(SUM(p.viewcount)) as popularity ^"
+    },
+    {
+      "question_id": 637,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 639,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: bigint = text LINE 5: JOIN tags t ON t.id = ANY(string_to_array(p.tags, ' ')) ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 665,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 678,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"views\" does not exist LINE 3: WHERE ownerdisplayname = 'Harvey Motulsky' AND views = (SELE... ^"
+    },
+    {
+      "question_id": 682,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column p.creationdate does not exist LINE 4: WHERE EXTRACT(YEAR FROM p.creationdate) = 2010 ^ HINT: Perhaps you meant to reference the column \"p.creaiondate\" or the column \"u.creationdate\"."
+    },
+    {
+      "question_id": 683,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 687,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 710,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 716,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column v.upvotes does not exist LINE 2: ...ND(100.0 * COUNT(DISTINCT c.userid) FILTER (WHERE v.upvotes ... ^ HINT: Perhaps you meant to reference the column \"u.upvotes\"."
+    },
+    {
+      "question_id": 341,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"This\""
+    },
+    {
+      "question_id": 344,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: bigint = text LINE 3: JOIN legalities l ON c.id = l.uuid ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 345,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: bigint = text LINE 3: JOIN legalities l ON c.id = l.uuid ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 347,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"foreign\""
+    },
+    {
+      "question_id": 349,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 352,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"Explanation\""
+    },
+    {
+      "question_id": 356,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 358,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"s\""
+    },
+    {
+      "question_id": 368,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 377,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 383,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 391,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"foreign\""
+    },
+    {
+      "question_id": 402,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 405,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 408,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 409,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 412,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"foreign\""
+    },
+    {
+      "question_id": 415,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: bigint = text LINE 4: JOIN legalities ON cards.id = legalities.uuid ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 416,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"foreign\""
+    },
+    {
+      "question_id": 422,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"foreign\""
+    },
+    {
+      "question_id": 440,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"foreign\""
+    },
+    {
+      "question_id": 462,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 465,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"foreign\""
+    },
+    {
+      "question_id": 466,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 468,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 472,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 473,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 474,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 479,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 480,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"foreign\""
+    },
+    {
+      "question_id": 484,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"foreign\""
+    },
+    {
+      "question_id": 486,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 487,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"Explanation\""
+    },
+    {
+      "question_id": 518,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 522,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: bigint = text LINE 3: JOIN legalities ON cards.id = legalities.uuid ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 529,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 530,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 198,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column c.atom_id1 does not exist LINE 7: JOIN connected c ON (a.atom_id = c.atom_id1 AND b.bond_i... ^ HINT: Perhaps you meant to reference the column \"c.atom_id\" or the column \"c.atom_id2\"."
+    },
+    {
+      "question_id": 201,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at end of input"
+    },
+    {
+      "question_id": 207,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: missing FROM-clause entry for table \"e\" LINE 1: SELECT DISTINCT e.element ^"
+    },
+    {
+      "question_id": 215,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 218,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 219,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 226,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 227,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"molecule_id\" is ambiguous LINE 1: ...N label = '+' THEN 1 ELSE 0 END) / COUNT(DISTINCT molecule_i... ^"
+    },
+    {
+      "question_id": 228,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 231,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"I\""
+    },
+    {
+      "question_id": 232,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"molecule_id\" is ambiguous LINE 1: SELECT molecule_id ^"
+    },
+    {
+      "question_id": 234,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"bond_id\" is ambiguous LINE 1: SELECT COUNT(DISTINCT bond_id) ^"
+    },
+    {
+      "question_id": 236,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column bond.atom_id does not exist LINE 3: JOIN atom a1 ON bond.atom_id = a1.atom_id OR bond.atom_id = ... ^"
+    },
+    {
+      "question_id": 242,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 244,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 245,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column bond.atom_id does not exist LINE 6: WHERE atom.element = 'i' AND atom.atom_id = bond.atom_id ^"
+    },
+    {
+      "question_id": 255,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the statement projects no column, so there is no answer to record or compare"
+    },
+    {
+      "question_id": 263,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"```\""
+    },
+    {
+      "question_id": 282,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function divide(bigint, bigint) does not exist LINE 2: DIVIDE(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END), COUNT... ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 327,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 5,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 11,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: unterminated quoted identifier at or near \"\"Enrollment (K-1\""
+    },
+    {
+      "question_id": 24,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column s.enrollment does not exist LINE 1: SELECT s.school, s.enrollment, fr.percent_eligible_frpm ^"
+    },
+    {
+      "question_id": 26,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column s.highgrade does not exist LINE 4: WHERE s.highgrade = '12' ^"
+    },
+    {
+      "question_id": 27,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"Explanation\""
+    },
+    {
+      "question_id": 28,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"5\""
+    },
+    {
+      "question_id": 31,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column f.school_code does not exist LINE 10: JOIN frpm f ON s.cdscode = f.School_Code ^ HINT: Perhaps you meant to reference the column \"f.School Code\"."
+    },
+    {
+      "question_id": 32,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"-\""
+    },
+    {
+      "question_id": 37,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"This\""
+    },
+    {
+      "question_id": 36,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"cdscode\" does not exist LINE 5: SELECT cdscode, MAX(numge1500) AS max_numge1500 ^ DETAIL: There is a column named \"cdscode\" in table \"s\", but it cannot be referenced from this part of the query. HINT: To reference that column, you must mark this subquery with LATERAL."
+    },
+    {
+      "question_id": 40,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column s.phone does not exist LINE 1: SELECT s.phone ^ HINT: Perhaps you meant to reference the column \"sch.phone\"."
+    },
+    {
+      "question_id": 46,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 47,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: aggregate function calls cannot be nested LINE 1: SELECT AVG(COUNT(cdscode)) AS \"Monthly Average Number of Sch... ^"
+    },
+    {
+      "question_id": 50,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column s.school does not exist LINE 1: SELECT s.school, s.street ^"
+    },
+    {
+      "question_id": 62,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 77,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 79,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 82,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"high_grade\" does not exist LINE 5: WHEN high_grade >= 12 AND low_grade <= 12 THEN 'K-12' ^"
+    },
+    {
+      "question_id": 83,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"Code\""
+    },
+    {
+      "question_id": 89,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 93,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column c.a11 does not exist LINE 4: ...ERE c.gender = 'M' AND d.a3 = 'North Bohemia' AND c.a11 > 80... ^ HINT: Perhaps you meant to reference the column \"d.a11\"."
+    },
+    {
+      "question_id": 94,
+      "side": "prediction",
+      "step": "statement",
+      "message": "2 statements in one text; an audit runs one"
+    },
+    {
+      "question_id": 95,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"account_id\" does not exist LINE 1: SELECT account_id ^"
+    },
+    {
+      "question_id": 98,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: function year(date) does not exist LINE 3: WHERE date IN (SELECT date FROM loan WHERE YEAR(date) = 1997... ^ HINT: No function matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 100,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 112,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 115,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 116,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column client.account_id does not exist LINE 9: account_id = (SELECT client.account_id ^"
+    },
+    {
+      "question_id": 125,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 128,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column \"a2\" does not exist LINE 1: SELECT a2, COUNT(DISTINCT account_id) as num_female_accounts ^"
+    },
+    {
+      "question_id": 136,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 137,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 138,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 129,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: operator does not exist: date ~~ unknown LINE 5: WHERE t.type = 'VYDAJ' AND t.date LIKE '1996-01%' ^ HINT: No operator matches the given name and argument types. You might need to add explicit type casts."
+    },
+    {
+      "question_id": 149,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 168,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column c.account_id does not exist LINE 3: JOIN account a ON c.account_id = a.account_id ^ HINT: Perhaps you meant to reference the column \"a.account_id\"."
+    },
+    {
+      "question_id": 169,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"WHERE\""
+    },
+    {
+      "question_id": 173,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 186,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    },
+    {
+      "question_id": 189,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: column reference \"district_id\" is ambiguous LINE 10: SELECT district_id, MIN(a11) as min_salary ^"
+    },
+    {
+      "question_id": 194,
+      "side": "prediction",
+      "step": "statement",
+      "message": "the text does not parse: syntax error at or near \"\\\""
+    }
+  ],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 1
+}

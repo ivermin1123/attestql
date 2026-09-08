@@ -1,6 +1,16 @@
 """Evidence record shape, canonical serialization, replay comparability and rendering."""
 
 from attestql.evidence.build import ExecutionIdentity, IncompleteEvidence, build_evidence_record
+from attestql.evidence.load import (
+    LoadedRecord,
+    Recomputed,
+    UnreadableRecord,
+    load_descriptor,
+    load_record,
+    load_result,
+    load_row,
+    load_value,
+)
 from attestql.evidence.record import EvidenceRecord, ValidationOutcome
 from attestql.evidence.render import (
     RowDifference,
@@ -57,7 +67,9 @@ __all__ = [
     "ExecutionIdentity",
     "FixtureDigest",
     "IncompleteEvidence",
+    "LoadedRecord",
     "QuestionMetadata",
+    "Recomputed",
     "ReplayRule",
     "RowDifference",
     "RowGroup",
@@ -65,6 +77,7 @@ __all__ = [
     "SessionSettings",
     "SortKey",
     "StatementSource",
+    "UnreadableRecord",
     "UnsupportedValue",
     "ValidationOutcome",
     "build_evidence_record",
@@ -72,6 +85,11 @@ __all__ = [
     "canonical_type_tag",
     "compare_r_ord",
     "compare_r_set",
+    "load_descriptor",
+    "load_record",
+    "load_result",
+    "load_row",
+    "load_value",
     "precondition_mismatches",
     "preconditions_match",
     "record_json",

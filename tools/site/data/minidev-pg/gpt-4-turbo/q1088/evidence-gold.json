@@ -1,0 +1,6721 @@
+{
+  "question_as_asked": "Please list the names of the players whose volley score and dribbling score are over 70.",
+  "question": {
+    "question_id": "1088",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "Please list the names of the players whose volley score and dribbling score are over 70.",
+    "evidence_text": "volley score are over 70 refers to volleys > 70; dribbling score refers to dribbling are over 70 refers to dribbling > 70;"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "statement_source": {
+    "path": "data/questions/mini_dev_postgresql.json",
+    "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "date": "2024-06-19"
+  },
+  "executed_sql": "SELECT DISTINCT t1.player_name FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id WHERE t2.volleys > 70 AND t2.dribbling > 70",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "player_name",
+        "declared_type": "text"
+      }
+    ],
+    "row_count": 1105,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "Antonio Candreva"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Peter Whittingham"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Ruben"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Raul Meireles"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Felipe Gedoz"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Francesco Lodi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ahmed El Mohamady"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Elliot Grandin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Moi Gomez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Benoit Cheyrou"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dario Vidosic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ricardo Gardner"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lars Stindl"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lynel Kitambala"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Emanuele Giaccherini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luigi Pieroni"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tim Matavz"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Raffael"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aritz Aduriz"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin de Bruyne"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jeremie Aliadiere"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Souleymane Camara"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Filippo Inzaghi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Antonio Di Natale"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jason Puncheon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fredy Montero"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Brown Ideye"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rudolf Skacel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Parolo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Carlos Mane"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hugo Rodallega"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luis Boa Morte"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Orlando Engelaar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Kuranyi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Danko Lazovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gabi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aloys Nong"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Leon Osman"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Munir El Haddadi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pedro Rodriguez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sabin Merino"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Robbie Blake"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Youssef El Arabi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alassane Plea"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alvaro Morata"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Simone Padoin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eren Derdiyok"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ibson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cameron Jerome"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathan Reis"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thierry Henry"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Davy Klaassen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Diomansy Kamara"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Corentin Jean"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Darren Pratley"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Shinji Kagawa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Robinho"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Denni Avdic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jedaias Capucho Neves"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lorenzo Insigne"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tobias Werner"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mariano Pavone"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Steed Malbranque"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sebastien Roudet"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Charles N'Zogbia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lucas Moura"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicola Amoruso"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pablo Aimar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alexander Frei"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Valeri Bojinov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Haris Seferovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giacomo Bonaventura"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giovanni Sio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eran Zahavi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Danijel Ljuboja"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mikel Arteta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Robert Lewandowski"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jordy Clasie"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Zoltan Gera"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Renato"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Reus"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Matthias Lepiller"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Manolo Gabbiadini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tuncay Sanli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Olivier Kapo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dele Alli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Morten Gamst Pedersen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nolan Roux"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adrian Colunga"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ivica Olic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vedad Ibisevic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adrian Ramos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Paul Scholes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Roberto Firmino"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jermain Defoe"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sebastian Leto"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Henrik Mkhitaryan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nino"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Raimondi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Djibril Cisse"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andre Schuerrle"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hatem Ben Arfa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Taner Yalcin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gonzalo Higuain"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ciro Immobile"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rodrigo Palacio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marcelo Moreno"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Klaas Jan Huntelaar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Mari"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mirko Vucinic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "John Guidetti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Olivier Thomert"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Francesco Tavano"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wade Elliott"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Joshua King"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Felipe Pardo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alvaro Vazquez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Nugent"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jens Toornstra"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aatif Chahechouhe"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lukas Podolski"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Elyaniv Barda"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Memphis Depay"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mikael Forssell"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ciprian Marica"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dame N'Doye"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Karim Matmour"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Diogo Salomao"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Julio Arca"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Valentin Stocker"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Antonio Cassano"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Javi Guerra"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gergely Rudolf"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Clint Dempsey"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nolito"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nemanja Matic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thomas Kahlenberg"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mickael Isabey"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Edin Dzeko"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ivica Iliev"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fernando Llorente"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wilson Eduardo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniele Cacia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Oussama Tannane"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bryan Ruiz"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giuseppe Rossi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Georges N'Koudou"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nelson Haedo Valdez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Deyverson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Baxter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ederson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alexandr Kerzhakov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cyril Thereau"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Boubacar Sanogo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mateus"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Carlos Saleiro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dieumerci Mbokani"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Edu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mimoun Azaouagh"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ivan Rakitic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ricardo Fuller"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Erik Nevland"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wayne Routledge"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luis Seijas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniel Ginczek"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Zlatko Junuzovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Krisztian Nemeth"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mirko Antenucci"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Albert Riera"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Paolo Guerrero"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Darren Bent"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathan Rodriguez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Admir Mehmedi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wendel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ricardo Oliveira"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lucas Barrios"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yohan Cabaye"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Milan Jovanovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Boudewijn Zenden"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ludovic Obraniak"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nabil Ghilas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mido"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jan Moravek"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Karim Benzema"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Geoffrey Mujangi Bia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniele Baselli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Miroslav Stoch"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nikos Karelis"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Rossi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mevlut Erdinc"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nacer Barazite"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Xisco Nadal"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lucas Pratto"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ibai Gomez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giampiero Pinzi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Zvjezdan Misimovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thiago Alcantara"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Toifilou Maoulida"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kenny Miller"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lionel Messi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nabil Baha"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adrian Lopez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Manu del Moral"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Francelino Matuzalem"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "John Bostock"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luis Muriel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gregory van der Wiel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marama Vahirua"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Keisuke Honda"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alfred Finnbogason"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jakob Jantscher"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fabio Liverani"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Clemens Fritz"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Izet Hajrovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lee Cattermole"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Remy Cabella"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Samuele Longo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Antonio da Silva"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mu Kanazaki"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Valter Birsa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yacine Brahimi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrey Voronin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aiyegbeni Yakubu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Simone Pepe"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rodrigo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Christophe Landrin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Massimo Maccarone"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Louis Saha"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ilan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alessandro Sgrigna"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Villa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Moussa Dembele"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Hoeger"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Michael Owen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Joonas Kolkka"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Duvan Zapata"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sergio Garcia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Victor Casadesus"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alexis Sanchez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Felipe Seymour"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Valentin Eysseric"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Carles Gil"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fabio Grosso"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicolas Anelka"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Issiar Dia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Guido Marilungo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mauricio Pinilla"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Michael Chopra"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wesley Sneijder"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mervan Celik"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ze Luis"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Euzebiusz Smolarek"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marek Jankulovski"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Peguy Luyindula"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Danilo Dias"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Riccardo Meggiorini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daisuke Matsui"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nihat Kahveci"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jamie Vardy"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Douglas Costa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alexander Meier"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Joffre David Guerron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Martin Harnik"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Theofanis Gekas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andre-Pierre Gignac"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hugo Leal"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ja-Cheol Koo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cristiano Doni"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nery Castillo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hugo Almeida"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Guillaume Hoarau"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luis Fabiano"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ruslan Malinovsky"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Miralem Pjanic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Diniyar Bilyaletdinov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Julian Draxler"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cristiano Lucarelli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Donadel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Robbie Fowler"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jefferson Farfan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vincenzo Iaquinta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Viktor Fischer"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bennedict McCarthy,27"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Peter Odemwingie"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Barreto"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luca Toni"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adam Maher"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giuseppe De Luca"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Riccardo Montolivo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "James Rodriguez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Victor Ibarbo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gianluca Sansone"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stefan Kiessling"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Chinedu Obasi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ruben Olivera"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alessio Cerci"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Angel Di Maria"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nilmar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Silva"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniel Sturridge"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Carlos Martins"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Walter Pandiani"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Neymar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Balotelli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Borriello"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jeremain Lens"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Ngog"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Sau"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ilombe Mboyo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rubin Okotie"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniel Didavi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adrien Regattin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ivan Trickovski"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Leon Best"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Elvis Manu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alberto Bueno"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Philippe Coutinho"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Davide Moscardelli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Clement Grenier"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alessandro Del Piero"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bafetimbi Gomis"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Barral"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hans Vanaken"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ryan Babel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Martin Braithwaite"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Iago Aspas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Claudio Pizarro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Peter Loevenkrands"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sotiris Ninis"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juan Mata"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Arkadiusz Milik"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mathieu Valbuena"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Leonard Kweuke"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sebastian Giovinco"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adam Lallana"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mostapha El Kabir"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicola Pozzi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jordan Ayew"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luis Suarez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thibault Giresse"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Evandro Goebel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sergio Oliveira"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Deco"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Angel Lafita"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sofiane Feghouli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mbaye Niang"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Abraham Guie Gneki"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sylvain Marveaux"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ricky van Wolfswinkel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Baba"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pizzi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ivan Perisic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rasmus Elm"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Scott McDonald"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Javier Portillo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juan Gomez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stephen Ireland"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yohan Demont"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wayne Rooney"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Oliver Neuville"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mesut Oezil"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Paulinho"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Arda Turan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Joel Campbell"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Victor Anichebe"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anthony Martial"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Paul Freier"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Islam Slimani"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pierre Webo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Renato Augusto"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lucio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nuri Sahin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Bentley"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fredy Guarin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Arouna Kone"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Mandzukic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jackson Martinez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Paul Pogba"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Renato Steffen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Garry Mendes Rodrigues"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrea Cossu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mladen Petric"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tamas Hajnal"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yannick Djalo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ivan Alonso"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Goran Pandev"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicolai Joergensen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luc Castaignos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "El Hadji Diouf"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lukasz Gargula"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Albert Meyong Ze"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marouane Fellaini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tim Cahill"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ireneusz Jelen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giuseppe Mascara"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nikica Jelavic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathan Soriano"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juan Cuadrado"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Georginio Wijnaldum"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Zoltan Stieber"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sekou Cisse"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Liedson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sami Khedira"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thomas Mueller"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Raul Rusescu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Gomez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Shinji Okazaki"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gervinho"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Gaspar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Xavier Pentecote"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marko Pantelic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kandia Traore"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Sosa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Goetze"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kenwyne Jones"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Simon Vukcevic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stevan Jovetic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fred"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Asamoah Gyan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gabriel Agbonlahor"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lucho Gonzalez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anthony Le Tallec"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mohammed Abdellaoue"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mariano Bogliacino"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Franco Vazquez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sulley Ali Muntari"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Abel Hernandez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Blaise Matuidi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Emile Heskey"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathan dos Santos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Simon Zoller"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Charlie Adam"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniel Wass"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Beckham"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Junya Tanaka"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aras Oezbiliz"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "German Denis"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eric Maxim Choupo-Moting"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fedor Smolov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hameur Bouazza"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sebastian Freis"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Francisco Navarro Yeste"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jefferson Nascimento"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Samuel Eto'o"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lautaro Acosta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Urby Emanuelson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vladimir Darida"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Carlos Tevez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adel Taarabt"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fabien Camus"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Robert Acquafresca"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luis Jimenez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Roman Pavlyuchenko"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Franco Daniel Jara"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alexandru Maxim"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Christophe Mandanne"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giuseppe Sculli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aaron Ramsey"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Michael Ballack"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rodrigo Taddei"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Leonardo Ulloa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Charles"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Peter Crouch"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Timo Werner"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adriano"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stefano Guberti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cleber Santana"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniel Jensen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Florent Malouda"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Helder Postiga"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alvaro Negredo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicolas Andres Cordova"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jakub Blaszczykowski"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luuk de Jong"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Julian Schieber"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Patrick Helmes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mark Uth"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Joselu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mikel San Jose"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrea Dossena"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alexandre Lacazette"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jiri Stajner"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jesus Navas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ruben Castro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dudley Campbell"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Felipe Gutierrez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Emmanuel Adebayor"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sergio Bernardo Almiron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Florent Sinama-Pongolle"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Robin van Persie"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Haavard Nielsen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Zhi Zheng"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mark Gonzalez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Raul Tamudo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Federico Macheda"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Panagiotis Kone"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrea Lazzari"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hamit Altintop"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Michael Essien"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marquinho"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bartholomew Ogbeche"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Joao Pedro Galvao"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrea Gasbarroni"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Odion Ighalo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sergio Aguero"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Frank Lampard"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Santiago Leonardo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andre Carrillo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fabio Borini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dejan Stankovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anthony Lurling"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sergio Ezequiel Araujo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Julien Quercia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alberto Luque,21"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Maxi Rodriguez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jeremy Menez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pedro Morales"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Claudio Beauvue"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ricardo Quaresma"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adriano Ferreira Pinto"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Patrick Herrmann"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrej Kramaric"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yoan Gouffran"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Morgan Amalfitano"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Raul Marcelo Bobadilla"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gianluca Zambrotta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bobby Zamora"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Michy Batshuayi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Teofilo Gutierrez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cani"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ruben Micael"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Diego Costa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ivan Sanchez Riki"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Fabian"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vladimir Weiss"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Leandro Damiao"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathan Cristaldo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Siqueira De Olivera Luciano"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jay Rodriguez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Angelo Palombo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Danilo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Maximilian Arnold"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jerome Leroy"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Raul"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fernandinho"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Clarence Seedorf"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Benjamin De Ceulaer"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bertrand Traore"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fabio Coentrao"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Roberto Pereyra"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gaetano D'Agostino"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thorgan Hazard"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Quincy Owusu-Abeyie"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Massimo Ambrosini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Loic Remy"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nikola Zigic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Francisco Alcacer"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luca Cigarini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Antonio Floro Flores"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Raffaele Palladino"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mancini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rogelio Funes Mori"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Michu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jimmy Briand"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Antoine Griezmann"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Imoh Ezekiel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Saul Berjon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fabian Delph"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dario Cvitanich"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Johan Audel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hulk"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Victor Camarasa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dimitar Rangelov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Leo Bonatini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Xabi Alonso"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wesley Verhoek"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Baye Oumar Niasse"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mounir El Hamdaoui"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Josip Ilicic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Oleg Iachtchouk"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yuya Osako"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juanlu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Danny Hoesen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Raphael Guerreiro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yuri Zhirkov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Elias"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kingsley Coman"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mahir Saglik"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nestor Susaeta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Matias Suarez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jorge Martinez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Leandro Bacuna"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Geovanni"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jan Simak"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicolas Lopez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stewart Downing"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kwadwo Asamoah"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cicero"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Romain Rocchi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Emanuele Calaio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anthony Mounier"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathan Pereira"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Pizarro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pedro Mendes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bruno Cesar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gil Vermouth"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathan De Guzman"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrea Pirlo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alejandro Daro Gomez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mauro Icardi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wason Renteria"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eljero Elia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marc Albrighton"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Zakaria Labyad"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Salomon Rondon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ignacio Piatti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luka Modric"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathan Biabiany"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Diego Barcelos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Craig Bellamy"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mathieu Flamini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gareth Bale"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "James Morrison"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nordin Amrabat"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Seba"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gerso Fernandes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Blaise N'Kufo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adrian Mutu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Manuel Trigueros"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Roy Beerens"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Roque Santa Cruz"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Paul-Georges Ntep"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Suazo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Frederic Kanoute"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andy Delort"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eliran Atar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Johan Elmander"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Davies"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Carlos Eduardo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marouane Chamakh"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lucas Perez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Matthew Taylor"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Landon Donovan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Kilbane"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tommaso Rocchi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fernando Belluschi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andres Guardado"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Braga"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Danny Welbeck"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marcelo Estigarribia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adnane Tighadouini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juan Vargas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "John Goossens"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Halil Altintop"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ignazio Abate"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Weldon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Borja Viguera"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Maicon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hakim Ziyech"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alessandro Rosina"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mohammed Tchite"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juraj Kucka"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Esteban Cambiasso"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cesc Fabregas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cristian Benitez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rafael van der Vaart"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ramires"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pasquale Foggia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ludovic Giuly"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jack Wilshere"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bojan Krkic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Radja Nainggolan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jaime Valdes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrey Arshavin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andres Iniesta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alberto Paloschi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bosko Jankovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Raul Jimenez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Mirallas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Romain Hamouma"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mehmet Ekici"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Shaun Wright-Phillips"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pedro Leon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Nolan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Emmanuel Agyemang-Badu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicolas De Preville"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Franco Brienza"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eder"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juan Carlos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Davide Lanzafame"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juan Carlos Menseguez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alexander Iashvili"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pablo Osvaldo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andy King"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Christian Daniel Ledesma"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cedric Makiadi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alexandre Pato"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrew Johnson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicki Bille Nielsen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Isaac Boakye"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jordan Henderson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Steven Pienaar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giovani dos Santos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Trezeguet"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dusan Svento"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Arjen Robben"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Obafemi Martins"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Xherdan Shaqiri"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Niko Kranjcar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dani Ndi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Darko Bodul"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Perparim Hetemaj"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicklas Pedersen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Franco Di Santo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kieron Dyer"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tom Huddlestone"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rui Miguel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Toni Kroos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Damien Duff"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Moussa Sow"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wissam Ben Yedder"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Benjani Mwaruwari"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hernanes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Maxi Lopez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nabil Fekir"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Martin Petrov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Martin Joergensen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Matias Alustiza"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fernando Torres"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Michel Bastos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Leo Baptistao"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dimitar Berbatov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cheick Diabate"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cedric Bakambu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Florent Balmont"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ricardo Horta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Alberto Santana"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sergio Floccari"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ibrahim Afellay"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Walter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eder Citadin Martins"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Javi Moreno Marquez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Walid Mesloub"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lasse Schoene"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "John Arne Riise"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mauro Camoranesi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giampaolo Pazzini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anis Ben-Hatira"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ruben Suarez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Benjamin Moukandjo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Victor Obinna"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hernan Crespo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Frederic Piquionne"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dusan Tadic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ashley Young"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Garath McCleary"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nuno Gomes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Claudio Marchisio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pierre-Emerick Aubameyang"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Salomon Kalou"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jermaine Jenas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Romain Poyet"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Josip Drmic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jimmy Kebe"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marek Hamsik"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lassad Nouioui"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Julien Sable"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniele De Rossi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ricardo Alvarez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lucas Piazon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ninos Gouriye"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marcus Berg"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Balazs Dzsudzsak"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Geoffrey Dernis"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Piotr Trochowski"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jhon Cordoba"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nacer Chadli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ze Eduardo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dusan Djuric"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pablo Piatti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Braulio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Siebe Schrijvers"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ryan Giggs"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ayoze Perez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vaclav Sverkos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cristian Pasquato"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Houssine Kharja"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Santi Mina"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jan Rosenthal"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lior Rafaelov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ilkay Guendogan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Diego"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bakary Sako"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Erik Jendrisek"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vicente Sanchez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alejandro Alfaro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Santi Cazorla"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniel Omoya Braaten"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Demba Ba"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Diego Milito"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tranquillo Barnetta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Joao Moutinho"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "James McFadden"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mustapha Riga"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kalu Uche"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Julio Baptista"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ronny"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stephan El Shaarawy"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alessandro Diamanti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nani"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adem Ljajic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Oscar Trejo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Didier Konan Ya"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Elano"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Modibo Maiga"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Milos Krasic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aleksandr Hleb"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gokhan Inler"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dirk Kuyt"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gokhan Tore"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adrien Silva"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gylfi Sigurdsson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luis Garcia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Franck Tabanou"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Felipe Caicedo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Abdoulaye Diallo Sadio,22"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Bermejo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Demy de Zeeuw"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juan Arango"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cacau"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cristian Rodriguez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Edgar Antonio Mendez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ahmed Musa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cristiano Zanetti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vagner Love"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dennis Rommedahl"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Barry Ferguson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lima"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicklas Bendtner"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Achille Emana"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thiago Motta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Crislan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Keirrison"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "John Carew"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nene"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thorstein Helstad"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Manuel Jurado"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pablo Barrientos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bebe"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andre Hahn"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nwankwo Kanu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lisandro Lopez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Radamel Falcao"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marcio Mossoro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Olivier Sorlin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Matteo Brighi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kerim Frei Koyunlu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Maximillian Beister"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Matheus Pereira"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Samir Nasri"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gregory Pujol"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yves Hadley Desmarets"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Milivoje Novakovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Davy Proepper"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bastian Schweinsteiger"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ikechukwu Uche"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Axel Witsel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Simao"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Valere Germain"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Maria Guti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Matias Fernandez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Gameiro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ashkan Dejagah"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Maria Callejon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ola Toivonen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Javier Pastore"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Felipe Melo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Arturo Vidal"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alessandro Matri"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniel Candeias"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sebastian Larsson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eduardo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vicente"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Markus Rosenberg"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juninho Pernambucano,20"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Cristiano Ronaldo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stephen Quinn"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Everton"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Heung-Min Son"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin-Prince Boateng"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tim Borowski"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jose Antonio Reyes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fabio Quagliarella"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Maor Melikson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vitali Kutuzov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Michael Krohn-Dehli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Di Vaio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Abdelkader Ghezzal"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eidur Gudjohnsen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marko Marin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alan Kardec"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Juan Carlos Valeron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Albert Bunjaku"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Rondon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alejandro Dominguez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marek Mintal"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Darius Vassell"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Di Michele"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Romelu Lukaku"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Zlatan Ibrahimovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Benoit Assou-Ekotto"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Milos Jojic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Amauri"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Theo Walcott"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Olcay Sahan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Constant"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Andrea Caracciolo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Imanol Agirretxe"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ismael Bangoura"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pablo Hernandez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jon Dahl Tomasson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tomas Rosicky"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sidney Govou"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kelvin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kaka"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Robbie Keane"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ricardo Cabanas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Caio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dede"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Abou Diaby"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Per Ciljan Skjelbred"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fernando Cavenaghi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luiz Adriano"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gonzalo Bergessio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Danijel Milicevic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Javier Chevanton"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Wilfried Bony"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Antonio Nocerino"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kamel Ghilas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Masoud Shojaei"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Angel Correa"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Enzo Perez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gaston Ramirez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gianni Munari"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dorlan Pabon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kleber Pinheiro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ishak Belfodil"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mame Biram Diouf"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sidney Sam"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sergio Pellissier"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Celso Borges"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ruud van Nistelrooy"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Grafite"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Steven Gerrard"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Robert Vittek"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Marchionni"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Moritz Leitner"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yoshinori Muto"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Didier Drogba"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tarik Elyounoussi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Miralem Sulejmani"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Chris Eagles"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco Davide Faraoni"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Paulo Dybala"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alessandro Florenzi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ezequiel Scarione"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Edinson Cavani"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eden Hazard"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mattia Destro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sami Allagui"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Carlos Bacca"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mauro Zarate"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ji-Sung Park"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ali Messaoud"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Franck Ribery"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Barry Bannan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jonathan Blondel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ewerthon"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aaron Hunt"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Domenico Berardi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Simone Zaza"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Javier Saviola"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Francesco Totti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alberto Aquilani"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Giandomenico Mesto"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lucas Biglia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sebastien Grax"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Elson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Aiden McGeady"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bruno Peres"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fraizer Campbell"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eric Mouloungui"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rodolfo Bodipo Diaz"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Leandro Daniel Paredes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Diego Forlan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nicolas Gaitan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Magnus Wolff Eikrem"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Miroslav Klose"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Fabrizio Miccoli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hakan Calhanoglu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Filip Djuricic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jan Schlaudraff"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniel Parejo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anass Achahbar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pierre-Alain Frau"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Tulio de Melo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dan Gosling"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Youri Tielemans"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Javier Zanetti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Henok Goitom"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marcelo Zalayeta"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Vadis Odjidja-Ofoe"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thomas Enevoldsen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Roberto Soldado"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nikola Kalinic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Guillaume Gillet"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eduardo Salvio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stefano Mauri"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Humberto Suazo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Doyle"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yoann Gourcuff"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Eduardo Vargas"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Charles Takyi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "David Bellion"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Karim Bellarabi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Derley"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anwar El-Ghazi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ivan Klasnic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adam Szalai"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Rafael Martins"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hiroshi Kiyotake"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Adryan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ronaldinho"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Konstantinos Mitroglou"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alberto Gilardino"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Itay Shechter"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Lazaros Christodoulopoulos"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Erik Lamela"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Valon Behrami"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ioannis Amanatidis"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dorge Kouemaha"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Igor Budan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kim Kaellstroem"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kris Boyd"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pawel Brozek"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Berigaud"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ryad Boudebouz"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mateo Kovacic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Hakan Yakin"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Papiss Cisse"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Dimitri Payet"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Nikola Djurdjic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stefano Sturaro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Simon Davies"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Maxi Moralez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Christian Maggio"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Romain Alessandrini"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Michael Bradley"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Stiliyan Petrov"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Miku"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Szabolcs Huszti"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Erik Huseklepp"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Max Kruse"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Javier Hernandez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marco van Ginkel"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "John Utaka"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kieran Richardson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Oscar Cardozo"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Milos Maric"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mohamed Zidan"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Marko Arnautovic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pascal Feindouno"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ivo Ilicevic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Emmanuel Emenike"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Sebastian Meoli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Kevin Roelandts"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Prince Tagoe"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mario Vrancic"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Yacine Abdessadki"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Thiago Ribeiro"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Manuel Pucciarelli"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Riyad Mahrez"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Daniel Guiza"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Alexander Gerndt"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anderson Talisca"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anthony Modeste"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Ezequiel Lavezzi"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Seydou Doumbia"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Anthony Stokes"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mikkel Diskerud"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Joe Cole"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "James Milner"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Luciano Dario Vietto"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Pavel Pogrebnyak"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Johan Vonlanthen"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Gelson"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Mathieu Bodmer"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Carlos Vela"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Christian Benteke"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Siem de Jong"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Jorginho"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Blerim Dzemaili"
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 120000
+  },
+  "row_count": 1105,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:87b270d6a8bbd90cb1e8577d1d3e0aec65dd5c52bd7608e162d971b37e42d980",
+    "row_counts": {
+      "public.player": 11060,
+      "public.player_attributes": 183978
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-08T05:22:38.535771+00:00",
+  "executed_at": "2026-09-08T05:22:50.381258+00:00",
+  "run_id": "audit-7912134a-3f9b-4113-a6b6-ebaf8b6a2bc0",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:ede92fd07294d5fdbe2d0cc6ba6d1da26dfce89677c75f64c27a319e31f0de82",
+  "record_hash": "sha256:c2fcee3e5d072cf67073ccddd1bd64cdc199f46bc97563970b4b7b19fa94f0bf"
+}

@@ -1,0 +1,140 @@
+{
+  "question_as_asked": "How many times the circuits were held in Austria? Please give their location and coordinates.",
+  "question": {
+    "question_id": "978",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "How many times the circuits were held in Austria? Please give their location and coordinates.",
+    "evidence_text": "location coordinates refers to (lat,lng); Austria refers to country = 'Austria';"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "statement_source": {
+    "path": "data/preds-pg/predict_mini_dev_gpt-4-turbo_postgresql.json",
+    "digest": "sha256:428fd115a67a76d6312ea205aab64764b5a09444587588eda442a94cfee65211",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4-turbo_postgresql.json",
+    "date": "2024-06-19"
+  },
+  "executed_sql": "SELECT location, lat, lng FROM circuits WHERE country = 'Austria'",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "location",
+        "declared_type": "text"
+      },
+      {
+        "name": "lat",
+        "declared_type": "float4"
+      },
+      {
+        "name": "lng",
+        "declared_type": "float4"
+      }
+    ],
+    "row_count": 3,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "Spielburg"
+        },
+        {
+          "type": "dec",
+          "value": "47.2197"
+        },
+        {
+          "type": "dec",
+          "value": "14.7647"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Styria"
+        },
+        {
+          "type": "dec",
+          "value": "47.2039"
+        },
+        {
+          "type": "dec",
+          "value": "14.7478"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Spielburg"
+        },
+        {
+          "type": "dec",
+          "value": "47.2197"
+        },
+        {
+          "type": "dec",
+          "value": "14.7647"
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 120000
+  },
+  "row_count": 3,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:dba8a9a92336f39850ac0e5248f8ef476f2bc8ca791dd5ec46b668424980980f",
+    "row_counts": {
+      "public.circuits": 72
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-08T05:22:38.535771+00:00",
+  "executed_at": "2026-09-08T05:22:54.933855+00:00",
+  "run_id": "audit-7912134a-3f9b-4113-a6b6-ebaf8b6a2bc0",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:82bb07e2b9e169e0063a7c05412a47e6889ebda0ae511e610ffda490800eb5c2",
+  "record_hash": "sha256:bdc187631e739fb92e046e571c54f8a46a48b0387f7a3d32d528fe333719ebe8"
+}

@@ -1,0 +1,131 @@
+{# The run: where the whole of it is, what it counted, what it was made of, and the index of
+   its questions.
+
+   The counts are the summary's own. The index is one row per directory the run wrote,
+   and then the questions that wrote none: a statement that could not be run has no
+   evidence to open, so it is a row here with the side that failed and the message. #}
+{% extends "base.html" %}
+{% from "_files.html" import file_links %}
+{% from "_figure.html" import figure_block %}
+{% from "_index.html" import index_table %}
+
+{% block strip %}
+<header class="strip strip--run">
+  <h1 class="strip__title">the run</h1>
+  <p class="strip__facts">
+    <span class="chip chip--set mono">{{ page.run_id }}</span>
+    <span class="chip chip--rule">exit status {{ page.exit_status }}</span>
+  </p>
+</header>
+{% endblock %}
+
+{% block content %}
+{% if page.published %}
+<section class="published" id="published">
+  <h2>The whole of this run is a release asset</h2>
+  {% if page.published.directories %}
+  <p>This site holds {{ page.directories }} of the {{ page.published.directories }} question directories this run wrote; the archive holds every one:</p>
+  {% else %}
+  <p>The pages here are a selection of this run's questions. Every question directory it wrote is in one archive:</p>
+  {% endif %}
+  <dl class="facts">
+    <dt>archive</dt>
+    <dd class="mono"><a href="{{ page.published.url }}">{{ page.published.name }}</a></dd>
+    <dt>size</dt>
+    <dd class="mono">{{ page.published.size }}</dd>
+    <dt>sha256</dt>
+    <dd class="mono">{{ page.published.digest }}</dd>
+  </dl>
+</section>
+{% endif %}
+
+<section class="counts" id="counts">
+  <h2>What it counted</h2>
+  <table class="counts__table">
+    <thead><tr><th scope="col">what</th><th scope="col">how many</th></tr></thead>
+    <tbody>
+      {% for count in page.counts %}
+      <tr><th scope="row">{{ count.name }}</th><td class="mono">{{ count.value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if page.verdict_figure %}
+  {{ figure_block(page.verdict_figure) }}
+  {% endif %}
+  <h3>the probes</h3>
+  <table class="counts__table">
+    <thead><tr><th scope="col">probe</th><th scope="col">fired on</th></tr></thead>
+    <tbody>
+      {% for count in page.probe_counts %}
+      <tr><th scope="row">{{ count.name }}</th><td class="mono">{{ count.value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if page.probe_figure %}
+  {{ figure_block(page.probe_figure) }}
+  {% endif %}
+  {% if page.credited %}
+  <h3>credited by BIRD's own check and NOT_EQUAL here</h3>
+  <table class="counts__table">
+    <thead><tr><th scope="col">what</th><th scope="col">how many</th></tr></thead>
+    <tbody>
+      {% for count in page.credited %}
+      <tr><th scope="row">{{ count.name }}</th><td class="mono">{{ count.value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+
+<section class="made-of" id="made-of">
+  <h2>What the run was made of</h2>
+  <dl class="facts">
+    {% for fact in page.made_of %}
+    <dt>{{ fact.name }}</dt>
+    <dd class="mono">{{ fact.value }}{% if fact.detail %}<span class="ink-2"> {{ fact.detail }}</span>{% endif %}</dd>
+    {% endfor %}
+  </dl>
+</section>
+
+<section class="session" id="session">
+  <h2>The session the run was made in</h2>
+  <details>
+    <summary>what the engine reported, {{ page.session|length }} settings</summary>
+    <dl class="facts">
+      {% for fact in page.session %}
+      <dt>{{ fact.name }}</dt>
+      <dd class="mono">{{ fact.value }}</dd>
+      {% endfor %}
+    </dl>
+  </details>
+</section>
+
+{% if page.notes %}
+<section class="notes" id="notes">
+  <h2>What the run states about itself</h2>
+  <dl class="facts">
+    {% for note in page.notes %}
+    <dt>{{ note.name }}</dt>
+    <dd class="mono">{{ note.value }}{% if note.detail %}<span class="ink-2"> {{ note.detail }}</span>{% endif %}</dd>
+    {% endfor %}
+  </dl>
+</section>
+{% endif %}
+
+<section class="index" id="index">
+  <h2>The questions</h2>
+  {{ index_table(page.entries, "") }}
+  <p class="ink-2">A question whose statement could not be run wrote no directory, so it is a row here and has no page: the summary holds the side that stopped, the step it stopped at and the engine's own message.</p>
+  {% if page.filters %}
+  <h3>The same index, restricted</h3>
+  <p class="ink-2">Each of these is a page of its own, so a filtered view has an address a reader can send. Nothing here is done by a script or by a query string.</p>
+  <ul class="filters">
+    {% for filter in page.filters %}
+    <li><a href="{{ filter.slug }}/index.html">{{ filter.heading }}</a> <span class="ink-2">{{ filter.entries|length }}</span></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+
+{{ file_links(page.files) }}
+{% endblock %}

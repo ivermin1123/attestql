@@ -1,0 +1,203 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "potential",
+            "column": "player_attributes.potential",
+            "declared_type": "bigint",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 4,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT id, potential AS attestql_ordering_key_0 FROM player_attributes WHERE preferred_foot = 'right' ORDER BY potential ASC NULLS LAST",
+        "unbounded_rows": 138409,
+        "projected_columns": [
+          "id"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "potential",
+            "direction": "asc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "case": null
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:fa047e4fdc77cbeaa46f8672d4b875c8b614b3935687950b2d88b10903652575",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "id",
+              "declared_type": "int8"
+            }
+          ],
+          "row_count": 4,
+          "truncated": false,
+          "rows_shown": 4,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 132236
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 132235
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 66213
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 66214
+              }
+            ]
+          ],
+          "result_hash": "sha256:fa047e4fdc77cbeaa46f8672d4b875c8b614b3935687950b2d88b10903652575"
+        },
+        "planner_statistics": {
+          "player_attributes": {
+            "last_analyze": null,
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 183978
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "player_attributes"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:0648da55b6d26bb2d6d63c9e16df785ebbe698f47a2b3d26068f9bae549cd6ca",
+          "result": {
+            "columns": [
+              {
+                "name": "id",
+                "declared_type": "int8"
+              }
+            ],
+            "row_count": 4,
+            "truncated": false,
+            "rows_shown": 4,
+            "rows": [
+              [
+                {
+                  "type": "int",
+                  "value": 132235
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 132236
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 66213
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 66214
+                }
+              ]
+            ],
+            "result_hash": "sha256:0648da55b6d26bb2d6d63c9e16df785ebbe698f47a2b3d26068f9bae549cd6ca"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 132235
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 132236
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 66213
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 66214
+          }
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "format": "attestql/audit/summary/2",
+  "run_id": "audit-8d432337-f2f3-458d-ab13-d0ad22a2fcf2",
+  "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/debit_card_specializing/debit_card_specializing.sqlite | size=34635776",
+  "effective_database_role": "file",
+  "session_settings": {
+    "engine": "sqlite",
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "parser": {
+    "validator": "audit:sqlglot-sqlite-parse",
+    "sqlglot": "30.18.0",
+    "dialect": "sqlite"
+  },
+  "question_set": {
+    "path": "data/questions/mini_dev_sqlite.json",
+    "digest": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+    "date": "2024-06-19",
+    "entries": 500,
+    "audited": 30,
+    "duplicate_ids": [
+      137,
+      138
+    ],
+    "ids": [
+      1471,
+      1472,
+      1473,
+      1476,
+      1479,
+      1480,
+      1481,
+      1482,
+      1483,
+      1484,
+      1486,
+      1490,
+      1493,
+      1498,
+      1500,
+      1501,
+      1505,
+      1506,
+      1507,
+      1509,
+      1514,
+      1515,
+      1521,
+      1524,
+      1525,
+      1526,
+      1528,
+      1529,
+      1531,
+      1533
+    ]
+  },
+  "predictions": {
+    "path": "data/preds-sqlite/predict_mini_dev_meta-llama-3-70b-instruct-2_sqlite.json",
+    "digest": "sha256:d4e0efbafaa26435c2110559b7a24c91efa272ce82b6ec6d2a7176019582e1ae",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_meta-llama-3-70b-instruct-2_sqlite.json",
+    "date": "2024-06-19",
+    "keyed_by": "position",
+    "statements": 500,
+    "positions_unused": [
+      487,
+      488
+    ]
+  },
+  "verdicts": {
+    "EQUAL": 10,
+    "NOT_EQUAL": 17,
+    "ERROR": 3
+  },
+  "smells": {
+    "ordering-over-numeric-text": 0,
+    "arbitrary-cut": 0,
+    "not-a-function-of-the-data": 0,
+    "float-aggregate-order": 0,
+    "direction-against-question": 0
+  },
+  "smells_fired": 0,
+  "credited_but_not_equal": {
+    "total": 2,
+    "by_mechanism": {
+      "multiplicity": 2,
+      "type": 0,
+      "order": 0,
+      "truncation": 0,
+      "other": 0
+    },
+    "by_test_suite_ex": {
+      "1": 0,
+      "0": 2
+    }
+  },
+  "fixture": {
+    "depth": "counts",
+    "cache": "runs/minidev-sqlite/meta-llama-3-70b-instruct-2/debit_card_specializing/fixture.json",
+    "source": {
+      "path": "data/minidev/dev_databases/debit_card_specializing/debit_card_specializing.sqlite",
+      "digest": "sha256:b3d149ad05746dbbe5116e229e17e18f09c39db43cf117d9ef3441753608b691",
+      "origin": "minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f), member minidev/MINIDEV/dev_databases, debit_card_specializing/debit_card_specializing.sqlite",
+      "date": "2024-06-13"
+    },
+    "schema_digest": "sha256:2131b6310cf40e1cc434bfe0408cde4b5b6dfac61f5767ff8b67293a07027579",
+    "row_counts": {
+      "main.customers": 32461,
+      "main.gasstations": 5716,
+      "main.products": 591,
+      "main.transactions_1k": 1000,
+      "main.yearmonth": 383282
+    },
+    "content_digests": {},
+    "measured_tables": [
+      "customers",
+      "yearmonth",
+      "gasstations",
+      "transactions_1k",
+      "products"
+    ],
+    "missing_tables": [],
+    "unreadable_tables": [],
+    "refused": ""
+  },
+  "planner_statistics": {},
+  "shuffle": {
+    "seed": 1,
+    "row_limit": 300000,
+    "scratch_schema": "temp",
+    "prepared": true,
+    "reason": "",
+    "copied": [
+      "customers",
+      "gasstations",
+      "products",
+      "transactions_1k"
+    ],
+    "skipped": {
+      "yearmonth": 383282
+    },
+    "not_reached_by_a_copy": {}
+  },
+  "settings": {
+    "statement_timeout_seconds": 30,
+    "fail_on_smell": false,
+    "experimental_s2": false,
+    "plan_variant": false,
+    "out": "runs/minidev-sqlite/meta-llama-3-70b-instruct-2/debit_card_specializing",
+    "serialization": "attestql/audit/2",
+    "work_mem": null,
+    "hash_mem_multiplier": null
+  },
+  "data_as_of": "2026-09-08T05:03:29.266087+00:00",
+  "data_as_of_source": "the instant the run started",
+  "elapsed_seconds": {
+    "fixture": 0.003,
+    "questions": 3.5,
+    "shuffle": 0.051
+  },
+  "errors": [
+    {
+      "question_id": 1481,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: misuse of window function MIN()"
+    },
+    {
+      "question_id": 1524,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: no such column: c.Country"
+    },
+    {
+      "question_id": 1529,
+      "side": "prediction",
+      "step": "statement",
+      "message": "2 statements in one text; an audit runs one"
+    }
+  ],
+  "timed_out": {
+    "gold": [],
+    "prediction": []
+  },
+  "exit_status": 1
+}

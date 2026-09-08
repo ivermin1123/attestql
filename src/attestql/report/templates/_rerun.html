@@ -1,0 +1,13 @@
+{# What each record says about running its own statement again. The instruction is the
+   record's own text and is shown as it was written. #}
+{% macro rerun_block(records) %}
+<section class="rerun" id="rerun">
+  <h2>Running these again</h2>
+  {% for record in records %}
+  <article class="rerun__side">
+    <h3>{{ record.side }}</h3>
+    <p class="rerun__instruction">{{ record.rerun_instruction }}</p>
+  </article>
+  {% endfor %}
+</section>
+{% endmacro %}

@@ -1,0 +1,636 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "t1.numge1500::real / (NULLIF(t1.numtsttakr, 0))",
+            "not_applicable": "the key is an expression and not a column"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t2.street, t2.city, t2.state, t2.zip, t1.numge1500::real / (NULLIF(t1.numtsttakr, 0)) AS attestql_ordering_key_0 FROM satscores t1 JOIN schools t2 ON t1.cds = t2.cdscode ORDER BY t1.numge1500::real / (NULLIF(t1.numtsttakr, 0)) ASC NULLS FIRST",
+        "unbounded_rows": 2269,
+        "projected_columns": [
+          "street",
+          "city",
+          "state",
+          "zip"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "t1.numge1500::real / (NULLIF(t1.numtsttakr, 0))",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 1,
+            "fires": true
+          }
+        ],
+        "returned_rows_with_a_null_key": [
+          [
+            {
+              "type": "str",
+              "value": "2800 Nicolaus Road, Suite 100"
+            },
+            {
+              "type": "str",
+              "value": "Lincoln"
+            },
+            {
+              "type": "str",
+              "value": "CA"
+            },
+            {
+              "type": "str",
+              "value": "95648-1757"
+            }
+          ]
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "tied_rows": 596,
+          "distinct_projected_answers": 561,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "2800 Nicolaus Road, Suite 100"
+              },
+              {
+                "type": "str",
+                "value": "Lincoln"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "95648-1757"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "6402 Linda Vista Road"
+              },
+              {
+                "type": "str",
+                "value": "San Diego"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "92111-7320"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "2601 Rosamond Boulevard"
+              },
+              {
+                "type": "str",
+                "value": "Rosamond"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "93560-7688"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "4431 Mount Herbert Avenue"
+              },
+              {
+                "type": "str",
+                "value": "San Diego"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "92117-4728"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "10170 Huennekens Street"
+              },
+              {
+                "type": "str",
+                "value": "San Diego"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "92121-2964"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "4100 Normal Street, Annex 14"
+              },
+              {
+                "type": "str",
+                "value": "San Diego"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "92103"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "3939 Conde Street"
+              },
+              {
+                "type": "str",
+                "value": "San Diego"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "92110-3012"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "3773 El Cajon Boulevard"
+              },
+              {
+                "type": "str",
+                "value": "San Diego"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "92105"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "1144 West Lacey Boulevard"
+              },
+              {
+                "type": "str",
+                "value": "Hanford"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "93230-5956"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "418 West 8th Street"
+              },
+              {
+                "type": "str",
+                "value": "Hanford"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "93230-4536"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut, null-first"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "2800 Nicolaus Road, Suite 100"
+          },
+          {
+            "type": "str",
+            "value": "Lincoln"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "95648-1757"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "6402 Linda Vista Road"
+          },
+          {
+            "type": "str",
+            "value": "San Diego"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "92111-7320"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "2601 Rosamond Boulevard"
+          },
+          {
+            "type": "str",
+            "value": "Rosamond"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "93560-7688"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "4431 Mount Herbert Avenue"
+          },
+          {
+            "type": "str",
+            "value": "San Diego"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "92117-4728"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "10170 Huennekens Street"
+          },
+          {
+            "type": "str",
+            "value": "San Diego"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "92121-2964"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "4100 Normal Street, Annex 14"
+          },
+          {
+            "type": "str",
+            "value": "San Diego"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "92103"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "3939 Conde Street"
+          },
+          {
+            "type": "str",
+            "value": "San Diego"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "92110-3012"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "3773 El Cajon Boulevard"
+          },
+          {
+            "type": "str",
+            "value": "San Diego"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "92105"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "1144 West Lacey Boulevard"
+          },
+          {
+            "type": "str",
+            "value": "Hanford"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "93230-5956"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "418 West 8th Street"
+          },
+          {
+            "type": "str",
+            "value": "Hanford"
+          },
+          {
+            "type": "str",
+            "value": "CA"
+          },
+          {
+            "type": "str",
+            "value": "93230-4536"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:fa1aa0fe0a319e2b75749b90fac6a44f32dc33a545113a0e07d5965e61ac148c",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "street",
+              "declared_type": "text"
+            },
+            {
+              "name": "city",
+              "declared_type": "text"
+            },
+            {
+              "name": "state",
+              "declared_type": "text"
+            },
+            {
+              "name": "zip",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "2125 Jefferson Avenue"
+              },
+              {
+                "type": "str",
+                "value": "Berkeley"
+              },
+              {
+                "type": "str",
+                "value": "CA"
+              },
+              {
+                "type": "str",
+                "value": "94703-1414"
+              }
+            ]
+          ],
+          "result_hash": "sha256:fa1aa0fe0a319e2b75749b90fac6a44f32dc33a545113a0e07d5965e61ac148c"
+        },
+        "planner_statistics": {
+          "satscores": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:51.562503+00",
+            "n_mod_since_analyze": 0
+          },
+          "schools": {
+            "last_analyze": null,
+            "last_autoanalyze": "2026-09-08 05:19:52.240861+00",
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "satscores",
+            "schools"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:fa1aa0fe0a319e2b75749b90fac6a44f32dc33a545113a0e07d5965e61ac148c",
+          "result": {
+            "columns": [
+              {
+                "name": "street",
+                "declared_type": "text"
+              },
+              {
+                "name": "city",
+                "declared_type": "text"
+              },
+              {
+                "name": "state",
+                "declared_type": "text"
+              },
+              {
+                "name": "zip",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "2125 Jefferson Avenue"
+                },
+                {
+                  "type": "str",
+                  "value": "Berkeley"
+                },
+                {
+                  "type": "str",
+                  "value": "CA"
+                },
+                {
+                  "type": "str",
+                  "value": "94703-1414"
+                }
+              ]
+            ],
+            "result_hash": "sha256:fa1aa0fe0a319e2b75749b90fac6a44f32dc33a545113a0e07d5965e61ac148c"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

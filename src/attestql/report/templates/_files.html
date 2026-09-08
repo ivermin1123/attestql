@@ -1,0 +1,12 @@
+{# The JSON this page was rendered from, beside the page. Every sentence above comes from
+   one of these files, and a reader who doubts one opens it. #}
+{% macro file_links(files) %}
+<section class="files" id="files">
+  <h2>The JSON this page was rendered from</h2>
+  <ul class="files__list">
+    {% for file in files %}
+    <li><a class="mono" href="{{ file.name }}">{{ file.name }}</a> <span class="ink-2">{{ file.value }}</span></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endmacro %}

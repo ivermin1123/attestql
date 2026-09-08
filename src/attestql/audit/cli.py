@@ -120,6 +120,14 @@ from attestql.evidence.types import (
     SessionSettings,
     StatementSource,
 )
+from attestql.report import (
+    REPORT,
+    REPORT_DESCRIPTION,
+    REPORT_HELP,
+    ReportRefused,
+    add_report_arguments,
+    render_report,
+)
 
 PROGRAM = "attestql"
 
@@ -1672,6 +1680,9 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="the directory the sandbox and its audit are written into",
     )
+    add_report_arguments(
+        subcommands.add_parser(REPORT, help=REPORT_HELP, description=REPORT_DESCRIPTION)
+    )
     return parser
 
 
@@ -1754,6 +1765,23 @@ def connect_and_audit(options: AuditOptions, writer: Writer) -> int:
     return audit(options, backend, writer)
 
 
+def report(audit_directory: Path, out: Path | None, writer: Writer) -> int:
+    """One rendering's exit status: the pages it wrote, or 2 when it could not render.
+
+    The two statuses of ADR-0013 point 2 that a command which audits nothing can have. A
+    directory that is not an audit's, a file that is not the JSON its name says and a
+    document that does not hold what its format states are each this tool failing to run
+    over what it was given, which is 2; anything it rendered is 0, because rendering states
+    nothing about what the run found and the run's own status is on the page.
+    """
+    try:
+        writer.line(render_report(audit_directory, out).line)
+    except ReportRefused as refused:
+        print(f"{PROGRAM}: {refused}", file=sys.stderr)
+        return 2
+    return 0
+
+
 def run_demo(out: Path, writer: Writer) -> int:
     """Write the packaged sandbox into that directory, audit it, and say how to rerun it.
 
@@ -1808,6 +1836,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     writer = ConsoleWriter(sys.stdout)
     if parsed.command == DEMO:
         return run_demo(cast("Path", parsed.out), writer)
+    if parsed.command == REPORT:
+        return report(cast("Path", parsed.audit), cast("Path | None", parsed.out), writer)
     return connect_and_audit(parse_arguments(argv), writer)
 
 
@@ -1822,6 +1852,7 @@ __all__ = [
     "POSITION_KEYING",
     "PROGRAM",
     "QUESTION_ID_KEYING",
+    "REPORT",
     "RERUN_PREFIX",
     "SERIALIZATION",
     "SMELLS_FILE",
@@ -1846,6 +1877,7 @@ __all__ = [
     "parse_arguments",
     "read_predictions",
     "read_questions",
+    "report",
     "resolve_predictions",
     "run_audit",
     "run_demo",

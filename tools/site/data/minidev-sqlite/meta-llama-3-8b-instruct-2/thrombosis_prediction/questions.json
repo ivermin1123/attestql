@@ -1,0 +1,252 @@
+[
+ {
+  "question_id": "1149",
+  "db_id": "thrombosis_prediction",
+  "question": "Are there more in-patient or outpatient who were male? What is the deviation in percentage?"
+ },
+ {
+  "question_id": "1150",
+  "db_id": "thrombosis_prediction",
+  "question": "What is the percentage of female patient were born after 1930?"
+ },
+ {
+  "question_id": "1152",
+  "db_id": "thrombosis_prediction",
+  "question": "What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?"
+ },
+ {
+  "question_id": "1153",
+  "db_id": "thrombosis_prediction",
+  "question": "What is the disease patient '30609' diagnosed with. List all the date of laboratory tests done for this patient."
+ },
+ {
+  "question_id": "1155",
+  "db_id": "thrombosis_prediction",
+  "question": "List the patient ID, sex and birthday of patient with LDH beyond normal range."
+ },
+ {
+  "question_id": "1156",
+  "db_id": "thrombosis_prediction",
+  "question": "State the ID and age of patient with positive degree of coagulation."
+ },
+ {
+  "question_id": "1157",
+  "db_id": "thrombosis_prediction",
+  "question": "For patients with severe degree of thrombosis, list their ID, sex and disease the patient is diagnosed with."
+ },
+ {
+  "question_id": "1162",
+  "db_id": "thrombosis_prediction",
+  "question": "How many female patients who came at the hospital in 1997 was immediately followed at the outpatient clinic?"
+ },
+ {
+  "question_id": "1164",
+  "db_id": "thrombosis_prediction",
+  "question": "How many of the patients with the most serious thrombosis cases examined in 1997 are women?"
+ },
+ {
+  "question_id": "1166",
+  "db_id": "thrombosis_prediction",
+  "question": "What are the symptoms observed by the youngest patient to ever did a medical examination? Identify their diagnosis."
+ },
+ {
+  "question_id": "1168",
+  "db_id": "thrombosis_prediction",
+  "question": "The oldest SJS patient's medical laboratory work was completed on what date, and what age was the patient when they initially arrived at the hospital?"
+ },
+ {
+  "question_id": "1169",
+  "db_id": "thrombosis_prediction",
+  "question": "What is the ratio of male to female patients among all those with abnormal uric acid counts?"
+ },
+ {
+  "question_id": "1171",
+  "db_id": "thrombosis_prediction",
+  "question": "How many underage patients were examined during the course of the three-year period from 1990 to 1993?"
+ },
+ {
+  "question_id": "1175",
+  "db_id": "thrombosis_prediction",
+  "question": "How old was the patient who had the highest hemoglobin count at the time of the examination, and what is the doctor's diagnosis?"
+ },
+ {
+  "question_id": "1179",
+  "db_id": "thrombosis_prediction",
+  "question": "For the patient who was diagnosed with SLE on 1994/2/19, what was his/her anti-Cardiolipin antibody concentration status on 1993/11/12?"
+ },
+ {
+  "question_id": "1185",
+  "db_id": "thrombosis_prediction",
+  "question": "For the patient who was born on 1959/2/18, what is the decrease rate for his/her total cholesterol from November to December in 1981?"
+ },
+ {
+  "question_id": "1187",
+  "db_id": "thrombosis_prediction",
+  "question": "How many patients who were examined between 1987/7/6 and 1996/1/31 had a GPT level greater than 30 and an ALB level less than 4? List them by their ID."
+ },
+ {
+  "question_id": "1189",
+  "db_id": "thrombosis_prediction",
+  "question": "What number of patients with a degree of thrombosis level 2 and ANA pattern of only S, have a level of anti-Cardiolip in antibody (IgM) 20% higher than average?"
+ },
+ {
+  "question_id": "1192",
+  "db_id": "thrombosis_prediction",
+  "question": "List all patients who were followed up at the outpatient clinic who underwent a laboratory test in October 1991 and had a total blood bilirubin level within the normal range."
+ },
+ {
+  "question_id": "1195",
+  "db_id": "thrombosis_prediction",
+  "question": "What is the average blood albumin level for female patients with a PLT greater than 400 who have been diagnosed with SLE?"
+ },
+ {
+  "question_id": "1198",
+  "db_id": "thrombosis_prediction",
+  "question": "How many female patients were given an APS diagnosis?"
+ },
+ {
+  "question_id": "1201",
+  "db_id": "thrombosis_prediction",
+  "question": "What percentage of patients who were born in 1980 and were diagnosed with RA are women?"
+ },
+ {
+  "question_id": "1205",
+  "db_id": "thrombosis_prediction",
+  "question": "Was the patient with the number 57266's uric acid within a normal range?"
+ },
+ {
+  "question_id": "1208",
+  "db_id": "thrombosis_prediction",
+  "question": "Provide IDs for male patients with ALT glutamic pylvic transaminase (GPT) that have history of ALT glutamic pylvic transaminase (GPT) exceed the normal range."
+ },
+ {
+  "question_id": "1209",
+  "db_id": "thrombosis_prediction",
+  "question": "Please provide the diagnosis of patients with ALT glutamic pylvic transaminase beyond the normal range by ascending order of their date of birth."
+ },
+ {
+  "question_id": "1220",
+  "db_id": "thrombosis_prediction",
+  "question": "Provide all ID, sex and birthday of patients whose urea nitrogen (UN) just within the borderline of passing?"
+ },
+ {
+  "question_id": "1225",
+  "db_id": "thrombosis_prediction",
+  "question": "List and group all patients by sex for total bilirubin (T-BIL) level not within the normal range."
+ },
+ {
+  "question_id": "1227",
+  "db_id": "thrombosis_prediction",
+  "question": "What is the average age of the male patient with high cholesterol?"
+ },
+ {
+  "question_id": "1229",
+  "db_id": "thrombosis_prediction",
+  "question": "For all patients with triglyceride (TG) level beyond the normal range, how many are age more than 50 years?"
+ },
+ {
+  "question_id": "1231",
+  "db_id": "thrombosis_prediction",
+  "question": "For patient born between 1936-1956, how many male patients have creatinine phosphokinase beyond the normal range?"
+ },
+ {
+  "question_id": "1232",
+  "db_id": "thrombosis_prediction",
+  "question": "Provide ID, sex and age of patient who has blood glucose (GLU) not within normal range but with total cholesterol(T-CHO) within normal range."
+ },
+ {
+  "question_id": "1235",
+  "db_id": "thrombosis_prediction",
+  "question": "What are the patient's diagnosis for those who has lower red blood blood cell? State their ID and age."
+ },
+ {
+  "question_id": "1238",
+  "db_id": "thrombosis_prediction",
+  "question": "Among the patients who were diagnosed with SLE, who is the oldest with normal hemoglobin level. Provide the ID and sex."
+ },
+ {
+  "question_id": "1239",
+  "db_id": "thrombosis_prediction",
+  "question": "Name the ID and age of patient with two or more laboratory examinations which show their hematoclit level exceeded the normal range."
+ },
+ {
+  "question_id": "1241",
+  "db_id": "thrombosis_prediction",
+  "question": "For patients with abnormal platelet level, state the number of patients with lower than normal range. How is it compare to the number of patients with higher than normal range?"
+ },
+ {
+  "question_id": "1242",
+  "db_id": "thrombosis_prediction",
+  "question": "For laboratory examinations take in 1984, list all patients below 50 years old with normal platelet level."
+ },
+ {
+  "question_id": "1243",
+  "db_id": "thrombosis_prediction",
+  "question": "For all patients who are older than 55 years old, what is the percentage of female who has abnormal prothrombin time (PT)?"
+ },
+ {
+  "question_id": "1247",
+  "db_id": "thrombosis_prediction",
+  "question": "Among the male patients who have a normal level of white blood cells, how many of them have an abnormal fibrinogen level?"
+ },
+ {
+  "question_id": "1251",
+  "db_id": "thrombosis_prediction",
+  "question": "How many patients with an Ig G higher than normal?"
+ },
+ {
+  "question_id": "1252",
+  "db_id": "thrombosis_prediction",
+  "question": "Among the patients with a normal Ig G level, how many of them have symptoms?"
+ },
+ {
+  "question_id": "1254",
+  "db_id": "thrombosis_prediction",
+  "question": "How many patients with a normal Ig A level came to the hospital after 1990/1/1?"
+ },
+ {
+  "question_id": "1255",
+  "db_id": "thrombosis_prediction",
+  "question": "For the patients with an abnormal Ig M level, what is the most common disease they are diagnosed with?"
+ },
+ {
+  "question_id": "1256",
+  "db_id": "thrombosis_prediction",
+  "question": "How many patients with a abnormal C-reactive protein don't have their data recorded?"
+ },
+ {
+  "question_id": "1257",
+  "db_id": "thrombosis_prediction",
+  "question": "Among the patients whose creatinine level is abnormal, how many of them aren't 70 yet?"
+ },
+ {
+  "question_id": "1265",
+  "db_id": "thrombosis_prediction",
+  "question": "How many patients have a normal level of anti-ribonuclear protein and have been admitted to the hospital?"
+ },
+ {
+  "question_id": "1267",
+  "db_id": "thrombosis_prediction",
+  "question": "Among the patients with normal anti-SM, how many of them does not have thrombosis?"
+ },
+ {
+  "question_id": "1270",
+  "db_id": "thrombosis_prediction",
+  "question": "Among the patients who has a normal anti-scl70, how many of them are female and does not have any symptom?"
+ },
+ {
+  "question_id": "1275",
+  "db_id": "thrombosis_prediction",
+  "question": "Among the patients who has a normal level of anti-centromere and a normal level of anti-SSB, how many of them are male?"
+ },
+ {
+  "question_id": "1281",
+  "db_id": "thrombosis_prediction",
+  "question": "Among the patients who have an abnormal level of glutamic oxaloacetic transaminase, when was the youngest of them born?"
+ },
+ {
+  "question_id": "1302",
+  "db_id": "thrombosis_prediction",
+  "question": "For the patients with a normal range of creatinine phosphokinase, how many of them have a positive measure of degree of coagulation?"
+ }
+]

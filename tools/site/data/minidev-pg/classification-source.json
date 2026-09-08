@@ -1,0 +1,13 @@
+{
+ "source": "plans/reports/prediction-mode-260904-real-predictions/classification.json",
+ "date": "2026-09-04",
+ "shape": "per_file",
+ "reason_field": "reason",
+ "keys": "per_file[<prediction file>].rows[], joined by the run name and question_id",
+ "classes": {
+  "A": "a wrong answer the benchmark credited: another table or projection; a scalar repeated per row of an unrelated table; a list at least twice the answer's length where the question asks for the things, not the rows",
+  "B": "harmless: one distinct row repeated; DISTINCT added by the prediction; a list under twice the answer with every row present",
+  "C": "the tool's rule, not the question's: the same number as int8 against numeric or float8 against numeric"
+ },
+ "classes_source": "plans/reports/measurement-260904-0046-prediction-mode-on-real-predictions.md"
+}

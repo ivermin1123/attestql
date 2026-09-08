@@ -215,3 +215,81 @@ by hand, is in
 [the measurement report](../plans/reports/measurement-260902-2226-gold-only-probes-mini-dev.md):
 67 % actionable over the fires, and the direction probe alone 17 %, which is why it is off by
 default.
+
+## The report command
+
+`attestql report <audit-dir>` reads the JSON one audit wrote and writes a page for the run and a
+page for each question, with the JSON each page was rendered from copied beside it. It reads the
+files and reaches no database, so a directory produced on another machine, by either engine,
+renders here: the pages are built from the `format` strings the documents declare and from
+nothing else. `--out` says where they go and defaults to the audit directory's own sibling,
+`<audit-dir>-report/`, because a rerun of the audit clears the audit directory and a report
+written inside one would be left there, stale, beside a fresh run. Exit status is 0 when the
+pages were written and 2 when the directory could not be rendered: a directory holding no
+`summary.json` was not written by this tool, and the line says so with nothing written. An
+`--out` naming the audit directory itself, or a directory inside it, is refused for the same
+reason the default is a sibling.
+
+The output directory follows the rule the audit's own does. The first render leaves a
+`.attestql-report` marker in it; a render into a directory that has the marker removes what the
+render before it wrote (`index.html`, `summary.json`, every `q<id>/`, `not-equal/`,
+`by-mechanism/`, `by-probe/` and `static/`) before
+writing anything, so what is in there is one report and not two, and anything else you put there
+stays. A non-empty directory without the marker is refused with nothing in it touched.
+
+`index.html` is the run: the counts, what the run was made of (both file digests with whatever
+origin the run was told, the server, the parser, the serialization, the fixture digest, the
+shuffle and the session as the engine reported it), the states the run has to state about itself
+(duplicate ids, prediction positions not compared, tables missing or unreadable, tables the
+shuffle did not reach, statements the budget stopped), and an index of every question. A question
+whose statement could not be run wrote no directory, so it is a row of that index read from the
+summary's own error list, with the side that stopped and the engine's message, and has no page.
+
+The index is also written restricted, under an address for each restriction, because a static
+host reads no query string: `not-equal/index.html` holds the rows whose verdict is NOT_EQUAL,
+`by-mechanism/<class>/index.html` the rows a counterexample put in that class, and
+`by-probe/<name>/index.html` the rows whose gold fired that probe. Each is the run page's own
+index with rows left out, links back to the whole, and is written only where a row satisfies
+it.
+
+`q<id>/index.html` is one question, in a fixed order: what was asked, the two statements with the
+tokens they differ in marked, the rows the two results differ in, what BIRD's own check and the
+test-suite check would have said, and then the results, the probes in all three states, both
+evidence records and the instruction for running each statement again. The page states the
+verdict, the mechanism and every `reading` string as the JSON holds them and adds no judgement of
+its own; a test reads the templates' own literals and forbids a short list of phrases there.
+
+Three files no audit writes are read where a publisher put them beside the summary. A
+`questions.json` holding `question_id`, `db_id` and the question text names the database each
+question is about, which reaches no file the audit writes, and the strip of a question page then
+states that database in front of the question set. A `classification.json` with a
+`classification-source.json` beside it, saying where the copy came from, what date it carries and
+which of its rows are this run's, puts one "read by hand" row on each question it holds a row
+for, showing the class and the reason verbatim with that date; the tool's verdict and a person's
+reading are two blocks on the page and are never merged; where that note also carries a `classes`
+object, the row states what the class means in the words of the document that defines it. A
+`published.json` holding a name, an `https://` URL, a size and a sha256 puts the address of the
+whole run on the run page, and where it also holds `directories`, how many question directories
+the archive has, the page states how many of them have a page here. A directory this tool wrote
+holds none of the three and renders exactly as it did before they existed.
+
+Beside every record's two hashes the page states `recomputed from this JSON: match`, or the two
+values when they differ. The line is not a repetition of the file: `attestql.evidence.load` reads
+the record back into the result and the descriptor it was rendered under, takes `result_hash`
+over that rendering again and `record_hash` over the document with that one key removed, and
+compares. A record whose bytes changed after the audit wrote it says so on the page.
+
+Where a table cannot say the thing, the page draws it: an SVG built in Python from the same
+numbers the tables state, with its data source in its `<title>` and the same numbers in words
+under it. The run page draws its verdicts and its probes; a question is drawn only where its
+class has a shape, which is the rows that moved, the rows one result holds more of, and the
+result that is the first rows of the other.
+
+The pages print. The sticky line at the top becomes an ordinary heading, every disclosure opens
+so paper holds what the screen would have held after you opened them all, every link prints where
+it goes, and nothing animates. The stylesheet, the script and the fonts are written under
+`static/` beside the pages, so a report is a directory you can move, serve or open with nothing
+fetched from a network.
+
+Rendering the same directory twice writes the same bytes: no clock is read and no generation time
+is written, so a report can be committed or published and re-made without a diff.

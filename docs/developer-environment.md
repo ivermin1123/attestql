@@ -8,7 +8,7 @@ drifts. Every convention this repository states should be mechanically checkable
 should be runnable with one command.
 
 This document follows the house Python setup checklist (detect, decide, add, verify, report). Where
-it departs from that checklist, section 8 says so and why.
+it departs from that checklist, section 9 says so and why.
 
 ---
 
@@ -122,13 +122,26 @@ markdownlint, cspell, then pytest. It is what a milestone verification runs.
 `just fix` applies only the auto-fixable subset (`ruff format`, `ruff check --fix`). Automatic fixing
 stops at the boundary of anything that changes meaning.
 
-## 6. Editor
+## 6. Building the site
+
+`uv run python tools/site/build.py` renders every run under `tools/site/data/` with
+`attestql report`, then the landing and the method page from `tools/site/templates/`, into
+`build/site/`, which git ignores. It prints the file count, the total bytes and the wall time,
+and it fails, naming what pushed it over, at more than 8,000 files, more than 40 MB in total, or
+any single page over 2 MB; those sit under the Cloudflare Pages Free plan's own 20,000 files and
+25 MiB a file, so a run can be added to a passing build without a re-plan. While no benchmark is
+published under `tools/site/data/`, the build audits the sandbox the package carries and shows
+that, with a banner on every page saying so. It reaches no network and no database: everything on
+both pages is read out of `pyproject.toml`, `README.md`, `site/index.html` and the JSON of the
+runs. `tools/site/README.md` has the deploy command for the preview project. Since 2026-09-08 `.github/workflows/site.yml` runs the same build on every push to `main` and publishes it to attestql.com, and on a manual run to the preview; `tools/site/README.md` names the two secrets it reads.
+
+## 7. Editor
 
 No editor configuration is committed. `.editorconfig` carries the whitespace rules, and the gate
 carries everything else; an editor that runs ruff, pyright in strict mode and the markdownlint and
 cspell extensions agrees with `just check` without further settings.
 
-## 7. Not adopted
+## 8. Not adopted
 
 **Coverage gate.** See section 2.
 
@@ -145,7 +158,7 @@ does not exist.
 **`requirements.txt`.** Two sources of truth. If a deploy target ever needs one, generate it with
 `uv export`.
 
-## 8. Departures from the house checklist, recorded
+## 9. Departures from the house checklist, recorded
 
 **CI is added, but no document may claim it gates anything until it has run green once.** The
 checklist calls for `.github/workflows/ci.yml`, and the file costs nothing and works the moment a
@@ -157,7 +170,7 @@ An earlier draft of this plan omitted CI entirely, which was the wrong fix for t
 
 **`S` added to ruff.** Reason in section 3.
 
-## 9. Consequence to accept honestly
+## 10. Consequence to accept honestly
 
 Turning pyright strict on against an existing tree will produce a first-run list of findings. Those
 are fixed in this milestone, in a **separate commit** from the config, so that the diff introducing

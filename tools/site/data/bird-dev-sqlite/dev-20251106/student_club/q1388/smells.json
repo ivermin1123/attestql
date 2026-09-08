@@ -1,0 +1,238 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "SUM(T2.amount)",
+            "not_applicable": "the key is an expression and not a column"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT T1.first_name, T1.last_name, T2.source, SUM(T2.amount) AS attestql_ordering_key_0 FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member GROUP BY T1.first_name, T1.last_name, T2.source ORDER BY SUM(T2.amount) DESC",
+        "unbounded_rows": 31,
+        "projected_columns": [
+          "first_name",
+          "last_name",
+          "source"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "SUM(T2.amount)",
+            "direction": "desc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1
+          ],
+          "tied_rows": 2,
+          "distinct_projected_answers": 2,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Connor"
+              },
+              {
+                "type": "str",
+                "value": "Hilton"
+              },
+              {
+                "type": "str",
+                "value": "Dues"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Sacha"
+              },
+              {
+                "type": "str",
+                "value": "Harrison"
+              },
+              {
+                "type": "str",
+                "value": "Dues"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Connor"
+          },
+          {
+            "type": "str",
+            "value": "Hilton"
+          },
+          {
+            "type": "str",
+            "value": "Dues"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Sacha"
+          },
+          {
+            "type": "str",
+            "value": "Harrison"
+          },
+          {
+            "type": "str",
+            "value": "Dues"
+          },
+          {
+            "type": "int",
+            "value": 100
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:c746a9491a920ab97d2da8eb378f92a9210fcd6867bef59d8778e7d58932abfa",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "first_name",
+              "declared_type": "TEXT"
+            },
+            {
+              "name": "last_name",
+              "declared_type": "TEXT"
+            },
+            {
+              "name": "source",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Connor"
+              },
+              {
+                "type": "str",
+                "value": "Hilton"
+              },
+              {
+                "type": "str",
+                "value": "Dues"
+              }
+            ]
+          ],
+          "result_hash": "sha256:c746a9491a920ab97d2da8eb378f92a9210fcd6867bef59d8778e7d58932abfa"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "member",
+            "income"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {},
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:c746a9491a920ab97d2da8eb378f92a9210fcd6867bef59d8778e7d58932abfa",
+          "result": {
+            "columns": [
+              {
+                "name": "first_name",
+                "declared_type": "TEXT"
+              },
+              {
+                "name": "last_name",
+                "declared_type": "TEXT"
+              },
+              {
+                "name": "source",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Connor"
+                },
+                {
+                  "type": "str",
+                  "value": "Hilton"
+                },
+                {
+                  "type": "str",
+                  "value": "Dues"
+                }
+              ]
+            ],
+            "result_hash": "sha256:c746a9491a920ab97d2da8eb378f92a9210fcd6867bef59d8778e7d58932abfa"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

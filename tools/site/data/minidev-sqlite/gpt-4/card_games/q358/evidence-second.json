@@ -1,0 +1,113 @@
+{
+  "question_as_asked": "What is the border color of card \"Ancestor's Chosen\"?",
+  "question": {
+    "question_id": "358",
+    "question_set": "mini_dev_sqlite from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_sqlite.json",
+    "question_text": "What is the border color of card \"Ancestor's Chosen\"?",
+    "evidence_text": "name of card  = 'Ancestor''s Chosen' ;"
+  },
+  "question_set_version": "sha256:4ba5fa8de55856222f484d380d2ba872b380bf79d825de70478e2120cb0fc43b",
+  "statement_source": {
+    "path": "data/preds-sqlite/predict_mini_dev_gpt-4_sqlite.json",
+    "digest": "sha256:afb13727cd9ba01aa4a4761769567b80746581e13895b63e54e6a5cc38d0c1a6",
+    "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4_sqlite.json",
+    "date": "2024-06-19"
+  },
+  "executed_sql": "SELECT borderColor FROM cards WHERE name = 'Ancestor''s Chosen'",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:sqlglot-sqlite-parse",
+  "effective_database_role": "file",
+  "backend_identity_at_checkout": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/card_games/card_games.sqlite | size=261820416",
+  "session_settings_in_force": {
+    "engine": "sqlite",
+    "time_zone": null,
+    "date_style": null,
+    "interval_style": null,
+    "extra_float_digits": null,
+    "database_collation": null,
+    "work_mem": null,
+    "hash_mem_multiplier": null,
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "wal",
+      "data_version": "3",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "borderColor",
+        "declared_type": "TEXT"
+      }
+    ],
+    "row_count": 4,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "black"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "black"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "black"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "black"
+        }
+      ]
+    ],
+    "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/card_games/card_games.sqlite | size=261820416",
+    "statement_timeout_ms": 30000
+  },
+  "row_count": 4,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:cad4fa10a67ffced218e7362544d718459a124f4f941637c89385447f24f1821",
+    "row_counts": {
+      "main.cards": 56822
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227"
+  },
+  "data_as_of": "2026-09-08T05:23:06.166754+00:00",
+  "executed_at": "2026-09-08T05:23:19.831140+00:00",
+  "run_id": "audit-4e13ba00-25fc-4dee-9812-b6b3a5bbb88f",
+  "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/card_games/card_games.sqlite | size=261820416 under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:2f4653cb64827c35cdc7fe0e4b53b1c98963e6caff06a7c79746348927536c7f",
+  "record_hash": "sha256:9a1f5c79ef89eaf7b98597c30d33b33d991e38414ee3e3448a548224fd58b14e"
+}

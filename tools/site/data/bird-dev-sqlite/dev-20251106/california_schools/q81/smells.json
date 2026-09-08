@@ -1,0 +1,502 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "T2.Latitude",
+            "column": "schools.Latitude",
+            "declared_type": "REAL",
+            "not_applicable": "the column is not declared as text"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT T2.City, T1.\"Low Grade\", T1.\"School Name\", T2.Latitude AS attestql_ordering_key_0 FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.State = 'CA' ORDER BY T2.Latitude ASC",
+        "unbounded_rows": 9986,
+        "projected_columns": [
+          "City",
+          "Low Grade",
+          "School Name"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "T2.Latitude",
+            "direction": "asc",
+            "nulls": "first",
+            "nulls_first_in_effect": true,
+            "returned_rows_null_in_this_key": 1,
+            "fires": true
+          }
+        ],
+        "returned_rows_with_a_null_key": [
+          [
+            {
+              "type": "str",
+              "value": "Oroville"
+            },
+            {
+              "type": "str",
+              "value": "7"
+            },
+            {
+              "type": "str",
+              "value": "Central Middle - RISE"
+            }
+          ]
+        ],
+        "tied_at_the_cut": {
+          "positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "tied_rows": 9,
+          "distinct_projected_answers": 9,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Oroville"
+              },
+              {
+                "type": "str",
+                "value": "7"
+              },
+              {
+                "type": "str",
+                "value": "Central Middle - RISE"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Anaheim"
+              },
+              {
+                "type": "str",
+                "value": "7"
+              },
+              {
+                "type": "str",
+                "value": "Community Day/Alternative Education/Special Education"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Garden Grove"
+              },
+              {
+                "type": "str",
+                "value": "9"
+              },
+              {
+                "type": "str",
+                "value": "Lincoln High Continuation"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Escondido"
+              },
+              {
+                "type": "str",
+                "value": "9"
+              },
+              {
+                "type": "str",
+                "value": "Escondido Community Day"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Encinitas"
+              },
+              {
+                "type": "str",
+                "value": "7"
+              },
+              {
+                "type": "str",
+                "value": "North Coast Alternative High"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "San Jose"
+              },
+              {
+                "type": "str",
+                "value": "K"
+              },
+              {
+                "type": "str",
+                "value": "Success Academy"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Redding"
+              },
+              {
+                "type": "str",
+                "value": "7"
+              },
+              {
+                "type": "str",
+                "value": "Shasta Independent Learning Center"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Denair"
+              },
+              {
+                "type": "str",
+                "value": "K"
+              },
+              {
+                "type": "str",
+                "value": "Denair Academic Avenues"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Waterford"
+              },
+              {
+                "type": "str",
+                "value": "K"
+              },
+              {
+                "type": "str",
+                "value": "Roberts Ferry Community Day"
+              }
+            ]
+          ]
+        },
+        "case": "tie-at-the-cut, null-first"
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Oroville"
+          },
+          {
+            "type": "str",
+            "value": "7"
+          },
+          {
+            "type": "str",
+            "value": "Central Middle - RISE"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Anaheim"
+          },
+          {
+            "type": "str",
+            "value": "7"
+          },
+          {
+            "type": "str",
+            "value": "Community Day/Alternative Education/Special Education"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Garden Grove"
+          },
+          {
+            "type": "str",
+            "value": "9"
+          },
+          {
+            "type": "str",
+            "value": "Lincoln High Continuation"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Escondido"
+          },
+          {
+            "type": "str",
+            "value": "9"
+          },
+          {
+            "type": "str",
+            "value": "Escondido Community Day"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Encinitas"
+          },
+          {
+            "type": "str",
+            "value": "7"
+          },
+          {
+            "type": "str",
+            "value": "North Coast Alternative High"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "San Jose"
+          },
+          {
+            "type": "str",
+            "value": "K"
+          },
+          {
+            "type": "str",
+            "value": "Success Academy"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Redding"
+          },
+          {
+            "type": "str",
+            "value": "7"
+          },
+          {
+            "type": "str",
+            "value": "Shasta Independent Learning Center"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Denair"
+          },
+          {
+            "type": "str",
+            "value": "K"
+          },
+          {
+            "type": "str",
+            "value": "Denair Academic Avenues"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Waterford"
+          },
+          {
+            "type": "str",
+            "value": "K"
+          },
+          {
+            "type": "str",
+            "value": "Roberts Ferry Community Day"
+          },
+          {
+            "type": "null",
+            "value": null
+          }
+        ]
+      ]
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:a5e73defb0aca6a1c2d1b80aeae9a4128e0cb15c642ff66d7022edd4b4bfdacf",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "City",
+              "declared_type": "TEXT"
+            },
+            {
+              "name": "Low Grade",
+              "declared_type": "TEXT"
+            },
+            {
+              "name": "School Name",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Oroville"
+              },
+              {
+                "type": "str",
+                "value": "7"
+              },
+              {
+                "type": "str",
+                "value": "Central Middle - RISE"
+              }
+            ]
+          ],
+          "result_hash": "sha256:a5e73defb0aca6a1c2d1b80aeae9a4128e0cb15c642ff66d7022edd4b4bfdacf"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "frpm",
+            "schools"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {},
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:3ec3af84ec6a49ecdb178c009ae424a9149b056df1bd39b026c3a0251a40037a",
+          "result": {
+            "columns": [
+              {
+                "name": "City",
+                "declared_type": "TEXT"
+              },
+              {
+                "name": "Low Grade",
+                "declared_type": "TEXT"
+              },
+              {
+                "name": "School Name",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Escondido"
+                },
+                {
+                  "type": "str",
+                  "value": "9"
+                },
+                {
+                  "type": "str",
+                  "value": "Escondido Community Day"
+                }
+              ]
+            ],
+            "result_hash": "sha256:3ec3af84ec6a49ecdb178c009ae424a9149b056df1bd39b026c3a0251a40037a"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Escondido"
+          },
+          {
+            "type": "str",
+            "value": "9"
+          },
+          {
+            "type": "str",
+            "value": "Escondido Community Day"
+          }
+        ]
+      ]
+    }
+  ]
+}

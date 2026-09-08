@@ -38,6 +38,14 @@ dependencies = [
     # the reason the parser above is: the parse decides the replay rule and the ordering a
     # record states, and a parser that changed under a rerun would change the record.
     "sqlglot==30.18.0",
+    # The report renderer's templates. `attestql report` writes the audit's own JSON out as
+    # pages, and the escaping of untrusted text -- SQL from a question file, a message from a
+    # server, a column name -- is what a template engine is for; a renderer built out of
+    # string formatting here would be one escape nobody wrote away from serving markup that
+    # came out of a prediction file. Pinned by range like the driver rather than exactly like
+    # the parsers: it decides no record and no verdict, so a patch release of it changes
+    # nothing a record states.
+    "jinja2>=3.1.6,<4",
 ]
 
 [project.urls]
@@ -56,10 +64,19 @@ where = ["src"]
 # fail on every machine that installed the package rather than in the gate.
 [tool.setuptools.package-data]
 "attestql.demo" = ["*.sql", "*.json"]
+# The renderer's templates, its stylesheet, its script, the method figure and the fonts. They
+# are found beside the module that renders them (`Path(__file__)`), so a wheel without them
+# would hold a command that fails on the machine that installed it rather than in the gate.
+# `static/*` does not reach into a directory, which is why the fonts are named separately.
+"attestql.report" = ["templates/*.html", "static/*", "static/fonts/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src", "tools"]
+# `tools/site` is on the path so that `tools/site/build.py` imports as `build`. Beware: a
+# plain `python` started in the repository root resolves that name to the git-ignored `build/`
+# output directory instead, as an empty namespace package, so
+# tests/test_site_builds_from_the_sandbox.py asserts which module it got.
+pythonpath = ["src", "tools", "tools/site"]
 markers = [
     "sandbox: needs the audit sandbox (tools/audit-sandbox/run.sh); skipped when ATTESTQL_AUDIT_SANDBOX is absent",
     "sandbox_sqlite: the SQLite audit sandbox (src/attestql/demo/); needs no container and is never skipped",
@@ -93,4 +110,6 @@ ignore = ["E501"]
 typeCheckingMode = "strict"
 pythonVersion = "3.11"
 include = ["src", "tests", "tools"]
-extraPaths = ["src", "tools"]
+# `tools/site` for the same reason the pytest `pythonpath` above carries it, and with the
+# same ambiguity against the git-ignored `build/` directory, which the test guards.
+extraPaths = ["src", "tools", "tools/site"]

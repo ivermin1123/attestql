@@ -1,0 +1,170 @@
+{
+  "question_as_asked": "What elements are in a double type bond?",
+  "question": {
+    "question_id": "207",
+    "question_set": "mini_dev_postgresql from https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "question_text": "What elements are in a double type bond?",
+    "evidence_text": "double type bond refers to bond_type = '=';"
+  },
+  "question_set_version": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+  "statement_source": {
+    "path": "data/questions/mini_dev_postgresql.json",
+    "digest": "sha256:d2731292f20b8d8569cd956dd747ffe1df13cd625076263e38ae9ebcef50b1ab",
+    "origin": "https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip (sha256 cc48ba16838204e4e214512030cb572eeb5f7bcdd999bae4b9b6ff12ec13b92f, downloaded 2026-09-07), member minidev/MINIDEV/mini_dev_postgresql.json",
+    "date": "2024-06-19"
+  },
+  "executed_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN connected AS T3 ON T1.atom_id = T3.atom_id WHERE T2.bond_type = '='",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "element",
+        "declared_type": "text"
+      }
+    ],
+    "row_count": 13,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "sn"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "ca"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "cu"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "p"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "h"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "cl"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "o"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "s"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "c"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "br"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "n"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "f"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "pb"
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 120000
+  },
+  "row_count": 13,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/2",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:ee9efd06befc46a5577044a8a367673c5fba8bc2c66e5b735e68ab585b369194",
+    "row_counts": {
+      "public.atom": 9111,
+      "public.bond": 9156,
+      "public.connected": 18312
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-08T05:23:23.924963+00:00",
+  "executed_at": "2026-09-08T05:24:05.678463+00:00",
+  "run_id": "audit-34520748-ce64-4674-9cd7-6d6fac5b9805",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:86a36104a8d53ec8bd73f49f3d83f044daf88dffa0b84975309b4b0882404937",
+  "record_hash": "sha256:85fce2f618aa337a0e54099bf370a0e50ac2a4a71c8feb5ea355bf9aa2047dc9"
+}

@@ -1,0 +1,792 @@
+[
+ {
+  "question_id": "1312",
+  "db_id": "student_club",
+  "question": "What's Angela Sanders's major?"
+ },
+ {
+  "question_id": "1313",
+  "db_id": "student_club",
+  "question": "How many students in the Student_Club are from the College of Engineering?"
+ },
+ {
+  "question_id": "1314",
+  "db_id": "student_club",
+  "question": "Please list the full names of the students in the Student_Club that come from the Art and Design Department."
+ },
+ {
+  "question_id": "1315",
+  "db_id": "student_club",
+  "question": "How many students of the Student_Club have attended the event \"Women's Soccer\"?"
+ },
+ {
+  "question_id": "1316",
+  "db_id": "student_club",
+  "question": "Please list the phone numbers of the students from the Student_Club that has attended the event \"Women's Soccer\"."
+ },
+ {
+  "question_id": "1317",
+  "db_id": "student_club",
+  "question": "Among the students from the Student_Club who attended the event \"Women's Soccer\", how many of them want a T-shirt that's in medium size?"
+ },
+ {
+  "question_id": "1318",
+  "db_id": "student_club",
+  "question": "What is the event that has the highest attendance of the students from the Student_Club?"
+ },
+ {
+  "question_id": "1319",
+  "db_id": "student_club",
+  "question": "Which college is the vice president of the Student_Club from?"
+ },
+ {
+  "question_id": "1320",
+  "db_id": "student_club",
+  "question": "Please list the event names of all the events attended by Maya Mclean."
+ },
+ {
+  "question_id": "1321",
+  "db_id": "student_club",
+  "question": "How many events of the Student_Club did Sacha Harrison attend in 2019?"
+ },
+ {
+  "question_id": "1322",
+  "db_id": "student_club",
+  "question": "Among the events attended by more than 10 members of the Student_Club, how many of them are meetings?"
+ },
+ {
+  "question_id": "1323",
+  "db_id": "student_club",
+  "question": "List all the names of events that had an attendance of over 20 students but were not fundraisers."
+ },
+ {
+  "question_id": "1324",
+  "db_id": "student_club",
+  "question": "What is the average attendance of meetings in 2020?"
+ },
+ {
+  "question_id": "1325",
+  "db_id": "student_club",
+  "question": "What is the most expensive item that was spent in support of club events?"
+ },
+ {
+  "question_id": "1326",
+  "db_id": "student_club",
+  "question": "How many members of the Student_Club have majored Environmental Engineering?\n"
+ },
+ {
+  "question_id": "1327",
+  "db_id": "student_club",
+  "question": "List the full name of all the members of the Student_Club who attended the \"Laugh Out Loud\" event."
+ },
+ {
+  "question_id": "1328",
+  "db_id": "student_club",
+  "question": "List the last name of all the students who majored Law and Constitutional Studies. \n"
+ },
+ {
+  "question_id": "1329",
+  "db_id": "student_club",
+  "question": "What county did Sherri Ramsey grew up?"
+ },
+ {
+  "question_id": "1330",
+  "db_id": "student_club",
+  "question": "What college offers the major that Tyler Hewitt took?"
+ },
+ {
+  "question_id": "1331",
+  "db_id": "student_club",
+  "question": "What is the amount of the funds that the Vice President received?"
+ },
+ {
+  "question_id": "1332",
+  "db_id": "student_club",
+  "question": "How much did the Student_Club members spend on food in the September Meeting?"
+ },
+ {
+  "question_id": "1333",
+  "db_id": "student_club",
+  "question": "What is the hometown city and state of the Student Club President?"
+ },
+ {
+  "question_id": "1334",
+  "db_id": "student_club",
+  "question": "List the full name of the Student_Club members that grew up in Illinois state."
+ },
+ {
+  "question_id": "1335",
+  "db_id": "student_club",
+  "question": "How much did the Student_Club members spend on advertisement in September Meeting?"
+ },
+ {
+  "question_id": "1336",
+  "db_id": "student_club",
+  "question": "What department offers the major that Pierce and Guidi took?"
+ },
+ {
+  "question_id": "1337",
+  "db_id": "student_club",
+  "question": "What is the total budgeted amount for all category in \"October Speaker\" event?"
+ },
+ {
+  "question_id": "1338",
+  "db_id": "student_club",
+  "question": "Was each expense in October Meeting on October 8, 2019 approved?"
+ },
+ {
+  "question_id": "1339",
+  "db_id": "student_club",
+  "question": "Calculate the total average cost that Elijah Allen spent in the events on September and October."
+ },
+ {
+  "question_id": "1340",
+  "db_id": "student_club",
+  "question": "Calculate the difference of the total amount spent in all events by the Student_Club in year 2019 and 2020."
+ },
+ {
+  "question_id": "1341",
+  "db_id": "student_club",
+  "question": "Give the location for \"Spring Budget Review\"."
+ },
+ {
+  "question_id": "1342",
+  "db_id": "student_club",
+  "question": "What was the cost for the \"Posters\" on 2019/9/4?"
+ },
+ {
+  "question_id": "1343",
+  "db_id": "student_club",
+  "question": "With the biggest budget for the \"Food\", what was the remaining of it?"
+ },
+ {
+  "question_id": "1344",
+  "db_id": "student_club",
+  "question": "What was the notes of the fundraising on 2019/9/14?"
+ },
+ {
+  "question_id": "1345",
+  "db_id": "student_club",
+  "question": "How many majors are there in \"College of Humanities and Social Sciences\"?"
+ },
+ {
+  "question_id": "1346",
+  "db_id": "student_club",
+  "question": "Tell the phone number of \"Carlo Jacobs\"."
+ },
+ {
+  "question_id": "1347",
+  "db_id": "student_club",
+  "question": "Tell the hometown county for \"Adela O'Gallagher\"."
+ },
+ {
+  "question_id": "1348",
+  "db_id": "student_club",
+  "question": "For all the budgets for \"November Meeting\", how many of them had exceeded the budget?"
+ },
+ {
+  "question_id": "1349",
+  "db_id": "student_club",
+  "question": "Provide the total number of the budget amount for \"September Speaker\" event."
+ },
+ {
+  "question_id": "1350",
+  "db_id": "student_club",
+  "question": "What is the status of the event which bought \"Post Cards, Posters\" on 2019/8/20?"
+ },
+ {
+  "question_id": "1351",
+  "db_id": "student_club",
+  "question": "What was Brent Thomason's major?"
+ },
+ {
+  "question_id": "1352",
+  "db_id": "student_club",
+  "question": "For all the club members from \"Business\" major, how many of them wear medium size t-shirt?"
+ },
+ {
+  "question_id": "1353",
+  "db_id": "student_club",
+  "question": "What's Christof Nielson's zip code type?"
+ },
+ {
+  "question_id": "1354",
+  "db_id": "student_club",
+  "question": "State the major name for the Vice President of the club."
+ },
+ {
+  "question_id": "1355",
+  "db_id": "student_club",
+  "question": "Where is the hometown state for \"Sacha Harrison\"?"
+ },
+ {
+  "question_id": "1356",
+  "db_id": "student_club",
+  "question": "Which department was the President of the club in?"
+ },
+ {
+  "question_id": "1357",
+  "db_id": "student_club",
+  "question": "State the date Connor Hilton paid his/her dues."
+ },
+ {
+  "question_id": "1358",
+  "db_id": "student_club",
+  "question": "Who was the first one paid his/her dues? Tell the full name."
+ },
+ {
+  "question_id": "1359",
+  "db_id": "student_club",
+  "question": "How many times was the budget in Advertisement for \"Yearly Kickoff\" meeting more than \"October Meeting\"?"
+ },
+ {
+  "question_id": "1360",
+  "db_id": "student_club",
+  "question": "What percentage was the budget for Parking to the total budget for the \"November Speaker\"?"
+ },
+ {
+  "question_id": "1361",
+  "db_id": "student_club",
+  "question": "What is the total cost of the pizzas for all the events?"
+ },
+ {
+  "question_id": "1362",
+  "db_id": "student_club",
+  "question": "How many cities are there in Orange County, Virginia?"
+ },
+ {
+  "question_id": "1363",
+  "db_id": "student_club",
+  "question": "List all of the College of Humanities and Social Sciences' departments."
+ },
+ {
+  "question_id": "1364",
+  "db_id": "student_club",
+  "question": "Where is Amy Firth's hometown?"
+ },
+ {
+  "question_id": "1365",
+  "db_id": "student_club",
+  "question": "What are the expenses of the budget with the lowest remaining?"
+ },
+ {
+  "question_id": "1366",
+  "db_id": "student_club",
+  "question": "List all the members who attended the event \"October Meeting\"."
+ },
+ {
+  "question_id": "1367",
+  "db_id": "student_club",
+  "question": "Which college do most of the members go to?"
+ },
+ {
+  "question_id": "1368",
+  "db_id": "student_club",
+  "question": "What does the person with the phone number \"809-555-3360\" major in?"
+ },
+ {
+  "question_id": "1369",
+  "db_id": "student_club",
+  "question": "Which event has the highest budget amount?"
+ },
+ {
+  "question_id": "1370",
+  "db_id": "student_club",
+  "question": "List all the expenses incurred by the vice president."
+ },
+ {
+  "question_id": "1371",
+  "db_id": "student_club",
+  "question": "How many members attended the \"Women's Soccer\" event?"
+ },
+ {
+  "question_id": "1372",
+  "db_id": "student_club",
+  "question": "When did the member, Casey Mason, received the income?"
+ },
+ {
+  "question_id": "1373",
+  "db_id": "student_club",
+  "question": "How many of the members' hometowns are from Maryland state?"
+ },
+ {
+  "question_id": "1374",
+  "db_id": "student_club",
+  "question": "How many events did the member with the phone number \"954-555-6240\" attend?"
+ },
+ {
+  "question_id": "1375",
+  "db_id": "student_club",
+  "question": "List all the members of the \"School of Applied Sciences, Technology and Education\" department."
+ },
+ {
+  "question_id": "1376",
+  "db_id": "student_club",
+  "question": "Among all the closed events, which event has the highest spend-to-budget ratio?"
+ },
+ {
+  "question_id": "1377",
+  "db_id": "student_club",
+  "question": "How many student have the position of president?"
+ },
+ {
+  "question_id": "1378",
+  "db_id": "student_club",
+  "question": "What is the highest amount of budget spend for an event?"
+ },
+ {
+  "question_id": "1379",
+  "db_id": "student_club",
+  "question": "How many meeting events were held in 2020?"
+ },
+ {
+  "question_id": "1380",
+  "db_id": "student_club",
+  "question": "What is the total amount of money spent for food?"
+ },
+ {
+  "question_id": "1381",
+  "db_id": "student_club",
+  "question": "List the name of students that have attended more than 7 events."
+ },
+ {
+  "question_id": "1382",
+  "db_id": "student_club",
+  "question": "Among the students majored in interior design, who have attended the Community Theater event?"
+ },
+ {
+  "question_id": "1383",
+  "db_id": "student_club",
+  "question": "State the name of students from Georgetown, South Carolina."
+ },
+ {
+  "question_id": "1384",
+  "db_id": "student_club",
+  "question": "How many income generated by Grant Gilmour?"
+ },
+ {
+  "question_id": "1385",
+  "db_id": "student_club",
+  "question": "Which students were able to generate income more than $40?"
+ },
+ {
+  "question_id": "1386",
+  "db_id": "student_club",
+  "question": "What is the total expense for the Yearly Kickoff?"
+ },
+ {
+  "question_id": "1387",
+  "db_id": "student_club",
+  "question": "Which student has been entrusted to manage the budget for the Yearly Kickoff?"
+ },
+ {
+  "question_id": "1388",
+  "db_id": "student_club",
+  "question": "Which students manage to generate the highest income. State his/her full name along with the income source."
+ },
+ {
+  "question_id": "1389",
+  "db_id": "student_club",
+  "question": "Which event has the lowest cost?"
+ },
+ {
+  "question_id": "1390",
+  "db_id": "student_club",
+  "question": "Based on the total cost for all event, what is the percentage of cost for Yearly Kickoff event?"
+ },
+ {
+  "question_id": "1391",
+  "db_id": "student_club",
+  "question": "What is the ratio of students majoring in finance to those majoring in physics?"
+ },
+ {
+  "question_id": "1392",
+  "db_id": "student_club",
+  "question": "Indicate the top source of funds received in September 2019 based on their amount."
+ },
+ {
+  "question_id": "1393",
+  "db_id": "student_club",
+  "question": "Provide the full name and email address of the Student_Club's Secretary."
+ },
+ {
+  "question_id": "1394",
+  "db_id": "student_club",
+  "question": "How many members of the Student_Club have major in 'Physics Teaching'?"
+ },
+ {
+  "question_id": "1395",
+  "db_id": "student_club",
+  "question": "How many members did attend the event 'Community Theater' in 2019?"
+ },
+ {
+  "question_id": "1396",
+  "db_id": "student_club",
+  "question": "Provide the number of events attended by Luisa Guidi. What is her major?"
+ },
+ {
+  "question_id": "1397",
+  "db_id": "student_club",
+  "question": "On average, how much did the Student_Club spend on food for the typical event in the past?"
+ },
+ {
+  "question_id": "1398",
+  "db_id": "student_club",
+  "question": "Name the event with the highest amount spent on advertisement."
+ },
+ {
+  "question_id": "1399",
+  "db_id": "student_club",
+  "question": "Did Maya Mclean attend the 'Women's Soccer' event?"
+ },
+ {
+  "question_id": "1400",
+  "db_id": "student_club",
+  "question": "Among all events hold by the Student_Club in 2019, find the percentage share of events related to 'Community Service'"
+ },
+ {
+  "question_id": "1401",
+  "db_id": "student_club",
+  "question": "Indicate the cost of posters for 'September Speaker' event."
+ },
+ {
+  "question_id": "1402",
+  "db_id": "student_club",
+  "question": "What is the most popular size of t-shirt ordered by the club members?"
+ },
+ {
+  "question_id": "1403",
+  "db_id": "student_club",
+  "question": "Indicate the name of the closed event whose cost has exceeded the budget the most."
+ },
+ {
+  "question_id": "1404",
+  "db_id": "student_club",
+  "question": "Identify the type of expenses and their total value approved for 'October Meeting' event."
+ },
+ {
+  "question_id": "1405",
+  "db_id": "student_club",
+  "question": "Calculate the amount budgeted for 'April Speaker' event. List all the budgeted categories for said event in an ascending order based on their amount budgeted."
+ },
+ {
+  "question_id": "1406",
+  "db_id": "student_club",
+  "question": "Among the budgets for Food, which one has the highest budgeted amount?"
+ },
+ {
+  "question_id": "1407",
+  "db_id": "student_club",
+  "question": "Among the budgets for Advertising, list out top three which have the most budgeted amount?"
+ },
+ {
+  "question_id": "1408",
+  "db_id": "student_club",
+  "question": "Calculate the total cost spent for Parking in the list."
+ },
+ {
+  "question_id": "1409",
+  "db_id": "student_club",
+  "question": "Mention the total expense used on 8/20/2019."
+ },
+ {
+  "question_id": "1410",
+  "db_id": "student_club",
+  "question": "List out the full name and total cost that member id \"rec4BLdZHS2Blfp4v\" incurred?"
+ },
+ {
+  "question_id": "1411",
+  "db_id": "student_club",
+  "question": "State what kind of expenses that Sacha Harrison incurred?"
+ },
+ {
+  "question_id": "1412",
+  "db_id": "student_club",
+  "question": "What kind of expenses incurred by members who have X-Large in size of tee shirt?"
+ },
+ {
+  "question_id": "1413",
+  "db_id": "student_club",
+  "question": "Mention the zip code of members who incurred less than 50USD."
+ },
+ {
+  "question_id": "1414",
+  "db_id": "student_club",
+  "question": "State the name of major that Phillip Cullen has joined."
+ },
+ {
+  "question_id": "1415",
+  "db_id": "student_club",
+  "question": "List out the position of members who joined major of Business."
+ },
+ {
+  "question_id": "1416",
+  "db_id": "student_club",
+  "question": "How many members of Business have the Medium size of tee shirt?"
+ },
+ {
+  "question_id": "1417",
+  "db_id": "student_club",
+  "question": "List out the type of events which have remaining budget more than 30 USD."
+ },
+ {
+  "question_id": "1418",
+  "db_id": "student_club",
+  "question": "Mention the category of events which were held at MU 215."
+ },
+ {
+  "question_id": "1419",
+  "db_id": "student_club",
+  "question": "What are the budget categories for the event that took place on 2020-03-24T12:00:00?"
+ },
+ {
+  "question_id": "1420",
+  "db_id": "student_club",
+  "question": "State the name of major that Vice President has joined."
+ },
+ {
+  "question_id": "1421",
+  "db_id": "student_club",
+  "question": "Calculate the percentage of members who are major Business in the list?"
+ },
+ {
+  "question_id": "1422",
+  "db_id": "student_club",
+  "question": "State the category of events were held at MU 215."
+ },
+ {
+  "question_id": "1423",
+  "db_id": "student_club",
+  "question": "How many income are received with an amount of 50?"
+ },
+ {
+  "question_id": "1424",
+  "db_id": "student_club",
+  "question": "Among the members, how many of them have an extra large t-shirt size?"
+ },
+ {
+  "question_id": "1425",
+  "db_id": "student_club",
+  "question": "In the College of Agriculture and Applied Sciences, how many majors are under the department of School of Applied Sciences, Technology and Education?"
+ },
+ {
+  "question_id": "1426",
+  "db_id": "student_club",
+  "question": "List the last name of members with a major in environmental engineering and include its department and college name."
+ },
+ {
+  "question_id": "1427",
+  "db_id": "student_club",
+  "question": "What are the budget category of the events located at MU 215 and a guest speaker type with a 0 budget spent?"
+ },
+ {
+  "question_id": "1428",
+  "db_id": "student_club",
+  "question": "List the city and state of members enrolled under electrical and computer engineering department."
+ },
+ {
+  "question_id": "1429",
+  "db_id": "student_club",
+  "question": "What is the name of the social event that was attended by the vice president of the Student_Club located at 900 E. Washington St.?"
+ },
+ {
+  "question_id": "1430",
+  "db_id": "student_club",
+  "question": "What is the last name and position of the student that bought pizza on 09/10/2019?"
+ },
+ {
+  "question_id": "1431",
+  "db_id": "student_club",
+  "question": "List the last name of the members of the club that attended the women's soccer event."
+ },
+ {
+  "question_id": "1432",
+  "db_id": "student_club",
+  "question": "Among the members with t-shirt size of medium, what is the percentage of the amount 50 received by the Student_Club?"
+ },
+ {
+  "question_id": "1433",
+  "db_id": "student_club",
+  "question": "Which counties have zip codes with post office boxes?"
+ },
+ {
+  "question_id": "1434",
+  "db_id": "student_club",
+  "question": "What are the zip codes that have post office boxes in the country of the country of San Juan Municipio whose state is Puerto Rico?"
+ },
+ {
+  "question_id": "1435",
+  "db_id": "student_club",
+  "question": "List the names of closed event as \"game\" that was closed from 3/15/2019 to 3/20/2020."
+ },
+ {
+  "question_id": "1436",
+  "db_id": "student_club",
+  "question": "Please provide links to events for members who have paid more than 50 dollar."
+ },
+ {
+  "question_id": "1437",
+  "db_id": "student_club",
+  "question": "Which members who were approved from 1/10/2019 to 11/19/2019? Please identify the member who attended the event and the link to their event."
+ },
+ {
+  "question_id": "1438",
+  "db_id": "student_club",
+  "question": "Please indicate the college of the person whose first name is Katy with the link to the major \"rec1N0upiVLy5esTO\"."
+ },
+ {
+  "question_id": "1439",
+  "db_id": "student_club",
+  "question": "Please list the phone numbers of the members who majored in business at the College of Agriculture and Applied Sciences."
+ },
+ {
+  "question_id": "1440",
+  "db_id": "student_club",
+  "question": "List emails of people who paid more than 20 dollars from 9/10/2019 to 11/19/2019."
+ },
+ {
+  "question_id": "1441",
+  "db_id": "student_club",
+  "question": "How many members have education major in the College of Education & Human Services?"
+ },
+ {
+  "question_id": "1442",
+  "db_id": "student_club",
+  "question": "What is the percentage of the events that went over budget?"
+ },
+ {
+  "question_id": "1443",
+  "db_id": "student_club",
+  "question": "Give the event ID, location, and status of events conducted from November 2019 to March 2020."
+ },
+ {
+  "question_id": "1444",
+  "db_id": "student_club",
+  "question": "List the expenses that spend more than fifty dollars on average."
+ },
+ {
+  "question_id": "1445",
+  "db_id": "student_club",
+  "question": "Find the full name of members whose t-shirt size is extra large."
+ },
+ {
+  "question_id": "1446",
+  "db_id": "student_club",
+  "question": "Calculate the percentage of zip codes that are PO boxes."
+ },
+ {
+  "question_id": "1447",
+  "db_id": "student_club",
+  "question": "List the name and location of events that underspend its budget."
+ },
+ {
+  "question_id": "1448",
+  "db_id": "student_club",
+  "question": "Find the name and date of events with expenses for pizza that were more than fifty dollars but less than a hundred dollars."
+ },
+ {
+  "question_id": "1449",
+  "db_id": "student_club",
+  "question": "What is the name and major of members who had to spend more than a hundred dollars on an expense?"
+ },
+ {
+  "question_id": "1450",
+  "db_id": "student_club",
+  "question": "In the events with budget more than forty, list the location at which the event is happening."
+ },
+ {
+  "question_id": "1451",
+  "db_id": "student_club",
+  "question": "Among the members who incurred expenses in more than one event, who paid the most amount?"
+ },
+ {
+  "question_id": "1452",
+  "db_id": "student_club",
+  "question": "What is the average amount paid by students in a position other than a member?"
+ },
+ {
+  "question_id": "1453",
+  "db_id": "student_club",
+  "question": "List the name of events with less than average parking cost."
+ },
+ {
+  "question_id": "1454",
+  "db_id": "student_club",
+  "question": "What is the percentage of the cost for the meeting events?"
+ },
+ {
+  "question_id": "1455",
+  "db_id": "student_club",
+  "question": "Which budget allowed the most money for water, chips, and cookies?"
+ },
+ {
+  "question_id": "1456",
+  "db_id": "student_club",
+  "question": "List the full name of the top five members who spend the most money in the descending order of spending."
+ },
+ {
+  "question_id": "1457",
+  "db_id": "student_club",
+  "question": "Give the full name and contact number of members who had to spend more than average on each expense."
+ },
+ {
+  "question_id": "1458",
+  "db_id": "student_club",
+  "question": "Calculate the difference in the percentage of members in New Jersey and Vermont."
+ },
+ {
+  "question_id": "1459",
+  "db_id": "student_club",
+  "question": "What is the major of Garrett Gerke and which department does it belong to?"
+ },
+ {
+  "question_id": "1460",
+  "db_id": "student_club",
+  "question": "Write the full name of the member who spent money for water, veggie tray and supplies and include the cost of it."
+ },
+ {
+  "question_id": "1461",
+  "db_id": "student_club",
+  "question": "List the last names of students under the Elementary Education major and include their phone numbers."
+ },
+ {
+  "question_id": "1462",
+  "db_id": "student_club",
+  "question": "What category was budgeted for the 'January Speaker' event and how much was the amount budgeted for that category?"
+ },
+ {
+  "question_id": "1463",
+  "db_id": "student_club",
+  "question": "List the event names which were budgeted for the food."
+ },
+ {
+  "question_id": "1464",
+  "db_id": "student_club",
+  "question": "Write the full names of students who received funds on the date of 9/9/2019 and include the amount received."
+ },
+ {
+  "question_id": "1465",
+  "db_id": "student_club",
+  "question": "Which budget category does the expense 'Posters' fall to?"
+ },
+ {
+  "question_id": "1466",
+  "db_id": "student_club",
+  "question": "Write the full name of the club member with the position of 'Secretary' and list which college the club member belongs to."
+ },
+ {
+  "question_id": "1467",
+  "db_id": "student_club",
+  "question": "Calculate the total amount spent on speaker gifts and list the name of the event they were spent on."
+ },
+ {
+  "question_id": "1468",
+  "db_id": "student_club",
+  "question": "Where is the hometown of Garrett Gerke?"
+ },
+ {
+  "question_id": "1469",
+  "db_id": "student_club",
+  "question": "Which student has the hometown of Lincolnton, North Carolina with the zip code of 28092? List their full name and position."
+ }
+]

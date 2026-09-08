@@ -1,0 +1,159 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "COUNT(T2.language)",
+            "not_applicable": "the key is an expression and not a column"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 1,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT (CAST(SUM(T1.id) AS REAL) / COUNT(T1.id)) / 4, T2.language, COUNT(T2.language) AS attestql_ordering_key_0 FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.id = T2.id WHERE T1.releaseDate BETWEEN '2012-01-01' AND '2015-12-31' GROUP BY T1.releaseDate ORDER BY COUNT(T2.language) DESC",
+        "unbounded_rows": 68,
+        "projected_columns": [
+          "(CAST(SUM(T1.id) AS REAL) / COUNT(T1.id)) / 4",
+          "language"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "COUNT(T2.language)",
+            "direction": "desc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "case": null
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:b5693f77f64f6a785dd2054ae28ad09604520931c209ed4100e61d9d52e85457",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "(CAST(SUM(T1.id) AS REAL) / COUNT(T1.id)) / 4",
+              "declared_type": "REAL"
+            },
+            {
+              "name": "language",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "dec",
+                "value": "66.95833333333333"
+              },
+              {
+                "type": "str",
+                "value": "Japanese"
+              }
+            ]
+          ],
+          "result_hash": "sha256:b5693f77f64f6a785dd2054ae28ad09604520931c209ed4100e61d9d52e85457"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "sets",
+            "set_translations"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "legalities": 427907
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:3247ce0a9c4792afd7064e498dd6c5511e78f2662752705016175d1c07d26904",
+          "result": {
+            "columns": [
+              {
+                "name": "(CAST(SUM(T1.id) AS REAL) / COUNT(T1.id)) / 4",
+                "declared_type": "REAL"
+              },
+              {
+                "name": "language",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "dec",
+                  "value": "66.95833333333333"
+                },
+                {
+                  "type": "str",
+                  "value": "Korean"
+                }
+              ]
+            ],
+            "result_hash": "sha256:3247ce0a9c4792afd7064e498dd6c5511e78f2662752705016175d1c07d26904"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "dec",
+            "value": "66.95833333333333"
+          },
+          {
+            "type": "str",
+            "value": "Korean"
+          }
+        ]
+      ]
+    }
+  ]
+}

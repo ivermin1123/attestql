@@ -1,0 +1,127 @@
+{# The page a link to the site opens, in the order the phase fixes.
+
+   Every value here was read out of an artifact by the build: the sentence is the package
+   description, the block is the command and what it printed, the rows are the run's own
+   counterexample, the install line is the README's, the table is each run's summary and the
+   links at the foot are the ones the live page carries. What this file adds is the words
+   between them. #}
+{% extends "base.html" %}
+{% from "_rows.html" import rows_table %}
+{% from "_figure.html" import figure_block %}
+
+{% block strip %}
+<header class="strip strip--run">
+  <h1 class="strip__title">AttestQL</h1>
+  <p class="strip__facts">
+    <span class="chip chip--rule">a static viewer over the JSON an audit writes</span>
+  </p>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="opening" id="opening">
+  <p>{{ page.sentence }}</p>
+</section>
+
+<section class="ten-minutes" id="ten-minutes">
+  <h2>Ten minutes</h2>
+  <p>Two commands, no server and no account. The second audits the sandbox the package carries and writes a directory of JSON, one per question.</p>
+  <pre class="command mono">{{ page.install }}
+{{ page.command }}</pre>
+  <p>The output below is that command's own, printed while this page was built. The run it names is this build's: run <span class="mono">{{ page.run_id }}</span>, data as of <span class="mono">{{ page.executed_at }}</span>. Yours will carry your own.</p>
+  <pre class="command mono">{{ page.output }}</pre>
+</section>
+
+<section class="one-question" id="one-question">
+  <h2>One of them, in full</h2>
+  <p>{{ page.question.verdict_reading }}</p>
+  {% for difference in page.question.differences %}
+  <article class="differing__side">
+    <h3>{{ difference.heading }}, {{ difference.rows.total }}</h3>
+    {{ rows_table(difference.rows) }}
+  </article>
+  {% endfor %}
+  <p><strong>{{ page.principle }}</strong> It means these two statements disagree on this data under this rule; the rows above are the disagreement; a maintainer decides.</p>
+  <p><a href="{{ root }}{{ page.question_href }}">The whole of that question</a>, with both statements, both evidence records, the probes and the JSON each part was rendered from.</p>
+</section>
+
+<section class="headline" id="headline">
+  <h2>What the published runs found</h2>
+  {% if page.numbers %}
+  <dl class="facts">
+    {% for number in page.numbers %}
+    <dt>{{ number.name }}</dt>
+    <dd class="mono" title="{{ number.source }}">{{ "{:,}".format(number.value) }}{% if number.rest > 0 %}<span class="headline__published ink-2">{{ "{:,}".format(number.published) }} of them have a page here; the other {{ "{:,}".format(number.rest) }} are whole in the release assets.</span>{% endif %}</dd>
+    {% endfor %}
+  </dl>
+  {% if page.bar %}
+  {{ figure_block(page.bar) }}
+  {% endif %}
+  {% else %}
+  <p>{{ page.no_numbers }}</p>
+  {% endif %}
+</section>
+
+<section class="index" id="runs">
+  <h2>The runs</h2>
+  <p>Each row links to a page rendered from a <span class="mono">summary.json</span> the audit wrote. Where a connection is one database file, one prediction file is a group of eleven runs and the row is the group. <a href="{{ root }}runs/index.html">Every benchmark</a> is indexed on its own page.</p>
+  {% for benchmark in page.benchmarks %}
+  <h3>{{ benchmark.name }}</h3>
+  <div class="rows__region">
+    <table class="index__table">
+      {% if benchmark.groups %}
+      <thead>
+        <tr>
+          <th scope="col">group</th>
+          <th scope="col">runs</th>
+          {% for sum in benchmark.groups[0].sums %}
+          <th scope="col">{{ sum.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for group in benchmark.groups %}
+        <tr class="index__row">
+          <th scope="row" class="mono"><a href="{{ root }}{{ group.slug }}/index.html">{{ group.name }}</a></th>
+          <td class="mono">{{ group.runs|length }}</td>
+          {% for sum in group.sums %}
+          <td class="mono">{{ sum.value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% else %}
+      <thead>
+        <tr>
+          <th scope="col">run</th>
+          {% for fact in benchmark.direct[0].facts %}
+          <th scope="col">{{ fact.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for run in benchmark.direct %}
+        <tr class="index__row">
+          <th scope="row" class="mono"><a href="{{ root }}{{ run.slug }}/index.html">{{ run.name }}</a></th>
+          {% for fact in run.facts %}
+          <td class="mono">{{ fact.value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% endif %}
+    </table>
+  </div>
+  {% endfor %}
+</section>
+
+<section class="read-on" id="read-on">
+  <h2>Read on</h2>
+  <ul class="files__list">
+    <li><a href="{{ root }}method/index.html">The method</a> <span class="ink-2">what is computed beside every verdict, out of the strings the package holds</span></li>
+    {% for href, words in page.links %}
+    <li><a href="{{ href }}">{{ words }}</a></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}
