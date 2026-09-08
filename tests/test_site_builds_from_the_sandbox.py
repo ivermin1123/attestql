@@ -33,6 +33,12 @@ from attestql.report.render import PAGE_FILE
 
 REPOSITORY = Path(__file__).resolve().parent.parent
 
+assert Path(site.__file__ or "") == REPOSITORY / "tools" / "site" / "build.py", (
+    "`build` is also the name of the git-ignored output directory, which resolves as a "
+    "namespace package when the repository root comes first on the path: this asserts the "
+    "module under test is the script and not that directory"
+)
+
 pytestmark = pytest.mark.sandbox_sqlite
 
 
@@ -255,6 +261,120 @@ def test_a_benchmark_directory_holding_no_run_publishes_nothing(
     assert site.benchmark_directories() != ()
     assert site.BANNER in (out / PAGE_FILE).read_text(encoding="utf-8")
     assert not (out / site.RUNS_DIRECTORY / "a-benchmark").exists()
+
+
+def test_the_build_refuses_a_directory_it_did_not_write_and_takes_over_one_it_did(
+    tmp_path: Path,
+) -> None:
+    """`--out` is a path a person types, so a build empties only a directory of its own.
+
+    The rule `attestql report` follows, for the reason it follows it: emptying whatever the
+    flag was pointed at would cost somebody the files this build never wrote.
+    """
+    mine = tmp_path / "mine"
+    mine.mkdir()
+    (mine / "notes.md").write_text("mine", encoding="utf-8")
+
+    with pytest.raises(site.BuildRefused, match="is not empty and holds no"):
+        build(mine)
+
+    assert [path.name for path in mine.iterdir()] == ["notes.md"]
+    assert (mine / "notes.md").read_text(encoding="utf-8") == "mine"
+
+    out = tmp_path / "site"
+    build(out)
+    assert (out / site.SITE_MARKER).is_file()
+    # A directory an earlier build wrote holds the marker, so the next one takes it over.
+    assert build(out).files > 0
+
+
+def test_a_published_run_may_not_take_the_address_the_sandbox_goes_to(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, built: Path
+) -> None:
+    """Two runs at one address would mean the second silently overwrote the first."""
+    data = tmp_path / "data" / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN
+    data.mkdir(parents=True)
+    (data / "summary.json").write_text(
+        (
+            built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN / "summary.json"
+        ).read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(site, "DATA", tmp_path / "data")
+
+    with pytest.raises(site.BuildRefused, match="which is where the sandbox"):
+        build(tmp_path / "site")
+
+
+def test_a_run_the_renderer_refuses_is_this_build_refusing_and_names_the_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, built: Path
+) -> None:
+    """A malformed file in one published run is a line and an exit status, not a traceback."""
+    run = tmp_path / "data" / "a-benchmark" / "a-run"
+    run.mkdir(parents=True)
+    (run / "summary.json").write_text("not the JSON its name says", encoding="utf-8")
+    monkeypatch.setattr(site, "DATA", tmp_path / "data")
+
+    with pytest.raises(site.BuildRefused, match="could not be read as JSON"):
+        build(tmp_path / "site")
+
+
+def test_the_bar_is_one_whole_cut_into_two_parts_and_never_three_added_up(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A bar states a proportion, so its parts are disjoint and add up to what it draws.
+
+    The second number is a subset of the first and the third counts another benchmark's
+    questions, so a bar over all three would double-count one and mix in the other. What is
+    drawn is the first cut into the part classified by hand and the rest.
+    """
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / site.AGGREGATE_FILE).write_text(
+        json.dumps(
+            {
+                "credited_but_not_equal": {"value": 164, "source": "minidev-pg/aggregate.json"},
+                "classified_by_hand": {"value": 69, "source": "minidev-pg/classification.json"},
+                "bird_dev_classified_by_hand": {"value": 23, "source": "bird-dev/classify.json"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(site, "DATA", data)
+    out = tmp_path / "site"
+
+    build(out)
+
+    page = read(out / PAGE_FILE)
+    text = " ".join("".join(page.text).split())
+    assert "69 " in text and "95 " in text, "the part and the rest, which add up to 164"
+    assert "23" not in text.split("the rest")[-1][:80], "the other benchmark is not a segment"
+
+    (data / site.AGGREGATE_FILE).write_text(
+        json.dumps(
+            {
+                "credited_but_not_equal": {"value": 10, "source": "a.json"},
+                "classified_by_hand": {"value": 11, "source": "b.json"},
+                "bird_dev_classified_by_hand": {"value": 1, "source": "c.json"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(site.BuildRefused, match="a part larger than its whole"):
+        build(tmp_path / "over")
+
+
+def test_the_method_page_says_whose_preconditions_those_seven_are(built: Path) -> None:
+    """They are PostgreSQL's, and the landing's own demo is a SQLite run.
+
+    A reader told their run required agreement on seven settings that SQLite never checks
+    would have been told something the tool does not do. Both sentences are the two backends'
+    own.
+    """
+    text = " ".join("".join(read(built / site.METHOD_DIRECTORY / PAGE_FILE).text).split())
+
+    assert "settings two postgresql records must agree on" in text.lower()
+    assert "a SQLite record states no session setting that decides comparability" in text
 
 
 def test_the_build_refuses_an_out_inside_the_live_page_s_directory(tmp_path: Path) -> None:

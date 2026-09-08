@@ -11,3 +11,7 @@ build/
 
 # Worktrees the coordinator creates for workers; never repository content.
 .claude/worktrees/
+
+# The cache wrangler writes wherever it is run. Deploys go from outside the repository for
+# this reason; this catches the run that forgets.
+.wrangler/

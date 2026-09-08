@@ -284,13 +284,15 @@ a:hover {
    --------------------------------------------------------------------------------------- */
 
 /* The line a site puts above every page of itself when the pages are not yet what they will
-   be. Not sticky and not a chip: it is read once, at the top, and then scrolled away. The
-   gold tint is the fill a state takes on this page, and `--ink` on it is 12.71:1 in light
-   and 11.66:1 in dark, both computed in tests/test_report_tokens_meet_contrast.py. */
+   be. Not sticky and not a chip: it is read once, at the top, and then scrolled away.
+   `--rule` and not a tint: the two tints belong to rows of a result and the spec never lets
+   one appear without its label column and its glyph, which a banner has neither of. `--ink`
+   on `--rule` is 11.98:1 in light and 10.80:1 in dark, both computed in
+   tests/test_report_tokens_meet_contrast.py. */
 .banner {
   padding: var(--space-3) var(--gutter);
-  background: var(--gold-tint);
-  border-bottom: 1px solid var(--rule);
+  background: var(--rule);
+  border-bottom: 1px solid var(--ink-2);
 }
 
 /* The line inside the band, given the strip's own width so that it starts on the same left
