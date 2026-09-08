@@ -8,10 +8,23 @@ design and not two.
 
 ```text
 tools/site/build.py            the build
-tools/site/templates/          landing.html, method.html, runs.html, benchmark.html
-tools/site/data/               the published runs (phase 4 fills it; see its README)
+tools/site/templates/          landing.html, method.html, runs.html, benchmark.html, group.html
+tools/site/data/               the published runs; see its README
 build/site/                    where a build goes; git ignores build/
 ```
+
+A benchmark holds runs, and on an engine where one connection is one database file it holds
+groups of them: a question set naming eleven databases is eleven invocations of the audit, so a
+prediction file is a group and the address of a run is one segment deeper
+(`runs/minidev-sqlite/gpt-4/formula_1/`). A group has a page of its own and a line on its
+benchmark's index stating the sums of its runs' counts, which they can be because no question is
+in two of them; it is never a merged `summary.json`. `build.py` reads both shapes and needs to
+be told nothing.
+
+Every page takes the stylesheet, the script and the three font files from the one `static/` at
+the site's root rather than carrying a copy of them: at 121 runs a copy per run would be a tenth
+of everything the site is allowed to weigh. A report `attestql report` writes still carries its
+own, so a directory it wrote opens on its own.
 
 ## Build
 
@@ -33,7 +46,9 @@ answer to a build over budget is a narrower selection of questions and never a l
 While `tools/site/data/` holds no benchmark, the build audits the sandbox the package carries
 and renders that, under the benchmark `sandbox` and the run `demo`, with a banner on every page
 saying the published runs arrive with the next phase. The banner is removed by a benchmark
-directory appearing under `data/` and not by an edit to a template.
+directory appearing under `data/` and not by an edit to a template. Since 2026-09-08 that
+directory holds the five published audits, so the banner is on no page of a build; the tests
+that are about that state point `data/` at a directory that is not there.
 
 ## Deploy the preview
 
@@ -48,8 +63,8 @@ npx --yes wrangler@4.129.0 pages deploy <repo>/build/site \
 ```
 
 Preview URL, deployed 2026-09-08: <https://attestql-ui.pages.dev>. Each deploy also prints an
-address of its own for that one deployment; the current one is
-<https://79f77b57.attestql-ui.pages.dev>.
+address of its own for that one deployment; the current one, the first to serve the published
+runs, is <https://b5a78fd6.attestql-ui.pages.dev>.
 
 The demo the build audits runs at a fixed `/tmp/attestql-site-sandbox`, not under `build/`. The
 SQLite backend records the absolute path of the file it opened and every question page states it,
