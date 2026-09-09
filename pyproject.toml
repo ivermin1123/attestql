@@ -32,7 +32,7 @@ classifiers = [
     "Topic :: Software Development :: Testing",
 ]
 dependencies = [
-    "psycopg[binary]>=3.3.4,<4",
+    "psycopg[binary]>=3.3.5,<4",
     # The audit's parser: a BSD-2-Clause binding to libpg_query, which is PostgreSQL's own
     # grammar compiled as a library, so the tool and the server read a statement the same
     # way. Pinned exactly, because the parse decides the replay rule and the ordering a
