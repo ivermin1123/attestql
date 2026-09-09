@@ -1,0 +1,34 @@
+name: Feature or question
+description: Ask what AttestQL does, or propose something it should do.
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        AttestQL audits a gold statement against a second statement and writes evidence someone
+        else can replay. It does not decide which statement is right and it does not generate
+        differentiating data. The README's "What it does not do" is the shortest description of
+        its edges, and the claims register is where every number in it is owned by an artifact.
+  - type: textarea
+    id: ask
+    attributes:
+      label: What you are asking for
+      description: The question, or the thing you want AttestQL to do.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: What you are auditing
+      description: >
+        The engine, the corpus or database, and the command you run today or would want to run. A
+        concrete case is worth more here than a general shape.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you tried or considered
+      description: Existing flags, another tool, or the check you are doing by hand instead.
+    validations:
+      required: false

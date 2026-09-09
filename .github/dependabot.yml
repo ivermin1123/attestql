@@ -1,0 +1,15 @@
+# Weekly update pull requests for the two surfaces this repository pins. `uv` is Dependabot's own
+# ecosystem for a project whose dependencies live in pyproject.toml and uv.lock, and it updates
+# both together, which `pip` would not. `github-actions` reads the `uses:` lines of the three
+# workflows: those are pinned by commit SHA with the version in a trailing comment, which is the
+# form Dependabot rewrites.
+version: 2
+updates:
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
