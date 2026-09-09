@@ -5,8 +5,18 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "attestql"
 version = "0.3.0"
-description = "Audit text-to-SQL gold and predictions on PostgreSQL with typed replay evidence."
+description = "Audit text-to-SQL gold and predictions on PostgreSQL or SQLite with typed replay evidence."
 readme = "README.md"
+authors = [{ name = "Hoang Le", email = "ivermin1123@gmail.com" }]
+keywords = [
+    "text-to-sql",
+    "sql",
+    "audit",
+    "benchmark",
+    "evaluation",
+    "postgresql",
+    "sqlite",
+]
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.11"
@@ -17,7 +27,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Database",
     "Topic :: Software Development :: Testing",
@@ -51,7 +60,9 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/ivermin1123/attestql"
 Repository = "https://github.com/ivermin1123/attestql"
+Documentation = "https://github.com/ivermin1123/attestql/blob/main/docs/audit-command.md"
 Issues = "https://github.com/ivermin1123/attestql/issues"
+Changelog = "https://github.com/ivermin1123/attestql/releases"
 
 [project.scripts]
 attestql = "attestql.audit.cli:main"
@@ -69,6 +80,10 @@ where = ["src"]
 # would hold a command that fails on the machine that installed it rather than in the gate.
 # `static/*` does not reach into a directory, which is why the fonts are named separately.
 "attestql.report" = ["templates/*.html", "static/*", "static/fonts/*"]
+# The marker that says this package is typed. The repository type checks itself in strict
+# mode, and without this file in the wheel a caller's own checker treats every import from
+# it as untyped, so the checking done here would stop at the installing machine.
+"attestql" = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -87,7 +102,9 @@ dev = [
     "pre-commit>=4.6.2",
     "pyright>=1.1.411",
     "pytest>=9.1.1",
-    "ruff>=0.16.4",
+    # Exactly, and the version `.pre-commit-config.yaml` pins: the hook and `just lint` read
+    # the same files, and two ruff versions would disagree about them.
+    "ruff==0.16.4",
 ]
 
 [tool.ruff]
