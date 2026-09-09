@@ -1605,7 +1605,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="compare golds and predictions on one database and record what differs",
         description=(
             "Run each gold statement, and each prediction beside it, against one "
-            "PostgreSQL database; report where they disagree and which golds smell wrong."
+            "PostgreSQL or SQLite database; report where they disagree and which golds "
+            "smell wrong."
         ),
     )
     audit.add_argument(
