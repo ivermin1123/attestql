@@ -1,5 +1,8 @@
 {
-  // Files markdownlint does not lint. Rule configuration lives in .markdownlint.jsonc.
+  // File selection: what markdownlint-cli2 skips, on top of the globs the justfile passes it.
+  // Which rules apply is the other file's job; see .markdownlint.jsonc, which cli2 discovers
+  // on its own. This list also filters paths named explicitly on the command line, so widening
+  // it silently drops files the justfile meant to lint.
   "ignores": [
     "node_modules"
   ]
