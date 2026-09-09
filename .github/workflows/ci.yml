@@ -1,10 +1,23 @@
 # Runs the same checks as `just check`, on the oldest Python the project supports and the one it is
 # developed on. Until a run has been observed green this file is configuration, not evidence.
+#
+# Every action is pinned to the commit SHA of the release named in the trailing comment, so a tag
+# moved under this repository cannot change what runs here. Dependabot updates the pin and the
+# comment together.
 name: ci
 
 on:
   push:
   pull_request:
+
+permissions:
+  contents: read
+
+# A push that supersedes an earlier one on the same ref stops the run it superseded: nothing here
+# publishes, so the only cost of cancelling is a report nobody is waiting for.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   check:
@@ -14,14 +27,14 @@ jobs:
       matrix:
         python: ["3.11", "3.13"]
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           enable-cache: true
           python-version: ${{ matrix.python }}
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "22"
-      - uses: extractions/setup-just@v4
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
       - run: uv sync --locked
       - run: just check

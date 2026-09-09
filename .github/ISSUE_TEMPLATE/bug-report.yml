@@ -1,0 +1,63 @@
+name: Bug report
+description: AttestQL did something its documentation says it should not do.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A report about a run is only actionable with the engine, the version, the command and what
+        the summary said, so those four are asked for below.
+
+        Do not report a vulnerability here. Use the Security tab's "Report a vulnerability", as
+        SECURITY.md describes.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What `attestql --version` prints.
+      placeholder: attestql 0.3.0
+    validations:
+      required: true
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Engine
+      options:
+        - PostgreSQL
+        - SQLite
+        - Both
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: The command you ran
+      description: The whole command line, with the flags it carried.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: What the summary said
+      description: >
+        The summary line the run printed, and the verdict counts from audit/summary.json when the
+        run wrote one. Redact anything from your data that you cannot share.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+      description: What the documentation, the evidence record or the claims register says should
+        have happened.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Operating system and Python version
+      placeholder: macOS 15, Python 3.13
+    validations:
+      required: false
