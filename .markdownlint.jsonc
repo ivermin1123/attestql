@@ -1,6 +1,6 @@
 {
-  // markdownlint defaults, with the exceptions below. Each exception and its reason is
-  // recorded in plans/2026-08-25-slice1-mt-tooling.md.
+  // Rule configuration: markdownlint defaults, with the exceptions below and their reasons.
+  // Which files get linted is the other file's job; see .markdownlint-cli2.jsonc.
   "default": true,
   // Documents wrap at 100 by hand, and tables legitimately exceed that width.
   "MD013": false,

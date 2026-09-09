@@ -4,10 +4,23 @@ __pycache__/
 *.egg-info/
 .venv/
 .ruff_cache/
-.mypy_cache/
 dist/
 build/
 .env
+.coverage
+htmlcov/
+node_modules/
+
+# Editor and operating system droppings. None of it is repository content.
+.DS_Store
+.idea/
+.vscode/
+
+# What `attestql demo` writes when it is run from the repository root: the sandbox it builds,
+# the audit it makes of it, and the SQLite file that audit reads. Anchored to the root because
+# `src/attestql/demo/` is tracked source, and a bare `demo/` would swallow anything added there.
+/demo/
+*.sqlite
 
 # Worktrees the coordinator creates for workers; never repository content.
 .claude/worktrees/
