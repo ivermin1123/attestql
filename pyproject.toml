@@ -104,7 +104,7 @@ dev = [
     "pytest>=9.1.1",
     # Exactly, and the version `.pre-commit-config.yaml` pins: the hook and `just lint` read
     # the same files, and two ruff versions would disagree about them.
-    "ruff==0.16.4",
+    "ruff==0.16.6",
 ]
 
 [tool.ruff]

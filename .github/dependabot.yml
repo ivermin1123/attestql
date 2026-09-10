@@ -1,8 +1,11 @@
-# Weekly update pull requests for the two surfaces this repository pins. `uv` is Dependabot's own
+# Weekly update pull requests for the three surfaces this repository pins. `uv` is Dependabot's own
 # ecosystem for a project whose dependencies live in pyproject.toml and uv.lock, and it updates
 # both together, which `pip` would not. `github-actions` reads the `uses:` lines of the three
 # workflows: those are pinned by commit SHA with the version in a trailing comment, which is the
-# form Dependabot rewrites.
+# form Dependabot rewrites. `pre-commit` reads the hook revisions: the ruff hook has to name the
+# version the dev group pins, which tests/test_the_gate_and_the_hook_pin_one_ruff.py asserts, so
+# a bump that reached only pyproject.toml would go red. Dependabot updates one manifest per pull
+# request, so both surfaces have to be tracked for that pair to stay in step.
 version: 2
 updates:
   - package-ecosystem: "uv"
@@ -10,6 +13,10 @@ updates:
     schedule:
       interval: "weekly"
   - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pre-commit"
     directory: "/"
     schedule:
       interval: "weekly"
