@@ -183,7 +183,7 @@ ERROR = "ERROR"
 NO_SMELL = "none"
 
 SERIALIZATION = SerializationDescriptor(
-    version="attestql/audit/3",
+    version="attestql/audit/4",
     numeric_scale=6,
     timestamp_format="%Y-%m-%dT%H:%M:%S.%fZ",
     timezone="UTC",

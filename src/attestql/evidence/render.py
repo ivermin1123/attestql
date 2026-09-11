@@ -28,6 +28,7 @@ from attestql.evidence.serialize import (
     UndecodedText,
     canonical_serialize,
     canonical_type_tag,
+    typed_row,
 )
 from attestql.evidence.types import StatementSource
 from attestql.kernel.types import ExecutionResult
@@ -123,8 +124,13 @@ class RowDifference:
 
 
 def _multiset(rows: Sequence[tuple[object, ...]]) -> Counter[tuple[tuple[str, object], ...]]:
-    """The rows as a multiset of typed cells: the keying the R-SET comparison uses."""
-    return Counter(tuple((canonical_type_tag(value), value) for value in row) for row in rows)
+    """The rows as a multiset of typed cells, keyed the way the R-SET comparison keys them.
+
+    Through ``typed_row`` and not by pairing each value with its tag here, which is the same
+    thing for every value except a NaN: the shared keying stands one key in for every NaN and
+    this did not, so two results holding one were reported as a row different on each side.
+    """
+    return Counter(typed_row(row) for row in rows)
 
 
 def row_difference(

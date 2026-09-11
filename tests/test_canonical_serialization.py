@@ -248,18 +248,47 @@ def test_a_naive_datetime_is_refused_rather_than_assigned_a_timezone(
         )
 
 
-@pytest.mark.parametrize("value", [Decimal("NaN"), Decimal("Infinity"), Decimal("-Infinity")])
-def test_a_non_finite_numeric_is_refused_rather_than_rendered_at_a_scale(
+@pytest.mark.parametrize(
+    ("value", "rendered"),
+    [
+        (Decimal("NaN"), "NaN"),
+        (Decimal("sNaN"), "NaN"),
+        (Decimal("-NaN"), "NaN"),
+        (Decimal("Infinity"), "Infinity"),
+        (Decimal("-Infinity"), "-Infinity"),
+    ],
+)
+def test_a_non_finite_numeric_renders_as_its_name(
     value: Decimal,
+    rendered: str,
     execution_limits: ExecutionLimits,
     serialization_descriptor: SerializationDescriptor,
 ) -> None:
-    """A comparison that counts rows keys a NaN as one value; a rendering at a fixed scale
-    still has nothing to write for one, and refusing is what it has always done."""
-    with pytest.raises(UnsupportedValue, match="non-finite"):
-        canonical_serialize(
-            _one_value(execution_limits, "numeric", value), serialization_descriptor
+    """A value with no digits to place at a scale renders as its name, and every NaN spelling
+    renders as one of them. Until 2026-09-11 this was refused, which made an R-SET result
+    holding a NaN an error instead of a verdict."""
+    document = canonical_serialize(
+        _one_value(execution_limits, "numeric", value), serialization_descriptor
+    )
+
+    assert f"row\tdec:{rendered}\n".encode() in document
+
+
+def test_every_nan_spelling_hashes_alike_and_the_infinities_do_not(
+    execution_limits: ExecutionLimits, serialization_descriptor: SerializationDescriptor
+) -> None:
+    """The rendering has to agree with the keying, or two results the comparison calls EQUAL
+    carry two hashes and the run reports a difference it cannot show."""
+
+    def rendered(text: str) -> bytes:
+        return canonical_serialize(
+            _one_value(execution_limits, "numeric", Decimal(text)), serialization_descriptor
         )
+
+    assert rendered("NaN") == rendered("sNaN") == rendered("-NaN")
+    assert len({rendered("Infinity"), rendered("-Infinity"), rendered("NaN")}) == 3, (
+        "each infinity is equal to itself and to nothing else"
+    )
 
 
 def test_a_descriptor_naming_an_unknown_timezone_renders_nothing(

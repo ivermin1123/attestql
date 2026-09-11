@@ -168,9 +168,10 @@ def test_a_record_written_under_the_earlier_layout_still_re_hashes() -> None:
     earlier = [
         path
         for path in written
-        if cast("dict[str, str]", document(path)["serialization"])["version"] == "attestql/audit/2"
+        if cast("dict[str, str]", document(path)["serialization"])["version"]
+        in {"attestql/audit/2", "attestql/audit/3"}
     ]
-    assert earlier, "those records were written under the layout before this one"
+    assert earlier, "those records were written under a layout before this one"
     for path in earlier[:20]:
         round_trips(path)
 
@@ -221,3 +222,82 @@ def test_a_text_value_that_did_not_decode_round_trips_as_its_bytes(tmp_path: Pat
     undecoded = [value for value in loaded if type(value) is UndecodedText]
     assert undecoded == [UndecodedText(b"\xff")], "the bytes come back as those bytes"
     assert "ff" in loaded, "and the text that decoded is still text"
+
+
+@pytest.mark.sandbox
+def test_a_non_finite_float_receives_a_verdict_and_its_record_round_trips(
+    sandbox_backend: PostgresBackend, tmp_path: Path
+) -> None:
+    """The product path the NaN rendering exists for.
+
+    A PostgreSQL ``float8`` reaches a record as the decimal the server printed for it, so
+    ``'NaN'::float8`` reaches one as ``Decimal('NaN')``. Until 2026-09-11 the rendering refused
+    that value, so hashing the result raised and a question holding a NaN reported an error
+    instead of the verdict the comparison had already reached.
+
+    Two questions, because they show different halves of it. The first pair is identical and has
+    to be EQUAL, which is the verdict that was being lost. The second pair differs, which is what
+    makes the run write the records, so the round trip is taken over records that really hold a
+    NaN rather than over constructed ones.
+    """
+    same = "SELECT v FROM (VALUES ('NaN'::float8), (1.5::float8), ('Infinity'::float8)) AS t(v)"
+    gold = "SELECT v FROM (VALUES ('NaN'::float8), (1.5::float8)) AS t(v)"
+    predicted = "SELECT v FROM (VALUES ('NaN'::float8)) AS t(v)"
+    _write(
+        tmp_path / "questions.json",
+        [
+            {
+                "question_id": 1,
+                "db_id": "european_football_2",
+                "question": "Which values?",
+                "evidence": "",
+                "SQL": same,
+                "difficulty": "simple",
+            },
+            {
+                "question_id": 2,
+                "db_id": "european_football_2",
+                "question": "Which values, again?",
+                "evidence": "",
+                "SQL": gold,
+                "difficulty": "simple",
+            },
+        ],
+    )
+    _write(tmp_path / "predictions.json", {"1": same, "2": predicted})
+    audit = tmp_path / "audit"
+    run_audit(
+        AuditOptions(
+            dsn=os.environ[SANDBOX_DSN],
+            questions=tmp_path / "questions.json",
+            predictions=tmp_path / "predictions.json",
+            out=audit,
+            data_as_of=DATA_AS_OF,
+        ),
+        sandbox_backend,
+        Lines(),
+    )
+
+    summary = document(audit / "summary.json")
+    assert summary["errors"] == [], f"a NaN is not an error: {summary['errors']}"
+    assert cast("dict[str, int]", summary["verdicts"]) == {"EQUAL": 1, "NOT_EQUAL": 1}, summary[
+        "verdicts"
+    ]
+    assert cast("dict[str, Any]", summary["settings"])["serialization"] == "attestql/audit/4"
+
+    written = list(records(audit))
+    for path in written:
+        round_trips(path)
+    holds_a_nan = [
+        path
+        for path in written
+        if any(
+            cell.get("value") == "NaN"
+            for row in cast(
+                "list[list[dict[str, Any]]]",
+                cast("dict[str, Any]", document(path)["result"])["rows"],
+            )
+            for cell in row
+        )
+    ]
+    assert holds_a_nan, "the records the run wrote hold the NaN the question returned"

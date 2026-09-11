@@ -117,6 +117,10 @@ class _NotANumber(Enum):
     NAN = "nan"
 
 
+_NAN = "NaN"
+"""What every NaN renders as. One spelling, for the reason ``_render_decimal`` gives."""
+
+
 def typed_value(value: object) -> tuple[str, object]:
     """One value paired with the tag of the type it was returned as, as a comparison keys it.
 
@@ -134,9 +138,10 @@ def typed_value(value: object) -> tuple[str, object]:
     Standing a NaN's key in for it is what leaves the rule in one place. The infinities need
     no stand-in: Decimal already holds each equal to itself and to nothing else.
 
-    The rendering is not what changes here. A non-finite numeric still has no rendering at a
-    fixed scale and ``canonical_serialize`` still refuses one; this is how a comparison that
-    counts rows rather than rendering them keys the value.
+    The rendering agrees with this. A non-finite numeric renders as its name rather than at a
+    fixed scale, and every NaN spelling renders alike, so a result this function calls equal to
+    another hashes alike too. Before 2026-09-11 the rendering refused one instead, which made an
+    R-SET result holding a NaN an error rather than a verdict.
     """
     tag = canonical_type_tag(value)
     if isinstance(value, Decimal) and value.is_nan():
@@ -150,11 +155,18 @@ def typed_row(row: Iterable[object]) -> tuple[tuple[str, object], ...]:
 
 
 def _render_decimal(value: Decimal, numeric_scale: int) -> str:
-    """A numeric at the descriptor's scale, rounded half up, never in exponent form."""
+    """A numeric at the descriptor's scale, rounded half up, never in exponent form.
+
+    A non-finite numeric has no digits to place at a scale, so it renders as its name. Every
+    NaN spelling renders as ``NaN``: ``typed_value`` already stands one key in for all of them
+    because this engine reads them as one value, and a rendering that told ``sNaN`` from ``NaN``
+    would give two results that compare EQUAL two different hashes. The infinities keep their
+    sign, which is what makes each equal to itself and to nothing else.
+    """
+    if value.is_nan():
+        return _NAN
     if not value.is_finite():
-        raise UnsupportedValue(
-            f"a non-finite numeric has no rendering at a fixed scale, got {value}"
-        )
+        return format(value, "f")
     exponent = Decimal(1).scaleb(-numeric_scale)
     with localcontext() as context:
         # The result needs room for every integral digit plus the scale, and one digit more

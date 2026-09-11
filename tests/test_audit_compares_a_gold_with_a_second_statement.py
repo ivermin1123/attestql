@@ -93,6 +93,7 @@ GOLD_ORD = "SELECT speed FROM team_attributes ORDER BY speed ASC NULLS FIRST LIM
 SECOND_ORD = "SELECT speed FROM team_attributes ORDER BY speed DESC NULLS LAST LIMIT 3"
 
 ELEMENT = (("element", "text"),)
+MEASURE = (("element", "float8"),)
 SPEED = (("speed", "int8"),)
 
 SECOND_ALIASED = "SELECT element AS symbol FROM atom"
@@ -144,6 +145,33 @@ def test_two_statements_with_the_same_rows_agree(tmp_path: Path) -> None:
     assert comparison.differing_rows.only_left_total == 0
     assert comparison.differing_rows.only_right_total == 0
     assert comparison.bird_ex.value == 1
+
+
+def test_two_statements_returning_the_same_nan_agree_and_show_no_difference(
+    tmp_path: Path,
+) -> None:
+    """A NaN is one value here, so two results holding one are equal and neither side holds a
+    row the other does not.
+
+    Both halves were broken until 2026-09-11 and for different reasons. Hashing the result
+    refused a non-finite value, so an EQUAL verdict was overwritten by an error; and the
+    multiset behind the row difference keyed each value with its tag itself rather than through
+    the shared keying, so two NaNs counted as two values and a row was reported as differing on
+    each side of results that are the same.
+    """
+    rows = ((Decimal("NaN"),), (Decimal("1.5"),))
+    backend = FakeBackend(
+        {GOLD_SET: fake_result(MEASURE, rows), SECOND_SET: fake_result(MEASURE, rows)},
+        row_counts={"atom": 2},
+    )
+
+    comparison = _compare(backend, tmp_path, gold_sql=GOLD_SET, second_sql=SECOND_SET)
+
+    assert comparison.replay_rule is ReplayRule.R_SET
+    assert comparison.verdict.result is ComparabilityResult.EQUAL
+    assert comparison.gold_result_hash == comparison.second_result_hash
+    assert comparison.differing_rows.only_left_total == 0
+    assert comparison.differing_rows.only_right_total == 0
 
 
 def test_a_prediction_that_renames_a_column_gives_the_same_answer(tmp_path: Path) -> None:
