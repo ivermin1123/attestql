@@ -57,7 +57,7 @@ archives() {
   echo "archives in $ASSETS"
 }
 
-# The manifest select.py reads to write each run's published.json. manifest.py counts what is
+# The manifest select_questions.py reads to write each run's published.json. manifest.py counts what is
 # in each archive; this only says where the assets and the tag are.
 manifest() {  # manifest <tag>
   local tag="$1"
@@ -66,13 +66,27 @@ manifest() {  # manifest <tag>
   echo "manifest: $MANIFEST"
 }
 
+# The notes a release created here carries. Written beside the assets so a caller can read
+# them before the release exists; notes.py is where the shape of them is.
+notes() {  # notes <tag>
+  local tag="$1"
+  [ -f "$MANIFEST" ] || { echo "no manifest to write notes from" >&2; return 1; }
+  python3 "$here/notes.py" "$MANIFEST" "$tag" > "$ASSETS/notes.md" || {
+    rm -f "$ASSETS/notes.md"; echo "the notes could not be written" >&2; return 1; }
+  echo "notes: $ASSETS/notes.md"
+}
+
 upload() {  # upload <tag>
   local tag="${1:?the tag the audits were made with}"
-  archives
-  manifest "$tag"
-  ( cd "$ASSETS" && shasum -a 256 ./*.tar.gz > SHA256SUMS )
+  # Checked, because this script runs without `set -e`: a release created from a half-built
+  # set of assets is worse than one not created at all.
+  archives || { echo "the archives could not be built" >&2; return 1; }
+  manifest "$tag" || return 1
+  ( cd "$ASSETS" && shasum -a 256 ./*.tar.gz > SHA256SUMS ) || {
+    echo "the digests could not be taken" >&2; return 1; }
   gh auth status >/dev/null 2>&1 || { echo "gh is not logged in" >&2; return 1; }
   if ! gh release view "$tag" --repo "$REPOSITORY" >/dev/null 2>&1; then
+    notes "$tag" || return 1
     gh release create "$tag" --repo "$REPOSITORY" --verify-tag \
       --title "attestql ${tag#v}" --notes-file "$ASSETS/notes.md" || return 1
   fi
@@ -82,6 +96,7 @@ upload() {  # upload <tag>
 case "${1:-}" in
   archives) archives ;;
   manifest) manifest "${2:?the tag}" ;;
+  notes) manifest "${2:?the tag}" && notes "$2" ;;
   upload) upload "${2:-}" ;;
   *) sed -n '2,20p' "$0"; exit 2 ;;
 esac

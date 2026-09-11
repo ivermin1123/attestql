@@ -153,6 +153,26 @@ DIGESTS
   echo "inputs ready in $RUNS_WORK"
 }
 
+# Run the jobs of one batch and collect every status. `wait -n` would need bash 4.3 while the
+# note above says bash 3.2, and a bare `wait` throws every status away, which is how a run of
+# eleven databases could fail eleven times and still report itself done.
+FAILED=0
+BATCH=()
+
+batch_add() {  # batch_add <pid>
+  BATCH+=("$1")
+  [ "${#BATCH[@]}" -ge 3 ] && batch_drain
+  return 0
+}
+
+batch_drain() {
+  local pid
+  for pid in ${BATCH[@]+"${BATCH[@]}"}; do
+    wait "$pid" || FAILED=$((FAILED + 1))
+  done
+  BATCH=()
+}
+
 # One SQLite audit of one database. Skipped when its summary.json is already there.
 sqlite_one() {  # sqlite_one <out> <questions> <origin> <date> <databases-dir> <data-origin> <data-date> <db> [predictions args...]
   local out="$1" questions="$2" origin="$3" qdate="$4" dbdir="$5" dorigin="$6" ddate="$7" db="$8"; shift 8
@@ -171,6 +191,11 @@ sqlite_one() {  # sqlite_one <out> <questions> <origin> <date> <databases-dir> <
   # empty directory or one it marked, and refuses one holding a file it did not write.
   mv "$out.stdout.txt" "$out/stdout.txt"; mv "$out.stderr.txt" "$out/stderr.txt"
   echo "$out exit=$status in $((SECONDS - start))s: $(tail -1 "$out/stdout.txt")"
+  # 0 is no disagreement and 1 is at least one, both of them runs that happened; 2 and above is
+  # a tool error, and so is a run that wrote no summary. Returning it is what lets the caller
+  # refuse to print its DONE marker over a failure.
+  [ "$status" -le 1 ] && [ -f "$out/summary.json" ] && return 0
+  return 1
 }
 
 # The arguments one SQLite run of one prediction file takes, as a global array: bash 3.2 on
@@ -184,16 +209,15 @@ sqlite_prediction_args() {  # sqlite_prediction_args <model>
 sqlite_runs() {
   cd "$RUNS_WORK"
   export ATTESTQL="${ATTESTQL:-$RUNS_WORK/venv/bin/attestql}"
-  local db model running=0
+  local db model
 
   echo "== bird-dev-sqlite: the 2025-11-06 copy, gold-only, eleven databases"
   for db in "${DEV_ORDER[@]}"; do
     sqlite_one "runs/bird-dev-sqlite/dev-20251106/$db" data/questions/dev_20251106-00000-of-00001.json \
       "$DEV1106_ORIGIN" "$DEV1106_DATE" data/dev/dev_databases "$DEV_DATA_ORIGIN" "$DEV_DATA_DATE" "$db" &
-    running=$((running + 1))
-    [ "$running" -ge 3 ] && { wait -n; running=$((running - 1)); }
+    batch_add $!
   done
-  wait; running=0
+  batch_drain
 
   echo "== minidev-sqlite: the nine prediction files against the zip's questions, keyed by position"
   for model in "${MODELS[@]}"; do
@@ -202,11 +226,11 @@ sqlite_runs() {
       sqlite_one "runs/minidev-sqlite/$model/$db" data/questions/mini_dev_sqlite.json \
         "$MINIDEV_SQLITE_ORIGIN" "$MINIDEV_SQLITE_DATE" data/minidev/dev_databases \
         "$MINIDEV_DATA_ORIGIN" "$MINIDEV_DATA_DATE" "$db" "${PREDICTION_ARGS[@]}" &
-      running=$((running + 1))
-      [ "$running" -ge 3 ] && { wait -n; running=$((running - 1)); }
+      batch_add $!
     done
   done
-  wait
+  batch_drain
+  [ "$FAILED" -eq 0 ] || { echo "$FAILED SQLite run(s) failed" >&2; return 1; }
   echo "SQLITE_DONE"
 }
 
@@ -354,6 +378,8 @@ pg_gold_only() {  # pg_gold_only <zip|hf> <scratch schema>
   status=$?
   mv "$out.stdout.txt" "$out/stdout.txt"; mv "$out.stderr.txt" "$out/stderr.txt"
   echo "$out exit=$status in $((SECONDS - start))s: $(tail -1 "$out/stdout.txt")"
+  [ "$status" -le 1 ] && [ -f "$out/summary.json" ] && return 0
+  return 1
 }
 
 # The nine prediction runs, against the zip's own question file under position keying, which
@@ -375,6 +401,8 @@ pg_prediction() {  # pg_prediction <model> <scratch schema>
   status=$?
   mv "$out.stdout.txt" "$out/stdout.txt"; mv "$out.stderr.txt" "$out/stderr.txt"
   echo "$out exit=$status in $((SECONDS - start))s: $(tail -1 "$out/stdout.txt")"
+  [ "$status" -le 1 ] && [ -f "$out/summary.json" ] && return 0
+  return 1
 }
 
 postgres_runs() {
@@ -382,20 +410,31 @@ postgres_runs() {
   export ATTESTQL="${ATTESTQL:-$RUNS_WORK/venv/bin/attestql}"
   local model index=0
   pg_gold_only zip attestql_scratch &
+  batch_add $!
   pg_gold_only hf attestql_scratch2 &
-  wait
+  batch_add $!
+  batch_drain
   # Two lanes, each with a scratch schema of its own, as the prediction-mode measurement ran.
-  ( for model in "${MODELS[@]:0:5}"; do pg_prediction "$model" attestql_scratch; done ) &
-  ( for model in "${MODELS[@]:5:4}"; do pg_prediction "$model" attestql_scratch2; done ) &
-  wait
+  # A lane fails when any run in it does, which is what the `||` carries out of the subshell.
+  ( status=0
+    for model in "${MODELS[@]:0:5}"; do pg_prediction "$model" attestql_scratch || status=1; done
+    exit "$status" ) &
+  batch_add $!
+  ( status=0
+    for model in "${MODELS[@]:5:4}"; do pg_prediction "$model" attestql_scratch2 || status=1; done
+    exit "$status" ) &
+  batch_add $!
+  batch_drain
+  [ "$FAILED" -eq 0 ] || { echo "$FAILED PostgreSQL run(s) failed" >&2; return 1; }
   echo "POSTGRES_DONE"
 }
 
 case "${1:-}" in
   inputs) inputs ;;
-  sqlite) sqlite_runs; rerun_timeouts runs/bird-dev-sqlite/; rerun_timeouts runs/minidev-sqlite/ ;;
+  sqlite) sqlite_runs || exit 1
+          rerun_timeouts runs/bird-dev-sqlite/; rerun_timeouts runs/minidev-sqlite/ ;;
   postgres) postgres_up || { echo "the server did not start" >&2; exit 1; }
-            postgres_runs
+            postgres_runs || exit 1
             rerun_timeouts runs/minidev-pg-gold-only/; rerun_timeouts runs/minidev-pg/ ;;
   rerun) rerun_timeouts "${2:-runs/}" ;;
   teardown) postgres_down ;;
