@@ -38,7 +38,7 @@ not decide alone.
 
 Phase 1 comes first for two reasons that are not preference. The ruleset of phase 2 blocks
 force-push, so a rewrite has to precede it or be undone to run. And the 11.1 MB measurement file
-that phase 2 would otherwise only untrack was added in `8a1d5ce`, after the rewrite point, so one
+that phase 2 would otherwise only untrack was added in `43d2a04`, after the rewrite point, so one
 rewrite can both strip the trailer and drop that blob from history rather than two.
 
 ## Acceptance criteria for the whole plan

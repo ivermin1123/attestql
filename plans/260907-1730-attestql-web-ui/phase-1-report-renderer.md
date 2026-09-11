@@ -12,7 +12,7 @@ directory produced by another machine.
 
 ## Requirements
 
-- Starts from `5e156d7` or later: the `demo` subcommand is in `cli.py` and the sandbox data is
+- Starts from `3a1287f` or later: the `demo` subcommand is in `cli.py` and the sandbox data is
   in `attestql.demo`. New subcommand `attestql report <audit-dir> --out <dir>` beside `audit`
   and `demo`; `--out` defaults to the sibling `<audit-dir>-report/`, never inside the audit
   directory, whose rerun cleanup would leave a stale report beside a fresh run. Refuses a

@@ -1,6 +1,6 @@
 # One probe and three input gaps, 2026-09-08
 
-Status 2026-09-08 22:10: all four done on `main` (`0ad15ca`, `e5d6899`, `0ff052f`, `b003a3d`),
+Status 2026-09-08 22:10: all four done on `main` (`8570a3f`, `3eb0f49`, `e39d426`, `beb204b`),
 the gate green before each, measured in
 [measurement-260908-2200-probe-and-input-gaps.md](../reports/measurement-260908-2200-probe-and-input-gaps.md)
 and recorded as register rows A45 to A48. The order ran 1, 4, 3, 2: the WAL copy of phase 4 is what

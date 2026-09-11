@@ -39,14 +39,14 @@ gets the same pages by running `attestql report audit/`.
   added without a re-plan. Pages exist only for the questions the site is about (the
   credited-but-NOT_EQUAL rows, fired-probe golds, the hand-classified rows, the unjust-zero and
   unjust-one cases); full runs are release assets.
-- Phase 1 starts from `5e156d7` or later (the `attestql demo` commit); the worktree is there.
+- Phase 1 starts from `3a1287f` or later (the `attestql demo` commit); the worktree is there.
 
 ## Non-goals (this plan)
 
 - A paste-two-statements playground (needs a server and a security boundary; only on demand).
 - Cross-run comparison pages (the NOT_COMPARABLE verdict exists; a page for it comes when two
   published runs of one benchmark exist).
-- PyPI: attestql 0.2.1 is published (`5d44e07`); nothing to do here.
+- PyPI: attestql 0.2.1 is published (`53bddf7`); nothing to do here.
 
 ## Acceptance criteria
 
@@ -105,7 +105,7 @@ Model routing per the owner's rule: phases 1, 3 and 4 are implementation and run
   any time.
 - A concurrent session commits to `main`. Every phase rebases on `main` before it starts and
   touches no file that session is editing (`README.md`, `site/index.html`,
-  `docs/audit-command.md`, `release.yml`, the register, and since `5e156d7` the `demo`
+  `docs/audit-command.md`, `release.yml`, the register, and since `3a1287f` the `demo`
   package, `tests/test_boundary.py`, `NOTICE`, `pyproject.toml` package data) except by the
   additions each phase file names: the `report` subcommand in `cli.py`, the Jinja2 dependency,
   two public accessors in `smells.py` and `postgres.py`, the OFL text in `NOTICE`. Reviewed against

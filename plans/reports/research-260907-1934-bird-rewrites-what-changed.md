@@ -2,7 +2,7 @@
 
 # BIRD's 399 dev rewrites: what changed in the answer and in the SQL
 
-Date 2026-09-07, tree `a376007`, SQLite 3.53.4 as Python 3.13.7 links it, AttestQL 0.2.2
+Date 2026-09-07, tree `c109d46`, SQLite 3.53.4 as Python 3.13.7 links it, AttestQL 0.2.2
 from this tree, sqlglot 30.18.0. Artifact: `research-260907-bird-rewrites/`.
 
 ## Inputs

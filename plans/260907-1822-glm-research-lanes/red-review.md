@@ -32,7 +32,7 @@ the briefs on 2026-09-07 before dispatch; S2 and S5 by the coordinator on the in
 - SHOULD-FIX: step 6 "golds whose SQL names `Player.height`": zero golds carry that literal; 13 `european_football_2` golds name `height` through an alias. Match `\bheight\b` on that database's golds or the answer is a false zero.
 - SHOULD-FIX: step 2's multiset reading through Python `==` makes `182 == 182.0 == True`; the tool's typed reading would not, and the heights differ in storage class on every row. State the equality rule in `replay_pairs.py` and count typed differences (`typeof`) apart from value differences.
 - SHOULD-FIX: step 4's `birdenv` needs `psycopg2-binary pymysql func_timeout` (upstream `evaluation_utils.py` imports the first two at the top; minidev `reproduce.sh`), not `func_timeout` alone; and `bird_ex_official.py` hardcodes `DATABASES = .../data/zip/minidev/MINIDEV/dev_databases`, so the dev-copy scoring needs a copy of the script with a database-directory argument. Say so, and say "500 positions, 498 distinct ids".
-- SHOULD-FIX: step 3 reuses dev-copy fires from tree `246a354` and runs the minidev copy at the worktree's 0.2.2; rerun the dev copy too (five runs, minutes) so a probe delta is the copy and not the version.
+- SHOULD-FIX: step 3 reuses dev-copy fires from tree `6a43c01` and runs the minidev copy at the worktree's 0.2.2; rerun the dev copy too (five runs, minutes) so a probe delta is the copy and not the version.
 - NIT: step 5's frpm join differs by 162 (1,620 vs 1,782), not 211, because frpm has fewer rows; say it so the worker does not treat it as a failed check. Step 2 with the 2025-11-06 golds hits q1131's timeout on both copies (S3).
 - Verdict: **AMEND-THEN-DISPATCH**.
 

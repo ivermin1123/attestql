@@ -97,9 +97,10 @@ generated when ADR-0013 retired the product path, and their allowance went with 
 
 ## 4. Repository-specific checks
 
-Automating these three is the main reason this milestone exists. Until it, they were run by hand
-every time by the coordinating session; each is now a script, and the last paragraph of this
-section says where each runs.
+Automating the first three is the main reason this milestone exists. Until it, they were run by
+hand every time by the coordinating session; each is now a script, and the last paragraph of this
+section says where each runs. A fourth was added on 2026-09-11 and runs at a different moment,
+which that paragraph also says.
 
 **Typography.** No em dash (U+2014), no en dash (U+2013), no numero sign (U+2116) in any `.md` or
 `.py` file authored by this project. The only exemption is a verbatim quotation of someone else's
@@ -114,9 +115,21 @@ right.
 index entry points at a file that exists. An unlisted ADR is invisible; an index entry with no file
 is a broken promise.
 
-Each is a small script under `tools/`, each exits non-zero on failure, each wired into `just check`
-and pre-commit. Each must have a test proving it **fails** on a deliberately bad input: a checker
-never seen to fail is not known to work.
+**Commit message attribution.** A commit message credits no AI. What is refused is attribution and
+not subject matter: a `Co-authored-by` trailer naming an assistant or a vendor's no-reply address,
+the generated-with marker some tools append, and the robot emoji. A message whose prose discusses an
+AI system passes, because the rule is about who a commit claims wrote it. Memory had already failed
+here: three commits of 2026-09-07 reached `main` with such a trailer, and taking it back out cost a
+history rewrite and the repair of 60 evidence references.
+
+The first three are small scripts under `tools/`, each exits non-zero on failure, each wired into
+`just check` and pre-commit. The fourth is also a script under `tools/`, but it needs a commit
+message, which `just check` does not have, so it runs only as a `commit-msg` hook and
+`uv run pre-commit install --hook-type commit-msg` is what installs it. Installing the ordinary
+hooks does not install it, so a clone that skips that command commits without the check.
+
+Each must have a test proving it **fails** on a deliberately bad input: a checker never seen to
+fail is not known to work.
 
 ## 5. One command
 

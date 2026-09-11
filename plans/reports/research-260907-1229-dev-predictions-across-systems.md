@@ -3,7 +3,7 @@
 <!-- cspell:ignore dev1106 dev minidev qid sqls fewshot questionmask PTY azorius Takr -->
 # Research: BIRD dev predictions across systems
 
-Date 2026-09-08 12:49 +07, tree `a376007fcbe44c7c58e91002d1500460877624b6`. Artifact:
+Date 2026-09-08 12:49 +07, tree `c109d4637fcea989c3647072cf50ae590121b8e2`. Artifact:
 [directory](research-260907-dev-predictions-across-systems/).
 
 ## Outcome and assumption
@@ -79,7 +79,9 @@ multiplicity.type.order.truncation.other, and TS0 is the test-suite reading refu
 
 The tool's BIRD EX reading and BIRD's unmodified evaluator agree on 64427 of 64428 readable rows
 across all file-copy pairs. Per-file official sums, errors, timeouts and every disagreement row are
-in `prediction-measurement.json`; there was 1 disagreement.
+in `prediction-measurement.json`, which is 11.1 MB and left the tree on 2026-09-11 for the
+asset `research-260907-dev-predictions-across-systems.tar.gz` of the `v0.3.0` release (sha256
+`38a66be0…`, and `d3ed69e7…` for the file inside it); there was 1 disagreement.
 The one disagreement is `atlas2` q1126 on the new gold: the tool says EQUAL and BIRD's evaluator
 times out.
 Pooled ERROR sides are prediction 1424, gold 105, run 28; steps are execute 1437, statement 92,
@@ -144,6 +146,6 @@ dev1106 q622, old q521; `rsl-ds` old q258, q1244; `rsl-gpt` dev1106 q1051, old q
 ## What changes in AttestQL
 
 Add to register row A37: the pooled old-gold 1751/18627 (9.4%), the per-file and per-copy rows in
-`prediction-measurement.json`, the exact BIRD agreement count, the movement totals, and the sample's
+`prediction-measurement.json` (now the release asset named above), the exact BIRD agreement count, the movement totals, and the sample's
 A/B/C counts. Name the 12 unread-as-shipped plain-line files as a parser/input gap; the selected
 JSON files themselves need no change.

@@ -10,10 +10,10 @@ stated mechanism.
 
 State change while this was written (OBSERVED). At 17:04 the repository had no `site/` directory
 and attestql.com did not resolve. At 17:33 a concurrent session committed `site/index.html`
-(commit `0904dfb`, one hand-written page: the README's opening, the sandbox command and its
+(commit `768fe4f`, one hand-written page: the README's opening, the sandbox command and its
 unedited output, links to the repository, the register and PyPI), and its memory note states a
 Cloudflare Pages project named `attestql` with the domain attached. At 17:36 the host still did
-not resolve from this machine. The same session added `release.yml` (commit `7bc8a27`, PyPI
+not resolve from this machine. The same session added `release.yml` (commit `9ef98da`, PyPI
 trusted publishing on a `v*` tag) and bumped the version to 0.2.1. This report and the plan build
 on that page and that hosting rather than replacing them.
 
@@ -214,8 +214,8 @@ lists every question; full runs are release assets.
 ## 10. Recommendation
 
 Do phases 1 to 4 of the companion plan in order: renderer, design and verification, site build
-and deploy, publish runs. attestql 0.2.1 is on PyPI (`5d44e07`) and `attestql demo` shipped in
-`5e156d7`, so the landing page's install line and opening block are both true today. Revisit the
+and deploy, publish runs. attestql 0.2.1 is on PyPI (`53bddf7`) and `attestql demo` shipped in
+`3a1287f`, so the landing page's install line and opening block are both true today. Revisit the
 deferred items when a visitor asks for one.
 
 ## Sources

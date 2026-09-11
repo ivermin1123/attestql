@@ -2,7 +2,7 @@
 
 # Research: BIRD dev and Mini-Dev, the two copies of the same databases
 
-Date 2026-09-07, tree `a376007`. Python 3.13.7, SQLite 3.53.4, sqlglot 30.18.0. Artifact:
+Date 2026-09-07, tree `c109d46`. Python 3.13.7, SQLite 3.53.4, sqlglot 30.18.0. Artifact:
 [research-260907-two-database-copies](research-260907-two-database-copies/). No product code changed.
 
 ## Inputs and assumptions
@@ -68,7 +68,7 @@ and [smells-by-copy.json](research-260907-two-database-copies/smells-by-copy.jso
 | Mini-Dev | 32 | 25 | 19 | 2 |
 
 Exactly one gold differs: q1196 (`thrombosis_prediction`) fires `arbitrary-cut` on Mini-Dev and
-not on dev. The 31 dev fires match `gold-only-old.json` from tree `246a354` exactly, so this is
+not on dev. The 31 dev fires match `gold-only-old.json` from tree `6a43c01` exactly, so this is
 the fixture and not a tool-version change.
 
 ## BIRD's own Mini-Dev prediction scores

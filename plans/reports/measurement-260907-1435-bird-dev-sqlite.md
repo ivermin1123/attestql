@@ -1,6 +1,6 @@
 # Measurement: BIRD dev on SQLite, two copies of the golds, recall against BIRD's own rewrite
 
-Date 2026-09-07, tree `246a354`. SQLite 3.53.4 as Python 3.13.7 links it, `mode=ro` under
+Date 2026-09-07, tree `6a43c01`. SQLite 3.53.4 as Python 3.13.7 links it, `mode=ro` under
 `PRAGMA query_only`, no server or container, sqlglot 30.18.0. Artifact: `bird-dev-sqlite-260907/`.
 
 ## Inputs and method

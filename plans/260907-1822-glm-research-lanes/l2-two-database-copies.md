@@ -94,7 +94,7 @@ then `ATTESTQL="$MEASURE_WORK/venv/bin/attestql"`.
 3. **Probes per copy.** Run the tool gold-only on both copies of the five databases with the
    2024-06-27 golds (ten runs, `--ids` per database, the flags as `run_tool.sh` states them), at
    the worktree's own version, so a fire that differs is the copy and not the version;
-   `gold-only-old.json`, measured at tree `246a354`, is the cross-check for the dev copy. Which
+   `gold-only-old.json`, measured at tree `6a43c01`, is the cross-check for the dev copy. Which
    golds fire on one copy and not the other: `smells-by-copy.json`.
 4. **Prediction scores per copy.** BIRD's nine Mini-Dev SQLite prediction files scored by
    BIRD's own unmodified `evaluation_ex.py` (SQLite path; `evaluation_utils.py` imports

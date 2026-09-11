@@ -134,12 +134,12 @@ Evidence: at review time the main checkout held the uncommitted move of
 `tools/audit-sandbox-sqlite/{fixture.sql,predictions.json,questions.json}` into
 `src/attestql/demo/`, a `demo` subcommand parser in `cli.py`, `pyproject.toml` package data,
 `NOTICE`,
-`tests/test_boundary.py`. It landed as `5e156d7` at about 18:15. The plan named the old path in
+`tests/test_boundary.py`. It landed as `3a1287f` at about 18:15. The plan named the old path in
 phases 1 to 3, wired `report` into the same parser, and listed none of these files as contested.
-Also stale: "PyPI pending" (0.2.1 is published, `5d44e07`) and "nine commits not yet pushed"
-(`origin/main` was at `c6016eb`).
+Also stale: "PyPI pending" (0.2.1 is published, `53bddf7`) and "nine commits not yet pushed"
+(`origin/main` was at `74e0d27`).
 
-Fix: the worktree is fast-forwarded to `5e156d7`; phase 1 starts from there; the fixture comes
+Fix: the worktree is fast-forwarded to `3a1287f`; phase 1 starts from there; the fixture comes
 from `attestql.demo` and the landing block from `attestql demo --out`; the collision list names
 `cli.py`, `pyproject.toml`, `NOTICE`, `tests/test_boundary.py`, `tools/audit-sandbox-sqlite/`;
 the PyPI non-goal is gone.

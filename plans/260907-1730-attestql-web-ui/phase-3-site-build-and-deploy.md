@@ -1,12 +1,12 @@
 # Phase 3: the site build, landing and method pages, a preview deployment
 
-Status: DONE 2026-09-08. Seven commits on `ivermin1123/web-ui` (`6e0a896` to `95b46d0`), with
+Status: DONE 2026-09-08. Seven commits on `ivermin1123/web-ui` (`e8632c7` to `b26854e`), with
 `just check` green at each. The build makes 56 files and 525,006 bytes in a tenth of a second, the
 preview serves it at <https://attestql-ui.pages.dev>, and attestql.com is byte identical to
 `site/index.html`. An in-worker review found fifteen things, the first a path traversal the filter
-pages introduced, reproduced and repaired in `95b46d0`; the coordinator's review on Fable found six
+pages introduced, reproduced and repaired in `b26854e`; the coordinator's review on Fable found six
 more, the first being that every published page carried the builder's home directory, repaired in
-`5de5d4b`. Report, with the browser measurements and
+`1e1780d`. Report, with the browser measurements and
 the screenshots: `plans/reports/cook-260908-0932-web-ui-phase-3-site.md`. What is left is phase 4's
 data, the keyboard stop on a wide table, and the owner's switch; steps 3 and 4 below are done from
 one network, which the report states.
@@ -15,7 +15,7 @@ one network, which the report states.
 
 attestql.com is live (main session, 2026-09-07 18:05): Cloudflare Pages project `attestql` under
 the owner's personal account, custom domain attached, one CNAME `attestql.com` to
-`attestql.pages.dev`, proxied. It serves `site/index.html` from `main` (commit `0904dfb`),
+`attestql.pages.dev`, proxied. It serves `site/index.html` from `main` (commit `768fe4f`),
 deployed by hand from a directory outside the repository with
 `npx wrangler@4.129.0 pages deploy <repo>/site --project-name attestql --branch main`
 (wrangler leaves a `.wrangler/` cache in its working directory). The main session owns

@@ -5,7 +5,7 @@ tag should be cut on history that will not be rewritten again.
 
 ## What is wrong
 
-`LOGIC-01` was fixed in `1eea1c2`. The other two High findings of the review are still in the
+`LOGIC-01` was fixed in `07adbf0`. The other two High findings of the review are still in the
 0.3.0 that a user installs from PyPI.
 
 **LOGIC-02.** Both results are hashed for every rule, and the hashing step refuses a value that is

@@ -1,7 +1,7 @@
 # Cook report: phase 1, `attestql report`
 
 Worked 2026-09-07 18:43 to 19:40 (Asia/Saigon) on the web UI branch in the worktree
-`~/orca/workspaces/attestql/web-ui`, from `c77b1f5`. Scope: phase 1 of
+`~/orca/workspaces/attestql/web-ui`, from `aa48158`. Scope: phase 1 of
 `plans/260907-1730-attestql-web-ui/plan.md` only, per
 `plans/260907-1730-attestql-web-ui/phase-1-report-renderer.md` and the red-team review
 `plans/reports/review-260907-1806-web-ui-plan-red-team.md`. Gate green, committed.
@@ -114,7 +114,7 @@ strict over the new package; the committed spike directory
 ## Review fixes, 2026-09-07 19:24
 
 The coordinator's stage 2 review (independent reviewer) found no Critical and three Important
-findings, all reproduced before the fix and all fixed in the commit after `7253d64`. Behaviour
+findings, all reproduced before the fix and all fixed in the commit after `6e2ceb1`. Behaviour
 changed in one place only, the output directory, and the pages themselves are byte for byte what
 they were.
 

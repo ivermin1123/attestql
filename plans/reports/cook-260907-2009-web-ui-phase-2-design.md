@@ -1,7 +1,7 @@
 # Cook report: phase 2, the design applied and verified
 
 Worked 2026-09-07 20:09 to 21:30 (Asia/Saigon) in the worktree `~/orca/workspaces/attestql/web-ui`,
-from `8fd4458`. Scope: phase 2 of `plans/260907-1730-attestql-web-ui/plan.md` only, per
+from `f8029c2`. Scope: phase 2 of `plans/260907-1730-attestql-web-ui/plan.md` only, per
 `plans/260907-1730-attestql-web-ui/phase-2-design-and-verification.md` and `design-spec.md`.
 Nothing of phase 3 was started: no `tools/site/`, no landing or method page, no pre-rendered
 filter paths, no deployment. Gate green, committed.
@@ -134,7 +134,7 @@ than before, which are the two new slope cases.
 **The rule.** Every one of the six commits carried a `Co-Authored-By` trailer naming a model.
 The repository allows no AI reference in its artifacts and the brief asked for none. None was
 pushed, so all six were rewritten in place with `git filter-branch --msg-filter`, keeping every
-other line: `git log --format=%B 8fd4458..HEAD | grep -ci co-authored` is 0 and
+other line: `git log --format=%B f8029c2..HEAD | grep -ci co-authored` is 0 and
 `git diff <old head> <new head>` is empty, so no tree moved.
 
 **The design defect.** At 1280 and wider the sticky strip started one gutter left of the prose

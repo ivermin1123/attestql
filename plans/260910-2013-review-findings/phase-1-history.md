@@ -5,13 +5,13 @@ Closes HYG-09, and the single largest item of HYG-01.
 ## What is wrong
 
 Three commits of 2026-09-07 carry `Co-Authored-By: Claude Opus 5`, against the owner's standing
-rule that a commit names no AI. They are `04d2170`, `74594d0` and `246a354`, all
+rule that a commit names no AI. They are `d640be1`, `9c8b38c` and `6a43c01`, all
 `docs(measurement)`. The owner decided on 2026-09-10 to rewrite them and repair every consequence
 rather than accept them as history.
 
 ## What the rewrite touches
 
-`04d2170` is the earliest, and 121 commits follow it. Measured on 2026-09-10:
+`d640be1` is the earliest, and 121 commits follow it. Measured on 2026-09-10:
 
 - four tags become stale: `v0.2.0`, `v0.2.1`, `v0.2.2`, `v0.3.0`;
 - two published GitHub releases point at two of those tags, and the `v0.2.2` release holds 21 run
@@ -36,7 +36,7 @@ commit with the same tree.
 3. Rewrite with `git filter-repo` in one pass: a message callback that strips the trailer line
    from the three commits, and a path exclusion that drops
    `plans/reports/research-260907-dev-predictions-across-systems/prediction-measurement.json`,
-   11.1 MB, added in `8a1d5ce` after the rewrite point. Doing both in one pass is why this phase
+   11.1 MB, added in `43d2a04` after the rewrite point. Doing both in one pass is why this phase
    precedes phase 2.
 4. Build the old-to-new commit map filter-repo writes, and rewrite the 60 references in tracked
    documents from it. A reference whose commit was not rewritten stays as it is.

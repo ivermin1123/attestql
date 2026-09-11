@@ -1,4 +1,4 @@
-"""The three repository checks under tools/ must fail on deliberately bad input and pass on
+"""The repository checks under tools/ must fail on deliberately bad input and pass on
 good input. A checker never seen to fail is not known to work."""
 
 from __future__ import annotations
@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 import check_adr_index
+import check_commit_message
 import check_doc_links
 import check_typography
 
@@ -207,3 +208,89 @@ def test_adr_index_fails_when_the_index_is_missing(
     status, output = run(check_adr_index.main, tmp_path, capsys)
     assert status == 1
     assert "docs/adr/0000-index.md: missing" in output
+
+
+# check_commit_message
+
+
+def message(path: Path, text: str) -> list[str]:
+    """A message file and the argument list a commit-msg hook would be given for it."""
+    path.write_text(text, encoding="utf-8")
+    return [str(path)]
+
+
+def test_commit_message_refuses_a_trailer_crediting_an_assistant(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    argv = message(
+        tmp_path / "COMMIT_EDITMSG",
+        "fix(audit): refuse a catalogue name that did not decode\n"
+        "\n"
+        "Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n",
+    )
+    status = check_commit_message.main(argv)
+    captured = capsys.readouterr()
+
+    assert status == 1
+    assert ":3:" in captured.err, "the finding names the line the trailer is on"
+    assert "claude" in captured.err.lower()
+
+
+def test_commit_message_refuses_a_vendor_address_without_a_known_name(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    argv = message(
+        tmp_path / "COMMIT_EDITMSG",
+        "docs: a line\n\nco-authored-by: Some Assistant <noreply@openai.com>\n",
+    )
+    status = check_commit_message.main(argv)
+
+    assert status == 1
+    assert "noreply@openai.com" in capsys.readouterr().err
+
+
+def test_commit_message_refuses_the_generated_with_marker_and_the_robot(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    argv = message(
+        tmp_path / "COMMIT_EDITMSG",
+        "docs: a line\n\n\N{ROBOT FACE} Generated with [Claude Code](https://claude.com/)\n",
+    )
+    status = check_commit_message.main(argv)
+    captured = capsys.readouterr()
+
+    assert status == 1
+    assert "generated-with marker" in captured.err
+    assert "robot emoji" in captured.err
+
+
+def test_commit_message_passes_a_message_that_credits_nobody(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    argv = message(
+        tmp_path / "COMMIT_EDITMSG",
+        "fix(serialize): size a numeric's rendering room by its magnitude\n"
+        "\n"
+        "Precision was set by significant digits rather than by the exponent.\n"
+        "\n"
+        "Co-authored-by: A Person <person@example.com>\n",
+    )
+    status = check_commit_message.main(argv)
+
+    assert status == 0
+    assert "ok" in capsys.readouterr().out
+
+
+def test_commit_message_allows_prose_about_an_assistant(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The rule is about who a commit claims wrote it, not about what it is about."""
+    argv = message(
+        tmp_path / "COMMIT_EDITMSG",
+        "docs(plans): record what the Claude and codex workers measured\n"
+        "\n"
+        "The GPT-4 prediction files are the ones BIRD publishes.\n",
+    )
+
+    assert check_commit_message.main(argv) == 0
+    assert "ok" in capsys.readouterr().out

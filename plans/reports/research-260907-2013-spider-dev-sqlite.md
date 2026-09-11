@@ -1,7 +1,7 @@
 <!-- cspell:ignore sqlglot Bkyl Mohammadreza Pourreza DAIL tvshow RUCKB CodeS gdown wta cccf -->
 # Research: Spider 1.0 dev on SQLite, gold-only probes and the 2020 correction
 
-Date 2026-09-07 20:13, tree `a376007`, AttestQL 0.2.2, Python 3.13.7, SQLite 3.53.4 and
+Date 2026-09-07 20:13, tree `c109d46`, AttestQL 0.2.2, Python 3.13.7, SQLite 3.53.4 and
 sqlglot 30.18.0. Artifact: [research-260907-spider-dev-sqlite/](research-260907-spider-dev-sqlite/).
 
 ## Inputs and alignment

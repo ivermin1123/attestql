@@ -40,3 +40,8 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: check-commit-message
+        name: a commit message names no AI
+        entry: uv run python tools/check_commit_message.py
+        language: system
+        stages: [commit-msg]

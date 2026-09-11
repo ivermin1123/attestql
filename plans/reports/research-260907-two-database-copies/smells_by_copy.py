@@ -86,15 +86,15 @@ def main() -> None:
                 {
                     "question_id": question_id,
                     "current": row["smells"],
-                    "at_246a354": expected,
+                    "at_6a43c01": expected,
                 }
             )
     if crosscheck:
-        raise SystemExit(f"the current dev runs differ from tree 246a354: {crosscheck}")
+        raise SystemExit(f"the current dev runs differ from tree 6a43c01: {crosscheck}")
     document = {
         "copies": copies,
         "fired_on_one_copy_only": different,
-        "crosscheck_against_246a354": {
+        "crosscheck_against_6a43c01": {
             "source": "plans/reports/bird-dev-sqlite-260907/gold-only-old.json",
             "differences": crosscheck,
         },

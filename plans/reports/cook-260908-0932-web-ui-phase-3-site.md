@@ -2,18 +2,18 @@
 
 Phase 3 of `plans/260907-1730-attestql-web-ui/plan.md`, on the branch `ivermin1123/web-ui` in the
 worktree `~/orca/workspaces/attestql/web-ui`, 2026-09-08 (Asia/Saigon), on Opus per the owner's
-model rule. Seven commits on top of `ab4a99f`. The screenshots and the browser measurements are
+model rule. Seven commits on top of `1bd7d18`. The screenshots and the browser measurements are
 in `cook-260908-0932-web-ui-phase-3-site/` beside this file.
 
 | Commit | What it is |
 | --- | --- |
-| `6e0a896` | step 0: the measure moves to `55ch`, the owner's decision of 2026-09-08 |
-| `dbf3f6a` | the pre-rendered filter pages in the package renderer |
-| `0b770ef` | `tools/site/build.py`, the four site templates, the two READMEs, the tests |
-| `daaf66f` | one paragraph in `docs/developer-environment.md` |
-| `1c8ddd2` | this report, its screenshots, the plan and phase status |
-| `e6381dd` | the banner keys to a published run, not to an empty directory |
-| `95b46d0` | the review's findings, the first of them a path traversal this cook introduced |
+| `e8632c7` | step 0: the measure moves to `55ch`, the owner's decision of 2026-09-08 |
+| `ab265b3` | the pre-rendered filter pages in the package renderer |
+| `3a8fa5d` | `tools/site/build.py`, the four site templates, the two READMEs, the tests |
+| `b182d53` | one paragraph in `docs/developer-environment.md` |
+| `06d6386` | this report, its screenshots, the plan and phase status |
+| `d087aef` | the banner keys to a published run, not to an empty directory |
+| `b26854e` | the review's findings, the first of them a path traversal this cook introduced |
 
 ## Step 0: the three owner decisions of 2026-09-08
 
@@ -164,8 +164,8 @@ this file with `site-measurements.json`, which holds every number above.
 
 **The preview.** Deployed from `$TMPDIR`, outside the repository, with
 `npx --yes wrangler@4.129.0 pages deploy <repo>/build/site --project-name attestql-ui --branch
-web-ui`, after confirming the project with `pages project list`. Deployed twice: once at `0b770ef`
-and again at `95b46d0`, which is what the preview serves now.
+web-ui`, after confirming the project with `pages project list`. Deployed twice: once at `3a8fa5d`
+and again at `b26854e`, which is what the preview serves now.
 
 - <https://attestql-ui.pages.dev> and the second deployment's own address
   <https://f6872917.attestql-ui.pages.dev> both answer 200. The first request after a deploy
@@ -224,12 +224,12 @@ New tests:
 
 ## The review, and what it found
 
-An in-worker `code-reviewer` read `ab4a99f..daaf66f` and returned fifteen findings. Fourteen were
-acted on in `95b46d0`; the rest are recorded below. The first is the one that matters.
+An in-worker `code-reviewer` read `1bd7d18..b182d53` and returned fifteen findings. Fourteen were
+acted on in `b26854e`; the rest are recorded below. The first is the one that matters.
 
 **A path traversal, introduced by this cook.** A counterexample's `mechanism.class` and a probe's
 `name` are text out of documents this command is documented to read from another machine, and the
-filter pages of `dbf3f6a` were the first code to put either into a path (`out / slug`). Reproduced
+filter pages of `ab265b3` were the first code to put either into a path (`out / slug`). Reproduced
 before it was repaired: a `class` of `../../../../../../tmp/attestql-traversal-proof` on the
 packaged sandbox made `attestql report` write `index.html` into `/private/tmp/tmp/` , outside the
 `--out` the caller chose. Jinja's autoescaping does not touch this, because a path is not markup.

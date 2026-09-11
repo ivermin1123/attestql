@@ -1,7 +1,7 @@
 <!-- cspell:ignore minidev dev1106 qid -->
 # Measurement: one new probe and three input gaps
 
-Date 2026-09-08 22:00 +07, tree `d85932e`. Artifact:
+Date 2026-09-08 22:00 +07, tree `1e38886`. Artifact:
 [directory](probe-260908-duplicate-full-row/). Plan:
 [260908-2119-probe-and-input-gaps](../260908-2119-probe-and-input-gaps/plan.md).
 
@@ -94,7 +94,7 @@ when the run ends. Every `card_games` run of the sweep above read one.
 ## What the review changed
 
 The four commits were reviewed on the diff before this report was written, and five findings were
-fixed at `400a30d` and `d85932e`, after which every number above was measured again and came back
+fixed at `9af1af1` and `1e38886`, after which every number above was measured again and came back
 identical. Two were pairing hazards in the line reader: `str.splitlines` also breaks at a form feed,
 a vertical tab and two Unicode separators, so one of those inside a statement would have pushed
 every later line onto the wrong question; and dropping the empty lines at the end of a file turned a
