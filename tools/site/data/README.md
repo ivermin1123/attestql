@@ -4,6 +4,11 @@ What `tools/site/build.py` renders. Everything here was written by `attestql aud
 in by `tools/site-select/select_questions.py`; nothing in it is edited by hand, and remaking it is
 `tools/site-select/audits.sh` followed by that script.
 
+`.attestql-selection` beside this README is what says the directory is the selector's own.
+A selection empties what it writes into, so it writes into a directory that is empty, that
+is not there yet, or that carries that file, and refuses any other untouched. The rule is
+the one `tools/site/build.py` and `attestql report` follow for their own output.
+
 The question text, the evidence text and the gold SQL in these directories are BIRD Mini-Dev's
 and BIRD dev's, licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); `NOTICE` at the repository root

@@ -49,6 +49,15 @@ DATA = REPOSITORY / "tools" / "site" / "data"
 REPORTS = REPOSITORY / "plans" / "reports"
 DEFAULT_WORK = Path("/tmp/attestql-runs")  # noqa: S108
 
+SELECTION_MARKER = ".attestql-selection"
+SELECTION_MARKER_TEXT = (
+    "written by tools/site-select/select_questions.py: every selection into this "
+    "directory empties it first\n"
+)
+DATA_README = "README.md"
+"""What says an output directory is a selection's own and may be emptied by the next one,
+and the one file under it that a person wrote and a selection keeps."""
+
 SUMMARY_FILE = "summary.json"
 COUNTEREXAMPLE_FILE = "counterexample.json"
 SMELLS_FILE = "smells.json"
@@ -619,7 +628,7 @@ def write(
     work: Path,
 ) -> None:
     """The selection copied under `data/`, with everything a page reads beside it."""
-    _clear(out)
+    prepare_output(out)
     by_run: dict[str, list[Question]] = {}
     for question in kept:
         by_run.setdefault(question.run.slug, []).append(question)
@@ -662,19 +671,56 @@ def _copy(source: Path, destination: Path) -> None:
     shutil.copyfile(source, destination)
 
 
-def _clear(out: Path) -> None:
-    """Everything a selection before this one wrote, gone, and the README kept.
+def prepare_output(out: Path) -> None:
+    """The output directory, emptied of the last selection and marked as this one's.
+
+    Public because what a selection may empty is a contract and not an implementation detail:
+    the tests below it are what hold the rule.
 
     The directory's own README states what a benchmark and a run are and is not written here;
     everything else under it is this script's output and is made again from the work directory.
+
+    Only a directory this script wrote to, which is what the marker says, following the rule
+    `tools/site/build.py` and `attestql report` both follow for their own output. `--out` is a
+    path a person types, and a selection that emptied whatever it was pointed at would cost
+    somebody the files it did not write: this one resolved its path, followed no symlink to get
+    there, and refused the repository and every directory above it.
     """
-    if not out.is_dir():
-        out.mkdir(parents=True)
+    resolved = out.resolve()
+    if out.is_symlink():
+        raise SelectionRefused(
+            f"{out} is a symbolic link: a selection writes into a directory, not through a link "
+            "to one, because what it would empty is then decided somewhere else"
+        )
+    if resolved == REPOSITORY or resolved in REPOSITORY.parents:
+        raise SelectionRefused(
+            f"{resolved} is the repository or a directory above it, and a selection empties what "
+            "it writes into: nothing was removed"
+        )
+    if not resolved.is_dir():
+        resolved.mkdir(parents=True)
+        _mark(resolved)
         return
-    for path in out.iterdir():
-        if path.name == "README.md":
+    kept = {SELECTION_MARKER, DATA_README}
+    if (
+        any(path.name not in kept for path in resolved.iterdir())
+        and not (resolved / SELECTION_MARKER).is_file()
+    ):
+        raise SelectionRefused(
+            f"{resolved} holds files and no {SELECTION_MARKER}, the file a selection leaves in a "
+            "directory of its own: nothing in it was removed. A selection writes into a "
+            "directory that is empty, that is not there yet, or that an earlier selection wrote"
+        )
+    for path in resolved.iterdir():
+        if path.name == DATA_README:
             continue
         shutil.rmtree(path) if path.is_dir() else path.unlink()
+    _mark(resolved)
+
+
+def _mark(out: Path) -> None:
+    """The file that says this directory is a selection's own and may be emptied by the next."""
+    (out / SELECTION_MARKER).write_text(SELECTION_MARKER_TEXT, encoding="utf-8")
 
 
 def _questions_of(run: Run, work: Path) -> list[Mapping[str, object]]:
