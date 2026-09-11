@@ -336,6 +336,19 @@ postgres_up() {
     return 1
   fi
   echo "the dump loaded $loaded tables"
+  # ANALYZE before a single audit runs, because two of the probes read what the planner decides.
+  # `not-a-function-of-the-data` and `float-aggregate-order` rerun the gold over a shuffled copy
+  # and compare the row order, and the order a statement without a total ORDER BY returns is the
+  # plan's. A freshly loaded server has no statistics until autovacuum gets to it, so the first
+  # audits after a load planned differently from the ones a minute later: measured 2026-09-11
+  # over five passes of one prediction file on one server, the first pass reported 11
+  # `not-a-function-of-the-data` and 5 `float-aggregate-order` and the four after it reported 14
+  # and 4, with every other probe and every verdict identical. Settling the statistics here is
+  # what makes a wave of runs comparable with each other and with the next wave.
+  echo "== analyzing, so that every run in this wave plans the same way"
+  docker exec "$CONTAINER" psql --username=postgres --dbname=bird --no-psqlrc --quiet \
+    --command "ANALYZE" > out/analyze.txt 2>&1 || {
+      echo "the server could not be analyzed; the log is out/analyze.txt" >&2; return 1; }
   auditor_password="$(openssl rand -hex 24)"
   # Checked, because this script runs without `set -e`: a role that was not made leaves every
   # audit below failing to authenticate, and this function used to print "server up" anyway.
