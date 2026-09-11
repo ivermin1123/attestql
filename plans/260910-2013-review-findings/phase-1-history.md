@@ -1,5 +1,14 @@
 # Phase 1: the three commits, and the blob that rides along
 
+**Done 2026-09-11 at `c92e234`.** What the validation below came back as: the gate and both
+CI workflows green; `v0.2.0`, `v0.2.1` and `v0.2.2` resolve to byte-identical trees;
+`v0.3.0`'s tree differs by exactly the one deleted path and nothing else, and the published
+wheel and sdist hold no `plans/` path so neither changed; no commit in the graph carries the
+trailer; 94 references across 27 files were rewritten from the commit map and a scan of all
+3,293 tracked files finds none pointing at a commit the graph no longer holds; every object
+that was dangling before the rewrite is still present; and the measurement file round-trips
+from the `v0.3.0` release at the two digests the claims register states.
+
 Closes HYG-09, and the single largest item of HYG-01.
 
 ## What is wrong
