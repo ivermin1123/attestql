@@ -263,6 +263,53 @@ def test_the_unbounded_rewrite_keeps_the_projection_and_adds_the_keys(tmp_path: 
     assert _run(path, variant) == [("Cedar", 3), ("Birch", 2), ("Alder", 1)]
 
 
+@pytest.mark.parametrize(
+    ("sql", "named"),
+    [
+        ("SELECT DISTINCT name FROM schools ORDER BY id LIMIT 2", ("id",)),
+        ("SELECT DISTINCT name, id FROM schools ORDER BY id LIMIT 2", ()),
+        ("SELECT name FROM schools ORDER BY id LIMIT 2", ()),
+        ("SELECT DISTINCT name AS n FROM schools ORDER BY n LIMIT 2", ()),
+        ("SELECT DISTINCT name FROM schools ORDER BY 1 LIMIT 2", ()),
+    ],
+)
+def test_a_distinct_statement_names_the_ordering_keys_it_does_not_project(
+    sql: str, named: tuple[str, ...]
+) -> None:
+    """SQLite allows a DISTINCT statement to order by a column its select list does not hold,
+    and PostgreSQL refuses one, so this is the engine that has to answer for the shape. An
+    alias and an ordinal both resolve to the target they name, so neither is unprojected."""
+    assert parse_statement(sql).keys_not_projected_under_distinct == named
+
+
+def test_projecting_an_unprojected_key_under_distinct_returns_rows_the_statement_did_not(
+    tmp_path: Path,
+) -> None:
+    """Why the smell refuses the shape rather than reading it.
+
+    Adding the key to the select list de-duplicates on the pair instead of on the column, so
+    the rewrite returns a row for every value of the key. The statement's own result already
+    held every distinct name; the rewrite's extra rows are an artefact of the rewrite, and a
+    smell that read them would report a tie at a cut the statement never made.
+    """
+    path = _file(tmp_path)
+    connection = sqlite3.connect(path)
+    with connection:
+        connection.execute("CREATE TABLE repeated (name TEXT, nine INTEGER)")
+        connection.executemany(
+            "INSERT INTO repeated VALUES (?, ?)", (("Alder", 1), ("Alder", 2), ("Birch", 3))
+        )
+    connection.close()
+    sql = "SELECT DISTINCT name FROM repeated ORDER BY nine LIMIT 2"
+    parsed = parse_statement(sql)
+
+    assert parsed.keys_not_projected_under_distinct == ("nine",)
+    assert len(_run(path, sql)) == 2, "the statement's own answer holds every distinct name"
+    assert len(_run(path, parsed.without_the_bound_and_projecting_its_keys())) == 3, (
+        "the rewrite de-duplicates on the pair and so returns one row per key value"
+    )
+
+
 def test_the_unbounded_rewrite_resolves_an_ordinal_key_to_the_column_it_names(
     tmp_path: Path,
 ) -> None:

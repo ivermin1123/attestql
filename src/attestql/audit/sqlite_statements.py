@@ -159,6 +159,28 @@ class SqliteStatement:
         """The ordering as a record states it."""
         return tuple(key.sort_key() for key in self.ordering)
 
+    @property
+    def keys_not_projected_under_distinct(self) -> tuple[str, ...]:
+        """The ordering keys a DISTINCT statement does not already project, as their text.
+
+        SQLite allows what PostgreSQL refuses: ``SELECT DISTINCT x FROM t ORDER BY y`` orders
+        by a column the select list does not hold. Projecting ``y`` to compare the rows at a
+        cut would de-duplicate on ``(x, y)`` instead of on ``x``, so the rewrite would return
+        rows the statement never did. Naming the keys lets the smell say which ones.
+        """
+        if not self.distinct:
+            return ()
+        root = _root_of(_parse_one(self.sql))
+        if not isinstance(root, exp.Select):
+            return ()
+        projected = [expression for _, expression in _targets(root)]
+        unprojected: list[str] = []
+        for element in _ordered_elements(root):
+            key = _projected_key(root, element.this)
+            if not any(key == already for already in projected):
+                unprojected.append(key.sql(dialect=DIALECT))
+        return tuple(unprojected)
+
     def with_ordering_key_cast_to_numeric(self, index: int) -> str:
         """This statement with ordering key ``index`` cast to REAL, and nothing else.
 
@@ -183,6 +205,12 @@ class SqliteStatement:
         it would collapse the very ties this is asked about, and the select list keeps every
         column it had. The ordering keys are added after it, because a tie is a tie in the
         keys and the keys need not be projected.
+
+        Under DISTINCT that addition is not free, and SQLite is the engine where it can bite:
+        a key the select list does not already hold widens the grain the de-duplication runs
+        on, so the rewrite returns rows the statement never returned. A caller asks
+        ``keys_not_projected_under_distinct`` before using this and reports itself not
+        applicable when it answers with anything.
 
         A key written as an ordinal or as an output alias is resolved back to the expression
         it names first: an ordinal added to a select list would be the constant and not the

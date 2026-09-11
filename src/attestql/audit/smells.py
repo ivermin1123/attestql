@@ -24,7 +24,11 @@ depends on it. An unordered bound fires when a rerun over shuffled data changes 
 result. An ordered bound fires when the rows at the cut are tied on every ordering key
 and those tied rows project different answers; tied rows that project the same answer
 are not a hazard, which is what removed every miss on the measured corpus. Its third
-case is a key that puts nulls first and a bounded result that then holds one.
+case is a key that puts nulls first and a bounded result that then holds one. An ordered
+bound it cannot read is one where the statement is DISTINCT and orders by an expression its
+select list does not hold, which SQLite allows and PostgreSQL refuses: projecting the key to
+find the rows at the cut would de-duplicate on a wider grain and return rows the statement
+never did, so the smell reports itself not applicable and names the keys.
 
 ``not-a-function-of-the-data`` reruns the gold over a seeded shuffled copy of its tables
 and compares the full result under the gold's own rule. When the two differ, the answer
@@ -507,13 +511,20 @@ def _ordered_cut(
 ) -> Smell:
     """An ordered bound: the rows at the cut, and where the nulls in the keys went."""
     name = ARBITRARY_CUT
+    payload: Json = {"cut": cut, "offset": offset, "distinct_kept": parsed.distinct}
+    unprojected = parsed.keys_not_projected_under_distinct
+    if unprojected:
+        # Projecting the keys would de-duplicate on a wider grain than the statement did, so
+        # the rows this would read are not the rows the statement returned. Nothing here can
+        # be measured without answering a question about a different statement.
+        payload["keys_not_projected_under_distinct"] = list(unprojected)
+        payload["reason"] = (
+            f"the statement is DISTINCT and orders by {', '.join(unprojected)}, which its "
+            "select list does not hold, so projecting the keys would return rows it did not"
+        )
+        return _quiet(name, payload, applicable=False)
     variant_sql = parsed.without_the_bound_and_projecting_its_keys()
-    payload: Json = {
-        "cut": cut,
-        "offset": offset,
-        "distinct_kept": parsed.distinct,
-        "unbounded_sql": variant_sql,
-    }
+    payload["unbounded_sql"] = variant_sql
     try:
         unbounded = backend.execute(
             variant_sql, statement_timeout_seconds=settings.statement_timeout_seconds

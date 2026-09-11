@@ -119,7 +119,8 @@ class ParsedStatement(Protocol):
     list's own aliases, which an ordering key may name instead of a column.
     ``set_operation`` and ``from_has_subquery`` are the two shapes in which neither
     resolution is sound, and a smell that meets one reports itself not applicable rather
-    than guessing.
+    than guessing. ``keys_not_projected_under_distinct`` is a third such shape, and the one
+    engine that can state it is SQLite.
     """
 
     @property
@@ -155,6 +156,17 @@ class ParsedStatement(Protocol):
     @property
     def offset_stated(self) -> bool:
         """Whether an offset was written at all."""
+        ...
+
+    @property
+    def keys_not_projected_under_distinct(self) -> tuple[str, ...]:
+        """The ordering keys a DISTINCT statement does not already project, as their text.
+
+        Projecting a key widens the grain a DISTINCT de-duplicates on, so a rewrite that
+        added one would return rows the statement itself never returned, and a smell reading
+        those rows would be reading a different statement. Empty when the statement states no
+        DISTINCT, and empty when every key is already in the select list.
+        """
         ...
 
     @property

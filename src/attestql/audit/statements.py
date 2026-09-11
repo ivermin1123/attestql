@@ -130,6 +130,13 @@ class PostgresStatement:
     from_has_subquery: bool
 
     @property
+    def keys_not_projected_under_distinct(self) -> tuple[str, ...]:
+        """None: PostgreSQL refuses a DISTINCT statement that orders by an expression its
+        select list does not hold, so a key this could name cannot reach the parser. The
+        copies the rewrite adds group with the originals and the row set does not change."""
+        return ()
+
+    @property
     def unresolved_ordering_keys(self) -> tuple[str, ...]:
         """None: in this grammar a sort key that is a token is a column or a syntax error.
 

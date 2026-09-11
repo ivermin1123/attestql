@@ -41,6 +41,7 @@ from attestql.audit.smells import (
     ordering_over_numeric_text,
     smells_json,
 )
+from attestql.audit.sqlite_statements import parse_statement as parse_sqlite_statement
 from attestql.audit.statements import parse_statement
 from tests.audit_fakes import (
     DESCRIPTOR,
@@ -79,6 +80,12 @@ _STATISTICS_JSON = {
 NATIONALITY = (("nationality", "text"),)
 NAME = (("name", "text"),)
 NAME_AND_SCORE = (("name", "text"), ("attestql_ordering_key_0", "int8"))
+NAME_AND_SCORE_PROJECTED = (("name", "text"), ("score", "int8"))
+NAME_SCORE_AND_KEY = (
+    ("name", "text"),
+    ("score", "int8"),
+    ("attestql_ordering_key_0", "int8"),
+)
 TOTAL_FLOAT = (("sum", "float8"),)
 TOTAL_INT = (("sum", "int8"),)
 
@@ -335,6 +342,60 @@ def test_an_arbitrary_cut_counts_a_not_a_number_among_the_answers_it_found() -> 
     assert _smell(found) == (ARBITRARY_CUT, True, True)
     assert found.evidence["tied_at_the_cut"]["positions"] == [0, 1, 2]
     assert found.evidence["tied_at_the_cut"]["distinct_projected_answers"] == 2
+
+
+def test_an_arbitrary_cut_does_not_apply_to_a_distinct_key_the_select_list_does_not_hold() -> None:
+    """The false positive this refusal exists for.
+
+    SQLite allows ``SELECT DISTINCT name ... ORDER BY score``, and projecting ``score`` to
+    read the rows at the cut de-duplicates on the pair instead of on the name, so the rewrite
+    returns rows the statement never returned. Reading them reported a tie at a cut the
+    statement did not make. PostgreSQL refuses this shape, which is why only the SQLite parse
+    can produce it, and the smell now names the key instead of measuring the wrong statement.
+    """
+    sql = "SELECT DISTINCT name FROM players ORDER BY score DESC LIMIT 2"
+    parsed = parse_sqlite_statement(sql)
+    backend = FakeBackend({sql: fake_result(NAME, (("a",), ("b",)))})
+
+    found = arbitrary_cut(
+        parsed,
+        backend,
+        backend.execute(sql, statement_timeout_seconds=30),
+        settings=SETTINGS,
+    )
+
+    assert _smell(found) == (ARBITRARY_CUT, False, False)
+    assert found.evidence["keys_not_projected_under_distinct"] == ["score"]
+    assert "select list does not hold" in str(found.evidence["reason"])
+    assert "unbounded_sql" not in found.evidence, "the rewrite was never run"
+
+
+def test_an_arbitrary_cut_still_reads_a_distinct_statement_that_projects_its_key() -> None:
+    """The shape the refusal must not swallow: the key is in the select list, so projecting a
+    copy of it groups with the original and the row set does not change."""
+    sql = "SELECT DISTINCT name, score FROM players ORDER BY score DESC LIMIT 2"
+    parsed = parse_sqlite_statement(sql)
+
+    assert parsed.keys_not_projected_under_distinct == ()
+
+    rows = (("a", 10, 10), ("b", 5, 5), ("c", 5, 5), ("d", 1, 1))
+    backend = FakeBackend(
+        {
+            sql: fake_result(NAME_AND_SCORE_PROJECTED, (("a", 10), ("b", 5))),
+            parsed.without_the_bound_and_projecting_its_keys(): fake_result(
+                NAME_SCORE_AND_KEY, rows
+            ),
+        }
+    )
+
+    found = arbitrary_cut(
+        parsed,
+        backend,
+        backend.execute(sql, statement_timeout_seconds=30),
+        settings=SETTINGS,
+    )
+
+    assert found.applicable, found.evidence
 
 
 def test_an_arbitrary_cut_keeps_distinct_when_it_removes_the_bound() -> None:
