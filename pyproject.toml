@@ -91,7 +91,7 @@ testpaths = ["tests"]
 # plain `python` started in the repository root resolves that name to the git-ignored `build/`
 # output directory instead, as an empty namespace package, so
 # tests/test_site_builds_from_the_sandbox.py asserts which module it got.
-pythonpath = ["src", "tools", "tools/site"]
+pythonpath = ["src", "tools", "tools/site", "tools/site-select"]
 markers = [
     "sandbox: needs the audit sandbox (tools/audit-sandbox/run.sh); skipped when ATTESTQL_AUDIT_SANDBOX is absent",
     "sandbox_sqlite: the SQLite audit sandbox (src/attestql/demo/); needs no container and is never skipped",
@@ -129,4 +129,6 @@ pythonVersion = "3.11"
 include = ["src", "tests", "tools"]
 # `tools/site` for the same reason the pytest `pythonpath` above carries it, and with the
 # same ambiguity against the git-ignored `build/` directory, which the test guards.
-extraPaths = ["src", "tools", "tools/site"]
+# `tools/site-select` joined them on 2026-09-11, once the script that shadowed the standard
+# library's `select` was renamed and the directory became safe to put on a path.
+extraPaths = ["src", "tools", "tools/site", "tools/site-select"]

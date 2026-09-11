@@ -1,7 +1,7 @@
 # The published runs the site is built from
 
 What `tools/site/build.py` renders. Everything here was written by `attestql audit` and copied
-in by `tools/site-select/select.py`; nothing in it is edited by hand, and remaking it is
+in by `tools/site-select/select_questions.py`; nothing in it is edited by hand, and remaking it is
 `tools/site-select/audits.sh` followed by that script.
 
 The question text, the evidence text and the gold SQL in these directories are BIRD Mini-Dev's
@@ -64,7 +64,7 @@ could not be run has no directory and is a row of the run page read from the sum
 ## `aggregate.json`
 
 Beside the benchmarks, one file the landing page reads for its three headline numbers. It is
-written by `tools/site-select/select.py` and never by hand. Each key holds an object with three
+written by `tools/site-select/select_questions.py` and never by hand. Each key holds an object with three
 fields: `value`, the number; `published`, how many of them have a page on this site; and
 `source`, the file the number was read out of, which the landing puts in a `title` attribute
 beside it so a reader can see what to open.
@@ -117,8 +117,8 @@ out of the site is in that run's release asset, whole.
 tools/site-select/audits.sh inputs      # verify the cached inputs, fetch the predictions
 tools/site-select/audits.sh sqlite      # bird-dev-sqlite, then minidev-sqlite
 tools/site-select/audits.sh postgres    # the container, the dump, minidev-pg-gold-only, minidev-pg
-uv run python tools/site-select/select.py --dry-run
-uv run python tools/site-select/select.py
+uv run python tools/site-select/select_questions.py --dry-run
+uv run python tools/site-select/select_questions.py
 ```
 
 Every flag each run was given, with the origin strings and the dates, is in `audits.sh`; the

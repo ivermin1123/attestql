@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""The manifest `select.py --published` reads, from the archives `release.sh` built.
+"""The manifest `select_questions.py --published` reads, from the archives `release.sh`
+built.
 
     manifest.py <assets directory> <tag> <owner/repository>
 
@@ -27,7 +28,7 @@ QUESTION = re.compile(r"^(.*)/q\d+/$")
 """One question directory inside an archive: the run it belongs to, and the question it is.
 
 Members are listed with a trailing slash, so this matches the directory itself and never a file
-inside it, and the run is everything in front of it, which is the path `select.py` addresses a
+inside it, and the run is everything in front of it, which is the path the selector addresses a
 run by."""
 
 RUN = re.compile(r"^(.*)/summary\.json$")
@@ -64,9 +65,8 @@ def main() -> int:
 def _question_directories(archive: Path) -> Counter[str]:
     """How many question directories each run inside one archive wrote.
 
-    Read with `tarfile` rather than by running `tar`, so that this script imports nothing that
-    imports the standard library's `select`: `select.py` sits in this same directory, and the
-    directory a script is run from comes first on the path.
+    Read with `tarfile` rather than by running `tar`, which is the smaller of the two ways
+    and the one that needs no process.
     """
     with tarfile.open(archive, "r:gz") as opened:
         names = opened.getnames()

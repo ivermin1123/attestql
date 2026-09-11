@@ -1,4 +1,5 @@
-"""What `tools/site-select/select.py` wrote under `tools/site/data/`, read as a page reads it.
+"""What `tools/site-select/select_questions.py` wrote under `tools/site/data/`, read as a
+page reads it.
 
 The script is not imported here. Its own name is the standard library's `select`, which
 everything that waits on a file descriptor imports, and `tests/test_boundary.py` forbids
@@ -27,7 +28,7 @@ import pytest
 
 REPOSITORY = Path(__file__).resolve().parent.parent
 DATA = REPOSITORY / "tools" / "site" / "data"
-SELECT = REPOSITORY / "tools" / "site-select" / "select.py"
+SELECT = REPOSITORY / "tools" / "site-select" / "select_questions.py"
 BUILD = REPOSITORY / "tools" / "site" / "build.py"
 BUDGETS = ("MAX_FILES", "MAX_BYTES", "MAX_PAGE_BYTES")
 

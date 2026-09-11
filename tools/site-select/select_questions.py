@@ -25,9 +25,10 @@ largest first, and never one a maintainer read by hand or one the aggregate name
 Nothing is trimmed inside a record: a record's hash covers its content, so a shortened copy of
 one is not the record.
 
-    tools/site-select/select.py --dry-run          what the selection would cost
-    tools/site-select/select.py                    make it, under the budget
-    tools/site-select/select.py --published <file> write the release-asset lines, after upload
+    tools/site-select/select_questions.py --dry-run   what the selection would cost
+    tools/site-select/select_questions.py             make it, under the budget
+    tools/site-select/select_questions.py --published <file>
+                                                      write the release-asset lines
 """
 
 from __future__ import annotations
