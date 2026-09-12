@@ -31,7 +31,7 @@ not decide alone.
 |---|---|---|---|
 | [1](phase-1-history.md) | HYG-09, and the largest single item of HYG-01 | none | done 2026-09-11 |
 | [2](phase-2-evidence-and-protection.md) | HYG-01 remainder, META-01 | phase 1 | open |
-| [3](phase-3-the-two-high-findings.md) | LOGIC-02, LOGIC-17, LOGIC-03, and release 0.3.1 | phase 1 | open |
+| [3](phase-3-the-two-high-findings.md) | LOGIC-02, LOGIC-17, LOGIC-03, and release 0.3.1 | phase 1 | done 2026-09-12 |
 | [4](phase-4-group-b.md) | 18 findings the review grouped as low risk | phase 3 | open |
 | [5](phase-5-decided-behaviour.md) | LOGIC-22, LOGIC-21, PERF-01, ARCH-03, SEC-02, CI-03, HYG-04 | phase 3 | open |
 | [6](phase-6-structure.md) | The three refactors, CQ-L3-05, TEST-01, CI-05 | phase 4, phase 5 | open |

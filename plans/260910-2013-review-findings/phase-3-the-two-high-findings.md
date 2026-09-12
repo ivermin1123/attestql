@@ -42,3 +42,22 @@ smell, and which of them a user was exposed to.
 - A test for each finding that fails before the fix and passes after it.
 - The re-measured smell counts, the claims register and the site agree.
 - `just check` green, CI green, and a clean install of 0.3.1 from PyPI runs the demo.
+
+## Done 2026-09-12
+
+`67a804d` closed LOGIC-02 and LOGIC-17 together, because the second is only reachable once the
+first is fixed: a non-finite value gets a rendering (ADR-0016) and the R-SET multiset keys its
+cells through the same typed keying the comparison uses. `ee41966` closed LOGIC-03. Each came with
+a test that fails on the tree before it.
+
+The published numbers were re-measured by making all 121 of the site's runs again, plus the
+2024-06-27 copy of BIRD dev that register row A34 compares, and the register records the new
+numbers as A49 to A52 with the old ones left dated where they stand. Two things came out of that
+which were not in this phase's plan and are in the report: what an order-dependent gold probe sees
+on PostgreSQL depends on the planner's statistics, so `audits.sh` now runs `ANALYZE` after a dump
+load, and the budget cut in the selector took the largest question of the whole selection, which
+gave one benchmark zero question pages once `duplicate-full-row` brought 613 directories with it.
+
+0.3.1 is on PyPI and the tag carries the runs whole. Validation: `just check` and CI green at
+every commit, a clean install of 0.3.1 from PyPI runs the demo and writes records stating
+`attestql/audit/4`, and the site attestql.com serves the refreshed runs (register N7).

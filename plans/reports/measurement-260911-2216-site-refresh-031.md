@@ -106,6 +106,36 @@ where `bird-dev-sqlite`'s is 28 KB. Every one of its 99 runs would have publishe
 no question page under it. The cut now takes the largest question of whichever benchmark still
 holds the most, which leaves the benchmarks as equal as the cut reaches; the budget is unchanged.
 
+## The other copy of BIRD dev, so that one row compares one tool
+
+Register row A34 compares the two published copies of the BIRD dev question set against each
+other. The site publishes the 2025-11-06 copy alone, so the refresh left the 2024-06-27 copy
+measured with 0.2.x beside a 2025-11-06 copy measured with 0.3.1, which is two tools and not two
+copies. It was audited again on 2026-09-12 with the same 0.3.1, against the same eleven databases
+of `dev.zip`, gold-only, three at a time.
+
+| | 2024-06-27 | 2025-11-06 |
+| --- | --- | --- |
+| audited | 1,532 of 1,534 | 1,531 of 1,534 |
+| golds a probe fired on | 189 | 130 |
+| `arbitrary-cut` | 45 | 23 |
+| `not-a-function-of-the-data` | 36 | 20 |
+| `ordering-over-numeric-text` | 4 | 3 |
+| `float-aggregate-order` | 0 | 0 |
+| `duplicate-full-row` | 131 | 97 |
+| `direction-against-question` | 0 | 0 |
+
+What is short of 1,534 is the same in both as it was at `6a43c01`: q518 and q701 exceed the 30 s
+statement budget on both copies, and the 2025-11-06 rewrite of q1131 does too. Of the four probes
+that existed at that tree, `not-a-function-of-the-data`, `ordering-over-numeric-text` and
+`float-aggregate-order` come back with the counts they had, which is what a SQLite run should do:
+nothing here samples statistics. `arbitrary-cut` is two fewer on the 2024 copy and one fewer on
+the 2025 copy, all three of them retractions under the DISTINCT rule.
+
+The eleven runs are the release asset `bird-dev-20240627-gold-only.tar.gz` of `v0.3.1`, sha256
+`74a2282a…`, 2,252,222 bytes, which holds every question directory and each run's console output.
+They are not published on the site.
+
 ## Reproducing this
 
 The fresh runs are in `/tmp/attestql-runs/runs` and are published whole as the release assets of
