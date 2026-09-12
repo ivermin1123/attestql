@@ -21,9 +21,9 @@ around it.
 The site has a file and a byte budget, and the evidence records hold every row of their results,
 so a question directory ranges from kilobytes to megabytes. The dry run states what the selection
 would cost, per benchmark and in total; a selection over the budget leaves out whole questions,
-largest first, and never one a maintainer read by hand or one the aggregate names as unjust.
-Nothing is trimmed inside a record: a record's hash covers its content, so a shortened copy of
-one is not the record.
+the largest of whichever benchmark still holds the most of them, and never one a maintainer read
+by hand or one the aggregate names as unjust. Nothing is trimmed inside a record: a record's hash
+covers its content, so a shortened copy of one is not the record.
 
     tools/site-select/select_questions.py --dry-run   what the selection would cost
     tools/site-select/select_questions.py             make it, under the budget
@@ -537,11 +537,11 @@ def read_unjust() -> Mapping[tuple[str, str], frozenset[str]]:
 def trim(
     runs: Sequence[Run], questions: Sequence[Question]
 ) -> tuple[list[Question], list[Question]]:
-    """The selection cut to the budget: whole questions, largest first, protected ones kept.
+    """The selection cut to the budget: whole questions, per benchmark, protected ones kept.
 
     Two cuts, in this order. A question whose page would be over `MAX_PAGE_BYTES` cannot be
     published at any budget, so it goes first and its being protected does not save it -- the
-    build would refuse the site. Then the largest of the rest, until the file count and the
+    build would refuse the site. Then what `_cut_order` names, until the file count and the
     total fit. A selection that does not fit with the protected questions alone is refused
     rather than made smaller by dropping one of them.
     """
@@ -562,20 +562,51 @@ def trim(
             f"the questions read by hand and named as unjust do not fit on their own: "
             f"{floor_files:,} files of {MAX_FILES:,} and {floor_bytes:,} bytes of {MAX_BYTES:,}"
         )
-    order = sorted(kept, key=lambda question: (question.protected, -question.built_bytes))
     running_files = files + sum(question.built_files for question in kept)
     running_bytes = total + sum(question.built_bytes for question in kept)
     survivors = {id(question) for question in kept}
-    for question in order:
+    for question in _cut_order(kept):
         if running_files <= MAX_FILES and running_bytes <= MAX_BYTES:
-            break
-        if question.protected:
             break
         survivors.discard(id(question))
         running_files -= question.built_files
         running_bytes -= question.built_bytes
         dropped.append(replace(question, reasons=question.reasons | {"over-budget"}))
     return [question for question in kept if id(question) in survivors], dropped
+
+
+def _cut_order(questions: Sequence[Question]) -> list[Question]:
+    """The order the budget takes questions out in, and only the ones it may take.
+
+    The largest question of whichever benchmark still holds the most goes first, so the
+    benchmarks are left with as equal a number of published questions as the cut reaches.
+    Taking the largest of the whole selection instead would settle the site on one size
+    threshold for every benchmark, and a benchmark whose records run a little larger than
+    another's would publish none of its own: measured on 2026-09-12, `minidev-sqlite` came
+    out of 99 runs with 0 question pages because its smallest question is 52 KB where
+    another benchmark's is 28 KB. A benchmark showing none of its questions is a missing
+    benchmark and not a narrower selection.
+
+    A benchmark with more runs does not get more of the budget for them. The pages a run
+    has are its own, and what a question page is for is one worked example of one finding,
+    so the same number of them per benchmark is the sample a reader can compare across.
+    """
+    shares: dict[str, list[Question]] = {}
+    for question in questions:
+        if not question.protected:
+            shares.setdefault(question.run.benchmark, []).append(question)
+    for share in shares.values():
+        share.sort(
+            key=lambda question: (question.built_bytes, question.run.slug, question.question_id)
+        )
+    order: list[Question] = []
+    while any(shares.values()):
+        fullest = min(
+            (name for name, share in shares.items() if share),
+            key=lambda name: (-len(shares[name]), name),
+        )
+        order.append(shares[fullest].pop())
+    return order
 
 
 def report(runs: Sequence[Run], kept: Sequence[Question], dropped: Sequence[Question]) -> None:
