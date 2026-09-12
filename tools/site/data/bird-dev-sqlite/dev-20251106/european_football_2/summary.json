@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-9d69a29b-e497-49b3-976c-18ac8e4f0c76",
+  "run_id": "audit-f6bfa597-de65-4a5d-8554-2e208a88bf41",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/european_football_2/european_football_2.sqlite | size=597754880",
   "effective_database_role": "file",
   "session_settings": {
@@ -172,9 +172,10 @@
     "arbitrary-cut": 5,
     "not-a-function-of-the-data": 6,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 6,
     "direction-against-question": 0
   },
-  "smells_fired": 11,
+  "smells_fired": 17,
   "credited_but_not_equal": null,
   "fixture": {
     "depth": "counts",
@@ -240,16 +241,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/bird-dev-sqlite/dev-20251106/european_football_2",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:13:55.178504+00:00",
+  "data_as_of": "2026-09-11T14:59:36.292032+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 107.925,
-    "shuffle": 2.04
+    "fixture": 0.018,
+    "questions": 112.547,
+    "shuffle": 2.678
   },
   "errors": [
     {

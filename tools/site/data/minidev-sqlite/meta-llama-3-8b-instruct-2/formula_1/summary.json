@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-8a2aed3c-d3bd-4ece-b104-f4b22760efbd",
+  "run_id": "audit-15f13232-a920-467e-86b2-9a2ff65488c1",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/formula_1/formula_1.sqlite | size=22360064",
   "effective_database_role": "file",
   "session_settings": {
@@ -108,6 +108,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_meta-llama-3-8b-instruct-2_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -124,9 +125,10 @@
     "arbitrary-cut": 1,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 2,
     "direction-against-question": 0
   },
-  "smells_fired": 2,
+  "smells_fired": 4,
   "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -218,16 +220,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/meta-llama-3-8b-instruct-2/formula_1",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:04:35.026407+00:00",
+  "data_as_of": "2026-09-11T14:53:47.396247+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 4.989,
-    "shuffle": 0.15
+    "fixture": 0.003,
+    "questions": 4.141,
+    "shuffle": 0.12
   },
   "errors": [
     {

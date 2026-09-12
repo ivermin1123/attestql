@@ -1,0 +1,224 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "no ORDER BY key resolves to a text column",
+        "keys": [
+          {
+            "key": "count(t2.id)",
+            "not_applicable": "the key is an expression and not a column"
+          }
+        ]
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "cut": 4,
+        "offset": 0,
+        "distinct_kept": false,
+        "unbounded_sql": "SELECT t1.name, count(t2.id) AS attestql_ordering_key_0 FROM league t1 JOIN match t2 ON t1.id = t2.league_id WHERE t2.season = '2015/2016' GROUP BY t1.name ORDER BY count(t2.id) DESC NULLS LAST",
+        "unbounded_rows": 11,
+        "projected_columns": [
+          "name"
+        ],
+        "ordering_key_columns": [
+          "attestql_ordering_key_0"
+        ],
+        "ordering_keys": [
+          {
+            "key": "count(t2.id)",
+            "direction": "desc",
+            "nulls": "last",
+            "nulls_first_in_effect": false,
+            "returned_rows_null_in_this_key": 0,
+            "fires": false
+          }
+        ],
+        "case": null
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-ORD",
+        "baseline_result_hash": "sha256:2efe778ac662b4eacac1414d24c17de44b9facc69e9c47310142b75c234206bb",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "name",
+              "declared_type": "text"
+            }
+          ],
+          "row_count": 4,
+          "truncated": false,
+          "rows_shown": 4,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Italy Serie A"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Spain LIGA BBVA"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "England Premier League"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "France Ligue 1"
+              }
+            ]
+          ],
+          "result_hash": "sha256:2efe778ac662b4eacac1414d24c17de44b9facc69e9c47310142b75c234206bb"
+        },
+        "planner_statistics": {
+          "league": {
+            "last_analyze": "2026-09-11 18:13:22.180756+00",
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 0
+          },
+          "match": {
+            "last_analyze": "2026-09-11 18:13:23.04275+00",
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "league",
+            "match"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:8a08f18dd660eae56fd1e54ca0cbf086cbbb57a722d3df1be625f2b749d3d8c9",
+          "result": {
+            "columns": [
+              {
+                "name": "name",
+                "declared_type": "text"
+              }
+            ],
+            "row_count": 4,
+            "truncated": false,
+            "rows_shown": 4,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Italy Serie A"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "France Ligue 1"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "England Premier League"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Spain LIGA BBVA"
+                }
+              ]
+            ],
+            "result_hash": "sha256:8a08f18dd660eae56fd1e54ca0cbf086cbbb57a722d3df1be625f2b749d3d8c9"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Italy Serie A"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "France Ligue 1"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "England Premier League"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Spain LIGA BBVA"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 4,
+        "distinct_rows": 4,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

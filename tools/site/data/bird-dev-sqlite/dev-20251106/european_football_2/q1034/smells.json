@@ -121,7 +121,7 @@
         "heuristic": true,
         "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-ORD",
-        "baseline_result_hash": "sha256:fb5160f7bd70559923b0ed5dadfd92b8092f067f362d05a27ae15681bfdf5b57",
+        "baseline_result_hash": "sha256:31fa41cd8e879f94c8c51e2837a458f6c356ba8ac745e2e0a073f70df5cba6e7",
         "baseline_result": {
           "columns": [
             {
@@ -140,7 +140,7 @@
               }
             ]
           ],
-          "result_hash": "sha256:fb5160f7bd70559923b0ed5dadfd92b8092f067f362d05a27ae15681bfdf5b57"
+          "result_hash": "sha256:31fa41cd8e879f94c8c51e2837a458f6c356ba8ac745e2e0a073f70df5cba6e7"
         },
         "planner_statistics": {},
         "shuffle": {
@@ -157,7 +157,7 @@
           "run": true,
           "verdict": "not_equal",
           "differs": true,
-          "result_hash": "sha256:8cb38ee13c01690a9d24d0e9e20275a25cf67f08935a96acabcf3a57c7dabc93",
+          "result_hash": "sha256:860b1cac729f9a087cd6862b521ed234198db811a8081220cd1e3025755103b4",
           "result": {
             "columns": [
               {
@@ -176,7 +176,7 @@
                 }
               ]
             ],
-            "result_hash": "sha256:8cb38ee13c01690a9d24d0e9e20275a25cf67f08935a96acabcf3a57c7dabc93"
+            "result_hash": "sha256:860b1cac729f9a087cd6862b521ed234198db811a8081220cd1e3025755103b4"
           }
         },
         "plan_variant": {
@@ -192,6 +192,24 @@
           }
         ]
       ]
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 1,
+        "distinct_rows": 1,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false,
+        "not_applicable": "a result of fewer than two rows has nothing to repeat"
+      },
+      "counterexample_rows": []
     }
   ]
 }

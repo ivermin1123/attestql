@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-acc4c30d-830a-4ac7-b122-2f07f8c70ebb",
+  "run_id": "audit-022bf1ca-da2c-4a7c-902b-0649694b9ec0",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/superhero/superhero.sqlite | size=237568",
   "effective_database_role": "file",
   "session_settings": {
@@ -94,6 +94,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo-instruct_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -110,9 +111,10 @@
     "arbitrary-cut": 3,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 4,
     "direction-against-question": 0
   },
-  "smells_fired": 3,
+  "smells_fired": 7,
   "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -194,16 +196,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/gpt-35-turbo-instruct/superhero",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:00:15.392424+00:00",
+  "data_as_of": "2026-09-11T14:44:51.488809+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.575,
-    "shuffle": 0.011
+    "questions": 0.449,
+    "shuffle": 0.009
   },
   "errors": [
     {

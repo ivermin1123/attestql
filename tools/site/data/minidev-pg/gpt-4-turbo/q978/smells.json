@@ -32,7 +32,7 @@
         "heuristic": true,
         "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-SET",
-        "baseline_result_hash": "sha256:05076efc0115e818e17e81114745f4c03c3892adf67f5af7870bac75cdd3f351",
+        "baseline_result_hash": "sha256:dac40bfafb0a33dae8f3e95037639075713e0230dd22f044c325f818246fcfef",
         "baseline_result": {
           "columns": [
             {
@@ -81,12 +81,12 @@
               }
             ]
           ],
-          "result_hash": "sha256:05076efc0115e818e17e81114745f4c03c3892adf67f5af7870bac75cdd3f351"
+          "result_hash": "sha256:dac40bfafb0a33dae8f3e95037639075713e0230dd22f044c325f818246fcfef"
         },
         "planner_statistics": {
           "circuits": {
-            "last_analyze": null,
-            "last_autoanalyze": "2026-09-08 05:19:12.766783+00",
+            "last_analyze": "2026-09-11 17:24:22.859004+00",
+            "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }
         },
@@ -110,7 +110,7 @@
           "run": true,
           "verdict": "equal",
           "differs": false,
-          "result_hash": "sha256:05076efc0115e818e17e81114745f4c03c3892adf67f5af7870bac75cdd3f351",
+          "result_hash": "sha256:dac40bfafb0a33dae8f3e95037639075713e0230dd22f044c325f818246fcfef",
           "result": {
             "columns": [
               {
@@ -159,13 +159,31 @@
                 }
               ]
             ],
-            "result_hash": "sha256:05076efc0115e818e17e81114745f4c03c3892adf67f5af7870bac75cdd3f351"
+            "result_hash": "sha256:dac40bfafb0a33dae8f3e95037639075713e0230dd22f044c325f818246fcfef"
           }
         },
         "plan_variant": {
           "run": false,
           "reason": "the plan variant was not asked for"
         }
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 2,
+        "distinct_rows": 2,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": true,
+        "set_operation": false,
+        "not_applicable": "the statement states DISTINCT, so it cannot repeat a row"
       },
       "counterexample_rows": []
     }

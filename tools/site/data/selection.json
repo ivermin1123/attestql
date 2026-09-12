@@ -5,12 +5,12 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "california_schools",
-   "run_id": "audit-cf217358-b543-48ea-95b9-81bb7a1f9fdc",
+   "run_id": "audit-6b4c2fea-a8fb-4a52-a341-be8ee5656719",
    "audited": 89,
    "verdicts": {
     "GOLD-ONLY": 89
    },
-   "smells_fired": 10,
+   "smells_fired": 13,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -19,8 +19,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 2.508,
-    "shuffle": 0.12
+    "questions": 2.762,
+    "shuffle": 0.123
    },
    "published_questions": 4,
    "published_ids": [
@@ -36,13 +36,13 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "card_games",
-   "run_id": "audit-dab499aa-0142-4d84-a27a-cf354e9e38e3",
+   "run_id": "audit-eb132a52-c3c3-41eb-9764-a3e0d611f58d",
    "audited": 191,
    "verdicts": {
     "GOLD-ONLY": 190,
     "ERROR": 1
    },
-   "smells_fired": 6,
+   "smells_fired": 29,
    "credited_but_not_equal": null,
    "errors": 1,
    "timed_out": {
@@ -52,15 +52,21 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.028,
-    "questions": 72.593,
-    "shuffle": 1.183
+    "fixture": 0.04,
+    "questions": 70.634,
+    "shuffle": 1.259
    },
-   "published_questions": 4,
+   "published_questions": 10,
    "published_ids": [
+    "365",
     "392",
     "423",
+    "441",
+    "461",
+    "473",
+    "481",
     "484",
+    "485",
     "523"
    ],
    "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
@@ -70,13 +76,13 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "codebase_community",
-   "run_id": "audit-ff6edbda-1c00-4398-9495-bcfff9d1aa86",
+   "run_id": "audit-510a85ba-4bcd-4978-8965-80e23e438349",
    "audited": 186,
    "verdicts": {
     "GOLD-ONLY": 185,
     "ERROR": 1
    },
-   "smells_fired": 0,
+   "smells_fired": 21,
    "credited_but_not_equal": null,
    "errors": 1,
    "timed_out": {
@@ -86,12 +92,20 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 96.049,
-    "shuffle": 1.223
+    "fixture": 0.01,
+    "questions": 90.456,
+    "shuffle": 1.056
    },
-   "published_questions": 0,
-   "published_ids": [],
+   "published_questions": 7,
+   "published_ids": [
+    "575",
+    "584",
+    "599",
+    "611",
+    "612",
+    "620",
+    "681"
+   ],
    "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
   },
   {
@@ -99,12 +113,12 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "debit_card_specializing",
-   "run_id": "audit-63118ad9-0d09-4659-b872-f27fea977091",
+   "run_id": "audit-1239b0dc-fb54-4e96-b62f-d964410aef0b",
    "audited": 64,
    "verdicts": {
     "GOLD-ONLY": 64
    },
-   "smells_fired": 1,
+   "smells_fired": 5,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -113,12 +127,15 @@
    },
    "elapsed_seconds": {
     "fixture": 0.003,
-    "questions": 3.588,
-    "shuffle": 0.041
+    "questions": 3.898,
+    "shuffle": 0.043
    },
-   "published_questions": 1,
+   "published_questions": 4,
    "published_ids": [
-    "1517"
+    "1517",
+    "1518",
+    "1530",
+    "1533"
    ],
    "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
   },
@@ -127,13 +144,13 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "european_football_2",
-   "run_id": "audit-9d69a29b-e497-49b3-976c-18ac8e4f0c76",
+   "run_id": "audit-f6bfa597-de65-4a5d-8554-2e208a88bf41",
    "audited": 129,
    "verdicts": {
     "GOLD-ONLY": 128,
     "ERROR": 1
    },
-   "smells_fired": 11,
+   "smells_fired": 17,
    "credited_but_not_equal": null,
    "errors": 1,
    "timed_out": {
@@ -143,13 +160,15 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 107.925,
-    "shuffle": 2.04
+    "fixture": 0.018,
+    "questions": 112.547,
+    "shuffle": 2.678
    },
-   "published_questions": 5,
+   "published_questions": 7,
    "published_ids": [
+    "1029",
     "1034",
+    "1086",
     "1090",
     "1117",
     "1135",
@@ -162,7 +181,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "financial",
-   "run_id": "audit-c8b2684b-ae24-4be1-90ab-9bf41ff5682a",
+   "run_id": "audit-0e2fc4f3-7504-47df-aa2a-cbfba4e61c92",
    "audited": 106,
    "verdicts": {
     "GOLD-ONLY": 106
@@ -175,14 +194,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.016,
-    "questions": 49.224,
-    "shuffle": 0.045
+    "fixture": 0.012,
+    "questions": 47.231,
+    "shuffle": 0.035
    },
-   "published_questions": 1,
-   "published_ids": [
-    "94"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
   },
   {
@@ -190,12 +207,12 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "formula_1",
-   "run_id": "audit-12a6eeae-04a4-45ea-866b-f75095ba654b",
+   "run_id": "audit-03b26ae5-ee37-48c1-b9c1-b9cc1ca15b70",
    "audited": 174,
    "verdicts": {
     "GOLD-ONLY": 174
    },
-   "smells_fired": 7,
+   "smells_fired": 14,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -203,17 +220,18 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 11.056,
-    "shuffle": 0.128
+    "fixture": 0.004,
+    "questions": 33.615,
+    "shuffle": 0.156
    },
-   "published_questions": 7,
+   "published_questions": 8,
    "published_ids": [
     "847",
     "879",
     "893",
     "906",
     "927",
+    "973",
     "1002",
     "1004"
    ],
@@ -224,12 +242,12 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "student_club",
-   "run_id": "audit-f8b407cc-6e5d-46a1-aa9e-ab46497258ed",
+   "run_id": "audit-0adbd727-fcc4-4941-9d6a-37cdcc51932b",
    "audited": 158,
    "verdicts": {
     "GOLD-ONLY": 158
    },
-   "smells_fired": 5,
+   "smells_fired": 14,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -237,16 +255,24 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 0.359,
-    "shuffle": 0.063
+    "fixture": 0.001,
+    "questions": 0.374,
+    "shuffle": 0.062
    },
-   "published_questions": 4,
+   "published_questions": 12,
    "published_ids": [
     "1318",
+    "1336",
+    "1338",
     "1365",
+    "1387",
     "1388",
-    "1389"
+    "1389",
+    "1411",
+    "1412",
+    "1413",
+    "1417",
+    "1418"
    ],
    "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
   },
@@ -255,12 +281,12 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "superhero",
-   "run_id": "audit-d3f8ac37-674e-4d02-9bef-e01383ae49a0",
+   "run_id": "audit-c03638ca-1a6b-4dd3-a1fc-dddb70c2f1f0",
    "audited": 129,
    "verdicts": {
     "GOLD-ONLY": 129
    },
-   "smells_fired": 2,
+   "smells_fired": 13,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -269,13 +295,17 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.6,
+    "questions": 0.591,
     "shuffle": 0.01
    },
-   "published_questions": 2,
+   "published_questions": 6,
    "published_ids": [
     "766",
-    "802"
+    "797",
+    "798",
+    "802",
+    "837",
+    "840"
    ],
    "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
   },
@@ -284,12 +314,12 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "thrombosis_prediction",
-   "run_id": "audit-81b79d57-0fa4-459a-9c7a-72e804752908",
+   "run_id": "audit-f33ba623-8188-4478-b657-0e377570607b",
    "audited": 163,
    "verdicts": {
     "GOLD-ONLY": 163
    },
-   "smells_fired": 4,
+   "smells_fired": 14,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -297,13 +327,14 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.759,
-    "shuffle": 0.051
+    "fixture": 0.002,
+    "questions": 1.145,
+    "shuffle": 0.087
    },
-   "published_questions": 3,
+   "published_questions": 4,
    "published_ids": [
-    "1209",
+    "1259",
+    "1268",
     "1284",
     "1290"
    ],
@@ -314,12 +345,12 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "toxicology",
-   "run_id": "audit-81503b04-4c0f-4190-852f-051b20e5247a",
+   "run_id": "audit-0ace8241-aee1-4871-b915-32f04c5e2b83",
    "audited": 145,
    "verdicts": {
     "GOLD-ONLY": 145
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -327,12 +358,14 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 12.378,
-    "shuffle": 0.051
+    "fixture": 0.006,
+    "questions": 18.477,
+    "shuffle": 0.099
    },
-   "published_questions": 0,
-   "published_ids": [],
+   "published_questions": 1,
+   "published_ids": [
+    "220"
+   ],
    "archive": "bird-dev-sqlite-dev-20251106.tar.gz"
   },
   {
@@ -340,14 +373,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-35-turbo",
-   "run_id": "audit-a7e6b760-f8ad-479a-b956-9cd88ea91e18",
+   "run_id": "audit-27701da4-0a79-4cc9-9477-d46a66ddd8db",
    "audited": 498,
    "verdicts": {
     "NOT_EQUAL": 197,
     "ERROR": 185,
     "EQUAL": 116
    },
-   "smells_fired": 27,
+   "smells_fired": 55,
    "credited_but_not_equal": {
     "total": 23,
     "by_mechanism": {
@@ -368,15 +401,16 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.249,
-    "questions": 34.257,
-    "shuffle": 5.541
+    "fixture": 0.444,
+    "questions": 53.609,
+    "shuffle": 11.637
    },
-   "published_questions": 26,
+   "published_questions": 27,
    "published_ids": [
     "82",
     "149",
     "206",
+    "213",
     "240",
     "281",
     "345",
@@ -408,14 +442,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-35-turbo-instruct",
-   "run_id": "audit-b6efa569-00a2-4421-b91b-09d107e2dac3",
+   "run_id": "audit-9c7ed9bf-f34f-4829-a6f5-311be3fe398e",
    "audited": 498,
    "verdicts": {
     "NOT_EQUAL": 193,
     "ERROR": 189,
     "EQUAL": 116
    },
-   "smells_fired": 31,
+   "smells_fired": 54,
    "credited_but_not_equal": {
     "total": 18,
     "by_mechanism": {
@@ -436,14 +470,15 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.396,
-    "questions": 40.297,
-    "shuffle": 7.717
+    "fixture": 0.224,
+    "questions": 69.974,
+    "shuffle": 6.294
    },
    "published_questions": 23,
    "published_ids": [
     "45",
     "82",
+    "213",
     "230",
     "345",
     "358",
@@ -463,8 +498,7 @@
     "1435",
     "1457",
     "1506",
-    "1514",
-    "1529"
+    "1514"
    ],
    "archive": "minidev-pg-gpt-35-turbo-instruct.tar.gz"
   },
@@ -473,14 +507,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-4",
-   "run_id": "audit-34520748-ce64-4674-9cd7-6d6fac5b9805",
+   "run_id": "audit-2cae0420-b41f-41f2-b42d-fea0eb481a6b",
    "audited": 498,
    "verdicts": {
     "EQUAL": 164,
     "ERROR": 122,
     "NOT_EQUAL": 212
    },
-   "smells_fired": 32,
+   "smells_fired": 63,
    "credited_but_not_equal": {
     "total": 17,
     "by_mechanism": {
@@ -501,22 +535,22 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.236,
-    "questions": 39.352,
-    "shuffle": 5.481
+    "fixture": 0.342,
+    "questions": 78.012,
+    "shuffle": 10.007
    },
-   "published_questions": 26,
+   "published_questions": 25,
    "published_ids": [
     "45",
     "82",
     "207",
+    "213",
     "249",
     "345",
     "358",
     "459",
     "462",
     "522",
-    "736",
     "800",
     "850",
     "854",
@@ -527,7 +561,6 @@
     "1130",
     "1141",
     "1331",
-    "1340",
     "1361",
     "1380",
     "1432",
@@ -541,14 +574,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-4-32k",
-   "run_id": "audit-eacac37d-7cc4-4d44-9121-67cecbf29b75",
+   "run_id": "audit-6429f772-8de0-4932-8d38-685020a362fe",
    "audited": 498,
    "verdicts": {
     "NOT_EQUAL": 210,
     "ERROR": 134,
     "EQUAL": 154
    },
-   "smells_fired": 32,
+   "smells_fired": 64,
    "credited_but_not_equal": {
     "total": 23,
     "by_mechanism": {
@@ -569,17 +602,18 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.253,
-    "questions": 30.853,
-    "shuffle": 5.484
+    "fixture": 0.391,
+    "questions": 42.05,
+    "shuffle": 13.262
    },
-   "published_questions": 31,
+   "published_questions": 30,
    "published_ids": [
     "45",
     "149",
     "168",
     "173",
     "206",
+    "213",
     "240",
     "245",
     "249",
@@ -590,22 +624,20 @@
     "477",
     "487",
     "790",
+    "798",
     "800",
     "850",
     "857",
     "879",
     "1035",
     "1130",
-    "1340",
     "1361",
     "1380",
-    "1410",
     "1432",
     "1435",
     "1457",
     "1506",
-    "1514",
-    "1529"
+    "1514"
    ],
    "archive": "minidev-pg-gpt-4-32k.tar.gz"
   },
@@ -614,14 +646,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-4-turbo",
-   "run_id": "audit-7912134a-3f9b-4113-a6b6-ebaf8b6a2bc0",
+   "run_id": "audit-246d1eac-d49a-4ada-a77b-1e63dcecab16",
    "audited": 498,
    "verdicts": {
     "EQUAL": 154,
     "NOT_EQUAL": 216,
     "ERROR": 128
    },
-   "smells_fired": 30,
+   "smells_fired": 57,
    "credited_but_not_equal": {
     "total": 27,
     "by_mechanism": {
@@ -642,15 +674,16 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.258,
-    "questions": 37.185,
-    "shuffle": 5.64
+    "fixture": 0.138,
+    "questions": 40.712,
+    "shuffle": 5.023
    },
-   "published_questions": 33,
+   "published_questions": 34,
    "published_ids": [
     "112",
     "206",
     "207",
+    "213",
     "240",
     "245",
     "358",
@@ -661,6 +694,7 @@
     "528",
     "565",
     "790",
+    "798",
     "850",
     "854",
     "857",
@@ -676,7 +710,6 @@
     "1340",
     "1361",
     "1380",
-    "1389",
     "1432",
     "1435",
     "1506",
@@ -689,14 +722,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "meta-llama-3-70b-instruct-2",
-   "run_id": "audit-5057e95b-76d8-4d53-a20b-a2de3d1eb19a",
+   "run_id": "audit-3b96f6e1-49f7-44df-bedf-d3d4c479bdb2",
    "audited": 498,
    "verdicts": {
     "NOT_EQUAL": 209,
     "EQUAL": 131,
     "ERROR": 158
    },
-   "smells_fired": 28,
+   "smells_fired": 54,
    "credited_but_not_equal": {
     "total": 19,
     "by_mechanism": {
@@ -717,12 +750,13 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.396,
-    "questions": 91.784,
-    "shuffle": 7.714
+    "fixture": 0.223,
+    "questions": 186.228,
+    "shuffle": 6.303
    },
-   "published_questions": 23,
+   "published_questions": 24,
    "published_ids": [
+    "213",
     "240",
     "253",
     "345",
@@ -734,6 +768,7 @@
     "522",
     "528",
     "565",
+    "798",
     "850",
     "857",
     "868",
@@ -741,7 +776,6 @@
     "1134",
     "1361",
     "1380",
-    "1389",
     "1435",
     "1457",
     "1506",
@@ -754,14 +788,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "meta-llama-3-8b-instruct-2",
-   "run_id": "audit-2ed41f69-8e39-4e9d-9cd1-737fad320828",
+   "run_id": "audit-8bfe979a-b3f9-4830-bc95-858912d54d03",
    "audited": 498,
    "verdicts": {
     "ERROR": 258,
     "NOT_EQUAL": 158,
     "EQUAL": 82
    },
-   "smells_fired": 15,
+   "smells_fired": 35,
    "credited_but_not_equal": {
     "total": 12,
     "by_mechanism": {
@@ -784,11 +818,11 @@
     ]
    },
    "elapsed_seconds": {
-    "fixture": 0.268,
-    "questions": 147.934,
-    "shuffle": 5.843
+    "fixture": 0.252,
+    "questions": 165.571,
+    "shuffle": 11.657
    },
-   "published_questions": 15,
+   "published_questions": 16,
    "published_ids": [
     "82",
     "249",
@@ -796,6 +830,7 @@
     "358",
     "440",
     "565",
+    "798",
     "850",
     "868",
     "1035",
@@ -813,14 +848,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "mistralai-mixtral-8x7b-instru-4",
-   "run_id": "audit-caa3d3fc-17d4-4f05-9ebf-50f46afc1202",
+   "run_id": "audit-a8843a6b-01c8-432c-a236-bb7a62375320",
    "audited": 498,
    "verdicts": {
     "NOT_EQUAL": 111,
     "ERROR": 328,
     "EQUAL": 59
    },
-   "smells_fired": 8,
+   "smells_fired": 20,
    "credited_but_not_equal": {
     "total": 14,
     "by_mechanism": {
@@ -841,18 +876,20 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.219,
-    "questions": 35.971,
-    "shuffle": 5.058
+    "fixture": 0.411,
+    "questions": 76.687,
+    "shuffle": 12.6
    },
-   "published_questions": 16,
+   "published_questions": 18,
    "published_ids": [
     "200",
     "206",
+    "213",
     "230",
     "268",
     "371",
     "565",
+    "798",
     "850",
     "854",
     "857",
@@ -871,14 +908,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "phi-3-medium-128k-instruct-1",
-   "run_id": "audit-715e02b9-6229-4aab-aa2e-7df62f68e7a4",
+   "run_id": "audit-1d9a914d-c720-4e87-a82e-8152e2416dc1",
    "audited": 498,
    "verdicts": {
     "ERROR": 219,
     "NOT_EQUAL": 179,
     "EQUAL": 100
    },
-   "smells_fired": 27,
+   "smells_fired": 47,
    "credited_but_not_equal": {
     "total": 11,
     "by_mechanism": {
@@ -899,18 +936,19 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.249,
-    "questions": 31.059,
-    "shuffle": 4.949
+    "fixture": 0.215,
+    "questions": 27.915,
+    "shuffle": 9.886
    },
-   "published_questions": 15,
+   "published_questions": 16,
    "published_ids": [
     "82",
     "206",
+    "213",
     "345",
     "358",
-    "736",
     "790",
+    "798",
     "850",
     "854",
     "868",
@@ -928,12 +966,12 @@
    "benchmark": "minidev-pg-gold-only",
    "group": "",
    "run": "hf",
-   "run_id": "audit-ed50a84a-c286-4cbb-ac89-ab3111058ad5",
+   "run_id": "audit-bd0ee5fc-3556-4f9f-ab8f-2f5a6915228e",
    "audited": 500,
    "verdicts": {
     "GOLD-ONLY": 500
    },
-   "smells_fired": 38,
+   "smells_fired": 76,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -941,34 +979,29 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.314,
-    "questions": 63.371,
-    "shuffle": 8.185
+    "fixture": 0.285,
+    "questions": 50.914,
+    "shuffle": 6.774
    },
-   "published_questions": 24,
+   "published_questions": 19,
    "published_ids": [
-    "37",
     "82",
-    "94",
-    "115",
-    "349",
-    "671",
+    "213",
+    "473",
+    "637",
     "736",
-    "751",
-    "766",
-    "794",
-    "847",
-    "906",
-    "1002",
-    "1028",
+    "798",
+    "1029",
     "1135",
-    "1144",
-    "1168",
+    "1145",
+    "1322",
+    "1338",
     "1340",
     "1361",
     "1380",
     "1389",
     "1410",
+    "1482",
     "1529",
     "1531"
    ],
@@ -979,12 +1012,12 @@
    "benchmark": "minidev-pg-gold-only",
    "group": "",
    "run": "zip",
-   "run_id": "audit-adbef1a5-9f41-4a8f-ac55-8c3d8df71394",
+   "run_id": "audit-5450d59b-e798-4c06-b9b6-e5a49413ed52",
    "audited": 498,
    "verdicts": {
     "GOLD-ONLY": 498
    },
-   "smells_fired": 39,
+   "smells_fired": 76,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -992,35 +1025,29 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.315,
-    "questions": 63.174,
-    "shuffle": 8.185
+    "fixture": 0.285,
+    "questions": 50.649,
+    "shuffle": 6.774
    },
-   "published_questions": 25,
+   "published_questions": 19,
    "published_ids": [
-    "37",
     "82",
-    "94",
-    "115",
-    "349",
-    "671",
+    "213",
+    "473",
+    "637",
     "736",
-    "751",
-    "766",
-    "794",
-    "847",
+    "798",
     "879",
-    "906",
-    "1002",
-    "1028",
+    "1029",
     "1135",
-    "1144",
-    "1168",
+    "1145",
+    "1338",
     "1340",
     "1361",
     "1380",
     "1389",
     "1410",
+    "1482",
     "1529",
     "1531"
    ],
@@ -1031,14 +1058,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "california_schools",
-   "run_id": "audit-b29a0db8-17ca-424a-b3e5-82ac6c1fcaba",
+   "run_id": "audit-5c342a20-264c-4530-8a7d-59d8813bf8bd",
    "audited": 30,
    "verdicts": {
     "EQUAL": 7,
     "NOT_EQUAL": 19,
     "ERROR": 4
    },
-   "smells_fired": 4,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -1060,13 +1087,11 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 1.167,
-    "shuffle": 0.135
+    "questions": 0.947,
+    "shuffle": 0.129
    },
-   "published_questions": 1,
-   "published_ids": [
-    "82"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
   },
   {
@@ -1074,14 +1099,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "card_games",
-   "run_id": "audit-f9d04203-64fb-4cb6-85da-984fd2792670",
+   "run_id": "audit-5ed8b70d-ff8f-48e7-8aa7-65ac594cd8f4",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 27,
     "EQUAL": 14,
     "ERROR": 11
    },
-   "smells_fired": 3,
+   "smells_fired": 9,
    "credited_but_not_equal": {
     "total": 7,
     "by_mechanism": {
@@ -1104,9 +1129,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.028,
-    "questions": 46.592,
-    "shuffle": 1.213
+    "fixture": 0.022,
+    "questions": 45.929,
+    "shuffle": 0.986
    },
    "published_questions": 2,
    "published_ids": [
@@ -1120,14 +1145,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "codebase_community",
-   "run_id": "audit-a5d2eca3-708b-4b71-9b4a-58fc67c3cb36",
+   "run_id": "audit-90a4d90d-7c16-47e2-a834-73cd3909c63b",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 20,
     "EQUAL": 20,
     "ERROR": 9
    },
-   "smells_fired": 3,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -1152,9 +1177,9 @@
     ]
    },
    "elapsed_seconds": {
-    "fixture": 0.012,
-    "questions": 74.202,
-    "shuffle": 1.23
+    "fixture": 0.01,
+    "questions": 72.363,
+    "shuffle": 1.11
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1165,14 +1190,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "debit_card_specializing",
-   "run_id": "audit-d8858f68-df7a-4b55-9481-b567fbdaa5e9",
+   "run_id": "audit-4d167fbd-fa78-4dde-baa0-d1b6c067f284",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 20,
     "EQUAL": 6,
     "ERROR": 4
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 3,
     "by_mechanism": {
@@ -1193,15 +1218,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 9.398,
-    "shuffle": 0.056
+    "fixture": 0.004,
+    "questions": 8.1,
+    "shuffle": 0.053
    },
-   "published_questions": 2,
-   "published_ids": [
-    "1507",
-    "1514"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
   },
   {
@@ -1209,14 +1231,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "european_football_2",
-   "run_id": "audit-31033482-88c5-4cd0-bcd9-cd5e69618fdc",
+   "run_id": "audit-d0ee7009-9dc7-4faf-9f38-ac5fa7a2061b",
    "audited": 51,
    "verdicts": {
     "EQUAL": 25,
     "NOT_EQUAL": 22,
     "ERROR": 4
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 5,
     "by_mechanism": {
@@ -1237,9 +1259,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.015,
-    "questions": 11.164,
-    "shuffle": 3.058
+    "fixture": 0.012,
+    "questions": 7.908,
+    "shuffle": 2.628
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1250,14 +1272,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "financial",
-   "run_id": "audit-f6b1cc1f-56b0-4e6f-9f13-a98c98bb32f9",
+   "run_id": "audit-80ee6037-62e2-4151-a80f-d0183ffe754c",
    "audited": 30,
    "verdicts": {
-    "NOT_EQUAL": 16,
-    "ERROR": 8,
+    "NOT_EQUAL": 17,
+    "ERROR": 7,
     "EQUAL": 6
    },
-   "smells_fired": 2,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -1272,17 +1294,15 @@
      "0": 0
     }
    },
-   "errors": 8,
+   "errors": 7,
    "timed_out": {
     "gold": [],
-    "prediction": [
-     145
-    ]
+    "prediction": []
    },
    "elapsed_seconds": {
     "fixture": 0.012,
-    "questions": 31.975,
-    "shuffle": 0.032
+    "questions": 33.375,
+    "shuffle": 0.033
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1293,14 +1313,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "formula_1",
-   "run_id": "audit-fdf541cd-89ce-4d08-950a-6f3d607db617",
+   "run_id": "audit-fe75c489-adc8-4a01-8b06-951191d62d3d",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 43,
     "EQUAL": 15,
     "ERROR": 8
    },
-   "smells_fired": 4,
+   "smells_fired": 8,
    "credited_but_not_equal": {
     "total": 3,
     "by_mechanism": {
@@ -1321,9 +1341,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 5.43,
-    "shuffle": 0.128
+    "fixture": 0.003,
+    "questions": 4.667,
+    "shuffle": 0.123
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1334,14 +1354,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "student_club",
-   "run_id": "audit-d166184e-4991-4992-9ccb-60428cf6e856",
+   "run_id": "audit-bfd3a7dd-7e6f-41c0-a85d-1f7daa0367b6",
    "audited": 48,
    "verdicts": {
     "EQUAL": 21,
     "ERROR": 10,
     "NOT_EQUAL": 17
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -1362,14 +1382,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 0.088,
-    "shuffle": 0.074
+    "fixture": 0.001,
+    "questions": 0.072,
+    "shuffle": 0.069
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1435"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
   },
   {
@@ -1377,14 +1395,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "superhero",
-   "run_id": "audit-41ea1294-2046-41d0-9c60-5d69916f6283",
+   "run_id": "audit-240eb5a1-4512-43fc-ad07-8a2e581721ab",
    "audited": 52,
    "verdicts": {
     "EQUAL": 32,
     "NOT_EQUAL": 18,
     "ERROR": 2
    },
-   "smells_fired": 3,
+   "smells_fired": 8,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -1406,8 +1424,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.641,
-    "shuffle": 0.013
+    "questions": 0.577,
+    "shuffle": 0.011
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1418,14 +1436,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "thrombosis_prediction",
-   "run_id": "audit-8048dae1-0757-4488-97c7-2c9771c75d39",
+   "run_id": "audit-e9a7ed93-57dd-47a2-bdc1-c184123252b0",
    "audited": 50,
    "verdicts": {
     "ERROR": 14,
     "EQUAL": 10,
     "NOT_EQUAL": 26
    },
-   "smells_fired": 1,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -1447,7 +1465,7 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.31,
+    "questions": 0.245,
     "shuffle": 0.048
    },
    "published_questions": 0,
@@ -1459,14 +1477,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "toxicology",
-   "run_id": "audit-0f6a76ed-cc4f-4374-b4b8-dbb94647da4a",
+   "run_id": "audit-a95b2c5e-5407-469a-a11f-a33de031d9f8",
    "audited": 40,
    "verdicts": {
     "NOT_EQUAL": 17,
     "ERROR": 15,
     "EQUAL": 8
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -1487,13 +1505,14 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 14.218,
-    "shuffle": 0.05
+    "fixture": 0.001,
+    "questions": 10.837,
+    "shuffle": 0.042
    },
-   "published_questions": 1,
+   "published_questions": 2,
    "published_ids": [
-    "206"
+    "206",
+    "213"
    ],
    "archive": "minidev-sqlite-gpt-35-turbo.tar.gz"
   },
@@ -1502,14 +1521,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "california_schools",
-   "run_id": "audit-902a3f61-a864-43be-9746-b3258a4d81f0",
+   "run_id": "audit-ca4aee86-f089-49b9-8352-b5a7b9ffd14e",
    "audited": 30,
    "verdicts": {
     "EQUAL": 4,
     "NOT_EQUAL": 19,
     "ERROR": 7
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -1530,14 +1549,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 1.097,
-    "shuffle": 0.191
+    "fixture": 0.001,
+    "questions": 1.057,
+    "shuffle": 0.168
    },
-   "published_questions": 1,
-   "published_ids": [
-    "82"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
   },
   {
@@ -1545,14 +1562,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "card_games",
-   "run_id": "audit-c5d2a00f-9672-44f6-8630-2ef70e03da01",
+   "run_id": "audit-7239f3fd-1812-49e8-a67c-f619d7534211",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 29,
     "ERROR": 10,
     "EQUAL": 13
    },
-   "smells_fired": 3,
+   "smells_fired": 8,
    "credited_but_not_equal": {
     "total": 8,
     "by_mechanism": {
@@ -1575,15 +1592,14 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.025,
-    "questions": 46.924,
-    "shuffle": 1.079
+    "fixture": 0.08,
+    "questions": 53.447,
+    "shuffle": 1.647
    },
-   "published_questions": 3,
+   "published_questions": 2,
    "published_ids": [
     "358",
-    "440",
-    "462"
+    "440"
    ],
    "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
   },
@@ -1592,14 +1608,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "codebase_community",
-   "run_id": "audit-49215ef1-ae35-4207-99a0-4538f9872bc4",
+   "run_id": "audit-b3e7ca49-e1de-4522-b3f9-9c47e21a8091",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 19,
     "EQUAL": 17,
     "ERROR": 13
    },
-   "smells_fired": 3,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -1620,9 +1636,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.021,
-    "questions": 14.561,
-    "shuffle": 1.92
+    "fixture": 0.013,
+    "questions": 12.762,
+    "shuffle": 1.599
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1633,14 +1649,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "debit_card_specializing",
-   "run_id": "audit-bd55a89c-7256-488a-b0b3-6f728a87b89d",
+   "run_id": "audit-8ca8a995-676f-43de-8461-ac39c4fd8f9d",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 18,
     "ERROR": 6,
     "EQUAL": 6
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 3,
     "by_mechanism": {
@@ -1661,13 +1677,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.005,
-    "questions": 3.421,
-    "shuffle": 0.07
+    "fixture": 0.003,
+    "questions": 2.758,
+    "shuffle": 0.048
    },
-   "published_questions": 2,
+   "published_questions": 1,
    "published_ids": [
-    "1507",
     "1514"
    ],
    "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
@@ -1677,14 +1692,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "european_football_2",
-   "run_id": "audit-3fae206f-78fa-4453-a443-5cd9d8023e55",
+   "run_id": "audit-6f141545-145c-4a00-b4d0-8cd6ffbed173",
    "audited": 51,
    "verdicts": {
     "EQUAL": 23,
     "NOT_EQUAL": 16,
     "ERROR": 12
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -1708,8 +1723,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.01,
-    "questions": 36.175,
-    "shuffle": 2.31
+    "questions": 35.175,
+    "shuffle": 2.087
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1720,14 +1735,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "financial",
-   "run_id": "audit-4bf3f4e3-f34f-4099-9e52-802a9f3f8136",
+   "run_id": "audit-56213fb9-c5e4-4b86-98c6-8ec83f11f5e6",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 21,
     "ERROR": 5,
     "EQUAL": 4
    },
-   "smells_fired": 1,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -1748,9 +1763,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.013,
-    "questions": 3.118,
-    "shuffle": 0.045
+    "fixture": 0.012,
+    "questions": 2.789,
+    "shuffle": 0.036
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1761,14 +1776,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "formula_1",
-   "run_id": "audit-e531ef38-5061-4c26-ac1b-a0c61be3ab37",
+   "run_id": "audit-bbd024d4-b6b0-404c-850e-b9f47f720479",
    "audited": 66,
    "verdicts": {
     "ERROR": 10,
     "NOT_EQUAL": 39,
     "EQUAL": 17
    },
-   "smells_fired": 4,
+   "smells_fired": 7,
    "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -1789,9 +1804,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.005,
-    "questions": 5.555,
-    "shuffle": 0.135
+    "fixture": 0.003,
+    "questions": 4.491,
+    "shuffle": 0.12
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1802,14 +1817,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "student_club",
-   "run_id": "audit-42355325-8654-4129-93e5-4ace747fc880",
+   "run_id": "audit-f0296379-a05b-4a30-8831-cd677435a606",
    "audited": 48,
    "verdicts": {
     "EQUAL": 17,
     "ERROR": 12,
     "NOT_EQUAL": 19
    },
-   "smells_fired": 0,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -1830,14 +1845,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 0.089,
-    "shuffle": 0.069
+    "fixture": 0.001,
+    "questions": 0.065,
+    "shuffle": 0.061
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1435"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
   },
   {
@@ -1845,14 +1858,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "superhero",
-   "run_id": "audit-acc4c30d-830a-4ac7-b122-2f07f8c70ebb",
+   "run_id": "audit-022bf1ca-da2c-4a7c-902b-0649694b9ec0",
    "audited": 52,
    "verdicts": {
     "ERROR": 11,
     "EQUAL": 28,
     "NOT_EQUAL": 13
    },
-   "smells_fired": 3,
+   "smells_fired": 7,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -1874,8 +1887,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.575,
-    "shuffle": 0.011
+    "questions": 0.449,
+    "shuffle": 0.009
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1886,7 +1899,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "thrombosis_prediction",
-   "run_id": "audit-d16b452a-f082-4eda-b34a-013e7ee05d2a",
+   "run_id": "audit-26fad5b3-bdc4-406d-b9ad-6b9990f573a9",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 19,
@@ -1915,8 +1928,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.248,
-    "shuffle": 0.048
+    "questions": 0.19,
+    "shuffle": 0.043
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1927,14 +1940,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "toxicology",
-   "run_id": "audit-03289090-4bb5-4d9f-a3a3-4c52632ff8c1",
+   "run_id": "audit-cffd9f62-3b36-4053-9c22-0344d509ca76",
    "audited": 40,
    "verdicts": {
     "EQUAL": 8,
     "NOT_EQUAL": 16,
     "ERROR": 16
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -1956,12 +1969,13 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.528,
-    "shuffle": 0.045
+    "questions": 0.459,
+    "shuffle": 0.042
    },
-   "published_questions": 1,
+   "published_questions": 2,
    "published_ids": [
-    "206"
+    "206",
+    "213"
    ],
    "archive": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz"
   },
@@ -1970,14 +1984,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "california_schools",
-   "run_id": "audit-4e6b7b56-7da3-4835-9f05-4544e8e4a5b5",
+   "run_id": "audit-da86f52f-e12d-4a23-8bda-8d2ce2134f60",
    "audited": 30,
    "verdicts": {
     "EQUAL": 10,
     "NOT_EQUAL": 18,
     "ERROR": 2
    },
-   "smells_fired": 4,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -1999,13 +2013,11 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 1.188,
-    "shuffle": 0.14
+    "questions": 0.952,
+    "shuffle": 0.1
    },
-   "published_questions": 1,
-   "published_ids": [
-    "82"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-4.tar.gz"
   },
   {
@@ -2013,14 +2025,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "card_games",
-   "run_id": "audit-4e13ba00-25fc-4dee-9812-b6b3a5bbb88f",
+   "run_id": "audit-707aa79a-31e0-4ae3-b222-7a245ab92bc6",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 32,
     "EQUAL": 19,
     "ERROR": 1
    },
-   "smells_fired": 3,
+   "smells_fired": 9,
    "credited_but_not_equal": {
     "total": 6,
     "by_mechanism": {
@@ -2043,14 +2055,13 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.034,
-    "questions": 51.653,
-    "shuffle": 1.319
+    "fixture": 0.022,
+    "questions": 48.918,
+    "shuffle": 0.983
    },
-   "published_questions": 2,
+   "published_questions": 1,
    "published_ids": [
-    "358",
-    "462"
+    "358"
    ],
    "archive": "minidev-sqlite-gpt-4.tar.gz"
   },
@@ -2059,14 +2070,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "codebase_community",
-   "run_id": "audit-8dd62574-ec6d-4476-bddb-2811a2a0a7b0",
+   "run_id": "audit-f342edb0-e0cf-41fb-908e-311a1bd4079c",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 23,
     "EQUAL": 24,
     "ERROR": 2
    },
-   "smells_fired": 3,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -2089,9 +2100,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.013,
-    "questions": 43.1,
-    "shuffle": 1.557
+    "fixture": 0.017,
+    "questions": 41.383,
+    "shuffle": 1.284
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2102,14 +2113,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "debit_card_specializing",
-   "run_id": "audit-b6df2160-40de-4549-b5c3-016093f6c38e",
+   "run_id": "audit-a4aac945-a7cc-444f-925b-a3ca32e7e2e1",
    "audited": 30,
    "verdicts": {
     "EQUAL": 12,
     "ERROR": 1,
     "NOT_EQUAL": 17
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -2130,9 +2141,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.007,
-    "questions": 4.202,
-    "shuffle": 0.059
+    "fixture": 0.003,
+    "questions": 3.142,
+    "shuffle": 0.04
    },
    "published_questions": 1,
    "published_ids": [
@@ -2145,14 +2156,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "european_football_2",
-   "run_id": "audit-0170c46a-5392-44ab-aeac-a6373c0dea60",
+   "run_id": "audit-0ee61e9a-b3e6-4fe0-90ca-4461d1cc9e43",
    "audited": 51,
    "verdicts": {
     "EQUAL": 22,
     "NOT_EQUAL": 26,
     "ERROR": 3
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 7,
     "by_mechanism": {
@@ -2173,9 +2184,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.024,
-    "questions": 10.909,
-    "shuffle": 3.097
+    "fixture": 0.011,
+    "questions": 7.724,
+    "shuffle": 2.55
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2186,14 +2197,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "financial",
-   "run_id": "audit-3fc0d8db-d144-4c4e-ada3-dfb9d08e61e1",
+   "run_id": "audit-123a3aff-bff0-475a-8549-831a82057133",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 21,
     "EQUAL": 8,
     "ERROR": 1
    },
-   "smells_fired": 2,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -2214,9 +2225,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.02,
-    "questions": 3.424,
-    "shuffle": 0.043
+    "fixture": 0.011,
+    "questions": 2.899,
+    "shuffle": 0.031
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2227,14 +2238,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "formula_1",
-   "run_id": "audit-cc4c3ff9-f9a7-4a5d-b0ef-a38e9a8c5ea4",
+   "run_id": "audit-54c7778e-0356-4c17-8678-c65329ee3590",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 43,
     "EQUAL": 20,
     "ERROR": 3
    },
-   "smells_fired": 4,
+   "smells_fired": 8,
    "credited_but_not_equal": {
     "total": 6,
     "by_mechanism": {
@@ -2255,9 +2266,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.007,
-    "questions": 5.525,
-    "shuffle": 0.146
+    "fixture": 0.003,
+    "questions": 4.692,
+    "shuffle": 0.112
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2268,14 +2279,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "student_club",
-   "run_id": "audit-c8a23211-745e-4ff1-a2bf-8db4b1670f09",
+   "run_id": "audit-ff72e7c2-cd51-4668-8dab-706dab7d9ebc",
    "audited": 48,
    "verdicts": {
     "EQUAL": 27,
     "ERROR": 3,
     "NOT_EQUAL": 18
    },
-   "smells_fired": 1,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -2296,14 +2307,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 0.083,
-    "shuffle": 0.078
+    "fixture": 0.001,
+    "questions": 0.067,
+    "shuffle": 0.055
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1435"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-4.tar.gz"
   },
   {
@@ -2311,14 +2320,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "superhero",
-   "run_id": "audit-9e3b938b-84f9-45f0-bf0a-6ad4986dc7ab",
+   "run_id": "audit-4b172a01-eb57-4e81-aa25-724616732a9c",
    "audited": 52,
    "verdicts": {
     "EQUAL": 40,
     "NOT_EQUAL": 11,
     "ERROR": 1
    },
-   "smells_fired": 3,
+   "smells_fired": 8,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -2340,8 +2349,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.58,
-    "shuffle": 0.009
+    "questions": 0.461,
+    "shuffle": 0.01
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2352,14 +2361,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "thrombosis_prediction",
-   "run_id": "audit-147f1124-b030-48ad-a74c-cd800cf1a32c",
+   "run_id": "audit-cd5a15dc-09a9-427b-99e9-5f1896687127",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 30,
     "EQUAL": 16,
     "ERROR": 4
    },
-   "smells_fired": 2,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -2381,8 +2390,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.357,
-    "shuffle": 0.048
+    "questions": 0.315,
+    "shuffle": 0.036
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2393,14 +2402,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "toxicology",
-   "run_id": "audit-1e841461-ed08-433e-85d7-830d98ce6ade",
+   "run_id": "audit-3746b2e9-af0a-493b-9468-ebbf7a8feb67",
    "audited": 40,
    "verdicts": {
     "EQUAL": 11,
     "NOT_EQUAL": 24,
     "ERROR": 5
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -2422,12 +2431,13 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.846,
-    "shuffle": 0.04
+    "questions": 0.717,
+    "shuffle": 0.036
    },
-   "published_questions": 2,
+   "published_questions": 3,
    "published_ids": [
     "206",
+    "213",
     "249"
    ],
    "archive": "minidev-sqlite-gpt-4.tar.gz"
@@ -2437,14 +2447,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "california_schools",
-   "run_id": "audit-d92b0844-d4d3-4a1e-9f3a-0ab9296f53fe",
+   "run_id": "audit-bc0aaf44-8e6b-4e16-b80d-148c90e7d4e6",
    "audited": 30,
    "verdicts": {
     "EQUAL": 9,
     "NOT_EQUAL": 20,
     "ERROR": 1
    },
-   "smells_fired": 4,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -2466,13 +2476,11 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 1.413,
-    "shuffle": 0.131
+    "questions": 1.186,
+    "shuffle": 0.12
    },
-   "published_questions": 1,
-   "published_ids": [
-    "82"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
   },
   {
@@ -2480,14 +2488,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "card_games",
-   "run_id": "audit-d31cab82-3889-46c1-9da6-defca398afc6",
+   "run_id": "audit-94c129e9-5ab3-4f12-bc4f-4d427a7a6d68",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 36,
     "EQUAL": 15,
     "ERROR": 1
    },
-   "smells_fired": 3,
+   "smells_fired": 9,
    "credited_but_not_equal": {
     "total": 6,
     "by_mechanism": {
@@ -2510,15 +2518,14 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.037,
-    "questions": 45.912,
-    "shuffle": 1.224
+    "fixture": 0.052,
+    "questions": 45.692,
+    "shuffle": 1.816
    },
-   "published_questions": 3,
+   "published_questions": 2,
    "published_ids": [
     "358",
-    "440",
-    "462"
+    "440"
    ],
    "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
   },
@@ -2527,14 +2534,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "codebase_community",
-   "run_id": "audit-23069b57-2e1a-4068-b152-9cd41104f31b",
+   "run_id": "audit-b6ba4c28-569f-4884-bd71-8e4e34b703af",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 23,
     "EQUAL": 23,
     "ERROR": 3
    },
-   "smells_fired": 3,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -2558,8 +2565,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.011,
-    "questions": 45.355,
-    "shuffle": 1.315
+    "questions": 41.303,
+    "shuffle": 1.071
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2570,14 +2577,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "debit_card_specializing",
-   "run_id": "audit-3e5adc79-54df-43ec-b04d-d17f8bc48ba5",
+   "run_id": "audit-15bfcc1c-388a-4f9a-a9d9-fde2eae689b4",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 20,
     "ERROR": 1,
     "EQUAL": 9
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -2599,8 +2606,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.003,
-    "questions": 11.339,
-    "shuffle": 0.061
+    "questions": 9.079,
+    "shuffle": 0.049
    },
    "published_questions": 1,
    "published_ids": [
@@ -2613,14 +2620,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "european_football_2",
-   "run_id": "audit-24c394ae-aaff-488c-8753-e8c800d85f0b",
+   "run_id": "audit-32bdcd7f-0bdb-4d26-8b5e-5d471778172d",
    "audited": 51,
    "verdicts": {
     "EQUAL": 26,
     "NOT_EQUAL": 23,
     "ERROR": 2
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 6,
     "by_mechanism": {
@@ -2641,9 +2648,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.014,
-    "questions": 11.627,
-    "shuffle": 3.066
+    "fixture": 0.018,
+    "questions": 9.111,
+    "shuffle": 3.164
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2654,14 +2661,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "financial",
-   "run_id": "audit-3445351e-bdc4-49f1-b501-e7e5d3312d0a",
+   "run_id": "audit-0875de74-84a1-4854-8665-988d890ee028",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 18,
     "ERROR": 3,
     "EQUAL": 9
    },
-   "smells_fired": 1,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -2682,9 +2689,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.025,
-    "questions": 3.369,
-    "shuffle": 0.038
+    "fixture": 0.012,
+    "questions": 2.678,
+    "shuffle": 0.033
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2695,14 +2702,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "formula_1",
-   "run_id": "audit-25d5d40f-3fc8-4b0f-800e-6546b3c11f7e",
+   "run_id": "audit-9038a739-9c11-4e45-ba70-31c7924c8f56",
    "audited": 66,
    "verdicts": {
     "EQUAL": 25,
     "NOT_EQUAL": 35,
     "ERROR": 6
    },
-   "smells_fired": 4,
+   "smells_fired": 8,
    "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -2723,9 +2730,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.008,
-    "questions": 5.577,
-    "shuffle": 0.136
+    "fixture": 0.004,
+    "questions": 4.663,
+    "shuffle": 0.121
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2736,14 +2743,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "student_club",
-   "run_id": "audit-c7efddca-88a8-47a2-ab99-8b894a00c808",
+   "run_id": "audit-8d04d1f9-0452-43f9-b611-17281be5aec7",
    "audited": 48,
    "verdicts": {
     "EQUAL": 31,
     "ERROR": 5,
     "NOT_EQUAL": 12
    },
-   "smells_fired": 1,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -2764,14 +2771,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 0.083,
-    "shuffle": 0.077
+    "fixture": 0.001,
+    "questions": 0.07,
+    "shuffle": 0.066
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1435"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
   },
   {
@@ -2779,14 +2784,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "superhero",
-   "run_id": "audit-6e8823c0-2c9a-4f1f-a1da-943e1f5ea07b",
+   "run_id": "audit-85cc05d7-db31-4360-9377-5d3a1e60a5a8",
    "audited": 52,
    "verdicts": {
     "EQUAL": 37,
     "NOT_EQUAL": 14,
     "ERROR": 1
    },
-   "smells_fired": 3,
+   "smells_fired": 8,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -2807,9 +2812,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 0.648,
-    "shuffle": 0.011
+    "fixture": 0.001,
+    "questions": 0.525,
+    "shuffle": 0.01
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2820,14 +2825,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "thrombosis_prediction",
-   "run_id": "audit-5e8d44db-a40f-4883-a03a-2ff7a4a276cf",
+   "run_id": "audit-5268ddb2-4407-4bd5-875c-b71ecdd1c022",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 31,
     "EQUAL": 12,
     "ERROR": 7
    },
-   "smells_fired": 2,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 5,
     "by_mechanism": {
@@ -2849,8 +2854,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.413,
-    "shuffle": 0.037
+    "questions": 0.381,
+    "shuffle": 0.04
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2861,14 +2866,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "toxicology",
-   "run_id": "audit-f58b0212-bc37-4061-b2c0-64297a07a1cc",
+   "run_id": "audit-0948d68a-b4bf-4eaa-b48c-7654355959b1",
    "audited": 40,
    "verdicts": {
     "EQUAL": 9,
     "ERROR": 8,
     "NOT_EQUAL": 23
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 5,
     "by_mechanism": {
@@ -2890,12 +2895,13 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.822,
-    "shuffle": 0.049
+    "questions": 0.697,
+    "shuffle": 0.038
    },
-   "published_questions": 2,
+   "published_questions": 3,
    "published_ids": [
     "206",
+    "213",
     "268"
    ],
    "archive": "minidev-sqlite-gpt-4-32k.tar.gz"
@@ -2905,13 +2911,13 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "california_schools",
-   "run_id": "audit-91c892ea-1216-430e-8275-2ba08ac3f0bb",
+   "run_id": "audit-f5035fdc-fa0b-4a73-a53e-ac0bba94e816",
    "audited": 30,
    "verdicts": {
     "EQUAL": 11,
     "NOT_EQUAL": 19
    },
-   "smells_fired": 4,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -2933,13 +2939,11 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 1.244,
-    "shuffle": 0.119
+    "questions": 0.993,
+    "shuffle": 0.103
    },
-   "published_questions": 1,
-   "published_ids": [
-    "82"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
   },
   {
@@ -2947,14 +2951,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "card_games",
-   "run_id": "audit-fb23ec3b-e8c5-4809-a8bc-a5db5787fee3",
+   "run_id": "audit-4bd1ae12-10df-4fe5-8373-ba1e5d133a65",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 31,
     "EQUAL": 18,
     "ERROR": 3
    },
-   "smells_fired": 3,
+   "smells_fired": 9,
    "credited_but_not_equal": {
     "total": 9,
     "by_mechanism": {
@@ -2977,15 +2981,14 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.03,
-    "questions": 51.034,
-    "shuffle": 1.252
+    "fixture": 0.026,
+    "questions": 54.381,
+    "shuffle": 1.069
    },
-   "published_questions": 3,
+   "published_questions": 2,
    "published_ids": [
     "358",
-    "440",
-    "462"
+    "440"
    ],
    "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
   },
@@ -2994,14 +2997,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "codebase_community",
-   "run_id": "audit-5e0765be-3cca-4d9b-b227-abcb845c81cc",
+   "run_id": "audit-4b81ea74-49cf-491a-8d58-16761a723c7c",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 21,
     "EQUAL": 24,
     "ERROR": 4
    },
-   "smells_fired": 3,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -3024,9 +3027,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.012,
-    "questions": 42.398,
-    "shuffle": 1.3
+    "fixture": 0.019,
+    "questions": 44.054,
+    "shuffle": 1.303
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3037,13 +3040,13 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "debit_card_specializing",
-   "run_id": "audit-7e580d3a-8a50-44e6-a970-3d8a0f13f396",
+   "run_id": "audit-5f78dcae-23a6-41dd-b968-66c5efc812f1",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 20,
     "EQUAL": 10
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -3064,9 +3067,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 4.001,
-    "shuffle": 0.048
+    "fixture": 0.002,
+    "questions": 3.107,
+    "shuffle": 0.041
    },
    "published_questions": 1,
    "published_ids": [
@@ -3079,14 +3082,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "european_football_2",
-   "run_id": "audit-caf3f5cc-33f2-4843-8b6d-7df9d4cf8f30",
+   "run_id": "audit-a46c8756-2d31-434f-ad9a-088e88ffff05",
    "audited": 51,
    "verdicts": {
     "EQUAL": 20,
     "NOT_EQUAL": 29,
     "ERROR": 2
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 8,
     "by_mechanism": {
@@ -3107,9 +3110,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.022,
-    "questions": 12.695,
-    "shuffle": 3.911
+    "fixture": 0.011,
+    "questions": 8.493,
+    "shuffle": 2.368
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3120,14 +3123,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "financial",
-   "run_id": "audit-a62b9450-e229-48fa-be8c-cdeeaabf490d",
+   "run_id": "audit-2e996f2c-8ff4-4b20-88ff-e1c2b0729872",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 13,
     "EQUAL": 9,
     "ERROR": 8
    },
-   "smells_fired": 2,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -3148,9 +3151,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.018,
-    "questions": 2.26,
-    "shuffle": 0.042
+    "fixture": 0.011,
+    "questions": 1.744,
+    "shuffle": 0.031
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3161,14 +3164,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "formula_1",
-   "run_id": "audit-d7f733e7-2723-448a-9d61-9fbb4f2a3d53",
+   "run_id": "audit-d260c381-60be-4bc8-a8c4-268047825d16",
    "audited": 66,
    "verdicts": {
     "EQUAL": 25,
     "ERROR": 7,
     "NOT_EQUAL": 34
    },
-   "smells_fired": 2,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -3189,9 +3192,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.006,
-    "questions": 4.815,
-    "shuffle": 0.127
+    "fixture": 0.003,
+    "questions": 3.971,
+    "shuffle": 0.108
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3202,14 +3205,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "student_club",
-   "run_id": "audit-66d23471-2e30-4bc8-8cda-2c7d92b266c9",
+   "run_id": "audit-d6f11ee3-2d2f-49f6-8b0e-d83c8785ec62",
    "audited": 48,
    "verdicts": {
     "EQUAL": 22,
     "ERROR": 12,
     "NOT_EQUAL": 14
    },
-   "smells_fired": 1,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -3230,14 +3233,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 0.077,
-    "shuffle": 0.07
+    "fixture": 0.001,
+    "questions": 0.056,
+    "shuffle": 0.055
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1435"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
   },
   {
@@ -3245,14 +3246,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "superhero",
-   "run_id": "audit-538af6d0-dd05-4616-9cc2-56966727220a",
+   "run_id": "audit-e940f282-e345-4f35-b0cd-765e18a96ca9",
    "audited": 52,
    "verdicts": {
     "EQUAL": 29,
     "NOT_EQUAL": 9,
     "ERROR": 14
    },
-   "smells_fired": 3,
+   "smells_fired": 8,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -3274,8 +3275,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.512,
-    "shuffle": 0.01
+    "questions": 0.416,
+    "shuffle": 0.009
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3286,14 +3287,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "thrombosis_prediction",
-   "run_id": "audit-8ba87c68-edea-492e-89a3-385b27e034dc",
+   "run_id": "audit-e31cf9f1-1055-4ff5-8757-d1be7f2d72f6",
    "audited": 50,
    "verdicts": {
     "ERROR": 6,
     "NOT_EQUAL": 29,
     "EQUAL": 15
    },
-   "smells_fired": 2,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -3315,8 +3316,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.367,
-    "shuffle": 0.056
+    "questions": 0.325,
+    "shuffle": 0.038
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3327,14 +3328,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "toxicology",
-   "run_id": "audit-6d8d0e18-7d46-4a00-88ab-8c209953260e",
+   "run_id": "audit-1e47f097-c49c-49e9-af18-10cdc6016144",
    "audited": 40,
    "verdicts": {
     "EQUAL": 7,
     "NOT_EQUAL": 13,
     "ERROR": 20
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 3,
     "by_mechanism": {
@@ -3356,12 +3357,13 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.573,
-    "shuffle": 0.046
+    "questions": 0.461,
+    "shuffle": 0.035
    },
-   "published_questions": 2,
+   "published_questions": 3,
    "published_ids": [
     "206",
+    "213",
     "268"
    ],
    "archive": "minidev-sqlite-gpt-4-turbo.tar.gz"
@@ -3371,14 +3373,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "california_schools",
-   "run_id": "audit-a296b4a7-6dd1-4a2a-9567-854a87c8251b",
+   "run_id": "audit-20b1ac87-2152-49cd-b56e-2955ba41b529",
    "audited": 30,
    "verdicts": {
     "EQUAL": 6,
     "NOT_EQUAL": 19,
     "ERROR": 5
    },
-   "smells_fired": 4,
+   "smells_fired": 6,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -3400,8 +3402,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 1.103,
-    "shuffle": 0.131
+    "questions": 0.93,
+    "shuffle": 0.099
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3412,14 +3414,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "card_games",
-   "run_id": "audit-81ba61cb-98ab-453b-91d2-dcdb8427ebe3",
+   "run_id": "audit-5ef2cb40-45de-4842-bf53-d73a3ef18763",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 36,
     "EQUAL": 13,
     "ERROR": 3
    },
-   "smells_fired": 3,
+   "smells_fired": 9,
    "credited_but_not_equal": {
     "total": 6,
     "by_mechanism": {
@@ -3442,15 +3444,14 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.027,
-    "questions": 48.751,
-    "shuffle": 1.103
+    "fixture": 0.03,
+    "questions": 50.314,
+    "shuffle": 1.139
    },
-   "published_questions": 3,
+   "published_questions": 2,
    "published_ids": [
     "358",
-    "440",
-    "462"
+    "440"
    ],
    "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
   },
@@ -3459,14 +3460,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "codebase_community",
-   "run_id": "audit-b6ba9caf-17d7-490f-92fb-2cd95f6815bd",
+   "run_id": "audit-fbae111f-4644-4d7e-824f-47f6e589b040",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 22,
     "ERROR": 8,
     "EQUAL": 19
    },
-   "smells_fired": 3,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -3489,9 +3490,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 44.079,
-    "shuffle": 1.193
+    "fixture": 0.011,
+    "questions": 43.755,
+    "shuffle": 1.136
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3502,14 +3503,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "debit_card_specializing",
-   "run_id": "audit-8d432337-f2f3-458d-ab13-d0ad22a2fcf2",
+   "run_id": "audit-31b25833-9bbd-4348-a01a-89dbee8ffeeb",
    "audited": 30,
    "verdicts": {
     "EQUAL": 10,
     "NOT_EQUAL": 17,
     "ERROR": 3
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -3530,8 +3531,8 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 3.5,
+    "fixture": 0.004,
+    "questions": 5.044,
     "shuffle": 0.051
    },
    "published_questions": 1,
@@ -3545,14 +3546,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "european_football_2",
-   "run_id": "audit-4ab2e1b5-7583-4706-9301-9aa2192eaf25",
+   "run_id": "audit-0033a0e2-75fe-4cf0-a57f-d34760ddcaaf",
    "audited": 51,
    "verdicts": {
     "EQUAL": 21,
     "NOT_EQUAL": 25,
     "ERROR": 5
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 8,
     "by_mechanism": {
@@ -3573,9 +3574,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.013,
-    "questions": 10.025,
-    "shuffle": 3.911
+    "fixture": 0.027,
+    "questions": 11.985,
+    "shuffle": 4.357
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3586,14 +3587,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "financial",
-   "run_id": "audit-37b4e4c2-8c68-420b-854a-341f0bbe450b",
+   "run_id": "audit-838d6bab-5c0c-4b6c-9bae-956275385936",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 21,
     "ERROR": 5,
     "EQUAL": 4
    },
-   "smells_fired": 1,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -3614,9 +3615,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.016,
-    "questions": 3.414,
-    "shuffle": 0.047
+    "fixture": 0.01,
+    "questions": 2.624,
+    "shuffle": 0.03
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3627,14 +3628,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "formula_1",
-   "run_id": "audit-99c59178-a979-4e88-8ed7-6de682614822",
+   "run_id": "audit-987e66fc-0e62-4ddb-9f1f-a2ce6b5d48ea",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 30,
     "EQUAL": 26,
     "ERROR": 10
    },
-   "smells_fired": 3,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -3655,9 +3656,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.007,
-    "questions": 5.27,
-    "shuffle": 0.143
+    "fixture": 0.003,
+    "questions": 4.403,
+    "shuffle": 0.111
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3668,14 +3669,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "student_club",
-   "run_id": "audit-ec2218eb-4561-4b99-9772-20200255aa0c",
+   "run_id": "audit-c872f109-d1d9-4526-b3b0-e60937b39613",
    "audited": 48,
    "verdicts": {
     "EQUAL": 25,
     "NOT_EQUAL": 19,
     "ERROR": 4
    },
-   "smells_fired": 1,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -3696,14 +3697,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 0.098,
-    "shuffle": 0.071
+    "fixture": 0.001,
+    "questions": 0.069,
+    "shuffle": 0.057
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1435"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-meta-llama-3-70b-instruct-2.tar.gz"
   },
   {
@@ -3711,13 +3710,13 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "superhero",
-   "run_id": "audit-e8bd48bc-864a-4d06-bc3c-74fda70421d0",
+   "run_id": "audit-580cad51-804c-401a-a9d2-5f275fa20bca",
    "audited": 52,
    "verdicts": {
     "EQUAL": 35,
     "NOT_EQUAL": 17
    },
-   "smells_fired": 3,
+   "smells_fired": 8,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -3739,8 +3738,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.646,
-    "shuffle": 0.012
+    "questions": 0.522,
+    "shuffle": 0.009
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3751,14 +3750,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "thrombosis_prediction",
-   "run_id": "audit-f6cba8a3-b3e1-4994-879d-ce07c007e233",
+   "run_id": "audit-a87d6d0e-84cb-46c0-9829-b0f12f9c82e4",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 28,
     "ERROR": 13,
     "EQUAL": 9
    },
-   "smells_fired": 1,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 5,
     "by_mechanism": {
@@ -3780,8 +3779,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.281,
-    "shuffle": 0.047
+    "questions": 0.24,
+    "shuffle": 0.036
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3792,14 +3791,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "toxicology",
-   "run_id": "audit-d08e73dd-8518-4814-afbd-46796fd2c056",
+   "run_id": "audit-2dc0b2e2-76c4-4b45-98fa-7651714adc62",
    "audited": 40,
    "verdicts": {
     "EQUAL": 9,
     "NOT_EQUAL": 29,
     "ERROR": 2
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 5,
     "by_mechanism": {
@@ -3821,11 +3820,12 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.787,
-    "shuffle": 0.04
+    "questions": 0.663,
+    "shuffle": 0.036
    },
-   "published_questions": 2,
+   "published_questions": 3,
    "published_ids": [
+    "213",
     "249",
     "268"
    ],
@@ -3836,7 +3836,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "california_schools",
-   "run_id": "audit-df9bb5f6-31b9-42a7-b84e-4f7361da1168",
+   "run_id": "audit-bfde8ea0-afe8-402f-830f-83cca5523607",
    "audited": 30,
    "verdicts": {
     "ERROR": 16,
@@ -3865,8 +3865,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.378,
-    "shuffle": 0.122
+    "questions": 0.325,
+    "shuffle": 0.112
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3877,14 +3877,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "card_games",
-   "run_id": "audit-15027561-7049-44cf-8283-c2d0463d3d2c",
+   "run_id": "audit-a24c9cd2-1820-463e-9520-90f54968ae5f",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 28,
     "ERROR": 16,
     "EQUAL": 8
    },
-   "smells_fired": 2,
+   "smells_fired": 7,
    "credited_but_not_equal": {
     "total": 5,
     "by_mechanism": {
@@ -3907,15 +3907,14 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.029,
-    "questions": 44.781,
-    "shuffle": 1.156
+    "fixture": 0.099,
+    "questions": 49.951,
+    "shuffle": 1.896
    },
-   "published_questions": 3,
+   "published_questions": 2,
    "published_ids": [
     "358",
-    "440",
-    "462"
+    "440"
    ],
    "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
   },
@@ -3924,14 +3923,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "codebase_community",
-   "run_id": "audit-464f1d92-8ec8-4639-b79f-c446a9b8f9b5",
+   "run_id": "audit-4b6ec901-0639-4bfa-b815-93f544754928",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 20,
     "ERROR": 15,
     "EQUAL": 14
    },
-   "smells_fired": 3,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -3954,9 +3953,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.013,
-    "questions": 45.247,
-    "shuffle": 1.212
+    "fixture": 0.01,
+    "questions": 44.047,
+    "shuffle": 1.108
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3967,14 +3966,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "debit_card_specializing",
-   "run_id": "audit-2513425b-0020-46a5-87dd-683e71776b18",
+   "run_id": "audit-4c138a07-2259-4b6c-b162-6c382f992ab6",
    "audited": 30,
    "verdicts": {
     "ERROR": 8,
     "EQUAL": 5,
     "NOT_EQUAL": 17
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -3998,7 +3997,7 @@
    },
    "elapsed_seconds": {
     "fixture": 0.002,
-    "questions": 32.61,
+    "questions": 32.425,
     "shuffle": 0.04
    },
    "published_questions": 1,
@@ -4012,7 +4011,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "european_football_2",
-   "run_id": "audit-5cc2ec0f-cd89-4d64-b7f5-90a23137ee39",
+   "run_id": "audit-cf9e6790-8398-4c07-a70c-cb695d6944d9",
    "audited": 51,
    "verdicts": {
     "ERROR": 21,
@@ -4040,9 +4039,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.014,
-    "questions": 16.218,
-    "shuffle": 2.832
+    "fixture": 0.012,
+    "questions": 12.74,
+    "shuffle": 2.378
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4053,14 +4052,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "financial",
-   "run_id": "audit-d775a04d-3e35-454a-8eaa-a94a22de811f",
+   "run_id": "audit-70622496-da89-4d30-aefe-e92db138d3bc",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 15,
     "EQUAL": 4,
     "ERROR": 11
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -4081,9 +4080,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.013,
-    "questions": 4.009,
-    "shuffle": 0.037
+    "fixture": 0.011,
+    "questions": 3.29,
+    "shuffle": 0.032
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4094,14 +4093,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "formula_1",
-   "run_id": "audit-8a2aed3c-d3bd-4ece-b104-f4b22760efbd",
+   "run_id": "audit-15f13232-a920-467e-86b2-9a2ff65488c1",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 32,
     "EQUAL": 14,
     "ERROR": 20
    },
-   "smells_fired": 2,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -4122,9 +4121,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 4.989,
-    "shuffle": 0.15
+    "fixture": 0.003,
+    "questions": 4.141,
+    "shuffle": 0.12
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4135,14 +4134,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "student_club",
-   "run_id": "audit-dc409a9a-3e75-4424-b1d2-608e49d811b9",
+   "run_id": "audit-eaa8f178-057c-4664-8288-b13b8e875812",
    "audited": 48,
    "verdicts": {
     "ERROR": 19,
     "EQUAL": 15,
     "NOT_EQUAL": 14
    },
-   "smells_fired": 0,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -4164,13 +4163,11 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.075,
-    "shuffle": 0.065
+    "questions": 0.064,
+    "shuffle": 0.061
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1435"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz"
   },
   {
@@ -4178,14 +4175,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "superhero",
-   "run_id": "audit-067df9d1-605a-4fad-9957-639cd9a5dc6c",
+   "run_id": "audit-d08245f4-df22-41c6-b1a1-45b13902d6ed",
    "audited": 52,
    "verdicts": {
     "ERROR": 16,
     "EQUAL": 26,
     "NOT_EQUAL": 10
    },
-   "smells_fired": 2,
+   "smells_fired": 7,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -4207,8 +4204,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.584,
-    "shuffle": 0.012
+    "questions": 0.508,
+    "shuffle": 0.01
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4219,7 +4216,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "thrombosis_prediction",
-   "run_id": "audit-3d3519f1-c5fa-4de8-8bc6-f6d7d5da23ae",
+   "run_id": "audit-c9a92f06-db25-4d29-a291-4612d50f017d",
    "audited": 50,
    "verdicts": {
     "ERROR": 29,
@@ -4247,8 +4244,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.225,
-    "shuffle": 0.043
+    "questions": 0.224,
+    "shuffle": 0.048
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4259,14 +4256,14 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "toxicology",
-   "run_id": "audit-fc082afa-0748-4507-be68-10405b048b27",
+   "run_id": "audit-dfc8201f-5d21-4992-8a44-9688f7388e13",
    "audited": 40,
    "verdicts": {
     "NOT_EQUAL": 18,
     "ERROR": 16,
     "EQUAL": 6
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -4288,8 +4285,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.797,
-    "shuffle": 0.044
+    "questions": 0.775,
+    "shuffle": 0.046
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4300,14 +4297,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "california_schools",
-   "run_id": "audit-bc01e4d4-3912-463e-a9b2-bc616e056475",
+   "run_id": "audit-3656d8a6-539d-4d32-9ae1-4591a144c92f",
    "audited": 30,
    "verdicts": {
     "ERROR": 16,
     "NOT_EQUAL": 13,
     "EQUAL": 1
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -4329,8 +4326,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.683,
-    "shuffle": 0.117
+    "questions": 0.634,
+    "shuffle": 0.124
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4341,14 +4338,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "card_games",
-   "run_id": "audit-e0b6d4d0-9118-49d5-9353-48cfd978097e",
+   "run_id": "audit-d2c38ab2-b464-414c-9398-c524489936d3",
    "audited": 52,
    "verdicts": {
     "ERROR": 29,
     "NOT_EQUAL": 14,
     "EQUAL": 9
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 3,
     "by_mechanism": {
@@ -4371,14 +4368,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.024,
-    "questions": 33.309,
-    "shuffle": 1.142
+    "fixture": 0.023,
+    "questions": 33.358,
+    "shuffle": 0.984
    },
-   "published_questions": 1,
-   "published_ids": [
-    "462"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
   },
   {
@@ -4386,14 +4381,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "codebase_community",
-   "run_id": "audit-7d7e763d-a218-426c-8687-86848f5983a5",
+   "run_id": "audit-0ff4501f-5c92-4999-8040-8110d3ce753e",
    "audited": 49,
    "verdicts": {
     "ERROR": 20,
     "NOT_EQUAL": 21,
     "EQUAL": 8
    },
-   "smells_fired": 3,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -4414,9 +4409,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.017,
-    "questions": 11.851,
-    "shuffle": 1.522
+    "fixture": 0.021,
+    "questions": 10.008,
+    "shuffle": 1.6
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4427,14 +4422,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "debit_card_specializing",
-   "run_id": "audit-13cf0492-cbc3-4df7-96f5-bedeafd4f2c5",
+   "run_id": "audit-e403e3b7-f0e0-45b8-baea-6a066ce9ed66",
    "audited": 30,
    "verdicts": {
     "EQUAL": 5,
     "ERROR": 11,
     "NOT_EQUAL": 14
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -4455,15 +4450,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 1.721,
-    "shuffle": 0.053
+    "fixture": 0.011,
+    "questions": 1.96,
+    "shuffle": 0.077
    },
-   "published_questions": 2,
-   "published_ids": [
-    "1507",
-    "1514"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
   },
   {
@@ -4471,7 +4463,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "european_football_2",
-   "run_id": "audit-fa26f81a-cce0-4423-814f-6c1c690ef447",
+   "run_id": "audit-476e3000-555d-4a97-9429-64c9427b476c",
    "audited": 51,
    "verdicts": {
     "EQUAL": 13,
@@ -4499,9 +4491,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.023,
-    "questions": 9.506,
-    "shuffle": 3.135
+    "fixture": 0.013,
+    "questions": 14.863,
+    "shuffle": 2.709
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4512,14 +4504,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "financial",
-   "run_id": "audit-91b4d389-5897-4df0-8417-7c6f3e046757",
+   "run_id": "audit-665f0d1e-78df-4cfe-8230-c4f382d84f3c",
    "audited": 30,
    "verdicts": {
-    "NOT_EQUAL": 9,
-    "ERROR": 18,
+    "NOT_EQUAL": 8,
+    "ERROR": 19,
     "EQUAL": 3
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -4534,15 +4526,17 @@
      "0": 0
     }
    },
-   "errors": 18,
+   "errors": 19,
    "timed_out": {
     "gold": [],
-    "prediction": []
+    "prediction": [
+     116
+    ]
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 25.136,
-    "shuffle": 0.03
+    "fixture": 0.019,
+    "questions": 31.86,
+    "shuffle": 0.044
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4553,14 +4547,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "formula_1",
-   "run_id": "audit-a9fc8296-fc59-4760-a04f-d45621b64d4d",
+   "run_id": "audit-f0602f09-e5dc-4b5c-a02d-87ff5edcf379",
    "audited": 66,
    "verdicts": {
     "ERROR": 27,
     "NOT_EQUAL": 27,
     "EQUAL": 12
    },
-   "smells_fired": 2,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -4581,9 +4575,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 4.966,
-    "shuffle": 0.15
+    "fixture": 0.009,
+    "questions": 4.642,
+    "shuffle": 0.195
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4594,14 +4588,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "student_club",
-   "run_id": "audit-856da5a8-6a71-40a2-b306-8cbcd21e9060",
+   "run_id": "audit-baa260f0-66eb-4a01-8b24-4ce27d545a28",
    "audited": 48,
    "verdicts": {
     "EQUAL": 12,
     "ERROR": 28,
     "NOT_EQUAL": 8
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -4622,14 +4616,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 0.055,
-    "shuffle": 0.073
+    "fixture": 0.002,
+    "questions": 0.039,
+    "shuffle": 0.059
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1435"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
   },
   {
@@ -4637,14 +4629,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "superhero",
-   "run_id": "audit-ceef14ee-7aab-4fc2-a493-981dcc90708e",
+   "run_id": "audit-ae05028d-8405-4f90-8291-1402a677c1c9",
    "audited": 52,
    "verdicts": {
     "ERROR": 35,
     "EQUAL": 12,
     "NOT_EQUAL": 5
    },
-   "smells_fired": 1,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -4666,8 +4658,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.665,
-    "shuffle": 0.013
+    "questions": 0.6,
+    "shuffle": 0.009
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4678,14 +4670,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "thrombosis_prediction",
-   "run_id": "audit-b68452b6-171f-402e-b881-1718b15970bc",
+   "run_id": "audit-8ebf81d6-1c78-4d0c-a0a1-96f81c2050e8",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 21,
     "EQUAL": 7,
     "ERROR": 22
    },
-   "smells_fired": 1,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -4707,8 +4699,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.194,
-    "shuffle": 0.042
+    "questions": 0.196,
+    "shuffle": 0.037
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4719,14 +4711,14 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "toxicology",
-   "run_id": "audit-2d4ec9d4-28e3-4b98-9d28-d020a587bb34",
+   "run_id": "audit-572c1f65-642b-4efa-bc47-e6ea7784e590",
    "audited": 40,
    "verdicts": {
     "NOT_EQUAL": 10,
     "ERROR": 21,
     "EQUAL": 9
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -4748,12 +4740,13 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 2.681,
+    "questions": 2.327,
     "shuffle": 0.039
    },
-   "published_questions": 1,
+   "published_questions": 2,
    "published_ids": [
-    "206"
+    "206",
+    "213"
    ],
    "archive": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz"
   },
@@ -4762,14 +4755,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "california_schools",
-   "run_id": "audit-78e008cd-53d7-4ce6-b3c9-46dc0b7a6391",
+   "run_id": "audit-1406031d-73f4-4ded-ab36-8c2de946b708",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 17,
     "EQUAL": 1,
     "ERROR": 12
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -4791,8 +4784,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.888,
-    "shuffle": 0.12
+    "questions": 0.81,
+    "shuffle": 0.112
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4803,14 +4796,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "card_games",
-   "run_id": "audit-82fc97c5-4082-4d4e-9a7b-9963798f6328",
+   "run_id": "audit-c0f61be7-48b5-4b66-9867-cbe1b2a2e223",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 37,
     "EQUAL": 9,
     "ERROR": 6
    },
-   "smells_fired": 3,
+   "smells_fired": 9,
    "credited_but_not_equal": {
     "total": 5,
     "by_mechanism": {
@@ -4831,9 +4824,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.047,
-    "questions": 27.232,
-    "shuffle": 1.465
+    "fixture": 0.026,
+    "questions": 17.805,
+    "shuffle": 1.182
    },
    "published_questions": 2,
    "published_ids": [
@@ -4847,14 +4840,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "codebase_community",
-   "run_id": "audit-2febf83d-7b33-4160-834c-006f1e33cbb2",
+   "run_id": "audit-8e4c73b7-b84d-4da8-a076-9fc917922e57",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 19,
     "EQUAL": 17,
     "ERROR": 13
    },
-   "smells_fired": 3,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -4877,9 +4870,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 40.394,
-    "shuffle": 1.206
+    "fixture": 0.014,
+    "questions": 41.282,
+    "shuffle": 1.229
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4890,14 +4883,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "debit_card_specializing",
-   "run_id": "audit-25310ec1-176a-493b-876d-056be8b8190b",
+   "run_id": "audit-b4228a58-b929-4296-868b-effec0cbbb79",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 16,
     "ERROR": 8,
     "EQUAL": 6
    },
-   "smells_fired": 0,
+   "smells_fired": 2,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -4918,14 +4911,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 2.551,
-    "shuffle": 0.044
+    "fixture": 0.003,
+    "questions": 2.004,
+    "shuffle": 0.043
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1514"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
   },
   {
@@ -4933,14 +4924,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "european_football_2",
-   "run_id": "audit-15fea0db-f7ac-4bd6-b2ba-2161dc9c2d93",
+   "run_id": "audit-a6905c24-4bcb-43a2-8525-c062132c1fd2",
    "audited": 51,
    "verdicts": {
     "EQUAL": 21,
     "NOT_EQUAL": 24,
     "ERROR": 6
    },
-   "smells_fired": 4,
+   "smells_fired": 5,
    "credited_but_not_equal": {
     "total": 7,
     "by_mechanism": {
@@ -4961,9 +4952,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.018,
-    "questions": 10.91,
-    "shuffle": 3.037
+    "fixture": 0.011,
+    "questions": 8.236,
+    "shuffle": 2.61
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4974,14 +4965,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "financial",
-   "run_id": "audit-e68aafff-7739-4280-b3dc-d30f0144b6d4",
+   "run_id": "audit-1248b206-3eef-4c75-88b4-a303995a2ad4",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 13,
     "ERROR": 13,
     "EQUAL": 4
    },
-   "smells_fired": 1,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -5004,9 +4995,9 @@
     ]
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 31.889,
-    "shuffle": 0.028
+    "fixture": 0.009,
+    "questions": 31.725,
+    "shuffle": 0.029
    },
    "published_questions": 0,
    "published_ids": [],
@@ -5017,14 +5008,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "formula_1",
-   "run_id": "audit-30bc63cf-2630-4cad-b46a-51686307e05f",
+   "run_id": "audit-f32bf4f8-d80a-4193-9b6f-b7bc3f8d730c",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 33,
     "EQUAL": 11,
     "ERROR": 22
    },
-   "smells_fired": 1,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 3,
     "by_mechanism": {
@@ -5045,9 +5036,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 6.055,
-    "shuffle": 0.135
+    "fixture": 0.003,
+    "questions": 4.182,
+    "shuffle": 0.114
    },
    "published_questions": 0,
    "published_ids": [],
@@ -5058,14 +5049,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "student_club",
-   "run_id": "audit-6a653158-9488-4507-89d0-e5883e452240",
+   "run_id": "audit-dfec41a8-5609-4ce7-b311-1b29d74919ec",
    "audited": 48,
    "verdicts": {
     "NOT_EQUAL": 17,
     "EQUAL": 21,
     "ERROR": 10
    },
-   "smells_fired": 0,
+   "smells_fired": 3,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -5086,14 +5077,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.082,
-    "shuffle": 0.065
+    "fixture": 0.002,
+    "questions": 0.07,
+    "shuffle": 0.057
    },
-   "published_questions": 1,
-   "published_ids": [
-    "1435"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
   },
   {
@@ -5101,14 +5090,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "superhero",
-   "run_id": "audit-eca4c25d-8d0b-48b4-baef-a8c0f13a5638",
+   "run_id": "audit-b10b371c-bb01-4f94-8601-98f064839461",
    "audited": 52,
    "verdicts": {
     "EQUAL": 30,
     "NOT_EQUAL": 15,
     "ERROR": 7
    },
-   "smells_fired": 3,
+   "smells_fired": 7,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -5130,8 +5119,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.589,
-    "shuffle": 0.01
+    "questions": 0.457,
+    "shuffle": 0.012
    },
    "published_questions": 0,
    "published_ids": [],
@@ -5142,7 +5131,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "thrombosis_prediction",
-   "run_id": "audit-ded23b77-3c17-4553-8fd1-5ced98c4920f",
+   "run_id": "audit-f0e34597-7d3b-4fda-b239-0010013833dc",
    "audited": 50,
    "verdicts": {
     "ERROR": 24,
@@ -5171,8 +5160,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.291,
-    "shuffle": 0.043
+    "questions": 0.205,
+    "shuffle": 0.049
    },
    "published_questions": 0,
    "published_ids": [],
@@ -5183,14 +5172,14 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "toxicology",
-   "run_id": "audit-0ffdadee-5674-483e-9046-75f1f64a26ae",
+   "run_id": "audit-467e7085-652d-440a-9e05-2a8066c1cdc6",
    "audited": 40,
    "verdicts": {
     "EQUAL": 7,
     "NOT_EQUAL": 22,
     "ERROR": 11
    },
-   "smells_fired": 0,
+   "smells_fired": 1,
    "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -5211,14 +5200,12 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 13.022,
-    "shuffle": 0.046
+    "fixture": 0.002,
+    "questions": 12.375,
+    "shuffle": 0.047
    },
-   "published_questions": 1,
-   "published_ids": [
-    "213"
-   ],
+   "published_questions": 0,
+   "published_ids": [],
    "archive": "minidev-sqlite-phi-3-medium-128k-instruct-1.tar.gz"
   }
  ]

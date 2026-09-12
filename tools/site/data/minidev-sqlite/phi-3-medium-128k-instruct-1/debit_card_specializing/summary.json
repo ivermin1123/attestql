@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-25310ec1-176a-493b-876d-056be8b8190b",
+  "run_id": "audit-b4228a58-b929-4296-868b-effec0cbbb79",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/debit_card_specializing/debit_card_specializing.sqlite | size=34635776",
   "effective_database_role": "file",
   "session_settings": {
@@ -72,6 +72,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_phi-3-medium-128k-instruct-1_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -88,9 +89,10 @@
     "arbitrary-cut": 0,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 2,
     "direction-against-question": 0
   },
-  "smells_fired": 0,
+  "smells_fired": 2,
   "credited_but_not_equal": {
     "total": 2,
     "by_mechanism": {
@@ -158,16 +160,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/phi-3-medium-128k-instruct-1/debit_card_specializing",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:05:18.321476+00:00",
+  "data_as_of": "2026-09-11T14:55:22.744868+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 2.551,
-    "shuffle": 0.044
+    "fixture": 0.003,
+    "questions": 2.004,
+    "shuffle": 0.043
   },
   "errors": [
     {

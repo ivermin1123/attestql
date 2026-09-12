@@ -32,7 +32,7 @@
         "heuristic": true,
         "means": "this statement aggregates floating point numbers, so its last digits depend on the order the rows were summed in; the values agree to six significant digits",
         "rule": "R-SET",
-        "baseline_result_hash": "sha256:6376fecdfe2de0191c430a98db1db23ae8c94b2235a7101989955c2d73465c47",
+        "baseline_result_hash": "sha256:ed9e5980b03e4ee36d094e55cce65a74a8cbdb6fbf983e68de6fec0b6a0e15d1",
         "baseline_result": {
           "columns": [
             {
@@ -67,18 +67,18 @@
               }
             ]
           ],
-          "result_hash": "sha256:6376fecdfe2de0191c430a98db1db23ae8c94b2235a7101989955c2d73465c47"
+          "result_hash": "sha256:ed9e5980b03e4ee36d094e55cce65a74a8cbdb6fbf983e68de6fec0b6a0e15d1"
         },
         "planner_statistics": {
           "member": {
-            "last_analyze": null,
+            "last_analyze": "2026-09-11 18:13:22.325026+00",
             "last_autoanalyze": null,
-            "n_mod_since_analyze": 33
+            "n_mod_since_analyze": 0
           },
           "expense": {
-            "last_analyze": null,
+            "last_analyze": "2026-09-11 17:24:23.939041+00",
             "last_autoanalyze": null,
-            "n_mod_since_analyze": 32
+            "n_mod_since_analyze": 0
           }
         },
         "shuffle": {
@@ -102,7 +102,7 @@
           "run": true,
           "verdict": "not_equal",
           "differs": true,
-          "result_hash": "sha256:88fbf702d4829bf6bf75c9caf11ecbb563d6884b0a94a2597fa7458dec47ecca",
+          "result_hash": "sha256:d17320d780a9dc8bbb6cecca0da995e03f32aeb7a1e75c0de6363dee5b7c359f",
           "result": {
             "columns": [
               {
@@ -137,7 +137,7 @@
                 }
               ]
             ],
-            "result_hash": "sha256:88fbf702d4829bf6bf75c9caf11ecbb563d6884b0a94a2597fa7458dec47ecca"
+            "result_hash": "sha256:d17320d780a9dc8bbb6cecca0da995e03f32aeb7a1e75c0de6363dee5b7c359f"
           }
         },
         "plan_variant": {
@@ -171,6 +171,24 @@
           }
         ]
       ]
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 1,
+        "distinct_rows": 1,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false,
+        "not_applicable": "a result of fewer than two rows has nothing to repeat"
+      },
+      "counterexample_rows": []
     }
   ]
 }

@@ -1,0 +1,120 @@
+{
+  "question_as_asked": "What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?",
+  "question": {
+    "question_id": "1029",
+    "question_set": "mini_dev_pg-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-12)",
+    "question_text": "What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?",
+    "evidence_text": "speed in which attacks are put together refers to buildUpPlaySpeed;highest build up play speed refers to MAX(buildUpPlaySpeed)"
+  },
+  "question_set_version": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+  "statement_source": {
+    "path": "data/questions/mini_dev_pg-00000-of-00001.json",
+    "digest": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-12)",
+    "date": "2026-01-18T08:44:25Z"
+  },
+  "executed_sql": "SELECT t1.buildUpPlaySpeed FROM Team_Attributes AS t1 INNER JOIN Team AS t2 ON t1.team_api_id = t2.team_api_id ORDER BY t1.buildUpPlaySpeed ASC NULLS FIRST LIMIT 4",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:libpg_query-parse",
+  "effective_database_role": "auditor",
+  "backend_identity_at_checkout": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+  "session_settings_in_force": {
+    "engine": "postgresql",
+    "time_zone": "Etc/UTC",
+    "date_style": "ISO, MDY",
+    "interval_style": "postgres",
+    "extra_float_digits": "1",
+    "database_collation": "en_US.utf8",
+    "work_mem": "4096",
+    "hash_mem_multiplier": "2",
+    "recorded": {
+      "statement_timeout": "0",
+      "search_path": "\"$user\", public",
+      "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+      "server_version_num": "160015",
+      "transaction_read_only": "on",
+      "max_parallel_workers_per_gather": "2",
+      "server_encoding": "UTF8",
+      "datlocprovider": "c",
+      "daticulocale": "",
+      "datcollversion": "2.41"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "buildupplayspeed",
+        "declared_type": "int8"
+      }
+    ],
+    "row_count": 4,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "int",
+          "value": 20
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 20
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 20
+        }
+      ],
+      [
+        {
+          "type": "int",
+          "value": 23
+        }
+      ]
+    ],
+    "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
+    "statement_timeout_ms": 30000
+  },
+  "row_count": 4,
+  "canonical_ordering": [
+    {
+      "column": "t1.buildupplayspeed",
+      "descending": false
+    }
+  ],
+  "serialization": {
+    "version": "attestql/audit/4",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-ORD",
+  "fixture": {
+    "schema_digest": "sha256:9569693beaecfb53a614c6a17fa15de9183779d44aa279a4c366cb75b289dc45",
+    "row_counts": {
+      "public.team": 299,
+      "public.team_attributes": 1458
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
+  },
+  "data_as_of": "2026-09-11T18:13:24.692936+00:00",
+  "executed_at": "2026-09-11T19:04:35.879425+00:00",
+  "run_id": "audit-bd0ee5fc-3556-4f9f-ab8f-2f5a6915228e",
+  "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
+  "result_hash": "sha256:968697dc8a2a01aac97b21860225d57dd94715eea7fddc4a67f60868fb702372",
+  "record_hash": "sha256:7d87a04a722827d7c28eaee86ea8cd2c6027574163586826378b3f79a9964dd4"
+}

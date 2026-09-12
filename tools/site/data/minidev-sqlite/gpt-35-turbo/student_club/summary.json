@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-d166184e-4991-4992-9ccb-60428cf6e856",
+  "run_id": "audit-bfd3a7dd-7e6f-41c0-a85d-1f7daa0367b6",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/student_club/student_club.sqlite | size=2641920",
   "effective_database_role": "file",
   "session_settings": {
@@ -90,6 +90,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -106,9 +107,10 @@
     "arbitrary-cut": 0,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 2,
     "direction-against-question": 0
   },
-  "smells_fired": 0,
+  "smells_fired": 2,
   "credited_but_not_equal": {
     "total": 1,
     "by_mechanism": {
@@ -184,16 +186,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/gpt-35-turbo/student_club",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:01:16.700796+00:00",
+  "data_as_of": "2026-09-11T14:46:46.874306+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 0.088,
-    "shuffle": 0.074
+    "fixture": 0.001,
+    "questions": 0.072,
+    "shuffle": 0.069
   },
   "errors": [
     {

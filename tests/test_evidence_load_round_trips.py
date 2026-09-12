@@ -27,7 +27,7 @@ from typing import Any, cast
 
 import pytest
 
-from attestql.audit.cli import AuditOptions, main, run_audit
+from attestql.audit.cli import SERIALIZATION, AuditOptions, main, run_audit
 from attestql.audit.compare import GOLD_RECORD_FILE, SECOND_RECORD_FILE
 from attestql.audit.engines import SQLITE
 from attestql.audit.postgres import PostgresBackend
@@ -155,24 +155,23 @@ def test_a_cell_tagged_with_a_type_the_reading_has_no_rule_for_is_refused(
         load_record(stated)
 
 
-SITE_RECORDS = REPOSITORY / "tools" / "site" / "data" / "bird-dev-sqlite"
+EARLIER_RECORDS = REPOSITORY / "tests" / "records-from-earlier-releases"
 
 
-def test_a_record_written_under_the_earlier_layout_still_re_hashes() -> None:
+def test_a_record_written_under_an_earlier_layout_still_re_hashes() -> None:
     """The layout version moved when a text value that does not decode became recordable.
     A record written before that states the version it was written under and is rendered
     under that one, so its two hashes are still its own: a reader that re-rendered every
-    record under today's rules would report every record ever written as a mismatch."""
-    written = sorted(SITE_RECORDS.rglob("evidence-gold.json"))
-    assert written, "the site data holds records from a real run"
-    earlier = [
-        path
-        for path in written
-        if cast("dict[str, str]", document(path)["serialization"])["version"]
-        in {"attestql/audit/2", "attestql/audit/3"}
-    ]
-    assert earlier, "those records were written under a layout before this one"
-    for path in earlier[:20]:
+    record under today's rules would report every record ever written as a mismatch.
+
+    The records are the ones an earlier release wrote, kept beside this test because today's
+    code cannot write one. Their directory's README says where each came from.
+    """
+    written = sorted(EARLIER_RECORDS.rglob("evidence-*.json"))
+    assert len(written) == 4, "one gold and one prediction record, on each engine"
+    for path in written:
+        stated = cast("dict[str, str]", document(path)["serialization"])["version"]
+        assert stated != SERIALIZATION.version, f"{path} is not from an earlier layout"
         round_trips(path)
 
 

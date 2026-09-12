@@ -79,18 +79,6 @@
         [
           {
             "type": "str",
-            "value": "Advertisement"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Food"
-          }
-        ],
-        [
-          {
-            "type": "str",
             "value": "Parking"
           }
         ],
@@ -99,9 +87,21 @@
             "type": "str",
             "value": "Speaker Gifts"
           }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Advertisement"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Food"
+          }
         ]
       ],
-      "result_hash": "sha256:33aa41ed5d494bfb5dc2e98856ac7486ca39f0eec87f0d6943064d471c663a32"
+      "result_hash": "sha256:1e39519e35d8497dda391541e8902a50b2c84ebb06c3687b39281354157b1e07"
     },
     "record": "evidence-gold.json"
   },
@@ -270,7 +270,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:fc28c3bca6832c74154945e7896751527d5aeee64c525e6c27d27457b0ddf181"
+      "result_hash": "sha256:cd2cdf707357595a9da0e2f5e3c2c7d0732fe6465459ac8a17dfefb0b054f8b0"
     },
     "record": "evidence-second.json"
   },
@@ -320,8 +320,8 @@
     "rows_shown_per_side": 25
   },
   "result_hashes": {
-    "gold": "sha256:33aa41ed5d494bfb5dc2e98856ac7486ca39f0eec87f0d6943064d471c663a32",
-    "second": "sha256:fc28c3bca6832c74154945e7896751527d5aeee64c525e6c27d27457b0ddf181"
+    "gold": "sha256:1e39519e35d8497dda391541e8902a50b2c84ebb06c3687b39281354157b1e07",
+    "second": "sha256:cd2cdf707357595a9da0e2f5e3c2c7d0732fe6465459ac8a17dfefb0b054f8b0"
   },
   "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
   "fixture": {
@@ -333,5 +333,5 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "run_id": "audit-2ed41f69-8e39-4e9d-9cd1-737fad320828"
+  "run_id": "audit-8bfe979a-b3f9-4830-bc95-858912d54d03"
 }

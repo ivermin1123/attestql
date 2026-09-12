@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-91b4d389-5897-4df0-8417-7c6f3e046757",
+  "run_id": "audit-665f0d1e-78df-4cfe-8230-c4f382d84f3c",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/financial/financial.sqlite | size=71294976",
   "effective_database_role": "file",
   "session_settings": {
@@ -72,6 +72,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_mistralai-mixtral-8x7b-instru-4_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -79,8 +80,8 @@
     ]
   },
   "verdicts": {
-    "NOT_EQUAL": 9,
-    "ERROR": 18,
+    "NOT_EQUAL": 8,
+    "ERROR": 19,
     "EQUAL": 3
   },
   "smells": {
@@ -88,9 +89,10 @@
     "arbitrary-cut": 0,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 1,
     "direction-against-question": 0
   },
-  "smells_fired": 0,
+  "smells_fired": 1,
   "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -167,16 +169,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/mistralai-mixtral-8x7b-instru-4/financial",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:29:04.478800+00:00",
+  "data_as_of": "2026-09-11T15:14:24.027524+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 25.136,
-    "shuffle": 0.03
+    "fixture": 0.019,
+    "questions": 31.86,
+    "shuffle": 0.044
   },
   "errors": [
     {
@@ -226,6 +228,12 @@
       "side": "prediction",
       "step": "statement",
       "message": "the text does not parse: Expecting ). Line 1, Col: 23. SELECT (COUNT(c.client\u001b[4m\\\u001b[0m_id) FILTER (WHERE c.gender = 'M')) * 100.0 / COUNT(c.client\\_id) AS percentage\\_of\\_male\\_clients F"
+    },
+    {
+      "question_id": 116,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: the statement ran past its 30s timeout"
     },
     {
       "question_id": 125,
@@ -290,7 +298,9 @@
   ],
   "timed_out": {
     "gold": [],
-    "prediction": []
+    "prediction": [
+      116
+    ]
   },
   "exit_status": 1
 }

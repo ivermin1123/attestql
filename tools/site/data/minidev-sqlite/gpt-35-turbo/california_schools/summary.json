@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-b29a0db8-17ca-424a-b3e5-82ac6c1fcaba",
+  "run_id": "audit-5c342a20-264c-4530-8a7d-59d8813bf8bd",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/california_schools/california_schools.sqlite | size=11116544",
   "effective_database_role": "file",
   "session_settings": {
@@ -72,6 +72,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -88,9 +89,10 @@
     "arbitrary-cut": 2,
     "not-a-function-of-the-data": 2,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 2,
     "direction-against-question": 0
   },
-  "smells_fired": 4,
+  "smells_fired": 6,
   "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -151,16 +153,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/gpt-35-turbo/california_schools",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:00:18.107904+00:00",
+  "data_as_of": "2026-09-11T14:44:56.459533+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 1.167,
-    "shuffle": 0.135
+    "questions": 0.947,
+    "shuffle": 0.129
   },
   "errors": [
     {

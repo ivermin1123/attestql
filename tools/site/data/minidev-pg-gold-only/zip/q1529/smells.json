@@ -25,14 +25,14 @@
       "counterexample_rows": []
     },
     {
-      "name": "float-aggregate-order",
+      "name": "not-a-function-of-the-data",
       "fired": true,
       "applicable": true,
       "evidence": {
         "heuristic": true,
-        "means": "this statement aggregates floating point numbers, so its last digits depend on the order the rows were summed in; the values agree to six significant digits",
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-SET",
-        "baseline_result_hash": "sha256:abac40bcf8bcd1919ece362aaa46a30b6a2f8d5731b5198ed89de90803225106",
+        "baseline_result_hash": "sha256:5db6c8da9430d81b8d17d0ebfa544c82ceafa67bad5759cd1819452363b3b6ab",
         "baseline_result": {
           "columns": [
             {
@@ -59,23 +59,23 @@
               }
             ]
           ],
-          "result_hash": "sha256:abac40bcf8bcd1919ece362aaa46a30b6a2f8d5731b5198ed89de90803225106"
+          "result_hash": "sha256:5db6c8da9430d81b8d17d0ebfa544c82ceafa67bad5759cd1819452363b3b6ab"
         },
         "planner_statistics": {
           "yearmonth": {
-            "last_analyze": null,
+            "last_analyze": "2026-09-11 18:13:24.077853+00",
             "last_autoanalyze": null,
-            "n_mod_since_analyze": 383282
+            "n_mod_since_analyze": 0
           },
           "transactions_1k": {
-            "last_analyze": null,
+            "last_analyze": "2026-09-11 18:13:23.749262+00",
             "last_autoanalyze": null,
-            "n_mod_since_analyze": 1000
+            "n_mod_since_analyze": 0
           },
           "gasstations": {
-            "last_analyze": null,
+            "last_analyze": "2026-09-11 18:13:22.092412+00",
             "last_autoanalyze": null,
-            "n_mod_since_analyze": 5716
+            "n_mod_since_analyze": 0
           }
         },
         "shuffle": {
@@ -102,7 +102,7 @@
           "run": true,
           "verdict": "not_equal",
           "differs": true,
-          "result_hash": "sha256:2542c0243d0729b5724e56716e4d917e69d897aa5fddca8003b4a6e6291092b7",
+          "result_hash": "sha256:df547e5b2cb0892278903b9bd3689605467d0674c0a3b82c764c4a516eacb528",
           "result": {
             "columns": [
               {
@@ -121,7 +121,7 @@
               [
                 {
                   "type": "dec",
-                  "value": "68740.23"
+                  "value": "68740.305"
                 },
                 {
                   "type": "dec",
@@ -129,36 +129,19 @@
                 }
               ]
             ],
-            "result_hash": "sha256:2542c0243d0729b5724e56716e4d917e69d897aa5fddca8003b4a6e6291092b7"
+            "result_hash": "sha256:df547e5b2cb0892278903b9bd3689605467d0674c0a3b82c764c4a516eacb528"
           }
         },
         "plan_variant": {
           "run": false,
           "reason": "the plan variant was not asked for"
-        },
-        "float_cells": [
-          {
-            "row": 0,
-            "column": "sum",
-            "declared_type": "float4",
-            "baseline": "68740.22",
-            "rerun": "68740.23"
-          },
-          {
-            "row": 0,
-            "column": "sum",
-            "declared_type": "float4",
-            "baseline": "3437.01",
-            "rerun": "3437.0103"
-          }
-        ],
-        "significant_digits": 6
+        }
       },
       "counterexample_rows": [
         [
           {
             "type": "dec",
-            "value": "68740.23"
+            "value": "68740.305"
           },
           {
             "type": "dec",
@@ -166,6 +149,24 @@
           }
         ]
       ]
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 1,
+        "distinct_rows": 1,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false,
+        "not_applicable": "a result of fewer than two rows has nothing to repeat"
+      },
+      "counterexample_rows": []
     }
   ]
 }

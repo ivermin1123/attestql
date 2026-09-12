@@ -2,7 +2,7 @@
   "question_as_asked": "Which event has the lowest cost?",
   "question": {
     "question_id": "1389",
-    "question_set": "mini_dev_pg-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-08)",
+    "question_set": "mini_dev_pg-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-12)",
     "question_text": "Which event has the lowest cost?",
     "evidence_text": "event refers to event_name; lowest cost means MIN(cost)"
   },
@@ -10,7 +10,7 @@
   "statement_source": {
     "path": "data/questions/mini_dev_pg-00000-of-00001.json",
     "digest": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
-    "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-08)",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-12)",
     "date": "2026-01-18T08:44:25Z"
   },
   "executed_sql": "SELECT T1.event_name FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget ORDER BY T3.cost NULLS FIRST LIMIT 1",
@@ -76,7 +76,7 @@
     }
   ],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -94,10 +94,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "data_as_of": "2026-09-08T05:18:53.188748+00:00",
-  "executed_at": "2026-09-08T05:19:05.215453+00:00",
-  "run_id": "audit-ed50a84a-c286-4cbb-ac89-ab3111058ad5",
+  "data_as_of": "2026-09-11T18:13:24.692936+00:00",
+  "executed_at": "2026-09-11T18:47:58.546802+00:00",
+  "run_id": "audit-bd0ee5fc-3556-4f9f-ab8f-2f5a6915228e",
   "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
-  "result_hash": "sha256:56406324bb087daab39eca2d80eb40a285f0ba16585dc9ae96e7e4c82cf0b7c5",
-  "record_hash": "sha256:57a66bb45239a5f6e888845cd1b7cf80af646ca89180e2a103a82a8c28d8d0e5"
+  "result_hash": "sha256:b1e094f6b55ef4ba84fe8279cd40be0566cbb66aae9999c082ba2a0d71e237f5",
+  "record_hash": "sha256:bb2016c491eaae200fc517c5c01ed1ece5db15eaeed7dd54208cd444c57b1ef2"
 }

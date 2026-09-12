@@ -2,7 +2,7 @@
   "question_as_asked": "Calculate the difference of the total amount spent in all events by the Student_Club in year 2019 and 2020.",
   "question": {
     "question_id": "1340",
-    "question_set": "mini_dev_pg-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-08)",
+    "question_set": "mini_dev_pg-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-12)",
     "question_text": "Calculate the difference of the total amount spent in all events by the Student_Club in year 2019 and 2020.",
     "evidence_text": "The first 4 strings of the event_date values in the event table can represent year; The difference of the total amount spent = SUBTRACT(spent where YEAR(event_date) = 2019, spent where YEAR(event_date) = 2020)"
   },
@@ -10,7 +10,7 @@
   "statement_source": {
     "path": "data/questions/mini_dev_pg-00000-of-00001.json",
     "digest": "sha256:7fa740ef9225389cff6c34432120e8325d0ca3008d73db1ae38731234bc10da7",
-    "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-08)",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_mini_dev/resolve/f65faf4ae3b638c1fa6df1d3370c8d92c8366301/data/mini_dev_pg-00000-of-00001.json (commit f65faf4a, downloaded 2026-09-12)",
     "date": "2026-01-18T08:44:25Z"
   },
   "executed_sql": "SELECT SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2019' THEN T2.spent ELSE 0 END) - SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2020' THEN T2.spent ELSE 0 END) AS num FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event",
@@ -71,7 +71,7 @@
   "row_count": 1,
   "canonical_ordering": [],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -88,10 +88,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "data_as_of": "2026-09-08T05:18:53.188748+00:00",
-  "executed_at": "2026-09-08T05:19:04.886398+00:00",
-  "run_id": "audit-ed50a84a-c286-4cbb-ac89-ab3111058ad5",
+  "data_as_of": "2026-09-11T18:13:24.692936+00:00",
+  "executed_at": "2026-09-11T18:47:58.232925+00:00",
+  "run_id": "audit-bd0ee5fc-3556-4f9f-ab8f-2f5a6915228e",
   "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
-  "result_hash": "sha256:8ec9642f1f2d773f23ac5c701909c24d0e993619408c86f4e3ea41ebf18e2bca",
-  "record_hash": "sha256:2e2bbbe5a8498ab225dda3d7a90ed3a3590e3dfd9587c51a925b2312f95384aa"
+  "result_hash": "sha256:6734b548b6e292f82a949162f990dc3457b0a19dbb79bedf2e70d2b5a2ae82a8",
+  "record_hash": "sha256:4b79e12bf27d950b6980fdc104ec4c149413611bf82efd7be8598d8c0964138e"
 }

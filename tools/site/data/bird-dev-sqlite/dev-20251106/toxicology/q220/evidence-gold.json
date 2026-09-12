@@ -1,0 +1,112 @@
+{
+  "question_as_asked": "Please list the top three elements in the molecule TR000 in alphabetical order.",
+  "question": {
+    "question_id": "220",
+    "question_set": "dev_20251106-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07)",
+    "question_text": "Please list the top three elements in the molecule TR000 in alphabetical order.",
+    "evidence_text": "TR000 is the molecule id."
+  },
+  "question_set_version": "sha256:ffd8018378ddb1a8794753e0a31cfc81862ff7318a5184c22f3dc4ce03a03feb",
+  "statement_source": {
+    "path": "data/questions/dev_20251106-00000-of-00001.json",
+    "digest": "sha256:ffd8018378ddb1a8794753e0a31cfc81862ff7318a5184c22f3dc4ce03a03feb",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07)",
+    "date": "2026-01-18T08:51:02Z"
+  },
+  "executed_sql": "SELECT T.element FROM atom AS T WHERE T.molecule_id = 'TR000' ORDER BY T.element LIMIT 3",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:sqlglot-sqlite-parse",
+  "effective_database_role": "file",
+  "backend_identity_at_checkout": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/toxicology/toxicology.sqlite | size=2678784",
+  "session_settings_in_force": {
+    "engine": "sqlite",
+    "time_zone": null,
+    "date_style": null,
+    "interval_style": null,
+    "extra_float_digits": null,
+    "database_collation": null,
+    "work_mem": null,
+    "hash_mem_multiplier": null,
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "element",
+        "declared_type": "TEXT"
+      }
+    ],
+    "row_count": 3,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "c"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "cl"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "cl"
+        }
+      ]
+    ],
+    "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/toxicology/toxicology.sqlite | size=2678784",
+    "statement_timeout_ms": 30000
+  },
+  "row_count": 3,
+  "canonical_ordering": [
+    {
+      "column": "T.element",
+      "descending": false
+    }
+  ],
+  "serialization": {
+    "version": "attestql/audit/4",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-ORD",
+  "fixture": {
+    "schema_digest": "sha256:d8fa71c3e79cecc54e52634cb1665f9665f1dfc8352f9d935bb3abfb1bab7464",
+    "row_counts": {
+      "main.atom": 12333
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:f5fa7f21af1ad878ff8fef1b0582b8cb2d7ed63dbac65ff16d2ba05667650c5b"
+  },
+  "data_as_of": "2026-09-11T14:39:44.429645+00:00",
+  "executed_at": "2026-09-11T14:39:59.130137+00:00",
+  "run_id": "audit-0ace8241-aee1-4871-b915-32f04c5e2b83",
+  "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/toxicology/toxicology.sqlite | size=2678784 under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
+  "result_hash": "sha256:e0358e4b2184517a7f71f6597dac3e4c69c5b9094b2e7d5f461a8bd46b864ca2",
+  "record_hash": "sha256:0626e21caa95764e29a7ec6dd2db87234672cd712ca689ef33bb5f35bc0a04af"
+}

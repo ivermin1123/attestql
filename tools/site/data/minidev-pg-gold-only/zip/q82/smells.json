@@ -102,7 +102,7 @@
         "heuristic": true,
         "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-ORD",
-        "baseline_result_hash": "sha256:e5b05f6120040b20ed41b69bd57d43ab4c1aed13e703a7cf08ef042e19ea7d47",
+        "baseline_result_hash": "sha256:d4d87fb991696c450e12529c6c599b392de69debe7b966d28ef8cccdb2210f15",
         "baseline_result": {
           "columns": [
             {
@@ -121,12 +121,12 @@
               }
             ]
           ],
-          "result_hash": "sha256:e5b05f6120040b20ed41b69bd57d43ab4c1aed13e703a7cf08ef042e19ea7d47"
+          "result_hash": "sha256:d4d87fb991696c450e12529c6c599b392de69debe7b966d28ef8cccdb2210f15"
         },
         "planner_statistics": {
           "schools": {
-            "last_analyze": null,
-            "last_autoanalyze": "2026-09-08 05:19:52.240861+00",
+            "last_analyze": "2026-09-11 18:13:24.050191+00",
+            "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }
         },
@@ -150,7 +150,7 @@
           "run": true,
           "verdict": "not_equal",
           "differs": true,
-          "result_hash": "sha256:1b829aa0402048b9ccec3257a9a9e927eac486dca1c336deed2139fe0fc7f3da",
+          "result_hash": "sha256:ad3cdf827326e0095f8ec41c8da708e1998813bd07b0af516c415d3f697cd2ce",
           "result": {
             "columns": [
               {
@@ -169,7 +169,7 @@
                 }
               ]
             ],
-            "result_hash": "sha256:1b829aa0402048b9ccec3257a9a9e927eac486dca1c336deed2139fe0fc7f3da"
+            "result_hash": "sha256:ad3cdf827326e0095f8ec41c8da708e1998813bd07b0af516c415d3f697cd2ce"
           }
         },
         "plan_variant": {
@@ -185,6 +185,24 @@
           }
         ]
       ]
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 1,
+        "distinct_rows": 1,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false,
+        "not_applicable": "a result of fewer than two rows has nothing to repeat"
+      },
+      "counterexample_rows": []
     }
   ]
 }

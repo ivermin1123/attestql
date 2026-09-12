@@ -83,7 +83,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:f60c2fc9e6a6c6cad29668d2768b14c1f0c7c46b0f3a6ea99fd3786444791dc8"
+      "result_hash": "sha256:015ee2dc92af175cce34f064c9830fe43208d8a6f78021474680725f6261b133"
     },
     "record": "evidence-gold.json"
   },
@@ -126,7 +126,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:8ebef7123bc372f118690376757e966b45c508c3ac77c6ac00c17d3194ef15b1"
+      "result_hash": "sha256:9c0624874afbaf70006924bb8eed358dc2fdd60fe2d491e3dcdf670093fccfec"
     },
     "record": "evidence-second.json"
   },
@@ -149,8 +149,8 @@
     "rows_shown_per_side": 25
   },
   "result_hashes": {
-    "gold": "sha256:f60c2fc9e6a6c6cad29668d2768b14c1f0c7c46b0f3a6ea99fd3786444791dc8",
-    "second": "sha256:8ebef7123bc372f118690376757e966b45c508c3ac77c6ac00c17d3194ef15b1"
+    "gold": "sha256:015ee2dc92af175cce34f064c9830fe43208d8a6f78021474680725f6261b133",
+    "second": "sha256:9c0624874afbaf70006924bb8eed358dc2fdd60fe2d491e3dcdf670093fccfec"
   },
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/toxicology/toxicology.sqlite | size=2678784",
   "fixture": {
@@ -162,5 +162,5 @@
     "content_digests": {},
     "source_file_sha256": "sha256:35ef27ae6bdfda530e125ed369666ac0abb8bc8c0bcc0ad09407f547ecb61a93"
   },
-  "run_id": "audit-1e841461-ed08-433e-85d7-830d98ce6ade"
+  "run_id": "audit-3746b2e9-af0a-493b-9468-ebbf7a8feb67"
 }

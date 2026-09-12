@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-1e841461-ed08-433e-85d7-830d98ce6ade",
+  "run_id": "audit-3746b2e9-af0a-493b-9468-ebbf7a8feb67",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/toxicology/toxicology.sqlite | size=2678784",
   "effective_database_role": "file",
   "session_settings": {
@@ -82,6 +82,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -98,9 +99,10 @@
     "arbitrary-cut": 0,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 1,
     "direction-against-question": 0
   },
-  "smells_fired": 0,
+  "smells_fired": 1,
   "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -164,16 +166,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/gpt-4/toxicology",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:03:10.450841+00:00",
+  "data_as_of": "2026-09-11T14:50:38.965622+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.846,
-    "shuffle": 0.04
+    "questions": 0.717,
+    "shuffle": 0.036
   },
   "errors": [
     {

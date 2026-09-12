@@ -1,0 +1,186 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "reason": "the statement states no LIMIT"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:6954ce039c20be170f7c1fbc3ccf90d5848078406bcd0aa2be3a437673a926eb",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "?column?",
+              "declared_type": "float8"
+            },
+            {
+              "name": "?column?",
+              "declared_type": "float8"
+            },
+            {
+              "name": "?column?",
+              "declared_type": "float8"
+            }
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "rows_shown": 1,
+          "rows": [
+            [
+              {
+                "type": "dec",
+                "value": "545.397464234613"
+              },
+              {
+                "type": "dec",
+                "value": "681.5838032367947"
+              },
+              {
+                "type": "dec",
+                "value": "708.1116371784611"
+              }
+            ]
+          ],
+          "result_hash": "sha256:6954ce039c20be170f7c1fbc3ccf90d5848078406bcd0aa2be3a437673a926eb"
+        },
+        "planner_statistics": {
+          "customers": {
+            "last_analyze": "2026-09-11 17:24:23.934127+00",
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 0
+          },
+          "yearmonth": {
+            "last_analyze": "2026-09-11 18:13:24.077853+00",
+            "last_autoanalyze": null,
+            "n_mod_since_analyze": 0
+          }
+        },
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "customers",
+            "yearmonth"
+          ],
+          "tables_not_shuffled": [
+            "yearmonth"
+          ],
+          "tables_skipped_for_size": {
+            "laptimes": 400524,
+            "legalities": 427907,
+            "posthistory": 303155,
+            "trans": 1056320,
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "not_equal",
+          "differs": true,
+          "result_hash": "sha256:852b9566b3810beedce16530fed501e16d4a317afb6090414d28098a65a57c71",
+          "result": {
+            "columns": [
+              {
+                "name": "?column?",
+                "declared_type": "float8"
+              },
+              {
+                "name": "?column?",
+                "declared_type": "float8"
+              },
+              {
+                "name": "?column?",
+                "declared_type": "float8"
+              }
+            ],
+            "row_count": 1,
+            "truncated": false,
+            "rows_shown": 1,
+            "rows": [
+              [
+                {
+                  "type": "dec",
+                  "value": "545.4000427186699"
+                },
+                {
+                  "type": "dec",
+                  "value": "681.5866605734918"
+                },
+                {
+                  "type": "dec",
+                  "value": "708.1088457267458"
+                }
+              ]
+            ],
+            "result_hash": "sha256:852b9566b3810beedce16530fed501e16d4a317afb6090414d28098a65a57c71"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "dec",
+            "value": "545.4000427186699"
+          },
+          {
+            "type": "dec",
+            "value": "681.5866605734918"
+          },
+          {
+            "type": "dec",
+            "value": "708.1088457267458"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 1,
+        "distinct_rows": 1,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false,
+        "not_applicable": "a result of fewer than two rows has nothing to repeat"
+      },
+      "counterexample_rows": []
+    }
+  ]
+}

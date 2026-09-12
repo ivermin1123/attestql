@@ -1,0 +1,258 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "reason": "the statement states no LIMIT"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:275ad967da34afd12abff997ec05dd7369ed5e19376beddba21c6a2007d4a0b0",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "heading_accuracy",
+              "declared_type": "INTEGER"
+            }
+          ],
+          "row_count": 24,
+          "truncated": false,
+          "rows_shown": 10,
+          "rows": [
+            [
+              {
+                "type": "int",
+                "value": 52
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 52
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 52
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 52
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 52
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 51
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 51
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 51
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 51
+              }
+            ],
+            [
+              {
+                "type": "int",
+                "value": 51
+              }
+            ]
+          ],
+          "result_hash": "sha256:275ad967da34afd12abff997ec05dd7369ed5e19376beddba21c6a2007d4a0b0"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "Player",
+            "Player_Attributes"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {},
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:c012d5ae44479d45482119acba8af84d0ba14814eb1cd5c5201784d2c3cfb70a",
+          "result": {
+            "columns": [
+              {
+                "name": "heading_accuracy",
+                "declared_type": "INTEGER"
+              }
+            ],
+            "row_count": 24,
+            "truncated": false,
+            "rows_shown": 10,
+            "rows": [
+              [
+                {
+                  "type": "int",
+                  "value": 41
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 41
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 47
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 47
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 47
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 47
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 47
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 47
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 51
+                }
+              ],
+              [
+                {
+                  "type": "int",
+                  "value": 51
+                }
+              ]
+            ],
+            "result_hash": "sha256:c012d5ae44479d45482119acba8af84d0ba14814eb1cd5c5201784d2c3cfb70a"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 24,
+        "distinct_rows": 4,
+        "repeated_rows": 4,
+        "largest_repeat": 11,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false,
+        "repeats_of_the_rows_shown": [
+          11,
+          6,
+          5,
+          2
+        ]
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "int",
+            "value": 51
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 47
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 52
+          }
+        ],
+        [
+          {
+            "type": "int",
+            "value": 41
+          }
+        ]
+      ]
+    }
+  ]
+}

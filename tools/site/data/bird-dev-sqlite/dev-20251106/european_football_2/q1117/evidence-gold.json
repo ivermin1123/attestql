@@ -129,7 +129,7 @@
     }
   ],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -145,10 +145,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:e4d361dbeec6591a4b315877c0c481da05c8ff5a3d389b34d6e17b6f15bee4e0"
   },
-  "data_as_of": "2026-09-08T05:13:55.178504+00:00",
-  "executed_at": "2026-09-08T05:14:10.742655+00:00",
-  "run_id": "audit-9d69a29b-e497-49b3-976c-18ac8e4f0c76",
+  "data_as_of": "2026-09-11T14:59:36.292032+00:00",
+  "executed_at": "2026-09-11T14:59:56.396429+00:00",
+  "run_id": "audit-f6bfa597-de65-4a5d-8554-2e208a88bf41",
   "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/european_football_2/european_football_2.sqlite | size=597754880 under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
-  "result_hash": "sha256:9c862969bd013e05ff1ea75a57d2694534e7e3c323e621be154562fbb327bb68",
-  "record_hash": "sha256:628f831f7f3805f0b93d26dfe680238302ff516bcf3b5ccf4931c444f96081a3"
+  "result_hash": "sha256:75325a400764432a13984d559881f0ab687f9cdedff538cc82c4dea6dadbd073",
+  "record_hash": "sha256:68ce09a82f5b848feb0686f9e5a5a75f23d92b990e34ef99e6039f53945c969f"
 }

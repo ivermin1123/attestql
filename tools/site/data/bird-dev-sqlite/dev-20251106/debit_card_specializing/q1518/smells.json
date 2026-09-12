@@ -1,0 +1,143 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "reason": "the statement states no LIMIT"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:5c5d70c20a5227bdb300602e3d57167f7995c47f58c447f939d3a8e601c2a87a",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "Country",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 2,
+          "truncated": false,
+          "rows_shown": 2,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "CZE"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "CZE"
+              }
+            ]
+          ],
+          "result_hash": "sha256:5c5d70c20a5227bdb300602e3d57167f7995c47f58c447f939d3a8e601c2a87a"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "transactions_1k",
+            "gasstations"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "yearmonth": 383282
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:5c5d70c20a5227bdb300602e3d57167f7995c47f58c447f939d3a8e601c2a87a",
+          "result": {
+            "columns": [
+              {
+                "name": "Country",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 2,
+            "truncated": false,
+            "rows_shown": 2,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "CZE"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "CZE"
+                }
+              ]
+            ],
+            "result_hash": "sha256:5c5d70c20a5227bdb300602e3d57167f7995c47f58c447f939d3a8e601c2a87a"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 2,
+        "distinct_rows": 1,
+        "repeated_rows": 1,
+        "largest_repeat": 2,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false,
+        "repeats_of_the_rows_shown": [
+          2
+        ]
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "CZE"
+          }
+        ]
+      ]
+    }
+  ]
+}

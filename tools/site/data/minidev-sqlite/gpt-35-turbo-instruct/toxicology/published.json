@@ -1,7 +1,7 @@
 {
  "name": "minidev-sqlite-gpt-35-turbo-instruct.tar.gz",
- "url": "https://github.com/ivermin1123/attestql/releases/download/v0.2.2/minidev-sqlite-gpt-35-turbo-instruct.tar.gz",
- "bytes": 12866649,
- "sha256": "8b8a96d259e6eef7d6afe164ced25e6bff5200abe354c2e08dd23f28f39a0e7e",
- "directories": 16
+ "url": "https://github.com/ivermin1123/attestql/releases/download/v0.3.1/minidev-sqlite-gpt-35-turbo-instruct.tar.gz",
+ "bytes": 13065794,
+ "sha256": "f2a14be12bd39d9576d1d0f14b9f4103bbcc7ebbe52017c02c0e9476b1285170",
+ "directories": 17
 }

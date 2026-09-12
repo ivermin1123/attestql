@@ -1,7 +1,7 @@
 {
  "name": "bird-dev-sqlite-dev-20251106.tar.gz",
- "url": "https://github.com/ivermin1123/attestql/releases/download/v0.2.2/bird-dev-sqlite-dev-20251106.tar.gz",
- "bytes": 375933,
- "sha256": "4f83fa6296273278933f9f1b7d726f813ac35f73a03e4aa15dce6ec7db0700bc",
- "directories": 3
+ "url": "https://github.com/ivermin1123/attestql/releases/download/v0.3.1/bird-dev-sqlite-dev-20251106.tar.gz",
+ "bytes": 1739091,
+ "sha256": "25027860c3bf77d82f742417be07a18b94f953b79c72059ced7327b0804e9e09",
+ "directories": 13
 }

@@ -75,7 +75,7 @@
     }
   ],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -91,10 +91,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:986817d793479801ed55133e55aa27e335422c0cd3866b54a3d6317b7c5f09c1"
   },
-  "data_as_of": "2026-09-08T05:05:54.087132+00:00",
-  "executed_at": "2026-09-08T05:05:56.686052+00:00",
-  "run_id": "audit-cf217358-b543-48ea-95b9-81bb7a1f9fdc",
+  "data_as_of": "2026-09-11T14:43:11.178994+00:00",
+  "executed_at": "2026-09-11T14:43:14.040708+00:00",
+  "run_id": "audit-6b4c2fea-a8fb-4a52-a341-be8ee5656719",
   "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/california_schools/california_schools.sqlite | size=11116544 under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
-  "result_hash": "sha256:ed45314af3779019f211bebac045dc1f0dc8a3206b4e385e30ac7ffeb798e29b",
-  "record_hash": "sha256:bee03f11fb5539863e082dd271478909c6a4896e1dfcf390debd4e1f44985b09"
+  "result_hash": "sha256:32ca303822c371894a0c439cb44ae2e01d8fd91bdb14fe71b0a31bb8f64e4946",
+  "record_hash": "sha256:cd713159bb13eca71daf2610f4763519567b5e48183648dbc407815d3df51c29"
 }

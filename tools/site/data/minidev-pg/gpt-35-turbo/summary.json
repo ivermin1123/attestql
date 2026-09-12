@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-a7e6b760-f8ad-479a-b956-9cd88ea91e18",
+  "run_id": "audit-27701da4-0a79-4cc9-9477-d46a66ddd8db",
   "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
   "effective_database_role": "auditor",
   "session_settings": {
@@ -42,6 +42,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo_postgresql.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -56,11 +57,12 @@
   "smells": {
     "ordering-over-numeric-text": 2,
     "arbitrary-cut": 11,
-    "not-a-function-of-the-data": 11,
+    "not-a-function-of-the-data": 12,
     "float-aggregate-order": 3,
+    "duplicate-full-row": 27,
     "direction-against-question": 0
   },
-  "smells_fired": 27,
+  "smells_fired": 55,
   "credited_but_not_equal": {
     "total": 23,
     "by_mechanism": {
@@ -246,378 +248,378 @@
   },
   "planner_statistics": {
     "customers": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.424716+00",
+      "last_analyze": "2026-09-11 17:24:23.934127+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "yearmonth": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:53.2103+00",
+      "last_analyze": "2026-09-11 18:13:24.077853+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "gasstations": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:24.38603+00",
+      "last_analyze": "2026-09-11 18:13:22.092412+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "products": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:42.324323+00",
+      "last_analyze": "2026-09-11 18:13:23.326472+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "transactions_1k": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:51.57727+00",
+      "last_analyze": "2026-09-11 18:13:23.749262+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "member": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 18:13:22.325026+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 33
+      "n_mod_since_analyze": 0
     },
     "major": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:54.215199+00",
+      "last_analyze": "2026-09-11 18:13:24.286238+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "event": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 17:24:23.938124+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 42
+      "n_mod_since_analyze": 0
     },
     "attendance": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.51989+00",
+      "last_analyze": "2026-09-11 17:24:22.8385+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "income": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 18:13:22.288716+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 36
+      "n_mod_since_analyze": 0
     },
     "zip_code": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:53.56429+00",
+      "last_analyze": "2026-09-11 18:13:24.142141+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "expense": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 17:24:23.939041+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 32
+      "n_mod_since_analyze": 0
     },
     "budget": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 17:24:22.869096+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 52
+      "n_mod_since_analyze": 0
     },
     "patient": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:27.997559+00",
+      "last_analyze": "2026-09-11 18:13:22.324761+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "laboratory": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:24.536007+00",
+      "last_analyze": "2026-09-11 18:13:22.127802+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "examination": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:17.016088+00",
+      "last_analyze": "2026-09-11 17:24:23.938808+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "match": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:30.556119+00",
+      "last_analyze": "2026-09-11 18:13:23.04275+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "league": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 18:13:22.180756+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 11
+      "n_mod_since_analyze": 0
     },
     "team": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:51.569042+00",
+      "last_analyze": "2026-09-11 18:13:23.746824+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "team_attributes": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:47.099723+00",
+      "last_analyze": "2026-09-11 18:13:23.682409+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "player_attributes": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:47.072684+00",
+      "last_analyze": "2026-09-11 18:13:23.674927+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "player": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:42.607944+00",
+      "last_analyze": "2026-09-11 18:13:23.390845+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "country": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 17:24:23.922419+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 11
+      "n_mod_since_analyze": 0
     },
     "qualifying": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:42.323203+00",
+      "last_analyze": "2026-09-11 18:13:23.325897+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "drivers": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:17.015092+00",
+      "last_analyze": "2026-09-11 17:24:23.937858+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "circuits": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.766783+00",
+      "last_analyze": "2026-09-11 17:24:22.859004+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "races": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:43.698656+00",
+      "last_analyze": "2026-09-11 18:13:23.466253+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "results": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:42.521079+00",
+      "last_analyze": "2026-09-11 18:13:23.368778+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "laptimes": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:26.095384+00",
+      "last_analyze": "2026-09-11 18:13:22.180241+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "constructorresults": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:54.019426+00",
+      "last_analyze": "2026-09-11 18:13:24.253196+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "constructors": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:10.045536+00",
+      "last_analyze": "2026-09-11 17:24:23.81301+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "seasons": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:51.572102+00",
+      "last_analyze": "2026-09-11 18:13:23.747916+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "driverstandings": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:54.213972+00",
+      "last_analyze": "2026-09-11 18:13:24.285787+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "constructorstandings": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:54.075421+00",
+      "last_analyze": "2026-09-11 18:13:24.26152+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "pitstops": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:30.59473+00",
+      "last_analyze": "2026-09-11 18:13:23.054617+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "superpower": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:51.563746+00",
+      "last_analyze": "2026-09-11 18:13:23.746365+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "superhero": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.518866+00",
+      "last_analyze": "2026-09-11 18:13:23.677134+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "hero_power": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:27.99269+00",
+      "last_analyze": "2026-09-11 18:13:22.288491+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "status": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:47.073755+00",
+      "last_analyze": "2026-09-11 18:13:23.677416+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "colour": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 17:24:22.838122+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 35
+      "n_mod_since_analyze": 0
     },
     "publisher": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 18:13:23.463095+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 25
+      "n_mod_since_analyze": 0
     },
     "attribute": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 17:24:23.810409+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 6
+      "n_mod_since_analyze": 0
     },
     "hero_attribute": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:27.977203+00",
+      "last_analyze": "2026-09-11 18:13:22.287239+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "race": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:42.324734+00",
+      "last_analyze": "2026-09-11 18:13:23.326658+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "gender": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 18:13:22.18054+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 3
+      "n_mod_since_analyze": 0
     },
     "alignment": {
-      "last_analyze": null,
+      "last_analyze": "2026-09-11 17:24:22.872153+00",
       "last_autoanalyze": null,
-      "n_mod_since_analyze": 4
+      "n_mod_since_analyze": 0
     },
     "users": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:53.980066+00",
+      "last_analyze": "2026-09-11 18:13:24.248355+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "posts": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:42.214641+00",
+      "last_analyze": "2026-09-11 18:13:23.308798+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "tags": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:51.571344+00",
+      "last_analyze": "2026-09-11 18:13:23.747736+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "comments": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.355095+00",
+      "last_analyze": "2026-09-11 17:24:23.882779+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "votes": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:53.353415+00",
+      "last_analyze": "2026-09-11 18:13:24.086809+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "posthistory": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:38.302835+00",
+      "last_analyze": "2026-09-11 18:13:23.180946+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "badges": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.766008+00",
+      "last_analyze": "2026-09-11 17:24:22.85819+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "postlinks": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:42.257312+00",
+      "last_analyze": "2026-09-11 18:13:23.312968+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "cards": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:16.814042+00",
+      "last_analyze": "2026-09-11 17:24:23.805014+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "legalities": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:27.765085+00",
+      "last_analyze": "2026-09-11 18:13:22.230714+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "rulings": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:43.694404+00",
+      "last_analyze": "2026-09-11 18:13:23.462315+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "foreign_data": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:24.359437+00",
+      "last_analyze": "2026-09-11 18:13:22.088701+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "sets": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:52.284481+00",
+      "last_analyze": "2026-09-11 18:13:24.053661+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "set_translations": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:54.217612+00",
+      "last_analyze": "2026-09-11 18:13:24.288421+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "bond": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.802916+00",
+      "last_analyze": "2026-09-11 17:24:22.868735+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "atom": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:10.04421+00",
+      "last_analyze": "2026-09-11 17:24:22.837714+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "molecule": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:30.558409+00",
+      "last_analyze": "2026-09-11 18:13:23.044496+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "connected": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:17.010277+00",
+      "last_analyze": "2026-09-11 17:24:23.921883+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "satscores": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:51.562503+00",
+      "last_analyze": "2026-09-11 18:13:23.746118+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "schools": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:52.240861+00",
+      "last_analyze": "2026-09-11 18:13:24.050191+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "frpm": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:27.964858+00",
+      "last_analyze": "2026-09-11 18:13:22.286115+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "district": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:24.361355+00",
+      "last_analyze": "2026-09-11 18:13:22.090131+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "account": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:16.907324+00",
+      "last_analyze": "2026-09-11 17:24:23.812215+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "client": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.822716+00",
+      "last_analyze": "2026-09-11 17:24:22.871952+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "disp": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:17.037279+00",
+      "last_analyze": "2026-09-11 17:24:23.94015+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "loan": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:27.994147+00",
+      "last_analyze": "2026-09-11 18:13:22.315915+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "trans": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:51.531334+00",
+      "last_analyze": "2026-09-11 18:13:23.74002+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "order": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.516523+00",
+      "last_analyze": "2026-09-11 18:13:22.323456+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "card": {
-      "last_analyze": null,
-      "last_autoanalyze": "2026-09-08 05:19:12.803807+00",
+      "last_analyze": "2026-09-11 17:24:22.869629+00",
+      "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     }
   },
@@ -714,16 +716,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-pg/gpt-35-turbo",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": "4096",
     "hash_mem_multiplier": "2"
   },
-  "data_as_of": "2026-09-08T05:21:06.155844+00:00",
+  "data_as_of": "2026-09-11T20:22:10.846379+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.249,
-    "questions": 34.257,
-    "shuffle": 5.541
+    "fixture": 0.444,
+    "questions": 53.609,
+    "shuffle": 11.637
   },
   "errors": [
     {

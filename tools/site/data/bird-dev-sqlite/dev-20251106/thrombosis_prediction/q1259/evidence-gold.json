@@ -1,0 +1,234 @@
+{
+  "question_as_asked": "Please list the diseases of the patients born after 1985-1-1 and have a normal Rhuematoid Factor.",
+  "question": {
+    "question_id": "1259",
+    "question_set": "dev_20251106-00000-of-00001 from https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07)",
+    "question_text": "Please list the diseases of the patients born after 1985-1-1 and have a normal Rhuematoid Factor.",
+    "evidence_text": "diseases refers to Diagnosis; born after 1985/1/1 refers to YEAR(Birthday) > = 1985; normal Rhuematoid Factor refers to RA IN('-', '+-');"
+  },
+  "question_set_version": "sha256:ffd8018378ddb1a8794753e0a31cfc81862ff7318a5184c22f3dc4ce03a03feb",
+  "statement_source": {
+    "path": "data/questions/dev_20251106-00000-of-00001.json",
+    "digest": "sha256:ffd8018378ddb1a8794753e0a31cfc81862ff7318a5184c22f3dc4ce03a03feb",
+    "origin": "https://huggingface.co/datasets/birdsql/bird_sql_dev_20251106/resolve/3c11fb193e5439b338e23677fa0aae11e8b85db9/data/dev_20251106-00000-of-00001.json (commit 3c11fb19, downloaded 2026-09-07)",
+    "date": "2026-01-18T08:51:02Z"
+  },
+  "executed_sql": "SELECT T1.Diagnosis FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE (T2.RA = '-' OR T2.RA = '+-') AND T1.Birthday > '1985-01-01'",
+  "bound_parameters": [],
+  "validation_outcome": {
+    "checks_run": [
+      "parses_as_exactly_one_statement",
+      "the_one_statement_is_a_select",
+      "no_placeholder_without_a_bound_parameter"
+    ],
+    "all_passed": true
+  },
+  "validator_version": "audit:sqlglot-sqlite-parse",
+  "effective_database_role": "file",
+  "backend_identity_at_checkout": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite | size=7327744",
+  "session_settings_in_force": {
+    "engine": "sqlite",
+    "time_zone": null,
+    "date_style": null,
+    "interval_style": null,
+    "extra_float_digits": null,
+    "database_collation": null,
+    "work_mem": null,
+    "hash_mem_multiplier": null,
+    "recorded": {
+      "sqlite_version": "3.53.4",
+      "encoding": "UTF-8",
+      "reverse_unordered_selects": "0",
+      "query_only": "1",
+      "journal_mode": "delete",
+      "data_version": "1",
+      "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
+      "collation_list": "RTRIM,NOCASE,BINARY",
+      "case_sensitive_like": "0"
+    }
+  },
+  "result": {
+    "columns": [
+      {
+        "name": "Diagnosis",
+        "declared_type": "TEXT"
+      }
+    ],
+    "row_count": 24,
+    "truncated": false,
+    "rows": [
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SLE"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "RA susp"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "RA susp"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "RA susp"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SJS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SJS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SJS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SJS"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "SJS"
+        }
+      ]
+    ],
+    "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite | size=7327744",
+    "statement_timeout_ms": 30000
+  },
+  "row_count": 24,
+  "canonical_ordering": [],
+  "serialization": {
+    "version": "attestql/audit/4",
+    "numeric_scale": 6,
+    "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
+    "timezone": "UTC",
+    "null_rendering": "NULL",
+    "encoding": "utf-8"
+  },
+  "replay_rule": "R-SET",
+  "fixture": {
+    "schema_digest": "sha256:56b2a83c41f6d945ad756be07376e23ab3ca35e362e172dc4e2bb2adb0b0e088",
+    "row_counts": {
+      "main.Laboratory": 13908,
+      "main.Patient": 1238
+    },
+    "content_digests": {},
+    "source_file_sha256": "sha256:e7e16d74b4731b4b8d33fdbe8c29cd5622620788ce8d1f335631f65fc7cf1db9"
+  },
+  "data_as_of": "2026-09-11T14:39:44.428255+00:00",
+  "executed_at": "2026-09-11T14:39:45.402507+00:00",
+  "run_id": "audit-f33ba623-8188-4478-b657-0e377570607b",
+  "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite | size=7327744 under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
+  "result_hash": "sha256:2819c6655b7086b24adc4ad442ead223e2c00212f86cb443d077db16e75be85f",
+  "record_hash": "sha256:3bbb5f7e0ba031ed8d4cca3865439283b8dbdde7661b73c275b13afbb6d54855"
+}

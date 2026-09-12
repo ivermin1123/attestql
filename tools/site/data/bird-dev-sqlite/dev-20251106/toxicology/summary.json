@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-81503b04-4c0f-4190-852f-051b20e5247a",
+  "run_id": "audit-0ace8241-aee1-4871-b915-32f04c5e2b83",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/toxicology/toxicology.sqlite | size=2678784",
   "effective_database_role": "file",
   "session_settings": {
@@ -187,9 +187,10 @@
     "arbitrary-cut": 0,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 2,
     "direction-against-question": 0
   },
-  "smells_fired": 0,
+  "smells_fired": 2,
   "credited_but_not_equal": null,
   "fixture": {
     "depth": "counts",
@@ -240,16 +241,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/bird-dev-sqlite/dev-20251106/toxicology",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T04:58:56.286804+00:00",
+  "data_as_of": "2026-09-11T14:39:44.429645+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 12.378,
-    "shuffle": 0.051
+    "fixture": 0.006,
+    "questions": 18.477,
+    "shuffle": 0.099
   },
   "errors": [],
   "timed_out": {

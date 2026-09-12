@@ -75,7 +75,7 @@
     }
   ],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -93,10 +93,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:eb89bcfe97eefa386a27904ec5aa15159811a7eac894ec659a36e48fa9f76b77"
   },
-  "data_as_of": "2026-09-08T04:59:09.216110+00:00",
-  "executed_at": "2026-09-08T04:59:09.544850+00:00",
-  "run_id": "audit-f8b407cc-6e5d-46a1-aa9e-ab46497258ed",
+  "data_as_of": "2026-09-11T14:42:23.297741+00:00",
+  "executed_at": "2026-09-11T14:42:23.646322+00:00",
+  "run_id": "audit-0adbd727-fcc4-4941-9d6a-37cdcc51932b",
   "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/student_club/student_club.sqlite | size=2641920 under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
-  "result_hash": "sha256:a64abae025d48878b3159093c209dd31eb9109bb35fef916a1b99a270439cda2",
-  "record_hash": "sha256:fc2a4ed933430ae958369baf72b6caf728afd1bb0e9d6d795bdd6254e8610a37"
+  "result_hash": "sha256:d82d6aa74a1b8f664e7b9c36890a42b40fcd63ffc09e5ac7245fa1976a8614db",
+  "record_hash": "sha256:7b61916c223b15f66c434b3d36ce52596670a37721f104f241ce58cd4cbb0689"
 }

@@ -125,7 +125,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:4ad873a2af3f3250499f57160503b0fffc347d4d01b1c3351acbffe709c6e40f"
+      "result_hash": "sha256:097ac4971cafa268280cbb5f5a77939e631fc78f5de30a6b0eb14be09214910a"
     },
     "record": "evidence-gold.json"
   },
@@ -146,66 +146,6 @@
         [
           {
             "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Wishclaw Talisman"
-          }
-        ],
-        [
-          {
-            "type": "str",
             "value": "Bloodsoaked Altar"
           }
         ],
@@ -291,10 +231,70 @@
           {
             "type": "str",
             "value": "Witch's Cauldron"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Witch's Cauldron"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Witch's Cauldron"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Witch's Cauldron"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Witch's Cauldron"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Witch's Cauldron"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Executioner's Capsule"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Executioner's Capsule"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Executioner's Capsule"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Executioner's Capsule"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Executioner's Capsule"
           }
         ]
       ],
-      "result_hash": "sha256:01e9a4e2a1c8f9375cb17f87529bfa214446a0d74e4b921fe927f8a27a7d5f7f"
+      "result_hash": "sha256:01ed68c787a0a652b9250fb25884d4149015060ef74e4ab225cc5df6e70926d2"
     },
     "record": "evidence-second.json"
   },
@@ -380,8 +380,8 @@
     "rows_shown_per_side": 25
   },
   "result_hashes": {
-    "gold": "sha256:4ad873a2af3f3250499f57160503b0fffc347d4d01b1c3351acbffe709c6e40f",
-    "second": "sha256:01e9a4e2a1c8f9375cb17f87529bfa214446a0d74e4b921fe927f8a27a7d5f7f"
+    "gold": "sha256:097ac4971cafa268280cbb5f5a77939e631fc78f5de30a6b0eb14be09214910a",
+    "second": "sha256:01ed68c787a0a652b9250fb25884d4149015060ef74e4ab225cc5df6e70926d2"
   },
   "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
   "fixture": {
@@ -393,5 +393,5 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "run_id": "audit-a7e6b760-f8ad-479a-b956-9cd88ea91e18"
+  "run_id": "audit-27701da4-0a79-4cc9-9477-d46a66ddd8db"
 }

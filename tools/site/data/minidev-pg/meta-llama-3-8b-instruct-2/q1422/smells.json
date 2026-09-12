@@ -32,7 +32,7 @@
         "heuristic": true,
         "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-SET",
-        "baseline_result_hash": "sha256:33aa41ed5d494bfb5dc2e98856ac7486ca39f0eec87f0d6943064d471c663a32",
+        "baseline_result_hash": "sha256:1e39519e35d8497dda391541e8902a50b2c84ebb06c3687b39281354157b1e07",
         "baseline_result": {
           "columns": [
             {
@@ -47,18 +47,6 @@
             [
               {
                 "type": "str",
-                "value": "Advertisement"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Food"
-              }
-            ],
-            [
-              {
-                "type": "str",
                 "value": "Parking"
               }
             ],
@@ -67,20 +55,32 @@
                 "type": "str",
                 "value": "Speaker Gifts"
               }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Advertisement"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Food"
+              }
             ]
           ],
-          "result_hash": "sha256:33aa41ed5d494bfb5dc2e98856ac7486ca39f0eec87f0d6943064d471c663a32"
+          "result_hash": "sha256:1e39519e35d8497dda391541e8902a50b2c84ebb06c3687b39281354157b1e07"
         },
         "planner_statistics": {
           "event": {
-            "last_analyze": null,
+            "last_analyze": "2026-09-11 17:24:23.938124+00",
             "last_autoanalyze": null,
-            "n_mod_since_analyze": 42
+            "n_mod_since_analyze": 0
           },
           "budget": {
-            "last_analyze": null,
+            "last_analyze": "2026-09-11 17:24:22.869096+00",
             "last_autoanalyze": null,
-            "n_mod_since_analyze": 52
+            "n_mod_since_analyze": 0
           }
         },
         "shuffle": {
@@ -104,7 +104,7 @@
           "run": true,
           "verdict": "equal",
           "differs": false,
-          "result_hash": "sha256:33aa41ed5d494bfb5dc2e98856ac7486ca39f0eec87f0d6943064d471c663a32",
+          "result_hash": "sha256:0ade1f21a380282314f8217e4a7e9200e7d18d7d75018ae19f87cfc67ed74b3e",
           "result": {
             "columns": [
               {
@@ -141,13 +141,31 @@
                 }
               ]
             ],
-            "result_hash": "sha256:33aa41ed5d494bfb5dc2e98856ac7486ca39f0eec87f0d6943064d471c663a32"
+            "result_hash": "sha256:0ade1f21a380282314f8217e4a7e9200e7d18d7d75018ae19f87cfc67ed74b3e"
           }
         },
         "plan_variant": {
           "run": false,
           "reason": "the plan variant was not asked for"
         }
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 4,
+        "distinct_rows": 4,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": true,
+        "set_operation": false,
+        "not_applicable": "the statement states DISTINCT, so it cannot repeat a row"
       },
       "counterexample_rows": []
     }

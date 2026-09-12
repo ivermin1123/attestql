@@ -79,13 +79,13 @@
         [
           {
             "type": "str",
-            "value": "Additivum"
+            "value": "Dalnic.popl."
           }
         ],
         [
           {
             "type": "str",
-            "value": "Autokosmet."
+            "value": "Zpr.nakupu"
           }
         ],
         [
@@ -97,7 +97,7 @@
         [
           {
             "type": "str",
-            "value": "Dalnic.popl."
+            "value": "Zboží nesp."
           }
         ],
         [
@@ -109,19 +109,13 @@
         [
           {
             "type": "str",
-            "value": "Knihy,nov."
+            "value": "Obcerstvení"
           }
         ],
         [
           {
             "type": "str",
-            "value": "LPG"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Mytí vozidel"
+            "value": "Nemrz.kapal."
           }
         ],
         [
@@ -133,7 +127,13 @@
         [
           {
             "type": "str",
-            "value": "Nafta Plus"
+            "value": "Natural Plus"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Autokosmet."
           }
         ],
         [
@@ -151,25 +151,13 @@
         [
           {
             "type": "str",
-            "value": "Natural Plus"
+            "value": "Knihy,nov."
           }
         ],
         [
           {
             "type": "str",
-            "value": "Natural Spec"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Nemrz.kapal."
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Obcerstvení"
+            "value": "Provoz.nápl."
           }
         ],
         [
@@ -187,23 +175,35 @@
         [
           {
             "type": "str",
-            "value": "Provoz.nápl."
+            "value": "Mytí vozidel"
           }
         ],
         [
           {
             "type": "str",
-            "value": "Zboží nesp."
+            "value": "LPG"
           }
         ],
         [
           {
             "type": "str",
-            "value": "Zpr.nakupu"
+            "value": "Additivum"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Natural Spec"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Nafta Plus"
           }
         ]
       ],
-      "result_hash": "sha256:f7f5b8af5a46f62a7f86f5b08594634439f714c8a104d731bc830db6025efc10"
+      "result_hash": "sha256:3178e55fd6255473ea58802a9494725a7de45b2b2f216a3199f2ae61c6a2ea07"
     },
     "record": "evidence-gold.json"
   },
@@ -372,7 +372,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:ba280208a0eaa020fa28b26975bb971ec16d4d67f8b122134ff7e0a84350073f"
+      "result_hash": "sha256:ff8f1a6d3a297b84677d6ab904e6939ad35a6d6373b8d7bbe5685bb1ba95c9f0"
     },
     "record": "evidence-second.json"
   },
@@ -557,8 +557,8 @@
     "rows_shown_per_side": 25
   },
   "result_hashes": {
-    "gold": "sha256:f7f5b8af5a46f62a7f86f5b08594634439f714c8a104d731bc830db6025efc10",
-    "second": "sha256:ba280208a0eaa020fa28b26975bb971ec16d4d67f8b122134ff7e0a84350073f"
+    "gold": "sha256:3178e55fd6255473ea58802a9494725a7de45b2b2f216a3199f2ae61c6a2ea07",
+    "second": "sha256:ff8f1a6d3a297b84677d6ab904e6939ad35a6d6373b8d7bbe5685bb1ba95c9f0"
   },
   "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
   "fixture": {
@@ -571,5 +571,5 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "run_id": "audit-2ed41f69-8e39-4e9d-9cd1-737fad320828"
+  "run_id": "audit-8bfe979a-b3f9-4830-bc95-858912d54d03"
 }

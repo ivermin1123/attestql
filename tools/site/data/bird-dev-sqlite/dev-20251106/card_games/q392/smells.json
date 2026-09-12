@@ -23,214 +23,20 @@
     },
     {
       "name": "arbitrary-cut",
-      "fired": true,
-      "applicable": true,
+      "fired": false,
+      "applicable": false,
       "evidence": {
         "heuristic": true,
         "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
         "cut": 3,
         "offset": 0,
         "distinct_kept": true,
-        "unbounded_sql": "SELECT DISTINCT T1.name, T2.date AS attestql_ordering_key_0 FROM cards AS T1 INNER JOIN rulings AS T2 ON T1.uuid = T2.uuid WHERE T1.rarity = 'uncommon' ORDER BY T2.date ASC",
-        "unbounded_rows": 3792,
-        "projected_columns": [
-          "name"
+        "keys_not_projected_under_distinct": [
+          "T2.date"
         ],
-        "ordering_key_columns": [
-          "attestql_ordering_key_0"
-        ],
-        "ordering_keys": [
-          {
-            "key": "T2.date",
-            "direction": "asc",
-            "nulls": "first",
-            "nulls_first_in_effect": true,
-            "returned_rows_null_in_this_key": 0,
-            "fires": false
-          }
-        ],
-        "tied_at_the_cut": {
-          "positions": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9
-          ],
-          "tied_rows": 418,
-          "distinct_projected_answers": 418,
-          "rows": [
-            [
-              {
-                "type": "str",
-                "value": "Guerrilla Tactics"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Aura of Silence"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Orcish Artillery"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Puppeteer"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Soul Warden"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Spirit Link"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Spiketail Hatchling"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Stampeding Wildebeests"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Steel Golem"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "Aura Graft"
-              }
-            ]
-          ]
-        },
-        "case": "tie-at-the-cut"
+        "reason": "the statement is DISTINCT and orders by T2.date, which its select list does not hold, so projecting the keys would return rows it did not"
       },
-      "counterexample_rows": [
-        [
-          {
-            "type": "str",
-            "value": "Guerrilla Tactics"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Aura of Silence"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Orcish Artillery"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Puppeteer"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Soul Warden"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Spirit Link"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Spiketail Hatchling"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Stampeding Wildebeests"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Steel Golem"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Aura Graft"
-          },
-          {
-            "type": "str",
-            "value": "2004-10-04"
-          }
-        ]
-      ]
+      "counterexample_rows": []
     },
     {
       "name": "not-a-function-of-the-data",
@@ -240,7 +46,7 @@
         "heuristic": true,
         "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-ORD",
-        "baseline_result_hash": "sha256:69a3d999c0c8f5178c7e86dcca9457b361b376961626a16b39a15dd766139bb1",
+        "baseline_result_hash": "sha256:96cb4ca28d599ab81d9ed78555987ea400940b4f00824d3466ab41da7db1dd23",
         "baseline_result": {
           "columns": [
             {
@@ -271,7 +77,7 @@
               }
             ]
           ],
-          "result_hash": "sha256:69a3d999c0c8f5178c7e86dcca9457b361b376961626a16b39a15dd766139bb1"
+          "result_hash": "sha256:96cb4ca28d599ab81d9ed78555987ea400940b4f00824d3466ab41da7db1dd23"
         },
         "planner_statistics": {},
         "shuffle": {
@@ -291,7 +97,7 @@
           "run": true,
           "verdict": "not_equal",
           "differs": true,
-          "result_hash": "sha256:3fa3938775237ed70d65a965e614c890819f4318157c2ffc1cacf8b60c31b2a4",
+          "result_hash": "sha256:98d4a8bad0c6fedf5beeb17cd6af7e9fc3592056a3785ae4b934adf2231b9a13",
           "result": {
             "columns": [
               {
@@ -322,7 +128,7 @@
                 }
               ]
             ],
-            "result_hash": "sha256:3fa3938775237ed70d65a965e614c890819f4318157c2ffc1cacf8b60c31b2a4"
+            "result_hash": "sha256:98d4a8bad0c6fedf5beeb17cd6af7e9fc3592056a3785ae4b934adf2231b9a13"
           }
         },
         "plan_variant": {
@@ -350,6 +156,24 @@
           }
         ]
       ]
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 3,
+        "distinct_rows": 3,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": true,
+        "set_operation": false,
+        "not_applicable": "the statement states DISTINCT, so it cannot repeat a row"
+      },
+      "counterexample_rows": []
     }
   ]
 }

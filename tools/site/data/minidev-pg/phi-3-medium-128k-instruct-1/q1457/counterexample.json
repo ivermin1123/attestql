@@ -131,7 +131,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:8b26bbf5c0485fd3d9b6439e58ec3549d6a1885f79aa5e9aca030207fe5ba5ca"
+      "result_hash": "sha256:24d1d1edbce8a513c6e35ea1d8a8b2aef767cd7e65f6e78840c1996559e1a17b"
     },
     "record": "evidence-gold.json"
   },
@@ -188,43 +188,29 @@
         [
           {
             "type": "str",
-            "value": "Sacha"
+            "value": "Phillip"
           },
           {
             "type": "str",
-            "value": "Harrison"
+            "value": "Cullen"
           },
           {
             "type": "str",
-            "value": "840-555-4781"
+            "value": "905-555-5035"
           }
         ],
         [
           {
             "type": "str",
-            "value": "Sacha"
+            "value": "Elijah"
           },
           {
             "type": "str",
-            "value": "Harrison"
+            "value": "Allen"
           },
           {
             "type": "str",
-            "value": "840-555-4781"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Sacha"
-          },
-          {
-            "type": "str",
-            "value": "Harrison"
-          },
-          {
-            "type": "str",
-            "value": "840-555-4781"
+            "value": "724-555-5721"
           }
         ],
         [
@@ -258,15 +244,43 @@
         [
           {
             "type": "str",
-            "value": "Phillip"
+            "value": "Elijah"
           },
           {
             "type": "str",
-            "value": "Cullen"
+            "value": "Allen"
           },
           {
             "type": "str",
-            "value": "905-555-5035"
+            "value": "724-555-5721"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Sacha"
+          },
+          {
+            "type": "str",
+            "value": "Harrison"
+          },
+          {
+            "type": "str",
+            "value": "840-555-4781"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Sacha"
+          },
+          {
+            "type": "str",
+            "value": "Harrison"
+          },
+          {
+            "type": "str",
+            "value": "840-555-4781"
           }
         ],
         [
@@ -286,33 +300,19 @@
         [
           {
             "type": "str",
-            "value": "Elijah"
+            "value": "Sacha"
           },
           {
             "type": "str",
-            "value": "Allen"
+            "value": "Harrison"
           },
           {
             "type": "str",
-            "value": "724-555-5721"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Elijah"
-          },
-          {
-            "type": "str",
-            "value": "Allen"
-          },
-          {
-            "type": "str",
-            "value": "724-555-5721"
+            "value": "840-555-4781"
           }
         ]
       ],
-      "result_hash": "sha256:a9afa38c74cefb93b25a34cb9590c6d259cd7cc2d05bd52912d9407edcfd4890"
+      "result_hash": "sha256:66b4d44b145d9a7a1b6714c6e13d65de699c10665a06c55a088109f83f7e7570"
     },
     "record": "evidence-second.json"
   },
@@ -377,8 +377,8 @@
     "rows_shown_per_side": 25
   },
   "result_hashes": {
-    "gold": "sha256:8b26bbf5c0485fd3d9b6439e58ec3549d6a1885f79aa5e9aca030207fe5ba5ca",
-    "second": "sha256:a9afa38c74cefb93b25a34cb9590c6d259cd7cc2d05bd52912d9407edcfd4890"
+    "gold": "sha256:24d1d1edbce8a513c6e35ea1d8a8b2aef767cd7e65f6e78840c1996559e1a17b",
+    "second": "sha256:66b4d44b145d9a7a1b6714c6e13d65de699c10665a06c55a088109f83f7e7570"
   },
   "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
   "fixture": {
@@ -391,5 +391,5 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "run_id": "audit-715e02b9-6229-4aab-aa2e-7df62f68e7a4"
+  "run_id": "audit-1d9a914d-c720-4e87-a82e-8152e2416dc1"
 }

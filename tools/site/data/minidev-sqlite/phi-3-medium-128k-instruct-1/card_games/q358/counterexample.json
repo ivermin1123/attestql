@@ -83,7 +83,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:fa7ee98b9e890fd7fbef9e372c9766dc3ebeedb105e93ecc5982160b89e2057c"
+      "result_hash": "sha256:44b8638749207abe4201a8f1d9819038c3ee80b0f0f1c9f0fb6c519b1a6d3dff"
     },
     "record": "evidence-gold.json"
   },
@@ -126,7 +126,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:2f4653cb64827c35cdc7fe0e4b53b1c98963e6caff06a7c79746348927536c7f"
+      "result_hash": "sha256:3888b3bad45f80ce3944e62abd81307e2747a780fc59ee8b4d0f7868f7503e88"
     },
     "record": "evidence-second.json"
   },
@@ -149,8 +149,8 @@
     "rows_shown_per_side": 25
   },
   "result_hashes": {
-    "gold": "sha256:fa7ee98b9e890fd7fbef9e372c9766dc3ebeedb105e93ecc5982160b89e2057c",
-    "second": "sha256:2f4653cb64827c35cdc7fe0e4b53b1c98963e6caff06a7c79746348927536c7f"
+    "gold": "sha256:44b8638749207abe4201a8f1d9819038c3ee80b0f0f1c9f0fb6c519b1a6d3dff",
+    "second": "sha256:3888b3bad45f80ce3944e62abd81307e2747a780fc59ee8b4d0f7868f7503e88"
   },
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/card_games/card_games.sqlite | size=261820416",
   "fixture": {
@@ -161,5 +161,5 @@
     "content_digests": {},
     "source_file_sha256": "sha256:c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227"
   },
-  "run_id": "audit-82fc97c5-4082-4d4e-9a7b-9963798f6328"
+  "run_id": "audit-c0f61be7-48b5-4b66-9867-cbe1b2a2e223"
 }

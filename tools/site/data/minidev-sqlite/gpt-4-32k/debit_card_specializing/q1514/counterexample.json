@@ -83,7 +83,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:b08acf9ce8d1711d12dc275035848bc24e10a0111c04ba8aa6845de0a0b33c93"
+      "result_hash": "sha256:40bfcac47ec21c1565351aebc4749ef097273897d1b37f33e659d577a3cc70ea"
     },
     "record": "evidence-gold.json"
   },
@@ -120,7 +120,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:18c7812c48c88011c7265497269b1590425de582de351e83bbb5592d726eaecb"
+      "result_hash": "sha256:283f08db261a8cd54967b26ca2271d67e07cb2df8158a8d9097b998115f61fbd"
     },
     "record": "evidence-second.json"
   },
@@ -143,8 +143,8 @@
     "rows_shown_per_side": 25
   },
   "result_hashes": {
-    "gold": "sha256:b08acf9ce8d1711d12dc275035848bc24e10a0111c04ba8aa6845de0a0b33c93",
-    "second": "sha256:18c7812c48c88011c7265497269b1590425de582de351e83bbb5592d726eaecb"
+    "gold": "sha256:40bfcac47ec21c1565351aebc4749ef097273897d1b37f33e659d577a3cc70ea",
+    "second": "sha256:283f08db261a8cd54967b26ca2271d67e07cb2df8158a8d9097b998115f61fbd"
   },
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/debit_card_specializing/debit_card_specializing.sqlite | size=34635776",
   "fixture": {
@@ -157,5 +157,5 @@
     "content_digests": {},
     "source_file_sha256": "sha256:b3d149ad05746dbbe5116e229e17e18f09c39db43cf117d9ef3441753608b691"
   },
-  "run_id": "audit-3e5adc79-54df-43ec-b04d-d17f8bc48ba5"
+  "run_id": "audit-15bfcc1c-388a-4f9a-a9d9-fde2eae689b4"
 }

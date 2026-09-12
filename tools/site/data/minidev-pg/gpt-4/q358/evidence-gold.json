@@ -71,7 +71,7 @@
   "row_count": 1,
   "canonical_ordering": [],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -87,10 +87,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "data_as_of": "2026-09-08T05:23:23.924963+00:00",
-  "executed_at": "2026-09-08T05:23:56.818230+00:00",
-  "run_id": "audit-34520748-ce64-4674-9cd7-6d6fac5b9805",
+  "data_as_of": "2026-09-11T23:21:37.097880+00:00",
+  "executed_at": "2026-09-11T23:35:26.678950+00:00",
+  "run_id": "audit-2cae0420-b41f-41f2-b42d-fea0eb481a6b",
   "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
-  "result_hash": "sha256:d9f3da20d306bd421e73114c5e7176f4611d2c45574ef54f5bfeff02e6cfa6f7",
-  "record_hash": "sha256:73a5244070cea7c2cc73e845f5deac1398cabd485fcddc7364ace6dddb1dbfd1"
+  "result_hash": "sha256:bbb146afe803261bd361edae92568b4b4de432c43b9e27b110e3117fa12752e2",
+  "record_hash": "sha256:9382fd4302956e1d0b64a1806e559ef05e69d9a4cafcc94fe2f0ae5af6f8be4b"
 }

@@ -91,7 +91,7 @@
     }
   ],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -108,10 +108,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:17185981cd747f6cdc374cb02a6096db3130e6ec2ddc582fe1686a28fb4c4c8a"
   },
-  "data_as_of": "2026-09-08T04:57:31.494463+00:00",
-  "executed_at": "2026-09-08T04:57:37.765322+00:00",
-  "run_id": "audit-12a6eeae-04a4-45ea-866b-f75095ba654b",
+  "data_as_of": "2026-09-11T14:36:07.342266+00:00",
+  "executed_at": "2026-09-11T14:36:18.866566+00:00",
+  "run_id": "audit-03b26ae5-ee37-48c1-b9c1-b9cc1ca15b70",
   "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/formula_1/formula_1.sqlite | size=22360064 under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
-  "result_hash": "sha256:95586ad9cbebd6bd17ab272e5754212cef9669f964611847cfb7439ea72fc8eb",
-  "record_hash": "sha256:3a185a8d32b5fc309eded73f5dbda4f476460bf54a58bb0a9319167113ac39df"
+  "result_hash": "sha256:f69037cdb763a6d246596ced3a8cc1605af692dda30e74c3f89aad73f274905e",
+  "record_hash": "sha256:5cb957a0f5f1e0a782f99ccf98a0af68ec13e2d19eba5a76c20d005ed301a6b7"
 }

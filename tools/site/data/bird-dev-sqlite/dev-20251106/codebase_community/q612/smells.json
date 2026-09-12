@@ -1,0 +1,191 @@
+{
+  "format": "attestql/audit/smells/2",
+  "reading": "A smell is a mechanical reason to read this gold statement again. It is a heuristic: it does not state that the statement is wrong, and a maintainer decides.",
+  "smells": [
+    {
+      "name": "ordering-over-numeric-text",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement orders by a text column holding only numbers, and ordering it as a number gives a different answer, so the gold may be sorting 9.5 above 10",
+        "reason": "the statement states no top level ORDER BY"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "arbitrary-cut",
+      "fired": false,
+      "applicable": false,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement cuts its result at a LIMIT that does not decide which rows come back, so a different but equally correct statement can return other rows and score zero",
+        "reason": "the statement states no LIMIT"
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "not-a-function-of-the-data",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
+        "rule": "R-SET",
+        "baseline_result_hash": "sha256:df38b40fe48282b1a2202c5a63c9f6159679b8c77f1eabe46531ac01b0580c93",
+        "baseline_result": {
+          "columns": [
+            {
+              "name": "Name",
+              "declared_type": "TEXT"
+            }
+          ],
+          "row_count": 6,
+          "truncated": false,
+          "rows_shown": 6,
+          "rows": [
+            [
+              {
+                "type": "str",
+                "value": "Autobiographer"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Teacher"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Supporter"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Teacher"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Student"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "Editor"
+              }
+            ]
+          ],
+          "result_hash": "sha256:df38b40fe48282b1a2202c5a63c9f6159679b8c77f1eabe46531ac01b0580c93"
+        },
+        "planner_statistics": {},
+        "shuffle": {
+          "seed": "1",
+          "row_limit": 300000,
+          "tables": [
+            "users",
+            "badges"
+          ],
+          "tables_not_shuffled": [],
+          "tables_skipped_for_size": {
+            "postHistory": 303155
+          },
+          "tables_not_reached_by_a_copy": {}
+        },
+        "shuffled_copies": {
+          "run": true,
+          "verdict": "equal",
+          "differs": false,
+          "result_hash": "sha256:8e8e1a76691bce67a796291d9d83542a14a210f43e291415afa4c367fefaf68c",
+          "result": {
+            "columns": [
+              {
+                "name": "Name",
+                "declared_type": "TEXT"
+              }
+            ],
+            "row_count": 6,
+            "truncated": false,
+            "rows_shown": 6,
+            "rows": [
+              [
+                {
+                  "type": "str",
+                  "value": "Editor"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Student"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Autobiographer"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Supporter"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Teacher"
+                }
+              ],
+              [
+                {
+                  "type": "str",
+                  "value": "Teacher"
+                }
+              ]
+            ],
+            "result_hash": "sha256:8e8e1a76691bce67a796291d9d83542a14a210f43e291415afa4c367fefaf68c"
+          }
+        },
+        "plan_variant": {
+          "run": false,
+          "reason": "the plan variant was not asked for"
+        }
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": true,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 6,
+        "distinct_rows": 5,
+        "repeated_rows": 1,
+        "largest_repeat": 2,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false,
+        "repeats_of_the_rows_shown": [
+          2
+        ]
+      },
+      "counterexample_rows": [
+        [
+          {
+            "type": "str",
+            "value": "Teacher"
+          }
+        ]
+      ]
+    }
+  ]
+}

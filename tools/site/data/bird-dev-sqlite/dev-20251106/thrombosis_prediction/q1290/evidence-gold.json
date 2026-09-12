@@ -75,7 +75,7 @@
     }
   ],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -91,10 +91,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:e7e16d74b4731b4b8d33fdbe8c29cd5622620788ce8d1f335631f65fc7cf1db9"
   },
-  "data_as_of": "2026-09-08T04:58:55.059074+00:00",
-  "executed_at": "2026-09-08T04:58:55.834861+00:00",
-  "run_id": "audit-81b79d57-0fa4-459a-9c7a-72e804752908",
+  "data_as_of": "2026-09-11T14:39:44.428255+00:00",
+  "executed_at": "2026-09-11T14:39:45.629552+00:00",
+  "run_id": "audit-f33ba623-8188-4478-b657-0e377570607b",
   "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite | size=7327744 under the session settings and over the data this record's fixture digest names, and compare the two results under R-ORD",
-  "result_hash": "sha256:1aea2d470b55830060d5fc1378d76f94e525a5e670eb325b0146218a38a177aa",
-  "record_hash": "sha256:4d78aa8422dff32151803adf432138524f8ad2c88da2e2d379f85d930175a7c7"
+  "result_hash": "sha256:3d2eacd1356c512959ef8c36d7b7cf6c7826454d3dc965e48b5ea251e13aa968",
+  "record_hash": "sha256:b454ab879a73a6d8804aa8b16aa5a8f125e64afce71aaffb704ecbe265218bb5"
 }

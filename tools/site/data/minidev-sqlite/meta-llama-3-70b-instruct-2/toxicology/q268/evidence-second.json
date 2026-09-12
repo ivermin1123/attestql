@@ -88,7 +88,7 @@
   "row_count": 4,
   "canonical_ordering": [],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -106,10 +106,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:35ef27ae6bdfda530e125ed369666ac0abb8bc8c0bcc0ad09407f547ecb61a93"
   },
-  "data_as_of": "2026-09-08T05:03:48.329501+00:00",
-  "executed_at": "2026-09-08T05:03:49.124241+00:00",
-  "run_id": "audit-d08e73dd-8518-4814-afbd-46796fd2c056",
+  "data_as_of": "2026-09-11T14:52:25.146568+00:00",
+  "executed_at": "2026-09-11T14:52:25.830532+00:00",
+  "run_id": "audit-2dc0b2e2-76c4-4b45-98fa-7651714adc62",
   "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/toxicology/toxicology.sqlite | size=2678784 under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
-  "result_hash": "sha256:6bbe179f680db87d846b65091f10cf2a3da6505593f1995dad7e13826bdaa8db",
-  "record_hash": "sha256:288d4bf2575f534c130a5720bdcf22c32484e0ecd8c4f7aec14e4e55e7cacca5"
+  "result_hash": "sha256:1a0aee89049eb711f94a3090863f3ce6641bc51e73cfbf4d76628db77ad727c1",
+  "record_hash": "sha256:82a210489a186acd8736f12a34a64ad89ca6cbd24a791e3962637584e5733080"
 }

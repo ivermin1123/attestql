@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-ff6edbda-1c00-4398-9495-bcfff9d1aa86",
+  "run_id": "audit-510a85ba-4bcd-4978-8965-80e23e438349",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/codebase_community/codebase_community.sqlite | size=481419264",
   "effective_database_role": "file",
   "session_settings": {
@@ -229,9 +229,10 @@
     "arbitrary-cut": 0,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 21,
     "direction-against-question": 0
   },
-  "smells_fired": 0,
+  "smells_fired": 21,
   "credited_but_not_equal": null,
   "fixture": {
     "depth": "counts",
@@ -295,16 +296,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/bird-dev-sqlite/dev-20251106/codebase_community",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:12:17.158069+00:00",
+  "data_as_of": "2026-09-11T14:58:04.065836+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 96.049,
-    "shuffle": 1.223
+    "fixture": 0.01,
+    "questions": 90.456,
+    "shuffle": 1.056
   },
   "errors": [
     {

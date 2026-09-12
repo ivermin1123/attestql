@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-ceef14ee-7aab-4fc2-a493-981dcc90708e",
+  "run_id": "audit-ae05028d-8405-4f90-8291-1402a677c1c9",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/superhero/superhero.sqlite | size=237568",
   "effective_database_role": "file",
   "session_settings": {
@@ -94,6 +94,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_mistralai-mixtral-8x7b-instru-4_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -110,9 +111,10 @@
     "arbitrary-cut": 1,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 4,
     "direction-against-question": 0
   },
-  "smells_fired": 1,
+  "smells_fired": 5,
   "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -194,16 +196,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/mistralai-mixtral-8x7b-instru-4/superhero",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:04:59.960649+00:00",
+  "data_as_of": "2026-09-11T14:55:02.312373+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.665,
-    "shuffle": 0.013
+    "questions": 0.6,
+    "shuffle": 0.009
   },
   "errors": [
     {

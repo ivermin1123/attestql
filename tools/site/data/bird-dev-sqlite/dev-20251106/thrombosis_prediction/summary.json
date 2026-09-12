@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-81b79d57-0fa4-459a-9c7a-72e804752908",
+  "run_id": "audit-f33ba623-8188-4478-b657-0e377570607b",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite | size=7327744",
   "effective_database_role": "file",
   "session_settings": {
@@ -205,9 +205,10 @@
     "arbitrary-cut": 2,
     "not-a-function-of-the-data": 2,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 10,
     "direction-against-question": 0
   },
-  "smells_fired": 4,
+  "smells_fired": 14,
   "credited_but_not_equal": null,
   "fixture": {
     "depth": "counts",
@@ -255,16 +256,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/bird-dev-sqlite/dev-20251106/thrombosis_prediction",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T04:58:55.059074+00:00",
+  "data_as_of": "2026-09-11T14:39:44.428255+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.759,
-    "shuffle": 0.051
+    "fixture": 0.002,
+    "questions": 1.145,
+    "shuffle": 0.087
   },
   "errors": [],
   "timed_out": {

@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-f6b1cc1f-56b0-4e6f-9f13-a98c98bb32f9",
+  "run_id": "audit-80ee6037-62e2-4151-a80f-d0183ffe754c",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/financial/financial.sqlite | size=71294976",
   "effective_database_role": "file",
   "session_settings": {
@@ -72,6 +72,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-35-turbo_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -79,8 +80,8 @@
     ]
   },
   "verdicts": {
-    "NOT_EQUAL": 16,
-    "ERROR": 8,
+    "NOT_EQUAL": 17,
+    "ERROR": 7,
     "EQUAL": 6
   },
   "smells": {
@@ -88,9 +89,10 @@
     "arbitrary-cut": 1,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 3,
     "direction-against-question": 0
   },
-  "smells_fired": 2,
+  "smells_fired": 5,
   "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -167,16 +169,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/gpt-35-turbo/financial",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:19:20.148030+00:00",
+  "data_as_of": "2026-09-11T14:46:13.041298+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
     "fixture": 0.012,
-    "questions": 31.975,
-    "shuffle": 0.032
+    "questions": 33.375,
+    "shuffle": 0.033
   },
   "errors": [
     {
@@ -210,12 +212,6 @@
       "message": "execute: ambiguous column name: date"
     },
     {
-      "question_id": 145,
-      "side": "prediction",
-      "step": "execute",
-      "message": "execute: the statement ran past its 30s timeout"
-    },
-    {
       "question_id": 169,
       "side": "prediction",
       "step": "statement",
@@ -230,9 +226,7 @@
   ],
   "timed_out": {
     "gold": [],
-    "prediction": [
-      145
-    ]
+    "prediction": []
   },
   "exit_status": 1
 }

@@ -32,7 +32,7 @@
         "heuristic": true,
         "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-SET",
-        "baseline_result_hash": "sha256:e7f9b5c11beda1b1f87dcacf483165b567c9e8aa1f68e6fbe98bfcc79482ec8c",
+        "baseline_result_hash": "sha256:a1208731e280c1d24575c296dc786e1f3bacfee74d778124c8752b828725bc21",
         "baseline_result": {
           "columns": [
             {
@@ -57,17 +57,17 @@
               }
             ]
           ],
-          "result_hash": "sha256:e7f9b5c11beda1b1f87dcacf483165b567c9e8aa1f68e6fbe98bfcc79482ec8c"
+          "result_hash": "sha256:a1208731e280c1d24575c296dc786e1f3bacfee74d778124c8752b828725bc21"
         },
         "planner_statistics": {
           "connected": {
-            "last_analyze": null,
-            "last_autoanalyze": "2026-09-08 05:19:17.010277+00",
+            "last_analyze": "2026-09-11 17:24:23.921883+00",
+            "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "atom": {
-            "last_analyze": null,
-            "last_autoanalyze": "2026-09-08 05:19:10.04421+00",
+            "last_analyze": "2026-09-11 17:24:22.837714+00",
+            "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }
         },
@@ -92,7 +92,7 @@
           "run": true,
           "verdict": "equal",
           "differs": false,
-          "result_hash": "sha256:345e7e4a961cacde1fea6d209b11f847516628c17bee0650463d55d478e58119",
+          "result_hash": "sha256:a817e9088bb4b3965b1bbf91a1c9e64a64911e57463e370dc9fa5858f3e40937",
           "result": {
             "columns": [
               {
@@ -117,13 +117,30 @@
                 }
               ]
             ],
-            "result_hash": "sha256:345e7e4a961cacde1fea6d209b11f847516628c17bee0650463d55d478e58119"
+            "result_hash": "sha256:a817e9088bb4b3965b1bbf91a1c9e64a64911e57463e370dc9fa5858f3e40937"
           }
         },
         "plan_variant": {
           "run": false,
           "reason": "the plan variant was not asked for"
         }
+      },
+      "counterexample_rows": []
+    },
+    {
+      "name": "duplicate-full-row",
+      "fired": false,
+      "applicable": true,
+      "evidence": {
+        "heuristic": true,
+        "means": "this statement returns the same whole row more than once and never says DISTINCT, so a statement answering the same question once per row disagrees on multiplicity alone",
+        "rows": 2,
+        "distinct_rows": 2,
+        "repeated_rows": 0,
+        "largest_repeat": 1,
+        "result_bounded": false,
+        "distinct_stated": false,
+        "set_operation": false
       },
       "counterexample_rows": []
     }

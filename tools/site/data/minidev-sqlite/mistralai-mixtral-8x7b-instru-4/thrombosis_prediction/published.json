@@ -1,7 +1,7 @@
 {
  "name": "minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz",
- "url": "https://github.com/ivermin1123/attestql/releases/download/v0.2.2/minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz",
- "bytes": 1075349,
- "sha256": "7f34c38f4a2fbc7c9cfd7720ee1dcc8af8c27748e47e2bdd6ebe556f7e3703ea",
+ "url": "https://github.com/ivermin1123/attestql/releases/download/v0.3.1/minidev-sqlite-mistralai-mixtral-8x7b-instru-4.tar.gz",
+ "bytes": 1128124,
+ "sha256": "4db0b591e548c35228a12ab4e16332c28a1ce6901739bcec0640a245bd86db72",
  "directories": 21
 }

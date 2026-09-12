@@ -82,7 +82,7 @@
   "row_count": 3,
   "canonical_ordering": [],
   "serialization": {
-    "version": "attestql/audit/2",
+    "version": "attestql/audit/4",
     "numeric_scale": 6,
     "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ",
     "timezone": "UTC",
@@ -100,10 +100,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:b3d149ad05746dbbe5116e229e17e18f09c39db43cf117d9ef3441753608b691"
   },
-  "data_as_of": "2026-09-08T05:02:52.181154+00:00",
-  "executed_at": "2026-09-08T05:02:56.250653+00:00",
-  "run_id": "audit-b6df2160-40de-4549-b5c3-016093f6c38e",
+  "data_as_of": "2026-09-11T14:49:34.815994+00:00",
+  "executed_at": "2026-09-11T14:49:37.855831+00:00",
+  "run_id": "audit-a4aac945-a7cc-444f-925b-a3ca32e7e2e1",
   "rerun_instruction": "re-run this statement read-only against SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/debit_card_specializing/debit_card_specializing.sqlite | size=34635776 under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
-  "result_hash": "sha256:18c7812c48c88011c7265497269b1590425de582de351e83bbb5592d726eaecb",
-  "record_hash": "sha256:50d9509fbe988dac3cf2bbe72a63e67043522a9888ce858b14976d1fee98f743"
+  "result_hash": "sha256:283f08db261a8cd54967b26ca2271d67e07cb2df8158a8d9097b998115f61fbd",
+  "record_hash": "sha256:e095771ed6bebf2bf816ffc13205c894265adc70230766faf8f8a280c3d7ca11"
 }

@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-cf217358-b543-48ea-95b9-81bb7a1f9fdc",
+  "run_id": "audit-6b4c2fea-a8fb-4a52-a341-be8ee5656719",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/dev/dev_databases/california_schools/california_schools.sqlite | size=11116544",
   "effective_database_role": "file",
   "session_settings": {
@@ -131,9 +131,10 @@
     "arbitrary-cut": 5,
     "not-a-function-of-the-data": 5,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 3,
     "direction-against-question": 0
   },
-  "smells_fired": 10,
+  "smells_fired": 13,
   "credited_but_not_equal": null,
   "fixture": {
     "depth": "counts",
@@ -181,16 +182,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/bird-dev-sqlite/dev-20251106/california_schools",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:05:54.087132+00:00",
+  "data_as_of": "2026-09-11T14:43:11.178994+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 2.508,
-    "shuffle": 0.12
+    "questions": 2.762,
+    "shuffle": 0.123
   },
   "errors": [],
   "timed_out": {

@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-25d5d40f-3fc8-4b0f-800e-6546b3c11f7e",
+  "run_id": "audit-9038a739-9c11-4e45-ba70-31c7924c8f56",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/formula_1/formula_1.sqlite | size=22360064",
   "effective_database_role": "file",
   "session_settings": {
@@ -108,6 +108,7 @@
     "origin": "https://raw.githubusercontent.com/bird-bench/mini_dev/b3d4bcbbae9a96934ad812551eb400c7a3b23c12/llm/exp_result/sql_output_kg/predict_mini_dev_gpt-4-32k_sqlite.json",
     "date": "2024-06-19",
     "keyed_by": "position",
+    "format": "json",
     "statements": 500,
     "positions_unused": [
       487,
@@ -124,9 +125,10 @@
     "arbitrary-cut": 3,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
+    "duplicate-full-row": 4,
     "direction-against-question": 0
   },
-  "smells_fired": 4,
+  "smells_fired": 8,
   "credited_but_not_equal": {
     "total": 4,
     "by_mechanism": {
@@ -218,16 +220,16 @@
     "experimental_s2": false,
     "plan_variant": false,
     "out": "runs/minidev-sqlite/gpt-4-32k/formula_1",
-    "serialization": "attestql/audit/2",
+    "serialization": "attestql/audit/4",
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-08T05:01:50.212472+00:00",
+  "data_as_of": "2026-09-11T14:48:20.116531+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.008,
-    "questions": 5.577,
-    "shuffle": 0.136
+    "fixture": 0.004,
+    "questions": 4.663,
+    "shuffle": 0.121
   },
   "errors": [
     {

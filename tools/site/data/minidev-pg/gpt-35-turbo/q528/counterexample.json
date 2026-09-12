@@ -344,7 +344,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:6bb0c8fffa0d2b634d3bcb0f3e9e098e10e76ad9355793bd451e43c1f7b8b296"
+      "result_hash": "sha256:0bda0d36a273a73fab105ca4b40c60a268a6b7a49dc1294c6465c18489faa92d"
     },
     "record": "evidence-gold.json"
   },
@@ -617,7 +617,7 @@
           }
         ]
       ],
-      "result_hash": "sha256:8518c95a914a668f4fbae66fdfc2aaeebddec54e19bdad6d090a6b8ec461cbd6"
+      "result_hash": "sha256:867b1e3793710011e2be8cc1260ae2cbf8535bce9e07d29642d97dccb42bb939"
     },
     "record": "evidence-second.json"
   },
@@ -956,8 +956,8 @@
     "rows_shown_per_side": 25
   },
   "result_hashes": {
-    "gold": "sha256:6bb0c8fffa0d2b634d3bcb0f3e9e098e10e76ad9355793bd451e43c1f7b8b296",
-    "second": "sha256:8518c95a914a668f4fbae66fdfc2aaeebddec54e19bdad6d090a6b8ec461cbd6"
+    "gold": "sha256:0bda0d36a273a73fab105ca4b40c60a268a6b7a49dc1294c6465c18489faa92d",
+    "second": "sha256:867b1e3793710011e2be8cc1260ae2cbf8535bce9e07d29642d97dccb42bb939"
   },
   "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
   "fixture": {
@@ -970,5 +970,5 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "run_id": "audit-a7e6b760-f8ad-479a-b956-9cd88ea91e18"
+  "run_id": "audit-27701da4-0a79-4cc9-9477-d46a66ddd8db"
 }
