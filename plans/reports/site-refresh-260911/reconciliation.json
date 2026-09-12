@@ -1,0 +1,56 @@
+{
+ "compared": 121,
+ "published_with_no_fresh_run": [],
+ "smells_moved": {
+  "arbitrary-cut": -1,
+  "duplicate-full-row": 613,
+  "float-aggregate-order": -1,
+  "not-a-function-of-the-data": 15
+ },
+ "verdicts_moved": [
+  {
+   "run": "minidev-sqlite/gpt-35-turbo/financial",
+   "published": {
+    "NOT_EQUAL": 16,
+    "ERROR": 8,
+    "EQUAL": 6
+   },
+   "fresh": {
+    "NOT_EQUAL": 17,
+    "ERROR": 7,
+    "EQUAL": 6
+   },
+   "timeouts_only": true,
+   "published_timeouts": [
+    [
+     145,
+     "prediction"
+    ]
+   ],
+   "fresh_timeouts": [],
+   "kept_a_crowded_copy": false
+  },
+  {
+   "run": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/financial",
+   "published": {
+    "NOT_EQUAL": 9,
+    "ERROR": 18,
+    "EQUAL": 3
+   },
+   "fresh": {
+    "NOT_EQUAL": 8,
+    "ERROR": 19,
+    "EQUAL": 3
+   },
+   "timeouts_only": true,
+   "published_timeouts": [],
+   "fresh_timeouts": [
+    [
+     116,
+     "prediction"
+    ]
+   ],
+   "kept_a_crowded_copy": true
+  }
+ ]
+}
