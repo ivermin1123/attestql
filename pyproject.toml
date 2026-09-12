@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "attestql"
-version = "0.3.0"
+version = "0.3.1"
 description = "Audit text-to-SQL gold and predictions on PostgreSQL or SQLite with typed replay evidence."
 readme = "README.md"
 authors = [{ name = "Hoang Le", email = "ivermin1123@gmail.com" }]
