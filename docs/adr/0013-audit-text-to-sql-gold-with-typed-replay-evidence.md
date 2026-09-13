@@ -23,6 +23,11 @@ gold sits open and unanswered on four trackers ([mini_dev #38](https://github.co
 ([p5-jin](https://www.vldb.org/cidrdb/papers/2026/p5-jin.pdf)). No installable tool takes a gold,
 a prediction and a PostgreSQL database and says where they differ (checked 2026-09-02; this
 negative claim decays like every other).
+Amended 2026-09-13: that check missed one. IBM's toolkit at
+<https://github.com/IBM/text2sql-eval-toolkit> had been on PyPI since 2026-03-11 and runs both
+statements on either engine, scoring them under several comparisons; it runs no gold-only probe
+and writes no evidence record, which is what this tool adds. Register row N2 carries the
+correction and the reading.
 
 **The spike, stated honestly.** A spike (its artifacts: `plans/reports/spike-260902-three-gold-defects/`;
 its code stays in the private history before publication) reproduced three
