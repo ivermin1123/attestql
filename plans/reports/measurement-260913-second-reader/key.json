@@ -1,0 +1,242 @@
+[
+ {
+  "item": 1,
+  "file": "gpt-35-turbo",
+  "question_id": 391,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 8 names; the prediction returns 80"
+ },
+ {
+  "item": 2,
+  "file": "gpt-35-turbo",
+  "question_id": 1501,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 2 countries; the prediction returns 978"
+ },
+ {
+  "item": 3,
+  "file": "gpt-35-turbo",
+  "question_id": 1506,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 21 descriptions; the prediction returns 933"
+ },
+ {
+  "item": 4,
+  "file": "gpt-35-turbo-instruct",
+  "question_id": 230,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 5 (element, label) rows; the prediction returns 103"
+ },
+ {
+  "item": 5,
+  "file": "gpt-35-turbo-instruct",
+  "question_id": 345,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 3 statuses; the prediction returns 523 to 3,810 rows"
+ },
+ {
+  "item": 6,
+  "file": "gpt-35-turbo-instruct",
+  "question_id": 850,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 3 race names; the prediction returns 76"
+ },
+ {
+  "item": 7,
+  "file": "gpt-35-turbo-instruct",
+  "question_id": 1035,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 161 ids; the prediction returns 356, so the count of teams is misstated"
+ },
+ {
+  "item": 8,
+  "file": "gpt-4",
+  "question_id": 1035,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 161 ids; the prediction returns 356, so the count of teams is misstated"
+ },
+ {
+  "item": 9,
+  "file": "gpt-4-32k",
+  "question_id": 173,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "the prediction reads trans instead of order and matches the gold's one row 13 times by coincidence of the data"
+ },
+ {
+  "item": 10,
+  "file": "gpt-4-32k",
+  "question_id": 240,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 6 elements; the prediction lists every atom, 24 rows"
+ },
+ {
+  "item": 11,
+  "file": "gpt-4-32k",
+  "question_id": 249,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "the prediction joins on atom_id OR atom_id2 and returns each of the 2 elements twice"
+ },
+ {
+  "item": 12,
+  "file": "gpt-4-32k",
+  "question_id": 255,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "a percentage computed by scalar subqueries, then selected once per row of molecule: 343 identical rows"
+ },
+ {
+  "item": 13,
+  "file": "gpt-4-32k",
+  "question_id": 268,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "the prediction joins on atom_id OR atom_id2 and returns each of the 2 elements twice"
+ },
+ {
+  "item": 14,
+  "file": "gpt-4-32k",
+  "question_id": 1035,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 161 ids; the prediction returns 356, so the count of teams is misstated"
+ },
+ {
+  "item": 15,
+  "file": "gpt-4-32k",
+  "question_id": 1506,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 21 descriptions; the prediction returns 933"
+ },
+ {
+  "item": 16,
+  "file": "gpt-4-turbo",
+  "question_id": 565,
+  "class": "A",
+  "mechanism": "type",
+  "reason": "both results are empty on this data; the prediction projects (title, closeddate) or a bool, not the well-finished label the question asks for"
+ },
+ {
+  "item": 17,
+  "file": "meta-llama-3-70b-instruct-2",
+  "question_id": 253,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 4 elements; the prediction returns 10 rows"
+ },
+ {
+  "item": 18,
+  "file": "meta-llama-3-70b-instruct-2",
+  "question_id": 345,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 3 statuses; the prediction returns 523 to 3,810 rows"
+ },
+ {
+  "item": 19,
+  "file": "meta-llama-3-70b-instruct-2",
+  "question_id": 565,
+  "class": "A",
+  "mechanism": "type",
+  "reason": "both results are empty on this data; the prediction projects (title, closeddate) or a bool, not the well-finished label the question asks for"
+ },
+ {
+  "item": 20,
+  "file": "meta-llama-3-70b-instruct-2",
+  "question_id": 1457,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 3 members; the prediction returns 11, one per expense"
+ },
+ {
+  "item": 21,
+  "file": "meta-llama-3-8b-instruct-2",
+  "question_id": 249,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "the prediction joins on atom_id OR atom_id2 and returns each of the 2 elements twice"
+ },
+ {
+  "item": 22,
+  "file": "meta-llama-3-8b-instruct-2",
+  "question_id": 565,
+  "class": "A",
+  "mechanism": "type",
+  "reason": "both results are empty on this data; the prediction projects (title, closeddate) or a bool, not the well-finished label the question asks for"
+ },
+ {
+  "item": 23,
+  "file": "meta-llama-3-8b-instruct-2",
+  "question_id": 850,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 3 race names; the prediction returns 76"
+ },
+ {
+  "item": 24,
+  "file": "meta-llama-3-8b-instruct-2",
+  "question_id": 1035,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 161 ids; the prediction returns 356, so the count of teams is misstated"
+ },
+ {
+  "item": 25,
+  "file": "meta-llama-3-8b-instruct-2",
+  "question_id": 1422,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 4 categories; the prediction returns 45"
+ },
+ {
+  "item": 26,
+  "file": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 230,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 5 (element, label) rows; the prediction returns 103"
+ },
+ {
+  "item": 27,
+  "file": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 268,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "the prediction joins on atom_id OR atom_id2 and returns each of the 2 elements twice"
+ },
+ {
+  "item": 28,
+  "file": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 850,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 3 race names; the prediction returns 76"
+ },
+ {
+  "item": 29,
+  "file": "mistralai-mixtral-8x7b-instru-4",
+  "question_id": 1506,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 21 descriptions; the prediction returns 933"
+ },
+ {
+  "item": 30,
+  "file": "phi-3-medium-128k-instruct-1",
+  "question_id": 1457,
+  "class": "A",
+  "mechanism": "multiplicity",
+  "reason": "gold DISTINCT over 3 members; the prediction returns 11, one per expense"
+ }
+]

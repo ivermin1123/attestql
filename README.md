@@ -95,7 +95,8 @@ BIRD's own evaluator run beside the tool as the check.
 prediction files that BIRD's evaluator scores 1, 164 (13.2 %) are `NOT_EQUAL` under the typed
 comparison, and read by hand 69 of those (42.1 %; 5.6 % of everything BIRD credits) are wrong
 answers the benchmark credited, 74 are duplicated rows a reader would forgive, and 21 are the
-typed rule alone. The two readings of EX agree on 4,476 of 4,482 predictions, and every
+typed rule alone. A second reader, blind to the first, agreed on 27 of a sample of 30 of the 69
+([report](plans/reports/measurement-260913-2342-second-reader-hand-classification.md)). The two readings of EX agree on 4,476 of 4,482 predictions, and every
 disagreement is one float sum whose last digits depend on the order its parts are added in
 ([report](plans/reports/measurement-260904-0046-prediction-mode-on-real-predictions.md)).
 

@@ -1,0 +1,182 @@
+[
+ {
+  "item": 1,
+  "class": "A",
+  "confidence": "high",
+  "reason": "name: 8 distinct card names against 80 prediction rows (each name 6-18x, one per foreign_data translation) while the question asks which cards, not which translations."
+ },
+ {
+  "item": 2,
+  "class": "A",
+  "confidence": "high",
+  "reason": "country: 2 distinct countries against 978 rows (CZE x912, SVK x64), one per transaction, so the list is ~489x the answer the question asks to list."
+ },
+ {
+  "item": 3,
+  "class": "A",
+  "confidence": "high",
+  "reason": "description: 21 distinct product descriptions against 933 rows (Nafta x522, Natural x238), 44x the list the question asks for."
+ },
+ {
+  "item": 4,
+  "class": "A",
+  "confidence": "high",
+  "reason": "(element,label): 5 distinct pairs against 103 rows (h x58, c x38), one per atom row, 20x the set of elements the question asks for."
+ },
+ {
+  "item": 5,
+  "class": "A",
+  "confidence": "high",
+  "reason": "status: 3 distinct statuses against 523 rows (Legal x514), 174x the answer, and the prediction joins cards.id=legalities.id instead of uuid."
+ },
+ {
+  "item": 6,
+  "class": "A",
+  "confidence": "high",
+  "reason": "name: 3 distinct race names against 76 rows (German Grand Prix x61), 25x the list the question asks for."
+ },
+ {
+  "item": 7,
+  "class": "A",
+  "confidence": "high",
+  "reason": "team_fifa_api_id: 161 distinct ids against 356 rows (ids repeated up to 4x, one per Team_Attributes season row), more than twice the answer while the question asks for teams."
+ },
+ {
+  "item": 8,
+  "class": "A",
+  "confidence": "high",
+  "reason": "team_fifa_api_id: identical case, 161 distinct ids reported as 356 rows, one per season row of Team_Attributes."
+ },
+ {
+  "item": 9,
+  "class": "B",
+  "confidence": "low",
+  "reason": "(frequency,k_symbol): a single distinct pair POPLATEK MESICNE/POJISTNE repeated 13 times, one per trans row of 3539, and the answer a reader takes away is unambiguous, though the prediction reads trans.amount instead of the gold's SUM over order."
+ },
+ {
+  "item": 10,
+  "class": "A",
+  "confidence": "high",
+  "reason": "element: 6 distinct elements against 24 atom rows (h x12, c x5), 4x the list the question asks to enumerate."
+ },
+ {
+  "item": 11,
+  "class": "A",
+  "confidence": "low",
+  "reason": "element: 2 atoms of bond TR144_8_19 (h,c) reported as 4 rows because the OR join matches atom_id and atom_id2, exactly twice the answer, so the list overstates how many atoms the bond has."
+ },
+ {
+  "item": 12,
+  "class": "A",
+  "confidence": "high",
+  "reason": "percentage: one scalar 39.75203 repeated 343 times, once per row of the molecule table the prediction selects FROM but never uses, where the question asks for a single percentage."
+ },
+ {
+  "item": 13,
+  "class": "A",
+  "confidence": "low",
+  "reason": "element: 2 atoms of bond TR001_10_11 (c,o) reported as 4 rows by the OR join, exactly twice the answer to a question asking for the elements."
+ },
+ {
+  "item": 14,
+  "class": "A",
+  "confidence": "high",
+  "reason": "team_fifa_api_id: 161 distinct ids against 356 rows, the same DISTINCT-dropped enumeration over Team_Attributes season rows."
+ },
+ {
+  "item": 15,
+  "class": "A",
+  "confidence": "high",
+  "reason": "description: 21 distinct descriptions against 933 rows (Nafta x522, Natural x238), 44x the list the question asks for."
+ },
+ {
+  "item": 16,
+  "class": "C",
+  "confidence": "low",
+  "reason": "both results are empty (0 rows each); the only difference is the declared type of the single column, text 'resylt' against bool 'well_finished', and the bool is the same yes/no the question asks for."
+ },
+ {
+  "item": 17,
+  "class": "A",
+  "confidence": "high",
+  "reason": "element: 4 distinct elements (c,n,p,y) against 10 rows (c x4, n x4), 2.5x the list of elements the question asks for."
+ },
+ {
+  "item": 18,
+  "class": "A",
+  "confidence": "high",
+  "reason": "status: 3 distinct statuses against 3810 rows (Legal x3644), 1270x the answer, one row per legalities record."
+ },
+ {
+  "item": 19,
+  "class": "C",
+  "confidence": "low",
+  "reason": "both results are empty (0 rows each); only the declared type differs, text 'resylt' against an unnamed bool, an encoding the question never asks about."
+ },
+ {
+  "item": 20,
+  "class": "A",
+  "confidence": "high",
+  "reason": "(first_name,last_name,phone): 3 distinct members against 11 rows (Sacha Harrison x6), one per over-average expense, where the question asks for members."
+ },
+ {
+  "item": 21,
+  "class": "A",
+  "confidence": "low",
+  "reason": "element: 2 atoms of bond TR144_8_19 reported as 4 rows (h x3, c x1) by the extra connected/atom self-join, twice the answer and with a skewed count."
+ },
+ {
+  "item": 22,
+  "class": "A",
+  "confidence": "low",
+  "reason": "the prediction projects (title, closeddate) instead of the gold's single well-finished verdict column, so it answers a different question and was credited only because both sides returned 0 rows."
+ },
+ {
+  "item": 23,
+  "class": "A",
+  "confidence": "high",
+  "reason": "name: 3 distinct race names against 76 rows (German Grand Prix x61), 25x the list asked for."
+ },
+ {
+  "item": 24,
+  "class": "A",
+  "confidence": "high",
+  "reason": "team_fifa_api_id: 161 distinct ids against 356 rows, DISTINCT dropped over Team_Attributes season rows."
+ },
+ {
+  "item": 25,
+  "class": "A",
+  "confidence": "high",
+  "reason": "category: 4 distinct categories against 45 rows (Food x16, Advertisement x15), 11x the answer to a question asking which categories."
+ },
+ {
+  "item": 26,
+  "class": "A",
+  "confidence": "high",
+  "reason": "(element,label): 5 distinct pairs against 103 rows (h x58, c x38), one per atom of TR060, 20x the set of elements asked for."
+ },
+ {
+  "item": 27,
+  "class": "A",
+  "confidence": "low",
+  "reason": "element: 2 atoms of bond TR001_10_11 (c,o) reported as 4 rows by the OR join plus the bond join, exactly twice the answer."
+ },
+ {
+  "item": 28,
+  "class": "A",
+  "confidence": "high",
+  "reason": "name: 3 distinct race names against 76 rows (German Grand Prix x61), 25x the list asked for."
+ },
+ {
+  "item": 29,
+  "class": "A",
+  "confidence": "high",
+  "reason": "description: 21 distinct descriptions against 933 rows (Nafta x522, Natural x238), 44x the list asked for."
+ },
+ {
+  "item": 30,
+  "class": "A",
+  "confidence": "high",
+  "reason": "(first_name,last_name,phone): 3 distinct members against 11 rows (Sacha Harrison x6, Elijah Allen x3), one per qualifying expense, where the question asks for members."
+ }
+]
