@@ -162,6 +162,22 @@ MARKER_TEXT = (
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 QUESTION_DIRECTORY = re.compile(r"q\d+")
 """The name of a directory this tool writes a question's evidence to."""
+QUESTION_ID_LIMIT = 10**9
+"""One past the largest question id this tool audits, because an id is also a name.
+
+Every question's evidence goes in a directory called ``q<id>``, and the rerun that empties
+the output directory again finds those directories by the pattern above. Both of those make
+an id something narrower than an integer. Below zero the name does not match the pattern, so
+a rerun left ``q-1`` standing beside a fresh run, which breaks the one thing the output
+directory promises: that it holds this run and no other. Far above, the name stops being one
+a filesystem will take, and a three-hundred digit id reached ``mkdir`` and came back as an
+``OSError`` traceback and exit 1 where the contract says a tool error is exit 2.
+
+Nine digits is the bound because it is far past every id any published BIRD file holds (the
+largest is 1533) and past the six-digit synthetic ids the packaged demo audits, and short
+enough that ``q<id>`` is a name every filesystem can hold. What matters is not the number: it
+is that an id outside it is refused before the backend opens, by a message naming the entry,
+rather than by a traceback in the middle of a run."""
 SUMMARY_FORMAT = "attestql/audit/summary/2"
 """What the layout of ``summary.json`` is, for a reader who opens one.
 
@@ -472,21 +488,74 @@ def read_questions(path: Path, ids: Sequence[int] = ()) -> QuestionSet:
 
 
 def _question(entry: object, path: Path, index: int) -> Question:
-    """One entry as a question, or a refusal naming the entry that was not one."""
+    """One entry as a question, or a refusal naming the field that was not one.
+
+    Every field is read at the type the file states it at rather than converted to the type
+    this tool wants. ``int(True)`` is 1 and ``str(None)`` is ``"None"``, so a file holding
+    either used to be audited under an identity it never stated, and a record then said that
+    identity was what was measured. A field of the wrong type is the file being wrong about
+    a question, which is a refusal, and the message names the field so that the person who
+    wrote the file can find it.
+    """
     if not isinstance(entry, dict):
         raise ToolError(f"{path} entry {index} is {type(entry).__name__} and not an object")
     fields = cast("dict[str, Any]", entry)
-    try:
-        return Question(
-            question_id=int(fields["question_id"]),
-            db_id=str(fields["db_id"]),
-            difficulty=str(fields.get("difficulty", "")),
-            question=str(fields["question"]),
-            evidence=str(fields.get("evidence", "")),
-            sql=str(fields["SQL"]),
+    where = f"{path} entry {index}"
+    return Question(
+        question_id=_question_id(fields, where),
+        db_id=_required_text(fields, "db_id", where),
+        difficulty=_optional_text(fields, "difficulty", where),
+        question=_required_text(fields, "question", where),
+        evidence=_optional_text(fields, "evidence", where),
+        sql=_required_text(fields, "SQL", where),
+    )
+
+
+def _question_id(fields: Mapping[str, object], where: str) -> int:
+    """The id of one entry: a whole number this tool can also use as a directory name.
+
+    ``bool`` is excluded explicitly because it is an ``int`` in Python and nowhere else: a
+    file stating ``true`` under ``question_id`` was audited as question 1.
+    """
+    if "question_id" not in fields:
+        raise ToolError(f"{where} is not a question: it states no question_id")
+    stated = fields["question_id"]
+    if not isinstance(stated, int) or isinstance(stated, bool):
+        raise ToolError(
+            f"{where} states question_id as {type(stated).__name__} and not a whole number; "
+            f"an id is the name of the directory this question's evidence goes in"
         )
-    except (KeyError, TypeError, ValueError) as incomplete:
-        raise ToolError(f"{path} entry {index} is not a question: {incomplete}") from incomplete
+    if not 0 <= stated < QUESTION_ID_LIMIT:
+        raise ToolError(
+            f"{where} states question_id {stated}, which is outside 0 to "
+            f"{QUESTION_ID_LIMIT - 1}: an id is the name of the directory this question's "
+            f"evidence goes in, and a rerun of this output directory finds those directories "
+            f"by that name"
+        )
+    return stated
+
+
+def _required_text(fields: Mapping[str, object], name: str, where: str) -> str:
+    """One field a question cannot be read without, at the type the file states it."""
+    if name not in fields:
+        raise ToolError(f"{where} is not a question: it states no {name}")
+    return _text_field(fields[name], name, where)
+
+
+def _optional_text(fields: Mapping[str, object], name: str, where: str) -> str:
+    """One field a question may leave out, refused when it is there at the wrong type."""
+    if name not in fields or fields[name] is None:
+        return ""
+    return _text_field(fields[name], name, where)
+
+
+def _text_field(stated: object, name: str, where: str) -> str:
+    if not isinstance(stated, str):
+        raise ToolError(
+            f"{where} states {name} as {type(stated).__name__} and not text; "
+            f"nothing this tool records is a value it converted for the file"
+        )
+    return stated
 
 
 @dataclass(frozen=True)
@@ -879,7 +948,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         _drop_shuffle(backend)
     summary = _summarise(options, counted, run_id=run_id, elapsed=phases.rounded())
     writer.line(_summary_line(summary))
-    write_json(
+    _write_summary(
         options.out / SUMMARY_FILE,
         _summary_json(
             options,
@@ -1300,6 +1369,15 @@ def _count_credited(counted: _Counted, comparison: Comparison) -> None:
     counted.credited_and_test_suite_ex += comparison.test_suite_ex.value
 
 
+def _write_summary(path: Path, document: Json) -> None:
+    """The summary, written where a write that fails is this tool failing rather than a
+    traceback: the same refusal and the same exit status as every other one."""
+    try:
+        write_json(path, document)
+    except OSError as unwritable:
+        raise ToolError(f"{path} could not be written: {unwritable}") from unwritable
+
+
 def _write_question(
     directory: Path,
     comparison: Comparison | None,
@@ -1312,11 +1390,17 @@ def _write_question(
     Without a prediction there is no counterexample to write and the gold's own record is
     what the fired smell is evidence about, so the directory holds that and the smells.
     """
-    if comparison is not None:
-        write_comparison(comparison, directory)
-    else:
-        write_json(directory / GOLD_RECORD_FILE, record_json(gold_record))
-    write_json(directory / SMELLS_FILE, smells_json(found))
+    try:
+        if comparison is not None:
+            write_comparison(comparison, directory)
+        else:
+            write_json(directory / GOLD_RECORD_FILE, record_json(gold_record))
+        write_json(directory / SMELLS_FILE, smells_json(found))
+    except OSError as unwritable:
+        # A run that could not write its evidence has failed as a tool, whatever it found
+        # about the question: the contract says a tool error is exit 2, and an OSError let
+        # out of here was a traceback and exit 1.
+        raise ToolError(f"{directory} could not be written: {unwritable}") from unwritable
 
 
 def _summarise(

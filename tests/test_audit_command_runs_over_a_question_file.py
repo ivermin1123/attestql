@@ -36,7 +36,9 @@ from attestql.audit.cli import (
     LINE_PREDICTIONS,
     MARKER_FILE,
     POSITION_KEYING,
+    QUESTION_DIRECTORY,
     QUESTION_ID_KEYING,
+    QUESTION_ID_LIMIT,
     SMELLS_FILE,
     SUMMARY_FILE,
     AuditOptions,
@@ -188,6 +190,111 @@ def test_a_question_file_that_is_not_a_list_is_refused(tmp_path: Path) -> None:
     path = write(tmp_path / "questions.json", {"question_id": 1})
     with pytest.raises(ToolError, match="a question file is a list"):
         read_questions(path)
+
+
+def test_a_field_at_the_wrong_type_is_refused_rather_than_converted(tmp_path: Path) -> None:
+    """`int(True)` is 1 and `str(None)` is "None", and both used to be audited.
+
+    A converted field is an identity the file never stated, written into every record of that
+    question as though it had been measured. The refusal names the entry and the field.
+    """
+    entry = question(879, "formula_1", ELEMENTS)
+    path = write(tmp_path / "questions.json", [{**entry, "question_id": True}])
+    with pytest.raises(ToolError, match="states question_id as bool"):
+        read_questions(path)
+
+    path = write(tmp_path / "questions.json", [{**entry, "db_id": None}])
+    with pytest.raises(ToolError, match="states db_id as NoneType"):
+        read_questions(path)
+
+    path = write(tmp_path / "questions.json", [{**entry, "SQL": 0}])
+    with pytest.raises(ToolError, match="states SQL as int"):
+        read_questions(path)
+
+    path = write(tmp_path / "questions.json", [{**entry, "difficulty": 3}])
+    with pytest.raises(ToolError, match="states difficulty as int"):
+        read_questions(path)
+
+
+def test_an_absent_field_names_itself(tmp_path: Path) -> None:
+    """A file missing a field a question cannot be read without says which one."""
+    entry = question(879, "formula_1", ELEMENTS)
+    path = write(tmp_path / "questions.json", [{k: v for k, v in entry.items() if k != "SQL"}])
+    with pytest.raises(ToolError, match="states no SQL"):
+        read_questions(path)
+
+
+def test_a_field_a_question_may_leave_out_may_also_be_null(tmp_path: Path) -> None:
+    """`evidence` and `difficulty` are absent from some published files and null in others,
+    and neither is the file being wrong about the question."""
+    entry = question(879, "formula_1", ELEMENTS)
+    path = write(tmp_path / "questions.json", [{**entry, "evidence": None, "difficulty": None}])
+
+    read = read_questions(path)
+
+    assert read.questions[0].evidence == ""
+    assert read.questions[0].difficulty == ""
+
+
+def test_an_id_below_zero_is_refused_because_a_rerun_would_not_clear_its_directory(
+    tmp_path: Path,
+) -> None:
+    """`q-1` does not match the pattern a rerun empties the output directory by.
+
+    One run is one directory, which is what the output directory promises; a directory the
+    next run cannot remove would stand beside a fresh one for as long as nobody noticed.
+    """
+    path = write(tmp_path / "questions.json", [question(-1, "formula_1", ELEMENTS)])
+    with pytest.raises(ToolError, match="question_id -1, which is outside"):
+        read_questions(path)
+
+    assert not QUESTION_DIRECTORY.fullmatch("q-1"), "which is why the id is refused"
+
+
+def test_an_id_too_long_to_be_a_directory_name_is_refused_before_the_run(
+    tmp_path: Path,
+) -> None:
+    """A three-hundred digit id reached `mkdir` and came back as a traceback and exit 1.
+
+    The contract says a tool error is exit 2, and this is one: it is refused while the file is
+    read, before a backend is opened and before anything is written.
+    """
+    path = write(tmp_path / "questions.json", [question(10**300, "formula_1", ELEMENTS)])
+    with pytest.raises(ToolError, match="which is outside 0 to 999999999"):
+        read_questions(path)
+
+
+def test_the_largest_id_the_packaged_demo_audits_is_inside_the_bound() -> None:
+    """The bound is far past every published id and past the demo's synthetic ones."""
+    assert QUESTION_ID_LIMIT > 900005, "the demo's synthetic ids"
+    assert QUESTION_ID_LIMIT > 1533, "the largest id a published BIRD file holds"
+
+
+def test_a_write_that_fails_mid_run_is_a_tool_error_and_not_a_traceback(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The contract says a tool error is exit 2, and a write that failed was neither.
+
+    The rerun empties the output directory of the `q<id>/` directories it wrote, which are
+    directories: a file of that name is not one of them and stays, and the run that then
+    tries to write `q879/` into it meets it. What used to come back was an `OSError` from
+    `mkdir` in the middle of the run, as a traceback and exit 1.
+    """
+    write(tmp_path / "questions.json", [question(879, "formula_1", FASTEST_LAP)])
+    write(tmp_path / "predictions.json", {"879": NUMERIC})
+    out = tmp_path / "audit"
+    out.mkdir()
+    (out / MARKER_FILE).write_text("written by attestql audit\n", encoding="utf-8")
+    (out / "q879").write_text("a file with the name of a directory", encoding="utf-8")
+
+    status = audit(
+        options(tmp_path, predictions=tmp_path / "predictions.json"),
+        _defect_backend(),
+        Lines(),
+    )
+
+    assert status == 2
+    assert "could not be written" in capsys.readouterr().err
 
 
 # the predictions file

@@ -71,6 +71,12 @@ questions it names. A file that states
 two different questions under one id stops the run; an id repeated with the same entry is one
 question.
 
+Every field is read at the type the file states it at, and an entry stating one at another type
+is a tool error before the run starts, exit 2, naming the entry and the field. `question_id` is a
+whole number from 0 to 999,999,999 and nothing else, because it is also the name of the directory
+that question's evidence goes in and the name a rerun of that directory looks for; `true` is not
+the id 1 and `null` is not the text `None`. The other four are text.
+
 A predictions file written for this tool is keyed by question id (`{"879": "SELECT ..."}`). BIRD's
 own prediction files under `llm/exp_result/` are keyed by the position of the entry in the
 question file rather than by question id, because its evaluation pairs prediction `i` with gold
