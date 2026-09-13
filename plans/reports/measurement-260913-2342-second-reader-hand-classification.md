@@ -1,3 +1,4 @@
+<!-- cspell:ignore closeddate -->
 # A second reader for the class A hand classification of Mini-Dev on PostgreSQL
 
 Measured 2026-09-13 at `eba24a0`, over the published runs under `tools/site/data/minidev-pg/`
