@@ -162,6 +162,11 @@ MARKER_TEXT = (
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 QUESTION_DIRECTORY = re.compile(r"q\d+")
 """The name of a directory this tool writes a question's evidence to."""
+NAMED_IN_A_REFUSAL = 20
+"""How many of a kind a refusal names before it says how many more there are.
+
+A message is read by a person looking for the one they mistyped, and a file naming five
+hundred unknown ids would otherwise print five hundred numbers at them."""
 QUESTION_ID_LIMIT = 10**9
 """One past the largest question id this tool audits, because an id is also a name.
 
@@ -711,13 +716,15 @@ def resolve_predictions(
     which is what BIRD's own evaluation writes: its ``package_sqls`` pairs prediction ``i``
     with gold line ``i``, so the file holds ``"0"`` to ``"499"`` and no question id at all.
 
-    Raises ``ToolError`` for a position no entry of the question file has, and for a file
-    keyed by question id whose keys are exactly the positions of a question file whose ids
-    are not: those two readings pair different statements, and guessing between them would
-    be this tool comparing golds with predictions written for other questions.
+    Raises ``ToolError`` for a position no entry of the question file has, for a key no
+    question of the file has under question-id keying, and for a file keyed by question id
+    whose keys are exactly the positions of a question file whose ids are not: those two
+    readings pair different statements, and guessing between them would be this tool
+    comparing golds with predictions written for other questions.
     """
     if keyed_by == QUESTION_ID_KEYING:
         _refuse_positions_read_as_ids(predictions, question_set)
+        _refuse_ids_the_question_file_does_not_hold(predictions, question_set)
         return ResolvedPredictions(by_id=dict(predictions), positions_unused=())
     by_id: dict[int, str | NoStatement] = {}
     unused: list[int] = []
@@ -734,6 +741,43 @@ def resolve_predictions(
             continue
         by_id[question_id] = predictions[position]
     return ResolvedPredictions(by_id=by_id, positions_unused=tuple(unused))
+
+
+def _refuse_ids_the_question_file_does_not_hold(
+    predictions: Mapping[int, str | NoStatement], question_set: QuestionSet
+) -> None:
+    """Refuse a prediction whose key names no question of the file, under question-id keying.
+
+    Such a prediction was dropped without a word: the question it was written for was audited
+    gold-only, and the run's own line and summary said GOLD-ONLY, which is what a question
+    with no prediction looks like. One mistyped digit therefore read as an audit of a
+    prediction that was never compared with anything.
+
+    Against the whole file and not against what ``--ids`` kept. A run auditing one database
+    out of a prediction file written for eleven compares none of the keys for the other ten,
+    and each of those keys still names a real question of the file. What is refused is a key
+    naming no question at all, which no filter explains.
+
+    Position keying has its own account of what was left over, in ``positions_unused``, and a
+    position outside the file is already refused above.
+    """
+    held = set(question_set.entry_ids)
+    unknown = sorted(key for key in predictions if key not in held)
+    if not unknown:
+        return
+    named = ", ".join(str(key) for key in unknown[:NAMED_IN_A_REFUSAL])
+    rest = (
+        ""
+        if len(unknown) <= NAMED_IN_A_REFUSAL
+        else f" and {len(unknown) - NAMED_IN_A_REFUSAL} more"
+    )
+    raise ToolError(
+        f"the predictions file names {len(unknown)} ids no question of {question_set.path} "
+        f"has: {named}{rest}. Under question-id keying a key is a question id, so each of "
+        f"these is a prediction this run would leave out while reporting the question "
+        f"it was meant for as having none. A file BIRD's own evaluation wrote is keyed by "
+        f"position and needs --predictions-keyed-by position"
+    )
 
 
 def _refuse_positions_read_as_ids(

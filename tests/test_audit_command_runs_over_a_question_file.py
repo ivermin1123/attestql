@@ -49,6 +49,7 @@ from attestql.audit.cli import (
     parse_arguments,
     read_predictions,
     read_questions,
+    resolve_predictions,
     run_audit,
 )
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
@@ -268,6 +269,66 @@ def test_the_largest_id_the_packaged_demo_audits_is_inside_the_bound() -> None:
     """The bound is far past every published id and past the demo's synthetic ones."""
     assert QUESTION_ID_LIMIT > 900005, "the demo's synthetic ids"
     assert QUESTION_ID_LIMIT > 1533, "the largest id a published BIRD file holds"
+
+
+def test_a_prediction_naming_no_question_of_the_file_is_refused(tmp_path: Path) -> None:
+    """One mistyped digit used to read as an audit of a prediction nothing compared.
+
+    Under question-id keying the key is a question id. A key naming no question was kept in
+    the map and then never matched, so the question it was meant for was audited gold-only
+    and the line and the summary said GOLD-ONLY, which is what a question with no prediction
+    looks like. Nothing anywhere said a prediction had been left behind.
+    """
+    path = write(tmp_path / "questions.json", [question(879, "formula_1", FASTEST_LAP)])
+    predictions = read_predictions(
+        write(tmp_path / "predictions.json", {"879": NUMERIC, "8790": NUMERIC})
+    )
+
+    with pytest.raises(ToolError, match="names 1 ids no question of"):
+        resolve_predictions(predictions, read_questions(path), QUESTION_ID_KEYING)
+
+
+def test_an_id_the_ids_filter_left_out_is_not_an_unknown_id(tmp_path: Path) -> None:
+    """A run over one database out of a file written for eleven compares none of the other ten.
+
+    Each of those keys names a real question of the file, which is why the check is against
+    the file and not against what the filter kept.
+    """
+    path = write(
+        tmp_path / "questions.json",
+        [question(879, "formula_1", FASTEST_LAP), question(207, "toxicology", ELEMENTS)],
+    )
+    predictions = read_predictions(
+        write(tmp_path / "predictions.json", {"879": NUMERIC, "207": NUMERIC})
+    )
+
+    resolved = resolve_predictions(predictions, read_questions(path, (879,)), QUESTION_ID_KEYING)
+
+    assert sorted(resolved.by_id) == [207, 879], "kept, and only 879 is audited"
+
+
+def test_a_refusal_naming_many_ids_says_how_many_more_there_are(tmp_path: Path) -> None:
+    """A file naming five hundred unknown ids prints twenty of them and a count."""
+    path = write(tmp_path / "questions.json", [question(879, "formula_1", FASTEST_LAP)])
+    predictions = read_predictions(
+        write(tmp_path / "predictions.json", {str(key): NUMERIC for key in range(1000, 1100)})
+    )
+
+    with pytest.raises(ToolError, match="and 80 more"):
+        resolve_predictions(predictions, read_questions(path), QUESTION_ID_KEYING)
+
+
+def test_position_keying_still_accounts_for_what_it_left_over(tmp_path: Path) -> None:
+    """`positions_unused` is the position-keyed account of the same thing, and it stands."""
+    entry = question(137, "financial", ELEMENTS)
+    path = write(tmp_path / "questions.json", [entry, dict(entry)])
+    predictions = read_predictions(
+        write(tmp_path / "predictions.json", {"0": NUMERIC, "1": NUMERIC})
+    )
+
+    resolved = resolve_predictions(predictions, read_questions(path), POSITION_KEYING)
+
+    assert resolved.positions_unused == (1,)
 
 
 def test_a_write_that_fails_mid_run_is_a_tool_error_and_not_a_traceback(

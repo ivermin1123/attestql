@@ -82,10 +82,15 @@ own prediction files under `llm/exp_result/` are keyed by the position of the en
 question file rather than by question id, because its evaluation pairs prediction `i` with gold
 line `i`; read one with `--predictions-keyed-by position`, and under the default keying a file of
 that shape is refused rather than paired with whichever questions happen to carry those numbers.
-A value may carry BIRD's own suffix (`\t----- bird -----\t<db_id>`), which is stripped. An entry
-that is the number `0` or an empty string, which is how BIRD dev's own `predict_dev.json` marks a
-prediction the model did not produce, is that question's error line and not a refusal of the
-file; a question the file does not name at all is audited gold-only.
+A key naming no question of the file at all is a tool error before the run starts, exit 2, naming
+the ids: under this keying a key is a question id, and one that names nothing would be a
+prediction the run leaves out while the question it was meant for is reported as having none. The
+ids are checked against the whole question file and not against what `--ids` kept, because a run
+over one database out of a prediction file written for eleven compares none of the keys for the
+other ten by design. A value may carry BIRD's own suffix (`\t----- bird -----\t<db_id>`), which is
+stripped. An entry that is the number `0` or an empty string, which is how BIRD dev's own
+`predict_dev.json` marks a prediction the model did not produce, is that question's error line
+and not a refusal of the file; a question the file does not name at all is audited gold-only.
 
 Most published prediction files hold no keys at all: one statement per line, in the order of the
 question file. `--predictions-format lines` reads one, where a line's position is its key, so that
