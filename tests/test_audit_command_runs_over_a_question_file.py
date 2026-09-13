@@ -20,6 +20,7 @@ import hashlib
 import importlib.metadata
 import json
 import re
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
 
@@ -604,7 +605,8 @@ def test_the_line_of_a_disagreement_is_the_one_the_adr_writes_down(
     )
     assert lines.written[1] == (
         "1 questions: 1 NOT_EQUAL, 1 smells fired, 0 credited by BIRD but NOT_EQUAL "
-        "(0 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)"
+        "(0 multiplicity, 0 type, 0 order, 0 truncation, 0 other), 0 timed out "
+        "(0 gold, 0 prediction)"
     )
     # Both records of a comparison are built from one session and one fixture, so no run
     # reaches NOT_COMPARABLE and the line does not count what cannot happen.
@@ -1039,6 +1041,46 @@ def test_a_record_states_the_timeout_its_statement_ran_under_and_the_summary_the
     assert backend.executed[0] == (ELEMENTS, 45), "the bound the run was given is what was set"
 
 
+AVERAGE_SPEED = "SELECT avg(speed) FROM laps"
+ROUNDED_SPEED = "SELECT round(avg(speed), 12) FROM laps"
+SPEED = (("speed", "float8"),)
+"""A float column and two statements over it, for the one class the summary line did not
+show. This tool loads a float as the exact decimal the server printed; BIRD's own driver
+builds a Python double from it, and two decimals a double cannot tell apart are one answer
+to the benchmark and two to a typed comparison."""
+
+
+def test_the_summary_line_counts_a_credited_disagreement_that_is_none_of_the_four_classes(
+    tmp_path: Path,
+) -> None:
+    """`other` was in the file and not on the line, so the total said one and the four
+    numbers beside it said zero.
+
+    A reader adding them up found a credited disagreement missing, which is the reading the
+    line exists to give. Documented as five classes in docs/audit-command.md all along, so
+    the line is what was wrong rather than the documentation.
+    """
+    write(tmp_path / "questions.json", [question(207, "toxicology", AVERAGE_SPEED)])
+    write(tmp_path / "predictions.json", {"207": ROUNDED_SPEED})
+    backend = FakeBackend(
+        {
+            AVERAGE_SPEED: fake_result(SPEED, ((Decimal("1.0000000000000000001"),),)),
+            ROUNDED_SPEED: fake_result(SPEED, ((Decimal("1.0"),),)),
+        },
+        row_counts={"laps": 3},
+    )
+    lines = Lines()
+
+    run_audit(options(tmp_path, predictions=tmp_path / "predictions.json"), backend, lines)
+
+    assert lines.written[-1] == (
+        "1 questions: 1 NOT_EQUAL, 0 smells fired, 1 credited by BIRD but NOT_EQUAL "
+        "(0 multiplicity, 0 type, 0 order, 0 truncation, 1 other), 0 timed out "
+        "(0 gold, 0 prediction)"
+    )
+    assert summary_of(tmp_path)["credited_but_not_equal"]["by_mechanism"]["other"] == 1
+
+
 def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism(
     tmp_path: Path,
 ) -> None:
@@ -1072,7 +1114,8 @@ def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism
 
     assert lines.written[1] == (
         "1 questions: 1 NOT_EQUAL, 1 smells fired, 1 credited by BIRD but NOT_EQUAL "
-        "(1 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)"
+        "(1 multiplicity, 0 type, 0 order, 0 truncation, 0 other), 0 timed out "
+        "(0 gold, 0 prediction)"
     )
     assert summary.credited_but_not_equal is not None
     assert summary.credited_but_not_equal.total == 1

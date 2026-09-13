@@ -87,6 +87,7 @@ from attestql.audit.compare import (
     MECHANISM_CLASSES,
     MECHANISM_MULTIPLICITY,
     MECHANISM_ORDER,
+    MECHANISM_OTHER,
     MECHANISM_TRUNCATION,
     MECHANISM_TYPE,
     SIDE_GOLD,
@@ -1037,7 +1038,8 @@ def _summary_line(summary: Summary) -> str:
         line += (
             f", {credited.total} credited by BIRD but NOT_EQUAL "
             f"({counted[MECHANISM_MULTIPLICITY]} multiplicity, {counted[MECHANISM_TYPE]} type, "
-            f"{counted[MECHANISM_ORDER]} order, {counted[MECHANISM_TRUNCATION]} truncation)"
+            f"{counted[MECHANISM_ORDER]} order, {counted[MECHANISM_TRUNCATION]} truncation, "
+            f"{counted[MECHANISM_OTHER]} other)"
         )
     return line + (
         f", {summary.timed_out_total} timed out "

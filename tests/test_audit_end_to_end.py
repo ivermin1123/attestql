@@ -73,7 +73,9 @@ describes the data every record here is about."""
 DEFECTS = ("1029", "879", "207")
 """The three questions whose shipped gold and correction disagree on this data."""
 
-NO_CREDIT = " credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation)"
+NO_CREDIT = (
+    " credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation, 0 other)"
+)
 """What the run given predictions states about the gap between the two readings: none of
 the three disagreements here is one BIRD's own check would have scored 1."""
 

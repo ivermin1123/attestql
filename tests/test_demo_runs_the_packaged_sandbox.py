@@ -47,7 +47,8 @@ prediction to compare, and one whose prediction answers it another way and agree
 
 SUMMARY_LINE = (
     "6 questions: 3 NOT_EQUAL, 5 smells fired, "
-    "0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation), "
+    "0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation, "
+    "0 other), "
     "0 timed out (0 gold, 0 prediction)"
 )
 """The whole of the demo's second-to-last line, which is the audit's own summary line and is
