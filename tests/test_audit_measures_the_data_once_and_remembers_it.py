@@ -181,3 +181,41 @@ def test_data_that_changed_under_the_same_schema_is_measured_again(tmp_path: Pat
     }
     entries = json.loads((tmp_path / CACHE_FILE).read_text(encoding="utf-8"))["entries"]
     assert len(entries) == 1, "the stale entry was kept beside the one that replaced it"
+
+
+def test_a_hand_edited_schema_digest_in_the_cache_does_not_reach_a_record(
+    tmp_path: Path,
+) -> None:
+    """The digest returned is the one measured on the server a moment ago, not the file's.
+
+    The key an entry is found under holds the schema digest, so the two cannot differ unless
+    somebody edited the file. When they did, every record made from that hit stated a fixture
+    identity nobody measured, and the fixture identity is a precondition of replaying the
+    record: a reader would have gone looking for a database that never existed.
+    """
+    backend = _backend()
+    fixture_digest(backend, TABLES, directory=tmp_path)
+    path = tmp_path / CACHE_FILE
+    document = json.loads(path.read_text(encoding="utf-8"))
+    for entry in document["entries"].values():
+        entry["schema_digest"] = "sha256:typed-in-by-hand"
+    path.write_text(json.dumps(document), encoding="utf-8")
+
+    served = fixture_digest(backend, TABLES, directory=tmp_path)
+
+    assert served.schema_digest == "sha256:fake-schema-digest", "what the server said"
+    assert backend.row_count_calls == [(DRIVERS, RESULTS)], "and it was still a hit"
+
+
+def test_the_cache_is_moved_into_place_rather_than_written_where_it_is_read(
+    tmp_path: Path,
+) -> None:
+    """An interrupted write used to leave a half written file under the name of a whole one.
+
+    Observed through what is beside the cache once the write is done: the temporary file is
+    made in the same directory, because a move is only atomic within one filesystem, and it
+    is gone whether the write finished or not.
+    """
+    fixture_digest(_backend(), TABLES, directory=tmp_path)
+
+    assert [path.name for path in sorted(tmp_path.iterdir())] == [CACHE_FILE]

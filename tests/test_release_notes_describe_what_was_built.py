@@ -16,6 +16,7 @@ import json
 from pathlib import Path
 
 import notes
+import pytest
 
 
 def manifest(tmp_path: Path, document: object) -> Path:
@@ -68,3 +69,35 @@ def test_the_notes_refuse_a_manifest_that_is_not_json(tmp_path: Path) -> None:
     path.write_text("not json", encoding="utf-8")
 
     assert notes.main([str(path), "v0.0.0"]) == 2
+
+
+def test_the_notes_state_what_moved_in_the_bytes_of_a_record() -> None:
+    """A reader comparing two records of one question has to be able to explain the diff.
+
+    The tool changes that move those bytes are named in the notes published with the
+    archives, because the archives are where the records are.
+    """
+    written = notes.render(
+        {"tag": "v0.3.2", "assets": [{"name": "a.tar.gz", "bytes": 1, "directories": 1}]},
+        "v0.3.2",
+    )
+
+    assert notes.RECORD_BYTES_MOVED, "this release moves them"
+    assert notes.RECORD_BYTES_HEADING in written
+    for moved in notes.RECORD_BYTES_MOVED:
+        assert moved in written
+
+
+def test_a_release_that_moved_no_record_byte_renders_no_such_section(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Empty is the ordinary state, and an empty heading would be a question with no answer."""
+    monkeypatch.setattr(notes, "RECORD_BYTES_MOVED", ())
+
+    written = notes.render(
+        {"tag": "v0.3.2", "assets": [{"name": "a.tar.gz", "bytes": 1, "directories": 1}]},
+        "v0.3.2",
+    )
+
+    assert notes.RECORD_BYTES_HEADING not in written
+    assert written.endswith("question directories\n")

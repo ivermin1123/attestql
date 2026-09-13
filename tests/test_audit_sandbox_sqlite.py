@@ -204,6 +204,7 @@ def test_the_summary_names_the_engine_the_file_and_the_grammar_that_judged_this_
         "query_only",
         "journal_mode",
         "data_version",
+        "automatic_index",
     }
 
 

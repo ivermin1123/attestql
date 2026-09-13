@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import tempfile
 from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass, fields
@@ -71,8 +73,40 @@ def digest_of(document: Json) -> str:
 
 
 def write_json(path: Path, document: Json) -> None:
+    write_text_atomically(path, json.dumps(document, indent=2, ensure_ascii=False) + "\n")
+
+
+def write_text_atomically(path: Path, text: str) -> None:
+    """Write the whole of ``text`` to ``path``, or leave what was there.
+
+    Through a temporary file in the same directory and then ``os.replace``, which is atomic
+    on every platform this runs on. Writing to the final path directly meant an interrupted
+    run left a half written file under a name a reader takes as a whole one: a question
+    directory with a truncated record in it and no summary to say the run never finished.
+    The rerun marker means the next run would clear it, so what this protects is the reader
+    who opens the directory in between.
+
+    The temporary file is in the destination's own directory because ``os.replace`` is only
+    atomic within one filesystem, and it is removed if the write or the move fails, so a
+    failure leaves neither a half written file nor a stray one.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(document, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    handle = tempfile.NamedTemporaryFile(  # noqa: SIM115
+        mode="w",
+        encoding="utf-8",
+        dir=path.parent,
+        prefix=f".{path.name}.",
+        suffix=".partial",
+        delete=False,
+    )
+    partial = Path(handle.name)
+    try:
+        with handle:
+            handle.write(text)
+        os.replace(partial, path)
+    except BaseException:
+        partial.unlink(missing_ok=True)
+        raise
 
 
 def result_digest(result: ExecutionResult, descriptor: SerializationDescriptor) -> str:
@@ -293,4 +327,5 @@ __all__ = [
     "row_difference_json",
     "statement_source_json",
     "write_json",
+    "write_text_atomically",
 ]

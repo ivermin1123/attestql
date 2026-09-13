@@ -20,13 +20,16 @@ fixes them now. The executor reads its own envelope back and refuses on drift, w
 from __future__ import annotations
 
 import dataclasses
+import json
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Any
 
 import pytest
 
 from attestql.evidence.build import ExecutionIdentity, IncompleteEvidence, build_evidence_record
 from attestql.evidence.record import EvidenceRecord
+from attestql.evidence.render import write_json
 from attestql.evidence.serialize import SerializationDescriptor
 from attestql.evidence.types import (
     ENGINE_POSTGRESQL,
@@ -433,3 +436,55 @@ def test_the_mappings_a_record_holds_cannot_be_edited_through_it(build: Any) -> 
         record.fixture.row_counts["usage_event"] = 5  # pyright: ignore[reportIndexIssue]  # read-only by design
     with pytest.raises(TypeError):
         record.session_settings_in_force.recorded["search_path"] = "public"  # pyright: ignore[reportIndexIssue]  # read-only by design
+
+
+def test_a_write_that_fails_leaves_the_record_that_was_there(tmp_path: Path) -> None:
+    """Until 2026-09-13 a record was written straight to its final path.
+
+    `Path.write_text` truncates before it writes, so a write that stopped part way left a
+    file that is neither the record before it nor the record after it, under a name a reader
+    takes as a whole record: a question directory with a truncated record in it and no
+    summary beside it to say the run never finished. The rerun marker means the next run
+    clears it; what this protects is the reader who opens the directory in between.
+
+    A lone surrogate is the failure that needs no patching: it is a `str` that cannot be
+    encoded as UTF-8, so the encode fails after the file has been opened.
+    """
+    path = tmp_path / "q879" / "evidence-gold.json"
+    write_json(path, {"the": "record before"})
+
+    with pytest.raises(UnicodeEncodeError):
+        write_json(path, {"the": "record after", "undecodable": "\ud800"})
+
+    assert json.loads(path.read_text(encoding="utf-8")) == {"the": "record before"}
+    assert [beside.name for beside in sorted(path.parent.iterdir())] == ["evidence-gold.json"], (
+        "and nothing of the write that failed is left beside it"
+    )
+
+
+def test_a_record_that_was_written_is_the_whole_document_and_nothing_beside_it(
+    tmp_path: Path,
+) -> None:
+    """The temporary file is made in the destination's own directory, because a move is only
+    atomic within one filesystem, and it is gone once the move is done."""
+    path = tmp_path / "q879" / "evidence-gold.json"
+
+    write_json(path, {"whole": "document"})
+
+    assert json.loads(path.read_text(encoding="utf-8")) == {"whole": "document"}
+    assert [beside.name for beside in sorted(path.parent.iterdir())] == ["evidence-gold.json"]
+
+
+def test_a_write_that_could_not_be_moved_into_place_leaves_what_was_there(
+    tmp_path: Path,
+) -> None:
+    """And leaves nothing of its own behind either, which is the other half of the promise."""
+    occupied = tmp_path / "evidence-gold.json"
+    occupied.mkdir()
+    (occupied / "not this command's").write_text("kept", encoding="utf-8")
+
+    with pytest.raises(OSError):
+        write_json(occupied, {"a": "document"})
+
+    assert (occupied / "not this command's").read_text(encoding="utf-8") == "kept"
+    assert [beside.name for beside in sorted(tmp_path.iterdir())] == ["evidence-gold.json"]

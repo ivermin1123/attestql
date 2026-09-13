@@ -26,7 +26,9 @@ import os
 import subprocess
 from pathlib import Path
 
-SCRIPT = Path(__file__).resolve().parents[1] / "tools" / "site-select" / "audits.sh"
+REPOSITORY = Path(__file__).resolve().parents[1]
+SCRIPT = REPOSITORY / "tools" / "site-select" / "audits.sh"
+SANDBOX = REPOSITORY / "tools" / "audit-sandbox" / "run.sh"
 
 
 def work_directory(root: Path, out: Path) -> Path:
@@ -95,3 +97,86 @@ def test_a_work_directory_with_nothing_to_rerun_passes(tmp_path: Path) -> None:
 
     assert finished.returncode == 0, finished.stderr
     assert "runs the bound stopped something in: 0" in finished.stdout
+
+
+# `run.sh`: what it accepts as an output directory
+#
+# The harness writes a server's whole data directory into `--out`, and the guard that it is
+# outside the repository read `cd && pwd`, which is a logical path: every symlink is still in
+# it. A link under the repository pointing at a directory outside it therefore resolved to a
+# path the guard accepted, and the harness then wrote through the link, back into the working
+# tree. `render.py` makes the same check on a resolved path, which is what this now is.
+#
+# Only the guard is driven. `docker` and `lsof` are shims on PATH, so the tests need no
+# container, no port and no network: what the shim records is whether the script reached the
+# step after the guard.
+
+
+def guard(tmp_path: Path, out: Path) -> tuple[subprocess.CompletedProcess[str], Path]:
+    """Run the sandbox harness far enough to answer the guard, and no further."""
+    shims = tmp_path / "shims"
+    shims.mkdir()
+    reached = tmp_path / "reached-docker"
+    (shims / "docker").write_text(
+        f'#!/bin/sh\necho "$@" >> "{reached}"\nexit 1\n', encoding="utf-8"
+    )
+    # Nothing is listening on the harness's port as far as these tests are concerned: the
+    # machine's own ports are not what is under test here.
+    (shims / "lsof").write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    for shim in shims.iterdir():
+        shim.chmod(0o755)
+    environment = dict(os.environ, PATH=f"{shims}:{os.environ.get('PATH', '')}")
+    finished = subprocess.run(  # noqa: S603
+        ["bash", str(SANDBOX), str(out), "--", "true"],  # noqa: S607
+        capture_output=True,
+        text=True,
+        env=environment,
+        check=False,
+    )
+    return finished, reached
+
+
+def test_an_output_directory_that_is_a_symlink_into_the_repository_is_refused(
+    tmp_path: Path,
+) -> None:
+    """The reproduction the review recorded: a logical path walks straight through the check."""
+    link = tmp_path / "somewhere-outside"
+    link.symlink_to(REPOSITORY / "build", target_is_directory=True)
+
+    finished, reached = guard(tmp_path, link)
+
+    assert finished.returncode == 2, finished.stdout
+    assert "symlink" in finished.stderr
+    assert not reached.exists(), "the refusal comes before the container"
+
+
+def test_an_output_directory_reached_through_a_symlink_is_refused_by_the_resolved_path(
+    tmp_path: Path,
+) -> None:
+    """The link is a directory of the path rather than its last part, so the name check above
+    does not see it and the resolved path is what refuses."""
+    inside = REPOSITORY / "build" / "attestql-sandbox-symlink-test"
+    inside.mkdir(parents=True, exist_ok=True)
+    link = tmp_path / "by-way-of"
+    link.symlink_to(REPOSITORY / "build", target_is_directory=True)
+
+    try:
+        finished, reached = guard(tmp_path, link / "attestql-sandbox-symlink-test")
+
+        assert finished.returncode == 2, finished.stdout
+        assert "must be outside the repository" in finished.stderr
+        assert not reached.exists()
+    finally:
+        inside.rmdir()
+
+
+def test_an_output_directory_outside_the_repository_passes_the_guard(tmp_path: Path) -> None:
+    """The other half: a plain directory outside is what the harness is for, and the run gets
+    as far as the container step this test then refuses to run."""
+    out = tmp_path / "sandbox"
+
+    finished, reached = guard(tmp_path, out)
+
+    assert "must be outside the repository" not in finished.stderr
+    assert "symlink" not in finished.stderr
+    assert reached.is_file(), "the guard passed and the harness reached docker"

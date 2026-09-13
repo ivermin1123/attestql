@@ -202,19 +202,33 @@ The path is on stderr, where the person who is spending the disk can read it."""
 CANNOT_WRITE = ("attempt to write a readonly database", "unable to open database file")
 """What SQLite says when it cannot create the sidecars a WAL file needs to be read."""
 
+NO_ROWID_COLUMN = "no such column: rowid"
+"""What SQLite says of a relation that has no rowid to order a seeded copy by.
+
+A view and a WITHOUT ROWID table both answer this, and nothing else does: a table that is not
+there says ``no such table``, and a file that cannot be read says what it cannot do. Matched
+on the message because the driver gives one ``OperationalError`` for all of them."""
+
 RECORDED_PRAGMAS: tuple[str, ...] = (
     "encoding",
     "reverse_unordered_selects",
     "query_only",
     "journal_mode",
     "data_version",
+    "automatic_index",
 )
-"""The five settings a record states that are read straight off a pragma of one value.
+"""The six settings a record states that are read straight off a pragma of one value.
 
-The other four of ADR-0014's nine are read differently and beside them: the version is a
-function, the compile options and the collation list are many rows, and
+The other four of the ten ADR-0014 names are read differently and beside them: the version is
+a function, the compile options and the collation list are many rows, and
 ``case_sensitive_like`` is a pragma SQLite only accepts and never answers, so what is
-recorded for it is what the file was observed doing."""
+recorded for it is what the file was observed doing.
+
+``automatic_index`` is the tenth, added 2026-09-13. The plan variant turns it off for one
+statement and gives it back after, so it is a setting this tool itself changes, and the rule
+the PostgreSQL side already follows is that a record states what its statement ran under. It
+is also the setting whose default a build may not ship, which is the case a record has no
+other way to disclose."""
 
 CENSUS_SQL = (
     "SELECT count(*), "
@@ -927,6 +941,12 @@ class SqliteBackend:
         Asked of the relation rather than read off its DDL: a view and a WITHOUT ROWID table
         both answer that there is no such column, and asking is what makes the answer the
         engine's rather than this module's reading of a CREATE statement.
+
+        One message is that answer, and only that one. Every refusal used to read as "this
+        relation has no rowid", so a file that could not be read at all, or a table that had
+        gone since the catalogue was read, quietly became a table the shuffle skipped: a
+        probe that covered less of the statement than the record says it did. Anything else
+        is raised, and the run reports it where it happened.
         """
         try:
             _run(
@@ -934,8 +954,10 @@ class SqliteBackend:
                 _sql("SELECT rowid FROM {schema}.{table} LIMIT 0", **_over(name)),
                 step="prepare_shuffled_copies",
             )
-        except BackendRefused:
-            return False
+        except BackendRefused as refused:
+            if NO_ROWID_COLUMN in refused.detail:
+                return False
+            raise
         return True
 
     def drop_shuffled_copies(self) -> None:
@@ -1109,12 +1131,26 @@ def _plan_controls(
     if not without_automatic_indexes:
         yield
         return
+    before = _automatic_index(connection)
     _run(connection, "PRAGMA automatic_index = 0", step="execute")
     try:
         yield
     finally:
         with suppress(BackendRefused):
-            _run(connection, "PRAGMA automatic_index = 1", step="execute")
+            _run(connection, f"PRAGMA automatic_index = {before}", step="execute")
+
+
+def _automatic_index(connection: sqlite3.Connection) -> int:
+    """What the connection had this pragma at, so that it can be given back exactly that.
+
+    Restoring a fixed 1 was right on every build that ships the default and wrong on one
+    that does not: the control would have been turned on by a run that never asked for it,
+    and every statement after the first plan variant would have read its tables another way
+    than the statements before it, inside one run whose record says one session.
+    """
+    rows = _all(connection, "PRAGMA automatic_index", step="execute")
+    stated = rows[0][0] if rows else 1
+    return 1 if not isinstance(stated, int) else stated
 
 
 def _fetch(

@@ -21,9 +21,29 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, cast
 
+RECORD_BYTES_HEADING = "What moved in the bytes of a record since the last release"
+
+RECORD_BYTES_MOVED: tuple[str, ...] = (
+    "A SQLite record's session settings block holds a tenth setting, `automatic_index`. The "
+    "shuffle probe's plan variant turns that pragma off and gives it back, so the value in "
+    "force over a statement is now stated rather than assumed to be the build's default. A "
+    "record of the same question made before and after this release differs by those bytes "
+    "and by nothing else.",
+)
+"""Every change in this release that moves the bytes of a record of the same question.
+
+A record is what a replay is checked against, so two records of one question that differ
+byte for byte are the first thing a reader has to be able to explain. These sentences are
+that explanation, published with the archives the release carries.
+
+An entry is added by the change that moves the bytes and stays until the release that
+carries it has shipped, which is when this tuple is emptied again. Empty is the ordinary
+state and renders no section at all."""
+
 
 def render(manifest: dict[str, Any], tag: str) -> str:
-    """The notes for one tag: what the archives are, and how much of a run each holds."""
+    """The notes for one tag: what the archives are, how much of a run each holds, and what
+    moved in the bytes of a record since the release before."""
     assets = cast("list[dict[str, Any]]", manifest["assets"])
     if not assets:
         raise ValueError("the manifest names no archive")
@@ -39,6 +59,9 @@ def render(manifest: dict[str, Any], tag: str) -> str:
         f"- `{one['name']}`, {one['bytes']} bytes, {one['directories']} question directories"
         for one in sorted(assets, key=lambda one: str(one["name"]))
     )
+    if RECORD_BYTES_MOVED:
+        lines.extend(("", f"## {RECORD_BYTES_HEADING}", ""))
+        lines.extend(f"- {moved}" for moved in RECORD_BYTES_MOVED)
     return "\n".join(lines) + "\n"
 
 

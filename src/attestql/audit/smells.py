@@ -478,12 +478,19 @@ def _unordered_cut(
         "why": "the statement bounds its result and states no ORDER BY, so which rows it "
         "returns is whichever ones the plan produced first",
     }
+    # Not applicable rather than quiet, in both of the cases below: the one measurement that
+    # answers this case was not taken, and a reader has to be able to tell that from a bound
+    # that was tested and held.
     if shuffled is None:
-        # Not applicable rather than quiet: the one measurement that answers this case was
-        # not taken, and a reader has to be able to tell that from a bound that was tested.
         payload["reason"] = f"{no_shuffle or NO_SHUFFLE}, so the bound was not tested"
         return _quiet(name, payload, applicable=False)
     payload["shuffle"] = _shuffle_json(parsed, shuffled)
+    if not _shuffle_reaches(parsed, shuffled):
+        payload["reason"] = (
+            "the shuffle reached no table this statement reads, so a rerun would read "
+            "the same rows in the same order and the bound was not tested"
+        )
+        return _quiet(name, payload, applicable=False)
     try:
         rerun = backend.execute_shuffled(
             parsed.sql, statement_timeout_seconds=settings.statement_timeout_seconds
@@ -622,6 +629,24 @@ def _rows_with_a_null_key(
     return tuple(with_a_null)
 
 
+def _shuffle_reaches(parsed: ParsedStatement, shuffled: ShuffledCopies | None) -> bool:
+    """Whether a rerun of this statement would read a copy at all.
+
+    A rerun reads the copies where they were made and the originals everywhere else, so a
+    statement none of whose tables were copied runs on exactly the data the baseline ran on
+    and returns exactly the baseline. That was reported as the probe having been asked and
+    answered: applicable, and EQUAL. It is the one thing the backend's contract says a probe
+    must not do, which is to state a measurement that was not taken.
+
+    Preparing no copies at all was already told apart, because there is nothing to reread;
+    this is the same case for one statement rather than for the run.
+    """
+    if shuffled is None:
+        return False
+    copied = set(shuffled.copied)
+    return any(table in copied for table in parsed.tables)
+
+
 def _shuffle_json(parsed: ParsedStatement, shuffled: ShuffledCopies) -> Json:
     """What the shuffle covered of this statement's tables, and what it did not.
 
@@ -681,8 +706,16 @@ def not_a_function_of_the_data(
         "planner_statistics": _planner_statistics_json(backend, parsed),
     }
     reruns: list[_Rerun] = []
+    reached = _shuffle_reaches(parsed, shuffled)
     if shuffled is None:
         payload["shuffled_copies"] = {"run": False, "reason": no_shuffle or NO_SHUFFLE}
+    elif not reached:
+        payload["shuffle"] = _shuffle_json(parsed, shuffled)
+        payload["shuffled_copies"] = {
+            "run": False,
+            "reason": "the shuffle reached no table this statement reads, so a rerun would "
+            "read the same rows in the same order",
+        }
     else:
         payload["shuffle"] = _shuffle_json(parsed, shuffled)
         _rerun(
@@ -710,7 +743,7 @@ def not_a_function_of_the_data(
         )
     else:
         payload["plan_variant"] = {"run": False, "reason": "the plan variant was not asked for"}
-    asked = shuffled is not None or settings.plan_variant
+    asked = reached or settings.plan_variant
     differing = [rerun for rerun in reruns if rerun.differs]
     if not differing:
         return _quiet(name, payload, applicable=asked)
