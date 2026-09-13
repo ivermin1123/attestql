@@ -1042,3 +1042,101 @@ def test_every_line_a_publisher_put_beside_a_run_is_escaped_where_it_is_rendered
         assert f"<script>alert('{value}')</script>" in page.text, value
     assert "&lt;script&gt;" in markup
     assert "a class this row is not" not in page.text, "a class the note does not define"
+
+
+def test_a_directory_holding_fewer_questions_than_its_summary_counts_is_refused(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """The reproduction the review recorded: a report that looks whole and is not.
+
+    The index is built from the question directories and from the summary's own error list,
+    and the total at the top of the run page is read straight out of the same summary. Nothing
+    compared the two, so an audit that lost a directory rendered five questions under a
+    heading saying six, with no page anywhere saying one was missing.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    shutil.rmtree(audit / "q879")
+
+    with pytest.raises(ReportRefused, match="accounts for 5 of them"):
+        render_report(audit, tmp_path / "report")
+
+    assert not (tmp_path / "report").exists(), "the refusal comes before anything is written"
+
+
+def test_a_selection_of_a_run_is_the_one_gap_that_is_explained(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """What a site publishes of a run is some of its questions, and the page says so.
+
+    `published.json` is where the whole run is, and the run page states how many of the run's
+    directories are here beside how many it wrote. That is a gap a reader is told about, so it
+    is not the gap this refusal is for.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    shutil.rmtree(audit / "q879")
+    (audit / "published.json").write_text(
+        json.dumps(
+            {
+                "name": "a-run.tar.gz",
+                "url": "https://example.invalid/a-run.tar.gz",
+                "bytes": 1,
+                "sha256": "0" * 64,
+                "directories": 6,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = render_report(audit, tmp_path / "report")
+
+    assert report.pages, "a selection renders"
+    assert not (tmp_path / "report" / "q879").exists()
+
+
+def test_a_directory_holding_more_questions_than_its_summary_counts_is_refused(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """A selection may be short of the run and never longer than it."""
+    audit = _copy_audit(rendered, tmp_path)
+    shutil.copytree(audit / "q879", audit / "q878")
+
+    with pytest.raises(ReportRefused, match="holds more than the questions"):
+        render_report(audit, tmp_path / "report")
+
+
+def test_a_rerun_clears_the_classification_the_render_before_it_copied(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """A maintainer's own reading of some questions, left standing over a run without one.
+
+    The two classification files are copied beside the summary when the audit directory has
+    them, and the rerun removed the pages, the summary, the question directories, the filters
+    and the stylesheet, but not these. A directory whose audit no longer holds them therefore
+    kept the copies the render before it made, in output that had already been published.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    (audit / "classification.json").write_text(
+        json.dumps({"rows": [{"question_id": "879", "db": "formula_1", "class": "wrong"}]}),
+        encoding="utf-8",
+    )
+    (audit / "classification-source.json").write_text(
+        json.dumps(
+            {
+                "source": "a maintainer's own reading",
+                "date": "2026-09-13",
+                "shape": "rows",
+                "classes": {"wrong": "the gold does not answer its question on this data"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "report"
+    render_report(audit, out)
+    assert (out / "classification.json").is_file()
+    assert (out / "classification-source.json").is_file()
+
+    render_report(rendered.audit, out)
+
+    assert not (out / "classification.json").exists()
+    assert not (out / "classification-source.json").exists()
+    assert "classification.json" in MARKER_TEXT, "the marker says what is removed"

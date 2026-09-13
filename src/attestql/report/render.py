@@ -119,9 +119,25 @@ what is lost is a pre-rendered view of rows a reader can already see."""
 MARKER_FILE = ".attestql-report"
 """What says an output directory is a render's own and may be cleared by the next one."""
 
+CLEARED_FILES: tuple[str, ...] = (
+    PAGE_FILE,
+    SUMMARY_FILE,
+    CLASSIFICATION_FILE,
+    CLASSIFICATION_SOURCE_FILE,
+)
+"""Every file a render writes at the root of its output directory, and so every file the
+rerun before this one has to remove.
+
+The two classification files were missing from this list until 2026-09-13, and a rerun of a
+directory whose audit no longer has them left the copies the render before it made: a
+maintainer's own reading of some other run's questions, standing beside a summary that says
+nothing about it, in output that had already been published. ``MARKER_TEXT`` says what is
+removed, so the two are stated there as well."""
+
 MARKER_TEXT = (
     "written by attestql report: every rerun into this directory removes index.html, "
-    "summary.json, the q<id>/ directories, not-equal/, by-mechanism/, by-probe/ and static/\n"
+    "summary.json, classification.json, classification-source.json, the q<id>/ directories, "
+    "not-equal/, by-mechanism/, by-probe/ and static/\n"
 )
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 
@@ -584,6 +600,7 @@ def render_report(
     try:
         summary = _document(summary_path)
         beside = _beside(audit_directory)
+        _refuse_a_gap_nothing_explains(audit_directory, summary, directories, beside.published)
         questions = [_question_page(directory, beside) for directory in directories]
         run = _run_page(summary, questions, directories, beside.published, len(directories))
         verdicts, probes = run_figures(run)
@@ -605,6 +622,41 @@ def render_report(
         # do what it was asked rather than a directory it could not read: it is the same
         # refusal and the same exit status as the checks above, and never a traceback.
         raise ReportRefused(f"{destination} could not be written: {unwritable}") from unwritable
+
+
+def _refuse_a_gap_nothing_explains(
+    audit_directory: Path,
+    summary: Json,
+    directories: Sequence[Path],
+    published: Published | None,
+) -> None:
+    """Every question the summary counts, accounted for by a directory or by an error.
+
+    The rows of the index come from the question directories and from the summary's own error
+    list, and until 2026-09-13 nothing compared either with the number the same summary says
+    was audited. An audit that lost a directory therefore rendered a report that looks whole:
+    it states the run's real total at the top and is simply missing the question, with no page
+    saying so anywhere. Removing ``q879`` from the demo rendered five questions under a total
+    of six.
+
+    A selection is the one gap that is explained. What a site publishes of a run is some of
+    its questions, and ``published.json`` is where the whole run is; the run page states both
+    numbers, so a reader is never shown a selection as if it were everything. Even then the
+    count may only be short: more pages than the run audited is not a selection of it.
+    """
+    stated = _integer(_object(summary, "question_set"), "audited")
+    accounted = len(directories) + len(_objects(summary, "errors"))
+    if accounted == stated or (published is not None and accounted < stated):
+        return
+    short = "holds" if accounted < stated else "holds more than"
+    raise ReportRefused(
+        f"{audit_directory} {short} the questions its {SUMMARY_FILE} counts: the summary says "
+        f"{stated} were audited and the directory accounts for {accounted} of them "
+        f"({len(directories)} question directories and {len(_objects(summary, 'errors'))} "
+        f"errors). A report rendered from it would state {stated} at the top and show "
+        f"{accounted}. A selection of a run says where the whole run is, in "
+        f"{PUBLISHED_FILE} beside the summary."
+    )
 
 
 def _refuse_an_out_inside_the_audit(audit_directory: Path, out: Path) -> None:
@@ -653,7 +705,7 @@ def _clear_the_render_before_this_one(out: Path) -> None:
             f"earlier report wrote to."
         )
     try:
-        for name in (PAGE_FILE, SUMMARY_FILE):
+        for name in CLEARED_FILES:
             (out / name).unlink(missing_ok=True)
         for child in entries:
             if child.is_dir() and (

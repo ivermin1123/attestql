@@ -242,10 +242,9 @@ def test_the_banner_is_on_every_page_without_data_and_on_none_of_them_with_it(
     """
     published = built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN
     data = tmp_path / "data"
-    (data / "a-benchmark" / "a-run").mkdir(parents=True)
-    (data / "a-benchmark" / "a-run" / "summary.json").write_text(
-        (published / "summary.json").read_text(encoding="utf-8"), encoding="utf-8"
-    )
+    # The whole run and not its summary alone: a directory whose summary counts questions it
+    # does not hold is a partial audit, and the renderer refuses one.
+    shutil.copytree(published, data / "a-benchmark" / "a-run")
     monkeypatch.setattr(site, "DATA", data)
     out = tmp_path / "site"
 
