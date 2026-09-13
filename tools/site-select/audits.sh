@@ -242,10 +242,14 @@ sqlite_runs() {
 # measurement scripts did: the run's closing line now states "0 timed out (0 gold, 0
 # prediction)" whether anything did or not, so a grep for the words matches every run and would
 # rerun all hundred and ten of them alone. The summary names the questions.
+#
+# A rerun that fails is counted the same way the first pass counts one, and this returns
+# non-zero for it. Without that the whole `sqlite` or `postgres` stage still exited 0 over a
+# rerun that never happened, with the crowded answer left as the only copy of the run.
 rerun_timeouts() {  # rerun_timeouts [path prefix]
   cd "$RUNS_WORK"
   export ATTESTQL="${ATTESTQL:-$RUNS_WORK/venv/bin/attestql}"
-  local only="${1:-runs/}" summary out found=0 name group benchmark stopped
+  local only="${1:-runs/}" summary out found=0 failed=0 status name group benchmark stopped
   # The prefix is what keeps the two stages out of each other: each reruns its own engine's
   # runs, so the SQLite pass and the PostgreSQL pass can overlap without one moving a
   # directory the other is writing into.
@@ -279,8 +283,14 @@ print(', '.join(f'{side}: {\",\".join(str(q) for q in ids)}' for side, ids in st
           "$MINIDEV_DATA_DATE" "$name" "${PREDICTION_ARGS[@]}" ;;
       minidev-pg-gold-only/*) pg_gold_only "$name" attestql_scratch ;;
       minidev-pg/*) pg_prediction "$name" attestql_scratch ;;
-      *) echo "  no rule for $out" >&2; mv "$out.under-load" "$out"; continue ;;
+      *) echo "  no rule for $out" >&2; mv "$out.under-load" "$out"; failed=$((failed + 1)); continue ;;
     esac
+    status=$?
+    if [ "$status" -ne 0 ]; then
+      failed=$((failed + 1))
+      echo "  the rerun failed; $out.under-load is the only copy of this run" >&2
+      continue
+    fi
     stopped="$(python3 -c "
 import json, sys
 stated = json.load(open(sys.argv[1])).get('timed_out') or {}
@@ -293,6 +303,7 @@ print(', '.join(f'{side}: {\",\".join(str(q) for q in ids)}' for side, ids in st
     fi
   done
   echo "runs the bound stopped something in: $found"
+  [ "$failed" -eq 0 ] || { echo "$failed rerun(s) under $only failed" >&2; return 1; }
 }
 
 # The server the two PostgreSQL benchmarks are audited on: the image digest the merge gate's
@@ -442,14 +453,22 @@ postgres_runs() {
   echo "POSTGRES_DONE"
 }
 
+# Both rerun passes of a stage are run whatever the first one says, and the stage exits on the
+# worst of the two: a failed rerun of one benchmark is not a reason to leave the other's
+# crowded answers unchecked, nor a reason to report the stage as done.
+rerun_status=0
 case "${1:-}" in
   inputs) inputs ;;
   sqlite) sqlite_runs || exit 1
-          rerun_timeouts runs/bird-dev-sqlite/; rerun_timeouts runs/minidev-sqlite/ ;;
+          rerun_timeouts runs/bird-dev-sqlite/ || rerun_status=1
+          rerun_timeouts runs/minidev-sqlite/ || rerun_status=1
+          exit "$rerun_status" ;;
   postgres) postgres_up || { echo "the server did not start" >&2; exit 1; }
             postgres_runs || exit 1
-            rerun_timeouts runs/minidev-pg-gold-only/; rerun_timeouts runs/minidev-pg/ ;;
-  rerun) rerun_timeouts "${2:-runs/}" ;;
+            rerun_timeouts runs/minidev-pg-gold-only/ || rerun_status=1
+            rerun_timeouts runs/minidev-pg/ || rerun_status=1
+            exit "$rerun_status" ;;
+  rerun) rerun_timeouts "${2:-runs/}" || exit 1 ;;
   teardown) postgres_down ;;
   *) sed -n '2,30p' "$0"; exit 2 ;;
 esac
