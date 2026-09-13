@@ -14,6 +14,7 @@ end-to-end run ADR-0013 point 11 asks for.
 from __future__ import annotations
 
 import os
+from collections.abc import Generator
 from datetime import timedelta
 
 import pytest
@@ -64,14 +65,22 @@ def _required(name: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def sandbox_backend() -> PostgresBackend:
+def sandbox_backend() -> Generator[PostgresBackend]:
     """The audit's own backend, opened on the DSN the sandbox runner exported.
 
     The password is passed beside the DSN rather than written into it, so a DSN that
-    reaches a record or a log never carries one. The connection lives as long as this
-    process, which is the process the runner tears the server down under.
+    reaches a record or a log never carries one. The connection lives as long as the tests
+    that use it and is closed after them: the runner tears the server down around this
+    process either way, and a fixture that only returned left the session open and a
+    ``ResourceWarning`` behind for every test file that asked for one.
     """
-    return PostgresBackend.connect(_required(SANDBOX_DSN), password=_required(SANDBOX_CREDENTIAL))
+    backend = PostgresBackend.connect(
+        _required(SANDBOX_DSN), password=_required(SANDBOX_CREDENTIAL)
+    )
+    try:
+        yield backend
+    finally:
+        backend.close()
 
 
 @pytest.fixture

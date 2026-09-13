@@ -387,12 +387,15 @@ class LoaderRegistry(Protocol):
 
 
 class Connection(Protocol):
-    """What this module needs from a connection: cursors, and the loaders it registers."""
+    """What this module needs from a connection: cursors, the loaders it registers, and the
+    way to give it back."""
 
     @property
     def adapters(self) -> LoaderRegistry: ...
 
     def cursor(self) -> Cursor: ...
+
+    def close(self) -> None: ...
 
 
 class PostgresBackend:
@@ -867,6 +870,23 @@ class PostgresBackend:
                         cursor.execute(self._drop_copy(name.name))
         finally:
             self._release_the_scratch_schema()
+
+    def close(self) -> None:
+        """Drop what this run made, give the schema back, and close the connection.
+
+        In that order and each in a finally, so that a drop the server refused still
+        releases the lock and still closes the socket: a connection left open holds a
+        session on the server, and the advisory lock with it would keep every later run out
+        of a scratch schema nobody is reading.
+
+        Safe more than once: the drop is already re-entrant, and psycopg's own ``close`` on
+        a closed connection does nothing.
+        """
+        try:
+            self.drop_shuffled_copies()
+        finally:
+            with suppress(psycopg.Error):
+                self._connection.close()
 
     def _hold_the_scratch_schema(self) -> None:
         """Take the run's advisory lock on the scratch schema, once, under a bounded wait.

@@ -991,6 +991,23 @@ class SqliteBackend:
             with suppress(sqlite3.Error):
                 connection.close()
 
+    def close(self) -> None:
+        """Drop the copies this run made and give both connections back.
+
+        Two of them on this engine: the read-only one every statement runs on, and the
+        writing one the copies were made under, which ``drop_shuffled_copies`` already
+        closes. A private copy of a WAL file, where one was made, is removed by the
+        finalizer registered when it was made and is not this method's to unlink.
+
+        Safe more than once: the drop is re-entrant and ``sqlite3``'s own close on a closed
+        connection does nothing.
+        """
+        try:
+            self.drop_shuffled_copies()
+        finally:
+            with suppress(sqlite3.Error):
+                self._connection.close()
+
     def _all(
         self, statement: str, params: Sequence[object] = (), *, step: str
     ) -> Sequence[tuple[Any, ...]]:

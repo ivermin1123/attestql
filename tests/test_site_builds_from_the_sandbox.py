@@ -27,9 +27,13 @@ from typing import Any, cast
 
 import build as site
 import pytest
+import select_questions as selection
 
 from attestql.audit.postgres import session_preconditions
 from attestql.audit.smells import probe_meanings
+from attestql.contract.counts import whole_count
+from attestql.evidence.load import UnreadableRecord
+from attestql.report import render
 from attestql.report.render import PAGE_FILE
 
 REPOSITORY = Path(__file__).resolve().parent.parent
@@ -486,7 +490,7 @@ def test_a_count_below_zero_is_refused_rather_than_drawn(
     )
     monkeypatch.setattr(site, "DATA", data)
 
-    with pytest.raises(site.BuildRefused, match="every number this page states is a count"):
+    with pytest.raises(site.BuildRefused, match="a count is never below zero"):
         build(tmp_path / "site")
 
 
@@ -758,3 +762,28 @@ def test_a_group_published_as_one_archive_states_that_archive_on_the_group_s_own
     assert f"This site holds {written} of the 400 question directories these 2 runs wrote" in text
     assert "https://example.invalid/grouped-a-model.tar.gz" in group.links
     assert "9" * 64 in text
+
+
+def test_the_selector_and_the_build_refuse_the_same_count(tmp_path: Path) -> None:
+    """One rule, in one place, for the three readers of a count in a JSON document.
+
+    The build refused a number below zero and the selector that writes the documents the
+    build reads did not, so a selection could write a count the build would then refuse,
+    with the failure landing on whoever ran the build rather than on whoever made the
+    selection. The renderer is the third reader and refused neither with the same words.
+    """
+    below_zero = {"value": -1}
+    readers = (
+        (site._integer, site.BuildRefused),  # pyright: ignore[reportPrivateUsage]
+        (selection._integer, selection.SelectionRefused),  # pyright: ignore[reportPrivateUsage]
+        (render._integer, UnreadableRecord),  # pyright: ignore[reportPrivateUsage]
+    )
+
+    for read, refusal in readers:
+        with pytest.raises(refusal, match="a count is never below zero"):
+            read(below_zero, "value")
+        with pytest.raises(refusal, match="bool where a whole number"):
+            read({"value": True}, "value")
+        assert read({"value": 0}, "value") == 0
+
+    assert whole_count({"value": 7}, "value", site.BuildRefused) == 7, "the rule they share"

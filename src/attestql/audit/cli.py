@@ -1981,7 +1981,14 @@ def connect_and_audit(options: AuditOptions, writer: Writer) -> int:
     except BackendRefused as refused:
         print(f"{PROGRAM}: the database could not be reached: {refused}", file=sys.stderr)
         return 2
-    return audit(options, backend, writer)
+    try:
+        return audit(options, backend, writer)
+    finally:
+        # Given back rather than left to the process exit. A command survives without this
+        # and a caller that is not a command does not: an unclosed backend is a session
+        # still open on the server and a file handle still held, and the copies the run
+        # made go with it.
+        backend.close()
 
 
 def _say_what_was_copied(backend: Backend, dsn: str) -> None:

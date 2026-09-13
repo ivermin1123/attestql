@@ -424,6 +424,19 @@ class Backend(Protocol):
         """
         raise NotImplementedError
 
+    def close(self) -> None:
+        """Give back everything this backend holds: connections, and the copies under them.
+
+        A command survives without this because the process exits and the operating system
+        takes the sockets and the file handles back. A test does not: the audit's own
+        fixtures left eighty-six connections open across one run of the suite, each one a
+        ``ResourceWarning`` and, on the server, a session holding whatever a session holds.
+
+        Called in a finally and safe more than once, so that a run that failed gives back as
+        much as a run that finished.
+        """
+        raise NotImplementedError
+
     def execute_shuffled(self, sql: str, *, statement_timeout_seconds: int) -> ExecutionResult:
         """Run one statement read-only against the shuffled copies rather than the tables."""
         raise NotImplementedError

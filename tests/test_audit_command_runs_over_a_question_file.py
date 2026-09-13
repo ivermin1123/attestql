@@ -1429,6 +1429,48 @@ def test_the_same_two_values_are_still_refused_when_the_run_names_postgresql(dsn
     assert refused.value.code == 2
 
 
+@pytest.mark.parametrize(
+    "dsn",
+    [
+        "host=localhost dbname=password_history",
+        "host=localhost dbname=bird options='-c search_path=password'",
+        "host=password.example.invalid dbname=bird",
+        "host=localhost dbname=bird user=password_admin",
+    ],
+)
+def test_a_dsn_carrying_the_word_but_naming_no_password_is_accepted(dsn: str) -> None:
+    """The rule is the keyword and not the word.
+
+    A database called `password_history` carries no credential, and until 2026-09-13 the
+    substring was what was looked for, so a whole class of perfectly ordinary DSNs could not
+    be audited at all. What the refusal is for is a `password=` keyword, which is the one
+    place a libpq keyword string puts the credential.
+    """
+    parsed = parse_arguments(["audit", "--dsn", dsn, "--questions", "q.json", "--out", "a"])
+
+    assert parsed.dsn == dsn
+
+
+@pytest.mark.parametrize(
+    "dsn",
+    [
+        "host=localhost password=hunter2",
+        "host=localhost PASSWORD=hunter2",
+        "host=localhost password = hunter2",
+        "host=localhost password='hunter 2'",
+        "password=hunter2",
+        "this is not a keyword string but it says password",
+    ],
+)
+def test_a_dsn_naming_the_keyword_is_still_refused_however_it_is_written(dsn: str) -> None:
+    """Including the string this reader cannot take apart: the reason for the rule is that a
+    credential must never reach a record, so a shape that is not understood is refused."""
+    with pytest.raises(SystemExit) as refused:
+        parse_arguments(["audit", "--dsn", dsn, "--questions", "q.json", "--out", "a"])
+
+    assert refused.value.code == 2
+
+
 def test_a_dsn_that_is_empty_is_refused_whichever_engine_was_named() -> None:
     """No engine is named by nothing, so this one is asked before the engine's own rule."""
     for engine in ("postgresql", "sqlite"):

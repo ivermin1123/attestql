@@ -18,7 +18,15 @@ import pytest
 
 from attestql.audit.backend import Backend
 from attestql.audit.cli import SUMMARY_FILE, AuditOptions, connect_and_audit
-from attestql.audit.engines import DEFAULT_ENGINE, ENGINES, Engine, engine_named
+from attestql.audit.engines import (
+    DEFAULT_ENGINE,
+    ENGINES,
+    PARSER_IDENTITY_PROBE,
+    Connect,
+    Engine,
+    _one_parser_per_engine,  # pyright: ignore[reportPrivateUsage]  # the registry's own check
+    engine_named,
+)
 from attestql.audit.parse import ParsedStatement, ParserIdentity
 from attestql.audit.sqlite_statements import PARSER as SQLITE_PARSER
 from attestql.audit.sqlite_statements import parse_statement as parse_sqlite_statement
@@ -90,6 +98,31 @@ def test_each_engine_brings_its_own_parser_and_never_the_other_one_s() -> None:
     assert SQLITE_PARSER.validator != PARSER.validator
 
 
+def test_every_registered_engine_parses_with_the_parser_it_states() -> None:
+    """`parser` and `parse` are two fields and nothing held them together.
+
+    `parser` is what the summary reports and the identity carried on a parsed statement is
+    what every record states, so an engine whose two had drifted apart would put two parsers
+    into one run's evidence, under the docstring of `Engine` saying that cannot happen. The
+    registry asks at import; this is the same question asked where a reader can see it.
+    """
+    for engine in ENGINES.values():
+        assert engine.parse(PARSER_IDENTITY_PROBE).parser is engine.parser, engine.name
+
+
+def test_an_engine_whose_parse_names_another_parser_never_reaches_a_registry() -> None:
+    """And the check refuses it rather than letting the run be the place it is noticed."""
+    crossed = Engine(
+        name="a-crossed-engine",
+        connect=DEFAULT_ENGINE.connect,
+        parse=parse_sqlite_statement,
+        parser=PARSER,
+    )
+
+    with pytest.raises(AssertionError, match="two parsers in one piece of evidence"):
+        _one_parser_per_engine({crossed.name: crossed})
+
+
 def test_an_engine_nobody_registered_is_refused_by_name() -> None:
     with pytest.raises(KeyError, match="no engine named 'duckdb'"):
         engine_named("duckdb")
@@ -135,3 +168,57 @@ def test_a_whole_audit_runs_through_an_engine_the_test_built(tmp_path: Path) -> 
     assert document["session_settings"]["engine"] == ENGINE_POSTGRESQL, (
         "the record's engine is what the backend reported, not what the engine called itself"
     )
+
+
+def _always(backend: Backend) -> Connect:
+    """A `connect` that hands back the backend the test built, whatever it is asked for."""
+
+    def connect(target: str, /, *, scratch: str) -> Backend:
+        return backend
+
+    return connect
+
+
+def test_the_command_gives_the_backend_back_when_the_run_is_over(tmp_path: Path) -> None:
+    """`Backend` had no `close` and `connect_and_audit` released nothing.
+
+    A command survived it because the process exits and the operating system takes the
+    sockets and the file handles back. A caller that is not a command did not: the audit's
+    own fixtures left eighty-six connections open across one run of the suite, each a
+    `ResourceWarning` and, on a server, a session still holding what a session holds.
+    """
+    backend = FakeBackend({ELEMENTS: fake_result(ELEMENT, (("c",),))}, row_counts={"atom": 2})
+    options = AuditOptions(
+        dsn="host=nowhere dbname=none",
+        questions=_questions(tmp_path),
+        out=tmp_path / "audit",
+        engine=Engine(
+            name="an-engine-of-the-test's-own",
+            connect=_always(backend),
+            parse=parse_statement,
+            parser=PARSER,
+        ),
+    )
+
+    connect_and_audit(options, Lines())
+
+    assert backend.closed == 1
+
+
+def test_a_run_that_failed_gives_the_backend_back_as_well(tmp_path: Path) -> None:
+    """The close is in a finally, so a run that could not start still releases what it took."""
+    backend = FakeBackend({}, row_counts={"atom": 2})
+    options = AuditOptions(
+        dsn="host=nowhere dbname=none",
+        questions=tmp_path / "no-such-question-file.json",
+        out=tmp_path / "audit",
+        engine=Engine(
+            name="an-engine-of-the-test's-own",
+            connect=_always(backend),
+            parse=parse_statement,
+            parser=PARSER,
+        ),
+    )
+
+    assert connect_and_audit(options, Lines()) == 2
+    assert backend.closed == 1

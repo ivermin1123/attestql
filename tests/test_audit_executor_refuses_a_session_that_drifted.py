@@ -203,6 +203,8 @@ class FakeConnection:
         self.refuses_drops = False
         """Set after the copies are made, so that a drop can fail where the create did
         not: what a role whose grant was taken away mid-run meets."""
+        self.closed = 0
+        """How many times the backend gave this connection back."""
         self.lock_keys: list[object] = []
         """The key of every advisory lock and unlock the backend asked for, in order."""
         self.census = census
@@ -228,6 +230,10 @@ class FakeConnection:
 
     def cursor(self) -> FakeCursor:
         return FakeCursor(self)
+
+    def close(self) -> None:
+        """Counted rather than enforced: what a test reads is that the backend asked."""
+        self.closed += 1
 
     def answer(self, text: str) -> tuple[Sequence[tuple[object, ...]], Sequence[FakeColumn] | None]:
         if text in {"BEGIN READ ONLY", "BEGIN", "SET TRANSACTION READ WRITE", "COMMIT", "ROLLBACK"}:

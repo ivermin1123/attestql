@@ -32,6 +32,7 @@ from typing import cast
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+from attestql.contract.counts import whole_count
 from attestql.evidence.load import LoadedRecord, UnreadableRecord, load_record
 from attestql.evidence.render import Json
 from attestql.report.figures import Figure, question_figure, run_figures
@@ -1824,10 +1825,8 @@ def _optional_text(document: Json, key: str, *, absent: str = "") -> str:
 
 
 def _integer(document: Json, key: str) -> int:
-    value = document.get(key)
-    if not isinstance(value, int) or isinstance(value, bool):
-        raise UnreadableRecord(f"{key} is not a whole number: {value!r}")
-    return value
+    """One count, by the same rule the site builder and the selector read one under."""
+    return whole_count(document, key, UnreadableRecord)
 
 
 def _optional_integer(document: Json, key: str, default: int) -> int:

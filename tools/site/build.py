@@ -62,6 +62,7 @@ from attestql.audit.compare import (
 from attestql.audit.postgres import session_preconditions
 from attestql.audit.smells import SMELLS_READING, probe_meanings
 from attestql.audit.sqlite import SqliteBackend
+from attestql.contract.counts import whole_count
 from attestql.evidence.replay import compare_r_ord, compare_r_set
 from attestql.evidence.types import ENGINE_POSTGRESQL
 from attestql.report.figures import Figure, proportion_bar
@@ -1098,14 +1099,11 @@ def _integer(document: Mapping[str, object], key: str) -> int:
 
     Every number this reads is a count of questions, and a count below zero is a file that
     cannot be right. Two negatives would also pass the bar's own check that a part is no
-    larger than its whole, and be drawn.
+    larger than its whole, and be drawn. The rule is shared with the selector that writes
+    these documents and with the renderer that reads them, which is the point: a selector
+    that could write a number this refuses would put the failure on whoever runs the build.
     """
-    value = document.get(key)
-    if not isinstance(value, int) or isinstance(value, bool):
-        raise BuildRefused(f"{key} is {type(value).__name__} where a whole number was expected")
-    if value < 0:
-        raise BuildRefused(f"{key} is {value}, and every number this page states is a count")
-    return value
+    return whole_count(document, key, BuildRefused)
 
 
 if __name__ == "__main__":

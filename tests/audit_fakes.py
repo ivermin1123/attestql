@@ -30,6 +30,7 @@ is a connection that went away after the run had started rather than one that ne
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+from contextlib import suppress
 
 from attestql.audit.backend import (
     BackendRefused,
@@ -198,6 +199,7 @@ class FakeBackend:
         self.executed_plan_variant: list[tuple[str, int]] = []
         self.prepared: list[tuple[tuple[TableName, ...], str, int]] = []
         self.dropped = 0
+        self.closed = 0
 
     @property
     def scratch(self) -> str:
@@ -359,6 +361,16 @@ class FakeBackend:
     def drop_shuffled_copies(self) -> None:
         self._refuse_if_the_server_went_away("drop_shuffled_copies")
         self.dropped += 1
+
+    def close(self) -> None:
+        """What the real backends do: drop what the run made, then give the rest back.
+
+        Counted rather than acted on, because a fake holds no connection. A refusal from
+        the drop is swallowed the way a real one is, so that a run that failed still closes.
+        """
+        self.closed += 1
+        with suppress(BackendRefused):
+            self.drop_shuffled_copies()
 
     def execute_shuffled(self, sql: str, *, statement_timeout_seconds: int) -> ExecutionResult:
         self.executed_shuffled.append((sql, statement_timeout_seconds))

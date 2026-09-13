@@ -43,6 +43,8 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import cast
 
+from attestql.contract.counts import whole_count
+
 HERE = Path(__file__).resolve().parent
 REPOSITORY = HERE.parent.parent
 DATA = REPOSITORY / "tools" / "site" / "data"
@@ -1026,10 +1028,13 @@ def _text(document: Mapping[str, object], key: str) -> str:
 
 
 def _integer(document: Mapping[str, object], key: str) -> int:
-    value = document.get(key)
-    if not isinstance(value, int) or isinstance(value, bool):
-        raise SelectionRefused(f"{key} is {type(value).__name__} where a whole number was expected")
-    return value
+    """One count, by the rule the site builder reads these documents back under.
+
+    It refused a number below zero and this did not, so a selection could write a count the
+    build would then refuse, with the failure landing on whoever ran the build rather than
+    on whoever made the selection.
+    """
+    return whole_count(document, key, SelectionRefused)
 
 
 if __name__ == "__main__":
