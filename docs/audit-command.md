@@ -200,9 +200,13 @@ own defaults written out rather than inherited, so that a float sum is added in 
 runs of one statement cannot differ in a late digit: a gather adds the partial sums in whatever
 order the workers returned them, and a hash aggregate that outgrows the memory bound spills and
 adds them per spilled batch, which moves three of the nine summation-order-sensitive Mini-Dev
-golds between 64 kB and 4 MB. All three are read back inside the statement's own transaction and
-the execution is refused if the session does not hold them, and holding them makes some plans
-slower here than on the same server at its own defaults.
+golds between 64 kB and 4 MB. It also runs with `search_path` pinned to `public`, so an
+unqualified name in the audited statement resolves to the schema the fixture digest and the row
+counts beside it describe rather than to whatever the session was started with. All four are read
+back inside the statement's own transaction and the execution is refused if the session does not
+hold them, the record states the values that were in force rather than the session's own, and
+holding the memory bounds makes some plans slower here than on the same server at its own
+defaults.
 
 q707 of Mini-Dev is the worked example: its gold runs in 50 ms, and the `meta-llama-3-70b-instruct`
 prediction for it runs in 0.22 s with two parallel workers and in 41 s warm to 105 s cold without
