@@ -72,7 +72,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Protocol, TextIO, cast
+from typing import Protocol, TextIO, cast
 
 from attestql.audit.backend import (
     READ_THROUGH_PRIVATE_COPY,
@@ -119,6 +119,7 @@ from attestql.audit.smells import (
     all_smells,
     smells_json,
 )
+from attestql.contract.document import JsonValue
 from attestql.demo import FIXTURE_FILE, build_fixture, write_inputs
 from attestql.evidence.record import EvidenceRecord
 from attestql.evidence.render import PARTIAL_SUFFIX, Json, record_json, write_json
@@ -508,7 +509,7 @@ def read_questions(path: Path, ids: Sequence[int] = ()) -> QuestionSet:
     )
 
 
-def _question(entry: object, path: Path, index: int) -> Question:
+def _question(entry: JsonValue, path: Path, index: int) -> Question:
     """One entry as a question, or a refusal naming the field that was not one.
 
     Every field is read at the type the file states it at rather than converted to the type
@@ -520,7 +521,7 @@ def _question(entry: object, path: Path, index: int) -> Question:
     """
     if not isinstance(entry, dict):
         raise ToolError(f"{path} entry {index} is {type(entry).__name__} and not an object")
-    fields = cast("dict[str, Any]", entry)
+    fields = entry
     where = f"{path} entry {index}"
     return Question(
         question_id=_question_id(fields, where),
@@ -631,9 +632,9 @@ def read_predictions(
     if not isinstance(document, dict):
         raise ToolError(f"{path} holds {type(document).__name__} and predictions are an object")
     predictions: dict[int, str | NoStatement] = {}
-    for key, value in cast("dict[object, object]", document).items():
+    for key, value in document.items():
         try:
-            keyed_under = int(cast("int | str", key))
+            keyed_under = int(key)
         except (TypeError, ValueError) as unreadable:
             raise ToolError(
                 f"{path} has the key {key!r}, which is neither a question id nor a position"
@@ -813,7 +814,7 @@ def _refuse_positions_read_as_ids(
     )
 
 
-def _question_entries(raw: object, path: Path) -> list[object]:
+def _question_entries(raw: JsonValue, path: Path) -> list[JsonValue]:
     """The list of question entries, bare as Mini-Dev ships it or wrapped in an object.
 
     A wrapped file is ``{"source": ..., "questions": [...]}``: a bare list cannot carry an
@@ -822,18 +823,18 @@ def _question_entries(raw: object, path: Path) -> list[object]:
     """
     kind = type(raw).__name__
     if isinstance(raw, dict):
-        wrapped = cast("dict[str, object]", raw).get("questions")
+        wrapped = raw.get("questions")
         if isinstance(wrapped, list):
-            return cast("list[object]", wrapped)
+            return wrapped
     if isinstance(raw, list):
-        return cast("list[object]", raw)
+        return raw
     raise ToolError(
         f"{path} holds {kind} and a question file is a list, "
         "or an object whose 'questions' field is one"
     )
 
 
-def _read_json(path: Path, what: str) -> object:
+def _read_json(path: Path, what: str) -> JsonValue:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except OSError as unreadable:

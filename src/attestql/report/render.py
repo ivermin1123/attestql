@@ -28,13 +28,12 @@ from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import cast
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from attestql.contract.counts import whole_count
+from attestql.contract.document import JsonObject, JsonValue, an_array, an_object
 from attestql.evidence.load import LoadedRecord, UnreadableRecord, load_record
-from attestql.evidence.render import Json
 from attestql.report.figures import Figure, question_figure, run_figures
 
 TEMPLATES = Path(__file__).parent / "templates"
@@ -750,7 +749,7 @@ def render_report(
 
 def _refuse_a_gap_nothing_explains(
     audit_directory: Path,
-    summary: Json,
+    summary: JsonObject,
     directories: Sequence[Path],
     published: Published | None,
 ) -> None:
@@ -805,7 +804,7 @@ def _refuse_a_gap_nothing_explains(
 
 def _refuse_a_count_that_cannot_be_right(
     audit_directory: Path,
-    summary: Json,
+    summary: JsonObject,
     present: Sequence[int],
     published: Published | None,
 ) -> None:
@@ -838,7 +837,7 @@ def _refuse_a_count_that_cannot_be_right(
         )
 
 
-def _listed_directories(summary: Json) -> tuple[int, ...] | None:
+def _listed_directories(summary: JsonObject) -> tuple[int, ...] | None:
     """The questions the run says it wrote a directory for, or ``None`` where it does not say.
 
     Absent is not empty. A summary written before this key existed says nothing about what
@@ -850,7 +849,7 @@ def _listed_directories(summary: Json) -> tuple[int, ...] | None:
     if not isinstance(stated, list):
         raise UnreadableRecord(f"question_directories is not a JSON array: {stated!r}")
     listed: list[int] = []
-    for value in cast("list[object]", stated):
+    for value in stated:
         if not isinstance(value, int) or isinstance(value, bool) or value < 0:
             raise UnreadableRecord(
                 f"question_directories holds {value!r}, which is not a question id"
@@ -1163,7 +1162,7 @@ def _by_hand(audit_directory: Path) -> Mapping[str, HandReading]:
     }
 
 
-def _classified(document: Json, where: Json) -> list[Json]:
+def _classified(document: JsonObject, where: JsonObject) -> list[JsonObject]:
     """The rows of one classification this run's page shows, by the join the note states.
 
     Two shapes and no more, each named by the note: ``per_file`` is a document keyed by the
@@ -1176,7 +1175,7 @@ def _classified(document: Json, where: Json) -> list[Json]:
     if shape == "per_file":
         files = _object(document, "per_file")
         stated = files.get(key)
-        return [] if not isinstance(stated, dict) else _objects(cast("Json", stated), "rows")
+        return [] if not isinstance(stated, dict) else _objects(stated, "rows")
     if shape == "rows":
         return [row for row in _objects(document, "rows") if _optional_text(row, "db") == key]
     raise UnreadableRecord(
@@ -1255,7 +1254,9 @@ def _question_page(directory: Path, beside: Beside | None = None) -> QuestionPag
     )
 
 
-def _comparison_page(directory: Path, counterexample: Json, smells: Json) -> QuestionPage:
+def _comparison_page(
+    directory: Path, counterexample: JsonObject, smells: JsonObject
+) -> QuestionPage:
     """A question that had a prediction: both statements, what differs, and both records."""
     question = _object(counterexample, "question")
     verdict = _object(counterexample, "verdict")
@@ -1320,7 +1321,7 @@ def _comparison_page(directory: Path, counterexample: Json, smells: Json) -> Que
     )
 
 
-def _gold_only_page(directory: Path, smells: Json) -> QuestionPage:
+def _gold_only_page(directory: Path, smells: JsonObject) -> QuestionPage:
     """A question with no prediction: the gold's own record is what the probes are about."""
     record, document = _record(directory / GOLD_RECORD_FILE, GOLD)
     question = _object(document, "question")
@@ -1357,7 +1358,7 @@ def _gold_only_page(directory: Path, smells: Json) -> QuestionPage:
 def _side(
     side: str,
     glyph: str,
-    stated: Json,
+    stated: JsonObject,
     tokens: tuple[Token, ...],
     result_hash: str,
     source: str,
@@ -1381,7 +1382,7 @@ def _side(
     )
 
 
-def _record_side(document: Json, record: Record) -> Side:
+def _record_side(document: JsonObject, record: Record) -> Side:
     """The gold of a question that had no prediction, read from its record."""
     return Side(
         side=GOLD,
@@ -1398,7 +1399,7 @@ def _record_side(document: Json, record: Record) -> Side:
 
 
 def _differences(
-    counterexample: Json, records: Sequence[tuple[Record, Json]]
+    counterexample: JsonObject, records: Sequence[tuple[Record, JsonObject]]
 ) -> tuple[Difference, ...]:
     """The two one-sided row differences, each under the columns of the side it came from."""
     stated = _object(counterexample, "differing_rows")
@@ -1425,7 +1426,7 @@ def _differences(
 
 
 def _grouped_rows(
-    groups: Sequence[Json],
+    groups: Sequence[JsonObject],
     columns: tuple[Column, ...],
     label: str,
     glyph: str,
@@ -1458,7 +1459,7 @@ def _grouped_rows(
     )
 
 
-def _result_rows(result: Json, source: str) -> Rows:
+def _result_rows(result: JsonObject, source: str) -> Rows:
     """A result block as a table: its columns, a bounded reading of its rows, and the rest.
 
     Bounded since 2026-09-13. A record holds every row of its result and the page embedded
@@ -1495,7 +1496,7 @@ def _result_rows(result: Json, source: str) -> Rows:
     )
 
 
-def _probe_rows(rows: Sequence[Json]) -> Rows:
+def _probe_rows(rows: Sequence[JsonValue]) -> Rows:
     """The rows a fired probe carries. The probe names no columns for them, so nor does this."""
     built = tuple(
         Row(cells=_cells(_list_of(row, "a probe row")), count=None, label="", glyph="")
@@ -1515,7 +1516,7 @@ def _probe_rows(rows: Sequence[Json]) -> Rows:
     )
 
 
-def _cells(row: Sequence[Json]) -> tuple[Cell, ...]:
+def _cells(row: Sequence[JsonValue]) -> tuple[Cell, ...]:
     """One rendered row as its cells, each with the tag the value was written under."""
     return tuple(
         Cell(
@@ -1582,7 +1583,7 @@ def _tagged(rows: Rows) -> Rows:
     )
 
 
-def _record(path: Path, side: str) -> tuple[Record, Json]:
+def _record(path: Path, side: str) -> tuple[Record, JsonObject]:
     """One evidence record as a page states it, with its result and its two hashes retaken."""
     document = _document(path)
     loaded: LoadedRecord = load_record(document)
@@ -1652,7 +1653,7 @@ def _record(path: Path, side: str) -> tuple[Record, Json]:
     )
 
 
-def _mechanism(stated: Json | None) -> Mechanism | None:
+def _mechanism(stated: JsonObject | None) -> Mechanism | None:
     if stated is None:
         return None
     return Mechanism(
@@ -1666,7 +1667,7 @@ def _mechanism(stated: Json | None) -> Mechanism | None:
     )
 
 
-def _reading(name: str, stated: Json) -> Reading:
+def _reading(name: str, stated: JsonObject) -> Reading:
     """One evaluator's own answer about the same two results, as its document states it."""
     return Reading(
         name=name,
@@ -1682,7 +1683,7 @@ def _reading(name: str, stated: Json) -> Reading:
     )
 
 
-def _probes(smells: Json) -> tuple[Probe, ...]:
+def _probes(smells: JsonObject) -> tuple[Probe, ...]:
     """Every probe that ran on this gold, fired, quiet and not applicable alike."""
     probes: list[Probe] = []
     for stated in _objects(smells, "smells"):
@@ -1707,7 +1708,7 @@ def _probes(smells: Json) -> tuple[Probe, ...]:
 
 
 def _run_page(
-    summary: Json,
+    summary: JsonObject,
     questions: Sequence[QuestionPage],
     directories: Sequence[Path],
     published: Published | None = None,
@@ -1855,7 +1856,7 @@ def _nameable(names: Iterable[str]) -> list[str]:
     return sorted({name for name in names if name and FILTER_SEGMENT.fullmatch(name)})
 
 
-def _probe_fired(smells: Json) -> tuple[tuple[str, int], ...]:
+def _probe_fired(smells: JsonObject) -> tuple[tuple[str, int], ...]:
     """Each probe and how many golds it fired on, as numbers, in the summary's own order.
 
     Read through ``_integer``, which is what every other number a page states goes through:
@@ -1880,7 +1881,7 @@ def _mechanism_counts(questions: Sequence[QuestionPage]) -> tuple[tuple[str, int
     return tuple(sorted(counted.items(), key=lambda pair: (-pair[1], pair[0])))
 
 
-def _credited(stated: Json | None) -> tuple[Fact, ...]:
+def _credited(stated: JsonObject | None) -> tuple[Fact, ...]:
     """What BIRD's own check credited and this comparison called NOT_EQUAL, by mechanism."""
     if stated is None:
         return ()
@@ -1894,18 +1895,18 @@ def _credited(stated: Json | None) -> tuple[Fact, ...]:
     )
 
 
-def _data_file(source: Json | None) -> tuple[Fact, ...]:
+def _data_file(source: JsonObject | None) -> tuple[Fact, ...]:
     if source is None:
         return ()
     return (Fact("data file", _text(source, "path"), _origin(source, _text(source, "digest"))),)
 
 
 def _notes(
-    summary: Json,
-    question_set: Json,
-    predictions: Json | None,
-    fixture: Json,
-    shuffle: Json,
+    summary: JsonObject,
+    question_set: JsonObject,
+    predictions: JsonObject | None,
+    fixture: JsonObject,
+    shuffle: JsonObject,
 ) -> tuple[Fact, ...]:
     """The states of the run that are a row rather than a page, stated only when they occurred."""
     notes: list[Fact] = []
@@ -1946,7 +1947,7 @@ def _notes(
 
 
 def _entries(
-    summary: Json, questions: Sequence[QuestionPage], directories: Sequence[Path]
+    summary: JsonObject, questions: Sequence[QuestionPage], directories: Sequence[Path]
 ) -> tuple[Entry, ...]:
     """The question index: one row per directory, then the questions that wrote none.
 
@@ -2010,93 +2011,89 @@ def mark_differences(left: str, right: str) -> tuple[tuple[Token, ...], tuple[To
     )
 
 
-def _document(path: Path) -> Json:
+def _document(path: Path) -> JsonObject:
     """One JSON file of an audit directory, or a refusal naming the file and what was wrong."""
     try:
-        loaded = json.loads(path.read_text(encoding="utf-8"))
+        loaded: JsonValue = json.loads(path.read_text(encoding="utf-8"))
     except OSError as unreadable:
         raise ReportRefused(f"{path} could not be read: {unreadable}") from unreadable
     except json.JSONDecodeError as unreadable:
         raise ReportRefused(f"{path} does not hold JSON: {unreadable}") from unreadable
     if not isinstance(loaded, dict):
         raise ReportRefused(f"{path} does not hold a JSON object")
-    return cast("Json", loaded)
+    return loaded
 
 
-def _entry_list(path: Path) -> list[Json]:
+def _entry_list(path: Path) -> list[JsonObject]:
     """One JSON file holding a list of objects, which `questions.json` is and no audit file."""
     try:
-        loaded = json.loads(path.read_text(encoding="utf-8"))
+        loaded: JsonValue = json.loads(path.read_text(encoding="utf-8"))
     except OSError as unreadable:
         raise ReportRefused(f"{path} could not be read: {unreadable}") from unreadable
     except json.JSONDecodeError as unreadable:
         raise ReportRefused(f"{path} does not hold JSON: {unreadable}") from unreadable
     if not isinstance(loaded, list):
         raise ReportRefused(f"{path} does not hold a JSON array")
-    return [_object_of(entry, path.name) for entry in cast("list[object]", loaded)]
+    return [_object_of(entry, path.name) for entry in loaded]
 
 
-def _object(document: Json, key: str) -> Json:
+def _object(document: JsonObject, key: str) -> JsonObject:
     return _object_of(document.get(key), key)
 
 
-def _object_of(value: object, what: str) -> Json:
-    if not isinstance(value, dict):
-        raise UnreadableRecord(f"{what} is not a JSON object: {value!r}")
-    return cast("Json", value)
+def _object_of(value: JsonValue, what: str) -> JsonObject:
+    return an_object(value, what, UnreadableRecord)
 
 
-def _object_or_none(document: Json, key: str) -> Json | None:
+def _object_or_none(document: JsonObject, key: str) -> JsonObject | None:
     """A block the format states may be null, or absent when the run had nothing to say."""
     value = document.get(key)
     return None if value is None else _object_of(value, key)
 
 
-def _list(document: Json, key: str) -> list[Json]:
+def _list(document: JsonObject, key: str) -> list[JsonValue]:
     return _list_of(document.get(key), key)
 
 
-def _list_of(value: object, what: str) -> list[Json]:
-    if not isinstance(value, list):
-        raise UnreadableRecord(f"{what} is not a JSON array: {value!r}")
-    return cast("list[Json]", value)
+def _list_of(value: JsonValue, what: str) -> list[JsonValue]:
+    return an_array(value, what, UnreadableRecord)
 
 
-def _objects(document: Json, key: str) -> list[Json]:
+def _objects(document: JsonObject, key: str) -> list[JsonObject]:
     return [_object_of(value, key) for value in _list(document, key)]
 
 
-def _strings(document: Json, key: str) -> list[str]:
+def _strings(document: JsonObject, key: str) -> list[str]:
     return [_as_text(value) for value in _list(document, key)]
 
 
-def _text(document: Json, key: str) -> str:
+def _text(document: JsonObject, key: str) -> str:
     value = document.get(key)
     if not isinstance(value, str):
         raise UnreadableRecord(f"{key} is not text: {value!r}")
     return value
 
 
-def _optional_text(document: Json, key: str, *, absent: str = "") -> str:
+def _optional_text(document: JsonObject, key: str, *, absent: str = "") -> str:
     """A value the format states may be null, as the text a page shows for it."""
     value = document.get(key)
     return absent if value is None else _as_text(value)
 
 
-def _integer(document: Json, key: str) -> int:
+def _integer(document: JsonObject, key: str) -> int:
     """One count, by the same rule the site builder and the selector read one under."""
     return whole_count(document, key, UnreadableRecord)
 
 
-def _optional_integer(document: Json, key: str, default: int) -> int:
+def _optional_integer(document: JsonObject, key: str, default: int) -> int:
     return default if document.get(key) is None else _integer(document, key)
 
 
-def _facts(block: Json) -> tuple[Fact, ...]:
+def _facts(block: JsonObject) -> tuple[Fact, ...]:
     return tuple(Fact(name, _as_text(value)) for name, value in block.items())
 
 
-def _origin(source: Json, digest: str) -> str:
+def _origin(source: JsonObject, digest: str) -> str:
     """What the run was told about a file, after the digest it measured for itself."""
     origin = _optional_text(source, "origin", absent="origin not stated")
     date = _optional_text(source, "date")
@@ -2116,7 +2113,7 @@ def _as_text(value: object) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True)
 
 
-def _cell_text(cell: Json) -> str:
+def _cell_text(cell: JsonObject) -> str:
     """One cell's payload as text. A null is the word, in the style the design gives it."""
     value = cell.get("value")
     return "NULL" if value is None else _as_text(value)
