@@ -109,17 +109,17 @@
         },
         "planner_statistics": {
           "products": {
-            "last_analyze": "2026-09-11 18:13:23.326472+00",
+            "last_analyze": "2026-09-14 12:51:04.229594+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "transactions_1k": {
-            "last_analyze": "2026-09-11 18:13:23.749262+00",
+            "last_analyze": "2026-09-14 12:51:04.722305+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "gasstations": {
-            "last_analyze": "2026-09-11 18:13:22.092412+00",
+            "last_analyze": "2026-09-14 12:51:02.743904+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

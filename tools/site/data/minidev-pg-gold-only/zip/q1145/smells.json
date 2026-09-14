@@ -59,7 +59,7 @@
         "heuristic": true,
         "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-ORD",
-        "baseline_result_hash": "sha256:2efe778ac662b4eacac1414d24c17de44b9facc69e9c47310142b75c234206bb",
+        "baseline_result_hash": "sha256:77990a9a27e9d00c2f3424dd164fb83148c0637b687dc6883f5c7f732b5f0604",
         "baseline_result": {
           "columns": [
             {
@@ -71,12 +71,6 @@
           "truncated": false,
           "rows_shown": 4,
           "rows": [
-            [
-              {
-                "type": "str",
-                "value": "Italy Serie A"
-              }
-            ],
             [
               {
                 "type": "str",
@@ -92,20 +86,26 @@
             [
               {
                 "type": "str",
+                "value": "Italy Serie A"
+              }
+            ],
+            [
+              {
+                "type": "str",
                 "value": "France Ligue 1"
               }
             ]
           ],
-          "result_hash": "sha256:2efe778ac662b4eacac1414d24c17de44b9facc69e9c47310142b75c234206bb"
+          "result_hash": "sha256:77990a9a27e9d00c2f3424dd164fb83148c0637b687dc6883f5c7f732b5f0604"
         },
         "planner_statistics": {
           "league": {
-            "last_analyze": "2026-09-11 18:13:22.180756+00",
+            "last_analyze": "2026-09-14 12:51:02.859972+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "match": {
-            "last_analyze": "2026-09-11 18:13:23.04275+00",
+            "last_analyze": "2026-09-14 12:51:03.86449+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

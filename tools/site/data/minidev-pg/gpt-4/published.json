@@ -1,7 +1,7 @@
 {
  "name": "minidev-pg-gpt-4.tar.gz",
- "url": "https://github.com/ivermin1123/attestql/releases/download/v0.3.1/minidev-pg-gpt-4.tar.gz",
- "bytes": 12230129,
- "sha256": "6267b3520fb1bb9579f8d224cfde577483faca4c498e3e1254a070c8c0507579",
+ "url": "https://github.com/ivermin1123/attestql/releases/download/v0.4.0/minidev-pg-gpt-4.tar.gz",
+ "bytes": 12230229,
+ "sha256": "1d85380a30c2ffd5b3a39f08f7ab1a0e1366de51fee1da80222c2014b1b39659",
  "directories": 226
 }

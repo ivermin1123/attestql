@@ -146,121 +146,31 @@
         [
           {
             "type": "str",
-            "value": "Bloodsoaked Altar"
+            "value": "Executioner's Capsule"
           }
         ],
         [
           {
             "type": "str",
-            "value": "Bloodsoaked Altar"
+            "value": "Executioner's Capsule"
           }
         ],
         [
           {
             "type": "str",
-            "value": "Bloodsoaked Altar"
+            "value": "Executioner's Capsule"
           }
         ],
         [
           {
             "type": "str",
-            "value": "Bloodsoaked Altar"
+            "value": "Executioner's Capsule"
           }
         ],
         [
           {
             "type": "str",
-            "value": "Bloodsoaked Altar"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Bloodsoaked Altar"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Bloodsoaked Altar"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Bloodsoaked Altar"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Bloodsoaked Altar"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Bloodsoaked Altar"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
-          }
-        ],
-        [
-          {
-            "type": "str",
-            "value": "Witch's Cauldron"
+            "value": "Executioner's Capsule"
           }
         ],
         [
@@ -291,10 +201,100 @@
           {
             "type": "str",
             "value": "Executioner's Capsule"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Executioner's Capsule"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Executioner's Capsule"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Immortal Coil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Immortal Coil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Immortal Coil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Immortal Coil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Immortal Coil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Immortal Coil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Immortal Coil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Immortal Coil"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Onyx Goblet"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Onyx Goblet"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Onyx Goblet"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Onyx Goblet"
+          }
+        ],
+        [
+          {
+            "type": "str",
+            "value": "Onyx Goblet"
           }
         ]
       ],
-      "result_hash": "sha256:01ed68c787a0a652b9250fb25884d4149015060ef74e4ab225cc5df6e70926d2"
+      "result_hash": "sha256:6c38b7245e5aa72408befe3363d7d7586bbdd9d4a4480d61596dbe4e017e326e"
     },
     "record": "evidence-second.json"
   },
@@ -381,7 +381,7 @@
   },
   "result_hashes": {
     "gold": "sha256:097ac4971cafa268280cbb5f5a77939e631fc78f5de30a6b0eb14be09214910a",
-    "second": "sha256:01ed68c787a0a652b9250fb25884d4149015060ef74e4ab225cc5df6e70926d2"
+    "second": "sha256:6c38b7245e5aa72408befe3363d7d7586bbdd9d4a4480d61596dbe4e017e326e"
   },
   "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
   "fixture": {
@@ -393,5 +393,5 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "run_id": "audit-27701da4-0a79-4cc9-9477-d46a66ddd8db"
+  "run_id": "audit-1c5c4146-3c91-4f05-b723-3cd43ed41d51"
 }

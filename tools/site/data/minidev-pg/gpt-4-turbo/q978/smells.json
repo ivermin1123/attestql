@@ -85,7 +85,7 @@
         },
         "planner_statistics": {
           "circuits": {
-            "last_analyze": "2026-09-11 17:24:22.859004+00",
+            "last_analyze": "2026-09-14 12:50:57.990934+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

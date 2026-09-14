@@ -102,12 +102,12 @@
         },
         "planner_statistics": {
           "team_attributes": {
-            "last_analyze": "2026-09-11 18:13:23.682409+00",
+            "last_analyze": "2026-09-14 12:51:04.628002+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "team": {
-            "last_analyze": "2026-09-11 18:13:23.746824+00",
+            "last_analyze": "2026-09-14 12:51:04.719781+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

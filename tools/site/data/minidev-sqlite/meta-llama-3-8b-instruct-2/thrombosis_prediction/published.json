@@ -1,7 +1,7 @@
 {
  "name": "minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz",
- "url": "https://github.com/ivermin1123/attestql/releases/download/v0.3.1/minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz",
- "bytes": 13261231,
- "sha256": "0b08daf5baa4ad749ec5c5474bcea3a1b2ce06ff73b93305b1b2ef445b7c8c12",
+ "url": "https://github.com/ivermin1123/attestql/releases/download/v0.4.0/minidev-sqlite-meta-llama-3-8b-instruct-2.tar.gz",
+ "bytes": 13265847,
+ "sha256": "f5f57826e0f95045e56a84a80bec8d5cbd9229863976c6a33d2bcb650a004688",
  "directories": 21
 }

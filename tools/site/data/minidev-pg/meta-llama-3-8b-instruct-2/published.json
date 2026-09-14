@@ -1,7 +1,7 @@
 {
  "name": "minidev-pg-meta-llama-3-8b-instruct-2.tar.gz",
- "url": "https://github.com/ivermin1123/attestql/releases/download/v0.3.1/minidev-pg-meta-llama-3-8b-instruct-2.tar.gz",
- "bytes": 11959083,
- "sha256": "a05eed6c063d4ee7e7141b9c65d4b59a5f7efa9f7f2974aa68bf95cec59fb3c4",
+ "url": "https://github.com/ivermin1123/attestql/releases/download/v0.4.0/minidev-pg-meta-llama-3-8b-instruct-2.tar.gz",
+ "bytes": 11959040,
+ "sha256": "e43cfcd4867f23db1999d81b741c3ccfdd131e2964f7b2990d0370c60497f90f",
  "directories": 168
 }

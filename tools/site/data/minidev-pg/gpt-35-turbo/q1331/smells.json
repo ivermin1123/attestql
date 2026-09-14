@@ -55,12 +55,12 @@
         },
         "planner_statistics": {
           "member": {
-            "last_analyze": "2026-09-11 18:13:22.325026+00",
+            "last_analyze": "2026-09-14 12:51:03.023954+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "income": {
-            "last_analyze": "2026-09-11 18:13:22.288716+00",
+            "last_analyze": "2026-09-14 12:51:02.984899+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

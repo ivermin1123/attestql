@@ -32,7 +32,7 @@
         "heuristic": true,
         "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-SET",
-        "baseline_result_hash": "sha256:f8884f832c8d1f77d6a6447a9f481f0a5cf62fc33e00c42397f68909181c34bd",
+        "baseline_result_hash": "sha256:62e29ab34660c506a9ef8785f0e034013c175e2d010b32396768fc32ea5f4383",
         "baseline_result": {
           "columns": [
             {
@@ -105,16 +105,16 @@
               }
             ]
           ],
-          "result_hash": "sha256:f8884f832c8d1f77d6a6447a9f481f0a5cf62fc33e00c42397f68909181c34bd"
+          "result_hash": "sha256:62e29ab34660c506a9ef8785f0e034013c175e2d010b32396768fc32ea5f4383"
         },
         "planner_statistics": {
           "player": {
-            "last_analyze": "2026-09-11 18:13:23.390845+00",
+            "last_analyze": "2026-09-14 12:51:04.298729+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "player_attributes": {
-            "last_analyze": "2026-09-11 18:13:23.674927+00",
+            "last_analyze": "2026-09-14 12:51:04.620709+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

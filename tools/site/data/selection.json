@@ -5,7 +5,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "california_schools",
-   "run_id": "audit-6b4c2fea-a8fb-4a52-a341-be8ee5656719",
+   "run_id": "audit-f19f3c65-4f0e-44dd-9054-6051e98e899d",
    "audited": 89,
    "verdicts": {
     "GOLD-ONLY": 89
@@ -18,9 +18,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 2.762,
-    "shuffle": 0.123
+    "fixture": 0.003,
+    "questions": 3.443,
+    "shuffle": 0.262
    },
    "published_questions": 4,
    "published_ids": [
@@ -36,15 +36,15 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "card_games",
-   "run_id": "audit-eb132a52-c3c3-41eb-9764-a3e0d611f58d",
+   "run_id": "audit-13dd1eba-cb0e-4289-a12a-be567317ef75",
    "audited": 191,
    "verdicts": {
-    "GOLD-ONLY": 190,
-    "ERROR": 1
+    "GOLD-ONLY": 189,
+    "ERROR": 2
    },
    "smells_fired": 29,
    "credited_but_not_equal": null,
-   "errors": 1,
+   "errors": 2,
    "timed_out": {
     "gold": [
      518
@@ -52,9 +52,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.04,
-    "questions": 70.634,
-    "shuffle": 1.259
+    "fixture": 0.028,
+    "questions": 93.281,
+    "shuffle": 1.633
    },
    "published_questions": 10,
    "published_ids": [
@@ -76,7 +76,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "codebase_community",
-   "run_id": "audit-510a85ba-4bcd-4978-8965-80e23e438349",
+   "run_id": "audit-08c5dbe3-2403-4a96-85eb-376670f6b490",
    "audited": 186,
    "verdicts": {
     "GOLD-ONLY": 185,
@@ -92,9 +92,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 90.456,
-    "shuffle": 1.056
+    "fixture": 0.051,
+    "questions": 122.546,
+    "shuffle": 1.484
    },
    "published_questions": 7,
    "published_ids": [
@@ -113,7 +113,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "debit_card_specializing",
-   "run_id": "audit-1239b0dc-fb54-4e96-b62f-d964410aef0b",
+   "run_id": "audit-bdaf34b6-af17-42a9-89d7-e429bb14b1a9",
    "audited": 64,
    "verdicts": {
     "GOLD-ONLY": 64
@@ -126,9 +126,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 3.898,
-    "shuffle": 0.043
+    "fixture": 0.008,
+    "questions": 7.67,
+    "shuffle": 0.087
    },
    "published_questions": 4,
    "published_ids": [
@@ -144,7 +144,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "european_football_2",
-   "run_id": "audit-f6bfa597-de65-4a5d-8554-2e208a88bf41",
+   "run_id": "audit-7b890d8b-c634-475d-b7b0-a60f5ecd30f8",
    "audited": 129,
    "verdicts": {
     "GOLD-ONLY": 128,
@@ -161,8 +161,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.018,
-    "questions": 112.547,
-    "shuffle": 2.678
+    "questions": 145.164,
+    "shuffle": 10.827
    },
    "published_questions": 7,
    "published_ids": [
@@ -181,7 +181,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "financial",
-   "run_id": "audit-0e2fc4f3-7504-47df-aa2a-cbfba4e61c92",
+   "run_id": "audit-290bb94a-c8ff-4768-9211-dcc7a62c1f77",
    "audited": 106,
    "verdicts": {
     "GOLD-ONLY": 106
@@ -194,9 +194,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.012,
-    "questions": 47.231,
-    "shuffle": 0.035
+    "fixture": 0.013,
+    "questions": 68.287,
+    "shuffle": 0.09
    },
    "published_questions": 0,
    "published_ids": [],
@@ -207,7 +207,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "formula_1",
-   "run_id": "audit-03b26ae5-ee37-48c1-b9c1-b9cc1ca15b70",
+   "run_id": "audit-4e9d9650-2d30-4729-8c63-9303de224bbf",
    "audited": 174,
    "verdicts": {
     "GOLD-ONLY": 174
@@ -220,9 +220,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 33.615,
-    "shuffle": 0.156
+    "fixture": 0.023,
+    "questions": 9.962,
+    "shuffle": 0.216
    },
    "published_questions": 8,
    "published_ids": [
@@ -242,7 +242,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "student_club",
-   "run_id": "audit-0adbd727-fcc4-4941-9d6a-37cdcc51932b",
+   "run_id": "audit-1b9f5b24-942a-40d1-9a37-f685bea6deef",
    "audited": 158,
    "verdicts": {
     "GOLD-ONLY": 158
@@ -255,9 +255,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.374,
-    "shuffle": 0.062
+    "fixture": 0.002,
+    "questions": 0.82,
+    "shuffle": 0.091
    },
    "published_questions": 12,
    "published_ids": [
@@ -281,7 +281,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "superhero",
-   "run_id": "audit-c03638ca-1a6b-4dd3-a1fc-dddb70c2f1f0",
+   "run_id": "audit-931f59b0-8c3d-42b1-b1c7-55a6a9973429",
    "audited": 129,
    "verdicts": {
     "GOLD-ONLY": 129
@@ -294,9 +294,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.591,
-    "shuffle": 0.01
+    "fixture": 0.006,
+    "questions": 1.571,
+    "shuffle": 0.011
    },
    "published_questions": 6,
    "published_ids": [
@@ -314,7 +314,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "thrombosis_prediction",
-   "run_id": "audit-f33ba623-8188-4478-b657-0e377570607b",
+   "run_id": "audit-e5fc1241-eb57-470d-bdb1-43b30b9732ec",
    "audited": 163,
    "verdicts": {
     "GOLD-ONLY": 163
@@ -327,9 +327,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 1.145,
-    "shuffle": 0.087
+    "fixture": 0.001,
+    "questions": 1.412,
+    "shuffle": 0.038
    },
    "published_questions": 4,
    "published_ids": [
@@ -345,7 +345,7 @@
    "benchmark": "bird-dev-sqlite",
    "group": "dev-20251106",
    "run": "toxicology",
-   "run_id": "audit-0ace8241-aee1-4871-b915-32f04c5e2b83",
+   "run_id": "audit-60e8e38d-f7d5-4cd1-95e4-3c5d1bd52d16",
    "audited": 145,
    "verdicts": {
     "GOLD-ONLY": 145
@@ -358,9 +358,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.006,
-    "questions": 18.477,
-    "shuffle": 0.099
+    "fixture": 0.002,
+    "questions": 18.279,
+    "shuffle": 0.058
    },
    "published_questions": 1,
    "published_ids": [
@@ -373,14 +373,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-35-turbo",
-   "run_id": "audit-27701da4-0a79-4cc9-9477-d46a66ddd8db",
+   "run_id": "audit-1c5c4146-3c91-4f05-b723-3cd43ed41d51",
    "audited": 498,
    "verdicts": {
     "NOT_EQUAL": 197,
     "ERROR": 185,
     "EQUAL": 116
    },
-   "smells_fired": 55,
+   "smells_fired": 54,
    "credited_but_not_equal": {
     "total": 23,
     "by_mechanism": {
@@ -401,9 +401,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.444,
-    "questions": 53.609,
-    "shuffle": 11.637
+    "fixture": 0.254,
+    "questions": 29.744,
+    "shuffle": 4.839
    },
    "published_questions": 27,
    "published_ids": [
@@ -442,7 +442,7 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-35-turbo-instruct",
-   "run_id": "audit-9c7ed9bf-f34f-4829-a6f5-311be3fe398e",
+   "run_id": "audit-d2059775-c461-489d-9c1e-7f7ae36e184b",
    "audited": 498,
    "verdicts": {
     "NOT_EQUAL": 193,
@@ -470,9 +470,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.224,
-    "questions": 69.974,
-    "shuffle": 6.294
+    "fixture": 0.28,
+    "questions": 32.726,
+    "shuffle": 6.586
    },
    "published_questions": 23,
    "published_ids": [
@@ -507,14 +507,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-4",
-   "run_id": "audit-2cae0420-b41f-41f2-b42d-fea0eb481a6b",
+   "run_id": "audit-b32179fc-a0bd-4229-bc84-81d3dc9bbecb",
    "audited": 498,
    "verdicts": {
     "EQUAL": 164,
     "ERROR": 122,
     "NOT_EQUAL": 212
    },
-   "smells_fired": 63,
+   "smells_fired": 61,
    "credited_but_not_equal": {
     "total": 17,
     "by_mechanism": {
@@ -535,9 +535,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.342,
-    "questions": 78.012,
-    "shuffle": 10.007
+    "fixture": 0.203,
+    "questions": 36.929,
+    "shuffle": 4.774
    },
    "published_questions": 25,
    "published_ids": [
@@ -574,14 +574,14 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-4-32k",
-   "run_id": "audit-6429f772-8de0-4932-8d38-685020a362fe",
+   "run_id": "audit-6eb5069c-cd44-4dd7-9159-45303f9cfcba",
    "audited": 498,
    "verdicts": {
     "NOT_EQUAL": 210,
     "ERROR": 134,
     "EQUAL": 154
    },
-   "smells_fired": 64,
+   "smells_fired": 61,
    "credited_but_not_equal": {
     "total": 23,
     "by_mechanism": {
@@ -602,9 +602,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.391,
-    "questions": 42.05,
-    "shuffle": 13.262
+    "fixture": 0.214,
+    "questions": 25.862,
+    "shuffle": 5.624
    },
    "published_questions": 30,
    "published_ids": [
@@ -646,7 +646,7 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "gpt-4-turbo",
-   "run_id": "audit-246d1eac-d49a-4ada-a77b-1e63dcecab16",
+   "run_id": "audit-9b355c99-9acf-40fa-bbae-77763a9af221",
    "audited": 498,
    "verdicts": {
     "EQUAL": 154,
@@ -674,9 +674,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.138,
-    "questions": 40.712,
-    "shuffle": 5.023
+    "fixture": 0.199,
+    "questions": 37.245,
+    "shuffle": 4.855
    },
    "published_questions": 34,
    "published_ids": [
@@ -722,12 +722,12 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "meta-llama-3-70b-instruct-2",
-   "run_id": "audit-3b96f6e1-49f7-44df-bedf-d3d4c479bdb2",
+   "run_id": "audit-b3dcd959-e541-44a3-bfa5-f4272d8f10ef",
    "audited": 498,
    "verdicts": {
-    "NOT_EQUAL": 209,
+    "NOT_EQUAL": 208,
     "EQUAL": 131,
-    "ERROR": 158
+    "ERROR": 159
    },
    "smells_fired": 54,
    "credited_but_not_equal": {
@@ -744,15 +744,15 @@
      "0": 16
     }
    },
-   "errors": 158,
+   "errors": 159,
    "timed_out": {
     "gold": [],
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.223,
-    "questions": 186.228,
-    "shuffle": 6.303
+    "fixture": 0.281,
+    "questions": 71.758,
+    "shuffle": 6.583
    },
    "published_questions": 24,
    "published_ids": [
@@ -788,7 +788,7 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "meta-llama-3-8b-instruct-2",
-   "run_id": "audit-8bfe979a-b3f9-4830-bc95-858912d54d03",
+   "run_id": "audit-82b2fc33-7c79-4f1e-ba02-045fb6fb823a",
    "audited": 498,
    "verdicts": {
     "ERROR": 258,
@@ -818,9 +818,9 @@
     ]
    },
    "elapsed_seconds": {
-    "fixture": 0.252,
-    "questions": 165.571,
-    "shuffle": 11.657
+    "fixture": 0.246,
+    "questions": 145.878,
+    "shuffle": 4.514
    },
    "published_questions": 16,
    "published_ids": [
@@ -848,7 +848,7 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "mistralai-mixtral-8x7b-instru-4",
-   "run_id": "audit-a8843a6b-01c8-432c-a236-bb7a62375320",
+   "run_id": "audit-3d090a82-ceab-4c3d-bb4c-19e9c7a03d3b",
    "audited": 498,
    "verdicts": {
     "NOT_EQUAL": 111,
@@ -876,9 +876,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.411,
-    "questions": 76.687,
-    "shuffle": 12.6
+    "fixture": 0.22,
+    "questions": 35.51,
+    "shuffle": 4.596
    },
    "published_questions": 18,
    "published_ids": [
@@ -908,7 +908,7 @@
    "benchmark": "minidev-pg",
    "group": "",
    "run": "phi-3-medium-128k-instruct-1",
-   "run_id": "audit-1d9a914d-c720-4e87-a82e-8152e2416dc1",
+   "run_id": "audit-62aed20b-25f7-4d30-ab8c-87f256558b30",
    "audited": 498,
    "verdicts": {
     "ERROR": 219,
@@ -936,9 +936,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.215,
-    "questions": 27.915,
-    "shuffle": 9.886
+    "fixture": 0.257,
+    "questions": 30.659,
+    "shuffle": 4.456
    },
    "published_questions": 16,
    "published_ids": [
@@ -966,12 +966,12 @@
    "benchmark": "minidev-pg-gold-only",
    "group": "",
    "run": "hf",
-   "run_id": "audit-bd0ee5fc-3556-4f9f-ab8f-2f5a6915228e",
+   "run_id": "audit-2e8f77d1-fb99-4c4c-8a42-65a40c5d382c",
    "audited": 500,
    "verdicts": {
     "GOLD-ONLY": 500
    },
-   "smells_fired": 76,
+   "smells_fired": 75,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -979,9 +979,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.285,
-    "questions": 50.914,
-    "shuffle": 6.774
+    "fixture": 0.241,
+    "questions": 29.895,
+    "shuffle": 6.862
    },
    "published_questions": 19,
    "published_ids": [
@@ -1012,12 +1012,12 @@
    "benchmark": "minidev-pg-gold-only",
    "group": "",
    "run": "zip",
-   "run_id": "audit-5450d59b-e798-4c06-b9b6-e5a49413ed52",
+   "run_id": "audit-54ee7545-4844-43de-b39c-1dc3b1f853ac",
    "audited": 498,
    "verdicts": {
     "GOLD-ONLY": 498
    },
-   "smells_fired": 76,
+   "smells_fired": 75,
    "credited_but_not_equal": null,
    "errors": 0,
    "timed_out": {
@@ -1025,9 +1025,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.285,
-    "questions": 50.649,
-    "shuffle": 6.774
+    "fixture": 0.239,
+    "questions": 29.857,
+    "shuffle": 6.862
    },
    "published_questions": 19,
    "published_ids": [
@@ -1058,7 +1058,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "california_schools",
-   "run_id": "audit-5c342a20-264c-4530-8a7d-59d8813bf8bd",
+   "run_id": "audit-70b1b90b-d49f-4e04-98ca-2ae160bdda36",
    "audited": 30,
    "verdicts": {
     "EQUAL": 7,
@@ -1087,8 +1087,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.947,
-    "shuffle": 0.129
+    "questions": 4.085,
+    "shuffle": 0.316
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1099,7 +1099,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "card_games",
-   "run_id": "audit-5ed8b70d-ff8f-48e7-8aa7-65ac594cd8f4",
+   "run_id": "audit-491766ea-37d5-4fa4-b57f-0fa69a966b8e",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 27,
@@ -1129,9 +1129,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.022,
-    "questions": 45.929,
-    "shuffle": 0.986
+    "fixture": 0.027,
+    "questions": 140.633,
+    "shuffle": 10.141
    },
    "published_questions": 2,
    "published_ids": [
@@ -1145,7 +1145,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "codebase_community",
-   "run_id": "audit-90a4d90d-7c16-47e2-a834-73cd3909c63b",
+   "run_id": "audit-9979fdba-1292-4ce0-b8d6-965b4d96a217",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 20,
@@ -1177,9 +1177,9 @@
     ]
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 72.363,
-    "shuffle": 1.11
+    "fixture": 0.339,
+    "questions": 144.14,
+    "shuffle": 6.25
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1190,7 +1190,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "debit_card_specializing",
-   "run_id": "audit-4d167fbd-fa78-4dde-baa0-d1b6c067f284",
+   "run_id": "audit-b788548f-f6dd-40da-8a6a-3b3f3fb112c3",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 20,
@@ -1218,9 +1218,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 8.1,
-    "shuffle": 0.053
+    "fixture": 0.065,
+    "questions": 23.511,
+    "shuffle": 0.105
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1231,7 +1231,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "european_football_2",
-   "run_id": "audit-d0ee7009-9dc7-4faf-9f38-ac5fa7a2061b",
+   "run_id": "audit-883c1e1d-4e66-47c6-bf1f-697d0dfcdfcf",
    "audited": 51,
    "verdicts": {
     "EQUAL": 25,
@@ -1260,8 +1260,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.012,
-    "questions": 7.908,
-    "shuffle": 2.628
+    "questions": 7.991,
+    "shuffle": 2.659
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1272,14 +1272,14 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "financial",
-   "run_id": "audit-80ee6037-62e2-4151-a80f-d0183ffe754c",
+   "run_id": "audit-fadb7799-f0a9-492a-a4ea-83649840120a",
    "audited": 30,
    "verdicts": {
-    "NOT_EQUAL": 17,
-    "ERROR": 7,
+    "NOT_EQUAL": 16,
+    "ERROR": 8,
     "EQUAL": 6
    },
-   "smells_fired": 5,
+   "smells_fired": 4,
    "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -1294,15 +1294,15 @@
      "0": 0
     }
    },
-   "errors": 7,
+   "errors": 8,
    "timed_out": {
     "gold": [],
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.012,
-    "questions": 33.375,
-    "shuffle": 0.033
+    "fixture": 0.029,
+    "questions": 28.336,
+    "shuffle": 0.042
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1313,7 +1313,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "formula_1",
-   "run_id": "audit-fe75c489-adc8-4a01-8b06-951191d62d3d",
+   "run_id": "audit-3ed5906f-9ceb-4aa7-865b-143f3d0a3e7e",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 43,
@@ -1342,8 +1342,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.003,
-    "questions": 4.667,
-    "shuffle": 0.123
+    "questions": 4.088,
+    "shuffle": 0.158
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1354,7 +1354,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "student_club",
-   "run_id": "audit-bfd3a7dd-7e6f-41c0-a85d-1f7daa0367b6",
+   "run_id": "audit-663d89fb-c9ba-4c17-9905-37494957903c",
    "audited": 48,
    "verdicts": {
     "EQUAL": 21,
@@ -1382,9 +1382,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.072,
-    "shuffle": 0.069
+    "fixture": 0.002,
+    "questions": 0.073,
+    "shuffle": 0.057
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1395,7 +1395,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "superhero",
-   "run_id": "audit-240eb5a1-4512-43fc-ad07-8a2e581721ab",
+   "run_id": "audit-a4b65018-ed58-4ffd-9f9b-7acb8a73a237",
    "audited": 52,
    "verdicts": {
     "EQUAL": 32,
@@ -1424,8 +1424,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.577,
-    "shuffle": 0.011
+    "questions": 0.511,
+    "shuffle": 0.009
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1436,7 +1436,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "thrombosis_prediction",
-   "run_id": "audit-e9a7ed93-57dd-47a2-bdc1-c184123252b0",
+   "run_id": "audit-ee4e7ea5-26b2-4cad-ada9-95bdc20b5495",
    "audited": 50,
    "verdicts": {
     "ERROR": 14,
@@ -1465,8 +1465,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.245,
-    "shuffle": 0.048
+    "questions": 0.214,
+    "shuffle": 0.037
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1477,7 +1477,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo",
    "run": "toxicology",
-   "run_id": "audit-a95b2c5e-5407-469a-a11f-a33de031d9f8",
+   "run_id": "audit-0869a025-ee25-40f2-b5dc-301081c04ae1",
    "audited": 40,
    "verdicts": {
     "NOT_EQUAL": 17,
@@ -1506,8 +1506,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 10.837,
-    "shuffle": 0.042
+    "questions": 10.706,
+    "shuffle": 0.039
    },
    "published_questions": 2,
    "published_ids": [
@@ -1521,7 +1521,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "california_schools",
-   "run_id": "audit-ca4aee86-f089-49b9-8352-b5a7b9ffd14e",
+   "run_id": "audit-6e69a231-723a-48bc-a52a-da3e867fc8cb",
    "audited": 30,
    "verdicts": {
     "EQUAL": 4,
@@ -1549,9 +1549,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 1.057,
-    "shuffle": 0.168
+    "fixture": 0.009,
+    "questions": 1.398,
+    "shuffle": 0.202
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1562,7 +1562,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "card_games",
-   "run_id": "audit-7239f3fd-1812-49e8-a67c-f619d7534211",
+   "run_id": "audit-6ab9edd0-6711-42f3-bea6-e77edc702019",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 29,
@@ -1592,9 +1592,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.08,
-    "questions": 53.447,
-    "shuffle": 1.647
+    "fixture": 0.03,
+    "questions": 58.95,
+    "shuffle": 1.691
    },
    "published_questions": 2,
    "published_ids": [
@@ -1608,7 +1608,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "codebase_community",
-   "run_id": "audit-b3e7ca49-e1de-4522-b3f9-9c47e21a8091",
+   "run_id": "audit-e9f4d115-d17b-4f1e-86b0-ea550c76a938",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 19,
@@ -1636,9 +1636,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.013,
-    "questions": 12.762,
-    "shuffle": 1.599
+    "fixture": 0.022,
+    "questions": 33.684,
+    "shuffle": 2.392
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1649,7 +1649,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "debit_card_specializing",
-   "run_id": "audit-8ca8a995-676f-43de-8461-ac39c4fd8f9d",
+   "run_id": "audit-623c0bc3-497f-4ac6-b4e4-2dfc47f49614",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 18,
@@ -1677,9 +1677,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 2.758,
-    "shuffle": 0.048
+    "fixture": 0.011,
+    "questions": 5.756,
+    "shuffle": 0.105
    },
    "published_questions": 1,
    "published_ids": [
@@ -1692,7 +1692,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "european_football_2",
-   "run_id": "audit-6f141545-145c-4a00-b4d0-8cd6ffbed173",
+   "run_id": "audit-a4d35527-e03e-4bdf-a280-40596d99269a",
    "audited": 51,
    "verdicts": {
     "EQUAL": 23,
@@ -1722,9 +1722,9 @@
     ]
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 35.175,
-    "shuffle": 2.087
+    "fixture": 0.049,
+    "questions": 63.255,
+    "shuffle": 9.082
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1735,7 +1735,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "financial",
-   "run_id": "audit-56213fb9-c5e4-4b86-98c6-8ec83f11f5e6",
+   "run_id": "audit-78ebf833-8c87-43d7-8ab8-d685231f30fe",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 21,
@@ -1763,9 +1763,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.012,
-    "questions": 2.789,
-    "shuffle": 0.036
+    "fixture": 0.094,
+    "questions": 6.569,
+    "shuffle": 0.179
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1776,7 +1776,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "formula_1",
-   "run_id": "audit-bbd024d4-b6b0-404c-850e-b9f47f720479",
+   "run_id": "audit-04a5c8d6-71d5-46b6-85b3-d7d9278a6c35",
    "audited": 66,
    "verdicts": {
     "ERROR": 10,
@@ -1804,9 +1804,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 4.491,
-    "shuffle": 0.12
+    "fixture": 0.287,
+    "questions": 19.512,
+    "shuffle": 0.3
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1817,7 +1817,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "student_club",
-   "run_id": "audit-f0296379-a05b-4a30-8831-cd677435a606",
+   "run_id": "audit-1aa92949-337b-4379-a81a-3f3407eacc0b",
    "audited": 48,
    "verdicts": {
     "EQUAL": 17,
@@ -1845,9 +1845,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.065,
-    "shuffle": 0.061
+    "fixture": 0.316,
+    "questions": 0.331,
+    "shuffle": 0.094
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1858,7 +1858,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "superhero",
-   "run_id": "audit-022bf1ca-da2c-4a7c-902b-0649694b9ec0",
+   "run_id": "audit-365523c2-7b77-413f-9951-2b38a30f5cb0",
    "audited": 52,
    "verdicts": {
     "ERROR": 11,
@@ -1886,9 +1886,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.449,
-    "shuffle": 0.009
+    "fixture": 0.325,
+    "questions": 1.465,
+    "shuffle": 0.013
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1899,7 +1899,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "thrombosis_prediction",
-   "run_id": "audit-26fad5b3-bdc4-406d-b9ad-6b9990f573a9",
+   "run_id": "audit-2a7dc187-59b3-4982-9617-bf92d5f1180a",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 19,
@@ -1927,9 +1927,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.19,
-    "shuffle": 0.043
+    "fixture": 0.005,
+    "questions": 0.594,
+    "shuffle": 0.21
    },
    "published_questions": 0,
    "published_ids": [],
@@ -1940,7 +1940,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-35-turbo-instruct",
    "run": "toxicology",
-   "run_id": "audit-cffd9f62-3b36-4053-9c22-0344d509ca76",
+   "run_id": "audit-ea114639-07b9-4def-92d7-abaa718393e4",
    "audited": 40,
    "verdicts": {
     "EQUAL": 8,
@@ -1968,9 +1968,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.459,
-    "shuffle": 0.042
+    "fixture": 0.006,
+    "questions": 2.166,
+    "shuffle": 0.389
    },
    "published_questions": 2,
    "published_ids": [
@@ -1984,7 +1984,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "california_schools",
-   "run_id": "audit-da86f52f-e12d-4a23-8bda-8d2ce2134f60",
+   "run_id": "audit-2b1151c0-ccca-48a8-88ba-d4e0bcd67263",
    "audited": 30,
    "verdicts": {
     "EQUAL": 10,
@@ -2013,8 +2013,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.952,
-    "shuffle": 0.1
+    "questions": 0.883,
+    "shuffle": 0.127
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2025,7 +2025,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "card_games",
-   "run_id": "audit-707aa79a-31e0-4ae3-b222-7a245ab92bc6",
+   "run_id": "audit-0683544b-8684-43ee-9c76-ab47108e9b15",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 32,
@@ -2055,9 +2055,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.022,
-    "questions": 48.918,
-    "shuffle": 0.983
+    "fixture": 0.055,
+    "questions": 66.168,
+    "shuffle": 2.817
    },
    "published_questions": 1,
    "published_ids": [
@@ -2070,7 +2070,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "codebase_community",
-   "run_id": "audit-f342edb0-e0cf-41fb-908e-311a1bd4079c",
+   "run_id": "audit-91709764-4d19-45d1-ac20-14ed591a51bd",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 23,
@@ -2100,9 +2100,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.017,
-    "questions": 41.383,
-    "shuffle": 1.284
+    "fixture": 0.024,
+    "questions": 72.028,
+    "shuffle": 1.444
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2113,7 +2113,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "debit_card_specializing",
-   "run_id": "audit-a4aac945-a7cc-444f-925b-a3ca32e7e2e1",
+   "run_id": "audit-fb926dac-f88c-4f77-bb33-af436ed07977",
    "audited": 30,
    "verdicts": {
     "EQUAL": 12,
@@ -2142,8 +2142,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.003,
-    "questions": 3.142,
-    "shuffle": 0.04
+    "questions": 3.672,
+    "shuffle": 0.052
    },
    "published_questions": 1,
    "published_ids": [
@@ -2156,7 +2156,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "european_football_2",
-   "run_id": "audit-0ee61e9a-b3e6-4fe0-90ca-4461d1cc9e43",
+   "run_id": "audit-1eccafb2-33c0-408d-bb8a-33a434a78712",
    "audited": 51,
    "verdicts": {
     "EQUAL": 22,
@@ -2184,9 +2184,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 7.724,
-    "shuffle": 2.55
+    "fixture": 0.014,
+    "questions": 9.196,
+    "shuffle": 5.669
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2197,7 +2197,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "financial",
-   "run_id": "audit-123a3aff-bff0-475a-8549-831a82057133",
+   "run_id": "audit-9141b153-143f-4a58-a3bf-529e0a60ed94",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 21,
@@ -2225,9 +2225,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 2.899,
-    "shuffle": 0.031
+    "fixture": 0.036,
+    "questions": 3.991,
+    "shuffle": 0.082
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2238,7 +2238,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "formula_1",
-   "run_id": "audit-54c7778e-0356-4c17-8678-c65329ee3590",
+   "run_id": "audit-934b25ef-c5a3-44a9-86af-a808f9bbe617",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 43,
@@ -2266,9 +2266,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 4.692,
-    "shuffle": 0.112
+    "fixture": 0.008,
+    "questions": 4.918,
+    "shuffle": 0.172
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2279,7 +2279,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "student_club",
-   "run_id": "audit-ff72e7c2-cd51-4668-8dab-706dab7d9ebc",
+   "run_id": "audit-616229db-84c9-4be8-9c83-6464f829f1f4",
    "audited": 48,
    "verdicts": {
     "EQUAL": 27,
@@ -2307,9 +2307,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.067,
-    "shuffle": 0.055
+    "fixture": 0.002,
+    "questions": 0.08,
+    "shuffle": 0.056
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2320,7 +2320,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "superhero",
-   "run_id": "audit-4b172a01-eb57-4e81-aa25-724616732a9c",
+   "run_id": "audit-e8c6e15d-bf34-487f-ab02-1795c5307eef",
    "audited": 52,
    "verdicts": {
     "EQUAL": 40,
@@ -2349,7 +2349,7 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.461,
+    "questions": 0.491,
     "shuffle": 0.01
    },
    "published_questions": 0,
@@ -2361,7 +2361,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "thrombosis_prediction",
-   "run_id": "audit-cd5a15dc-09a9-427b-99e9-5f1896687127",
+   "run_id": "audit-5cf8d7c2-7af3-451e-ae76-693d33508532",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 30,
@@ -2390,7 +2390,7 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.315,
+    "questions": 0.345,
     "shuffle": 0.036
    },
    "published_questions": 0,
@@ -2402,7 +2402,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4",
    "run": "toxicology",
-   "run_id": "audit-3746b2e9-af0a-493b-9468-ebbf7a8feb67",
+   "run_id": "audit-0bad4e6f-16d5-41b7-a0d0-2b28e748a2b9",
    "audited": 40,
    "verdicts": {
     "EQUAL": 11,
@@ -2430,9 +2430,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.717,
-    "shuffle": 0.036
+    "fixture": 0.002,
+    "questions": 0.868,
+    "shuffle": 0.038
    },
    "published_questions": 3,
    "published_ids": [
@@ -2447,7 +2447,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "california_schools",
-   "run_id": "audit-bc0aaf44-8e6b-4e16-b80d-148c90e7d4e6",
+   "run_id": "audit-6c47880c-b7aa-4534-9567-9b7742104cf5",
    "audited": 30,
    "verdicts": {
     "EQUAL": 9,
@@ -2476,8 +2476,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 1.186,
-    "shuffle": 0.12
+    "questions": 1.072,
+    "shuffle": 0.129
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2488,7 +2488,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "card_games",
-   "run_id": "audit-94c129e9-5ab3-4f12-bc4f-4d427a7a6d68",
+   "run_id": "audit-5ad59ebf-9f00-4ebb-8010-ae0200d479ef",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 36,
@@ -2518,9 +2518,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.052,
-    "questions": 45.692,
-    "shuffle": 1.816
+    "fixture": 0.246,
+    "questions": 113.789,
+    "shuffle": 5.924
    },
    "published_questions": 2,
    "published_ids": [
@@ -2534,7 +2534,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "codebase_community",
-   "run_id": "audit-b6ba4c28-569f-4884-bd71-8e4e34b703af",
+   "run_id": "audit-9052f4fa-f9a2-414c-aaaa-0a86d4f35ea2",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 23,
@@ -2564,9 +2564,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 41.303,
-    "shuffle": 1.071
+    "fixture": 0.019,
+    "questions": 70.96,
+    "shuffle": 2.99
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2577,11 +2577,11 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "debit_card_specializing",
-   "run_id": "audit-15bfcc1c-388a-4f9a-a9d9-fde2eae689b4",
+   "run_id": "audit-7405003c-c953-4136-930c-a39aff0c94a2",
    "audited": 30,
    "verdicts": {
-    "NOT_EQUAL": 20,
-    "ERROR": 1,
+    "NOT_EQUAL": 19,
+    "ERROR": 2,
     "EQUAL": 9
    },
    "smells_fired": 2,
@@ -2599,15 +2599,15 @@
      "0": 2
     }
    },
-   "errors": 1,
+   "errors": 2,
    "timed_out": {
     "gold": [],
     "prediction": []
    },
    "elapsed_seconds": {
     "fixture": 0.003,
-    "questions": 9.079,
-    "shuffle": 0.049
+    "questions": 3.628,
+    "shuffle": 0.041
    },
    "published_questions": 1,
    "published_ids": [
@@ -2620,7 +2620,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "european_football_2",
-   "run_id": "audit-32bdcd7f-0bdb-4d26-8b5e-5d471778172d",
+   "run_id": "audit-eb5ed245-0b0e-415a-b584-e941c398e1bf",
    "audited": 51,
    "verdicts": {
     "EQUAL": 26,
@@ -2648,9 +2648,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.018,
-    "questions": 9.111,
-    "shuffle": 3.164
+    "fixture": 0.011,
+    "questions": 9.426,
+    "shuffle": 4.53
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2661,7 +2661,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "financial",
-   "run_id": "audit-0875de74-84a1-4854-8665-988d890ee028",
+   "run_id": "audit-d2d9f647-56c7-4b85-b176-31d5905892f0",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 18,
@@ -2689,9 +2689,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.012,
-    "questions": 2.678,
-    "shuffle": 0.033
+    "fixture": 0.016,
+    "questions": 2.626,
+    "shuffle": 0.035
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2702,7 +2702,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "formula_1",
-   "run_id": "audit-9038a739-9c11-4e45-ba70-31c7924c8f56",
+   "run_id": "audit-02419771-1cd1-43d9-a3ef-788edb397d57",
    "audited": 66,
    "verdicts": {
     "EQUAL": 25,
@@ -2730,9 +2730,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 4.663,
-    "shuffle": 0.121
+    "fixture": 0.006,
+    "questions": 3.822,
+    "shuffle": 0.12
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2743,7 +2743,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "student_club",
-   "run_id": "audit-8d04d1f9-0452-43f9-b611-17281be5aec7",
+   "run_id": "audit-51ff5684-8c53-494f-8fe2-22741752f469",
    "audited": 48,
    "verdicts": {
     "EQUAL": 31,
@@ -2771,9 +2771,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.07,
-    "shuffle": 0.066
+    "fixture": 0.002,
+    "questions": 0.076,
+    "shuffle": 0.069
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2784,7 +2784,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "superhero",
-   "run_id": "audit-85cc05d7-db31-4360-9377-5d3a1e60a5a8",
+   "run_id": "audit-c3696353-aeea-4994-ba3f-86968be83d5d",
    "audited": 52,
    "verdicts": {
     "EQUAL": 37,
@@ -2813,8 +2813,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.525,
-    "shuffle": 0.01
+    "questions": 0.475,
+    "shuffle": 0.014
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2825,7 +2825,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "thrombosis_prediction",
-   "run_id": "audit-5268ddb2-4407-4bd5-875c-b71ecdd1c022",
+   "run_id": "audit-a5aa2483-0f66-49f3-a521-6e20766b95ba",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 31,
@@ -2853,9 +2853,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.381,
-    "shuffle": 0.04
+    "fixture": 0.002,
+    "questions": 0.321,
+    "shuffle": 0.048
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2866,7 +2866,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-32k",
    "run": "toxicology",
-   "run_id": "audit-0948d68a-b4bf-4eaa-b48c-7654355959b1",
+   "run_id": "audit-626a4458-7bc1-4785-b83f-0d4280f78b39",
    "audited": 40,
    "verdicts": {
     "EQUAL": 9,
@@ -2895,8 +2895,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.697,
-    "shuffle": 0.038
+    "questions": 0.661,
+    "shuffle": 0.048
    },
    "published_questions": 3,
    "published_ids": [
@@ -2911,7 +2911,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "california_schools",
-   "run_id": "audit-f5035fdc-fa0b-4a73-a53e-ac0bba94e816",
+   "run_id": "audit-bdb79300-27c3-4783-ad25-bc8f7addad25",
    "audited": 30,
    "verdicts": {
     "EQUAL": 11,
@@ -2938,9 +2938,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.993,
-    "shuffle": 0.103
+    "fixture": 0.003,
+    "questions": 1.035,
+    "shuffle": 0.125
    },
    "published_questions": 0,
    "published_ids": [],
@@ -2951,7 +2951,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "card_games",
-   "run_id": "audit-4bd1ae12-10df-4fe5-8373-ba1e5d133a65",
+   "run_id": "audit-6ae38ec2-4686-4e7a-89be-dd0e5f156903",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 31,
@@ -2981,9 +2981,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.026,
-    "questions": 54.381,
-    "shuffle": 1.069
+    "fixture": 0.032,
+    "questions": 96.187,
+    "shuffle": 1.447
    },
    "published_questions": 2,
    "published_ids": [
@@ -2997,7 +2997,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "codebase_community",
-   "run_id": "audit-4b81ea74-49cf-491a-8d58-16761a723c7c",
+   "run_id": "audit-153618d6-50bd-4fdc-b6e1-db19b687a1a5",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 21,
@@ -3027,9 +3027,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.019,
-    "questions": 44.054,
-    "shuffle": 1.303
+    "fixture": 0.022,
+    "questions": 70.519,
+    "shuffle": 6.159
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3040,7 +3040,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "debit_card_specializing",
-   "run_id": "audit-5f78dcae-23a6-41dd-b968-66c5efc812f1",
+   "run_id": "audit-5c3b6d0f-91ef-4759-aca7-0c83b688d326",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 20,
@@ -3067,9 +3067,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 3.107,
-    "shuffle": 0.041
+    "fixture": 0.003,
+    "questions": 3.386,
+    "shuffle": 0.049
    },
    "published_questions": 1,
    "published_ids": [
@@ -3082,7 +3082,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "european_football_2",
-   "run_id": "audit-a46c8756-2d31-434f-ad9a-088e88ffff05",
+   "run_id": "audit-cfd842a3-6a01-450f-aeb2-a3cc25cf522b",
    "audited": 51,
    "verdicts": {
     "EQUAL": 20,
@@ -3110,9 +3110,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 8.493,
-    "shuffle": 2.368
+    "fixture": 0.012,
+    "questions": 9.734,
+    "shuffle": 2.833
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3123,7 +3123,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "financial",
-   "run_id": "audit-2e996f2c-8ff4-4b20-88ff-e1c2b0729872",
+   "run_id": "audit-2ff8eaf6-8309-4040-a731-474076d4db81",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 13,
@@ -3151,9 +3151,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 1.744,
-    "shuffle": 0.031
+    "fixture": 0.015,
+    "questions": 1.948,
+    "shuffle": 0.044
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3164,7 +3164,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "formula_1",
-   "run_id": "audit-d260c381-60be-4bc8-a8c4-268047825d16",
+   "run_id": "audit-f1a8628a-8041-4894-91e9-47ef9ec46463",
    "audited": 66,
    "verdicts": {
     "EQUAL": 25,
@@ -3192,9 +3192,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 3.971,
-    "shuffle": 0.108
+    "fixture": 0.004,
+    "questions": 3.495,
+    "shuffle": 0.116
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3205,7 +3205,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "student_club",
-   "run_id": "audit-d6f11ee3-2d2f-49f6-8b0e-d83c8785ec62",
+   "run_id": "audit-8cad77f6-c50d-47ab-8da0-42893faecf1e",
    "audited": 48,
    "verdicts": {
     "EQUAL": 22,
@@ -3233,9 +3233,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.056,
-    "shuffle": 0.055
+    "fixture": 0.003,
+    "questions": 0.073,
+    "shuffle": 0.077
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3246,7 +3246,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "superhero",
-   "run_id": "audit-e940f282-e345-4f35-b0cd-765e18a96ca9",
+   "run_id": "audit-d18db14f-8959-4615-bc3d-a30490807ea8",
    "audited": 52,
    "verdicts": {
     "EQUAL": 29,
@@ -3274,9 +3274,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.416,
-    "shuffle": 0.009
+    "fixture": 0.002,
+    "questions": 0.433,
+    "shuffle": 0.019
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3287,7 +3287,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "thrombosis_prediction",
-   "run_id": "audit-e31cf9f1-1055-4ff5-8757-d1be7f2d72f6",
+   "run_id": "audit-e1ccee9b-35dd-43e3-b029-c9cb9cd06d78",
    "audited": 50,
    "verdicts": {
     "ERROR": 6,
@@ -3316,8 +3316,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.325,
-    "shuffle": 0.038
+    "questions": 0.308,
+    "shuffle": 0.046
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3328,7 +3328,7 @@
    "benchmark": "minidev-sqlite",
    "group": "gpt-4-turbo",
    "run": "toxicology",
-   "run_id": "audit-1e47f097-c49c-49e9-af18-10cdc6016144",
+   "run_id": "audit-5af0c0dd-43b5-48a5-b273-a29caf602aa6",
    "audited": 40,
    "verdicts": {
     "EQUAL": 7,
@@ -3357,8 +3357,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.461,
-    "shuffle": 0.035
+    "questions": 0.468,
+    "shuffle": 0.04
    },
    "published_questions": 3,
    "published_ids": [
@@ -3373,7 +3373,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "california_schools",
-   "run_id": "audit-20b1ac87-2152-49cd-b56e-2955ba41b529",
+   "run_id": "audit-3386518c-d3e0-4255-92aa-9ae69c7d539c",
    "audited": 30,
    "verdicts": {
     "EQUAL": 6,
@@ -3402,8 +3402,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.001,
-    "questions": 0.93,
-    "shuffle": 0.099
+    "questions": 1.092,
+    "shuffle": 0.111
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3414,7 +3414,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "card_games",
-   "run_id": "audit-5ef2cb40-45de-4842-bf53-d73a3ef18763",
+   "run_id": "audit-7f044db6-fe60-477a-92c0-9d77ed5e51a4",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 36,
@@ -3444,9 +3444,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.03,
-    "questions": 50.314,
-    "shuffle": 1.139
+    "fixture": 0.041,
+    "questions": 68.076,
+    "shuffle": 2.382
    },
    "published_questions": 2,
    "published_ids": [
@@ -3460,7 +3460,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "codebase_community",
-   "run_id": "audit-fbae111f-4644-4d7e-824f-47f6e589b040",
+   "run_id": "audit-48909159-1a29-48eb-a410-83236a04ddff",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 22,
@@ -3490,9 +3490,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 43.755,
-    "shuffle": 1.136
+    "fixture": 0.012,
+    "questions": 40.591,
+    "shuffle": 1.187
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3503,7 +3503,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "debit_card_specializing",
-   "run_id": "audit-31b25833-9bbd-4348-a01a-89dbee8ffeeb",
+   "run_id": "audit-075c6854-9f1a-4f2f-b581-acf3a4065c43",
    "audited": 30,
    "verdicts": {
     "EQUAL": 10,
@@ -3531,9 +3531,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.004,
-    "questions": 5.044,
-    "shuffle": 0.051
+    "fixture": 0.013,
+    "questions": 3.421,
+    "shuffle": 0.058
    },
    "published_questions": 1,
    "published_ids": [
@@ -3546,7 +3546,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "european_football_2",
-   "run_id": "audit-0033a0e2-75fe-4cf0-a57f-d34760ddcaaf",
+   "run_id": "audit-66f026d2-bae7-443d-8837-f3ddb40b41b1",
    "audited": 51,
    "verdicts": {
     "EQUAL": 21,
@@ -3574,9 +3574,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.027,
-    "questions": 11.985,
-    "shuffle": 4.357
+    "fixture": 0.011,
+    "questions": 8.579,
+    "shuffle": 4.2
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3587,7 +3587,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "financial",
-   "run_id": "audit-838d6bab-5c0c-4b6c-9bae-956275385936",
+   "run_id": "audit-72baa743-4a97-484f-a71a-053f618ec3d0",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 21,
@@ -3615,9 +3615,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 2.624,
-    "shuffle": 0.03
+    "fixture": 0.015,
+    "questions": 2.863,
+    "shuffle": 0.038
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3628,7 +3628,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "formula_1",
-   "run_id": "audit-987e66fc-0e62-4ddb-9f1f-a2ce6b5d48ea",
+   "run_id": "audit-0d984787-44f4-4313-9922-e261c9b1a6d6",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 30,
@@ -3656,9 +3656,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 4.403,
-    "shuffle": 0.111
+    "fixture": 0.005,
+    "questions": 4.005,
+    "shuffle": 0.128
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3669,7 +3669,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "student_club",
-   "run_id": "audit-c872f109-d1d9-4526-b3b0-e60937b39613",
+   "run_id": "audit-46f98b01-2a7c-4f5c-b7cb-362ce8933dec",
    "audited": 48,
    "verdicts": {
     "EQUAL": 25,
@@ -3697,9 +3697,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.069,
-    "shuffle": 0.057
+    "fixture": 0.007,
+    "questions": 0.094,
+    "shuffle": 0.067
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3710,7 +3710,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "superhero",
-   "run_id": "audit-580cad51-804c-401a-a9d2-5f275fa20bca",
+   "run_id": "audit-0f7cd502-22c1-433c-aaf9-4d41527ff5e8",
    "audited": 52,
    "verdicts": {
     "EQUAL": 35,
@@ -3737,9 +3737,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.522,
-    "shuffle": 0.009
+    "fixture": 0.002,
+    "questions": 0.515,
+    "shuffle": 0.011
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3750,7 +3750,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "thrombosis_prediction",
-   "run_id": "audit-a87d6d0e-84cb-46c0-9829-b0f12f9c82e4",
+   "run_id": "audit-0f0cddcd-d0ce-4b20-a583-e43b0d7c8fb6",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 28,
@@ -3778,9 +3778,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.24,
-    "shuffle": 0.036
+    "fixture": 0.002,
+    "questions": 0.253,
+    "shuffle": 0.083
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3791,7 +3791,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-70b-instruct-2",
    "run": "toxicology",
-   "run_id": "audit-2dc0b2e2-76c4-4b45-98fa-7651714adc62",
+   "run_id": "audit-0b96cf4b-674c-47c4-8b8e-cfb25db5f25b",
    "audited": 40,
    "verdicts": {
     "EQUAL": 9,
@@ -3819,9 +3819,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.663,
-    "shuffle": 0.036
+    "fixture": 0.005,
+    "questions": 0.665,
+    "shuffle": 0.07
    },
    "published_questions": 3,
    "published_ids": [
@@ -3836,7 +3836,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "california_schools",
-   "run_id": "audit-bfde8ea0-afe8-402f-830f-83cca5523607",
+   "run_id": "audit-9141e2de-f344-4588-8ac5-a0d546cbbe7e",
    "audited": 30,
    "verdicts": {
     "ERROR": 16,
@@ -3864,9 +3864,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.325,
-    "shuffle": 0.112
+    "fixture": 0.004,
+    "questions": 0.365,
+    "shuffle": 0.132
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3877,7 +3877,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "card_games",
-   "run_id": "audit-a24c9cd2-1820-463e-9520-90f54968ae5f",
+   "run_id": "audit-fbf1fa69-127a-471a-99e4-99224042200e",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 28,
@@ -3907,9 +3907,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.099,
-    "questions": 49.951,
-    "shuffle": 1.896
+    "fixture": 0.026,
+    "questions": 41.262,
+    "shuffle": 1.091
    },
    "published_questions": 2,
    "published_ids": [
@@ -3923,7 +3923,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "codebase_community",
-   "run_id": "audit-4b6ec901-0639-4bfa-b815-93f544754928",
+   "run_id": "audit-00c1331f-68e8-448c-919f-073f6b7aa014",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 20,
@@ -3953,9 +3953,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.01,
-    "questions": 44.047,
-    "shuffle": 1.108
+    "fixture": 0.011,
+    "questions": 45.001,
+    "shuffle": 1.166
    },
    "published_questions": 0,
    "published_ids": [],
@@ -3966,7 +3966,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "debit_card_specializing",
-   "run_id": "audit-4c138a07-2259-4b6c-b162-6c382f992ab6",
+   "run_id": "audit-0ab1fda7-3e75-4ef9-b101-0a8d49919f53",
    "audited": 30,
    "verdicts": {
     "ERROR": 8,
@@ -3997,8 +3997,8 @@
    },
    "elapsed_seconds": {
     "fixture": 0.002,
-    "questions": 32.425,
-    "shuffle": 0.04
+    "questions": 33.141,
+    "shuffle": 0.039
    },
    "published_questions": 1,
    "published_ids": [
@@ -4011,7 +4011,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "european_football_2",
-   "run_id": "audit-cf9e6790-8398-4c07-a70c-cb695d6944d9",
+   "run_id": "audit-d4aa6db2-cbff-4027-9372-7ed4c2e45540",
    "audited": 51,
    "verdicts": {
     "ERROR": 21,
@@ -4039,9 +4039,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.012,
-    "questions": 12.74,
-    "shuffle": 2.378
+    "fixture": 0.015,
+    "questions": 12.979,
+    "shuffle": 3.429
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4052,7 +4052,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "financial",
-   "run_id": "audit-70622496-da89-4d30-aefe-e92db138d3bc",
+   "run_id": "audit-ddcac883-dbf3-47e5-a8f0-40c27d904fb6",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 15,
@@ -4080,9 +4080,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 3.29,
-    "shuffle": 0.032
+    "fixture": 0.022,
+    "questions": 3.501,
+    "shuffle": 0.056
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4093,7 +4093,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "formula_1",
-   "run_id": "audit-15f13232-a920-467e-86b2-9a2ff65488c1",
+   "run_id": "audit-615c7cb7-ef05-40c2-bb3c-2dd4f41cf616",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 32,
@@ -4121,9 +4121,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 4.141,
-    "shuffle": 0.12
+    "fixture": 0.013,
+    "questions": 13.045,
+    "shuffle": 0.383
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4134,7 +4134,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "student_club",
-   "run_id": "audit-eaa8f178-057c-4664-8288-b13b8e875812",
+   "run_id": "audit-f94c6f40-edf2-4728-a386-9274b29a4a0d",
    "audited": 48,
    "verdicts": {
     "ERROR": 19,
@@ -4162,9 +4162,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.064,
-    "shuffle": 0.061
+    "fixture": 0.016,
+    "questions": 0.279,
+    "shuffle": 0.185
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4175,7 +4175,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "superhero",
-   "run_id": "audit-d08245f4-df22-41c6-b1a1-45b13902d6ed",
+   "run_id": "audit-eab53254-f480-4492-a1c9-aae8aa611433",
    "audited": 52,
    "verdicts": {
     "ERROR": 16,
@@ -4203,9 +4203,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.508,
-    "shuffle": 0.01
+    "fixture": 0.002,
+    "questions": 2.639,
+    "shuffle": 0.032
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4216,7 +4216,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "thrombosis_prediction",
-   "run_id": "audit-c9a92f06-db25-4d29-a291-4612d50f017d",
+   "run_id": "audit-9792839f-6fbe-49fd-ac32-2aa91d1bdca7",
    "audited": 50,
    "verdicts": {
     "ERROR": 29,
@@ -4243,9 +4243,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.224,
-    "shuffle": 0.048
+    "fixture": 0.006,
+    "questions": 1.127,
+    "shuffle": 0.151
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4256,7 +4256,7 @@
    "benchmark": "minidev-sqlite",
    "group": "meta-llama-3-8b-instruct-2",
    "run": "toxicology",
-   "run_id": "audit-dfc8201f-5d21-4992-8a44-9688f7388e13",
+   "run_id": "audit-33dd1ee5-53bd-4fe0-80d2-494cab533045",
    "audited": 40,
    "verdicts": {
     "NOT_EQUAL": 18,
@@ -4284,9 +4284,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.775,
-    "shuffle": 0.046
+    "fixture": 0.005,
+    "questions": 3.48,
+    "shuffle": 0.247
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4297,7 +4297,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "california_schools",
-   "run_id": "audit-3656d8a6-539d-4d32-9ae1-4591a144c92f",
+   "run_id": "audit-3a944edf-051d-4605-9f66-1bcbc3211d7f",
    "audited": 30,
    "verdicts": {
     "ERROR": 16,
@@ -4325,9 +4325,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.634,
-    "shuffle": 0.124
+    "fixture": 0.002,
+    "questions": 2.644,
+    "shuffle": 0.48
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4338,7 +4338,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "card_games",
-   "run_id": "audit-d2c38ab2-b464-414c-9398-c524489936d3",
+   "run_id": "audit-d6dd3289-c85b-493f-b3ee-efc6500cb939",
    "audited": 52,
    "verdicts": {
     "ERROR": 29,
@@ -4368,9 +4368,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.023,
-    "questions": 33.358,
-    "shuffle": 0.984
+    "fixture": 0.04,
+    "questions": 34.348,
+    "shuffle": 1.353
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4381,7 +4381,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "codebase_community",
-   "run_id": "audit-0ff4501f-5c92-4999-8040-8110d3ce753e",
+   "run_id": "audit-33ef25d1-711b-44bb-b734-688351bc2383",
    "audited": 49,
    "verdicts": {
     "ERROR": 20,
@@ -4409,9 +4409,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.021,
-    "questions": 10.008,
-    "shuffle": 1.6
+    "fixture": 0.025,
+    "questions": 54.305,
+    "shuffle": 5.452
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4422,7 +4422,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "debit_card_specializing",
-   "run_id": "audit-e403e3b7-f0e0-45b8-baea-6a066ce9ed66",
+   "run_id": "audit-2de2a0e6-5baf-4c67-9c77-dabd5ac35670",
    "audited": 30,
    "verdicts": {
     "EQUAL": 5,
@@ -4450,9 +4450,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 1.96,
-    "shuffle": 0.077
+    "fixture": 0.02,
+    "questions": 3.867,
+    "shuffle": 0.138
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4463,7 +4463,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "european_football_2",
-   "run_id": "audit-476e3000-555d-4a97-9429-64c9427b476c",
+   "run_id": "audit-59f2d468-2312-4756-bbe2-5fcb9e454e64",
    "audited": 51,
    "verdicts": {
     "EQUAL": 13,
@@ -4491,9 +4491,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.013,
-    "questions": 14.863,
-    "shuffle": 2.709
+    "fixture": 0.037,
+    "questions": 64.604,
+    "shuffle": 10.595
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4504,11 +4504,11 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "financial",
-   "run_id": "audit-665f0d1e-78df-4cfe-8230-c4f382d84f3c",
+   "run_id": "audit-a282dc10-c1e6-4799-b850-de0a770e6ea7",
    "audited": 30,
    "verdicts": {
-    "NOT_EQUAL": 8,
-    "ERROR": 19,
+    "NOT_EQUAL": 9,
+    "ERROR": 18,
     "EQUAL": 3
    },
    "smells_fired": 1,
@@ -4526,17 +4526,15 @@
      "0": 0
     }
    },
-   "errors": 19,
+   "errors": 18,
    "timed_out": {
     "gold": [],
-    "prediction": [
-     116
-    ]
+    "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.019,
-    "questions": 31.86,
-    "shuffle": 0.044
+    "fixture": 0.009,
+    "questions": 29.031,
+    "shuffle": 0.026
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4547,7 +4545,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "formula_1",
-   "run_id": "audit-f0602f09-e5dc-4b5c-a02d-87ff5edcf379",
+   "run_id": "audit-33be5594-0752-40b1-b313-d491a0595da1",
    "audited": 66,
    "verdicts": {
     "ERROR": 27,
@@ -4575,9 +4573,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.009,
-    "questions": 4.642,
-    "shuffle": 0.195
+    "fixture": 0.012,
+    "questions": 6.305,
+    "shuffle": 0.271
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4588,7 +4586,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "student_club",
-   "run_id": "audit-baa260f0-66eb-4a01-8b24-4ce27d545a28",
+   "run_id": "audit-95cf3a1a-2532-4aee-8c7c-2442064b7087",
    "audited": 48,
    "verdicts": {
     "EQUAL": 12,
@@ -4616,9 +4614,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 0.039,
-    "shuffle": 0.059
+    "fixture": 0.006,
+    "questions": 0.097,
+    "shuffle": 0.091
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4629,7 +4627,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "superhero",
-   "run_id": "audit-ae05028d-8405-4f90-8291-1402a677c1c9",
+   "run_id": "audit-a59fc846-8514-4b00-9018-31d19f0d6ccb",
    "audited": 52,
    "verdicts": {
     "ERROR": 35,
@@ -4657,9 +4655,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.6,
-    "shuffle": 0.009
+    "fixture": 0.004,
+    "questions": 0.871,
+    "shuffle": 0.019
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4670,7 +4668,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "thrombosis_prediction",
-   "run_id": "audit-8ebf81d6-1c78-4d0c-a0a1-96f81c2050e8",
+   "run_id": "audit-b0afbde8-00ad-45b8-91e9-73a8175e2f63",
    "audited": 50,
    "verdicts": {
     "NOT_EQUAL": 21,
@@ -4698,9 +4696,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.196,
-    "shuffle": 0.037
+    "fixture": 0.003,
+    "questions": 0.304,
+    "shuffle": 0.062
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4711,7 +4709,7 @@
    "benchmark": "minidev-sqlite",
    "group": "mistralai-mixtral-8x7b-instru-4",
    "run": "toxicology",
-   "run_id": "audit-572c1f65-642b-4efa-bc47-e6ea7784e590",
+   "run_id": "audit-fd80d1a7-0d68-4d73-a29c-59c0cc8a9cc4",
    "audited": 40,
    "verdicts": {
     "NOT_EQUAL": 10,
@@ -4739,9 +4737,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 2.327,
-    "shuffle": 0.039
+    "fixture": 0.002,
+    "questions": 3.655,
+    "shuffle": 0.05
    },
    "published_questions": 2,
    "published_ids": [
@@ -4755,7 +4753,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "california_schools",
-   "run_id": "audit-1406031d-73f4-4ded-ab36-8c2de946b708",
+   "run_id": "audit-bcbd10c2-2d9c-483f-9aab-57759d9aaa4e",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 17,
@@ -4783,9 +4781,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.81,
-    "shuffle": 0.112
+    "fixture": 0.002,
+    "questions": 1.897,
+    "shuffle": 0.188
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4796,7 +4794,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "card_games",
-   "run_id": "audit-c0f61be7-48b5-4b66-9867-cbe1b2a2e223",
+   "run_id": "audit-b73bf0f7-3597-4a5e-870d-8d0c63578d4e",
    "audited": 52,
    "verdicts": {
     "NOT_EQUAL": 37,
@@ -4824,9 +4822,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.026,
-    "questions": 17.805,
-    "shuffle": 1.182
+    "fixture": 0.031,
+    "questions": 56.341,
+    "shuffle": 2.759
    },
    "published_questions": 2,
    "published_ids": [
@@ -4840,7 +4838,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "codebase_community",
-   "run_id": "audit-8e4c73b7-b84d-4da8-a076-9fc917922e57",
+   "run_id": "audit-4c3a47a1-927b-4c52-b936-b5666bbca8e5",
    "audited": 49,
    "verdicts": {
     "NOT_EQUAL": 19,
@@ -4870,9 +4868,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.014,
-    "questions": 41.282,
-    "shuffle": 1.229
+    "fixture": 0.016,
+    "questions": 43.385,
+    "shuffle": 1.429
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4883,7 +4881,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "debit_card_specializing",
-   "run_id": "audit-b4228a58-b929-4296-868b-effec0cbbb79",
+   "run_id": "audit-2be5d937-2731-4311-b854-de4627f2f9c1",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 16,
@@ -4911,9 +4909,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 2.004,
-    "shuffle": 0.043
+    "fixture": 0.061,
+    "questions": 4.318,
+    "shuffle": 0.153
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4924,7 +4922,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "european_football_2",
-   "run_id": "audit-a6905c24-4bcb-43a2-8525-c062132c1fd2",
+   "run_id": "audit-42b0d375-fe8c-4d6b-a6f3-7641ea8e4303",
    "audited": 51,
    "verdicts": {
     "EQUAL": 21,
@@ -4952,9 +4950,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.011,
-    "questions": 8.236,
-    "shuffle": 2.61
+    "fixture": 0.055,
+    "questions": 49.411,
+    "shuffle": 14.528
    },
    "published_questions": 0,
    "published_ids": [],
@@ -4965,7 +4963,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "financial",
-   "run_id": "audit-1248b206-3eef-4c75-88b4-a303995a2ad4",
+   "run_id": "audit-8257885e-71a2-4c3e-8e54-cc015b5fe79a",
    "audited": 30,
    "verdicts": {
     "NOT_EQUAL": 13,
@@ -4995,9 +4993,9 @@
     ]
    },
    "elapsed_seconds": {
-    "fixture": 0.009,
-    "questions": 31.725,
-    "shuffle": 0.029
+    "fixture": 0.012,
+    "questions": 32.222,
+    "shuffle": 0.035
    },
    "published_questions": 0,
    "published_ids": [],
@@ -5008,7 +5006,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "formula_1",
-   "run_id": "audit-f32bf4f8-d80a-4193-9b6f-b7bc3f8d730c",
+   "run_id": "audit-e264af2a-8a95-4ab0-bfb0-a79d2825ae67",
    "audited": 66,
    "verdicts": {
     "NOT_EQUAL": 33,
@@ -5036,9 +5034,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.003,
-    "questions": 4.182,
-    "shuffle": 0.114
+    "fixture": 0.008,
+    "questions": 4.672,
+    "shuffle": 0.157
    },
    "published_questions": 0,
    "published_ids": [],
@@ -5049,7 +5047,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "student_club",
-   "run_id": "audit-dfec41a8-5609-4ce7-b311-1b29d74919ec",
+   "run_id": "audit-bb8a6bb3-3ff6-4511-905d-77f0b78b960c",
    "audited": 48,
    "verdicts": {
     "NOT_EQUAL": 17,
@@ -5077,9 +5075,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 0.07,
-    "shuffle": 0.057
+    "fixture": 0.007,
+    "questions": 0.117,
+    "shuffle": 0.096
    },
    "published_questions": 0,
    "published_ids": [],
@@ -5090,7 +5088,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "superhero",
-   "run_id": "audit-b10b371c-bb01-4f94-8601-98f064839461",
+   "run_id": "audit-df568c8e-1753-48b7-914d-7a858ef1f991",
    "audited": 52,
    "verdicts": {
     "EQUAL": 30,
@@ -5118,9 +5116,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.457,
-    "shuffle": 0.012
+    "fixture": 0.431,
+    "questions": 0.681,
+    "shuffle": 0.025
    },
    "published_questions": 0,
    "published_ids": [],
@@ -5131,7 +5129,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "thrombosis_prediction",
-   "run_id": "audit-f0e34597-7d3b-4fda-b239-0010013833dc",
+   "run_id": "audit-191b5f38-a60d-4868-8ad2-c9bae10a1b01",
    "audited": 50,
    "verdicts": {
     "ERROR": 24,
@@ -5159,9 +5157,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.001,
-    "questions": 0.205,
-    "shuffle": 0.049
+    "fixture": 0.429,
+    "questions": 0.347,
+    "shuffle": 0.077
    },
    "published_questions": 0,
    "published_ids": [],
@@ -5172,7 +5170,7 @@
    "benchmark": "minidev-sqlite",
    "group": "phi-3-medium-128k-instruct-1",
    "run": "toxicology",
-   "run_id": "audit-467e7085-652d-440a-9e05-2a8066c1cdc6",
+   "run_id": "audit-851bcd6c-bbc0-456a-ad61-abe893957a28",
    "audited": 40,
    "verdicts": {
     "EQUAL": 7,
@@ -5200,9 +5198,9 @@
     "prediction": []
    },
    "elapsed_seconds": {
-    "fixture": 0.002,
-    "questions": 12.375,
-    "shuffle": 0.047
+    "fixture": 0.438,
+    "questions": 12.689,
+    "shuffle": 0.073
    },
    "published_questions": 0,
    "published_ids": [],

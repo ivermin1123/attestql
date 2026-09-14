@@ -97,12 +97,12 @@
         },
         "planner_statistics": {
           "atom": {
-            "last_analyze": "2026-09-11 17:24:22.837714+00",
+            "last_analyze": "2026-09-14 12:50:57.967668+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "molecule": {
-            "last_analyze": "2026-09-11 18:13:23.044496+00",
+            "last_analyze": "2026-09-14 12:51:03.86612+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

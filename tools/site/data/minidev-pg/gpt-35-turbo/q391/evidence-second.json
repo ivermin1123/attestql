@@ -37,12 +37,12 @@
     "hash_mem_multiplier": "2",
     "recorded": {
       "statement_timeout": "0",
-      "search_path": "\"$user\", public",
       "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
       "server_version_num": "160015",
       "transaction_read_only": "on",
       "max_parallel_workers_per_gather": "2",
       "server_encoding": "UTF8",
+      "search_path": "public",
       "datlocprovider": "c",
       "daticulocale": "",
       "datcollversion": "2.41"
@@ -61,126 +61,6 @@
       [
         {
           "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Bloodsoaked Altar"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
-          "value": "Witch's Cauldron"
-        }
-      ],
-      [
-        {
-          "type": "str",
           "value": "Executioner's Capsule"
         }
       ],
@@ -536,6 +416,126 @@
         {
           "type": "str",
           "value": "Wishclaw Talisman"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Bloodsoaked Altar"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
+        }
+      ],
+      [
+        {
+          "type": "str",
+          "value": "Witch's Cauldron"
         }
       ]
     ],
@@ -562,10 +562,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "data_as_of": "2026-09-11T20:22:10.846379+00:00",
-  "executed_at": "2026-09-11T20:24:38.663440+00:00",
-  "run_id": "audit-27701da4-0a79-4cc9-9477-d46a66ddd8db",
+  "data_as_of": "2026-09-14T12:52:24.461204+00:00",
+  "executed_at": "2026-09-14T12:52:47.751862+00:00",
+  "run_id": "audit-1c5c4146-3c91-4f05-b723-3cd43ed41d51",
   "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
-  "result_hash": "sha256:01ed68c787a0a652b9250fb25884d4149015060ef74e4ab225cc5df6e70926d2",
-  "record_hash": "sha256:11366d9151d1a5226f8886495218a4531e3719531c5eb5c513d898828ea43b5a"
+  "result_hash": "sha256:6c38b7245e5aa72408befe3363d7d7586bbdd9d4a4480d61596dbe4e017e326e",
+  "record_hash": "sha256:359e31c0f0e21a990c4630777bd20bd16a45577bb20b70c5a74de260068765b9"
 }

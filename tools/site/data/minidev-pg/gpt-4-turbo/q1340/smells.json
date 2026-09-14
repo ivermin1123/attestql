@@ -55,12 +55,12 @@
         },
         "planner_statistics": {
           "event": {
-            "last_analyze": "2026-09-11 17:24:23.938124+00",
+            "last_analyze": "2026-09-14 12:50:59.479238+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "budget": {
-            "last_analyze": "2026-09-11 17:24:22.869096+00",
+            "last_analyze": "2026-09-14 12:50:58.001042+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

@@ -1,18 +1,18 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-6429f772-8de0-4932-8d38-685020a362fe",
+  "run_id": "audit-6eb5069c-cd44-4dd7-9159-45303f9cfcba",
   "backend_identity": "PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird",
   "effective_database_role": "auditor",
   "session_settings": {
     "engine": "postgresql",
     "recorded": {
       "statement_timeout": "0",
-      "search_path": "\"$user\", public",
       "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
       "server_version_num": "160015",
       "transaction_read_only": "on",
       "max_parallel_workers_per_gather": "2",
       "server_encoding": "UTF8",
+      "search_path": "public",
       "datlocprovider": "c",
       "daticulocale": "",
       "datcollversion": "2.41"
@@ -57,12 +57,12 @@
   "smells": {
     "ordering-over-numeric-text": 2,
     "arbitrary-cut": 12,
-    "not-a-function-of-the-data": 15,
-    "float-aggregate-order": 6,
+    "not-a-function-of-the-data": 13,
+    "float-aggregate-order": 5,
     "duplicate-full-row": 29,
     "direction-against-question": 0
   },
-  "smells_fired": 64,
+  "smells_fired": 61,
   "credited_but_not_equal": {
     "total": 23,
     "by_mechanism": {
@@ -248,377 +248,377 @@
   },
   "planner_statistics": {
     "customers": {
-      "last_analyze": "2026-09-11 17:24:23.934127+00",
+      "last_analyze": "2026-09-14 12:50:59.475079+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "yearmonth": {
-      "last_analyze": "2026-09-11 18:13:24.077853+00",
+      "last_analyze": "2026-09-14 12:51:05.044978+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "gasstations": {
-      "last_analyze": "2026-09-11 18:13:22.092412+00",
+      "last_analyze": "2026-09-14 12:51:02.743904+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "products": {
-      "last_analyze": "2026-09-11 18:13:23.326472+00",
+      "last_analyze": "2026-09-14 12:51:04.229594+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "transactions_1k": {
-      "last_analyze": "2026-09-11 18:13:23.749262+00",
+      "last_analyze": "2026-09-14 12:51:04.722305+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "member": {
-      "last_analyze": "2026-09-11 18:13:22.325026+00",
+      "last_analyze": "2026-09-14 12:51:03.023954+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "major": {
-      "last_analyze": "2026-09-11 18:13:24.286238+00",
+      "last_analyze": "2026-09-14 12:51:05.271181+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "event": {
-      "last_analyze": "2026-09-11 17:24:23.938124+00",
+      "last_analyze": "2026-09-14 12:50:59.479238+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "attendance": {
-      "last_analyze": "2026-09-11 17:24:22.8385+00",
+      "last_analyze": "2026-09-14 12:50:57.969365+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "income": {
-      "last_analyze": "2026-09-11 18:13:22.288716+00",
+      "last_analyze": "2026-09-14 12:51:02.984899+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "zip_code": {
-      "last_analyze": "2026-09-11 18:13:24.142141+00",
+      "last_analyze": "2026-09-14 12:51:05.113003+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "expense": {
-      "last_analyze": "2026-09-11 17:24:23.939041+00",
+      "last_analyze": "2026-09-14 12:50:59.480202+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "budget": {
-      "last_analyze": "2026-09-11 17:24:22.869096+00",
+      "last_analyze": "2026-09-14 12:50:58.001042+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "patient": {
-      "last_analyze": "2026-09-11 18:13:22.324761+00",
+      "last_analyze": "2026-09-14 12:51:03.02366+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "laboratory": {
-      "last_analyze": "2026-09-11 18:13:22.127802+00",
+      "last_analyze": "2026-09-14 12:51:02.78376+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "examination": {
-      "last_analyze": "2026-09-11 17:24:23.938808+00",
+      "last_analyze": "2026-09-14 12:50:59.479976+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "match": {
-      "last_analyze": "2026-09-11 18:13:23.04275+00",
+      "last_analyze": "2026-09-14 12:51:03.86449+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "league": {
-      "last_analyze": "2026-09-11 18:13:22.180756+00",
+      "last_analyze": "2026-09-14 12:51:02.859972+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "team": {
-      "last_analyze": "2026-09-11 18:13:23.746824+00",
+      "last_analyze": "2026-09-14 12:51:04.719781+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "team_attributes": {
-      "last_analyze": "2026-09-11 18:13:23.682409+00",
+      "last_analyze": "2026-09-14 12:51:04.628002+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "player_attributes": {
-      "last_analyze": "2026-09-11 18:13:23.674927+00",
+      "last_analyze": "2026-09-14 12:51:04.620709+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "player": {
-      "last_analyze": "2026-09-11 18:13:23.390845+00",
+      "last_analyze": "2026-09-14 12:51:04.298729+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "country": {
-      "last_analyze": "2026-09-11 17:24:23.922419+00",
+      "last_analyze": "2026-09-14 12:50:59.463542+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "qualifying": {
-      "last_analyze": "2026-09-11 18:13:23.325897+00",
+      "last_analyze": "2026-09-14 12:51:04.228848+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "drivers": {
-      "last_analyze": "2026-09-11 17:24:23.937858+00",
+      "last_analyze": "2026-09-14 12:50:59.478977+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "circuits": {
-      "last_analyze": "2026-09-11 17:24:22.859004+00",
+      "last_analyze": "2026-09-14 12:50:57.990934+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "races": {
-      "last_analyze": "2026-09-11 18:13:23.466253+00",
+      "last_analyze": "2026-09-14 12:51:04.383469+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "results": {
-      "last_analyze": "2026-09-11 18:13:23.368778+00",
+      "last_analyze": "2026-09-14 12:51:04.275252+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "laptimes": {
-      "last_analyze": "2026-09-11 18:13:22.180241+00",
+      "last_analyze": "2026-09-14 12:51:02.85949+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "constructorresults": {
-      "last_analyze": "2026-09-11 18:13:24.253196+00",
+      "last_analyze": "2026-09-14 12:51:05.234163+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "constructors": {
-      "last_analyze": "2026-09-11 17:24:23.81301+00",
+      "last_analyze": "2026-09-14 12:50:59.338551+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "seasons": {
-      "last_analyze": "2026-09-11 18:13:23.747916+00",
+      "last_analyze": "2026-09-14 12:51:04.720952+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "driverstandings": {
-      "last_analyze": "2026-09-11 18:13:24.285787+00",
+      "last_analyze": "2026-09-14 12:51:05.270456+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "constructorstandings": {
-      "last_analyze": "2026-09-11 18:13:24.26152+00",
+      "last_analyze": "2026-09-14 12:51:05.243066+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "pitstops": {
-      "last_analyze": "2026-09-11 18:13:23.054617+00",
+      "last_analyze": "2026-09-14 12:51:03.876747+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "superpower": {
-      "last_analyze": "2026-09-11 18:13:23.746365+00",
+      "last_analyze": "2026-09-14 12:51:04.719265+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "superhero": {
-      "last_analyze": "2026-09-11 18:13:23.677134+00",
+      "last_analyze": "2026-09-14 12:51:04.622816+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "hero_power": {
-      "last_analyze": "2026-09-11 18:13:22.288491+00",
+      "last_analyze": "2026-09-14 12:51:02.984649+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "status": {
-      "last_analyze": "2026-09-11 18:13:23.677416+00",
+      "last_analyze": "2026-09-14 12:51:04.6231+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "colour": {
-      "last_analyze": "2026-09-11 17:24:22.838122+00",
+      "last_analyze": "2026-09-14 12:50:57.968905+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "publisher": {
-      "last_analyze": "2026-09-11 18:13:23.463095+00",
+      "last_analyze": "2026-09-14 12:51:04.380226+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "attribute": {
-      "last_analyze": "2026-09-11 17:24:23.810409+00",
+      "last_analyze": "2026-09-14 12:50:59.335755+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "hero_attribute": {
-      "last_analyze": "2026-09-11 18:13:22.287239+00",
+      "last_analyze": "2026-09-14 12:51:02.983336+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "race": {
-      "last_analyze": "2026-09-11 18:13:23.326658+00",
+      "last_analyze": "2026-09-14 12:51:04.229856+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "gender": {
-      "last_analyze": "2026-09-11 18:13:22.18054+00",
+      "last_analyze": "2026-09-14 12:51:02.859799+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "alignment": {
-      "last_analyze": "2026-09-11 17:24:22.872153+00",
+      "last_analyze": "2026-09-14 12:50:58.004025+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "users": {
-      "last_analyze": "2026-09-11 18:13:24.248355+00",
+      "last_analyze": "2026-09-14 12:51:05.229441+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "posts": {
-      "last_analyze": "2026-09-11 18:13:23.308798+00",
+      "last_analyze": "2026-09-14 12:51:04.210618+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "tags": {
-      "last_analyze": "2026-09-11 18:13:23.747736+00",
+      "last_analyze": "2026-09-14 12:51:04.720743+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "comments": {
-      "last_analyze": "2026-09-11 17:24:23.882779+00",
+      "last_analyze": "2026-09-14 12:50:59.423971+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "votes": {
-      "last_analyze": "2026-09-11 18:13:24.086809+00",
+      "last_analyze": "2026-09-14 12:51:05.055007+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "posthistory": {
-      "last_analyze": "2026-09-11 18:13:23.180946+00",
+      "last_analyze": "2026-09-14 12:51:04.043991+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "badges": {
-      "last_analyze": "2026-09-11 17:24:22.85819+00",
+      "last_analyze": "2026-09-14 12:50:57.990118+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "postlinks": {
-      "last_analyze": "2026-09-11 18:13:23.312968+00",
+      "last_analyze": "2026-09-14 12:51:04.21504+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "cards": {
-      "last_analyze": "2026-09-11 17:24:23.805014+00",
+      "last_analyze": "2026-09-14 12:50:59.330452+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "legalities": {
-      "last_analyze": "2026-09-11 18:13:22.230714+00",
+      "last_analyze": "2026-09-14 12:51:02.918986+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "rulings": {
-      "last_analyze": "2026-09-11 18:13:23.462315+00",
+      "last_analyze": "2026-09-14 12:51:04.379443+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "foreign_data": {
-      "last_analyze": "2026-09-11 18:13:22.088701+00",
+      "last_analyze": "2026-09-14 12:51:02.740387+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "sets": {
-      "last_analyze": "2026-09-11 18:13:24.053661+00",
+      "last_analyze": "2026-09-14 12:51:05.012619+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "set_translations": {
-      "last_analyze": "2026-09-11 18:13:24.288421+00",
+      "last_analyze": "2026-09-14 12:51:05.27319+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "bond": {
-      "last_analyze": "2026-09-11 17:24:22.868735+00",
+      "last_analyze": "2026-09-14 12:50:58.00063+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "atom": {
-      "last_analyze": "2026-09-11 17:24:22.837714+00",
+      "last_analyze": "2026-09-14 12:50:57.967668+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "molecule": {
-      "last_analyze": "2026-09-11 18:13:23.044496+00",
+      "last_analyze": "2026-09-14 12:51:03.86612+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "connected": {
-      "last_analyze": "2026-09-11 17:24:23.921883+00",
+      "last_analyze": "2026-09-14 12:50:59.462838+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "satscores": {
-      "last_analyze": "2026-09-11 18:13:23.746118+00",
+      "last_analyze": "2026-09-14 12:51:04.718939+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "schools": {
-      "last_analyze": "2026-09-11 18:13:24.050191+00",
+      "last_analyze": "2026-09-14 12:51:05.006896+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "frpm": {
-      "last_analyze": "2026-09-11 18:13:22.286115+00",
+      "last_analyze": "2026-09-14 12:51:02.982129+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "district": {
-      "last_analyze": "2026-09-11 18:13:22.090131+00",
+      "last_analyze": "2026-09-14 12:51:02.741239+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "account": {
-      "last_analyze": "2026-09-11 17:24:23.812215+00",
+      "last_analyze": "2026-09-14 12:50:59.337624+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "client": {
-      "last_analyze": "2026-09-11 17:24:22.871952+00",
+      "last_analyze": "2026-09-14 12:50:58.003791+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "disp": {
-      "last_analyze": "2026-09-11 17:24:23.94015+00",
+      "last_analyze": "2026-09-14 12:50:59.481321+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "loan": {
-      "last_analyze": "2026-09-11 18:13:22.315915+00",
+      "last_analyze": "2026-09-14 12:51:03.014492+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "trans": {
-      "last_analyze": "2026-09-11 18:13:23.74002+00",
+      "last_analyze": "2026-09-14 12:51:04.712663+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "order": {
-      "last_analyze": "2026-09-11 18:13:22.323456+00",
+      "last_analyze": "2026-09-14 12:51:03.02234+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     },
     "card": {
-      "last_analyze": "2026-09-11 17:24:22.869629+00",
+      "last_analyze": "2026-09-14 12:50:58.001544+00",
       "last_autoanalyze": null,
       "n_mod_since_analyze": 0
     }
@@ -720,13 +720,245 @@
     "work_mem": "4096",
     "hash_mem_multiplier": "2"
   },
-  "data_as_of": "2026-09-11T20:32:24.707741+00:00",
+  "data_as_of": "2026-09-14T12:53:00.424166+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.391,
-    "questions": 42.05,
-    "shuffle": 13.262
+    "fixture": 0.214,
+    "questions": 25.862,
+    "shuffle": 5.624
   },
+  "question_directories": [
+    1471,
+    1476,
+    1479,
+    1480,
+    1482,
+    1484,
+    1490,
+    1493,
+    1498,
+    1500,
+    1505,
+    1506,
+    1514,
+    1524,
+    1528,
+    1529,
+    1322,
+    1338,
+    1340,
+    1350,
+    1361,
+    1362,
+    1376,
+    1380,
+    1387,
+    1389,
+    1390,
+    1404,
+    1410,
+    1411,
+    1422,
+    1427,
+    1432,
+    1435,
+    1457,
+    1464,
+    1152,
+    1028,
+    1035,
+    1039,
+    1057,
+    1078,
+    1130,
+    1145,
+    847,
+    850,
+    854,
+    857,
+    865,
+    866,
+    868,
+    877,
+    879,
+    881,
+    884,
+    896,
+    897,
+    902,
+    904,
+    906,
+    928,
+    930,
+    937,
+    948,
+    950,
+    951,
+    954,
+    955,
+    959,
+    964,
+    967,
+    972,
+    981,
+    989,
+    994,
+    1002,
+    1003,
+    1011,
+    1014,
+    726,
+    728,
+    730,
+    736,
+    738,
+    743,
+    744,
+    751,
+    758,
+    760,
+    765,
+    766,
+    769,
+    775,
+    781,
+    788,
+    790,
+    791,
+    794,
+    797,
+    798,
+    800,
+    801,
+    829,
+    531,
+    532,
+    533,
+    571,
+    581,
+    584,
+    586,
+    587,
+    595,
+    598,
+    604,
+    629,
+    634,
+    637,
+    640,
+    665,
+    671,
+    672,
+    678,
+    682,
+    683,
+    685,
+    694,
+    701,
+    710,
+    716,
+    340,
+    341,
+    344,
+    345,
+    346,
+    347,
+    349,
+    352,
+    366,
+    368,
+    371,
+    377,
+    383,
+    391,
+    397,
+    402,
+    405,
+    407,
+    408,
+    409,
+    412,
+    414,
+    424,
+    427,
+    440,
+    459,
+    462,
+    465,
+    469,
+    473,
+    474,
+    477,
+    479,
+    483,
+    484,
+    486,
+    487,
+    518,
+    522,
+    528,
+    529,
+    530,
+    197,
+    198,
+    201,
+    206,
+    207,
+    212,
+    213,
+    215,
+    218,
+    220,
+    230,
+    231,
+    239,
+    240,
+    242,
+    243,
+    244,
+    245,
+    247,
+    249,
+    255,
+    268,
+    281,
+    282,
+    24,
+    25,
+    27,
+    28,
+    32,
+    37,
+    40,
+    41,
+    45,
+    46,
+    47,
+    48,
+    50,
+    77,
+    87,
+    89,
+    93,
+    95,
+    98,
+    99,
+    115,
+    116,
+    117,
+    125,
+    128,
+    138,
+    145,
+    149,
+    159,
+    168,
+    169,
+    173,
+    186,
+    192,
+    194
+  ],
   "errors": [
     {
       "question_id": 1472,

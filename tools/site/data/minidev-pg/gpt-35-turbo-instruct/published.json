@@ -1,7 +1,7 @@
 {
  "name": "minidev-pg-gpt-35-turbo-instruct.tar.gz",
- "url": "https://github.com/ivermin1123/attestql/releases/download/v0.3.1/minidev-pg-gpt-35-turbo-instruct.tar.gz",
- "bytes": 12329221,
- "sha256": "f10e1b6e4c677044608500a521df03ead0d551fc7b39c9fff2d7606d77c83909",
+ "url": "https://github.com/ivermin1123/attestql/releases/download/v0.4.0/minidev-pg-gpt-35-turbo-instruct.tar.gz",
+ "bytes": 12330321,
+ "sha256": "3629f0f119e0886e67b7395955f7916566f01a4f55360c4efe7fc96afd7a7f8f",
  "directories": 208
 }

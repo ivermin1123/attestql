@@ -32,7 +32,7 @@
         "heuristic": true,
         "means": "rerun over the same rows in another physical order this statement gives another answer, so its result depends on how the rows are stored and not only on the data",
         "rule": "R-SET",
-        "baseline_result_hash": "sha256:a68cd7099981910b1867675987e3efee910a62e919f5116dd63fffc2549de609",
+        "baseline_result_hash": "sha256:b70d38466401cf5554459703bc706014c89881781745d2ed48fa9175a2d0f8f6",
         "baseline_result": {
           "columns": [
             {
@@ -46,50 +46,50 @@
           "rows": [
             [
               {
-                "type": "str",
-                "value": "<books>"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "<books>"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "<books>"
-              }
-            ],
-            [
-              {
-                "type": "str",
-                "value": "<books>"
-              }
-            ],
-            [
-              {
                 "type": "null",
                 "value": null
               }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "<books>"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "<books>"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "<books>"
+              }
+            ],
+            [
+              {
+                "type": "str",
+                "value": "<books>"
+              }
             ]
           ],
-          "result_hash": "sha256:a68cd7099981910b1867675987e3efee910a62e919f5116dd63fffc2549de609"
+          "result_hash": "sha256:b70d38466401cf5554459703bc706014c89881781745d2ed48fa9175a2d0f8f6"
         },
         "planner_statistics": {
           "posts": {
-            "last_analyze": "2026-09-11 18:13:23.308798+00",
+            "last_analyze": "2026-09-14 12:51:04.210618+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "users": {
-            "last_analyze": "2026-09-11 18:13:24.248355+00",
+            "last_analyze": "2026-09-14 12:51:05.229441+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "posthistory": {
-            "last_analyze": "2026-09-11 18:13:23.180946+00",
+            "last_analyze": "2026-09-14 12:51:04.043991+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

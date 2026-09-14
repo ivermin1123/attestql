@@ -55,12 +55,12 @@
         },
         "planner_statistics": {
           "district": {
-            "last_analyze": "2026-09-11 18:13:22.090131+00",
+            "last_analyze": "2026-09-14 12:51:02.741239+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "client": {
-            "last_analyze": "2026-09-11 17:24:22.871952+00",
+            "last_analyze": "2026-09-14 12:50:58.003791+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

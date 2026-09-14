@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-5ef2cb40-45de-4842-bf53-d73a3ef18763",
+  "run_id": "audit-7f044db6-fe60-477a-92c0-9d77ed5e51a4",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/card_games/card_games.sqlite | size=261820416",
   "effective_database_role": "file",
   "session_settings": {
@@ -12,6 +12,7 @@
       "query_only": "1",
       "journal_mode": "wal",
       "data_version": "4",
+      "automatic_index": "1",
       "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
       "collation_list": "RTRIM,NOCASE,BINARY",
       "case_sensitive_like": "0"
@@ -189,13 +190,52 @@
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-11T15:09:58.431921+00:00",
+  "data_as_of": "2026-09-14T11:20:40.921990+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.03,
-    "questions": 50.314,
-    "shuffle": 1.139
+    "fixture": 0.041,
+    "questions": 68.076,
+    "shuffle": 2.382
   },
+  "question_directories": [
+    340,
+    341,
+    344,
+    345,
+    349,
+    352,
+    358,
+    366,
+    368,
+    391,
+    397,
+    402,
+    405,
+    407,
+    408,
+    412,
+    414,
+    415,
+    416,
+    422,
+    424,
+    440,
+    459,
+    462,
+    465,
+    469,
+    473,
+    477,
+    479,
+    483,
+    484,
+    486,
+    487,
+    522,
+    528,
+    529,
+    530
+  ],
   "errors": [
     {
       "question_id": 371,

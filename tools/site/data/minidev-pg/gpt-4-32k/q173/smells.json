@@ -63,12 +63,12 @@
         },
         "planner_statistics": {
           "account": {
-            "last_analyze": "2026-09-11 17:24:23.812215+00",
+            "last_analyze": "2026-09-14 12:50:59.337624+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "order": {
-            "last_analyze": "2026-09-11 18:13:22.323456+00",
+            "last_analyze": "2026-09-14 12:51:03.02234+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

@@ -1,6 +1,6 @@
 {
   "format": "attestql/audit/summary/2",
-  "run_id": "audit-80ee6037-62e2-4151-a80f-d0183ffe754c",
+  "run_id": "audit-fadb7799-f0a9-492a-a4ea-83649840120a",
   "backend_identity": "SQLite 3.53.4 | file=/private/tmp/attestql-runs/data/minidev/dev_databases/financial/financial.sqlite | size=71294976",
   "effective_database_role": "file",
   "session_settings": {
@@ -12,6 +12,7 @@
       "query_only": "1",
       "journal_mode": "delete",
       "data_version": "1",
+      "automatic_index": "1",
       "compile_options": "ATOMIC_INTRINSICS=1,COMPILER=clang-21.0.0,DEFAULT_AUTOVACUUM,DEFAULT_CACHE_SIZE=-2000,DEFAULT_FILE_FORMAT=4,DEFAULT_JOURNAL_SIZE_LIMIT=-1,DEFAULT_MMAP_SIZE=0,DEFAULT_PAGE_SIZE=4096,DEFAULT_PCACHE_INITSZ=20,DEFAULT_RECURSIVE_TRIGGERS,DEFAULT_SECTOR_SIZE=4096,DEFAULT_SYNCHRONOUS=2,DEFAULT_WAL_AUTOCHECKPOINT=1000,DEFAULT_WAL_SYNCHRONOUS=2,DEFAULT_WORKER_THREADS=0,DIRECT_OVERFLOW_READ,ENABLE_API_ARMOR,ENABLE_COLUMN_METADATA,ENABLE_DBSTAT_VTAB,ENABLE_FTS3,ENABLE_FTS3_PARENTHESIS,ENABLE_FTS5,ENABLE_GEOPOLY,ENABLE_MATH_FUNCTIONS,ENABLE_MEMORY_MANAGEMENT,ENABLE_PERCENTILE,ENABLE_PREUPDATE_HOOK,ENABLE_RTREE,ENABLE_SESSION,ENABLE_STAT4,ENABLE_UNLOCK_NOTIFY,MALLOC_SOFT_LIMIT=1024,MAX_ATTACHED=10,MAX_COLUMN=2000,MAX_COMPOUND_SELECT=500,MAX_DEFAULT_PAGE_SIZE=8192,MAX_EXPR_DEPTH=1000,MAX_FUNCTION_ARG=1000,MAX_LENGTH=1000000000,MAX_LIKE_PATTERN_LENGTH=50000,MAX_MMAP_SIZE=0x7fff0000,MAX_PAGE_COUNT=0xfffffffe,MAX_PAGE_SIZE=65536,MAX_SQL_LENGTH=1000000000,MAX_TRIGGER_DEPTH=1000,MAX_VARIABLE_NUMBER=250000,MAX_VDBE_OP=250000000,MAX_WORKER_THREADS=8,MUTEX_PTHREADS,SYSTEM_MALLOC,TEMP_STORE=1,THREADSAFE=1,USE_URI",
       "collation_list": "RTRIM,NOCASE,BINARY",
       "case_sensitive_like": "0"
@@ -80,8 +81,8 @@
     ]
   },
   "verdicts": {
-    "NOT_EQUAL": 17,
-    "ERROR": 7,
+    "NOT_EQUAL": 16,
+    "ERROR": 8,
     "EQUAL": 6
   },
   "smells": {
@@ -89,10 +90,10 @@
     "arbitrary-cut": 1,
     "not-a-function-of-the-data": 0,
     "float-aggregate-order": 0,
-    "duplicate-full-row": 3,
+    "duplicate-full-row": 2,
     "direction-against-question": 0
   },
-  "smells_fired": 5,
+  "smells_fired": 4,
   "credited_but_not_equal": {
     "total": 0,
     "by_mechanism": {
@@ -173,13 +174,32 @@
     "work_mem": null,
     "hash_mem_multiplier": null
   },
-  "data_as_of": "2026-09-11T14:46:13.041298+00:00",
+  "data_as_of": "2026-09-14T07:33:33.154358+00:00",
   "data_as_of_source": "the instant the run started",
   "elapsed_seconds": {
-    "fixture": 0.012,
-    "questions": 33.375,
-    "shuffle": 0.033
+    "fixture": 0.029,
+    "questions": 28.336,
+    "shuffle": 0.042
   },
+  "question_directories": [
+    89,
+    93,
+    94,
+    99,
+    115,
+    117,
+    118,
+    125,
+    137,
+    129,
+    149,
+    152,
+    159,
+    173,
+    186,
+    192,
+    194
+  ],
   "errors": [
     {
       "question_id": 92,
@@ -210,6 +230,12 @@
       "side": "prediction",
       "step": "execute",
       "message": "execute: ambiguous column name: date"
+    },
+    {
+      "question_id": 145,
+      "side": "prediction",
+      "step": "execute",
+      "message": "execute: the statement returned 200001 rows, past the 200000 this tool holds for one result. Nothing is cut: the whole of a result is what a record states and what a verdict is taken over, so a result this long is this question's error and not a comparison of part of it."
     },
     {
       "question_id": 169,

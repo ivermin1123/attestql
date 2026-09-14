@@ -73,17 +73,17 @@
         },
         "planner_statistics": {
           "atom": {
-            "last_analyze": "2026-09-11 17:24:22.837714+00",
+            "last_analyze": "2026-09-14 12:50:57.967668+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "bond": {
-            "last_analyze": "2026-09-11 17:24:22.868735+00",
+            "last_analyze": "2026-09-14 12:50:58.00063+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "connected": {
-            "last_analyze": "2026-09-11 17:24:23.921883+00",
+            "last_analyze": "2026-09-14 12:50:59.462838+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

@@ -37,12 +37,12 @@
     "hash_mem_multiplier": "2",
     "recorded": {
       "statement_timeout": "0",
-      "search_path": "\"$user\", public",
       "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
       "server_version_num": "160015",
       "transaction_read_only": "on",
       "max_parallel_workers_per_gather": "2",
       "server_encoding": "UTF8",
+      "search_path": "public",
       "datlocprovider": "c",
       "daticulocale": "",
       "datcollversion": "2.41"
@@ -112,10 +112,10 @@
     "content_digests": {},
     "source_file_sha256": "sha256:31b1da211849d24a57c9af7636da46a5b82fc8a3ca1542bb3ebd8775e9a31cec"
   },
-  "data_as_of": "2026-09-11T18:13:24.692937+00:00",
-  "executed_at": "2026-09-11T19:25:27.098927+00:00",
-  "run_id": "audit-5450d59b-e798-4c06-b9b6-e5a49413ed52",
+  "data_as_of": "2026-09-14T12:51:05.775721+00:00",
+  "executed_at": "2026-09-14T12:51:37.940103+00:00",
+  "run_id": "audit-54ee7545-4844-43de-b39c-1dc3b1f853ac",
   "rerun_instruction": "re-run this statement read-only against PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit | server=172.17.0.2/32:5432 | database=bird under the session settings and over the data this record's fixture digest names, and compare the two results under R-SET",
   "result_hash": "sha256:904855aa0b55daf4874799af095ed6b293a99c421389bf52493323f881fa389c",
-  "record_hash": "sha256:7376bd460ffa3263fbfcc0ac9032214fae774a395380e46e86b03bd4719df8aa"
+  "record_hash": "sha256:77c15577c357040b2abdb2d9121cf732d1bc00938216ad75da02cc30c1f8f7f8"
 }

@@ -71,17 +71,17 @@
         },
         "planner_statistics": {
           "customers": {
-            "last_analyze": "2026-09-11 17:24:23.934127+00",
+            "last_analyze": "2026-09-14 12:50:59.475079+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "transactions_1k": {
-            "last_analyze": "2026-09-11 18:13:23.749262+00",
+            "last_analyze": "2026-09-14 12:51:04.722305+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "yearmonth": {
-            "last_analyze": "2026-09-11 18:13:24.077853+00",
+            "last_analyze": "2026-09-14 12:51:05.044978+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

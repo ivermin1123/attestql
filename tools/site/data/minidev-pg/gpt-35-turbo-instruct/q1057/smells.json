@@ -55,12 +55,12 @@
         },
         "planner_statistics": {
           "country": {
-            "last_analyze": "2026-09-11 17:24:23.922419+00",
+            "last_analyze": "2026-09-14 12:50:59.463542+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "match": {
-            "last_analyze": "2026-09-11 18:13:23.04275+00",
+            "last_analyze": "2026-09-14 12:51:03.86449+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }

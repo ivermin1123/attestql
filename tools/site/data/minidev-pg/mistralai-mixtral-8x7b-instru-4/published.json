@@ -1,7 +1,7 @@
 {
  "name": "minidev-pg-mistralai-mixtral-8x7b-instru-4.tar.gz",
- "url": "https://github.com/ivermin1123/attestql/releases/download/v0.3.1/minidev-pg-mistralai-mixtral-8x7b-instru-4.tar.gz",
- "bytes": 3846234,
- "sha256": "cc6e19fc8c8234a9066d8fbf060835087dcc0e0826802dbaa818e31b16f24084",
+ "url": "https://github.com/ivermin1123/attestql/releases/download/v0.4.0/minidev-pg-mistralai-mixtral-8x7b-instru-4.tar.gz",
+ "bytes": 3846260,
+ "sha256": "58edfe96e3afc649807ca5b1c494f6412009a16421680da89c34e267e9a6d15d",
  "directories": 118
 }

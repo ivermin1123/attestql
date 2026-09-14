@@ -140,12 +140,12 @@
         },
         "planner_statistics": {
           "drivers": {
-            "last_analyze": "2026-09-11 17:24:23.937858+00",
+            "last_analyze": "2026-09-14 12:50:59.478977+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           },
           "results": {
-            "last_analyze": "2026-09-11 18:13:23.368778+00",
+            "last_analyze": "2026-09-14 12:51:04.275252+00",
             "last_autoanalyze": null,
             "n_mod_since_analyze": 0
           }
