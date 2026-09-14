@@ -81,6 +81,7 @@ from urllib.parse import quote
 
 from attestql.audit.backend import (
     READ_THROUGH_PRIVATE_COPY,
+    ROW_BUDGET,
     BackendRefused,
     PlannerStatistics,
     ReadBackDrift,
@@ -90,6 +91,7 @@ from attestql.audit.backend import (
     TableName,
     TextCensus,
     folded,
+    refuse_a_result_past_the_row_budget,
 )
 from attestql.evidence.serialize import UndecodedText
 from attestql.evidence.types import ENGINE_SQLITE, SessionSettings
@@ -1202,7 +1204,13 @@ def _fetch(
         cursor = connection.execute(sql)
         try:
             described = tuple(str(column[0]) for column in cursor.description or ())
-            return described, tuple(tuple(row) for row in cursor.fetchall())
+            # One row more than the bound, which is what says the bound was crossed and is
+            # the whole of what is held while it is being found out. A SELECT reports no
+            # row count here, so the only way to know the length of a result is to read it,
+            # and reading one row past the bound is as far as this goes.
+            held = cursor.fetchmany(ROW_BUDGET + 1)
+            refuse_a_result_past_the_row_budget(len(held), ROW_BUDGET)
+            return described, tuple(tuple(row) for row in held)
         finally:
             cursor.close()
     except sqlite3.Error as failed:

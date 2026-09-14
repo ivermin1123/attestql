@@ -29,6 +29,7 @@ from typing import Any, cast
 
 import pytest
 
+from attestql.audit import sqlite
 from attestql.audit.backend import (
     READ_THROUGH_PRIVATE_COPY,
     BackendRefused,
@@ -668,6 +669,40 @@ def test_a_rerun_over_the_copies_reads_the_copies_and_the_audited_one_never_does
 
     with pytest.raises(BackendRefused, match="no shuffled copies"):
         backend.execute_shuffled(unordered, statement_timeout_seconds=TIMEOUT_SECONDS)
+
+
+def test_a_result_inside_the_row_budget_is_read_whole(
+    backend: SqliteBackend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The boundary is inside: a result exactly as long as the budget is a result."""
+    monkeypatch.setattr(sqlite, "ROW_BUDGET", 4)
+    wide = "WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n WHERE i < 4) SELECT i FROM n"
+
+    result = backend.execute(wide, statement_timeout_seconds=TIMEOUT_SECONDS)
+
+    assert len(result.rows) == 4
+    assert result.truncated is False, "nothing is cut at the bound or anywhere else"
+
+
+def test_a_result_past_the_row_budget_is_that_question_s_error_and_is_never_cut(
+    backend: SqliteBackend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """One row past the bound and the statement has no result, rather than most of one.
+
+    Both backends read every row a statement returned and the record holds every one, so a
+    prediction that reads a whole table where the gold reads a page of it cost the process
+    the whole table with no error anywhere. It is a refusal and never a cut: ADR-0013's
+    invariant against silent truncation is not weakened here, because nothing is truncated.
+    """
+    monkeypatch.setattr(sqlite, "ROW_BUDGET", 4)
+    wide = "WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n WHERE i < 5) SELECT i FROM n"
+
+    with pytest.raises(BackendRefused) as refused:
+        backend.execute(wide, statement_timeout_seconds=TIMEOUT_SECONDS)
+
+    assert refused.value.step == "execute"
+    assert "returned 5 rows, past the 4 this tool holds" in refused.value.detail
+    assert "Nothing is cut" in refused.value.detail
 
 
 def test_the_envelope_goes_back_on_when_the_copies_could_not_be_made(

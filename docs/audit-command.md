@@ -193,6 +193,29 @@ rows and not the order they are stored in, so a shuffled copy digests as the tab
 from; the function differs and is written in front of the value, `md5` over the server's own row
 text on PostgreSQL and `sha256` over the rendered rows on SQLite.
 
+## The row budget
+
+A result longer than 200,000 rows is that question's ERROR line, naming the bound and the count
+that crossed it, on either engine. Nothing is cut. Both backends read every row a statement
+returned and a record states every one of them, so the whole of a result is what a verdict is
+taken over; a result this tool will not hold is therefore a question it does not answer rather
+than a comparison of part of one. `truncated` stays false in every record, which is the same
+invariant it always carried.
+
+The bound is a module constant with no flag, and its value is measured rather than chosen: the
+largest `row_count` in the 605 evidence records published under `tools/site/data` is 15,429
+(Mini-Dev q1088, the `gpt-4-turbo` prediction) and the largest the packaged demo produces is 4,
+so this is the first round number past ten times the largest result the project has seen. A run
+that reaches it is reading something neither the benchmark runs nor the demo has produced, which
+in a prediction file usually means a statement that reads a whole table where the gold reads a
+page of it.
+
+What each engine can promise differs by what its driver does. On SQLite the rows are read one
+page past the bound and no further, so the bound is what is held. On PostgreSQL the driver has
+the server's result buffer before this tool asks for anything, and the count is read off the
+cursor before a single row becomes a Python object, so what the bound keeps out of the process
+is the copy a record would be built from, which is the one that costs an object per cell.
+
 ## The statement budget
 
 `--statement-timeout SECONDS`, 30 by default, bounds every statement the run sends, gold and

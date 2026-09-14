@@ -132,6 +132,45 @@ class StatementTimedOut(BackendRefused):
         super().__init__("execute", detail)
 
 
+ROW_BUDGET = 200_000
+"""How many rows of one result this tool will hold, past which the question is an error.
+
+Both backends read every row a statement returned and the record holds every one of them, so
+the memory a run costs is the memory the widest prediction in the file costs. A prediction
+that reads a whole table where the gold reads a page of it is not a rare shape in a
+prediction file, and nothing stood between one and the process.
+
+What is done about it is a refusal and never a cut. ADR-0013's invariant is that no result is
+silently truncated, and it is untouched here: nothing is truncated at all, ``truncated`` stays
+false everywhere, and no verdict is ever taken over part of a result. A result past this is
+that question's ERROR line, naming this bound and the count that crossed it, and the run goes
+on to the next question as it does after any other error.
+
+The value is measured rather than chosen. The largest ``row_count`` in the 605 evidence
+records this repository publishes under ``tools/site/data`` is 15,429 (Mini-Dev q1088, the
+`gpt-4-turbo` prediction), and the largest the packaged demo produces is 4. This is the first
+round number past ten times that measurement, so every result either of them holds is inside
+it by an order of magnitude, and a run that reaches it is reading something neither has seen.
+"""
+
+
+def refuse_a_result_past_the_row_budget(rows: int, budget: int) -> None:
+    """One message for either engine when a result is longer than this tool will hold.
+
+    Stated once because it is one decision: two engines that spelled the same refusal twice
+    would be two bounds a reader has to check against each other.
+    """
+    if rows <= budget:
+        return
+    raise BackendRefused(
+        "execute",
+        f"the statement returned {rows} rows, past the {budget} this tool holds for one "
+        f"result. Nothing is cut: the whole of a result is what a record states and what a "
+        f"verdict is taken over, so a result this long is this question's error and not a "
+        f"comparison of part of it.",
+    )
+
+
 class ReadBackDrift(BackendRefused):
     """The session did not hold what the executor set on it.
 
@@ -462,6 +501,7 @@ class Backend(Protocol):
 
 __all__ = [
     "ASCII_LETTERS_FOLDED",
+    "ROW_BUDGET",
     "Backend",
     "BackendRefused",
     "PlannerStatistics",
@@ -473,4 +513,5 @@ __all__ = [
     "TextCensus",
     "folded",
     "planner_statistics_json",
+    "refuse_a_result_past_the_row_budget",
 ]

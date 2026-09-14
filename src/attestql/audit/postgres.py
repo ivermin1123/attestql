@@ -73,6 +73,7 @@ from psycopg.abc import Buffer
 from psycopg.adapt import Loader
 
 from attestql.audit.backend import (
+    ROW_BUDGET,
     BackendRefused,
     PlannerStatistics,
     ReadBackDrift,
@@ -81,6 +82,7 @@ from attestql.audit.backend import (
     TableLookup,
     TableName,
     TextCensus,
+    refuse_a_result_past_the_row_budget,
 )
 from attestql.evidence.types import ENGINE_POSTGRESQL, SessionSettings
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
@@ -369,6 +371,12 @@ class Cursor(Protocol):
     @property
     def description(self) -> Sequence[ColumnDescription] | None: ...
 
+    @property
+    def rowcount(self) -> int: ...
+
+    """How many rows the statement returned, which the driver knows before this module asks
+    for any of them, and which is negative where a statement returned no result at all."""
+
     def execute(self, query: object, params: Sequence[object] | None = None) -> object: ...
 
     def fetchall(self) -> Sequence[tuple[Any, ...]]: ...
@@ -652,6 +660,12 @@ class PostgresBackend:
                 described = tuple(
                     (column.name, column.type_code) for column in cursor.description or ()
                 )
+                # How many rows the statement returned, read off the driver's own count
+                # before a single one of them is turned into a Python tuple. The driver
+                # holds the server's result buffer either way; what this bound keeps out of
+                # the process is the copy of it that a record would be built from, which is
+                # the one that costs an object per cell.
+                refuse_a_result_past_the_row_budget(max(cursor.rowcount, 0), ROW_BUDGET)
                 rows = tuple(tuple(row) for row in cursor.fetchall())
             except psycopg.Error as failed:
                 # The driver's own error, named the way this interface names failures, so
