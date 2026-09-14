@@ -155,6 +155,26 @@ def test_a_cell_tagged_with_a_type_the_reading_has_no_rule_for_is_refused(
         load_record(stated)
 
 
+def test_a_column_that_is_not_an_object_is_unreadable_rather_than_an_attribute_error(
+    tmp_path: Path,
+) -> None:
+    """Every entry of a document is proved to be what it is read as, including this one.
+
+    The columns block was read with `.get` on whatever the array held, so a document whose
+    columns are strings reached an attribute error rather than this module's own refusal, and
+    a reader was handed a traceback about `str` where a sentence about the record was owed.
+    """
+    sandbox = tmp_path / "sandbox"
+    with redirect_stdout(io.StringIO()):
+        assert main(["demo", "--out", str(sandbox)]) == 1
+    path = sandbox / "audit" / "q879" / GOLD_RECORD_FILE
+    stated = document(path)
+    cast("dict[str, Any]", stated["result"])["columns"] = ["nationality"]
+
+    with pytest.raises(UnreadableRecord, match="a column is not a JSON object"):
+        load_record(stated)
+
+
 EARLIER_RECORDS = REPOSITORY / "tests" / "records-from-earlier-releases"
 
 

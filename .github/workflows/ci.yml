@@ -1,5 +1,7 @@
-# Runs the same checks as `just check`, on the oldest Python the project supports and the one it is
-# developed on. Until a run has been observed green this file is configuration, not evidence.
+# Two jobs. `check` runs the same checks as `just check`, on the oldest Python the project supports
+# and the one it is developed on. `wheel` runs what `just check` cannot see at all: the built
+# distributions, and the command out of an installed wheel with no source tree on the path. Until a
+# run has been observed green this file is configuration, not evidence.
 #
 # Every action is pinned to the commit SHA of the release named in the trailing comment, so a tag
 # moved under this repository cannot change what runs here. Dependabot updates the pin and the
@@ -38,3 +40,59 @@ jobs:
       - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
       - run: uv sync --locked
       - run: just check
+
+  wheel:
+    # `release.yml` already builds the wheel, installs it and runs the demo out of it, but only on
+    # a tag: a wheel that left a data file or a template behind is found there with the version
+    # already cut, and the fix costs another tag. The same check belongs on every push, where a
+    # commit is what gets fixed. It runs on both supported versions rather than on the one the
+    # release builds with, because one pure-Python wheel serves both and they do not resolve the
+    # same dependency tree.
+    #
+    # `just check` cannot see any of this. It runs against `src/`, with every file where the
+    # repository put it; what a wheel holds is the build backend's decision, and the environment
+    # below holds the wheel and its dependencies and nothing else, so an import or a data file
+    # that only works from a checkout fails here.
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python }}
+      - run: uv build
+      - name: The wheel installs into an environment holding nothing else
+        run: |
+          uv venv --python "${{ matrix.python }}" "$RUNNER_TEMP/wheel"
+          uv pip install --python "$RUNNER_TEMP/wheel/bin/python" --no-cache dist/*.whl
+      - name: The installed command audits the packaged sandbox and renders it
+        # Three things, and each is here because the one before it does not cover it.
+        #
+        # The demo exits 1 over its own sandbox, because three of its six golds disagree with
+        # their corrections, which is the finding and not an error. An uncaught exception exits 1
+        # as well, so the status alone would pass a command that had crashed on its first
+        # question; the summary line the demo printed is read too, and that line is written last.
+        #
+        # The demo renders nothing. `templates/` and `static/` are package data that only
+        # `attestql report` reads, so a wheel that shipped them where nothing looks for them
+        # would pass every check above. The renderer resolves them from its own file, and this
+        # repository has already moved where that is, so the rendered page is asked for and asked
+        # to be non-empty.
+        #
+        # `shell: bash` and not the default, which is `bash -e` with no `pipefail`: the demo's
+        # own status is read out of `PIPESTATUS` through a `tee`, and without `pipefail` the
+        # pipeline reports `tee`'s success instead and the status below is never the demo's.
+        shell: bash
+        run: |
+          "$RUNNER_TEMP/wheel/bin/attestql" --version
+          demo_status=0
+          "$RUNNER_TEMP/wheel/bin/attestql" demo --out "$RUNNER_TEMP/demo" \
+            | tee "$RUNNER_TEMP/demo.out" || demo_status=${PIPESTATUS[0]}
+          test "$demo_status" -eq 1
+          grep -q "6 questions: 3 NOT_EQUAL" "$RUNNER_TEMP/demo.out"
+          "$RUNNER_TEMP/wheel/bin/attestql" report "$RUNNER_TEMP/demo/audit" --out "$RUNNER_TEMP/report"
+          test -s "$RUNNER_TEMP/report/index.html"

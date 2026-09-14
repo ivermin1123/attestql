@@ -36,9 +36,13 @@ from attestql.evidence.types import StatementSource
 from attestql.kernel.types import ExecutionResult
 
 Json = dict[str, Any]
-"""A JSON object. ``Any`` is the payload's own type: a document holds strings, numbers,
-booleans, nulls, lists and objects, and narrowing that here would only re-state the JSON
-grammar in a type the standard library's own encoder does not use."""
+"""A JSON object this tool **writes**. ``Any`` is the payload's own type: a document holds
+strings, numbers, booleans, nulls, lists and objects, and narrowing that here would only make
+every literal a writer builds fight the invariance of ``dict``.
+
+Reading is the other direction and has a type of its own: ``contract/document.py`` states what
+a document this tool was handed holds, because there the ``Any`` was a claim about somebody
+else's file rather than about a value this module just built."""
 
 ROWS_IN_ARTIFACT = 25
 """How many distinct rows a difference shows per side. The records hold all of them."""

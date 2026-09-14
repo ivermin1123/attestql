@@ -350,7 +350,7 @@ def _credited(directory: Path) -> bool:
 
     Read off the two fields the counterexample states rather than off `summary.json`, which
     counts these and does not name them. A comparison carries a mechanism when and only when
-    it is a NOT_EQUAL, which is the same test `cli.py` counts them by.
+    it is a NOT_EQUAL, which is the same test `cli/summary.py` counts them by.
     """
     counterexample = directory / COUNTEREXAMPLE_FILE
     if not counterexample.is_file():

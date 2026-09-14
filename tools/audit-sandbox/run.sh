@@ -53,7 +53,8 @@ fi
 mkdir -p "$out"
 # `cd -P` and `pwd -P`, not the logical pair: a logical path keeps every symlink in it, so a
 # link pointing back into the repository resolved to a path outside it and walked through the
-# check below. `render.py` does the same check on a resolved path, which is what this is now.
+# check below. `render/pages.py` does the same check, in `refuse_an_out_inside_the_audit`, on
+# a resolved path, which is what this is now.
 out="$(cd -P "$out" && pwd -P)"
 case "$out" in
   "$repo_root" | "$repo_root"/*)

@@ -34,9 +34,11 @@ import select_questions as selection
 from attestql.audit.postgres import session_preconditions
 from attestql.audit.smells import probe_meanings
 from attestql.contract.counts import whole_count
+from attestql.contract.document import JsonValue
 from attestql.evidence.load import UnreadableRecord
 from attestql.report import render
 from attestql.report.render import PAGE_FILE
+from attestql.report.render.load import integer_at
 
 REPOSITORY = Path(__file__).resolve().parent.parent
 
@@ -765,19 +767,21 @@ def test_the_selector_and_the_build_refuse_the_same_count(tmp_path: Path) -> Non
     with the failure landing on whoever ran the build rather than on whoever made the
     selection. The renderer is the third reader and refused neither with the same words.
     """
-    below_zero = {"value": -1}
+    below_zero: dict[str, JsonValue] = {"value": -1}
+    true_value: dict[str, JsonValue] = {"value": True}
+    zero: dict[str, JsonValue] = {"value": 0}
     readers = (
         (site._integer, site.BuildRefused),  # pyright: ignore[reportPrivateUsage]
         (selection._integer, selection.SelectionRefused),  # pyright: ignore[reportPrivateUsage]
-        (render._integer, UnreadableRecord),  # pyright: ignore[reportPrivateUsage]
+        (integer_at, UnreadableRecord),
     )
 
     for read, refusal in readers:
         with pytest.raises(refusal, match="a count is never below zero"):
             read(below_zero, "value")
         with pytest.raises(refusal, match="bool where a whole number"):
-            read({"value": True}, "value")
-        assert read({"value": 0}, "value") == 0
+            read(true_value, "value")
+        assert read(zero, "value") == 0
 
     assert whole_count({"value": 7}, "value", site.BuildRefused) == 7, "the rule they share"
 

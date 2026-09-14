@@ -23,9 +23,9 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
-from typing import cast
 
-from attestql.evidence.render import Json, digest_of, result_digest
+from attestql.contract.document import JsonObject, JsonValue, an_array, an_object
+from attestql.evidence.render import digest_of, result_digest
 from attestql.evidence.serialize import SerializationDescriptor, UndecodedText
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
@@ -67,7 +67,7 @@ class LoadedRecord:
     record_hash: Recomputed
 
 
-def load_value(cell: Json) -> object:
+def load_value(cell: JsonObject) -> object:
     """One rendered cell back as the value it was rendered from, by the tag it carries."""
     tag = _text(cell, "type")
     payload = cell.get("value")
@@ -104,12 +104,12 @@ def _undecoded_text(payload: object) -> UndecodedText:
         ) from unreadable
 
 
-def load_row(row: Sequence[Json]) -> tuple[object, ...]:
+def load_row(row: Sequence[JsonValue]) -> tuple[object, ...]:
     """One rendered row as the values its cells were rendered from."""
     return tuple(load_value(_object(cell, "a cell")) for cell in row)
 
 
-def load_result(result: Json) -> ExecutionResult:
+def load_result(result: JsonObject) -> ExecutionResult:
     """A record's ``result`` block back as the execution result it renders.
 
     ``limits_in_force`` is rebuilt from the one timeout the block states, which is the
@@ -118,8 +118,8 @@ def load_result(result: Json) -> ExecutionResult:
     execution and the serialization reads neither.
     """
     columns = tuple(
-        ColumnType(name=_text(column, "name"), declared_type=_text(column, "declared_type"))
-        for column in _rows(result, "columns")
+        ColumnType(name=_text(entry, "name"), declared_type=_text(entry, "declared_type"))
+        for entry in (_object(column, "a column") for column in _rows(result, "columns"))
     )
     return ExecutionResult(
         columns=columns,
@@ -132,7 +132,7 @@ def load_result(result: Json) -> ExecutionResult:
     )
 
 
-def load_descriptor(serialization: Json) -> SerializationDescriptor:
+def load_descriptor(serialization: JsonObject) -> SerializationDescriptor:
     """A record's ``serialization`` block back as the descriptor its result was rendered under."""
     return SerializationDescriptor(
         version=_text(serialization, "version"),
@@ -144,7 +144,7 @@ def load_descriptor(serialization: Json) -> SerializationDescriptor:
     )
 
 
-def load_record(document: Json) -> LoadedRecord:
+def load_record(document: JsonObject) -> LoadedRecord:
     """A record's rendering as its result, its descriptor and its two hashes taken again.
 
     The result hash is taken over the loaded result under the loaded descriptor, which is
@@ -171,7 +171,7 @@ def load_record(document: Json) -> LoadedRecord:
     )
 
 
-def _text(document: Json, key: str) -> str:
+def _text(document: JsonObject, key: str) -> str:
     value = document.get(key)
     if not isinstance(value, str):
         raise UnreadableRecord(f"{key} is not text: {value!r}")
@@ -210,19 +210,15 @@ def _instant(payload: object, read: Callable[[str], object], what: str) -> objec
         raise UnreadableRecord(f"{payload!r} is not {what}") from unreadable
 
 
-def _object(value: object, what: str) -> Json:
-    if not isinstance(value, dict):
-        raise UnreadableRecord(f"{what} is not a JSON object: {value!r}")
-    return cast("Json", value)
+def _object(value: JsonValue, what: str) -> JsonObject:
+    return an_object(value, what, UnreadableRecord)
 
 
-def _list(value: object, what: str) -> list[Json]:
-    if not isinstance(value, list):
-        raise UnreadableRecord(f"{what} is not a JSON array: {value!r}")
-    return cast("list[Json]", value)
+def _list(value: JsonValue, what: str) -> list[JsonValue]:
+    return an_array(value, what, UnreadableRecord)
 
 
-def _rows(document: Json, key: str) -> list[Json]:
+def _rows(document: JsonObject, key: str) -> list[JsonValue]:
     return _list(document.get(key), key)
 
 

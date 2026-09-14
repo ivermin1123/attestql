@@ -8,7 +8,7 @@ reads the statement's text. Two subjects, two modules, and ``engines.py`` is whe
 engine's answer to both is named in one place.
 
 ADR-0014 point 3: one parser per engine, behind the surface ``compare.py``, ``smells.py``
-and ``cli.py`` already read. Nothing of a particular grammar reaches through it. A parse
+and ``cli/run.py`` already read. Nothing of a particular grammar reaches through it. A parse
 tree, a node type and a deparser are the implementation's own, and the two rewrites below
 are methods rather than free functions taking a tree for exactly that reason: the caller
 asks the statement that was parsed for a variant of itself, and whatever produces it is
