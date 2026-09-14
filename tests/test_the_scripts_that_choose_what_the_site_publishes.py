@@ -16,6 +16,7 @@ of `manifest.py`, and `question_ids.py`.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 import tarfile
@@ -226,6 +227,10 @@ def test_the_manifest_states_the_size_the_digest_and_what_every_run_in_an_archiv
         "https://github.com/owner/repository/releases/download/v0.3.1/minidev-pg.tar.gz"
     )
     assert asset["bytes"] == built.stat().st_size
+    assert asset["sha256"] == hashlib.sha256(built.read_bytes()).hexdigest(), (
+        "the digest is what a reader checks a downloaded archive against, so it is taken "
+        "again here from the file the manifest describes"
+    )
     assert asset["directories"] == 4
     assert asset["per_run"] == {
         "runs/minidev-pg/gpt-4": 1,
