@@ -38,6 +38,7 @@ from attestql.contract.document import JsonValue
 from attestql.evidence.load import UnreadableRecord
 from attestql.report import render
 from attestql.report.render import PAGE_FILE
+from attestql.report.render.load import integer_at
 
 REPOSITORY = Path(__file__).resolve().parent.parent
 
@@ -772,7 +773,7 @@ def test_the_selector_and_the_build_refuse_the_same_count(tmp_path: Path) -> Non
     readers = (
         (site._integer, site.BuildRefused),  # pyright: ignore[reportPrivateUsage]
         (selection._integer, selection.SelectionRefused),  # pyright: ignore[reportPrivateUsage]
-        (render._integer, UnreadableRecord),  # pyright: ignore[reportPrivateUsage]
+        (integer_at, UnreadableRecord),
     )
 
     for read, refusal in readers:
