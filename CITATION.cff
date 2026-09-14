@@ -9,8 +9,8 @@ authors:
 repository-code: "https://github.com/ivermin1123/attestql"
 url: "https://attestql.com"
 license: Apache-2.0
-version: "0.3.1"
-date-released: "2026-09-12"
+version: "0.4.0"
+date-released: "2026-09-14"
 keywords:
   - text-to-sql
   - benchmark
