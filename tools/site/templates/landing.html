@@ -2,9 +2,10 @@
 
    Every value here was read out of an artifact by the build: the sentence is the package
    description, the block is the command and what it printed, the rows are the run's own
-   counterexample, the install line is the README's, the table is each run's summary and the
-   links at the foot are the ones the live page carries. What this file adds is the words
-   between them. #}
+   counterexample, the install line is the README's and the table is each run's summary. What
+   this file adds is the words between them and the three links at the foot, which are the
+   destinations this project publishes under and are written here because no artifact states
+   them. #}
 {% extends "base.html" %}
 {% from "_rows.html" import rows_table %}
 {% from "_figure.html" import figure_block %}
@@ -125,9 +126,9 @@
   <h2>Read on</h2>
   <ul class="files__list">
     <li><a href="{{ root }}method/index.html">The method</a> <span class="ink-2">what is computed beside every verdict, out of the strings the package holds</span></li>
-    {% for href, words in page.links %}
-    <li><a href="{{ href }}">{{ words }}</a></li>
-    {% endfor %}
+    <li><a href="https://github.com/ivermin1123/attestql">GitHub</a> <span class="ink-2">the source, the decision records and the reports behind them</span></li>
+    <li><a href="https://github.com/ivermin1123/attestql/blob/main/docs/claims-register.md">Claims register</a> <span class="ink-2">every claim this project makes, and what was measured for it</span></li>
+    <li><a href="https://pypi.org/project/attestql/">PyPI</a> <span class="ink-2">the published package</span></li>
   </ul>
 </section>
 {{ credit_block() }}

@@ -12,8 +12,7 @@ package description out of `pyproject.toml`; the opening command and its output 
 by running `attestql demo` while the build runs; the rows under it are that run's own
 `counterexample.json`, read through the same accessor the question page reads it through; the
 install line is the line `README.md` holds, so the two cannot drift; the run table is each
-run's `summary.json`; the links at the foot are the ones `site/index.html` carries, read out
-of that file and never edited; and the method page's rules, preconditions, probes and readings
+run's `summary.json`; and the method page's rules, preconditions, probes and readings
 are the strings the package itself holds. What is left, and it is short, is the connective
 prose in the two templates.
 
@@ -42,7 +41,6 @@ import tomllib
 from collections.abc import Iterable, Mapping, Sequence
 from contextlib import chdir, redirect_stdout
 from dataclasses import dataclass
-from html.parser import HTMLParser
 from pathlib import Path
 from typing import cast
 
@@ -91,7 +89,6 @@ REPOSITORY = HERE.parent.parent
 DATA = HERE / "data"
 SITE_TEMPLATES = HERE / "templates"
 DEFAULT_OUT = REPOSITORY / "build" / "site"
-LIVE_PAGE = REPOSITORY / "site" / "index.html"
 README = REPOSITORY / "README.md"
 PYPROJECT = REPOSITORY / "pyproject.toml"
 
@@ -469,7 +466,6 @@ class Landing:
     bar: Figure | None
     install: str
     benchmarks: tuple[Benchmark, ...]
-    links: tuple[tuple[str, str], ...]
 
     title = "AttestQL"
 
@@ -562,7 +558,6 @@ def main(argv: Sequence[str] | None = None) -> int:
 def build(out: Path) -> Built:
     """Render every run, then the two pages of the site's own, then measure the result."""
     started = time.perf_counter()
-    _refuse_an_out_inside_the_live_page(out)
     scratch = SANDBOX_SCRATCH
     _clear(out)
     _clear(scratch)
@@ -667,22 +662,6 @@ def _up(slug: str) -> str:
     is the number of segments in the address.
     """
     return "../" * len(slug.split("/"))
-
-
-def _refuse_an_out_inside_the_live_page(out: Path) -> None:
-    """`site/` is the live page's directory and another session's; a build never writes there.
-
-    Resolved first, so a relative path, a symlink and a `..` naming that directory are the
-    same answer. The check is the reason this script has an `--out` at all: the default is
-    already outside it, and what is refused is a hand that points it back in.
-    """
-    inside = out.resolve()
-    live = LIVE_PAGE.parent.resolve()
-    if inside == live or live in inside.parents:
-        raise BuildRefused(
-            f"--out {out} is {live} or a directory inside it, which holds the page "
-            f"attestql.com serves and belongs to another session. Nothing was written."
-        )
 
 
 def _clear(directory: Path) -> None:
@@ -888,7 +867,6 @@ def _landing(runs: Sequence[Run], benchmarks: Sequence[Benchmark]) -> Landing:
         bar=_bar(numbers, source),
         install=install_line(),
         benchmarks=tuple(benchmarks),
-        links=live_links(),
     )
 
 
@@ -924,63 +902,6 @@ def install_line() -> str:
         f"{README} holds no line beginning with one of {INSTALL_COMMANDS}, which is the "
         f"install line this page is built from rather than typing one of its own"
     )
-
-
-def live_links() -> tuple[tuple[str, str], ...]:
-    """The links the live page carries today, read out of it and never edited.
-
-    `site/index.html` belongs to another session. This reads its navigation so the built site
-    offers the same destinations, and a link added there arrives here on the next build.
-    """
-    found = _Links()
-    found.feed(LIVE_PAGE.read_text(encoding="utf-8"))
-    found.close()
-    if not found.links:
-        raise BuildRefused(f"{LIVE_PAGE} holds no navigation links to carry over")
-    unlabelled = [href for href, words in found.links if not words]
-    if unlabelled:
-        raise BuildRefused(
-            f"{LIVE_PAGE} has a link to {unlabelled[0]} with no words on it, which this page "
-            f"would carry over as a link a reader cannot read: an icon or an image is not a "
-            f"label a second page can reuse"
-        )
-    return tuple(found.links)
-
-
-class _Links(HTMLParser):
-    """The first `nav` of the live page: each link's target and the words on it.
-
-    The first and not every one: a page with a second `nav` in its footer would otherwise
-    have both merged into one list here, and the reading would be of a page nobody wrote.
-    Reading stops when that `nav` closes.
-    """
-
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self.links: list[tuple[str, str]] = []
-        self.inside = False
-        self.done = False
-        self.href = ""
-        self.text: list[str] = []
-
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag == "nav" and not self.done:
-            self.inside = True
-        if tag == "a" and self.inside:
-            self.href = str(dict(attrs).get("href") or "")
-            self.text = []
-
-    def handle_endtag(self, tag: str) -> None:
-        if tag == "a" and self.inside and self.href:
-            self.links.append((self.href, "".join(self.text).strip()))
-            self.href = ""
-        if tag == "nav" and self.inside:
-            self.inside = False
-            self.done = True
-
-    def handle_data(self, data: str) -> None:
-        if self.href:
-            self.text.append(data)
 
 
 def _numbers() -> tuple[tuple[Number, ...], str]:

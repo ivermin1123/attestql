@@ -84,6 +84,6 @@ environment and neither reaches a log. The first deployment was made by hand fro
 repository with the command of the previous section and `--project-name attestql --branch main`.
 The build writes a `_headers` file telling Pages to revalidate `static/` on every load, as it
 does a page: without it a page arrived fresh with a stylesheet up to four hours old.
-The domain and the DNS record were not touched: the project already held them. `site/index.html`
-is no longer what the domain serves; it stays in the repository as the source of the three links
-the landing carries until the session that owns it retires it.
+The domain and the DNS record were not touched: the project already held them. The hand written
+`site/index.html` the domain once served is gone, and the three links it carried are in the
+landing template, so there is one landing page and the build writes it.

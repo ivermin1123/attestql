@@ -8,8 +8,9 @@ audit the build made while it ran rather than from a fixture written for the tes
 
 What is asserted is the rule the phase sets for the landing, which is that nothing on it is
 typed by hand that an artifact states: the sentence is `pyproject.toml`'s description, the
-install line is the one `README.md` holds, the links at the foot are the ones
-`site/index.html` carries, and where the aggregate is missing there is no number at all. The
+install line is the one `README.md` holds, and where the aggregate is missing there is no
+number at all. The three links at the foot are the template's own, because no artifact states
+where this project publishes. The
 method page is asserted against the package's own accessors for the same reason, and the three
 budgets are asserted by building over them.
 """
@@ -44,6 +45,15 @@ assert Path(site.__file__ or "") == REPOSITORY / "tools" / "site" / "build.py", 
     "namespace package when the repository root comes first on the path: this asserts the "
     "module under test is the script and not that directory"
 )
+
+LINKS_AT_THE_FOOT = (
+    "https://github.com/ivermin1123/attestql",
+    "https://github.com/ivermin1123/attestql/blob/main/docs/claims-register.md",
+    "https://pypi.org/project/attestql/",
+)
+"""The three destinations the landing template carries, spelled here rather than read off the
+page under test: a link that changed in the template would otherwise be a link this test
+followed rather than one it checked."""
 
 pytestmark = pytest.mark.sandbox_sqlite
 
@@ -140,9 +150,8 @@ def test_the_landing_states_nothing_it_did_not_read_out_of_an_artifact(built: Pa
     assert description in text
     assert " ".join(install.split()) in text, "the README's own line, its runs of space collapsed"
     assert site.PRINCIPLE in text
-    for href, words in site.live_links():
+    for href in LINKS_AT_THE_FOOT:
         assert href in page.links, href
-        assert words in text, words
     assert "attestql demo --out demo" in text
     assert "demo/audit/q879/" in text, "the command's own output, with the paths it printed"
 
@@ -495,15 +504,14 @@ def test_a_count_below_zero_is_refused_rather_than_drawn(
         build(tmp_path / "site")
 
 
-def test_the_install_line_is_a_command_and_the_links_are_the_first_nav_s(
+def test_the_install_line_is_a_command_and_not_a_sentence_that_holds_one(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Two readings of two files the site does not own, each of which had a shape it took.
+    """A reading of a file the site does not own, which had a shape it took.
 
     The install line was any line holding `pip install attestql`, which a sentence of prose
     above the block satisfies; a page built from it would have offered a reader a paragraph
-    to paste into a shell. The navigation merged every `nav` on the page and carried a link
-    with no words on it, which on the built page is a link a reader cannot read.
+    to paste into a shell.
     """
     readme = tmp_path / "README.md"
     readme.write_text(
@@ -515,36 +523,20 @@ def test_the_install_line_is_a_command_and_the_links_are_the_first_nav_s(
 
     assert site.install_line() == "uv tool install attestql        # or: pip install attestql"
 
-    page = tmp_path / "index.html"
-    page.write_text(
-        '<!DOCTYPE html><html lang="en"><body>'
-        '<nav><a href="/one">One</a><a href="/two">Two</a></nav>'
-        "<p>the page</p>"
-        '<nav><a href="/three">Three</a></nav>'
-        "</body></html>",
-        encoding="utf-8",
-    )
-    monkeypatch.setattr(site, "LIVE_PAGE", page)
 
-    assert site.live_links() == (("/one", "One"), ("/two", "Two")), "the first nav, whole"
+def test_the_repository_holds_one_landing_page_and_the_build_reads_no_second_one() -> None:
+    """There were two landing pages, and the built one was read out of the other.
 
-    page.write_text(
-        '<!DOCTYPE html><html lang="en"><body>'
-        '<nav><a href="/one">One</a><a href="/icon"><img src="i.png" alt=""></a></nav>'
-        "</body></html>",
-        encoding="utf-8",
-    )
-    with pytest.raises(site.BuildRefused, match="with no words on it"):
-        site.live_links()
-
-
-def test_the_build_refuses_an_out_inside_the_live_page_s_directory(tmp_path: Path) -> None:
-    """`site/` holds what attestql.com serves and belongs to another session."""
-    with pytest.raises(site.BuildRefused, match="belongs to another session"):
-        site.build(REPOSITORY / "site" / "built")
-    with pytest.raises(site.BuildRefused, match="belongs to another session"):
-        site.build(REPOSITORY / "site")
-    assert not (REPOSITORY / "site" / "built").exists()
+    `site/index.html` was written by hand, stopped being what the domain serves when the
+    workflow began publishing this build, and stayed on as the file the links at the foot of
+    the landing were read out of. A page nobody serves is a page nobody checks: its own copy
+    of the demo output had already drifted from what the tool prints. Deleting it used to
+    stop the build. The links are this build's own now, so nothing outside `tools/site/`,
+    `README.md` and `pyproject.toml` is read for a page, and the second page is gone.
+    """
+    assert not (REPOSITORY / "site").exists(), "a second landing page is back in the repository"
+    assert not hasattr(site, "LIVE_PAGE"), "the build names a page it does not write"
+    assert not hasattr(site, "live_links"), "the build reads its links out of another page"
 
 
 def test_the_build_is_under_its_three_budgets_and_says_what_it_measured(
