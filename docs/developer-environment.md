@@ -46,6 +46,21 @@ migrations, which is why none of them needed a compatibility argument.
 | Markdown | **markdownlint** | Documentation is a primary deliverable here and an external reviewer reads it. Broken tables and inconsistent headings are defects in the deliverable, not cosmetics. |
 | Spelling | **cspell** | Same reason. The documents are read by people outside the team. |
 
+### The two Node files at the root, added 2026-09-14
+
+`package.json` and `package-lock.json` hold one dependency, wrangler, and exist because the site
+workflow runs it with a Cloudflare API token. `npx --yes wrangler@<version>` pinned the top of
+that tree and let the registry resolve the rest at deploy time, so what ran beside the token was
+not what any commit here states; `npm ci` installs the tree the lockfile resolves, with an
+integrity hash for every package, and the deploy runs the binary that install produced.
+
+**markdownlint and cspell stay on `npx` at the versions the justfile pins**, and neither appears
+in `package.json`. They read files, carry no credential, and run inside `just check`, where a
+maintainer is watching the output; a resolved tree for them would state a trust nothing needs.
+`node_modules/` stays ignored, no Node dependency is installed by `just check`, and
+`tests/test_the_deploy_runs_the_wrangler_it_locked.py` is what keeps the split and both pins from
+drifting.
+
 ## 3. Ruff rule selection
 
 `["E", "F", "I", "UP", "B", "SIM", "RUF", "S"]`, with `ignore = ["E501"]` because the formatter owns
