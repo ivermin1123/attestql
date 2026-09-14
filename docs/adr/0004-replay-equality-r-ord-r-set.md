@@ -5,7 +5,8 @@ wording in the Slice 1 brief. **Amended:** 2026-08-30, the Open question below i
 ADR-0009 (in the private history before publication), which fixes Q13's result grain at
 one row per segment; 2026-09-04, what a NaN is under R-SET is stated at the end, and what a
 type is under R-SET is stated at the end of the decision; 2026-09-07, what the two rules read
-a number as is stated at the end of the decision.
+a number as is stated at the end of the decision; 2026-09-14, the R-ORD paragraph states the rule
+the code applies and what follows from it.
 
 ## Context
 
@@ -22,9 +23,13 @@ unordered breakdown by segment has no canonical row order to compare.
 Replay equality is **exactly one of two rules, chosen per result and recorded in the evidence
 record**.
 
-**R-ORD**, when row order is part of the result contract. The query carries a total deterministic
-ordering with ties broken by a unique key, the result is rendered under the recorded canonical typed
-serialization, and the re-run must produce a byte-identical rendering.
+**R-ORD**, when row order is part of the result contract. The statement carries a top-level
+`ORDER BY`, whatever its ordering keys are; the result is rendered under the recorded canonical
+typed serialization, and the re-run must produce a byte-identical rendering. Amended 2026-09-14:
+this paragraph asked for "a total deterministic ordering with ties broken by a unique key" until
+that date, which was written for the sixteen questions of the retired product path, whose ordering
+keys were chosen with this record in hand. Nothing measures totality and nothing ever did. The
+paragraph below says what the rule stated here does not claim.
 
 **R-SET**, when row order is not part of the result contract. The re-run must produce the same
 multiset of rows under typed comparison: same column set and types, same row multiplicity, values
@@ -40,6 +45,20 @@ Both rules apply only when fixture version, schema version, metric-definition ve
 version, validator version, execution limits and evaluation clock all match the recorded values. A
 mismatch yields **not comparable**, which is a third outcome and is not a failure. A record that does
 not declare its rule is not a valid evidence record.
+
+**What R-ORD does not claim, amended 2026-09-14.** The rule is syntactic:
+`audit/statements.py` reads the parse and assigns R-ORD to a statement with a top-level
+`ORDER BY`, and `docs/audit-command.md` has described it that way since the tool was published. A
+gold whose ordering keys do not break every tie is therefore compared in the order its rows came
+back, and two statements that agree on the row set can be NOT_EQUAL with mechanism `order` because
+the server returned one tie in two arrangements.
+
+That is a documented non-claim and not a defect. `docs/claims-register.md` states that NOT_EQUAL
+means two statements disagree on this data under this rule and never that the gold is wrong, and
+the `arbitrary-cut` probe exists to find this exact shape: a cut through a tie the data does not
+break. The alternative, measuring whether an ordering is total and giving such a gold an outcome
+of its own, is a rule this record does not adopt: it would have the tool decide on a gold's behalf
+the thing the tool exists to put in front of a reader.
 
 **Storage class is type, amended 2026-09-04.** Under R-SET a value only meets a value of its own
 storage class, and which classes an engine has is the engine's to say. On PostgreSQL that is what
@@ -74,8 +93,10 @@ and an implicit guarantee is the kind a reviewer cannot check.
 
 ## Consequences
 
-- Every R-ORD question must express a **total** order. A ranking with an unstable tail is not
-  reproducible, which is the failure this rule exists to prevent.
+- Every R-ORD question of the retired catalogue expressed a **total** order. A ranking with an
+  unstable tail is not reproducible, which is the failure that requirement existed to prevent. It
+  bound those sixteen questions and never a benchmark's gold, which nobody here writes: amended
+  2026-09-14, the paragraph in the decision says what the rule claims over one.
 - Acceptance criterion A4 and failure criterion F3 both name R-ORD and R-SET and carry the same
   precondition set, so they cannot drift apart.
 - "Not comparable" must be surfaced honestly rather than reported as a pass or a fail.

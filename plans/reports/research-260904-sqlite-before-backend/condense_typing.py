@@ -5,8 +5,16 @@ the script still reports the check rather than assuming it).
 """
 
 import json
+import os
 
-W = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/work-rd"
+SCRATCH = os.environ.get("MEASURE_WORK", ".")
+"""The directory this run worked in, which held `data/` and `work-r*/`.
+
+Read from the environment and not written here: the run of 2026-09-04 used a scratch
+directory belonging to the session that made it, and one machine's layout is not something
+this repository publishes. The default is what a rerun from that directory reads."""
+
+W = f"{SCRATCH}/work-rd"
 
 
 def summarize(set_name, expected_total):

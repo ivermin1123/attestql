@@ -8,9 +8,8 @@ from pathlib import Path
 
 S = Path(__file__).resolve().parent
 os.environ.setdefault("MEASURE_WORK", str(S))
-REPO = Path(
-    "/Users/hoangle/Desktop/code/attestql/plans/reports/prediction-mode-260904-real-predictions"
-)
+REPORTS = Path(__file__).resolve().parents[2]
+REPO = REPORTS / "prediction-mode-260904-real-predictions"
 sys.path.insert(0, str(REPO))
 import measure  # noqa: E402
 

@@ -55,9 +55,15 @@ Cloudflare Pages project `attestql-ui`, a preview of its own with nothing attach
 this from a directory outside the repository: wrangler leaves a `.wrangler/` cache where it runs,
 and that cache is not repository content.
 
+wrangler is the one Node tool this repository locks, because it is the one that runs with a
+Cloudflare token. `npm ci` in the repository installs the tree `package-lock.json` resolves, and
+the deploy runs the binary that install produced, here and in the workflow both.
+
 ```sh
+cd <repo>
+npm ci
 cd "$TMPDIR"
-npx --yes wrangler@4.129.0 pages deploy <repo>/build/site \
+<repo>/node_modules/.bin/wrangler pages deploy <repo>/build/site \
     --project-name attestql-ui --branch web-ui
 ```
 

@@ -1,24 +1,32 @@
 """Run the tool's own parser (postgast, via attestql.audit.statements.parse_statement)
 over the same three gold sets. Run with the worktree's uv env:
 
-  cd /Users/hoangle/Desktop/code/attestql-research
+  cd <the checkout this file is in>
   UV_PROJECT_ENVIRONMENT=/tmp/attestql-research-venv uv run python \
       /private/tmp/.../scripts/postgast_parse.py
 """
 
 import json
+import os
 import re
 import sys
 
 sys.path.insert(
     0,
-    "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/work-rd/scripts",
+    os.environ.get("MEASURE_WORK", ".") + "/work-rd/scripts",
 )
 from load_golds import SETS, load
 
 from attestql.audit.statements import StatementRefused, parse_statement
 
-OUT = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/work-rd"
+SCRATCH = os.environ.get("MEASURE_WORK", ".")
+"""The directory this run worked in, which held `data/` and `work-r*/`.
+
+Read from the environment and not written here: the run of 2026-09-04 used a scratch
+directory belonging to the session that made it, and one machine's layout is not something
+this repository publishes. The default is what a rerun from that directory reads."""
+
+OUT = f"{SCRATCH}/work-rd"
 
 
 def shape(msg):

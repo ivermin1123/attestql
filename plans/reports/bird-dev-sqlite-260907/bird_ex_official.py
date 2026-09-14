@@ -38,6 +38,15 @@ DATABASES = WORK / "data/dev/dev_databases"
 SUFFIX = "\t----- bird -----\t"
 
 
+def under_work(path: Path) -> str:
+    """A path as a document here states it: relative to the work directory when it is inside it.
+
+    The work directory is what a rerun fills, so a path relative to it is the same path on
+    another machine, and an absolute one states the layout of the machine that ran this.
+    """
+    return str(path.relative_to(WORK)) if path.is_relative_to(WORK) else str(path)
+
+
 def database(db_id: str) -> str:
     """The file upstream's ``db_root_path + db_name + '/' + db_name + '.sqlite'`` names."""
     return str(DATABASES / db_id / f"{db_id}.sqlite")
@@ -125,7 +134,7 @@ def main() -> None:
             "dec31ae3, sha256 2f591e559dc2d97e5b35d5b656e80b0c2edf968f0bb5a78ddfd1d88b4bbbc472, "
             "unmodified"
         ),
-        "databases": str(DATABASES),
+        "databases": under_work(DATABASES),
         "positions": len(rows),
         "ex_sum": total,
         "ex_percent": round(100.0 * total / len(rows), 2),

@@ -20,6 +20,15 @@ DATABASES = WORK / "data/dev/dev_databases"
 OUT = WORK / "out"
 
 
+def under_work(path: Path) -> str:
+    """A path as a document here states it: relative to the work directory when it is inside it.
+
+    The work directory is what a rerun fills, so a path relative to it is the same path on
+    another machine, and an absolute one states the layout of the machine that ran this.
+    """
+    return str(path.relative_to(WORK)) if path.is_relative_to(WORK) else str(path)
+
+
 def digest(path: Path) -> str:
     hashed = hashlib.sha256()
     with path.open("rb") as handle:
@@ -47,7 +56,7 @@ def main() -> None:
         if source_digest != target_digest:
             raise SystemExit(f"{database}: the work copy is not byte-identical")
         copied[database] = {
-            "source": str(source),
+            "source": under_work(source),
             "copy": str(target.relative_to(WORK)),
             "sha256": target_digest,
             "reason": "WAL header; SQLite needs a writable directory for its sidecars",

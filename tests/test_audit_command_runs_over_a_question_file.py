@@ -26,6 +26,7 @@ from typing import Any, cast
 
 import pytest
 
+from attestql.audit import compare
 from attestql.audit.backend import (
     BackendRefused,
     PlannerStatistics,
@@ -1226,6 +1227,41 @@ def test_a_statement_the_backend_refuses_is_recorded_and_the_run_goes_on(
     assert summary.errors[0].step == "execute"
     assert summary.exit_status == 0
     assert summary_of(tmp_path)["errors"][0]["question_id"] == 1
+
+
+def test_a_reading_this_tool_will_not_finish_is_one_question_s_error_line(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The permutation search is the one reading with a bound of its own, and it is a refusal.
+
+    A pair whose columns hold the same values prunes to nothing and the search is a walk over
+    every order of the columns. Past its bound the question is an ERROR under the run's own
+    side, because the reading is around the two statements rather than either of them, and the
+    line names the step the way a backend's refusal names its own.
+    """
+    monkeypatch.setattr(compare, "PERMUTATION_WORK_BUDGET", 3)
+    names = (("a", "text"), ("b", "text"), ("c", "text"))
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    write(tmp_path / "predictions.json", {"207": ELEMENTS_ONE_ROW})
+    backend = FakeBackend(
+        {
+            ELEMENTS: fake_result(names, (("x", "x", "x"),)),
+            ELEMENTS_ONE_ROW: fake_result(names, (("x", "x", "x"),)),
+        },
+        row_counts={"atom": 1},
+    )
+    lines = Lines()
+
+    summary = run_audit(
+        options(tmp_path, predictions=tmp_path / "predictions.json"), backend, lines
+    )
+
+    assert "ERROR" in lines.written[0]
+    assert "run: comparison:" in lines.written[0]
+    assert "rows of comparison this tool will spend" in lines.written[0]
+    assert summary.errors[0].step == "comparison"
+    assert summary.errors[0].side == "run"
+    assert summary.question_directories == (), "a question that errored writes no directory"
 
 
 PAST_THE_BOUND = "execute: the statement ran past its 30s timeout"

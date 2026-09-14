@@ -44,7 +44,7 @@ from attestql.evidence.types import (
     SortKey,
     StatementSource,
 )
-from attestql.kernel.types import BoundParameter, ExecutionResult, ValidatedStatement
+from attestql.kernel.types import BoundParameter, ExecutionResult
 
 _PLACEHOLDER = re.compile(r"\$(\d+)")
 """Every ``$n`` the executed text carries. A statement that quotes text containing one
@@ -81,30 +81,26 @@ def _by_position(parameters: tuple[BoundParameter, ...]) -> tuple[BoundParameter
     return tuple(sorted(parameters, key=lambda parameter: parameter.position))
 
 
-def _require_stated_parameters(
-    statement: ValidatedStatement, bound_parameters: tuple[BoundParameter, ...]
+def _require_the_parameters_the_sql_binds(
+    executed_sql: str, bound_parameters: tuple[BoundParameter, ...]
 ) -> tuple[BoundParameter, ...]:
-    """The admitted parameters, once the caller has stated the same ones.
+    """The parameters this record states, once the SQL's own placeholders cover them.
 
-    Compared on the whole parameter and not on the shape alone: two runs of one
-    statement share a shape and differ in the values they bound, and a record naming
-    the wrong values is a record of a different execution.
+    Until 2026-09-14 this also compared them with the parameters a validator had admitted,
+    which is the half that went with the admission: nothing admitted a statement before it
+    ran, so the second list was built from the first and could not disagree with it. What is
+    left is the check that was ever about the record. A record whose SQL names ``$1`` and
+    ``$2`` and whose parameters are ``$1`` alone is a record nobody can re-run.
     """
-    admitted = _by_position(statement.parameters)
     stated = _by_position(tuple(bound_parameters))
-    if stated != admitted:
-        raise IncompleteEvidence(
-            "the bound parameters stated for this record are not the parameters the "
-            f"validator admitted: stated {stated!r}, admitted {admitted!r}"
-        )
-    placeholders = {int(position) for position in _PLACEHOLDER.findall(statement.sql)}
-    positions = {parameter.position for parameter in admitted}
+    placeholders = {int(position) for position in _PLACEHOLDER.findall(executed_sql)}
+    positions = {parameter.position for parameter in stated}
     if placeholders != positions:
         raise IncompleteEvidence(
             "the executed SQL's placeholders and its bound parameters do not cover each "
             f"other: placeholders {sorted(placeholders)}, parameters {sorted(positions)}"
         )
-    return admitted
+    return stated
 
 
 def build_evidence_record(
@@ -113,7 +109,9 @@ def build_evidence_record(
     question: QuestionMetadata,
     question_set_version: str,
     statement_source: StatementSource,
-    statement: ValidatedStatement,
+    executed_sql: str,
+    validator_version: str,
+    checks_passed: tuple[str, ...],
     bound_parameters: tuple[BoundParameter, ...],
     result: ExecutionResult,
     identity: ExecutionIdentity,
@@ -128,22 +126,29 @@ def build_evidence_record(
 ) -> EvidenceRecord:
     """A complete ``EvidenceRecord`` for one execution.
 
-    ``statement`` and ``result`` are the execution. ``statement_source`` is the file the
+    ``executed_sql`` and ``result`` are the execution, and ``validator_version`` and
+    ``checks_passed`` name the parser that read the statement and what it checked, which is
+    what the record states about how it was read. ``statement_source`` is the file the
     statement's text was read from, which only the caller that opened it knows. ``fixture``
     and ``session_settings_in_force`` are what was measured on the server the statement
     read, so a comparison can say whether two records are about the same data read
     under the same rules; the caller that took those measurements states them.
+
+    The four arrived as one ``ValidatedStatement`` until 2026-09-14, built by ``admit`` after
+    the statement had already run. A validated statement is a promise that what the validator
+    admitted is what reached the wire, and an admission taken afterwards is not that promise,
+    so the record now takes the values it states and nothing that reads as a guarantee.
     """
-    admitted_parameters = _require_stated_parameters(statement, bound_parameters)
+    stated_parameters = _require_the_parameters_the_sql_binds(executed_sql, bound_parameters)
     return EvidenceRecord(
         question_as_asked=question_as_asked,
         question=question,
         question_set_version=question_set_version,
         statement_source=statement_source,
-        executed_sql=statement.sql,
-        bound_parameters=admitted_parameters,
-        validation_outcome=ValidationOutcome(statement.checks_passed, True),
-        validator_version=statement.validator_version,
+        executed_sql=executed_sql,
+        bound_parameters=stated_parameters,
+        validation_outcome=ValidationOutcome(checks_passed, True),
+        validator_version=validator_version,
         effective_database_role=identity.effective_database_role,
         backend_identity_at_checkout=result.backend_identity,
         session_settings_in_force=session_settings_in_force,

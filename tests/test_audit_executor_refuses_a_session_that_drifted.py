@@ -129,6 +129,13 @@ class FakeCursor:
     def description(self) -> Sequence[FakeColumn] | None:
         return self._description
 
+    @property
+    def rowcount(self) -> int:
+        """What a driver reports about the statement it last ran: the rows it returned, or
+        -1 where it returned no result at all, which is what this fake's statements that
+        answer nothing did."""
+        return len(self._rows) if self._description is not None else -1
+
     def execute(self, query: object, params: Sequence[object] | None = None) -> object:
         text = str(query)
         self._connection.log.append(text)
@@ -991,6 +998,38 @@ def test_the_envelope_pins_the_schema_an_unqualified_name_resolves_against() -> 
     assert connection.log[path] == SEARCH_PATH
     assert path < read_back, "set before the read-back, because it is the envelope"
     assert read_back < connection.log.index(STATEMENT)
+
+
+def test_a_result_inside_the_row_budget_is_read_whole(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The boundary is inside: a result exactly as long as the budget is a result."""
+    monkeypatch.setattr(postgres, "ROW_BUDGET", len(ROWS))
+
+    result = _backend(FakeConnection()).execute(STATEMENT, statement_timeout_seconds=30)
+
+    assert len(result.rows) == len(ROWS)
+    assert result.truncated is False, "nothing is cut at the bound or anywhere else"
+
+
+def test_a_result_past_the_row_budget_is_refused_before_a_row_becomes_an_object(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """One row past the bound and the statement has no result, rather than most of one.
+
+    The count is the driver's own, read off the cursor before this module turns a single row
+    into a Python tuple: the driver holds the server's result buffer either way, and what the
+    bound keeps out of the process is the copy of it a record would be built from, which is
+    the one that costs an object per cell.
+    """
+    monkeypatch.setattr(postgres, "ROW_BUDGET", 1)
+    connection = FakeConnection()
+
+    with pytest.raises(BackendRefused) as refused:
+        _backend(connection).execute(STATEMENT, statement_timeout_seconds=30)
+
+    assert refused.value.step == "execute"
+    assert "returned 2 rows, past the 1 this tool holds" in refused.value.detail
+    assert "Nothing is cut" in refused.value.detail
+    assert STATEMENT in connection.log, "the statement ran; it is the reading that is refused"
 
 
 def test_the_envelope_names_the_schema_once_and_builds_the_statement_from_it() -> None:

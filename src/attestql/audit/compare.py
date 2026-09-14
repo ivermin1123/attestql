@@ -86,26 +86,10 @@ from attestql.evidence.types import (
     SortKey,
     StatementSource,
 )
-from attestql.kernel.types import (
-    ExecutionResult,
-    ProjectedColumnWidth,
-    ResultWidthProof,
-    ValidatedStatement,
-    admit,
-)
+from attestql.kernel.types import ExecutionResult
 
 DEFAULT_STATEMENT_TIMEOUT_SECONDS = 30
 """How long one statement of an audit may run. Set on the session and read back."""
-
-WIDTH_POLICY_VERSION = "audit:observed-widths"
-"""What the width proof on an audited statement is, named for what it is.
-
-A real proof bounds a projection before the statement is sent, from a policy over a known
-schema. An audit runs arbitrary benchmark SQL against a database it did not design and has
-no such policy, so the widths are measured from the rendering of what came back. The
-record does not carry this: ADR-0013 dropped ``policy_version`` because a version naming a
-measurement taken after the fact states nothing a reader can rely on. It exists because
-``admit`` requires a proof, and it is named so that nothing here reads as one."""
 
 COUNTEREXAMPLE_FORMAT = "attestql/audit/counterexample/2"
 """What the layout below is, for a reader who opens one of these files.
@@ -331,6 +315,61 @@ class Comparison:
     disagreement to explain and a NOT_COMPARABLE names its own preconditions."""
 
 
+PERMUTATION_WORK_BUDGET = 20_000_000
+"""How many rows of comparison the test-suite search will spend on one pair before it refuses.
+
+The search asks whether some order of the second result's columns makes the two results
+equal, which is what the reference evaluator asks. It is pruned by value set: a column may
+stand where a gold column stands only if every value it holds is a value that column holds,
+which on every result this project has measured leaves one order or none. A result whose
+columns all hold the same values prunes nothing, and then the search is a walk over every
+order of its columns, which at twelve columns is 479,001,600 of them.
+
+**The unit is rows compared, not orders tried**, because the orders are not what costs: every
+complete order is one pass building the second result under it, so a search is orders times
+rows and a bound on orders alone calls a walk over a hundred rows and one over a million the
+same size. Each complete order is charged the rows it compares and each partial order one
+unit, which is what the walk between them costs.
+
+**The default is a measured time.** On the machine this was set on, a pair of eight columns
+whose every column holds every value and which no order of them equates spends 20,229,281
+units and takes 10.40 seconds, which is 1,944,582 rows compared per second. Three other
+shapes of the same pair agree within a quarter: seven columns and 500 rows at 2,428,904 a
+second, eight columns and 100 rows at 2,107,924, six columns and 5,000 rows at 2,391,609. The
+bound is the slowest of those times ten seconds, to one significant figure, so a search that
+reaches it has taken about ten seconds of one core here.
+
+**That is not a wall clock and must not be read as one.** The rate is this machine's; a
+slower one spends the same units over more seconds, and ``--statement-timeout`` is set on the
+database session and covers nothing this comparison does after the rows are back. What the
+bound guarantees is that the work is finite and named, not when it ends.
+
+What it costs a real pair: over the 256 this project has, the 252 published counterexamples
+under ``tools/site/data`` and the four the packaged demo compares, the most any search spends
+is 4 units, the widest paired result is 3 columns and the longest is 1,664 rows. The bound is
+five million times the largest of those.
+
+Past it the question is an ERROR naming this bound, and that is a departure from the reference
+evaluator, which has no bound and would go on. ``docs/audit-command.md`` says so where the
+imitation is claimed: on a pathological pair this tool reports an error where BIRD's own
+scorer would eventually report a number.
+"""
+
+
+class ComparisonRefused(RuntimeError):
+    """A reading over two results this tool will not finish, named like a backend's refusal.
+
+    ``step`` is what a run's ERROR line carries in front of the message, the way a refusal
+    from a backend carries the step that refused. The reading is not the database's and not
+    the parser's, so it is neither of their refusals and has a type of its own.
+    """
+
+    def __init__(self, detail: str) -> None:
+        self.step = "comparison"
+        self.detail = detail
+        super().__init__(f"{self.step}: {detail}")
+
+
 class SideFailed(Exception):
     """A question that could not be answered, and the side of it that could not.
 
@@ -360,7 +399,7 @@ def sided(side: str) -> Generator[None]:
         yield
     except SideFailed:
         raise
-    except (StatementRefused, BackendRefused, UnsupportedValue) as failed:
+    except (StatementRefused, BackendRefused, ComparisonRefused, UnsupportedValue) as failed:
         raise SideFailed(side, failed) from failed
 
 
@@ -501,6 +540,14 @@ def _admitted_column_permutations(
     and drops it on the next line. That is its own rule applied one column earlier, and it
     is what keeps a wide result from being a walk over every column raised to itself: eight
     columns are forty thousand orders here and sixteen million there.
+
+    A pair whose columns all hold the same values prunes nothing, and then this is a walk over
+    every order of the columns. What the walk costs is counted and the search refuses past
+    ``PERMUTATION_WORK_BUDGET`` rather than going on, which is where this tool departs from the
+    evaluator it otherwise reproduces. The count is the rows the caller compares, because that
+    is where the time goes: every complete order costs one pass over the second result, and a
+    count of orders alone would call a search over a hundred rows and one over a million the
+    same size.
     """
     gold_holds = [{row[column] for row in gold} for column in range(columns)]
     second_holds = [{row[column] for row in second} for column in range(columns)]
@@ -512,11 +559,31 @@ def _admitted_column_permutations(
         )
         for column in range(columns)
     ]
+    rows = len(second)
+    spent = 0
+
+    def refuse() -> ComparisonRefused:
+        return ComparisonRefused(
+            f"the search for a column order making the two results equal passed the "
+            f"{PERMUTATION_WORK_BUDGET} rows of comparison this tool will spend on one, over "
+            f"{columns} columns whose values do not tell them apart and {rows} rows that every "
+            f"order of them is compared over. The reading this search answers is BIRD's own "
+            f"test-suite check, which has no such bound, so this question is an error here "
+            f"rather than a number that reading would eventually reach."
+        )
 
     def extend(taken: tuple[int, ...]) -> Iterator[tuple[int, ...]]:
+        nonlocal spent
         if len(taken) == columns:
+            # What the caller is about to do with this order: one pass over the rows.
+            spent += rows
+            if spent > PERMUTATION_WORK_BUDGET:
+                raise refuse()
             yield taken
             return
+        spent += 1
+        if spent > PERMUTATION_WORK_BUDGET:
+            raise refuse()
         for candidate in admitted[len(taken)]:
             if candidate not in taken:
                 yield from extend((*taken, candidate))
@@ -656,41 +723,6 @@ def mechanism_json(found: Mechanism) -> Json:
     }
 
 
-def width_proof(
-    result: ExecutionResult, serialization: SerializationDescriptor
-) -> ResultWidthProof:
-    """The widths this execution measured, which is not the same thing as a width proof."""
-    widths: list[ProjectedColumnWidth] = []
-    for index, column in enumerate(result.columns):
-        widest = _widest(result, index, serialization)
-        widths.append(
-            ProjectedColumnWidth(
-                name=column.name,
-                declared_type=column.declared_type,
-                max_encoded_bytes=widest,
-                max_decoded_bytes=widest,
-            )
-        )
-    return ResultWidthProof(columns=tuple(widths), policy_version=WIDTH_POLICY_VERSION)
-
-
-def _widest(result: ExecutionResult, index: int, serialization: SerializationDescriptor) -> int:
-    cells = (
-        len(serialization.render_value(row[index]).encode(serialization.encoding))
-        for row in result.rows
-    )
-    return max((*cells, 1))
-
-
-def _admitted(
-    parsed: ParsedStatement, result: ExecutionResult, serialization: SerializationDescriptor
-) -> ValidatedStatement:
-    parser = parsed.parser
-    return admit(
-        parsed.sql, (), parser.validator, parser.checks, width_proof(result, serialization)
-    )
-
-
 ORDERING_KEY_NAMES_NO_COLUMN = (
     "the top level ORDER BY key {token} names no column of {tables} and no column this "
     "statement projects; this engine's grammar reads such a token as a column where one of "
@@ -778,7 +810,9 @@ def _execute_and_record(
         question=question,
         question_set_version=question_set_version,
         statement_source=statement_source,
-        statement=_admitted(parsed, result, serialization),
+        executed_sql=parsed.sql,
+        validator_version=parsed.parser.validator,
+        checks_passed=parsed.parser.checks,
         bound_parameters=(),
         result=result,
         identity=identity,
@@ -1098,6 +1132,7 @@ __all__ = [
     "MECHANISM_TRUNCATION",
     "MECHANISM_TYPE",
     "ORDERING_KEY_NAMES_NO_COLUMN",
+    "PERMUTATION_WORK_BUDGET",
     "PROJECTION_NAMES_READING",
     "SECOND_RECORD_FILE",
     "SIDE_GOLD",
@@ -1106,9 +1141,9 @@ __all__ = [
     "TEST_SUITE_EX_METHOD",
     "TEST_SUITE_EX_SOURCE",
     "VERDICT_READING",
-    "WIDTH_POLICY_VERSION",
     "BirdEx",
     "Comparison",
+    "ComparisonRefused",
     "Mechanism",
     "RecordedStatement",
     "SideFailed",
@@ -1123,6 +1158,5 @@ __all__ = [
     "sided",
     "test_suite_ex",
     "test_suite_ex_json",
-    "width_proof",
     "write_comparison",
 ]

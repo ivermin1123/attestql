@@ -193,6 +193,45 @@ rows and not the order they are stored in, so a shuffled copy digests as the tab
 from; the function differs and is written in front of the value, `md5` over the server's own row
 text on PostgreSQL and `sha256` over the rendered rows on SQLite.
 
+## The row budget
+
+A result longer than 200,000 rows is that question's ERROR line, naming the bound and the count
+that crossed it, on either engine. Nothing is cut. Both backends read every row a statement
+returned and a record states every one of them, so the whole of a result is what a verdict is
+taken over; a result this tool will not hold is therefore a question it does not answer rather
+than a comparison of part of one. `truncated` stays false in every record, which is the same
+invariant it always carried.
+
+The bound is a module constant with no flag, and its value is measured rather than chosen: the
+largest `row_count` in the 605 evidence records published under `tools/site/data` is 15,429
+(Mini-Dev q1088, the `gpt-4-turbo` prediction) and the largest the packaged demo produces is 4,
+so this is the first round number past ten times the largest result the project has seen. A run
+that reaches it is reading something neither the benchmark runs nor the demo has produced, which
+in a prediction file usually means a statement that reads a whole table where the gold reads a
+page of it.
+
+What each engine can promise differs by what its driver does. On SQLite the rows are read one
+page past the bound and no further, so the bound is what is held. On PostgreSQL the driver has
+the server's result buffer before this tool asks for anything, and the count is read off the
+cursor before a single row becomes a Python object, so what the bound keeps out of the process
+is the copy a record would be built from, which is the one that costs an object per cell.
+
+The same bound covers the other read that holds a whole relation, and with it every such read
+this tool makes. `--fixture-digest full` renders every row of every table a gold names in order
+to digest it, which on SQLite means reading those tables into this process; a table longer than
+200,000 rows there is **the run refusing to start**, naming the table, its exact length and the
+bound, and not one question's ERROR line. It is a tool error and exit 2 because the digest is
+taken once for the whole run before anything is audited, so there is no question whose line
+could carry it and nothing has been audited when it happens; the default digest, the schema and
+the exact row counts, is still available over the same tables and reads no rows at all. The
+rows are read a page at a time, so what is held when the bound is crossed is the pages read so
+far and not the table. On PostgreSQL the same digest is computed on the server, which hands
+back one string per table, so nothing there is bounded because nothing there is held.
+
+The shuffle and the plan-variant executions of the probes are bounded too, and by the same
+constant: both go through the one execute path each backend has, so a probe re-reading a result
+past the bound is that question's ERROR exactly as the first reading of it would be.
+
 ## The statement budget
 
 `--statement-timeout SECONDS`, 30 by default, bounds every statement the run sends, gold and
@@ -250,7 +289,30 @@ finish inside 30 s there alone.
   keeps duplicate rows, keeps row order when the gold's text holds ORDER BY, and still admits a
   projection whose columns came back in another order. Its DISTINCT strip is not mirrored, because
   that evaluator rewrites both statements and runs them again and these rows are already fetched,
-  so it stands for that evaluator's answer only where neither statement holds a DISTINCT.
+  so it stands for that evaluator's answer only where neither statement holds a DISTINCT. The
+  second departure is a bound: the search for a column order that makes the two results equal is
+  pruned by value set, which on every result this project has measured leaves one order or none,
+  but a pair whose columns all hold the same values prunes nothing and the search is then a walk
+  over every order of the columns, 479,001,600 of them at twelve columns, each compared over
+  every row. **Past 20,000,000 rows of comparison the question is an ERROR naming that bound**,
+  where the evaluator has no bound and would go on. The bound is on rows compared and not on
+  orders tried, because the orders are not what costs: a complete order is one pass over the
+  second result, so the work is orders times rows and a bound on orders alone would call a walk
+  over a hundred rows and one over a million the same size. Each complete order is charged the
+  rows it compares and each partial order one unit.
+- What that number was measured against, and what it does not promise. A pair of eight columns
+  whose every column holds every value and which no order of them equates spends 20,229,281 units
+  and takes 10.40 seconds on the machine this was set on, which is 1,944,582 rows compared per
+  second; three other shapes of the same pair agree within a quarter (2,428,904 a second at seven
+  columns and 500 rows, 2,107,924 at eight columns and 100 rows, 2,391,609 at six columns and
+  5,000 rows). The bound is the slowest of those rates times ten seconds, to one significant
+  figure. **It is not a wall-clock guarantee and must not be read as one:** the rate is one
+  machine's, a slower one spends the same units over more seconds, and `--statement-timeout` is
+  set on the database session and covers nothing a comparison does after the rows are back. What
+  the bound guarantees is that the work is finite and named. What it costs a real pair: over the
+  256 this project has, the 252 published counterexamples and the four the demo compares, the
+  most any search spends is 4 units, the widest paired result is three columns and the longest is
+  1,664 rows, so the bound is five million times the largest measured spend.
 - A pair of numbers equal under R-ORD is not therefore equal under R-SET: R-ORD compares the
   canonical rendering, where a numeric is written at six decimals, and R-SET compares the values
   as the result returned them, so two numbers that first differ past the sixth decimal are EQUAL

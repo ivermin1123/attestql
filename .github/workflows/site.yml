@@ -32,6 +32,10 @@ jobs:
         with:
           node-version: "22"
       - run: uv sync --locked
+      # wrangler runs with the Cloudflare token, so it runs from the tree package-lock.json
+      # resolves rather than one the registry picks at deploy time. `npm ci` refuses a lockfile
+      # that has parted from the manifest, which is the check this step is worth.
+      - run: npm ci
       - run: uv run python tools/site/build.py --out build/site
       - name: Publish
         env:
@@ -46,6 +50,8 @@ jobs:
         # three with a prefix, and the one place that knows the current shape is the API that
         # verifies it, which wrangler asks first.
         # From a directory outside the checkout: wrangler leaves a .wrangler/ cache where it runs.
+        # The binary is the one `npm ci` installed into the checkout, named by path so the shell
+        # cannot reach a wrangler from anywhere else.
         run: |
           token="$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')"
           if [ -z "$token" ]; then
@@ -55,5 +61,6 @@ jobs:
           echo "CLOUDFLARE_API_TOKEN holds ${#token} characters after trimming"
           export CLOUDFLARE_API_TOKEN="$token"
           cd "$RUNNER_TEMP"
-          npx --yes wrangler@4.129.0 pages deploy "$GITHUB_WORKSPACE/build/site" \
+          locked="$GITHUB_WORKSPACE/node_modules/.bin/wrangler"
+          "$locked" pages deploy "$GITHUB_WORKSPACE/build/site" \
             --project-name "$PROJECT" --branch "$BRANCH" --commit-dirty=true

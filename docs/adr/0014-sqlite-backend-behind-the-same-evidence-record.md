@@ -128,7 +128,9 @@ column, and only a key that names none is refused.
 ## Estimate
 
 Stays as it is: `evidence/`, `contract/`, `kernel/ports.py`, most of `cli.py` and
-`compare.py`, about 4,000 lines. Splits into an engine module beside the PostgreSQL one:
+`compare.py`, about 4,000 lines. Amended 2026-09-14: `kernel/ports.py` did not stay, and
+went with the port cluster whose removal ADR-0013 point 7 records; the shared result types
+of `kernel/types.py` are what the audit still reaches. Splits into an engine module beside the PostgreSQL one:
 `postgres.py` (860) and `statements.py` (465), and a SQLite sibling of each, of a similar
 size. Changes in place: `kernel/types.py` and `evidence/types.py` for the two schema
 amendments, `smells.py` for the catalogue seam, about 150 lines. The measured numbers of the

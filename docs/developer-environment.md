@@ -46,6 +46,21 @@ migrations, which is why none of them needed a compatibility argument.
 | Markdown | **markdownlint** | Documentation is a primary deliverable here and an external reviewer reads it. Broken tables and inconsistent headings are defects in the deliverable, not cosmetics. |
 | Spelling | **cspell** | Same reason. The documents are read by people outside the team. |
 
+### The two Node files at the root, added 2026-09-14
+
+`package.json` and `package-lock.json` hold one dependency, wrangler, and exist because the site
+workflow runs it with a Cloudflare API token. `npx --yes wrangler@<version>` pinned the top of
+that tree and let the registry resolve the rest at deploy time, so what ran beside the token was
+not what any commit here states; `npm ci` installs the tree the lockfile resolves, with an
+integrity hash for every package, and the deploy runs the binary that install produced.
+
+**markdownlint and cspell stay on `npx` at the versions the justfile pins**, and neither appears
+in `package.json`. They read files, carry no credential, and run inside `just check`, where a
+maintainer is watching the output; a resolved tree for them would state a trust nothing needs.
+`node_modules/` stays ignored, no Node dependency is installed by `just check`, and
+`tests/test_the_deploy_runs_the_wrangler_it_locked.py` is what keeps the split and both pins from
+drifting.
+
 ## 3. Ruff rule selection
 
 `["E", "F", "I", "UP", "B", "SIM", "RUF", "S"]`, with `ignore = ["E501"]` because the formatter owns
@@ -177,6 +192,23 @@ its own. The seven tags this repository already has are not consistent about tha
 through `v0.2.0` are annotated, `v0.2.1`, `v0.2.2` and `v0.3.0` are lightweight) and are left as
 they are: a published tag is history, and rewriting one to tidy its object type would move a
 reference other people already hold.
+
+**Which number moves, decided 2026-09-14.** From 0.3.1 on, a release carrying a `feat` commit
+moves the **minor** and a release carrying only fixes, documentation and data moves the **patch**.
+The major stays at 0: what this project asks to be judged on is the record format and the ADRs
+that own it, and moving to 1 is a statement about their stability that no measurement here
+supports yet.
+
+The releases before that rule did not follow it, which is the finding this paragraph answers.
+Counted on 2026-09-14 with `git log <previous tag>..<tag>`: `v0.1.2` carried 1 `feat`
+commit, `v0.1.3` carried 7, `v0.2.1` carried 3 and `v0.2.2` carried 1, the one that shipped
+`attestql demo`. Each of those is a patch release holding a feature. `v0.2.0` and `v0.3.0` moved
+the minor and carried 5 and 15, and `v0.3.1` carried none of its 25 commits, so it is already the
+release the rule above describes and is where the rule starts rather than at a tag not yet made.
+The published tags are left as they are: a version number is a reference other people hold, and
+renaming one to tidy it would move something already in use. This paragraph is the correction.
+
+Phases 4 and 5 of the review findings carry `feat` commits, so the next release is **0.4.0**.
 
 **Which tags get a GitHub release.** Every tag that publishes a version to PyPI. The workflow
 makes none: it publishes to PyPI and stops, so the release page is made by hand at the tag, and

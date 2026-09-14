@@ -729,6 +729,81 @@ def test_columns_that_came_back_in_another_order_are_equal_under_the_test_suite_
     assert bird_ex(gold, second, engine=ENGINE_POSTGRESQL).value == 0
 
 
+def _every_column_one_value(columns: int) -> tuple[tuple[tuple[str, str], ...], tuple[object, ...]]:
+    """A pair of results the value-set pruning cannot tell apart, which is the worst shape.
+
+    Every column holds the same one value, so every column of the second result may stand
+    where every column of the gold stands and nothing is pruned: what the search walks is
+    every order of the columns, which is what makes a wide result factorial.
+    """
+    names = tuple((f"c{at}", "text") for at in range(columns))
+    return names, ("x",) * columns
+
+
+def test_a_search_inside_the_work_budget_answers(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The boundary is inside: a search that spends exactly the budget is a search.
+
+    Three columns and nothing pruned, so the first order the search builds is the one that
+    agrees and it stops there: three partial orders at one unit each, the root and one per
+    column below it, and then the two rows that order is compared over. Five units.
+    """
+    names, row = _every_column_one_value(3)
+    monkeypatch.setattr(compare, "PERMUTATION_WORK_BUDGET", 5)
+    gold = fake_result(names, (row, row))
+    second = fake_result(names, (row, row))
+
+    assert compare.test_suite_ex(gold, second, GOLD_SET, engine=ENGINE_POSTGRESQL).value == 1
+
+
+def test_a_search_past_the_work_budget_is_that_question_s_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """One unit past the bound and the reading has no answer, rather than a wrong one.
+
+    A result whose columns share their values prunes nothing, and the search is then a walk
+    over every order of its columns, each order compared over every row: twelve columns are
+    479,001,600 orders and a row count multiplies them. The bound stops it and the question is
+    an error naming the bound, which is where this tool departs from the reference evaluator
+    it otherwise reproduces, because that evaluator has no bound at all. The bound is moved to
+    the edge of a small search here rather than a wide pair built to reach the real one, so
+    what is checked is the bound and not the size of a fixture.
+    """
+    names, row = _every_column_one_value(3)
+    monkeypatch.setattr(compare, "PERMUTATION_WORK_BUDGET", 4)
+    gold = fake_result(names, (row, row))
+    second = fake_result(names, (row, row))
+
+    with pytest.raises(compare.ComparisonRefused) as refused:
+        compare.test_suite_ex(gold, second, GOLD_SET, engine=ENGINE_POSTGRESQL)
+
+    assert refused.value.step == "comparison"
+    assert "passed the 4 rows of comparison" in refused.value.detail
+    assert "3 columns" in refused.value.detail
+    assert "2 rows" in refused.value.detail
+    assert "BIRD's own test-suite check, which has no such bound" in refused.value.detail
+
+
+def test_the_budget_counts_the_rows_compared_and_not_the_orders_tried(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The same search over more rows costs more, which is what the budget is a budget on.
+
+    The two pairs below walk the identical tree: three columns, nothing pruned, the first
+    order agreeing. What differs is the pass over the rows that each complete order costs,
+    and it is the whole of the difference in time between them. A bound counting orders would
+    hold these two equal and let the longer one run as long as its rows take.
+    """
+    names, row = _every_column_one_value(3)
+    monkeypatch.setattr(compare, "PERMUTATION_WORK_BUDGET", 5)
+    short = fake_result(names, (row, row))
+    long = fake_result(names, (row,) * 6)
+
+    assert compare.test_suite_ex(short, short, GOLD_SET, engine=ENGINE_POSTGRESQL).value == 1
+    with pytest.raises(compare.ComparisonRefused) as refused:
+        compare.test_suite_ex(long, long, GOLD_SET, engine=ENGINE_POSTGRESQL)
+    assert "6 rows" in refused.value.detail
+
+
 def test_a_duplicate_row_bird_forgives_is_refused_by_the_test_suite_reading(
     tmp_path: Path,
 ) -> None:

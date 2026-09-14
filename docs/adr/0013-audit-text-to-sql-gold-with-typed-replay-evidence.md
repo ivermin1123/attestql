@@ -134,7 +134,10 @@ that look wrong, each with a counterexample and an evidence record.
    ADR-0003, 0004, 0006 stand. The S0 register narrows to S0-02, S0-03, S0-07, S0-08.
    Amended 2026-09-03, before publication: `kernel/adapters/` (the vendored V2.9 validator and
    its adapter) leaves the tree with the GPL parser it imports, so `kernel/` keeps only the
-   shared result types and the port protocols; ADR-0001, 0006 and 0010, the superseded ADRs, the
+   shared result types and the port protocols. Amended 2026-09-14: the port protocols went
+   too, with `ExecutionContext` and the `admit()` call the audit made after its statement had
+   already run, so `kernel/` keeps the shared result types alone; ADR-0001, 0006 and 0010,
+   the superseded ADRs, the
    Slice 1 documents and every report of the retired code stay in the private history before
    publication, up to that date, which the owner can provide on request.
 8. **Licence.** Apache-2.0. `pglast` (GPLv3 or later) stays as the validator's parser, declared in
