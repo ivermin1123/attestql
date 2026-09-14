@@ -1,0 +1,114 @@
+{
+ "compared": 121,
+ "published_with_no_fresh_run": [],
+ "smells_moved": {
+  "duplicate-full-row": -1,
+  "float-aggregate-order": -1,
+  "not-a-function-of-the-data": -7
+ },
+ "verdicts_moved": [
+  {
+   "run": "bird-dev-sqlite/dev-20251106/card_games",
+   "published": {
+    "GOLD-ONLY": 190,
+    "ERROR": 1
+   },
+   "fresh": {
+    "GOLD-ONLY": 189,
+    "ERROR": 2
+   },
+   "timeouts_only": false,
+   "published_timeouts": [
+    [
+     518,
+     "gold"
+    ]
+   ],
+   "fresh_timeouts": [
+    [
+     518,
+     "gold"
+    ]
+   ],
+   "kept_a_crowded_copy": true
+  },
+  {
+   "run": "minidev-pg/meta-llama-3-70b-instruct-2",
+   "published": {
+    "NOT_EQUAL": 209,
+    "EQUAL": 131,
+    "ERROR": 158
+   },
+   "fresh": {
+    "NOT_EQUAL": 208,
+    "EQUAL": 131,
+    "ERROR": 159
+   },
+   "timeouts_only": false,
+   "published_timeouts": [],
+   "fresh_timeouts": [],
+   "kept_a_crowded_copy": false
+  },
+  {
+   "run": "minidev-sqlite/gpt-35-turbo/financial",
+   "published": {
+    "NOT_EQUAL": 17,
+    "ERROR": 7,
+    "EQUAL": 6
+   },
+   "fresh": {
+    "NOT_EQUAL": 16,
+    "ERROR": 8,
+    "EQUAL": 6
+   },
+   "timeouts_only": false,
+   "published_timeouts": [],
+   "fresh_timeouts": [],
+   "kept_a_crowded_copy": false
+  },
+  {
+   "run": "minidev-sqlite/gpt-4-32k/debit_card_specializing",
+   "published": {
+    "NOT_EQUAL": 20,
+    "ERROR": 1,
+    "EQUAL": 9
+   },
+   "fresh": {
+    "NOT_EQUAL": 19,
+    "ERROR": 2,
+    "EQUAL": 9
+   },
+   "timeouts_only": false,
+   "published_timeouts": [],
+   "fresh_timeouts": [],
+   "kept_a_crowded_copy": false
+  },
+  {
+   "run": "minidev-sqlite/mistralai-mixtral-8x7b-instru-4/financial",
+   "published": {
+    "NOT_EQUAL": 8,
+    "ERROR": 19,
+    "EQUAL": 3
+   },
+   "fresh": {
+    "NOT_EQUAL": 9,
+    "ERROR": 18,
+    "EQUAL": 3
+   },
+   "timeouts_only": true,
+   "published_timeouts": [
+    [
+     116,
+     "prediction"
+    ]
+   ],
+   "fresh_timeouts": [],
+   "kept_a_crowded_copy": true
+  }
+ ],
+ "fresh_summaries_without_question_directories": [],
+ "fresh_summaries_disagreeing_with_disk": [],
+ "fresh_record_layouts": {
+  "attestql/audit/4": 4273
+ }
+}
