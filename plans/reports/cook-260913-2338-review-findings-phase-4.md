@@ -231,10 +231,104 @@ other lines of that block name the output directory, so they are the ones a run 
 `--out demo` from the repository root prints. `docs/audit-command.md` describes the refusals
 commits 3, 4 and 6 added.
 
+## Merge-gate fixes
+
+Two coordinator-side reviewers read the twelve commits above and returned MERGE AFTER FIXES.
+Three more commits, on top and never rewriting what is under them, each gate-green through the
+chained form and each with a test that fails before it.
+
+### 12. `a53847f` fix(report): a report is reconciled with what the run says it wrote
+
+The blocking one, and the reviewer was right: LOGIC-06 as I closed it was built on a false
+premise. The check read the number of questions audited as the number of question directories to
+expect, and it is not one. A question that agreed and fired no probe writes no directory, so every
+healthy run holding such a question was refused. Reproduced before anything was changed: `attestql
+demo --out D`, then an audit of `--ids 1029` alone, which is one gold, no prediction, no probe and
+exit 0, and then `attestql report` on it, which exited 2. The other half of the same mistake was
+the exception for a selection, which made the check silent for exactly the case it was written
+for, a published run that had lost `q879`.
+
+The run now says what it wrote. `summary.json` holds `question_directories`, the ids whose
+`q<id>/` the run wrote in the order asked, under the rule the run applies: a directory exists when
+the question disagreed, a NOT_EQUAL or a NOT_COMPARABLE, or when a probe fired over it. An empty
+list is a run that wrote none and is not a run that says nothing. The renderer reconciles the
+directories it finds against that list: a whole run must hold exactly them and is refused naming
+the ids either way, a selection may hold some of them and is refused for one the list does not
+name, and an errored question writes none and is a row from the summary rather than a gap. A
+summary written before the key is not refused, because every published run and every directory an
+earlier release left on a reader's disk is one; those are held only to the bounds their counts
+fix.
+
+Files: `src/attestql/audit/cli.py`, `src/attestql/report/render.py`,
+`src/attestql/report/templates/run.html`, `docs/audit-command.md`,
+`tests/test_report_renders_an_audit_directory.py`. Seven tests, of which the first that fails is
+`test_a_healthy_run_whose_only_question_agreed_and_fired_no_probe_renders`, the reproduction
+itself. Gate green.
+
+### 13. `1955fb3` docs(audit): three sentences the code had moved past, and one the code now meets
+
+The module docstring of `src/attestql/audit/cli.py` said nothing aborts a run after it started;
+one thing does since a write that fails mid run became a tool error, and it now says which. The
+SQLite backend and `SessionSettings` both said nine settings a file can be asked for; there are
+ten. The fourth was made true rather than corrected: the bound on a question id says an id outside
+it is refused before the backend opens, and it was not, because the run read the file and the run
+was handed a backend. `connect_and_audit` reads the question file before it connects, which is the
+preferred fix the review named; the read needs no backend and carries nothing past that line.
+
+Files: `src/attestql/audit/cli.py`, `src/attestql/audit/sqlite.py`,
+`src/attestql/evidence/types.py`, and three test files. Tests that fail first:
+`test_a_question_file_no_run_could_use_is_refused_before_a_database_is_opened` and
+`test_the_two_sentences_that_count_the_readings_count_the_ones_there_are`. One existing test
+changed with the behaviour: the one that proved the backend is given back after a failed run used
+a missing question file to fail, which no longer reaches a backend, so it fails on the output
+directory instead, and a second test states that a question file this run cannot use takes no
+backend at all. Gate green.
+
+### 14. `d5e8b11` fix(site): seven small things, one of which a killed process could leave behind
+
+`FilterPage` takes the `within` context the run and question pages take, and its title leads with
+the restriction as a question page leads with its question: over the 653 pages of the site that
+takes the titles past 60 characters from 173 to 46 and the longest from 89 to 73, with all 653
+still distinct. A rerun of an audit directory now removes a `.<name>.<rand>.partial` a killed
+process left, which it used to leave beside the fresh run. The SQLite `query_only` envelope goes
+back on whatever stopped the copies, rather than on the line after a loop anything could be raised
+out of. `SEARCH_PATH` is built from `DEFAULT_SCHEMA` instead of spelling `public` again.
+`tools/site/README.md` no longer documents the refusal about an `--out` inside a directory the
+repository does not have, and its template list names `not-found.html`. The release note about
+`search_path` says the key moves as well as the value. The symlink guard test makes everything it
+makes under `tmp_path` instead of creating and removing a directory under the repository's own
+`build/`.
+
+Files: `src/attestql/report/render.py`, `src/attestql/audit/cli.py`,
+`src/attestql/audit/postgres.py`, `src/attestql/audit/sqlite.py`,
+`src/attestql/evidence/render.py`, `tools/site-select/notes.py`, `tools/site/README.md`, and five
+test files. Four tests that fail first, of which
+`test_the_envelope_goes_back_on_when_the_copies_could_not_be_made` is the one about behaviour
+nothing else covered. Gate green.
+
+### Checks after the merge-gate fixes
+
+The reproduction renders: the one-question gold-only audit exits 0 and `attestql report` on it
+exits 0, writing one page and no questions. `just check` green at the branch head: 1,284 passed
+and 34 skipped, then 34 in the PostgreSQL sandbox and 130 in the SQLite sandbox.
+`uv run python tools/site/build.py` builds the 121 published runs into a scratch directory, 2,181
+files and 32,670,870 bytes, inside all three budgets. `docs/audit-command.md` states
+`question_directories` with its writing rule, states every refusal the report command can exit 2
+on, and names the two classification files a report rerun removes.
+
+### Named in the review and deliberately not done
+
+The review listed four as not now, and none was done: the DSN keyword parser accepts
+`host=h;password=x` and options strings carrying a password; a re-raise path catches `OSError`
+only; `contract/counts.py` shares message templates across its callers; and the `Backend` and
+`Connection` protocols each gained a method. They are refactors, and phase 6 owns the refactors.
+
 Status: DONE
 Summary: The eighteen findings of phase 4 are closed as the eleven commits the plan names, in its
-order, each with a test that fails before it and a green `just check` chained in front of it.
+order, and the two reviewers' blocking findings and small pass are closed as three commits on top,
+each with a test that fails before it and a green `just check` chained in front of it.
 Concerns: the published runs under `tools/site/data/` still hold records written before the
-`search_path` and `automatic_index` changes, so the site and the tool differ by those bytes until
-a release regenerates them; and `tools/site-select/audits.sh` is covered by its new tests alone,
-because running it is out of scope for a worker.
+`search_path` and `automatic_index` changes, and they state no `question_directories`, so the
+renderer holds them only to the bounds their counts fix until a release regenerates them; and
+`tools/site-select/audits.sh` is covered by its new tests alone, because running it is out of
+scope for a worker.
