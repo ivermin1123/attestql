@@ -151,7 +151,14 @@ and no second record, and its directory holds the two files there are: the gold'
 `evidence-gold.json`, and `smells.json`. `audit/summary.json` holds the counts, the fixture
 digest, whether the shuffle ran, the session the run was made in (the server's version string
 beside its number) and the parser that judged every statement (the validator, the `postgast`
-release and the libpg_query grammar version). `fixture.unreadable_tables` names the tables a gold
+release and the libpg_query grammar version). `question_directories` lists, in the order the
+questions were asked, the ids this run wrote a `q<id>/` for: a question gets one when it
+disagreed, which is a `NOT_EQUAL` or a `NOT_COMPARABLE`, or when a probe fired over it. A question
+that agreed with nothing to say about it writes none, and neither does one that errored, so the
+number audited is an upper bound on the directories and never a count of them. The list is what
+`attestql report` reconciles the directories it finds against; a run that audited only questions
+like that states an empty list, which is not the same as saying nothing.
+`fixture.unreadable_tables` names the tables a gold
 uses that the catalogue holds but the role may not SELECT from, beside `fixture.missing_tables`,
 the ones the catalogue does not hold at all; the first is repaired with a GRANT and the second in
 the question file, and either makes every question that uses the table an error line rather than
@@ -314,12 +321,24 @@ pages were written and 2 when the directory could not be rendered: a directory h
 `--out` naming the audit directory itself, or a directory inside it, is refused for the same
 reason the default is a sibling.
 
+The directories are reconciled with what the run says it wrote, and a report that would be
+missing a question, or showing one the run never had, is refused with nothing written. A
+directory the summary's `question_directories` names and that is not here is exit 2 naming the
+ids; a `q<id>/` the list does not name is exit 2 too, whether or not the run is a selection. A
+selection is the one gap that is explained: where a `published.json` is beside the summary the
+directories may be some of the listed ones, because a site publishes some of a run's questions
+and that file says where the whole run is, and the run page states how many of them are here. A
+summary written before `question_directories` existed states none, and such a directory is held
+only to what its counts fix: the directories and the errors cannot be more questions than the run
+audited, and a whole run cannot hold fewer directories than the `NOT_EQUAL` it counted.
+
 The output directory follows the rule the audit's own does. The first render leaves a
 `.attestql-report` marker in it; a render into a directory that has the marker removes what the
-render before it wrote (`index.html`, `summary.json`, every `q<id>/`, `not-equal/`,
-`by-mechanism/`, `by-probe/` and `static/`) before
-writing anything, so what is in there is one report and not two, and anything else you put there
-stays. A non-empty directory without the marker is refused with nothing in it touched.
+render before it wrote (`index.html`, `summary.json`, `classification.json`,
+`classification-source.json`, every `q<id>/`, `not-equal/`, `by-mechanism/`, `by-probe/` and
+`static/`) before writing anything, so what is in there is one report and not two, and anything
+else you put there stays. A non-empty directory without the marker is refused with nothing in it
+touched.
 
 `index.html` is the run: the counts, what the run was made of (both file digests with whatever
 origin the run was told, the server, the parser, the serialization, the fixture digest, the

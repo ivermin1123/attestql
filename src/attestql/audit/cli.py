@@ -390,6 +390,15 @@ class Summary:
     smells: Mapping[str, int]
     credited_but_not_equal: Credited | None
     errors: tuple[QuestionError, ...]
+    question_directories: tuple[int, ...]
+    """The questions this run wrote a directory for, in the order they were asked.
+
+    A question gets one when it disagreed, which is a NOT_EQUAL or a NOT_COMPARABLE, or when
+    a probe fired over it; a question that agreed with nothing to say about it writes none,
+    and neither does one that errored. Stated rather than left to be counted, because the
+    number audited does not say which directories a reader should find and a run that lost
+    one looked like a run that never wrote it.
+    """
     timed_out: Mapping[str, tuple[int, ...]]
     """The questions whose statement ran past the run's bound, by the side it ran on.
 
@@ -1215,6 +1224,9 @@ class _Counted:
     beside ``errors`` rather than read back out of them, because what makes one of them a
     timeout is the type the backend raised and not a phrase in a message an engine wrote."""
     questions: int = 0
+    directories: list[int] = field(default_factory=list[int])
+    """The questions this run wrote a directory for, in the order they were asked, which is
+    what the summary states so that a reader of the directory knows which of them to expect."""
     credited: int = 0
     credited_by_mechanism: dict[str, int] = field(default_factory=dict[str, int])
     credited_and_test_suite_ex: int = 0
@@ -1386,6 +1398,7 @@ def _audit_one(
     written = disagreed or bool(fired)
     if written:
         _write_question(directory, comparison, gold_record=gold, found=found)
+        counted.directories.append(question.question_id)
     writer.line(
         _line(
             question,
@@ -1487,6 +1500,7 @@ def _summarise(
             )
         ),
         errors=tuple(counted.errors),
+        question_directories=tuple(counted.directories),
         timed_out=_timed_out(counted),
         elapsed_seconds=elapsed,
         exit_status=status,
@@ -1637,6 +1651,7 @@ def _summary_json(
             "the instant the run started" if options.data_as_of is None else "--data-as-of"
         ),
         "elapsed_seconds": dict(summary.elapsed_seconds),
+        "question_directories": list(summary.question_directories),
         "errors": [
             {
                 "question_id": error.question_id,

@@ -125,6 +125,14 @@ and is copied beside the page: what this decides is the size of the document a b
 to lay out, not what a reader can reach. Fifty is more than a reader reads before opening
 the JSON and small enough that a result of ten thousand rows is a page like any other."""
 
+NAMED_IN_A_REFUSAL = 20
+"""How many question ids a refusal names before it counts the rest instead.
+
+A run of a thousand questions that lost its directories would otherwise put a thousand ids in
+one line on a terminal. Spelled here rather than imported from the command: a report is read
+without the auditing side of the package, and two layers that happen to name the same number
+are not one decision."""
+
 MARKER_FILE = ".attestql-report"
 """What says an output directory is a render's own and may be cleared by the next one."""
 
@@ -554,6 +562,12 @@ class RunPage:
     directories: int = 0
     """How many question directories this render found, which is how many of the run's
     questions have a page here. Counted rather than read, so it is what was rendered."""
+    wrote: int | None = None
+    """How many question directories the run says it wrote, where its summary says.
+
+    What a selection is a selection of. ``published.json`` states the same number for a run a
+    publisher archived, and this is the run's own answer for one nobody has; a summary written
+    before the run stated it leaves this empty and the page says only that it is a selection."""
     verdict_figure: Figure | None = None
     probe_figure: Figure | None = None
     """The verdicts and the probes drawn, filled in after the page is built. ``counts``
@@ -725,33 +739,125 @@ def _refuse_a_gap_nothing_explains(
     directories: Sequence[Path],
     published: Published | None,
 ) -> None:
-    """Every question the summary counts, accounted for by a directory or by an error.
+    """Every question directory the run says it wrote, found here; and none it never wrote.
 
-    The rows of the index come from the question directories and from the summary's own error
-    list, and until 2026-09-13 nothing compared either with the number the same summary says
-    was audited. An audit that lost a directory therefore rendered a report that looks whole:
-    it states the run's real total at the top and is simply missing the question, with no page
-    saying so anywhere. Removing ``q879`` from the demo rendered five questions under a total
-    of six.
+    The rows of the index come from the question directories, and until 2026-09-13 nothing
+    compared them with the run. An audit that lost a directory rendered a report that looks
+    whole: it states the run's real total at the top and is simply missing the question, with
+    no page saying so anywhere. Removing ``q879`` from the demo rendered five questions under
+    a total of six.
 
-    A selection is the one gap that is explained. What a site publishes of a run is some of
-    its questions, and ``published.json`` is where the whole run is; the run page states both
-    numbers, so a reader is never shown a selection as if it were everything. Even then the
-    count may only be short: more pages than the run audited is not a selection of it.
+    What the run wrote is the list the summary names and never the number it audited. A
+    question that agreed and fired no probe writes no directory, so the number audited is an
+    upper bound and nothing more: reading it as the count of directories to expect refused
+    every healthy run that held such a question, which is most of them.
+
+    A selection is the other case. What a site publishes of a run is some of its questions and
+    ``published.json`` is where the whole run is, so a directory the run wrote may be absent
+    here; one the run never wrote may not, whichever kind of report this is.
+
+    A summary that names no list was written before 2026-09-14, which every published run and
+    every directory an earlier release wrote is. Nothing is claimed about those beyond what the
+    counts allow, and what they allow is checked.
     """
-    stated = _integer(_object(summary, "question_set"), "audited")
-    accounted = len(directories) + len(_objects(summary, "errors"))
-    if accounted == stated or (published is not None and accounted < stated):
+    listed = _listed_directories(summary)
+    present = tuple(sorted(_question_ids(directories)))
+    if listed is None:
+        _refuse_a_count_that_cannot_be_right(audit_directory, summary, present, published)
         return
-    short = "holds" if accounted < stated else "holds more than"
-    raise ReportRefused(
-        f"{audit_directory} {short} the questions its {SUMMARY_FILE} counts: the summary says "
-        f"{stated} were audited and the directory accounts for {accounted} of them "
-        f"({len(directories)} question directories and {len(_objects(summary, 'errors'))} "
-        f"errors). A report rendered from it would state {stated} at the top and show "
-        f"{accounted}. A selection of a run says where the whole run is, in "
-        f"{PUBLISHED_FILE} beside the summary."
+    named = set(listed)
+    extra = tuple(sorted(set(present) - named))
+    if extra:
+        raise ReportRefused(
+            f"{audit_directory} holds more question directories than its {SUMMARY_FILE} names: "
+            f"{_ids(extra)} {'is' if len(extra) == 1 else 'are'} here and the run says it wrote "
+            f"{len(listed)} directories, none of them {'that one' if len(extra) == 1 else 'those'}. "
+            f"A report is rendered from an audit's own directory and shows what the run wrote."
+        )
+    if published is not None:
+        return
+    missing = tuple(sorted(named - set(present)))
+    if missing:
+        raise ReportRefused(
+            f"{audit_directory} holds fewer question directories than its {SUMMARY_FILE} names: "
+            f"the run says it wrote {len(listed)} and {_ids(missing)} "
+            f"{'is' if len(missing) == 1 else 'are'} not here. A report rendered from it would "
+            f"be missing {'that question' if len(missing) == 1 else 'those questions'} with no "
+            f"page saying so. A selection of a run says where the whole run is, in "
+            f"{PUBLISHED_FILE} beside the summary."
+        )
+
+
+def _refuse_a_count_that_cannot_be_right(
+    audit_directory: Path,
+    summary: Json,
+    present: Sequence[int],
+    published: Published | None,
+) -> None:
+    """The two bounds a summary that names no directories still fixes.
+
+    An errored question writes no directory and a question that agreed and fired no probe
+    writes none either, so the number audited bounds the directories from above and nothing
+    fixes them from below except the disagreements: every NOT_EQUAL was written. A selection
+    holds some of the directories, so only the upper bound is about it.
+    """
+    audited = _integer(_object(summary, "question_set"), "audited")
+    errors = len(_objects(summary, "errors"))
+    if len(present) + errors > audited:
+        raise ReportRefused(
+            f"{audit_directory} holds more than the questions its {SUMMARY_FILE} counts: the "
+            f"summary says {audited} were audited and the directory holds {len(present)} "
+            f"question directories beside {errors} errors, which is more questions than the "
+            f"run had. A report rendered from it would state {audited} at the top and show "
+            f"{len(present) + errors}."
+        )
+    not_equal = _optional_integer(_object(summary, "verdicts"), NOT_EQUAL, 0)
+    if published is None and len(present) < not_equal:
+        raise ReportRefused(
+            f"{audit_directory} holds fewer question directories than its {SUMMARY_FILE} "
+            f"counts {NOT_EQUAL}: the summary says {not_equal} questions disagreed and every "
+            f"one of those was written, and {len(present)} question directories are here. A "
+            f"report rendered from it would be missing a question that disagreed, with no page "
+            f"saying so. A selection of a run says where the whole run is, in {PUBLISHED_FILE} "
+            f"beside the summary."
+        )
+
+
+def _listed_directories(summary: Json) -> tuple[int, ...] | None:
+    """The questions the run says it wrote a directory for, or ``None`` where it does not say.
+
+    Absent is not empty. A summary written before this key existed says nothing about what
+    was written, and reading that silence as "none" would refuse every run made before it.
+    """
+    stated = summary.get("question_directories")
+    if stated is None:
+        return None
+    if not isinstance(stated, list):
+        raise UnreadableRecord(f"question_directories is not a JSON array: {stated!r}")
+    listed: list[int] = []
+    for value in cast("list[object]", stated):
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise UnreadableRecord(
+                f"question_directories holds {value!r}, which is not a question id"
+            )
+        listed.append(value)
+    return tuple(listed)
+
+
+def _question_ids(directories: Sequence[Path]) -> tuple[int, ...]:
+    """The id each ``q<id>/`` names, which is how the run named it."""
+    return tuple(
+        int(match.group(1))
+        for path in directories
+        if (match := QUESTION_DIRECTORY.match(path.name)) is not None
     )
+
+
+def _ids(found: Sequence[int]) -> str:
+    """A few question ids as a reader reads them, with the rest counted rather than listed."""
+    shown = ", ".join(f"q{value}" for value in found[:NAMED_IN_A_REFUSAL])
+    left = len(found) - NAMED_IN_A_REFUSAL
+    return shown if left <= 0 else f"{shown} and {left} more"
 
 
 def _refuse_an_out_inside_the_audit(audit_directory: Path, out: Path) -> None:
@@ -1603,11 +1709,13 @@ def _run_page(
     shuffle = _object(summary, "shuffle")
     session = _object(summary, "session_settings")
     verdicts = _object(summary, "verdicts")
+    listed = _listed_directories(summary)
     return RunPage(
         within=within,
         breadcrumb=breadcrumb,
         published=published,
         directories=found,
+        wrote=None if listed is None else len(listed),
         run_id=_text(summary, "run_id"),
         format=_text(summary, "format"),
         exit_status=_integer(summary, "exit_status"),
