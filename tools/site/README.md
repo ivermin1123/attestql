@@ -2,13 +2,14 @@
 
 What is served at a URL: the runs rendered by `attestql report`, plus a landing page and a page
 about the method that this directory owns. The renderer lives in the package
-(`src/attestql/report/`); this directory is the site built out of it, and the two templates here
+(`src/attestql/report/`); this directory is the site built out of it, and the templates here
 extend the package's base page and take its stylesheet, its script and its fonts, so there is one
 design and not two.
 
 ```text
 tools/site/build.py            the build
-tools/site/templates/          landing.html, method.html, runs.html, benchmark.html, group.html
+tools/site/templates/          landing.html, method.html, runs.html, benchmark.html,
+                               group.html, not-found.html
 tools/site/data/               the published runs; see its README
 build/site/                    where a build goes; git ignores build/
 ```
@@ -33,10 +34,8 @@ uv run python tools/site/build.py
 ```
 
 It writes `build/site/` and prints the file count, the total bytes and the wall time. `--out`
-moves the output; an `--out` inside `site/` is refused, because that directory holds the page
-attestql.com serves today and belongs to another session, and an `--out` that is not empty and
-holds no `.attestql-site` marker is refused untouched, because a build empties only a directory
-of its own.
+moves the output; an `--out` that is not empty and holds no `.attestql-site` marker is refused
+untouched, because a build empties only a directory of its own.
 
 The build is refused, with what pushed it over named, at more than 8,000 files, more than 40 MB
 in total, or any single page over 2 MB. Those are under the Cloudflare Pages Free plan's own limits (20,000

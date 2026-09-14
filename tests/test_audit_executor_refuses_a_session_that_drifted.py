@@ -24,9 +24,11 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 
+from attestql.audit import postgres
 from attestql.audit.backend import (
     Backend,
     BackendRefused,
@@ -35,6 +37,7 @@ from attestql.audit.backend import (
     TableName,
 )
 from attestql.audit.postgres import (
+    DEFAULT_SCHEMA,
     DEFAULT_SCRATCH_SCHEMA,
     DRIVER_ERROR,
     ENVELOPE_SETTINGS,
@@ -988,6 +991,23 @@ def test_the_envelope_pins_the_schema_an_unqualified_name_resolves_against() -> 
     assert connection.log[path] == SEARCH_PATH
     assert path < read_back, "set before the read-back, because it is the envelope"
     assert read_back < connection.log.index(STATEMENT)
+
+
+def test_the_envelope_names_the_schema_once_and_builds_the_statement_from_it() -> None:
+    """A second spelling of the schema is a second place to change it and one to forget.
+
+    ``DEFAULT_SCHEMA`` is where an unqualified table name is looked for, and the envelope
+    pins the search path to that schema and reads it back as that schema. All three were the
+    word ``public`` typed out again, so the module is read here for a second spelling of it:
+    a constant built from another constant looks the same from outside as one that repeats it.
+    """
+    source = Path(postgres.__file__).read_text(encoding="utf-8")
+
+    assert f'"{DEFAULT_SCHEMA}"' in source
+    assert source.count(f'"{DEFAULT_SCHEMA}"') == 1, "the schema is named once"
+    assert f"search_path = {DEFAULT_SCHEMA}" not in source, "the statement is built, not typed"
+    assert f"SET LOCAL search_path = {DEFAULT_SCHEMA}" == SEARCH_PATH
+    assert ENVELOPE_SETTINGS == (("search_path", SEARCH_PATH, DEFAULT_SCHEMA),)
 
 
 def test_a_session_that_would_not_hold_the_path_is_refused_before_the_statement() -> None:

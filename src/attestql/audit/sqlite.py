@@ -895,26 +895,38 @@ class SqliteBackend:
         made: set[TableName] = set()
         self._shuffled = None
         connection = self._writing_connection()
-        for name, found in present.items():
-            if not self._has_a_row_identity(connection, found):
-                unreachable[name] = WITHOUT_A_ROW_IDENTITY
-                continue
-            rows = counts[found.text]
-            if rows > row_limit:
-                skipped[name] = rows
-                continue
-            if found not in made:
-                # One copy per relation and not per spelling: SQLite matches a name without
-                # regard to case, so the copy a rerun reaches under one spelling is the copy
-                # it reaches under the other, and making it twice would drop the first.
-                _run(
-                    connection,
-                    _sql(SHUFFLED_COPY, copy=found.name, **_over(found)),
-                    (seed,),
-                    step="prepare_shuffled_copies",
-                )
-                made.add(found)
-            copied.append(name)
+        try:
+            for name, found in present.items():
+                if not self._has_a_row_identity(connection, found):
+                    unreachable[name] = WITHOUT_A_ROW_IDENTITY
+                    continue
+                rows = counts[found.text]
+                if rows > row_limit:
+                    skipped[name] = rows
+                    continue
+                if found not in made:
+                    # One copy per relation and not per spelling: SQLite matches a name
+                    # without regard to case, so the copy a rerun reaches under one spelling
+                    # is the copy it reaches under the other, and making it twice would drop
+                    # the first.
+                    _run(
+                        connection,
+                        _sql(SHUFFLED_COPY, copy=found.name, **_over(found)),
+                        (seed,),
+                        step="prepare_shuffled_copies",
+                    )
+                    made.add(found)
+                copied.append(name)
+        except BaseException:
+            # The envelope goes back on whatever stopped the copies. It was turned off for
+            # them alone, and a connection left writable is one this tool said it would not
+            # have: a file that had gone since the catalogue was read, or a relation the probe
+            # could not ask about, would have left it off for the rest of the run. A failure
+            # to put it back is not raised through the refusal already unwinding, which would
+            # tell the caller what the unwinding met rather than what stopped the run.
+            with suppress(BackendRefused):
+                _run(connection, f"{QUERY_ONLY} = 1", step="prepare_shuffled_copies")
+            raise
         _run(connection, f"{QUERY_ONLY} = 1", step="prepare_shuffled_copies")
         prepared = ShuffledCopies(
             copied=tuple(copied),

@@ -119,7 +119,7 @@ from attestql.audit.smells import (
 )
 from attestql.demo import FIXTURE_FILE, build_fixture, write_inputs
 from attestql.evidence.record import EvidenceRecord
-from attestql.evidence.render import Json, record_json, write_json
+from attestql.evidence.render import PARTIAL_SUFFIX, Json, record_json, write_json
 from attestql.evidence.replay import ComparabilityResult
 from attestql.evidence.serialize import SerializationDescriptor
 from attestql.evidence.types import (
@@ -1071,6 +1071,11 @@ def _clear_previous_run(out: Path) -> None:
     cache is keyed by the server and the schema digest and is a speed decision, so it stays,
     and so does anything a reader put here that this tool does not write.
 
+    A write in progress this tool never finished goes too. ``write_json`` writes beside its
+    destination and moves the file into place, and removes the partial one if either step
+    fails; a process killed between them leaves it behind, named with ``PARTIAL_SUFFIX``. It
+    is this tool's own file and is evidence of nothing, so a rerun takes it with the rest.
+
     Only a directory this tool wrote to is cleared, which is what ``MARKER_FILE`` says. One
     that is empty is taken over and marked, one that holds the marker is cleared and keeps
     it, and one that holds anything else is refused untouched: ``--out`` named a directory
@@ -1096,6 +1101,8 @@ def _clear_previous_run(out: Path) -> None:
         for child in entries:
             if child.is_dir() and QUESTION_DIRECTORY.fullmatch(child.name):
                 shutil.rmtree(child)
+            elif child.name.startswith(".") and child.name.endswith(PARTIAL_SUFFIX):
+                child.unlink(missing_ok=True)
         (out / MARKER_FILE).write_text(MARKER_TEXT, encoding="utf-8")
     except OSError as unwritable:
         raise ToolError(

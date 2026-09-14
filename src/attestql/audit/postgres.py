@@ -131,7 +131,12 @@ A hash aggregate spills at ``work_mem`` times this, so a server holding another 
 spills where this one does not and the two settings decide the summation order together.
 Two is PostgreSQL 16's own default and is stated for the same reason as the value above."""
 
-SEARCH_PATH = "SET LOCAL search_path = public"
+DEFAULT_SCHEMA = "public"
+"""Where a table named without a schema is looked for. BIRD's gold names bare tables and
+the dump loads them into one schema, so an unqualified name means this one, stated here
+rather than left to whatever the session's search path happens to be."""
+
+SEARCH_PATH = f"SET LOCAL search_path = {DEFAULT_SCHEMA}"
 """Which schema an unqualified name in the audited statement resolves to, pinned.
 
 Everything this tool measures and everything it says about what it measured is about
@@ -150,7 +155,9 @@ and not a variant of one execution. ``execute_shuffled`` puts the scratch schema
 ``pg_catalog`` is not named because PostgreSQL searches it first whatever the path says, and
 naming it would only move it."""
 
-ENVELOPE_SETTINGS: tuple[tuple[str, str, str], ...] = (("search_path", SEARCH_PATH, "public"),)
+ENVELOPE_SETTINGS: tuple[tuple[str, str, str], ...] = (
+    ("search_path", SEARCH_PATH, DEFAULT_SCHEMA),
+)
 """The settings of the envelope that are neither the timeout nor the gather: each one's
 name, the statement that sets it, and what ``pg_settings`` reports when it is held.
 
@@ -267,11 +274,6 @@ What a probe forgives a rerun for changing, named here because which types they 
 property of how this engine adds and not of the probe. A result column carries the server's
 own type name, which is what these are spelled as.
 """
-
-DEFAULT_SCHEMA = "public"
-"""Where a table named without a schema is looked for. BIRD's gold names bare tables and
-the dump loads them into one schema, so an unqualified name means this one, stated here
-rather than left to whatever the session's search path happens to be."""
 
 DEFAULT_SCRATCH_SCHEMA = "attestql_scratch"
 """The schema the shuffled copies are made in, which this tool never creates or drops.

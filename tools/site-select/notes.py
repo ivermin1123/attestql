@@ -29,7 +29,10 @@ RECORD_BYTES_MOVED: tuple[str, ...] = (
     "it now: every execution resolves an unqualified name against `public`, which is the "
     "schema the fixture digest and the row counts beside it were always about. A run made "
     'from a session holding the usual `"$user", public` therefore records `public` where '
-    "it used to record that.",
+    "it used to record that. The key moves as well as the value: `search_path` is written "
+    "where the envelope sets it rather than where the session reported it, so a reader "
+    "diffing two records of one question sees a line in a new position and not only a "
+    "changed one.",
     "A SQLite record's session settings block holds a tenth setting, `automatic_index`. The "
     "shuffle probe's plan variant turns that pragma off and gives it back, so the value in "
     "force over a statement is now stated rather than assumed to be the build's default. A "

@@ -65,6 +65,7 @@ from attestql.audit.statements import (
     VALIDATOR_VERSION,
     parse_statement,
 )
+from attestql.evidence.render import PARTIAL_SUFFIX
 from attestql.kernel.types import ExecutionResult
 from tests.audit_fakes import SETTINGS, FakeBackend, fake_result
 
@@ -784,6 +785,31 @@ def test_a_rerun_into_the_same_out_does_not_leave_the_run_before_it_to_be_read(
     assert len(backend.schema_digest_calls) > schema_reads, (
         "the schema is read from the server every run"
     )
+
+
+def test_a_rerun_removes_a_write_the_run_before_it_never_finished(tmp_path: Path) -> None:
+    """A file this tool wrote and never moved into place is this tool's to take back.
+
+    ``write_json`` writes beside its destination and moves the file over, and removes the
+    partial one if either step fails. A process killed between the two leaves it, and the
+    rerun took the summary and the question directories and left that: a directory a reader
+    opens as one run's evidence held half of a document from a run that had died.
+    """
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    backend = FakeBackend({ELEMENTS: fake_result(ELEMENT, (("c",),))}, row_counts={"atom": 2})
+    assert run_audit(options(tmp_path), backend, Lines()).exit_status == 0
+    out = tmp_path / "audit"
+
+    stray = out / f".{SUMMARY_FILE}.a1b2c3{PARTIAL_SUFFIX}"
+    stray.write_text('{"format": "attestql/audit/sum', encoding="utf-8")
+    hidden = out / ".a-file-of-the-reader-s-own"
+    hidden.write_text("kept", encoding="utf-8")
+
+    assert run_audit(options(tmp_path), backend, Lines()).exit_status == 0
+
+    assert not stray.exists(), "a write this tool never finished is not the next run's evidence"
+    assert hidden.read_text(encoding="utf-8") == "kept", "and nothing else hidden is touched"
+    assert (out / SUMMARY_FILE).is_file()
 
 
 def test_a_directory_this_tool_never_wrote_to_is_refused_with_nothing_removed(

@@ -72,6 +72,14 @@ def digest_of(document: Json) -> str:
     return f"sha256:{hashlib.sha256(payload.encode('utf-8')).hexdigest()}"
 
 
+PARTIAL_SUFFIX = ".partial"
+"""What a write in progress is named with, until the move that finishes it.
+
+Named here because a rerun of an output directory has to recognise one: a process killed
+between the open and the move leaves a file this tool wrote, and a directory that is this
+run's evidence and no other's holds none of them."""
+
+
 def write_json(path: Path, document: Json) -> None:
     write_text_atomically(path, json.dumps(document, indent=2, ensure_ascii=False) + "\n")
 
@@ -96,7 +104,7 @@ def write_text_atomically(path: Path, text: str) -> None:
         encoding="utf-8",
         dir=path.parent,
         prefix=f".{path.name}.",
-        suffix=".partial",
+        suffix=PARTIAL_SUFFIX,
         delete=False,
     )
     partial = Path(handle.name)
@@ -331,6 +339,7 @@ def record_json(record: EvidenceRecord, *, result_hash: str | None = None) -> Js
 
 
 __all__ = [
+    "PARTIAL_SUFFIX",
     "ROWS_IN_ARTIFACT",
     "Json",
     "RowDifference",

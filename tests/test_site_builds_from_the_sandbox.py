@@ -851,6 +851,34 @@ def test_no_two_pages_of_the_site_carry_the_same_title(built: Path) -> None:
     assert not repeated, repeated
 
 
+def test_a_filter_page_is_titled_by_the_run_a_publisher_named_and_not_by_its_uuid(
+    built: Path,
+) -> None:
+    """The restriction of an index is a page, and its title was the longest on the site.
+
+    A run page and a question page take the words the publisher used for the run; the filter
+    pages did not, so they fell back to the run's UUID, which is 42 characters no reader can
+    read and which left the title far past what a tab or a search result shows. The
+    restriction leads, as a question page leads with its question, because that is what tells
+    two of these apart.
+    """
+    filters = sorted(
+        (built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN).rglob(PAGE_FILE)
+    )
+    titles = [
+        re.findall(r"<title>(.*?)</title>", page.read_text(encoding="utf-8"))[0]
+        for page in filters
+        if page.parent.name in render.FILTER_DIRECTORIES
+        or page.parent.parent.name in render.FILTER_DIRECTORIES
+    ]
+
+    assert titles, "the sandbox run has restrictions of its own index"
+    for title in titles:
+        assert "audit-" not in title, title
+        assert site.SANDBOX_RUN in title, title
+        assert len(title) < 80, title
+
+
 def test_a_run_page_of_the_site_has_the_way_back_up_that_a_local_report_does_not(
     built: Path,
 ) -> None:

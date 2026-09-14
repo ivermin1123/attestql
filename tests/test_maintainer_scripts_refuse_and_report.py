@@ -154,20 +154,21 @@ def test_an_output_directory_reached_through_a_symlink_is_refused_by_the_resolve
     tmp_path: Path,
 ) -> None:
     """The link is a directory of the path rather than its last part, so the name check above
-    does not see it and the resolved path is what refuses."""
-    inside = REPOSITORY / "build" / "attestql-sandbox-symlink-test"
-    inside.mkdir(parents=True, exist_ok=True)
+    does not see it and the resolved path is what refuses.
+
+    The directory behind the link is one the repository already has, and everything this test
+    makes is under ``tmp_path``. It used to make one under ``build/`` and remove it again,
+    which is a test writing into the repository it is checking, and a run that died between
+    the two left it there for the next one to find.
+    """
     link = tmp_path / "by-way-of"
-    link.symlink_to(REPOSITORY / "build", target_is_directory=True)
+    link.symlink_to(REPOSITORY / "tools", target_is_directory=True)
 
-    try:
-        finished, reached = guard(tmp_path, link / "attestql-sandbox-symlink-test")
+    finished, reached = guard(tmp_path, link / "site")
 
-        assert finished.returncode == 2, finished.stdout
-        assert "must be outside the repository" in finished.stderr
-        assert not reached.exists()
-    finally:
-        inside.rmdir()
+    assert finished.returncode == 2, finished.stdout
+    assert "must be outside the repository" in finished.stderr
+    assert not reached.exists()
 
 
 def test_an_output_directory_outside_the_repository_passes_the_guard(tmp_path: Path) -> None:

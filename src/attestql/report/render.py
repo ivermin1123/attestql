@@ -509,6 +509,12 @@ class FilterPage:
     of: int
     """How many rows the whole index holds, so the page states what it is a part of."""
     entries: tuple[Entry, ...]
+    within: str = ""
+    """Where the run this restricts sits, in the words of whoever published it, or nothing.
+
+    The same context the run page and the question pages carry. Without it the title fell back
+    to the run's UUID, which is 42 characters of nothing a reader can read, and a filter page
+    was the longest title on the site."""
 
     @property
     def root(self) -> str:
@@ -517,6 +523,15 @@ class FilterPage:
 
     @property
     def title(self) -> str:
+        """The restriction first, then the run, in the shape a question page's title has.
+
+        The restriction leads because it is what tells two of these apart, and because a tab
+        and a search result show the front of a title and cut the rest. Where the publisher
+        said which run this is, that is what follows; a report `attestql report` wrote knows
+        of no other run and names its own UUID, as its run page does.
+        """
+        if self.within:
+            return f"{self.heading}, {self.within}"
         return f"attestql run {self.run_id}: {self.heading}"
 
     @property
@@ -709,7 +724,7 @@ def render_report(
             run,
             verdict_figure=verdicts,
             probe_figure=probes,
-            filters=_filters(run.entries, run.run_id),
+            filters=_filters(run.entries, run.run_id, within=within),
         )
     except UnreadableRecord as unreadable:
         raise ReportRefused(f"{audit_directory}: {unreadable}") from unreadable
@@ -1779,7 +1794,7 @@ def _run_page(
     )
 
 
-def _filters(entries: Sequence[Entry], run_id: str) -> tuple[FilterPage, ...]:
+def _filters(entries: Sequence[Entry], run_id: str, *, within: str = "") -> tuple[FilterPage, ...]:
     """The restrictions of the index that this run has rows for, in a fixed order.
 
     Every one is a subset of the rows above it and states its own rule in a sentence: no
@@ -1799,6 +1814,7 @@ def _filters(entries: Sequence[Entry], run_id: str) -> tuple[FilterPage, ...]:
             run_id=run_id,
             of=of,
             entries=tuple(rows),
+            within=within,
         )
 
     views: list[FilterPage] = [

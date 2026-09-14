@@ -86,6 +86,11 @@ def test_the_notes_state_what_moved_in_the_bytes_of_a_record() -> None:
     assert notes.RECORD_BYTES_HEADING in written
     for moved in notes.RECORD_BYTES_MOVED:
         assert moved in written
+    path = next(moved for moved in notes.RECORD_BYTES_MOVED if "search_path" in moved)
+    assert "a line in a new position" in path, (
+        "search_path is written where the envelope sets it and no longer where the session "
+        "reported it, so the key moves in the object and a diff shows a moved line"
+    )
 
 
 def test_a_release_that_moved_no_record_byte_renders_no_such_section(

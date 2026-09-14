@@ -670,6 +670,30 @@ def test_a_rerun_over_the_copies_reads_the_copies_and_the_audited_one_never_does
         backend.execute_shuffled(unordered, statement_timeout_seconds=TIMEOUT_SECONDS)
 
 
+def test_the_envelope_goes_back_on_when_the_copies_could_not_be_made(
+    backend: SqliteBackend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """``query_only`` is turned off for the copies alone, and back on whatever they did.
+
+    It was put back on the line after the loop, so anything raised out of the loop left the
+    second connection writable for the rest of the run: a file that had gone since the
+    catalogue was read, or a relation the rowid probe could not ask about, and a connection
+    this tool said it would not have.
+    """
+
+    def refuses(self: SqliteBackend, connection: sqlite3.Connection, name: TableName) -> bool:
+        raise BackendRefused("prepare_shuffled_copies", "the database file has gone")
+
+    monkeypatch.setattr(SqliteBackend, "_has_a_row_identity", refuses)
+
+    with pytest.raises(BackendRefused, match="the database file has gone"):
+        backend.prepare_shuffled_copies((TableName("", "drivers"),), seed="a-seed", row_limit=1000)
+
+    writing = backend._shuffle_connection  # pyright: ignore[reportPrivateUsage]
+    assert writing is not None, "the connection the copies are made on was opened"
+    assert writing.execute("PRAGMA query_only").fetchone()[0] == 1
+
+
 def test_the_copies_are_written_in_the_order_the_seed_fixes(backend: SqliteBackend) -> None:
     """Seeded rather than random, so a run reproduces; over the source row's rowid rather than
     over its values, so two identical rows still land in two places."""
