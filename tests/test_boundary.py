@@ -104,8 +104,11 @@ PACKAGE_METADATA = "importlib.metadata"
 exemption below. It reads what a package manager wrote and imports no code, which is the
 reason ``importlib`` is in the set above."""
 
-COMMAND_MODULE = SRC / "audit" / "cli.py"
-"""The command, which states the installed release when it is asked for ``--version``."""
+COMMAND_MODULE = SRC / "audit" / "cli" / "parser.py"
+"""The argument grammar, which states the installed release when asked for ``--version``.
+
+The whole command was one module until the split of 2026-09-14, and the release number is
+read where the flag that asks for it is defined, so the exemption moved with it."""
 
 VERSION_TEST = TESTS / "test_audit_command_runs_over_a_question_file.py"
 """The file that observes what that release reads as, which is the only way to observe it."""
