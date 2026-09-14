@@ -29,11 +29,15 @@ same rule phase 5 applied to the 23 report scripts. No commit was made for this 
 
 ### 1. `06e742f` test(site-select): the scripts that decide what the site publishes are tested directly
 
-TEST-01. The three maintainer scripts under `tools/site-select` decide what reaches attestql.com
-and what a release archive holds, and the only test that imported any of them was the budget cut.
-A new file, `tests/test_the_scripts_that_choose_what_the_site_publishes.py`, covers what the three
-existing files leave: run discovery, the release-asset line every run is given, the whole of
-`manifest.py`, and `question_ids.py`. Nine tests, no network and no Docker; every fixture is a
+TEST-01. The maintainer scripts under `tools/site-select` decide what reaches attestql.com and
+what a release archive holds. At `3300fbb` four test files imported one of them,
+`test_selection_empties_only_its_own_directory`, `test_site_builds_from_the_sandbox` and
+`test_the_budget_cut_leaves_every_benchmark_a_share` importing `select_questions` and
+`test_release_notes_describe_what_was_built` importing `notes`; `manifest.py` and
+`question_ids.py` had no test at all. A new file,
+`tests/test_the_scripts_that_choose_what_the_site_publishes.py`, covers what the four leave: run
+discovery, the release-asset line every run is given, the whole of `manifest.py`, and
+`question_ids.py`. Nine tests, no network and no Docker; every fixture is a
 directory tree and a tar archive built in `tmp_path`.
 
 It extends rather than duplicates. The budget cut stays in
@@ -57,8 +61,14 @@ and `test_a_release_that_moved_no_record_byte_renders_no_such_section` sets the 
 asserts the section is gone. Copying either into the new file would make two places to change, so
 the new file does not repeat them and says where they are.
 
-Files: `tests/test_the_scripts_that_choose_what_the_site_publishes.py` (new, 295 lines). Gate
+Files: `tests/test_the_scripts_that_choose_what_the_site_publishes.py` (new, 294 lines). Gate
 green, 1,298 passed.
+
+The merge gate found the digest unchecked. The test that says it reads the manifest's digest
+asserted nothing about one, and the only `sha256` in the file was the value another test plants in
+a manifest it writes itself, so the script could have stated any digest and this passed. Commit
+`400b9b1` takes the digest again from the archive the test built; with the script's digest replaced
+by sixty-four zeros the test fails at that line.
 
 ### 2. `e814afa` refactor(contract): what a document this tool reads is, proved at the boundary
 
@@ -178,6 +188,18 @@ the minimum a job that only reads the repository needs; the new job asks for not
 
 Files: `.github/workflows/ci.yml`. No test: nothing in the suite reads this file, and the check it
 adds is the run itself. Gate green.
+
+The merge gate found two holes in the step and one in the file's first line, fixed in `507885b`.
+The demo renders nothing, so `templates/` and `static/` were never read out of the wheel and the
+claim above about a missing template was not one this job could make; the step now renders the
+demo's own audit through `attestql report` and asks for a page with bytes in it, which is the
+command that reads them and whose resolution of them this branch moved. An uncaught exception exits
+1 as well, so the summary line the demo prints last is read too. Both of those need the demo's own
+status through a `tee`, which needs `pipefail`, which the implicit default shell does not set, so
+the step names `shell: bash`; measured in a scratch directory against a wheel built from this tree,
+the steps exit 0 under `bash -eo pipefail` and exit 1 before the report under `bash -e`. And the
+file's first line said it runs the same checks as `just check`, which one job does and the other
+deliberately does not.
 
 ### 6. `e83c497` docs(claims): the register names the modules the command now lives in
 
@@ -328,12 +350,18 @@ nine re-exports above.
 
 ## Open
 
-**Names that were never exported but were importable.** Splitting a module means names that
-happened to be in its namespace are no longer reachable through it: `attestql.audit.cli` no longer
-offers `json`, `argparse`, `render_report` or `write_json`, and `attestql.report.render` no longer
-offers `json`, `difflib`, `load_record` or `whole_count`. None was ever in `__all__`, nothing in
-this repository imported one of them that way, and the gate covers `tools/` as well as `src/` and
-`tests/`. A reader outside this repository who imported one would have to change the import.
+**Names that were module attributes but never exported, accepted as intended.** Splitting a
+module means names that happened to sit in its namespace are no longer reachable through it. In
+the renderer those are `GOLD`, `SECOND`, `GOLD_ONLY`, `GOLD_GLYPH`, `SECOND_GLYPH`, `SQL_TOKEN`,
+`ALWAYS_TAGGED`, `ASSET_SCHEME`, `OUT_SUFFIX`, `CLEARED_FILES`, `CLASSIFICATION_FILE`,
+`CLASSIFICATION_SOURCE_FILE`, `QUESTIONS_FILE`, `NAMED_IN_A_REFUSAL`, `HandReading` and `Beside`,
+and in the command `NO_SMELL` and `NAMED_IN_A_REFUSAL`, alongside the imported names any module
+carries, `json`, `argparse`, `difflib` and the rest. The coordinator accepts this at the merge
+gate as intended and not as a regression: this tool's contract is its command line and its record
+layout, not the attributes of a module; none of these was ever in either facade's `__all__`; no
+file in this repository read one of them that way, and the gate covers `tools/` as well as `src/`
+and `tests/`; and both facades export exactly what `__all__` always did plus the nine re-exports
+above. A reader outside this repository who imported one would have to change the import.
 
 **The five casts that stay.** `src/attestql/audit/fixture.py` keeps three, because its whole reader
 sits inside a handler that answers `None` and so has no refusal to raise, and
