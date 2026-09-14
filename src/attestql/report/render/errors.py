@@ -1,4 +1,4 @@
-"""The one refusal a report makes, shared by the four modules below it.
+"""The one refusal a report makes, raised by the loader, the pages and the facade.
 
 A directory that is not an audit's, a document that does not hold what its format states and
 an output directory that is not this render's own are one kind of answer to a person at a

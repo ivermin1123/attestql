@@ -95,11 +95,6 @@ TEMPLATES = Path(__file__).parent.parent / "templates"
 STATIC = Path(__file__).parent.parent / "static"
 """Both are the report package's own, one directory above this one since the split of
 2026-09-14: the templates a page is rendered from and the stylesheet every page links."""
-"""Where the templates and the stylesheet are, found beside this file.
-
-``importlib`` is forbidden repository-wide outside package metadata
-(``tests/test_boundary.py``), and a package directory that ships its templates is a
-directory this file can point at."""
 
 PAGE_COMMAND = "attestql audit"
 """What wrote the directory this command reads, as a refusal names it."""

@@ -7,8 +7,9 @@ to both is named once, so that a run chooses an engine and never chooses a backe
 parser separately (ADR-0014 points 2 and 3). Adding an engine is adding an entry to
 ``ENGINES``; nothing else in the audit asks which engine it is running on.
 
-The registry is here and not in ``cli.py`` because it names the implementations, and
-``cli.py`` is what a test imports to drive a scripted backend that reaches no server. It
+The registry is here and not in the command package because it names the implementations,
+and ``cli/run.py`` is what a test imports, through that package's facade, to drive a
+scripted backend that reaches no server. It
 is here and not in ``backend.py`` or ``parse.py`` because both of those are imported by
 the implementations it names, and a registry inside either would be a cycle.
 """

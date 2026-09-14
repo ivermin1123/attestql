@@ -1,12 +1,17 @@
-"""``python -m attestql.audit.cli``, which is the console script by another name.
+"""``python -m attestql.audit.cli``, which runs the same ``main`` the console script runs.
 
-The command was one module until the split of 2026-09-14, and a module run this way executes
-its own body; a package does not, so the entry point is stated here rather than being lost in
-the move. ``pyproject.toml`` names ``attestql.audit.cli:main`` and that is what this calls.
+This form is new with the package. The command was one module until the split of 2026-09-14
+and that module carried no ``__main__`` guard, so ``python -m attestql.audit.cli`` imported
+it, defined everything in it and ran no command at all. A package cannot be run that way
+without a ``__main__`` module, so here is one.
+
+The entry point is still ``pyproject.toml``'s ``attestql.audit.cli:main``. This calls that
+same function and decides nothing of its own.
 """
 
 from __future__ import annotations
 
 from attestql.audit.cli import main
 
-raise SystemExit(main())
+if __name__ == "__main__":
+    raise SystemExit(main())
