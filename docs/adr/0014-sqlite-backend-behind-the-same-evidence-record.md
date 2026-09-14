@@ -97,7 +97,10 @@ column, and only a key that names none is refused.
    records is `sqlite_version`, `encoding`, `compile_options`, `collation_list`,
    `case_sensitive_like`, `reverse_unordered_selects`, `query_only`, `journal_mode` and
    `data_version`; none of them is a precondition, because a SQLite record states no session
-   setting that decides comparability. `PRAGMA query_only = 1` is the envelope and is read
+   setting that decides comparability. Amended 2026-09-13: the block holds ten settings, the
+   tenth being `automatic_index`, because the shuffle probe turns it off for a plan variant
+   and gives it back after, and a record states the value that was in force over its own
+   statement. `PRAGMA query_only = 1` is the envelope and is read
    back on every statement, as the PostgreSQL `SET LOCAL`s are, and `mode=ro` is the
    file-level guarantee under it: both refuse a write with the same
    `attempt to write a readonly database`

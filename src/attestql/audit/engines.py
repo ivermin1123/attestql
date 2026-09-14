@@ -73,11 +73,17 @@ DSN_IS_A_URI = (
 would reach every record, log and process listing the DSN reaches, and no rule about what a
 URI may contain is worth trusting when the keyword form has no such shape."""
 
+DSN_CREDENTIAL_KEYWORD = "password"
+"""The one libpq keyword that carries the credential, and so the one this tool refuses.
+
+``passfile`` is not it: it names a file, which is one of the two ways this tool asks for a
+credential to be given to the driver instead."""
+
 DSN_NAMES_A_CREDENTIAL = (
     "the DSN names a password; set PGPASSWORD or use ~/.pgpass so that no "
     "credential is ever written into a record, a log or this command line"
 )
-"""Why a keyword DSN holding the word is refused. The credential reaches the driver from
+"""Why a keyword DSN naming that keyword is refused. The credential reaches the driver from
 the environment or from ``~/.pgpass``, so nothing has to write it on a command line."""
 
 
@@ -97,12 +103,72 @@ def _refuse_a_postgresql_dsn(target: str, /) -> str | None:
     Both are about the credential and neither is about the server: a DSN that carries one
     is written into a record, a log and a process listing by the run that uses it, and the
     two shapes above are where one is written.
+
+    What is refused in the keyword form is the keyword. Until 2026-09-13 it was the word
+    anywhere in the string, so ``dbname=password_history`` was refused for the name of a
+    database that carries no credential at all. A string this reader cannot take apart is
+    refused on the word, because the reason for the rule is that a credential must never
+    reach a record, and a string whose shape is not understood is not one to be lenient
+    about.
     """
     if "://" in target:
         return DSN_IS_A_URI
-    if "password" in target.lower():
+    keywords = _keyword_dsn_keywords(target)
+    if keywords is None:
+        return DSN_NAMES_A_CREDENTIAL if "password" in target.lower() else None
+    if DSN_CREDENTIAL_KEYWORD in keywords:
         return DSN_NAMES_A_CREDENTIAL
     return None
+
+
+def _keyword_dsn_keywords(target: str) -> set[str] | None:
+    """Every keyword of a libpq keyword string, or ``None`` when it is not one.
+
+    libpq's own shape: ``keyword = value`` pairs separated by whitespace, the spaces around
+    ``=`` optional, a value either bare or in single quotes, and a backslash escaping the
+    next character inside either. Only the keywords are collected; no value is returned from
+    here, so nothing a DSN carries can be read back out of this.
+    """
+    keywords: set[str] = set()
+    position, length = 0, len(target)
+    while position < length:
+        while position < length and target[position].isspace():
+            position += 1
+        if position >= length:
+            break
+        start = position
+        while position < length and not target[position].isspace() and target[position] != "=":
+            position += 1
+        keyword = target[start:position]
+        while position < length and target[position].isspace():
+            position += 1
+        if not keyword or position >= length or target[position] != "=":
+            return None
+        position += 1
+        while position < length and target[position].isspace():
+            position += 1
+        position = _past_a_dsn_value(target, position)
+        if position is None:
+            return None
+        keywords.add(keyword.lower())
+    return keywords
+
+
+def _past_a_dsn_value(target: str, position: int) -> int | None:
+    """Where the value beginning at ``position`` ends, or ``None`` if it never does."""
+    length = len(target)
+    quoted = position < length and target[position] == "'"
+    position += 1 if quoted else 0
+    while position < length:
+        if target[position] == "\\":
+            position += 2
+            continue
+        if quoted and target[position] == "'":
+            return position + 1
+        if not quoted and target[position].isspace():
+            return position
+        position += 1
+    return None if quoted else position
 
 
 @dataclass(frozen=True)
@@ -160,7 +226,35 @@ path is refused: PostgreSQL's two refusals are about a connection string, and a 
 called ``password`` or one holding ``://`` is a directory somebody made. Whether the file is
 there is answered when it is opened, with the path in the message."""
 
-ENGINES: Mapping[str, Engine] = {POSTGRESQL.name: POSTGRESQL, SQLITE.name: SQLITE}
+
+def _one_parser_per_engine(engines: Mapping[str, Engine]) -> Mapping[str, Engine]:
+    """Every engine whose ``parse`` returns statements carrying the ``parser`` it states.
+
+    The two are separate fields and nothing held them together: ``parser`` is what the
+    summary reports and the identity on a parsed statement is what every record states, so
+    an engine whose fields drifted apart would put two parsers in one run's evidence, under
+    the docstring of this very type saying that cannot happen. Asked here, of a statement
+    every grammar parses, so that the drift is a failure at import rather than a difference
+    a reader of two documents finds later.
+    """
+    for engine in engines.values():
+        stated = engine.parse(PARSER_IDENTITY_PROBE).parser
+        if stated != engine.parser:
+            raise AssertionError(
+                f"engine {engine.name!r} states the parser {engine.parser} and its parse "
+                f"returns statements carrying {stated}; a run on it would put two parsers "
+                f"in one piece of evidence"
+            )
+    return engines
+
+
+PARSER_IDENTITY_PROBE = "SELECT 1"
+"""The statement the check above parses: the one every grammar here reads the same way, and
+short enough that what it proves is the identity and nothing about the grammar."""
+
+ENGINES: Mapping[str, Engine] = _one_parser_per_engine(
+    {POSTGRESQL.name: POSTGRESQL, SQLITE.name: SQLITE}
+)
 """Every engine an audit can run on, by the name the flag takes."""
 
 DEFAULT_ENGINE = POSTGRESQL
@@ -177,9 +271,11 @@ def engine_named(name: str) -> Engine:
 
 __all__ = [
     "DEFAULT_ENGINE",
+    "DSN_CREDENTIAL_KEYWORD",
     "DSN_IS_A_URI",
     "DSN_NAMES_A_CREDENTIAL",
     "ENGINES",
+    "PARSER_IDENTITY_PROBE",
     "POSTGRESQL",
     "SQLITE",
     "Connect",

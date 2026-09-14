@@ -20,6 +20,7 @@ import hashlib
 import importlib.metadata
 import json
 import re
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
 
@@ -36,17 +37,21 @@ from attestql.audit.cli import (
     LINE_PREDICTIONS,
     MARKER_FILE,
     POSITION_KEYING,
+    QUESTION_DIRECTORY,
     QUESTION_ID_KEYING,
+    QUESTION_ID_LIMIT,
     SMELLS_FILE,
     SUMMARY_FILE,
     AuditOptions,
     NoStatement,
     ToolError,
     audit,
+    connect_and_audit,
     main,
     parse_arguments,
     read_predictions,
     read_questions,
+    resolve_predictions,
     run_audit,
 )
 from attestql.audit.compare import COUNTEREXAMPLE_FILE, GOLD_RECORD_FILE, SECOND_RECORD_FILE
@@ -60,6 +65,7 @@ from attestql.audit.statements import (
     VALIDATOR_VERSION,
     parse_statement,
 )
+from attestql.evidence.render import PARTIAL_SUFFIX
 from attestql.kernel.types import ExecutionResult
 from tests.audit_fakes import SETTINGS, FakeBackend, fake_result
 
@@ -188,6 +194,198 @@ def test_a_question_file_that_is_not_a_list_is_refused(tmp_path: Path) -> None:
     path = write(tmp_path / "questions.json", {"question_id": 1})
     with pytest.raises(ToolError, match="a question file is a list"):
         read_questions(path)
+
+
+def test_a_field_at_the_wrong_type_is_refused_rather_than_converted(tmp_path: Path) -> None:
+    """`int(True)` is 1 and `str(None)` is "None", and both used to be audited.
+
+    A converted field is an identity the file never stated, written into every record of that
+    question as though it had been measured. The refusal names the entry and the field.
+    """
+    entry = question(879, "formula_1", ELEMENTS)
+    path = write(tmp_path / "questions.json", [{**entry, "question_id": True}])
+    with pytest.raises(ToolError, match="states question_id as bool"):
+        read_questions(path)
+
+    path = write(tmp_path / "questions.json", [{**entry, "db_id": None}])
+    with pytest.raises(ToolError, match="states db_id as NoneType"):
+        read_questions(path)
+
+    path = write(tmp_path / "questions.json", [{**entry, "SQL": 0}])
+    with pytest.raises(ToolError, match="states SQL as int"):
+        read_questions(path)
+
+    path = write(tmp_path / "questions.json", [{**entry, "difficulty": 3}])
+    with pytest.raises(ToolError, match="states difficulty as int"):
+        read_questions(path)
+
+
+def test_an_absent_field_names_itself(tmp_path: Path) -> None:
+    """A file missing a field a question cannot be read without says which one."""
+    entry = question(879, "formula_1", ELEMENTS)
+    path = write(tmp_path / "questions.json", [{k: v for k, v in entry.items() if k != "SQL"}])
+    with pytest.raises(ToolError, match="states no SQL"):
+        read_questions(path)
+
+
+def test_a_field_a_question_may_leave_out_may_also_be_null(tmp_path: Path) -> None:
+    """`evidence` and `difficulty` are absent from some published files and null in others,
+    and neither is the file being wrong about the question."""
+    entry = question(879, "formula_1", ELEMENTS)
+    path = write(tmp_path / "questions.json", [{**entry, "evidence": None, "difficulty": None}])
+
+    read = read_questions(path)
+
+    assert read.questions[0].evidence == ""
+    assert read.questions[0].difficulty == ""
+
+
+def test_an_id_below_zero_is_refused_because_a_rerun_would_not_clear_its_directory(
+    tmp_path: Path,
+) -> None:
+    """`q-1` does not match the pattern a rerun empties the output directory by.
+
+    One run is one directory, which is what the output directory promises; a directory the
+    next run cannot remove would stand beside a fresh one for as long as nobody noticed.
+    """
+    path = write(tmp_path / "questions.json", [question(-1, "formula_1", ELEMENTS)])
+    with pytest.raises(ToolError, match="question_id -1, which is outside"):
+        read_questions(path)
+
+    assert not QUESTION_DIRECTORY.fullmatch("q-1"), "which is why the id is refused"
+
+
+def test_an_id_too_long_to_be_a_directory_name_is_refused_before_the_run(
+    tmp_path: Path,
+) -> None:
+    """A three-hundred digit id reached `mkdir` and came back as a traceback and exit 1.
+
+    The contract says a tool error is exit 2, and this is one: it is refused while the file is
+    read, before a backend is opened and before anything is written.
+    """
+    path = write(tmp_path / "questions.json", [question(10**300, "formula_1", ELEMENTS)])
+    with pytest.raises(ToolError, match="which is outside 0 to 999999999"):
+        read_questions(path)
+
+
+def test_a_question_file_no_run_could_use_is_refused_before_a_database_is_opened(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The refusal the file earns, ahead of the one the connection would earn.
+
+    The command read the file inside the run and the run was handed a backend, so a SQLite
+    dsn was opened and its data copied, and a PostgreSQL dsn was connected to and a scratch
+    schema locked, for a run whose first act was to refuse the file it was given. Here the
+    database is not there either: the answer is about the file, which is what was wrong.
+    """
+    path = write(tmp_path / "questions.json", [question(10**12, "formula_1", ELEMENTS)])
+    status = connect_and_audit(
+        options(
+            tmp_path,
+            engine=SQLITE,
+            dsn=str(tmp_path / "no-such-database.sqlite"),
+            questions=path,
+        ),
+        Lines(),
+    )
+
+    assert status == 2
+    said = capsys.readouterr().err
+    assert "which is outside 0 to 999999999" in said
+    assert "the database could not be reached" not in said, "the file is answered for first"
+
+
+def test_the_largest_id_the_packaged_demo_audits_is_inside_the_bound() -> None:
+    """The bound is far past every published id and past the demo's synthetic ones."""
+    assert QUESTION_ID_LIMIT > 900005, "the demo's synthetic ids"
+    assert QUESTION_ID_LIMIT > 1533, "the largest id a published BIRD file holds"
+
+
+def test_a_prediction_naming_no_question_of_the_file_is_refused(tmp_path: Path) -> None:
+    """One mistyped digit used to read as an audit of a prediction nothing compared.
+
+    Under question-id keying the key is a question id. A key naming no question was kept in
+    the map and then never matched, so the question it was meant for was audited gold-only
+    and the line and the summary said GOLD-ONLY, which is what a question with no prediction
+    looks like. Nothing anywhere said a prediction had been left behind.
+    """
+    path = write(tmp_path / "questions.json", [question(879, "formula_1", FASTEST_LAP)])
+    predictions = read_predictions(
+        write(tmp_path / "predictions.json", {"879": NUMERIC, "8790": NUMERIC})
+    )
+
+    with pytest.raises(ToolError, match="names 1 ids no question of"):
+        resolve_predictions(predictions, read_questions(path), QUESTION_ID_KEYING)
+
+
+def test_an_id_the_ids_filter_left_out_is_not_an_unknown_id(tmp_path: Path) -> None:
+    """A run over one database out of a file written for eleven compares none of the other ten.
+
+    Each of those keys names a real question of the file, which is why the check is against
+    the file and not against what the filter kept.
+    """
+    path = write(
+        tmp_path / "questions.json",
+        [question(879, "formula_1", FASTEST_LAP), question(207, "toxicology", ELEMENTS)],
+    )
+    predictions = read_predictions(
+        write(tmp_path / "predictions.json", {"879": NUMERIC, "207": NUMERIC})
+    )
+
+    resolved = resolve_predictions(predictions, read_questions(path, (879,)), QUESTION_ID_KEYING)
+
+    assert sorted(resolved.by_id) == [207, 879], "kept, and only 879 is audited"
+
+
+def test_a_refusal_naming_many_ids_says_how_many_more_there_are(tmp_path: Path) -> None:
+    """A file naming five hundred unknown ids prints twenty of them and a count."""
+    path = write(tmp_path / "questions.json", [question(879, "formula_1", FASTEST_LAP)])
+    predictions = read_predictions(
+        write(tmp_path / "predictions.json", {str(key): NUMERIC for key in range(1000, 1100)})
+    )
+
+    with pytest.raises(ToolError, match="and 80 more"):
+        resolve_predictions(predictions, read_questions(path), QUESTION_ID_KEYING)
+
+
+def test_position_keying_still_accounts_for_what_it_left_over(tmp_path: Path) -> None:
+    """`positions_unused` is the position-keyed account of the same thing, and it stands."""
+    entry = question(137, "financial", ELEMENTS)
+    path = write(tmp_path / "questions.json", [entry, dict(entry)])
+    predictions = read_predictions(
+        write(tmp_path / "predictions.json", {"0": NUMERIC, "1": NUMERIC})
+    )
+
+    resolved = resolve_predictions(predictions, read_questions(path), POSITION_KEYING)
+
+    assert resolved.positions_unused == (1,)
+
+
+def test_a_write_that_fails_mid_run_is_a_tool_error_and_not_a_traceback(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The contract says a tool error is exit 2, and a write that failed was neither.
+
+    The rerun empties the output directory of the `q<id>/` directories it wrote, which are
+    directories: a file of that name is not one of them and stays, and the run that then
+    tries to write `q879/` into it meets it. What used to come back was an `OSError` from
+    `mkdir` in the middle of the run, as a traceback and exit 1.
+    """
+    write(tmp_path / "questions.json", [question(879, "formula_1", FASTEST_LAP)])
+    write(tmp_path / "predictions.json", {"879": NUMERIC})
+    out = tmp_path / "audit"
+    out.mkdir()
+    (out / MARKER_FILE).write_text("written by attestql audit\n", encoding="utf-8")
+    (out / "q879").write_text("a file with the name of a directory", encoding="utf-8")
+
+    status = audit(
+        options(tmp_path, predictions=tmp_path / "predictions.json"),
+        _defect_backend(),
+        Lines(),
+    )
+
+    assert status == 2
+    assert "could not be written" in capsys.readouterr().err
 
 
 # the predictions file
@@ -436,7 +634,8 @@ def test_the_line_of_a_disagreement_is_the_one_the_adr_writes_down(
     )
     assert lines.written[1] == (
         "1 questions: 1 NOT_EQUAL, 1 smells fired, 0 credited by BIRD but NOT_EQUAL "
-        "(0 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)"
+        "(0 multiplicity, 0 type, 0 order, 0 truncation, 0 other), 0 timed out "
+        "(0 gold, 0 prediction)"
     )
     # Both records of a comparison are built from one session and one fixture, so no run
     # reaches NOT_COMPARABLE and the line does not count what cannot happen.
@@ -586,6 +785,31 @@ def test_a_rerun_into_the_same_out_does_not_leave_the_run_before_it_to_be_read(
     assert len(backend.schema_digest_calls) > schema_reads, (
         "the schema is read from the server every run"
     )
+
+
+def test_a_rerun_removes_a_write_the_run_before_it_never_finished(tmp_path: Path) -> None:
+    """A file this tool wrote and never moved into place is this tool's to take back.
+
+    ``write_json`` writes beside its destination and moves the file over, and removes the
+    partial one if either step fails. A process killed between the two leaves it, and the
+    rerun took the summary and the question directories and left that: a directory a reader
+    opens as one run's evidence held half of a document from a run that had died.
+    """
+    write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
+    backend = FakeBackend({ELEMENTS: fake_result(ELEMENT, (("c",),))}, row_counts={"atom": 2})
+    assert run_audit(options(tmp_path), backend, Lines()).exit_status == 0
+    out = tmp_path / "audit"
+
+    stray = out / f".{SUMMARY_FILE}.a1b2c3{PARTIAL_SUFFIX}"
+    stray.write_text('{"format": "attestql/audit/sum', encoding="utf-8")
+    hidden = out / ".a-file-of-the-reader-s-own"
+    hidden.write_text("kept", encoding="utf-8")
+
+    assert run_audit(options(tmp_path), backend, Lines()).exit_status == 0
+
+    assert not stray.exists(), "a write this tool never finished is not the next run's evidence"
+    assert hidden.read_text(encoding="utf-8") == "kept", "and nothing else hidden is touched"
+    assert (out / SUMMARY_FILE).is_file()
 
 
 def test_a_directory_this_tool_never_wrote_to_is_refused_with_nothing_removed(
@@ -871,6 +1095,46 @@ def test_a_record_states_the_timeout_its_statement_ran_under_and_the_summary_the
     assert backend.executed[0] == (ELEMENTS, 45), "the bound the run was given is what was set"
 
 
+AVERAGE_SPEED = "SELECT avg(speed) FROM laps"
+ROUNDED_SPEED = "SELECT round(avg(speed), 12) FROM laps"
+SPEED = (("speed", "float8"),)
+"""A float column and two statements over it, for the one class the summary line did not
+show. This tool loads a float as the exact decimal the server printed; BIRD's own driver
+builds a Python double from it, and two decimals a double cannot tell apart are one answer
+to the benchmark and two to a typed comparison."""
+
+
+def test_the_summary_line_counts_a_credited_disagreement_that_is_none_of_the_four_classes(
+    tmp_path: Path,
+) -> None:
+    """`other` was in the file and not on the line, so the total said one and the four
+    numbers beside it said zero.
+
+    A reader adding them up found a credited disagreement missing, which is the reading the
+    line exists to give. Documented as five classes in docs/audit-command.md all along, so
+    the line is what was wrong rather than the documentation.
+    """
+    write(tmp_path / "questions.json", [question(207, "toxicology", AVERAGE_SPEED)])
+    write(tmp_path / "predictions.json", {"207": ROUNDED_SPEED})
+    backend = FakeBackend(
+        {
+            AVERAGE_SPEED: fake_result(SPEED, ((Decimal("1.0000000000000000001"),),)),
+            ROUNDED_SPEED: fake_result(SPEED, ((Decimal("1.0"),),)),
+        },
+        row_counts={"laps": 3},
+    )
+    lines = Lines()
+
+    run_audit(options(tmp_path, predictions=tmp_path / "predictions.json"), backend, lines)
+
+    assert lines.written[-1] == (
+        "1 questions: 1 NOT_EQUAL, 0 smells fired, 1 credited by BIRD but NOT_EQUAL "
+        "(0 multiplicity, 0 type, 0 order, 0 truncation, 1 other), 0 timed out "
+        "(0 gold, 0 prediction)"
+    )
+    assert summary_of(tmp_path)["credited_but_not_equal"]["by_mechanism"]["other"] == 1
+
+
 def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism(
     tmp_path: Path,
 ) -> None:
@@ -904,7 +1168,8 @@ def test_a_prediction_bird_credits_and_this_tool_rejects_is_counted_by_mechanism
 
     assert lines.written[1] == (
         "1 questions: 1 NOT_EQUAL, 1 smells fired, 1 credited by BIRD but NOT_EQUAL "
-        "(1 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)"
+        "(1 multiplicity, 0 type, 0 order, 0 truncation, 0 other), 0 timed out "
+        "(0 gold, 0 prediction)"
     )
     assert summary.credited_but_not_equal is not None
     assert summary.credited_but_not_equal.total == 1
@@ -1257,6 +1522,48 @@ def test_the_same_two_values_are_still_refused_when_the_run_names_postgresql(dsn
         parse_arguments(
             ["audit", "--engine", "postgresql", "--dsn", dsn, "--questions", "q.json", "--out", "a"]
         )
+
+    assert refused.value.code == 2
+
+
+@pytest.mark.parametrize(
+    "dsn",
+    [
+        "host=localhost dbname=password_history",
+        "host=localhost dbname=bird options='-c search_path=password'",
+        "host=password.example.invalid dbname=bird",
+        "host=localhost dbname=bird user=password_admin",
+    ],
+)
+def test_a_dsn_carrying_the_word_but_naming_no_password_is_accepted(dsn: str) -> None:
+    """The rule is the keyword and not the word.
+
+    A database called `password_history` carries no credential, and until 2026-09-13 the
+    substring was what was looked for, so a whole class of perfectly ordinary DSNs could not
+    be audited at all. What the refusal is for is a `password=` keyword, which is the one
+    place a libpq keyword string puts the credential.
+    """
+    parsed = parse_arguments(["audit", "--dsn", dsn, "--questions", "q.json", "--out", "a"])
+
+    assert parsed.dsn == dsn
+
+
+@pytest.mark.parametrize(
+    "dsn",
+    [
+        "host=localhost password=hunter2",
+        "host=localhost PASSWORD=hunter2",
+        "host=localhost password = hunter2",
+        "host=localhost password='hunter 2'",
+        "password=hunter2",
+        "this is not a keyword string but it says password",
+    ],
+)
+def test_a_dsn_naming_the_keyword_is_still_refused_however_it_is_written(dsn: str) -> None:
+    """Including the string this reader cannot take apart: the reason for the rule is that a
+    credential must never reach a record, so a shape that is not understood is refused."""
+    with pytest.raises(SystemExit) as refused:
+        parse_arguments(["audit", "--dsn", dsn, "--questions", "q.json", "--out", "a"])
 
     assert refused.value.code == 2
 

@@ -32,13 +32,16 @@ whatever it holds, because a URI is where a password is written, and so is a key
 that names one; the password comes from ``PGPASSWORD`` or ``~/.pgpass`` through the
 driver, is never read by this module, and appears in no line, file or error.
 
-**Nothing aborts a run except the tool failing to start.** Failing to start is reading the
-question file, reading the predictions file, making the output directory and clearing the
-run before it out of it, and asking the backend what it is; nothing after that. A gold that
-does not parse, a statement that times out, a table this database does not hold, a value
-with no rendering, a server that went away between two questions: each is that question's
-``ERROR`` line with the message, an entry in the summary's ``errors``, and the run goes on
-to the next question and still writes ``summary.json``.
+**What aborts a run is the tool failing to start, and a write it cannot make.** Failing to
+start is reading the question file, reading the predictions file, making the output
+directory and clearing the run before it out of it, and asking the backend what it is. After
+that one thing still stops the run: a question directory or a summary that cannot be
+written. A run that cannot write its evidence has failed as a tool whatever it found, so it
+is a ``ToolError`` and exit 2 rather than a traceback and exit 1. A gold that does not parse,
+a statement that times out, a table this database does not hold, a value with no rendering, a
+server that went away between two questions: each is that question's ``ERROR`` line with the
+message, an entry in the summary's ``errors``, and the run goes on to the next question and
+still writes ``summary.json``.
 
 **An error is not the exit status.** ADR-0013 point 2 fixes 0 for no disagreement, 1 for
 at least one NOT_EQUAL and 2 for a tool error, and a question the run could not answer is
@@ -87,6 +90,7 @@ from attestql.audit.compare import (
     MECHANISM_CLASSES,
     MECHANISM_MULTIPLICITY,
     MECHANISM_ORDER,
+    MECHANISM_OTHER,
     MECHANISM_TRUNCATION,
     MECHANISM_TYPE,
     SIDE_GOLD,
@@ -115,7 +119,7 @@ from attestql.audit.smells import (
 )
 from attestql.demo import FIXTURE_FILE, build_fixture, write_inputs
 from attestql.evidence.record import EvidenceRecord
-from attestql.evidence.render import Json, record_json, write_json
+from attestql.evidence.render import PARTIAL_SUFFIX, Json, record_json, write_json
 from attestql.evidence.replay import ComparabilityResult
 from attestql.evidence.serialize import SerializationDescriptor
 from attestql.evidence.types import (
@@ -162,6 +166,28 @@ MARKER_TEXT = (
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 QUESTION_DIRECTORY = re.compile(r"q\d+")
 """The name of a directory this tool writes a question's evidence to."""
+NAMED_IN_A_REFUSAL = 20
+"""How many of a kind a refusal names before it says how many more there are.
+
+A message is read by a person looking for the one they mistyped, and a file naming five
+hundred unknown ids would otherwise print five hundred numbers at them."""
+QUESTION_ID_LIMIT = 10**9
+"""One past the largest question id this tool audits, because an id is also a name.
+
+Every question's evidence goes in a directory called ``q<id>``, and the rerun that empties
+the output directory again finds those directories by the pattern above. Both of those make
+an id something narrower than an integer. Below zero the name does not match the pattern, so
+a rerun left ``q-1`` standing beside a fresh run, which breaks the one thing the output
+directory promises: that it holds this run and no other. Far above, the name stops being one
+a filesystem will take, and a three-hundred digit id reached ``mkdir`` and came back as an
+``OSError`` traceback and exit 1 where the contract says a tool error is exit 2.
+
+Nine digits is the bound because it is far past every id any published BIRD file holds (the
+largest is 1533) and past the six-digit synthetic ids the packaged demo audits, and short
+enough that ``q<id>`` is a name every filesystem can hold. What matters is not the number: it
+is that an id outside it is refused before the backend opens, by a message naming the entry,
+rather than by a traceback in the middle of a run. ``connect_and_audit`` reads the question
+file before it connects for that reason."""
 SUMMARY_FORMAT = "attestql/audit/summary/2"
 """What the layout of ``summary.json`` is, for a reader who opens one.
 
@@ -368,6 +394,15 @@ class Summary:
     smells: Mapping[str, int]
     credited_but_not_equal: Credited | None
     errors: tuple[QuestionError, ...]
+    question_directories: tuple[int, ...]
+    """The questions this run wrote a directory for, in the order they were asked.
+
+    A question gets one when it disagreed, which is a NOT_EQUAL or a NOT_COMPARABLE, or when
+    a probe fired over it; a question that agreed with nothing to say about it writes none,
+    and neither does one that errored. Stated rather than left to be counted, because the
+    number audited does not say which directories a reader should find and a run that lost
+    one looked like a run that never wrote it.
+    """
     timed_out: Mapping[str, tuple[int, ...]]
     """The questions whose statement ran past the run's bound, by the side it ran on.
 
@@ -472,21 +507,74 @@ def read_questions(path: Path, ids: Sequence[int] = ()) -> QuestionSet:
 
 
 def _question(entry: object, path: Path, index: int) -> Question:
-    """One entry as a question, or a refusal naming the entry that was not one."""
+    """One entry as a question, or a refusal naming the field that was not one.
+
+    Every field is read at the type the file states it at rather than converted to the type
+    this tool wants. ``int(True)`` is 1 and ``str(None)`` is ``"None"``, so a file holding
+    either used to be audited under an identity it never stated, and a record then said that
+    identity was what was measured. A field of the wrong type is the file being wrong about
+    a question, which is a refusal, and the message names the field so that the person who
+    wrote the file can find it.
+    """
     if not isinstance(entry, dict):
         raise ToolError(f"{path} entry {index} is {type(entry).__name__} and not an object")
     fields = cast("dict[str, Any]", entry)
-    try:
-        return Question(
-            question_id=int(fields["question_id"]),
-            db_id=str(fields["db_id"]),
-            difficulty=str(fields.get("difficulty", "")),
-            question=str(fields["question"]),
-            evidence=str(fields.get("evidence", "")),
-            sql=str(fields["SQL"]),
+    where = f"{path} entry {index}"
+    return Question(
+        question_id=_question_id(fields, where),
+        db_id=_required_text(fields, "db_id", where),
+        difficulty=_optional_text(fields, "difficulty", where),
+        question=_required_text(fields, "question", where),
+        evidence=_optional_text(fields, "evidence", where),
+        sql=_required_text(fields, "SQL", where),
+    )
+
+
+def _question_id(fields: Mapping[str, object], where: str) -> int:
+    """The id of one entry: a whole number this tool can also use as a directory name.
+
+    ``bool`` is excluded explicitly because it is an ``int`` in Python and nowhere else: a
+    file stating ``true`` under ``question_id`` was audited as question 1.
+    """
+    if "question_id" not in fields:
+        raise ToolError(f"{where} is not a question: it states no question_id")
+    stated = fields["question_id"]
+    if not isinstance(stated, int) or isinstance(stated, bool):
+        raise ToolError(
+            f"{where} states question_id as {type(stated).__name__} and not a whole number; "
+            f"an id is the name of the directory this question's evidence goes in"
         )
-    except (KeyError, TypeError, ValueError) as incomplete:
-        raise ToolError(f"{path} entry {index} is not a question: {incomplete}") from incomplete
+    if not 0 <= stated < QUESTION_ID_LIMIT:
+        raise ToolError(
+            f"{where} states question_id {stated}, which is outside 0 to "
+            f"{QUESTION_ID_LIMIT - 1}: an id is the name of the directory this question's "
+            f"evidence goes in, and a rerun of this output directory finds those directories "
+            f"by that name"
+        )
+    return stated
+
+
+def _required_text(fields: Mapping[str, object], name: str, where: str) -> str:
+    """One field a question cannot be read without, at the type the file states it."""
+    if name not in fields:
+        raise ToolError(f"{where} is not a question: it states no {name}")
+    return _text_field(fields[name], name, where)
+
+
+def _optional_text(fields: Mapping[str, object], name: str, where: str) -> str:
+    """One field a question may leave out, refused when it is there at the wrong type."""
+    if name not in fields or fields[name] is None:
+        return ""
+    return _text_field(fields[name], name, where)
+
+
+def _text_field(stated: object, name: str, where: str) -> str:
+    if not isinstance(stated, str):
+        raise ToolError(
+            f"{where} states {name} as {type(stated).__name__} and not text; "
+            f"nothing this tool records is a value it converted for the file"
+        )
+    return stated
 
 
 @dataclass(frozen=True)
@@ -642,13 +730,15 @@ def resolve_predictions(
     which is what BIRD's own evaluation writes: its ``package_sqls`` pairs prediction ``i``
     with gold line ``i``, so the file holds ``"0"`` to ``"499"`` and no question id at all.
 
-    Raises ``ToolError`` for a position no entry of the question file has, and for a file
-    keyed by question id whose keys are exactly the positions of a question file whose ids
-    are not: those two readings pair different statements, and guessing between them would
-    be this tool comparing golds with predictions written for other questions.
+    Raises ``ToolError`` for a position no entry of the question file has, for a key no
+    question of the file has under question-id keying, and for a file keyed by question id
+    whose keys are exactly the positions of a question file whose ids are not: those two
+    readings pair different statements, and guessing between them would be this tool
+    comparing golds with predictions written for other questions.
     """
     if keyed_by == QUESTION_ID_KEYING:
         _refuse_positions_read_as_ids(predictions, question_set)
+        _refuse_ids_the_question_file_does_not_hold(predictions, question_set)
         return ResolvedPredictions(by_id=dict(predictions), positions_unused=())
     by_id: dict[int, str | NoStatement] = {}
     unused: list[int] = []
@@ -665,6 +755,43 @@ def resolve_predictions(
             continue
         by_id[question_id] = predictions[position]
     return ResolvedPredictions(by_id=by_id, positions_unused=tuple(unused))
+
+
+def _refuse_ids_the_question_file_does_not_hold(
+    predictions: Mapping[int, str | NoStatement], question_set: QuestionSet
+) -> None:
+    """Refuse a prediction whose key names no question of the file, under question-id keying.
+
+    Such a prediction was dropped without a word: the question it was written for was audited
+    gold-only, and the run's own line and summary said GOLD-ONLY, which is what a question
+    with no prediction looks like. One mistyped digit therefore read as an audit of a
+    prediction that was never compared with anything.
+
+    Against the whole file and not against what ``--ids`` kept. A run auditing one database
+    out of a prediction file written for eleven compares none of the keys for the other ten,
+    and each of those keys still names a real question of the file. What is refused is a key
+    naming no question at all, which no filter explains.
+
+    Position keying has its own account of what was left over, in ``positions_unused``, and a
+    position outside the file is already refused above.
+    """
+    held = set(question_set.entry_ids)
+    unknown = sorted(key for key in predictions if key not in held)
+    if not unknown:
+        return
+    named = ", ".join(str(key) for key in unknown[:NAMED_IN_A_REFUSAL])
+    rest = (
+        ""
+        if len(unknown) <= NAMED_IN_A_REFUSAL
+        else f" and {len(unknown) - NAMED_IN_A_REFUSAL} more"
+    )
+    raise ToolError(
+        f"the predictions file names {len(unknown)} ids no question of {question_set.path} "
+        f"has: {named}{rest}. Under question-id keying a key is a question id, so each of "
+        f"these is a prediction this run would leave out while reporting the question "
+        f"it was meant for as having none. A file BIRD's own evaluation wrote is keyed by "
+        f"position and needs --predictions-keyed-by position"
+    )
 
 
 def _refuse_positions_read_as_ids(
@@ -879,7 +1006,7 @@ def run_audit(options: AuditOptions, backend: Backend, writer: Writer) -> Summar
         _drop_shuffle(backend)
     summary = _summarise(options, counted, run_id=run_id, elapsed=phases.rounded())
     writer.line(_summary_line(summary))
-    write_json(
+    _write_summary(
         options.out / SUMMARY_FILE,
         _summary_json(
             options,
@@ -924,7 +1051,8 @@ def _summary_line(summary: Summary) -> str:
         line += (
             f", {credited.total} credited by BIRD but NOT_EQUAL "
             f"({counted[MECHANISM_MULTIPLICITY]} multiplicity, {counted[MECHANISM_TYPE]} type, "
-            f"{counted[MECHANISM_ORDER]} order, {counted[MECHANISM_TRUNCATION]} truncation)"
+            f"{counted[MECHANISM_ORDER]} order, {counted[MECHANISM_TRUNCATION]} truncation, "
+            f"{counted[MECHANISM_OTHER]} other)"
         )
     return line + (
         f", {summary.timed_out_total} timed out "
@@ -942,6 +1070,11 @@ def _clear_previous_run(out: Path) -> None:
     the end, so a run that dies halfway leaves none rather than another run's. The fixture
     cache is keyed by the server and the schema digest and is a speed decision, so it stays,
     and so does anything a reader put here that this tool does not write.
+
+    A write in progress this tool never finished goes too. ``write_json`` writes beside its
+    destination and moves the file into place, and removes the partial one if either step
+    fails; a process killed between them leaves it behind, named with ``PARTIAL_SUFFIX``. It
+    is this tool's own file and is evidence of nothing, so a rerun takes it with the rest.
 
     Only a directory this tool wrote to is cleared, which is what ``MARKER_FILE`` says. One
     that is empty is taken over and marked, one that holds the marker is cleared and keeps
@@ -968,6 +1101,8 @@ def _clear_previous_run(out: Path) -> None:
         for child in entries:
             if child.is_dir() and QUESTION_DIRECTORY.fullmatch(child.name):
                 shutil.rmtree(child)
+            elif child.name.startswith(".") and child.name.endswith(PARTIAL_SUFFIX):
+                child.unlink(missing_ok=True)
         (out / MARKER_FILE).write_text(MARKER_TEXT, encoding="utf-8")
     except OSError as unwritable:
         raise ToolError(
@@ -1100,6 +1235,9 @@ class _Counted:
     beside ``errors`` rather than read back out of them, because what makes one of them a
     timeout is the type the backend raised and not a phrase in a message an engine wrote."""
     questions: int = 0
+    directories: list[int] = field(default_factory=list[int])
+    """The questions this run wrote a directory for, in the order they were asked, which is
+    what the summary states so that a reader of the directory knows which of them to expect."""
     credited: int = 0
     credited_by_mechanism: dict[str, int] = field(default_factory=dict[str, int])
     credited_and_test_suite_ex: int = 0
@@ -1271,6 +1409,7 @@ def _audit_one(
     written = disagreed or bool(fired)
     if written:
         _write_question(directory, comparison, gold_record=gold, found=found)
+        counted.directories.append(question.question_id)
     writer.line(
         _line(
             question,
@@ -1300,6 +1439,15 @@ def _count_credited(counted: _Counted, comparison: Comparison) -> None:
     counted.credited_and_test_suite_ex += comparison.test_suite_ex.value
 
 
+def _write_summary(path: Path, document: Json) -> None:
+    """The summary, written where a write that fails is this tool failing rather than a
+    traceback: the same refusal and the same exit status as every other one."""
+    try:
+        write_json(path, document)
+    except OSError as unwritable:
+        raise ToolError(f"{path} could not be written: {unwritable}") from unwritable
+
+
 def _write_question(
     directory: Path,
     comparison: Comparison | None,
@@ -1312,11 +1460,17 @@ def _write_question(
     Without a prediction there is no counterexample to write and the gold's own record is
     what the fired smell is evidence about, so the directory holds that and the smells.
     """
-    if comparison is not None:
-        write_comparison(comparison, directory)
-    else:
-        write_json(directory / GOLD_RECORD_FILE, record_json(gold_record))
-    write_json(directory / SMELLS_FILE, smells_json(found))
+    try:
+        if comparison is not None:
+            write_comparison(comparison, directory)
+        else:
+            write_json(directory / GOLD_RECORD_FILE, record_json(gold_record))
+        write_json(directory / SMELLS_FILE, smells_json(found))
+    except OSError as unwritable:
+        # A run that could not write its evidence has failed as a tool, whatever it found
+        # about the question: the contract says a tool error is exit 2, and an OSError let
+        # out of here was a traceback and exit 1.
+        raise ToolError(f"{directory} could not be written: {unwritable}") from unwritable
 
 
 def _summarise(
@@ -1357,6 +1511,7 @@ def _summarise(
             )
         ),
         errors=tuple(counted.errors),
+        question_directories=tuple(counted.directories),
         timed_out=_timed_out(counted),
         elapsed_seconds=elapsed,
         exit_status=status,
@@ -1507,6 +1662,7 @@ def _summary_json(
             "the instant the run started" if options.data_as_of is None else "--data-as-of"
         ),
         "elapsed_seconds": dict(summary.elapsed_seconds),
+        "question_directories": list(summary.question_directories),
         "errors": [
             {
                 "question_id": error.question_id,
@@ -1848,12 +2004,30 @@ def connect_and_audit(options: AuditOptions, writer: Writer) -> int:
     engine is a second entry in the registry and a branch nowhere.
     """
     try:
+        read_questions(options.questions, options.ids)
+    except ToolError as unusable:
+        # Read before anything is opened, and read again by the run for itself. The read
+        # needs no backend and the file is where a run is refused most often, so a question
+        # file this run cannot use is its own refusal rather than a session opened, a copy of
+        # the data made and a scratch schema locked for a run that then refuses. What is
+        # carried past this line is nothing: the run reads the file itself, so there is no
+        # second reading of it for a caller to have to keep in step with the first.
+        print(f"{PROGRAM}: {unusable}", file=sys.stderr)
+        return 2
+    try:
         backend = options.engine.connect(options.dsn, scratch=options.scratch_schema)
         _say_what_was_copied(backend, options.dsn)
     except BackendRefused as refused:
         print(f"{PROGRAM}: the database could not be reached: {refused}", file=sys.stderr)
         return 2
-    return audit(options, backend, writer)
+    try:
+        return audit(options, backend, writer)
+    finally:
+        # Given back rather than left to the process exit. A command survives without this
+        # and a caller that is not a command does not: an unclosed backend is a session
+        # still open on the server and a file handle still held, and the copies the run
+        # made go with it.
+        backend.close()
 
 
 def _say_what_was_copied(backend: Backend, dsn: str) -> None:

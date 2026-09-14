@@ -12,8 +12,7 @@ package description out of `pyproject.toml`; the opening command and its output 
 by running `attestql demo` while the build runs; the rows under it are that run's own
 `counterexample.json`, read through the same accessor the question page reads it through; the
 install line is the line `README.md` holds, so the two cannot drift; the run table is each
-run's `summary.json`; the links at the foot are the ones `site/index.html` carries, read out
-of that file and never edited; and the method page's rules, preconditions, probes and readings
+run's `summary.json`; and the method page's rules, preconditions, probes and readings
 are the strings the package itself holds. What is left, and it is short, is the connective
 prose in the two templates.
 
@@ -42,7 +41,6 @@ import tomllib
 from collections.abc import Iterable, Mapping, Sequence
 from contextlib import chdir, redirect_stdout
 from dataclasses import dataclass
-from html.parser import HTMLParser
 from pathlib import Path
 from typing import cast
 
@@ -62,6 +60,7 @@ from attestql.audit.compare import (
 from attestql.audit.postgres import session_preconditions
 from attestql.audit.smells import SMELLS_READING, probe_meanings
 from attestql.audit.sqlite import SqliteBackend
+from attestql.contract.counts import whole_count
 from attestql.evidence.replay import compare_r_ord, compare_r_set
 from attestql.evidence.types import ENGINE_POSTGRESQL
 from attestql.report.figures import Figure, proportion_bar
@@ -75,6 +74,7 @@ from attestql.report.render import (
     SUMMARY_FILE,
     TEMPLATES,
     TEST_SUITE_READING,
+    Crumb,
     Fact,
     Published,
     QuestionPage,
@@ -89,7 +89,6 @@ REPOSITORY = HERE.parent.parent
 DATA = HERE / "data"
 SITE_TEMPLATES = HERE / "templates"
 DEFAULT_OUT = REPOSITORY / "build" / "site"
-LIVE_PAGE = REPOSITORY / "site" / "index.html"
 README = REPOSITORY / "README.md"
 PYPROJECT = REPOSITORY / "pyproject.toml"
 
@@ -135,6 +134,41 @@ four hours by default, so for four hours after a deploy a new page could arrive 
 stylesheet, which is what a reader saw on 2026-09-08. A conditional request answers 304 when
 nothing changed, so this costs one round trip and never pairs a page with a rule it was not
 written for."""
+
+SITE_URL = "https://attestql.com"
+"""Where this build is served, which is the one thing a page cannot read off an artifact.
+
+Every page states its own address under it as a canonical link, and `sitemap.xml` lists them
+all: without one, a search engine meeting the same run under a preview deployment and under
+this address has two pages and no way to know they are one. Stated here rather than passed in
+because the workflow that deploys this build deploys it to one place, and a build made
+anywhere else is a preview nobody indexes."""
+
+ROBOTS_FILE = "robots.txt"
+SITEMAP_FILE = "sitemap.xml"
+NOT_FOUND_FILE = "404.html"
+ICON_FILE = "icon.svg"
+"""The four files a site is expected to have and this build wrote none of, so a reader who
+mistyped a path met the host's own page and every tab carried the browser's blank icon."""
+
+NOT_FOUND_TITLE = "AttestQL: no page here"
+NOT_FOUND_DESCRIPTION = (
+    "This address holds no page. The published runs, the method and the landing page are "
+    "where the site's own navigation points."
+)
+
+ICON = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" '
+    'aria-label="attestql">'
+    '<rect width="32" height="32" rx="6" fill="#101418"/>'
+    '<path d="M8 21 L16 9 L24 21" fill="none" stroke="#e8e6e3" stroke-width="3" '
+    'stroke-linecap="round" stroke-linejoin="round"/>'
+    '<path d="M11.5 17.5 H20.5" fill="none" stroke="#e8e6e3" stroke-width="3" '
+    'stroke-linecap="round"/>'
+    "</svg>\n"
+)
+"""The site's icon: the A of its name, drawn rather than fetched, so that the build depends
+on no file it did not write and the whole of it is 380 bytes."""
 
 MAX_FILES = 8_000
 MAX_BYTES = 40 * 1024 * 1024
@@ -224,6 +258,44 @@ class Run:
         )
 
     @property
+    def within(self) -> str:
+        """Where this run sits, for the title of every page of it.
+
+        The same question under seventeen prediction runs used to give seventeen pages titled
+        `q1435 NOT_EQUAL`, which is what a search result, a browser tab and a bookmark show.
+
+        What tells those seventeen apart is the run, so the run's own name is always here: on
+        one engine a prediction file is one run and the name is the model, on the other a
+        connection is one database file and the name is the database, with the model as the
+        group above it. The group replaces the benchmark rather than joining it, because a
+        model name is already distinctive and a title of eighty characters is one a search
+        result cuts in half.
+        """
+        return f"{self.group or self.benchmark} {self.name}"
+
+    @property
+    def breadcrumb(self) -> tuple[Crumb, ...]:
+        """The way back up from this run's own page, innermost last.
+
+        A reader arriving from a shared link had the run and no link to the group or the
+        benchmark it belongs to, although both have pages. The paths are relative to the run
+        page, which is one segment below its group and two below its benchmark.
+        """
+        up = _up(self.slug)
+        crumbs = [
+            Crumb(label="the published runs", href=f"{up}{RUNS_DIRECTORY}/{PAGE_FILE}"),
+            Crumb(label=self.benchmark, href=f"{up}{RUNS_DIRECTORY}/{self.benchmark}/{PAGE_FILE}"),
+        ]
+        if self.group:
+            crumbs.append(
+                Crumb(
+                    label=self.group,
+                    href=f"{up}{RUNS_DIRECTORY}/{self.benchmark}/{self.group}/{PAGE_FILE}",
+                )
+            )
+        return tuple(crumbs)
+
+    @property
     def counts(self) -> Mapping[str, int]:
         """This run's own numbers, the ones a group's line adds up: what the summary states.
 
@@ -267,6 +339,10 @@ class Runs:
     benchmarks: tuple[Benchmark, ...]
 
     title = "attestql: the published runs"
+    description = (
+        "Every benchmark this site publishes, one row per run: what each audited, what "
+        "disagreed with the gold, and what the benchmark's own scorer said."
+    )
 
 
 @dataclass(frozen=True)
@@ -304,6 +380,13 @@ class Group:
         return f"attestql: {self.benchmark}, the runs of {self.name}"
 
     @property
+    def description(self) -> str:
+        return (
+            f"{self.name} audited over the {len(self.runs)} databases of {self.benchmark}, "
+            f"with the evidence for every question the two statements disagree on."
+        )
+
+    @property
     def sums(self) -> tuple[Fact, ...]:
         """Every count its runs state, added up, in the order the first run states them."""
         names: list[str] = []
@@ -325,6 +408,14 @@ class Benchmark:
     @property
     def title(self) -> str:
         return f"attestql: the runs of {self.name}"
+
+    @property
+    def description(self) -> str:
+        held = f"{len(self.groups)} prediction runs" if self.groups else f"{len(self.runs)} runs"
+        return (
+            f"{self.name}: {held} audited against the shipped data, with the rows that "
+            f"decided every disagreement."
+        )
 
     @property
     def slug(self) -> str:
@@ -375,9 +466,13 @@ class Landing:
     bar: Figure | None
     install: str
     benchmarks: tuple[Benchmark, ...]
-    links: tuple[tuple[str, str], ...]
 
     title = "AttestQL"
+
+    @property
+    def description(self) -> str:
+        """The package's own sentence, which is what the page opens with."""
+        return self.sentence
 
 
 @dataclass(frozen=True)
@@ -409,6 +504,20 @@ class Method:
     docs: str
 
     title = "AttestQL: the method"
+    description = (
+        "What the tool computes: the two replay rules, the canonical rendering, the session "
+        "settings a comparison checks, and every probe it runs over a gold."
+    )
+
+
+@dataclass(frozen=True)
+class NotFound:
+    """The page served where no page is: what happened, and the way back into the site."""
+
+    benchmarks: tuple[Benchmark, ...]
+
+    title = NOT_FOUND_TITLE
+    description = NOT_FOUND_DESCRIPTION
 
 
 @dataclass(frozen=True)
@@ -449,7 +558,6 @@ def main(argv: Sequence[str] | None = None) -> int:
 def build(out: Path) -> Built:
     """Render every run, then the two pages of the site's own, then measure the result."""
     started = time.perf_counter()
-    _refuse_an_out_inside_the_live_page(out)
     scratch = SANDBOX_SCRATCH
     _clear(out)
     _clear(scratch)
@@ -463,7 +571,16 @@ def build(out: Path) -> Built:
                 # rather than carrying a copy of it: the stylesheet, the script and the three
                 # font files are 98 kB, and a copy per run would be a tenth of everything the
                 # site is allowed to weigh spent on the same eight files over and over.
-                render_report(run.audit, out / run.slug, banner=banner, static_root=_up(run.slug))
+                render_report(
+                    run.audit,
+                    out / run.slug,
+                    banner=banner,
+                    static_root=_up(run.slug),
+                    within=run.within,
+                    breadcrumb=run.breadcrumb,
+                    address=_address(run.slug),
+                    icon=f"{STATIC_DIRECTORY}/{ICON_FILE}",
+                )
             except ReportRefused as refused:
                 raise BuildRefused(f"{run.slug}: {refused}") from refused
         environment = _environment()
@@ -475,6 +592,7 @@ def build(out: Path) -> Built:
                 page=benchmark,
                 root=_up(benchmark.slug),
                 banner=banner,
+                canonical=_address(benchmark.slug),
             )
             for group in benchmark.groups:
                 _write(
@@ -484,6 +602,7 @@ def build(out: Path) -> Built:
                     page=group,
                     root=_up(group.slug),
                     banner=banner,
+                    canonical=_address(group.slug),
                 )
         _write(
             out / RUNS_DIRECTORY / PAGE_FILE,
@@ -492,6 +611,7 @@ def build(out: Path) -> Built:
             page=Runs(benchmarks=tuple(benchmarks)),
             root="../",
             banner=banner,
+            canonical=_address(RUNS_DIRECTORY),
         )
         _write(
             out / PAGE_FILE,
@@ -500,6 +620,7 @@ def build(out: Path) -> Built:
             page=_landing(runs, benchmarks),
             root="",
             banner=banner,
+            canonical=_address(),
         )
         _write(
             out / METHOD_DIRECTORY / PAGE_FILE,
@@ -508,10 +629,25 @@ def build(out: Path) -> Built:
             page=_method(),
             root="../",
             banner=banner,
+            canonical=_address(METHOD_DIRECTORY),
+        )
+        # Served at every address that holds no page, so it is the canonical version of none
+        # of them and states no canonical link. Its links are root-relative for the same
+        # reason: the host serves this one file wherever the reader was, and a relative link
+        # would point at a directory that is not there.
+        _write(
+            out / NOT_FOUND_FILE,
+            environment,
+            "not-found.html",
+            page=_not_found(benchmarks),
+            root="/",
+            banner=banner,
         )
         for static in sorted(path for path in STATIC.rglob("*") if path.is_file()):
             _copy(static, out / STATIC_DIRECTORY / static.relative_to(STATIC))
+        (out / STATIC_DIRECTORY / ICON_FILE).write_text(ICON, encoding="utf-8")
         (out / HEADERS_FILE).write_text(HEADERS, encoding="utf-8")
+        _search_files(out, sorted(out.rglob(PAGE_FILE)))
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
     return _measure(out, time.perf_counter() - started)
@@ -526,22 +662,6 @@ def _up(slug: str) -> str:
     is the number of segments in the address.
     """
     return "../" * len(slug.split("/"))
-
-
-def _refuse_an_out_inside_the_live_page(out: Path) -> None:
-    """`site/` is the live page's directory and another session's; a build never writes there.
-
-    Resolved first, so a relative path, a symlink and a `..` naming that directory are the
-    same answer. The check is the reason this script has an `--out` at all: the default is
-    already outside it, and what is refused is a hand that points it back in.
-    """
-    inside = out.resolve()
-    live = LIVE_PAGE.parent.resolve()
-    if inside == live or live in inside.parents:
-        raise BuildRefused(
-            f"--out {out} is {live} or a directory inside it, which holds the page "
-            f"attestql.com serves and belongs to another session. Nothing was written."
-        )
 
 
 def _clear(directory: Path) -> None:
@@ -747,7 +867,6 @@ def _landing(runs: Sequence[Run], benchmarks: Sequence[Benchmark]) -> Landing:
         bar=_bar(numbers, source),
         install=install_line(),
         benchmarks=tuple(benchmarks),
-        links=live_links(),
     )
 
 
@@ -783,63 +902,6 @@ def install_line() -> str:
         f"{README} holds no line beginning with one of {INSTALL_COMMANDS}, which is the "
         f"install line this page is built from rather than typing one of its own"
     )
-
-
-def live_links() -> tuple[tuple[str, str], ...]:
-    """The links the live page carries today, read out of it and never edited.
-
-    `site/index.html` belongs to another session. This reads its navigation so the built site
-    offers the same destinations, and a link added there arrives here on the next build.
-    """
-    found = _Links()
-    found.feed(LIVE_PAGE.read_text(encoding="utf-8"))
-    found.close()
-    if not found.links:
-        raise BuildRefused(f"{LIVE_PAGE} holds no navigation links to carry over")
-    unlabelled = [href for href, words in found.links if not words]
-    if unlabelled:
-        raise BuildRefused(
-            f"{LIVE_PAGE} has a link to {unlabelled[0]} with no words on it, which this page "
-            f"would carry over as a link a reader cannot read: an icon or an image is not a "
-            f"label a second page can reuse"
-        )
-    return tuple(found.links)
-
-
-class _Links(HTMLParser):
-    """The first `nav` of the live page: each link's target and the words on it.
-
-    The first and not every one: a page with a second `nav` in its footer would otherwise
-    have both merged into one list here, and the reading would be of a page nobody wrote.
-    Reading stops when that `nav` closes.
-    """
-
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self.links: list[tuple[str, str]] = []
-        self.inside = False
-        self.done = False
-        self.href = ""
-        self.text: list[str] = []
-
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag == "nav" and not self.done:
-            self.inside = True
-        if tag == "a" and self.inside:
-            self.href = str(dict(attrs).get("href") or "")
-            self.text = []
-
-    def handle_endtag(self, tag: str) -> None:
-        if tag == "a" and self.inside and self.href:
-            self.links.append((self.href, "".join(self.text).strip()))
-            self.href = ""
-        if tag == "nav" and self.inside:
-            self.inside = False
-            self.done = True
-
-    def handle_data(self, data: str) -> None:
-        if self.href:
-            self.text.append(data)
 
 
 def _numbers() -> tuple[tuple[Number, ...], str]:
@@ -1007,15 +1069,70 @@ def _environment() -> Environment:
 
 
 def _write(
-    path: Path, environment: Environment, template: str, *, page: object, root: str, banner: str
+    path: Path,
+    environment: Environment,
+    template: str,
+    *,
+    page: object,
+    root: str,
+    banner: str,
+    canonical: str = "",
+    icon: str = "",
 ) -> Path:
-    """One page of the site's own. Its stylesheet is the site's, which is where its root is."""
+    """One page of the site's own. Its stylesheet is the site's, which is where its root is.
+
+    ``canonical`` is the address this page is served at; the 404 is the one page written
+    without one, because it is served at every address that holds no page and is a canonical
+    version of none of them.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        environment.get_template(template).render(page=page, root=root, banner=banner, static=root),
+        environment.get_template(template).render(
+            page=page,
+            root=root,
+            banner=banner,
+            static=root,
+            canonical=canonical,
+            icon=icon or f"{STATIC_DIRECTORY}/{ICON_FILE}",
+        ),
         encoding="utf-8",
     )
     return path
+
+
+def _not_found(benchmarks: Sequence[Benchmark]) -> NotFound:
+    """The 404, which names the benchmarks so that a mistyped run is one link from the right
+    one rather than a dead end."""
+    return NotFound(benchmarks=tuple(benchmarks))
+
+
+def _address(slug: str = "") -> str:
+    """Where one slug of this site is served, with the trailing slash a directory URL has."""
+    return f"{SITE_URL}/{slug}/" if slug else f"{SITE_URL}/"
+
+
+def _search_files(out: Path, pages: Sequence[Path]) -> list[Path]:
+    """`robots.txt` and `sitemap.xml`, written from the pages this build actually wrote.
+
+    Listed rather than composed from what the build meant to write, so a page that was not
+    written is not a line in the sitemap pointing at nothing.
+    """
+    addresses = sorted(
+        _address(str(page.parent.relative_to(out)).replace("\\", "/").strip(".")) for page in pages
+    )
+    sitemap = "\n".join(
+        [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+            *(f"  <url><loc>{address}</loc></url>" for address in addresses),
+            "</urlset>",
+            "",
+        ]
+    )
+    robots = "\n".join(["User-agent: *", "Allow: /", f"Sitemap: {SITE_URL}/{SITEMAP_FILE}", ""])
+    (out / SITEMAP_FILE).write_text(sitemap, encoding="utf-8")
+    (out / ROBOTS_FILE).write_text(robots, encoding="utf-8")
+    return [out / SITEMAP_FILE, out / ROBOTS_FILE]
 
 
 def _copy(source: Path, destination: Path) -> Path:
@@ -1098,14 +1215,11 @@ def _integer(document: Mapping[str, object], key: str) -> int:
 
     Every number this reads is a count of questions, and a count below zero is a file that
     cannot be right. Two negatives would also pass the bar's own check that a part is no
-    larger than its whole, and be drawn.
+    larger than its whole, and be drawn. The rule is shared with the selector that writes
+    these documents and with the renderer that reads them, which is the point: a selector
+    that could write a number this refuses would put the failure on whoever runs the build.
     """
-    value = document.get(key)
-    if not isinstance(value, int) or isinstance(value, bool):
-        raise BuildRefused(f"{key} is {type(value).__name__} where a whole number was expected")
-    if value < 0:
-        raise BuildRefused(f"{key} is {value}, and every number this page states is a count")
-    return value
+    return whole_count(document, key, BuildRefused)
 
 
 if __name__ == "__main__":

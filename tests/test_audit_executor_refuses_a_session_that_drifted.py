@@ -24,9 +24,11 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 
+from attestql.audit import postgres
 from attestql.audit.backend import (
     Backend,
     BackendRefused,
@@ -35,13 +37,16 @@ from attestql.audit.backend import (
     TableName,
 )
 from attestql.audit.postgres import (
+    DEFAULT_SCHEMA,
     DEFAULT_SCRATCH_SCHEMA,
     DRIVER_ERROR,
+    ENVELOPE_SETTINGS,
     HASH_MEM_MULTIPLIER,
     LOCK_WAIT_SECONDS,
     MEMORY_SETTINGS,
     NO_PARALLEL_AGGREGATION,
     QUALIFIED_NAME_IS_NOT_REACHED,
+    SEARCH_PATH,
     WORK_MEM,
     NumericFromFloatText,
     PostgresBackend,
@@ -201,6 +206,8 @@ class FakeConnection:
         self.refuses_drops = False
         """Set after the copies are made, so that a drop can fail where the create did
         not: what a role whose grant was taken away mid-run meets."""
+        self.closed = 0
+        """How many times the backend gave this connection back."""
         self.lock_keys: list[object] = []
         """The key of every advisory lock and unlock the backend asked for, in order."""
         self.census = census
@@ -227,6 +234,10 @@ class FakeConnection:
     def cursor(self) -> FakeCursor:
         return FakeCursor(self)
 
+    def close(self) -> None:
+        """Counted rather than enforced: what a test reads is that the backend asked."""
+        self.closed += 1
+
     def answer(self, text: str) -> tuple[Sequence[tuple[object, ...]], Sequence[FakeColumn] | None]:
         if text in {"BEGIN READ ONLY", "BEGIN", "SET TRANSACTION READ WRITE", "COMMIT", "ROLLBACK"}:
             self.local.clear()
@@ -235,11 +246,11 @@ class FakeConnection:
             if not self.keeps_its_gather:
                 self.local["max_parallel_workers_per_gather"] = text.rsplit("=", 1)[1].strip()
             return (), None
-        for name, statement, held in MEMORY_SETTINGS:
+        for name, statement, held in (*MEMORY_SETTINGS, *ENVELOPE_SETTINGS):
             if text == statement:
-                # What the server reports for a memory setting is not what the statement
-                # spelled: pg_settings renders work_mem in kilobytes, so the transaction
-                # holds what a read-back would find and not '4MB'.
+                # What the server reports for one of these is not what the statement
+                # spelled: pg_settings renders work_mem in kilobytes and reports a search
+                # path with its quotes, so the transaction holds what a read-back finds.
                 if name != self.keeps_its_own:
                     self.local[name] = held
                 return (), None
@@ -453,7 +464,7 @@ def test_settings_a_session_would_not_hold_are_refused_where_they_are_read() -> 
     connection = FakeConnection(keeps_its_own="work_mem")
     with pytest.raises(ReadBackDrift, match="work_mem was set to 4096") as drift:
         _backend(connection).session_settings()
-    assert drift.value.step == "memory_settings"
+    assert drift.value.step == "envelope_settings"
     assert connection.log[-1] == "ROLLBACK"
 
 
@@ -490,12 +501,12 @@ def test_the_session_settings_name_the_seven_and_record_the_rest() -> None:
     assert settings.hash_mem_multiplier == "2"
     assert dict(settings.recorded) == {
         "statement_timeout": "30000",
-        "search_path": '"$user", public',
         "server_version": "16.4 (Debian 16.4-1.pgdg120+1)",
         "server_version_num": "160004",
         "transaction_read_only": "on",
         "max_parallel_workers_per_gather": "2",
         "server_encoding": "UTF8",
+        "search_path": "public",
         "datlocprovider": "c",
         "daticulocale": "",
         "datcollversion": "2.41",
@@ -575,6 +586,24 @@ def test_the_session_settings_are_read_once_and_repeated_after_that() -> None:
     assert sum(1 for line in asked if "pg_database" in line) == 1
 
 
+def test_the_database_role_is_read_once_and_repeated_after_that() -> None:
+    """The role the statements run as is asked for once per record and once per comparison.
+
+    Nothing this backend sends can move it. The envelope every statement opens inside sets
+    the schema path, the memory bounds and the timeout and no role, so the second question
+    could only say what the first one said, and against a server across a network it was a
+    round trip for an answer already in hand.
+    """
+    connection = FakeConnection()
+    backend = _backend(connection)
+    role = backend.effective_database_role()
+    assert role == "bird_reader"
+    assert backend.effective_database_role() == role
+    assert [line for line in connection.log if line == "SELECT current_user"] == [
+        "SELECT current_user"
+    ]
+
+
 def test_a_session_that_cannot_report_a_precondition_setting_is_refused() -> None:
     connection = FakeConnection(settings={"statement_timeout": "30000"})
     with pytest.raises(BackendRefused, match="reported no value for"):
@@ -590,17 +619,18 @@ def test_a_connection_that_died_in_the_envelope_is_a_refusal_naming_that_step() 
 
 
 def test_a_connection_that_died_before_the_read_back_is_a_refusal_naming_that_step() -> None:
-    """The envelope was set and the session cannot be asked what it holds. Five statements
-    make that envelope: the read-only begin, the timeout, the gather turned off, and the two
-    memory settings a hash aggregate spills at."""
+    """The envelope was set and the session cannot be asked what it holds. Six statements
+    make that envelope: the read-only begin, the timeout, the gather turned off, the two
+    memory settings a hash aggregate spills at, and the search path the statement's own
+    unqualified names resolve against."""
     with pytest.raises(BackendRefused) as refused:
-        _backend(DeadConnection(kill_after=5)).execute(STATEMENT, statement_timeout_seconds=30)
+        _backend(DeadConnection(kill_after=6)).execute(STATEMENT, statement_timeout_seconds=30)
     assert refused.value.step == "read_back"
 
 
 def test_a_connection_that_died_at_the_statement_is_a_refusal_naming_that_step() -> None:
     with pytest.raises(BackendRefused) as refused:
-        _backend(DeadConnection(kill_after=6)).execute(STATEMENT, statement_timeout_seconds=30)
+        _backend(DeadConnection(kill_after=7)).execute(STATEMENT, statement_timeout_seconds=30)
     assert refused.value.step == "execute"
 
 
@@ -943,16 +973,83 @@ def test_a_scratch_schema_the_role_cannot_create_in_is_a_refusal_and_no_write() 
     assert connection.log[-1] == "ROLLBACK"
 
 
+def test_the_envelope_pins_the_schema_an_unqualified_name_resolves_against() -> None:
+    """Until 2026-09-13 the envelope set no search path at all.
+
+    Everything this tool measures and everything it says about what it measured is about
+    `public`: the fixture digest names `public.results`, the counts are of `public`, and the
+    tables a statement was read as naming are resolved there. The statement itself resolved
+    against whatever path the session arrived with, so a gold and a prediction could both
+    have read `other.results` under a digest describing `public.results`.
+    """
+    connection = FakeConnection()
+
+    _backend(connection).execute(STATEMENT, statement_timeout_seconds=30)
+
+    path = next(index for index, line in enumerate(connection.log) if "search_path" in line)
+    read_back = next(index for index, line in enumerate(connection.log) if "pg_settings" in line)
+    assert connection.log[path] == SEARCH_PATH
+    assert path < read_back, "set before the read-back, because it is the envelope"
+    assert read_back < connection.log.index(STATEMENT)
+
+
+def test_the_envelope_names_the_schema_once_and_builds_the_statement_from_it() -> None:
+    """A second spelling of the schema is a second place to change it and one to forget.
+
+    ``DEFAULT_SCHEMA`` is where an unqualified table name is looked for, and the envelope
+    pins the search path to that schema and reads it back as that schema. All three were the
+    word ``public`` typed out again, so the module is read here for a second spelling of it:
+    a constant built from another constant looks the same from outside as one that repeats it.
+    """
+    source = Path(postgres.__file__).read_text(encoding="utf-8")
+
+    assert f'"{DEFAULT_SCHEMA}"' in source
+    assert source.count(f'"{DEFAULT_SCHEMA}"') == 1, "the schema is named once"
+    assert f"search_path = {DEFAULT_SCHEMA}" not in source, "the statement is built, not typed"
+    assert f"SET LOCAL search_path = {DEFAULT_SCHEMA}" == SEARCH_PATH
+    assert ENVELOPE_SETTINGS == (("search_path", SEARCH_PATH, DEFAULT_SCHEMA),)
+
+
+def test_a_session_that_would_not_hold_the_path_is_refused_before_the_statement() -> None:
+    """Read back like the rest of the envelope, so a server that would not take it stops the
+    execution rather than answering from a schema nobody asked for."""
+    connection = FakeConnection(keeps_its_own="search_path")
+
+    with pytest.raises(ReadBackDrift, match="search_path was set to") as drift:
+        _backend(connection).execute(STATEMENT, statement_timeout_seconds=30)
+
+    assert drift.value.step == "read_back"
+    assert STATEMENT not in connection.log
+    assert connection.log[-1] == "ROLLBACK"
+
+
+def test_the_recorded_path_is_the_one_the_statements_ran_under() -> None:
+    """The session here holds `"$user", public` and no statement of the run resolves against
+    it, so that is not what a record of this run states."""
+    settings = _backend(FakeConnection()).session_settings()
+
+    assert settings.recorded["search_path"] == "public"
+
+
 def test_a_shuffled_rerun_sets_the_search_path_inside_the_read_only_transaction() -> None:
+    """Two statements set the path here, and the order of them is the point.
+
+    The envelope pins `public` before the read-back, because that is what every execution of
+    the run resolves an unqualified name against. The scratch schema goes in front of it
+    afterwards, where the variants of one execution go, so the read-back sees the envelope
+    and the statement sees the copies.
+    """
     connection = FakeConnection(counts={"drivers": 100})
     backend = _backend(connection)
     backend.prepare_shuffled_copies((DRIVERS,), seed="1", row_limit=1_000)
     connection.log.clear()
     backend.execute_shuffled(STATEMENT, statement_timeout_seconds=30)
-    path = next(index for index, line in enumerate(connection.log) if "search_path" in line)
+    paths = [index for index, line in enumerate(connection.log) if "search_path" in line]
     assert connection.log[0] == "BEGIN READ ONLY"
-    assert path < connection.log.index(STATEMENT)
-    assert "attestql_scratch" in connection.log[path]
+    assert len(paths) == 2
+    assert "attestql_scratch" not in connection.log[paths[0]], "the envelope"
+    assert "attestql_scratch" in connection.log[paths[1]], "and the rerun's own"
+    assert paths[1] < connection.log.index(STATEMENT)
     assert connection.log[connection.log.index(STATEMENT) + 1] == "ROLLBACK"
 
 

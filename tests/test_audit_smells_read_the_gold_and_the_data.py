@@ -507,6 +507,54 @@ def test_an_unordered_cut_with_nothing_to_rerun_against_was_not_asked_at_all() -
     assert backend.executed_shuffled == []
 
 
+def test_an_unordered_cut_the_shuffle_reached_no_table_of_was_not_asked_either() -> None:
+    """Copies were made, and none of them is a table this statement reads.
+
+    The rerun then reads exactly the rows the baseline read, in the order the baseline read
+    them, and returns the baseline. That was reported as a bound that had been tested and
+    held: applicable, EQUAL, over a measurement nobody took. The `Backend` contract names
+    this as the one thing a probe must not do.
+    """
+    backend = FakeBackend({TWO_ROWS: fake_result(NAME, (("a",), ("b",)))})
+    elsewhere = ShuffledCopies(
+        copied=(TableName("", "somewhere_else"),),
+        skipped={},
+        unreachable={},
+        seed="1",
+        row_limit=300_000,
+    )
+
+    found = arbitrary_cut(
+        parse_statement(TWO_ROWS),
+        backend,
+        backend.execute(TWO_ROWS, statement_timeout_seconds=30),
+        settings=SETTINGS,
+        shuffled=elsewhere,
+    )
+
+    assert _smell(found) == (ARBITRARY_CUT, False, False)
+    assert "reached no table this statement reads" in str(found.evidence["reason"])
+    assert backend.executed_shuffled == [], "and nothing was rerun"
+    assert found.evidence["shuffle"]["tables_not_shuffled"] == ["players"]
+
+
+def test_an_unordered_cut_the_shuffle_reached_one_table_of_is_asked() -> None:
+    """The other side of the same rule, so that the narrowing did not swallow the case the
+    probe is for: one table of the statement copied is a rerun worth running."""
+    backend = FakeBackend({TWO_ROWS: fake_result(NAME, (("a",), ("b",)))})
+
+    found = arbitrary_cut(
+        parse_statement(TWO_ROWS),
+        backend,
+        backend.execute(TWO_ROWS, statement_timeout_seconds=30),
+        settings=SETTINGS,
+        shuffled=SHUFFLED,
+    )
+
+    assert _smell(found) == (ARBITRARY_CUT, False, True)
+    assert [sql for sql, _ in backend.executed_shuffled] == [TWO_ROWS]
+
+
 def test_an_unordered_cut_with_no_reason_given_still_says_there_were_no_copies() -> None:
     backend = FakeBackend({TWO_ROWS: fake_result(NAME, (("a",), ("b",)))})
     found = arbitrary_cut(
@@ -721,7 +769,11 @@ def test_the_shuffle_evidence_names_a_table_no_copy_could_be_reached_for() -> No
     """A statement that qualified its table reads that table however the copies were made,
     so the rerun covered nothing of it and the evidence says so with the reason. Reported
     the way a table too large to copy is reported, because a reader is being told the same
-    kind of thing: this part of the data did not move."""
+    kind of thing: this part of the data did not move.
+
+    Not applicable, and this assertion said applicable until 2026-09-13. A rerun that reads
+    none of the copies runs on the data the baseline ran on and returns the baseline, so
+    what was reported was a probe asked and answered over a measurement nobody took."""
     qualified = "SELECT sum(x) FROM public.t"
     backend = FakeBackend({qualified: fake_result(TOTAL_INT, ((3,),))})
     shuffled = ShuffledCopies(
@@ -744,7 +796,12 @@ def test_the_shuffle_evidence_names_a_table_no_copy_could_be_reached_for() -> No
     assert shuffle["tables_not_reached_by_a_copy"] == {
         "public.t": "the statement names this table's schema"
     }
-    assert _smell(found) == (NOT_A_FUNCTION_OF_THE_DATA, False, True)
+    assert _smell(found) == (NOT_A_FUNCTION_OF_THE_DATA, False, False)
+    assert found.evidence["shuffled_copies"] == {
+        "run": False,
+        "reason": "the shuffle reached no table this statement reads, so a rerun would "
+        "read the same rows in the same order",
+    }
 
 
 # direction-against-question

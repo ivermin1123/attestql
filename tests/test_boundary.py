@@ -154,6 +154,24 @@ forbidden there too.
 The cross-process fixture determinism test held the previous ``subprocess`` exemption, also
 by exact path, and ADR-0013 deleted it with the fixture it generated."""
 
+MAINTAINER_SCRIPT_TEST = TESTS / "test_maintainer_scripts_refuse_and_report.py"
+"""The second file permitted to start a process, and permitted ``subprocess`` alone.
+
+The maintainer tools under ``tools/`` that are shell can only be observed by running them.
+LOGIC-10 of the 2026-09-08 review is why that matters: `audits.sh` read correctly and behaved
+wrongly, throwing away the status of every run it made, so an assertion over the text of the
+script would not have found it and would not catch its return. The permission is an exact path
+and it is one file, so a second shell script gets a test here rather than a third exemption.
+
+Nothing above a backend is reached by these tests: they drive a script with a work directory
+of their own and stop it before it opens a database, a container or a port."""
+
+PROCESS_STARTERS: tuple[Path, ...] = (CONSOLE_SCRIPT_TEST, MAINTAINER_SCRIPT_TEST)
+"""Every file permitted ``subprocess``, and the whole of what may start a process.
+
+Nothing under ``src`` is here, which is the part of the rule that is about the product: the
+audit runs in its own process and shells out to nothing."""
+
 
 def python_files(root: Path) -> list[Path]:
     files = sorted(root.rglob("*.py"))
@@ -319,7 +337,7 @@ def test_each_driver_is_reachable_from_exactly_the_modules_it_is_allowed_in_unde
 
 def forbidden_primitives(path: Path) -> list[str]:
     forbidden_imports = FORBIDDEN_IMPORTS
-    if path == CONSOLE_SCRIPT_TEST:
+    if path in PROCESS_STARTERS:
         forbidden_imports = FORBIDDEN_IMPORTS - {"subprocess"}
     found: list[str] = []
     for node in ast.walk(parse(path)):
@@ -376,17 +394,24 @@ def test_each_uri_escaper_really_escapes_the_path_it_is_allowed_to(path: Path) -
     )
 
 
-def test_the_console_script_test_really_starts_the_process_it_is_allowed_to() -> None:
-    """The positive case of the one process permission, on the same ground as the driver's."""
-    assert "subprocess" in imported_modules(CONSOLE_SCRIPT_TEST), (
-        f"{CONSOLE_SCRIPT_TEST.name} is the allowed process starter and starts none"
+@pytest.mark.parametrize("path", PROCESS_STARTERS, ids=lambda p: p.name)
+def test_each_process_starter_really_starts_the_process_it_is_allowed_to(path: Path) -> None:
+    """The positive case of the process permissions, on the same ground as the driver's."""
+    assert "subprocess" in imported_modules(path), (
+        f"{path.name} is an allowed process starter and starts none"
     )
 
 
-def test_subprocess_is_reachable_from_exactly_one_file() -> None:
+def test_subprocess_is_reachable_from_exactly_the_two_files_permitted_it() -> None:
     starters = [
         path
         for path in python_files(SRC) + python_files(TESTS)
         if "subprocess" in imported_modules(path)
     ]
-    assert starters == [CONSOLE_SCRIPT_TEST]
+    assert starters == sorted(PROCESS_STARTERS)
+
+
+def test_nothing_under_src_starts_a_process() -> None:
+    """The half of the rule that is about the product, asserted on its own so that a widening
+    of the test permissions above can never quietly widen this one."""
+    assert [path for path in python_files(SRC) if "subprocess" in imported_modules(path)] == []

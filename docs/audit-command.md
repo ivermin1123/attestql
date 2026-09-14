@@ -71,15 +71,26 @@ questions it names. A file that states
 two different questions under one id stops the run; an id repeated with the same entry is one
 question.
 
+Every field is read at the type the file states it at, and an entry stating one at another type
+is a tool error before the run starts, exit 2, naming the entry and the field. `question_id` is a
+whole number from 0 to 999,999,999 and nothing else, because it is also the name of the directory
+that question's evidence goes in and the name a rerun of that directory looks for; `true` is not
+the id 1 and `null` is not the text `None`. The other four are text.
+
 A predictions file written for this tool is keyed by question id (`{"879": "SELECT ..."}`). BIRD's
 own prediction files under `llm/exp_result/` are keyed by the position of the entry in the
 question file rather than by question id, because its evaluation pairs prediction `i` with gold
 line `i`; read one with `--predictions-keyed-by position`, and under the default keying a file of
 that shape is refused rather than paired with whichever questions happen to carry those numbers.
-A value may carry BIRD's own suffix (`\t----- bird -----\t<db_id>`), which is stripped. An entry
-that is the number `0` or an empty string, which is how BIRD dev's own `predict_dev.json` marks a
-prediction the model did not produce, is that question's error line and not a refusal of the
-file; a question the file does not name at all is audited gold-only.
+A key naming no question of the file at all is a tool error before the run starts, exit 2, naming
+the ids: under this keying a key is a question id, and one that names nothing would be a
+prediction the run leaves out while the question it was meant for is reported as having none. The
+ids are checked against the whole question file and not against what `--ids` kept, because a run
+over one database out of a prediction file written for eleven compares none of the keys for the
+other ten by design. A value may carry BIRD's own suffix (`\t----- bird -----\t<db_id>`), which is
+stripped. An entry that is the number `0` or an empty string, which is how BIRD dev's own
+`predict_dev.json` marks a prediction the model did not produce, is that question's error line
+and not a refusal of the file; a question the file does not name at all is audited gold-only.
 
 Most published prediction files hold no keys at all: one statement per line, in the order of the
 question file. `--predictions-format lines` reads one, where a line's position is its key, so that
@@ -140,7 +151,14 @@ and no second record, and its directory holds the two files there are: the gold'
 `evidence-gold.json`, and `smells.json`. `audit/summary.json` holds the counts, the fixture
 digest, whether the shuffle ran, the session the run was made in (the server's version string
 beside its number) and the parser that judged every statement (the validator, the `postgast`
-release and the libpg_query grammar version). `fixture.unreadable_tables` names the tables a gold
+release and the libpg_query grammar version). `question_directories` lists, in the order the
+questions were asked, the ids this run wrote a `q<id>/` for: a question gets one when it
+disagreed, which is a `NOT_EQUAL` or a `NOT_COMPARABLE`, or when a probe fired over it. A question
+that agreed with nothing to say about it writes none, and neither does one that errored, so the
+number audited is an upper bound on the directories and never a count of them. The list is what
+`attestql report` reconciles the directories it finds against; a run that audited only questions
+like that states an empty list, which is not the same as saying nothing.
+`fixture.unreadable_tables` names the tables a gold
 uses that the catalogue holds but the role may not SELECT from, beside `fixture.missing_tables`,
 the ones the catalogue does not hold at all; the first is repaired with a GRANT and the second in
 the question file, and either makes every question that uses the table an error line rather than
@@ -189,9 +207,13 @@ own defaults written out rather than inherited, so that a float sum is added in 
 runs of one statement cannot differ in a late digit: a gather adds the partial sums in whatever
 order the workers returned them, and a hash aggregate that outgrows the memory bound spills and
 adds them per spilled batch, which moves three of the nine summation-order-sensitive Mini-Dev
-golds between 64 kB and 4 MB. All three are read back inside the statement's own transaction and
-the execution is refused if the session does not hold them, and holding them makes some plans
-slower here than on the same server at its own defaults.
+golds between 64 kB and 4 MB. It also runs with `search_path` pinned to `public`, so an
+unqualified name in the audited statement resolves to the schema the fixture digest and the row
+counts beside it describe rather than to whatever the session was started with. All four are read
+back inside the statement's own transaction and the execution is refused if the session does not
+hold them, the record states the values that were in force rather than the session's own, and
+holding the memory bounds makes some plans slower here than on the same server at its own
+defaults.
 
 q707 of Mini-Dev is the worked example: its gold runs in 50 ms, and the `meta-llama-3-70b-instruct`
 prediction for it runs in 0.22 s with two parallel workers and in 41 s warm to 105 s cold without
@@ -299,12 +321,24 @@ pages were written and 2 when the directory could not be rendered: a directory h
 `--out` naming the audit directory itself, or a directory inside it, is refused for the same
 reason the default is a sibling.
 
+The directories are reconciled with what the run says it wrote, and a report that would be
+missing a question, or showing one the run never had, is refused with nothing written. A
+directory the summary's `question_directories` names and that is not here is exit 2 naming the
+ids; a `q<id>/` the list does not name is exit 2 too, whether or not the run is a selection. A
+selection is the one gap that is explained: where a `published.json` is beside the summary the
+directories may be some of the listed ones, because a site publishes some of a run's questions
+and that file says where the whole run is, and the run page states how many of them are here. A
+summary written before `question_directories` existed states none, and such a directory is held
+only to what its counts fix: the directories and the errors cannot be more questions than the run
+audited, and a whole run cannot hold fewer directories than the `NOT_EQUAL` it counted.
+
 The output directory follows the rule the audit's own does. The first render leaves a
 `.attestql-report` marker in it; a render into a directory that has the marker removes what the
-render before it wrote (`index.html`, `summary.json`, every `q<id>/`, `not-equal/`,
-`by-mechanism/`, `by-probe/` and `static/`) before
-writing anything, so what is in there is one report and not two, and anything else you put there
-stays. A non-empty directory without the marker is refused with nothing in it touched.
+render before it wrote (`index.html`, `summary.json`, `classification.json`,
+`classification-source.json`, every `q<id>/`, `not-equal/`, `by-mechanism/`, `by-probe/` and
+`static/`) before writing anything, so what is in there is one report and not two, and anything
+else you put there stays. A non-empty directory without the marker is refused with nothing in it
+touched.
 
 `index.html` is the run: the counts, what the run was made of (both file digests with whatever
 origin the run was told, the server, the parser, the serialization, the fixture digest, the

@@ -50,10 +50,13 @@ from attestql.report.render import (
     MARKER_TEXT,
     NOT_EQUAL_DIRECTORY,
     PAGE_FILE,
+    ROWS_ON_A_PAGE,
     SECOND_RECORD_FILE,
     SMELLS_FILE,
     STATIC,
     SUMMARY_FILE,
+    Crumb,
+    question_page,
 )
 
 pytestmark = pytest.mark.sandbox_sqlite
@@ -900,8 +903,9 @@ def test_a_published_run_says_how_many_of_its_question_directories_have_a_page_h
 
     The run wrote a directory per question it has evidence for; a site shows the ones its
     budget fits. Both numbers are on the page: the one counted here as the pages were written,
-    and the one the archive holds, which is the manifest's and reaches the page through
-    ``published.json``. A file written before that number existed still renders, without it.
+    and how many the run wrote, which is the archive's count out of ``published.json`` where a
+    publisher stated it and the run's own list otherwise. A run that states neither still
+    renders, saying that the pages are a selection and no more.
     """
     audit = _copy_audit(rendered, tmp_path)
     written = len(list(audit.glob("q*")))
@@ -911,13 +915,22 @@ def test_a_published_run_says_how_many_of_its_question_directories_have_a_page_h
     render_report(audit, tmp_path / "counted")
     (audit / "published.json").write_text(_published(), encoding="utf-8")
     render_report(audit, tmp_path / "uncounted")
+    summary = document(audit / SUMMARY_FILE)
+    del summary["question_directories"]
+    write(audit / SUMMARY_FILE, summary)
+    render_report(audit, tmp_path / "unstated")
 
     counted = read(tmp_path / "counted" / PAGE_FILE).text
     assert f"This site holds {written} of the 218 question directories this run wrote" in counted
     assert "the archive holds every one" in counted
     uncounted = read(tmp_path / "uncounted" / PAGE_FILE).text
     assert "of the 218 question directories" not in uncounted
-    assert "The pages here are a selection of this run's questions." in uncounted
+    assert f"This site holds {written} of the {written} question directories" in uncounted, (
+        "the archive states no count and the run's own list does"
+    )
+    unstated = read(tmp_path / "unstated" / PAGE_FILE).text
+    assert "question directories this run wrote" not in unstated
+    assert "The pages here are a selection of this run's questions." in unstated
 
 
 def test_a_release_asset_the_page_could_not_fetch_is_refused_rather_than_linked(
@@ -1042,3 +1055,354 @@ def test_every_line_a_publisher_put_beside_a_run_is_escaped_where_it_is_rendered
         assert f"<script>alert('{value}')</script>" in page.text, value
     assert "&lt;script&gt;" in markup
     assert "a class this row is not" not in page.text, "a class the note does not define"
+
+
+def test_a_run_that_lost_a_directory_its_summary_names_is_refused_naming_it(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """The reproduction the review recorded: a report that looks whole and is not.
+
+    The index is built from the question directories, and the total at the top of the run page
+    is read straight out of the summary. Nothing compared either with what the run says it
+    wrote, so an audit that lost a directory rendered five questions under a heading saying
+    six, with no page anywhere saying one was missing. The refusal names the question, because
+    which one is gone is the whole of what a reader has to go and find.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    shutil.rmtree(audit / "q879")
+
+    with pytest.raises(ReportRefused, match="holds fewer question directories") as refused:
+        render_report(audit, tmp_path / "report")
+
+    assert "q879" in str(refused.value), "the refusal says which question is not here"
+    assert not (tmp_path / "report").exists(), "the refusal comes before anything is written"
+
+
+def test_a_healthy_run_whose_only_question_agreed_and_fired_no_probe_renders(
+    tmp_path: Path,
+) -> None:
+    """A question that agreed with nothing to say about it writes no directory.
+
+    The number audited is therefore an upper bound on the directories and never the count of
+    them, and reading it as that count refused this run, which is as healthy as a run gets: one
+    gold, no prediction, no probe fired, exit 0. Every audit holding such a question was
+    refused, which is most of them.
+    """
+    sandbox = tmp_path / "sandbox"
+    assert run(["demo", "--out", str(sandbox)])[0] == 1
+    one = tmp_path / "one"
+    status, lines = run(
+        [
+            "audit",
+            "--engine",
+            "sqlite",
+            "--dsn",
+            str(sandbox / "fixture.sqlite"),
+            "--questions",
+            str(sandbox / "questions.json"),
+            "--ids",
+            "1029",
+            "--out",
+            str(one),
+        ]
+    )
+    assert status == 0, lines
+    assert not list(one.glob("q*")), "the question agreed and fired no probe"
+    assert document(one / SUMMARY_FILE)["question_directories"] == []
+
+    assert run(["report", str(one), "--out", str(tmp_path / "report")])[0] == 0
+    assert "no questions" in (tmp_path / "report" / PAGE_FILE).read_text(encoding="utf-8")
+
+
+def test_a_prediction_run_whose_questions_all_agreed_renders(tmp_path: Path) -> None:
+    """The same for a run that compared: two questions, both EQUAL, no probe, no directory."""
+    sandbox = tmp_path / "sandbox"
+    assert run(["demo", "--out", str(sandbox)])[0] == 1
+    asked = [
+        question
+        for question in document(sandbox / "questions.json")["questions"]
+        if question["question_id"] in {207, 1029}
+    ]
+    assert len(asked) == 2, "the packaged sandbox holds both"
+    predictions = tmp_path / "predictions.json"
+    write(predictions, {str(question["question_id"]): question["SQL"] for question in asked})
+
+    two = tmp_path / "two"
+    status, lines = run(
+        [
+            "audit",
+            "--engine",
+            "sqlite",
+            "--dsn",
+            str(sandbox / "fixture.sqlite"),
+            "--questions",
+            str(sandbox / "questions.json"),
+            "--predictions",
+            str(predictions),
+            "--ids",
+            "207,1029",
+            "--out",
+            str(two),
+        ]
+    )
+    assert status == 0, lines
+    assert document(two / SUMMARY_FILE)["verdicts"] == {"EQUAL": 2}
+    assert document(two / SUMMARY_FILE)["question_directories"] == []
+
+    assert run(["report", str(two), "--out", str(tmp_path / "report")])[0] == 0
+
+
+def test_a_selection_of_a_run_is_the_one_gap_that_is_explained(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """What a site publishes of a run is some of its questions, and the page says so.
+
+    `published.json` is where the whole run is, and the run page states how many of the run's
+    directories are here beside how many it wrote. That is a gap a reader is told about, so it
+    is not the gap this refusal is for.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    shutil.rmtree(audit / "q879")
+    (audit / "published.json").write_text(
+        json.dumps(
+            {
+                "name": "a-run.tar.gz",
+                "url": "https://example.invalid/a-run.tar.gz",
+                "bytes": 1,
+                "sha256": "0" * 64,
+                "directories": 6,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = render_report(audit, tmp_path / "report")
+
+    assert report.pages, "a selection renders"
+    assert not (tmp_path / "report" / "q879").exists()
+
+
+def test_a_directory_the_run_never_wrote_is_refused(rendered: Rendered, tmp_path: Path) -> None:
+    """A report shows what a run wrote, and a directory beside it is not that."""
+    audit = _copy_audit(rendered, tmp_path)
+    shutil.copytree(audit / "q879", audit / "q878")
+
+    with pytest.raises(ReportRefused, match="holds more question directories") as refused:
+        render_report(audit, tmp_path / "report")
+
+    assert "q878" in str(refused.value)
+
+
+def test_a_selection_holding_a_directory_the_run_never_wrote_is_refused(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """A selection is some of the questions a run wrote and never one it did not.
+
+    `published.json` says where the whole run is, which explains a directory that is not here.
+    It explains nothing about one that is here and was never part of the run.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    shutil.copytree(audit / "q879", audit / "q878")
+    (audit / "published.json").write_text(_published(directories=6), encoding="utf-8")
+
+    with pytest.raises(ReportRefused, match="holds more question directories") as refused:
+        render_report(audit, tmp_path / "report")
+
+    assert "q878" in str(refused.value)
+
+
+def test_a_summary_that_names_no_directories_renders_under_the_bounds_its_counts_fix(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """Every run made before 2026-09-14 says nothing about what it wrote, and still renders.
+
+    The 121 runs this repository publishes are such runs and so is any directory an earlier
+    release left on a reader's disk. Nothing is claimed about them beyond what the counts
+    allow: the directories and the errors cannot be more questions than the run audited, and a
+    whole run cannot hold fewer directories than the disagreements it counted.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    summary = document(audit / SUMMARY_FILE)
+    del summary["question_directories"]
+    write(audit / SUMMARY_FILE, summary)
+
+    assert render_report(audit, tmp_path / "report").pages, "an older run renders"
+
+    lost = tmp_path / "lost"
+    shutil.copytree(audit, lost)
+    for name in ("q879", "q1029", "q207", "q900001"):
+        shutil.rmtree(lost / name)
+    with pytest.raises(ReportRefused, match="fewer question directories than its"):
+        render_report(lost, tmp_path / "second")
+
+    extra = tmp_path / "extra"
+    shutil.copytree(audit, extra)
+    shutil.copytree(extra / "q207", extra / "q878")
+    shutil.copytree(extra / "q207", extra / "q877")
+    with pytest.raises(ReportRefused, match="holds more than the questions"):
+        render_report(extra, tmp_path / "third")
+
+
+def test_a_rerun_clears_the_classification_the_render_before_it_copied(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """A maintainer's own reading of some questions, left standing over a run without one.
+
+    The two classification files are copied beside the summary when the audit directory has
+    them, and the rerun removed the pages, the summary, the question directories, the filters
+    and the stylesheet, but not these. A directory whose audit no longer holds them therefore
+    kept the copies the render before it made, in output that had already been published.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    (audit / "classification.json").write_text(
+        json.dumps({"rows": [{"question_id": "879", "db": "formula_1", "class": "wrong"}]}),
+        encoding="utf-8",
+    )
+    (audit / "classification-source.json").write_text(
+        json.dumps(
+            {
+                "source": "a maintainer's own reading",
+                "date": "2026-09-13",
+                "shape": "rows",
+                "classes": {"wrong": "the gold does not answer its question on this data"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "report"
+    render_report(audit, out)
+    assert (out / "classification.json").is_file()
+    assert (out / "classification-source.json").is_file()
+
+    render_report(rendered.audit, out)
+
+    assert not (out / "classification.json").exists()
+    assert not (out / "classification-source.json").exists()
+    assert "classification.json" in MARKER_TEXT, "the marker says what is removed"
+
+
+def test_a_page_states_what_it_is_and_a_local_report_states_no_address(
+    rendered: Rendered,
+) -> None:
+    """The head held the charset, the viewport, the title and the stylesheet and nothing else.
+
+    A description is what a search result and a link preview show under the title, so every
+    page writes one. A canonical link is the publisher's: a report on somebody's disk is not
+    served anywhere, so it states no address, no social card and no icon, and the site's own
+    build is what fills those in.
+    """
+    markup = (rendered.out / PAGE_FILE).read_text(encoding="utf-8")
+    question = (rendered.out / "q879" / PAGE_FILE).read_text(encoding="utf-8")
+
+    for page in (markup, question):
+        assert '<meta name="description" content="' in page
+        assert 'rel="canonical"' not in page
+        assert 'property="og:' not in page
+    assert "q879" in question and "NOT_EQUAL" in question
+
+
+def test_a_question_page_title_is_the_question_alone_without_a_publisher_to_place_it(
+    rendered: Rendered,
+) -> None:
+    """`within` is the publisher's, and one directory knows of no other run."""
+    page = question_page(rendered.audit / "q879")
+
+    assert page.title == "q879 NOT_EQUAL"
+    assert page.within == ""
+
+
+def test_a_question_page_title_names_where_the_run_sits_when_it_is_told(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """Seventeen prediction runs of one question gave seventeen pages titled `q1435
+    NOT_EQUAL`, which is what a tab, a bookmark and a search result show."""
+    render_report(rendered.audit, tmp_path / "report", within="minidev-pg gpt-4")
+
+    markup = (tmp_path / "report" / "q879" / PAGE_FILE).read_text(encoding="utf-8")
+
+    assert "<title>q879 NOT_EQUAL, minidev-pg gpt-4</title>" in markup
+
+
+def test_the_run_page_has_a_way_back_up_only_where_the_publisher_gave_one(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """A reader arriving from a shared link had the run and no link to the group or the
+    benchmark above it, although both have pages. A report of one directory has neither."""
+    render_report(
+        rendered.audit,
+        tmp_path / "with",
+        breadcrumb=(Crumb(label="minidev-pg", href="../index.html"),),
+    )
+    render_report(rendered.audit, tmp_path / "without")
+
+    with_crumbs = (tmp_path / "with" / PAGE_FILE).read_text(encoding="utf-8")
+    without = (tmp_path / "without" / PAGE_FILE).read_text(encoding="utf-8")
+
+    assert 'class="breadcrumb"' in with_crumbs
+    assert ">minidev-pg</a>" in with_crumbs
+    assert 'class="breadcrumb"' not in without
+
+
+def test_a_record_shows_a_bounded_reading_of_its_result_and_links_the_whole(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """Two pages of the 2026-09-08 build weighed 1,806 kB with 16,616 row elements in them.
+
+    The bytes were never the problem and the page was inside its budget either way: what a
+    browser lays out is. The count on the line is still the whole count, and the JSON the
+    rows were read from is copied beside the page and linked from under the table.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    record = audit / "q879" / GOLD_RECORD_FILE
+    document = cast("dict[str, Any]", json.loads(record.read_text(encoding="utf-8")))
+    result = cast("dict[str, Any]", document["result"])
+    result["rows"] = [result["rows"][0]] * (ROWS_ON_A_PAGE + 20)
+    result["row_count"] = ROWS_ON_A_PAGE + 20
+    record.write_text(json.dumps(document), encoding="utf-8")
+
+    render_report(audit, tmp_path / "report")
+
+    markup = (tmp_path / "report" / "q879" / PAGE_FILE).read_text(encoding="utf-8")
+    assert markup.count('<tr class="rows__row') <= ROWS_ON_A_PAGE + 10, "the shown rows"
+    assert f"{ROWS_ON_A_PAGE} of them here" in markup
+    assert f'href="{GOLD_RECORD_FILE}"' in markup
+    assert (tmp_path / "report" / "q879" / GOLD_RECORD_FILE).is_file(), "and it is there"
+
+
+def test_a_report_holding_no_question_says_so_instead_of_an_empty_table(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """The rows table beside it has said `no rows` since it was written, and a reader meeting
+    a table with nothing under its headings cannot tell a run that audited nothing from a
+    page that failed to list what it audited."""
+    audit = _copy_audit(rendered, tmp_path)
+    for directory in sorted(audit.glob("q*")):
+        shutil.rmtree(directory)
+    summary = document(audit / SUMMARY_FILE)
+    summary["question_set"]["audited"] = 0
+    summary["verdicts"] = {}
+    summary["question_directories"] = []
+    write(audit / SUMMARY_FILE, summary)
+
+    render_report(audit, tmp_path / "report")
+
+    assert "no questions" in (tmp_path / "report" / PAGE_FILE).read_text(encoding="utf-8")
+
+
+def test_the_one_chip_that_does_something_states_its_state_and_is_hidden_without_a_script(
+    rendered: Rendered,
+) -> None:
+    """With scripting off it was a button with no handler and no state to announce.
+
+    The marking is on before any script runs, so the markup says so; a screen reader can
+    report a toggle that states `aria-pressed` and cannot report one that does not. Where
+    there is no script at all the chip is not offered, because a button that cannot do what
+    it says is worse than no button.
+    """
+    markup = (rendered.out / "q879" / PAGE_FILE).read_text(encoding="utf-8")
+
+    assert (
+        'class="chip chip--warn chip--mechanism" data-marks="statements" aria-pressed="true"'
+        in (markup)
+    )
+    assert "<noscript><style>.chip--mechanism { display: none; }</style></noscript>" in markup

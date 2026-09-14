@@ -538,8 +538,39 @@ a:hover {
   font-variant-numeric: tabular-nums;
 }
 
-.rows__none {
+.rows__none,
+.index__none {
   color: var(--ink-2);
+}
+
+/* The way back up from a run page, which a report of one directory does not have and does
+   not render. A list rather than a line of links so that it reads as one thing to a screen
+   reader, with the separator drawn rather than written into the markup. */
+.breadcrumb {
+  margin: 0 0 1.5rem;
+}
+
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+  color: var(--ink-2);
+}
+
+.breadcrumb__step + .breadcrumb__step::before {
+  content: "/";
+  margin-right: 0.6rem;
+  color: var(--ink-2);
+}
+
+/* The line under a bounded result, pointing at the JSON that holds all of it. */
+.record__whole {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
 }
 
 /* The two sides, each with its tint and its glyph. Neither tint appears without the label

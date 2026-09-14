@@ -59,7 +59,10 @@ from attestql.audit.compare import (
     write_comparison,
 )
 from attestql.audit.statements import StatementRefused, parse_statement
+from attestql.evidence import render
+from attestql.evidence.render import result_digest
 from attestql.evidence.replay import ComparabilityResult, compare_r_ord, compare_r_set
+from attestql.evidence.serialize import SerializationDescriptor
 from attestql.evidence.types import (
     ENGINE_POSTGRESQL,
     FixtureDigest,
@@ -67,6 +70,7 @@ from attestql.evidence.types import (
     ReplayRule,
     SortKey,
 )
+from attestql.kernel.types import ExecutionResult
 from tests.audit_fakes import (
     DESCRIPTOR,
     IDENTITY,
@@ -451,6 +455,48 @@ def test_a_fixture_that_differed_makes_the_two_records_incomparable(tmp_path: Pa
     verdict = compare_r_ord(comparison.gold, other_data)
     assert verdict.result is ComparabilityResult.NOT_COMPARABLE
     assert verdict.mismatched == ("fixture",)
+
+
+def test_writing_a_comparison_states_the_digests_it_took_and_renders_no_result_again(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The three files state each result's digest three times, over one reading of it.
+
+    A digest is the sha256 of the canonical rendering, so taking one costs a rendering of
+    every row. Each result used to be rendered for the bounded view in the counterexample,
+    again for the pair of hashes beside it, and a third time for the record on disk, all to
+    arrive at the one string the comparison was already holding. The count below is what
+    writing the three files now costs: nothing. The renderings a verdict takes are a
+    different one, each column named by its position, and they are taken before this.
+    """
+    backend = FakeBackend(
+        {
+            GOLD_SET: fake_result(ELEMENT, (("c",), ("c",))),
+            SECOND_SET: fake_result(ELEMENT, (("c",),)),
+        },
+        row_counts={"atom": 2},
+    )
+    comparison = _compare(backend, tmp_path, gold_sql=GOLD_SET, second_sql=SECOND_SET)
+    gold_hash = result_digest(comparison.gold.result, DESCRIPTOR)
+    second_hash = result_digest(comparison.second.result, DESCRIPTOR)
+    rendered: list[int] = []
+    canonical = render.canonical_serialize
+
+    def counted(result: ExecutionResult, descriptor: SerializationDescriptor) -> bytes:
+        rendered.append(len(result.rows))
+        return canonical(result, descriptor)
+
+    monkeypatch.setattr(render, "canonical_serialize", counted)
+    write_comparison(comparison, tmp_path / "q207")
+    assert rendered == [], "a result was rendered again to state a digest already taken"
+
+    document = json.loads((tmp_path / "q207" / COUNTEREXAMPLE_FILE).read_text(encoding="utf-8"))
+    assert document["result_hashes"] == {"gold": gold_hash, "second": second_hash}
+    assert document["gold"]["result"]["result_hash"] == gold_hash
+    assert document["second"]["result"]["result_hash"] == second_hash
+    for path, taken in ((GOLD_RECORD_FILE, gold_hash), (SECOND_RECORD_FILE, second_hash)):
+        written = json.loads((tmp_path / "q207" / path).read_text(encoding="utf-8"))
+        assert written["result_hash"] == taken
 
 
 def test_a_statement_the_audit_cannot_run_is_refused_before_anything_is_executed(

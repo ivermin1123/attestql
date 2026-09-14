@@ -2,13 +2,14 @@
 
 What is served at a URL: the runs rendered by `attestql report`, plus a landing page and a page
 about the method that this directory owns. The renderer lives in the package
-(`src/attestql/report/`); this directory is the site built out of it, and the two templates here
+(`src/attestql/report/`); this directory is the site built out of it, and the templates here
 extend the package's base page and take its stylesheet, its script and its fonts, so there is one
 design and not two.
 
 ```text
 tools/site/build.py            the build
-tools/site/templates/          landing.html, method.html, runs.html, benchmark.html, group.html
+tools/site/templates/          landing.html, method.html, runs.html, benchmark.html,
+                               group.html, not-found.html
 tools/site/data/               the published runs; see its README
 build/site/                    where a build goes; git ignores build/
 ```
@@ -33,10 +34,8 @@ uv run python tools/site/build.py
 ```
 
 It writes `build/site/` and prints the file count, the total bytes and the wall time. `--out`
-moves the output; an `--out` inside `site/` is refused, because that directory holds the page
-attestql.com serves today and belongs to another session, and an `--out` that is not empty and
-holds no `.attestql-site` marker is refused untouched, because a build empties only a directory
-of its own.
+moves the output; an `--out` that is not empty and holds no `.attestql-site` marker is refused
+untouched, because a build empties only a directory of its own.
 
 The build is refused, with what pushed it over named, at more than 8,000 files, more than 40 MB
 in total, or any single page over 2 MB. Those are under the Cloudflare Pages Free plan's own limits (20,000
@@ -84,6 +83,6 @@ environment and neither reaches a log. The first deployment was made by hand fro
 repository with the command of the previous section and `--project-name attestql --branch main`.
 The build writes a `_headers` file telling Pages to revalidate `static/` on every load, as it
 does a page: without it a page arrived fresh with a stylesheet up to four hours old.
-The domain and the DNS record were not touched: the project already held them. `site/index.html`
-is no longer what the domain serves; it stays in the repository as the source of the three links
-the landing carries until the session that owns it retires it.
+The domain and the DNS record were not touched: the project already held them. The hand written
+`site/index.html` the domain once served is gone, and the three links it carried are in the
+landing template, so there is one landing page and the build writes it.

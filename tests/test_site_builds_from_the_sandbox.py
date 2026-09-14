@@ -8,8 +8,9 @@ audit the build made while it ran rather than from a fixture written for the tes
 
 What is asserted is the rule the phase sets for the landing, which is that nothing on it is
 typed by hand that an artifact states: the sentence is `pyproject.toml`'s description, the
-install line is the one `README.md` holds, the links at the foot are the ones
-`site/index.html` carries, and where the aggregate is missing there is no number at all. The
+install line is the one `README.md` holds, and where the aggregate is missing there is no
+number at all. The three links at the foot are the template's own, because no artifact states
+where this project publishes. The
 method page is asserted against the package's own accessors for the same reason, and the three
 budgets are asserted by building over them.
 """
@@ -18,6 +19,7 @@ from __future__ import annotations
 
 import io
 import json
+import re
 import shutil
 import tomllib
 from contextlib import redirect_stdout
@@ -27,9 +29,13 @@ from typing import Any, cast
 
 import build as site
 import pytest
+import select_questions as selection
 
 from attestql.audit.postgres import session_preconditions
 from attestql.audit.smells import probe_meanings
+from attestql.contract.counts import whole_count
+from attestql.evidence.load import UnreadableRecord
+from attestql.report import render
 from attestql.report.render import PAGE_FILE
 
 REPOSITORY = Path(__file__).resolve().parent.parent
@@ -39,6 +45,15 @@ assert Path(site.__file__ or "") == REPOSITORY / "tools" / "site" / "build.py", 
     "namespace package when the repository root comes first on the path: this asserts the "
     "module under test is the script and not that directory"
 )
+
+LINKS_AT_THE_FOOT = (
+    "https://github.com/ivermin1123/attestql",
+    "https://github.com/ivermin1123/attestql/blob/main/docs/claims-register.md",
+    "https://pypi.org/project/attestql/",
+)
+"""The three destinations the landing template carries, spelled here rather than read off the
+page under test: a link that changed in the template would otherwise be a link this test
+followed rather than one it checked."""
 
 pytestmark = pytest.mark.sandbox_sqlite
 
@@ -135,9 +150,8 @@ def test_the_landing_states_nothing_it_did_not_read_out_of_an_artifact(built: Pa
     assert description in text
     assert " ".join(install.split()) in text, "the README's own line, its runs of space collapsed"
     assert site.PRINCIPLE in text
-    for href, words in site.live_links():
+    for href in LINKS_AT_THE_FOOT:
         assert href in page.links, href
-        assert words in text, words
     assert "attestql demo --out demo" in text
     assert "demo/audit/q879/" in text, "the command's own output, with the paths it printed"
 
@@ -242,10 +256,9 @@ def test_the_banner_is_on_every_page_without_data_and_on_none_of_them_with_it(
     """
     published = built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN
     data = tmp_path / "data"
-    (data / "a-benchmark" / "a-run").mkdir(parents=True)
-    (data / "a-benchmark" / "a-run" / "summary.json").write_text(
-        (published / "summary.json").read_text(encoding="utf-8"), encoding="utf-8"
-    )
+    # The whole run and not its summary alone: a directory whose summary counts questions it
+    # does not hold is a partial audit, and the renderer refuses one.
+    shutil.copytree(published, data / "a-benchmark" / "a-run")
     monkeypatch.setattr(site, "DATA", data)
     out = tmp_path / "site"
 
@@ -487,19 +500,18 @@ def test_a_count_below_zero_is_refused_rather_than_drawn(
     )
     monkeypatch.setattr(site, "DATA", data)
 
-    with pytest.raises(site.BuildRefused, match="every number this page states is a count"):
+    with pytest.raises(site.BuildRefused, match="a count is never below zero"):
         build(tmp_path / "site")
 
 
-def test_the_install_line_is_a_command_and_the_links_are_the_first_nav_s(
+def test_the_install_line_is_a_command_and_not_a_sentence_that_holds_one(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Two readings of two files the site does not own, each of which had a shape it took.
+    """A reading of a file the site does not own, which had a shape it took.
 
     The install line was any line holding `pip install attestql`, which a sentence of prose
     above the block satisfies; a page built from it would have offered a reader a paragraph
-    to paste into a shell. The navigation merged every `nav` on the page and carried a link
-    with no words on it, which on the built page is a link a reader cannot read.
+    to paste into a shell.
     """
     readme = tmp_path / "README.md"
     readme.write_text(
@@ -511,36 +523,20 @@ def test_the_install_line_is_a_command_and_the_links_are_the_first_nav_s(
 
     assert site.install_line() == "uv tool install attestql        # or: pip install attestql"
 
-    page = tmp_path / "index.html"
-    page.write_text(
-        '<!DOCTYPE html><html lang="en"><body>'
-        '<nav><a href="/one">One</a><a href="/two">Two</a></nav>'
-        "<p>the page</p>"
-        '<nav><a href="/three">Three</a></nav>'
-        "</body></html>",
-        encoding="utf-8",
-    )
-    monkeypatch.setattr(site, "LIVE_PAGE", page)
 
-    assert site.live_links() == (("/one", "One"), ("/two", "Two")), "the first nav, whole"
+def test_the_repository_holds_one_landing_page_and_the_build_reads_no_second_one() -> None:
+    """There were two landing pages, and the built one was read out of the other.
 
-    page.write_text(
-        '<!DOCTYPE html><html lang="en"><body>'
-        '<nav><a href="/one">One</a><a href="/icon"><img src="i.png" alt=""></a></nav>'
-        "</body></html>",
-        encoding="utf-8",
-    )
-    with pytest.raises(site.BuildRefused, match="with no words on it"):
-        site.live_links()
-
-
-def test_the_build_refuses_an_out_inside_the_live_page_s_directory(tmp_path: Path) -> None:
-    """`site/` holds what attestql.com serves and belongs to another session."""
-    with pytest.raises(site.BuildRefused, match="belongs to another session"):
-        site.build(REPOSITORY / "site" / "built")
-    with pytest.raises(site.BuildRefused, match="belongs to another session"):
-        site.build(REPOSITORY / "site")
-    assert not (REPOSITORY / "site" / "built").exists()
+    `site/index.html` was written by hand, stopped being what the domain serves when the
+    workflow began publishing this build, and stayed on as the file the links at the foot of
+    the landing were read out of. A page nobody serves is a page nobody checks: its own copy
+    of the demo output had already drifted from what the tool prints. Deleting it used to
+    stop the build. The links are this build's own now, so nothing outside `tools/site/`,
+    `README.md` and `pyproject.toml` is read for a page, and the second page is gone.
+    """
+    assert not (REPOSITORY / "site").exists(), "a second landing page is back in the repository"
+    assert not hasattr(site, "LIVE_PAGE"), "the build names a page it does not write"
+    assert not hasattr(site, "live_links"), "the build reads its links out of another page"
 
 
 def test_the_build_is_under_its_three_budgets_and_says_what_it_measured(
@@ -759,3 +755,139 @@ def test_a_group_published_as_one_archive_states_that_archive_on_the_group_s_own
     assert f"This site holds {written} of the 400 question directories these 2 runs wrote" in text
     assert "https://example.invalid/grouped-a-model.tar.gz" in group.links
     assert "9" * 64 in text
+
+
+def test_the_selector_and_the_build_refuse_the_same_count(tmp_path: Path) -> None:
+    """One rule, in one place, for the three readers of a count in a JSON document.
+
+    The build refused a number below zero and the selector that writes the documents the
+    build reads did not, so a selection could write a count the build would then refuse,
+    with the failure landing on whoever ran the build rather than on whoever made the
+    selection. The renderer is the third reader and refused neither with the same words.
+    """
+    below_zero = {"value": -1}
+    readers = (
+        (site._integer, site.BuildRefused),  # pyright: ignore[reportPrivateUsage]
+        (selection._integer, selection.SelectionRefused),  # pyright: ignore[reportPrivateUsage]
+        (render._integer, UnreadableRecord),  # pyright: ignore[reportPrivateUsage]
+    )
+
+    for read, refusal in readers:
+        with pytest.raises(refusal, match="a count is never below zero"):
+            read(below_zero, "value")
+        with pytest.raises(refusal, match="bool where a whole number"):
+            read({"value": True}, "value")
+        assert read({"value": 0}, "value") == 0
+
+    assert whole_count({"value": 7}, "value", site.BuildRefused) == 7, "the rule they share"
+
+
+def test_every_page_states_what_it_is_and_where_it_is_served(built: Path) -> None:
+    """The head of all 673 deployed pages held the charset, the viewport, the title and the
+    stylesheet and nothing else.
+
+    A description is what a search result and a link preview show under the title. A canonical
+    link is what tells a search engine that the same run under a preview deployment and under
+    attestql.com is one page and not two.
+    """
+    pages = sorted(built.rglob(PAGE_FILE))
+    assert pages, "the build wrote pages"
+
+    for page in pages:
+        markup = page.read_text(encoding="utf-8")
+        served = f"{site.SITE_URL}/{page.parent.relative_to(built).as_posix().strip('.')}".rstrip(
+            "/"
+        )
+        assert '<meta name="description" content="' in markup, page
+        assert f'<link rel="canonical" href="{served}/">' in markup, page
+        assert '<meta property="og:title"' in markup, page
+        assert f'href="{site.STATIC_DIRECTORY}/{site.ICON_FILE}"' in markup or "../" in markup, page
+
+
+def test_the_build_writes_the_four_files_a_site_is_expected_to_have(built: Path) -> None:
+    """None of them existed, so a mistyped address met the host's own page, every tab carried
+    a blank icon, and a search engine was given no list of what is here."""
+    robots = (built / site.ROBOTS_FILE).read_text(encoding="utf-8")
+    sitemap = (built / site.SITEMAP_FILE).read_text(encoding="utf-8")
+    not_found = (built / site.NOT_FOUND_FILE).read_text(encoding="utf-8")
+
+    assert (built / site.STATIC_DIRECTORY / site.ICON_FILE).is_file()
+    assert robots.splitlines()[0] == "User-agent: *"
+    assert f"Sitemap: {site.SITE_URL}/{site.SITEMAP_FILE}" in robots
+    assert sitemap.startswith('<?xml version="1.0" encoding="UTF-8"?>')
+    assert sitemap.count("<loc>") == len(sorted(built.rglob(PAGE_FILE))), "every page, once"
+    assert f"<loc>{site.SITE_URL}/</loc>" in sitemap
+    # Served at every address that holds no page, so it is the canonical version of none.
+    assert "404" in not_found
+    assert 'rel="canonical"' not in not_found
+    assert 'href="/index.html"' in not_found, "root-relative, because it is served anywhere"
+
+
+def test_the_sitemap_lists_a_page_for_every_line_and_no_line_without_a_page(
+    built: Path,
+) -> None:
+    """A line pointing at nothing is worse than no sitemap: it is a page a search engine goes
+    looking for and does not find."""
+    sitemap = (built / site.SITEMAP_FILE).read_text(encoding="utf-8")
+    listed = re.findall(r"<loc>(.*?)</loc>", sitemap)
+
+    for address in listed:
+        under = address.removeprefix(f"{site.SITE_URL}/").strip("/")
+        assert (built / under / PAGE_FILE).is_file(), address
+    assert len(listed) == len(set(listed)), "each page once"
+
+
+def test_no_two_pages_of_the_site_carry_the_same_title(built: Path) -> None:
+    """Measured on the 2026-09-08 build: 673 pages, 584 distinct titles, `q1435 NOT_EQUAL`
+    seventeen times. A title is what a tab, a bookmark and a search result show, so seventeen
+    of one is a reader who cannot tell which run they are looking at."""
+    titles = [
+        re.findall(r"<title>(.*?)</title>", page.read_text(encoding="utf-8"))[0]
+        for page in sorted(built.rglob(PAGE_FILE))
+    ]
+
+    repeated = {title for title in titles if titles.count(title) > 1}
+
+    assert not repeated, repeated
+
+
+def test_a_filter_page_is_titled_by_the_run_a_publisher_named_and_not_by_its_uuid(
+    built: Path,
+) -> None:
+    """The restriction of an index is a page, and its title was the longest on the site.
+
+    A run page and a question page take the words the publisher used for the run; the filter
+    pages did not, so they fell back to the run's UUID, which is 42 characters no reader can
+    read and which left the title far past what a tab or a search result shows. The
+    restriction leads, as a question page leads with its question, because that is what tells
+    two of these apart.
+    """
+    filters = sorted(
+        (built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN).rglob(PAGE_FILE)
+    )
+    titles = [
+        re.findall(r"<title>(.*?)</title>", page.read_text(encoding="utf-8"))[0]
+        for page in filters
+        if page.parent.name in render.FILTER_DIRECTORIES
+        or page.parent.parent.name in render.FILTER_DIRECTORIES
+    ]
+
+    assert titles, "the sandbox run has restrictions of its own index"
+    for title in titles:
+        assert "audit-" not in title, title
+        assert site.SANDBOX_RUN in title, title
+        assert len(title) < 80, title
+
+
+def test_a_run_page_of_the_site_has_the_way_back_up_that_a_local_report_does_not(
+    built: Path,
+) -> None:
+    """The group and the benchmark have pages and the run had no link to either."""
+    run = built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN / PAGE_FILE
+    page = read(run)
+
+    up = site._up(f"{site.RUNS_DIRECTORY}/{site.SANDBOX_BENCHMARK}/{site.SANDBOX_RUN}")  # pyright: ignore[reportPrivateUsage]
+
+    assert 'class="breadcrumb"' in run.read_text(encoding="utf-8")
+    assert f"{up}{site.RUNS_DIRECTORY}/{PAGE_FILE}" in page.links, "the runs index"
+    assert f"{up}{site.RUNS_DIRECTORY}/{site.SANDBOX_BENCHMARK}/{PAGE_FILE}" in page.links

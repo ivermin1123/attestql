@@ -29,7 +29,7 @@ q207  toxicology  R-SET  NOT_EQUAL  smells=none  demo/audit/q207/
 q900001 synthetic   R-ORD  GOLD-ONLY  smells=not-a-function-of-the-data  demo/audit/q900001/
 q900002 synthetic   R-ORD  GOLD-ONLY  smells=arbitrary-cut,not-a-function-of-the-data  demo/audit/q900002/
 q900005 synthetic   R-ORD  EQUAL      smells=ordering-over-numeric-text  demo/audit/q900005/
-6 questions: 3 NOT_EQUAL, 5 smells fired, 0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation), 0 timed out (0 gold, 0 prediction)
+6 questions: 3 NOT_EQUAL, 5 smells fired, 0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation, 0 other), 0 timed out (0 gold, 0 prediction)
 rerun: attestql audit --engine sqlite --dsn demo/fixture.sqlite --questions demo/questions.json --predictions demo/predictions.json --out demo/audit
 ```
 

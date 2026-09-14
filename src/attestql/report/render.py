@@ -32,6 +32,7 @@ from typing import cast
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+from attestql.contract.counts import whole_count
 from attestql.evidence.load import LoadedRecord, UnreadableRecord, load_record
 from attestql.evidence.render import Json
 from attestql.report.figures import Figure, question_figure, run_figures
@@ -116,12 +117,44 @@ this tool's own classes and probe names use. Skipped rather than refused, becaus
 still a chip on the run page and on the question page, so nothing a document states is lost;
 what is lost is a pre-rendered view of rows a reader can already see."""
 
+ROWS_ON_A_PAGE = 50
+"""How many rows of one record's result a question page holds.
+
+The record itself holds every row its result had, up to the bound the audit wrote it under,
+and is copied beside the page: what this decides is the size of the document a browser has
+to lay out, not what a reader can reach. Fifty is more than a reader reads before opening
+the JSON and small enough that a result of ten thousand rows is a page like any other."""
+
+NAMED_IN_A_REFUSAL = 20
+"""How many question ids a refusal names before it counts the rest instead.
+
+A run of a thousand questions that lost its directories would otherwise put a thousand ids in
+one line on a terminal. Spelled here rather than imported from the command: a report is read
+without the auditing side of the package, and two layers that happen to name the same number
+are not one decision."""
+
 MARKER_FILE = ".attestql-report"
 """What says an output directory is a render's own and may be cleared by the next one."""
 
+CLEARED_FILES: tuple[str, ...] = (
+    PAGE_FILE,
+    SUMMARY_FILE,
+    CLASSIFICATION_FILE,
+    CLASSIFICATION_SOURCE_FILE,
+)
+"""Every file a render writes at the root of its output directory, and so every file the
+rerun before this one has to remove.
+
+The two classification files were missing from this list until 2026-09-13, and a rerun of a
+directory whose audit no longer has them left the copies the render before it made: a
+maintainer's own reading of some other run's questions, standing beside a summary that says
+nothing about it, in output that had already been published. ``MARKER_TEXT`` says what is
+removed, so the two are stated there as well."""
+
 MARKER_TEXT = (
     "written by attestql report: every rerun into this directory removes index.html, "
-    "summary.json, the q<id>/ directories, not-equal/, by-mechanism/, by-probe/ and static/\n"
+    "summary.json, classification.json, classification-source.json, the q<id>/ directories, "
+    "not-equal/, by-mechanism/, by-probe/ and static/\n"
 )
 """The one line the marker holds, so a reader who opens it learns why it is there."""
 
@@ -421,10 +454,28 @@ class QuestionPage:
     by_hand: HandReading | None = None
     """A maintainer's own reading of this question, where one of the two classification files
     beside the summary holds a row for it, and nothing where it does not."""
+    within: str = ""
+    """Where this run sits, in the words of whoever published it: a benchmark and, where the
+    run is one of a group, the name of the prediction file the group is.
+
+    Empty for a report ``attestql report`` wrote, which is one run and knows of no other. A
+    site renders the same question under seventeen prediction runs, and the title of a page
+    is what a search result, a browser tab and a bookmark are: measured on the build of
+    2026-09-08, 673 pages carried 584 distinct titles and ``q1435 NOT_EQUAL`` was seventeen
+    of them."""
 
     @property
     def title(self) -> str:
-        return f"q{self.question_id} {self.verdict}"
+        """Short enough to survive a search result, and distinct within one site."""
+        stated = f"q{self.question_id} {self.verdict}"
+        return f"{stated}, {self.within}" if self.within else stated
+
+    @property
+    def description(self) -> str:
+        """What this page is, for a reader who meets it as a search result and not as a link."""
+        asked = self.question_text or "a question of this run"
+        where = f" in {self.within}" if self.within else ""
+        return f"q{self.question_id}{where}: {self.verdict} under {self.replay_rule}. {asked}"
 
 
 @dataclass(frozen=True)
@@ -458,6 +509,12 @@ class FilterPage:
     of: int
     """How many rows the whole index holds, so the page states what it is a part of."""
     entries: tuple[Entry, ...]
+    within: str = ""
+    """Where the run this restricts sits, in the words of whoever published it, or nothing.
+
+    The same context the run page and the question pages carry. Without it the title fell back
+    to the run's UUID, which is 42 characters of nothing a reader can read, and a filter page
+    was the longest title on the site."""
 
     @property
     def root(self) -> str:
@@ -466,7 +523,28 @@ class FilterPage:
 
     @property
     def title(self) -> str:
+        """The restriction first, then the run, in the shape a question page's title has.
+
+        The restriction leads because it is what tells two of these apart, and because a tab
+        and a search result show the front of a title and cut the rest. Where the publisher
+        said which run this is, that is what follows; a report `attestql report` wrote knows
+        of no other run and names its own UUID, as its run page does.
+        """
+        if self.within:
+            return f"{self.heading}, {self.within}"
         return f"attestql run {self.run_id}: {self.heading}"
+
+    @property
+    def description(self) -> str:
+        return self.restriction
+
+
+@dataclass(frozen=True)
+class Crumb:
+    """One step of the way back up from a page: what it is called and where it is."""
+
+    label: str
+    href: str
 
 
 @dataclass(frozen=True)
@@ -499,6 +577,12 @@ class RunPage:
     directories: int = 0
     """How many question directories this render found, which is how many of the run's
     questions have a page here. Counted rather than read, so it is what was rendered."""
+    wrote: int | None = None
+    """How many question directories the run says it wrote, where its summary says.
+
+    What a selection is a selection of. ``published.json`` states the same number for a run a
+    publisher archived, and this is the run's own answer for one nobody has; a summary written
+    before the run stated it leaves this empty and the page says only that it is a selection."""
     verdict_figure: Figure | None = None
     probe_figure: Figure | None = None
     """The verdicts and the probes drawn, filled in after the page is built. ``counts``
@@ -509,9 +593,34 @@ class RunPage:
     credited rows. A count that is not a whole number is refused where it is read, the way
     every other number on this page is, rather than drawn as a zero nobody was told about."""
 
+    within: str = ""
+    """Where this run sits, in the words of whoever published it. Empty for a report
+    ``attestql report`` wrote, which is one run and knows of no other."""
+    breadcrumb: tuple[Crumb, ...] = ()
+    """The way back up from this run, innermost last, or nothing.
+
+    A reader arriving on a run page from a shared link had no link to the group or the
+    benchmark it belongs to; the group and benchmark pages had one and the run did not. It is
+    the publisher's to fill in, because a run knows nothing of what is above it, and a report
+    of a single directory has nothing above it at all."""
+
     @property
     def title(self) -> str:
-        return f"attestql run {self.run_id}"
+        """The run as a publisher names it, or as it names itself.
+
+        `run_id` is a UUID, which is unique and unreadable, and the page states it either
+        way. Where the publisher said which run this is, that is what a tab, a bookmark and
+        a search result show instead.
+        """
+        return f"attestql run {self.within or self.run_id}"
+
+    @property
+    def description(self) -> str:
+        where = f" of {self.within}" if self.within else ""
+        return (
+            f"The audit run{where}: {self.questions_audited} questions, "
+            f"what disagreed, what fired, and the evidence for each."
+        )
 
 
 @dataclass(frozen=True)
@@ -549,13 +658,26 @@ def default_out(audit_directory: Path) -> Path:
 
 
 def render_report(
-    audit_directory: Path, out: Path | None = None, *, banner: str = "", static_root: str = ""
+    audit_directory: Path,
+    out: Path | None = None,
+    *,
+    banner: str = "",
+    static_root: str = "",
+    within: str = "",
+    breadcrumb: Sequence[Crumb] = (),
+    address: str = "",
+    icon: str = "",
 ) -> Report:
     """Render one audit directory into ``out``, or into its sibling when there is none.
 
     ``banner`` is a line put above every page written here, for a caller building a whole
     site out of several runs and needing to say something about all of them at once. It is
     empty for ``attestql report``, whose pages state what their own directory holds.
+
+    ``within`` and ``breadcrumb`` are for that caller too, and are what one run knows nothing
+    of: where it sits among the others, which is in every page's title, and the way back up,
+    which is on the run page. Both are empty for ``attestql report``, which renders one
+    directory and has nothing above it.
 
     ``static_root`` is for the same caller: the path from this report's own root to the
     directory holding the shared ``static/``, as ``../../../``. Empty, which is what
@@ -584,27 +706,173 @@ def render_report(
     try:
         summary = _document(summary_path)
         beside = _beside(audit_directory)
-        questions = [_question_page(directory, beside) for directory in directories]
-        run = _run_page(summary, questions, directories, beside.published, len(directories))
+        _refuse_a_gap_nothing_explains(audit_directory, summary, directories, beside.published)
+        questions = [
+            replace(_question_page(directory, beside), within=within) for directory in directories
+        ]
+        run = _run_page(
+            summary,
+            questions,
+            directories,
+            beside.published,
+            len(directories),
+            within=within,
+            breadcrumb=tuple(breadcrumb),
+        )
         verdicts, probes = run_figures(run)
         run = replace(
             run,
             verdict_figure=verdicts,
             probe_figure=probes,
-            filters=_filters(run.entries, run.run_id),
+            filters=_filters(run.entries, run.run_id, within=within),
         )
     except UnreadableRecord as unreadable:
         raise ReportRefused(f"{audit_directory}: {unreadable}") from unreadable
     _clear_the_render_before_this_one(destination)
     try:
         return _write(
-            destination, run, questions, audit_directory, directories, banner, static_root
+            destination,
+            run,
+            questions,
+            audit_directory,
+            directories,
+            banner,
+            static_root,
+            address,
+            icon,
         )
     except OSError as unwritable:
         # Everything below writes files, and a write that fails is this command failing to
         # do what it was asked rather than a directory it could not read: it is the same
         # refusal and the same exit status as the checks above, and never a traceback.
         raise ReportRefused(f"{destination} could not be written: {unwritable}") from unwritable
+
+
+def _refuse_a_gap_nothing_explains(
+    audit_directory: Path,
+    summary: Json,
+    directories: Sequence[Path],
+    published: Published | None,
+) -> None:
+    """Every question directory the run says it wrote, found here; and none it never wrote.
+
+    The rows of the index come from the question directories, and until 2026-09-13 nothing
+    compared them with the run. An audit that lost a directory rendered a report that looks
+    whole: it states the run's real total at the top and is simply missing the question, with
+    no page saying so anywhere. Removing ``q879`` from the demo rendered five questions under
+    a total of six.
+
+    What the run wrote is the list the summary names and never the number it audited. A
+    question that agreed and fired no probe writes no directory, so the number audited is an
+    upper bound and nothing more: reading it as the count of directories to expect refused
+    every healthy run that held such a question, which is most of them.
+
+    A selection is the other case. What a site publishes of a run is some of its questions and
+    ``published.json`` is where the whole run is, so a directory the run wrote may be absent
+    here; one the run never wrote may not, whichever kind of report this is.
+
+    A summary that names no list was written before 2026-09-14, which every published run and
+    every directory an earlier release wrote is. Nothing is claimed about those beyond what the
+    counts allow, and what they allow is checked.
+    """
+    listed = _listed_directories(summary)
+    present = tuple(sorted(_question_ids(directories)))
+    if listed is None:
+        _refuse_a_count_that_cannot_be_right(audit_directory, summary, present, published)
+        return
+    named = set(listed)
+    extra = tuple(sorted(set(present) - named))
+    if extra:
+        raise ReportRefused(
+            f"{audit_directory} holds more question directories than its {SUMMARY_FILE} names: "
+            f"{_ids(extra)} {'is' if len(extra) == 1 else 'are'} here and the run says it wrote "
+            f"{len(listed)} directories, none of them {'that one' if len(extra) == 1 else 'those'}. "
+            f"A report is rendered from an audit's own directory and shows what the run wrote."
+        )
+    if published is not None:
+        return
+    missing = tuple(sorted(named - set(present)))
+    if missing:
+        raise ReportRefused(
+            f"{audit_directory} holds fewer question directories than its {SUMMARY_FILE} names: "
+            f"the run says it wrote {len(listed)} and {_ids(missing)} "
+            f"{'is' if len(missing) == 1 else 'are'} not here. A report rendered from it would "
+            f"be missing {'that question' if len(missing) == 1 else 'those questions'} with no "
+            f"page saying so. A selection of a run says where the whole run is, in "
+            f"{PUBLISHED_FILE} beside the summary."
+        )
+
+
+def _refuse_a_count_that_cannot_be_right(
+    audit_directory: Path,
+    summary: Json,
+    present: Sequence[int],
+    published: Published | None,
+) -> None:
+    """The two bounds a summary that names no directories still fixes.
+
+    An errored question writes no directory and a question that agreed and fired no probe
+    writes none either, so the number audited bounds the directories from above and nothing
+    fixes them from below except the disagreements: every NOT_EQUAL was written. A selection
+    holds some of the directories, so only the upper bound is about it.
+    """
+    audited = _integer(_object(summary, "question_set"), "audited")
+    errors = len(_objects(summary, "errors"))
+    if len(present) + errors > audited:
+        raise ReportRefused(
+            f"{audit_directory} holds more than the questions its {SUMMARY_FILE} counts: the "
+            f"summary says {audited} were audited and the directory holds {len(present)} "
+            f"question directories beside {errors} errors, which is more questions than the "
+            f"run had. A report rendered from it would state {audited} at the top and show "
+            f"{len(present) + errors}."
+        )
+    not_equal = _optional_integer(_object(summary, "verdicts"), NOT_EQUAL, 0)
+    if published is None and len(present) < not_equal:
+        raise ReportRefused(
+            f"{audit_directory} holds fewer question directories than its {SUMMARY_FILE} "
+            f"counts {NOT_EQUAL}: the summary says {not_equal} questions disagreed and every "
+            f"one of those was written, and {len(present)} question directories are here. A "
+            f"report rendered from it would be missing a question that disagreed, with no page "
+            f"saying so. A selection of a run says where the whole run is, in {PUBLISHED_FILE} "
+            f"beside the summary."
+        )
+
+
+def _listed_directories(summary: Json) -> tuple[int, ...] | None:
+    """The questions the run says it wrote a directory for, or ``None`` where it does not say.
+
+    Absent is not empty. A summary written before this key existed says nothing about what
+    was written, and reading that silence as "none" would refuse every run made before it.
+    """
+    stated = summary.get("question_directories")
+    if stated is None:
+        return None
+    if not isinstance(stated, list):
+        raise UnreadableRecord(f"question_directories is not a JSON array: {stated!r}")
+    listed: list[int] = []
+    for value in cast("list[object]", stated):
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise UnreadableRecord(
+                f"question_directories holds {value!r}, which is not a question id"
+            )
+        listed.append(value)
+    return tuple(listed)
+
+
+def _question_ids(directories: Sequence[Path]) -> tuple[int, ...]:
+    """The id each ``q<id>/`` names, which is how the run named it."""
+    return tuple(
+        int(match.group(1))
+        for path in directories
+        if (match := QUESTION_DIRECTORY.match(path.name)) is not None
+    )
+
+
+def _ids(found: Sequence[int]) -> str:
+    """A few question ids as a reader reads them, with the rest counted rather than listed."""
+    shown = ", ".join(f"q{value}" for value in found[:NAMED_IN_A_REFUSAL])
+    left = len(found) - NAMED_IN_A_REFUSAL
+    return shown if left <= 0 else f"{shown} and {left} more"
 
 
 def _refuse_an_out_inside_the_audit(audit_directory: Path, out: Path) -> None:
@@ -653,7 +921,7 @@ def _clear_the_render_before_this_one(out: Path) -> None:
             f"earlier report wrote to."
         )
     try:
-        for name in (PAGE_FILE, SUMMARY_FILE):
+        for name in CLEARED_FILES:
             (out / name).unlink(missing_ok=True)
         for child in entries:
             if child.is_dir() and (
@@ -677,8 +945,14 @@ def _write(
     directories: Sequence[Path],
     banner: str,
     static_root: str = "",
+    address: str = "",
+    icon: str = "",
 ) -> Report:
-    """The pages, the stylesheet and the script, and the JSON copied beside each page."""
+    """The pages, the stylesheet and the script, and the JSON copied beside each page.
+
+    ``address`` is where this report's own root is served, with a trailing slash, or the
+    empty string for one nobody publishes: every page below states its own address under it.
+    """
     environment = _environment()
     pages: list[Path] = [
         _page(
@@ -689,6 +963,8 @@ def _write(
             root="",
             banner=banner,
             static_root=static_root,
+            canonical=address,
+            icon=icon,
         )
     ]
     files: list[Path] = [_copy(audit_directory / SUMMARY_FILE, out / SUMMARY_FILE)]
@@ -708,6 +984,8 @@ def _write(
                 root="../",
                 banner=banner,
                 static_root=static_root,
+                canonical=f"{address}{question.slug}/" if address else "",
+                icon=icon,
             )
         )
         files.extend(
@@ -722,6 +1000,8 @@ def _write(
             root=view.root,
             banner=banner,
             static_root=static_root,
+            canonical=f"{address}{view.slug}/" if address else "",
+            icon=icon,
         )
         for view in run.filters
     ]
@@ -761,16 +1041,27 @@ def _page(
     root: str,
     banner: str = "",
     static_root: str = "",
+    canonical: str = "",
+    icon: str = "",
 ) -> Path:
     """One page, with where the other pages are and where the stylesheet is told apart.
 
     ``root`` reaches this report's own root from this page; ``static`` reaches the directory
     holding ``static/``, which is that same root for a report that carries its own copy and a
     directory above the whole report for a site that shares one.
+
+    ``canonical`` is the address this page is served at, and ``icon`` the path of the site's
+    own icon under ``static``. Both are the publisher's: a report on somebody's disk has no
+    address to state and nothing to point a search engine at.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     rendered = environment.get_template(template).render(
-        page=page, root=root, banner=banner, static=root + static_root
+        page=page,
+        root=root,
+        banner=banner,
+        static=root + static_root,
+        canonical=canonical,
+        icon=icon,
     )
     path.write_text(rendered, encoding="utf-8")
     return path
@@ -1168,10 +1459,23 @@ def _grouped_rows(
 
 
 def _result_rows(result: Json, source: str) -> Rows:
-    """A result block as a table: its columns, its rows, and what it says it left out."""
+    """A result block as a table: its columns, a bounded reading of its rows, and the rest.
+
+    Bounded since 2026-09-13. A record holds every row of its result and the page embedded
+    all of them: two pages of the 2026-09-08 build weighed 1,806 kB with 16,616 row elements
+    in them, which is a document a browser has to lay out however little of it a reader
+    looks at. The bytes were never the problem, and the page is still inside its budget
+    either way; the size of the document is, and the rows a reader actually reads are the
+    first of them.
+
+    Nothing is lost by the bound: the JSON these rows were read from is copied beside the
+    page and the page links to it, and the row count on the table's own line is the whole
+    count and not the shown one.
+    """
+    held = _list(result, "rows")
     rows = tuple(
         Row(cells=_cells(_list_of(row, "a row")), count=None, label="", glyph="")
-        for row in _list(result, "rows")
+        for row in held[:ROWS_ON_A_PAGE]
     )
     row_count = _integer(result, "row_count")
     return _tagged(
@@ -1183,7 +1487,7 @@ def _result_rows(result: Json, source: str) -> Rows:
             ),
             rows=rows,
             row_count=row_count,
-            rows_shown=_optional_integer(result, "rows_shown", len(rows)),
+            rows_shown=min(_optional_integer(result, "rows_shown", len(held)), len(rows)),
             truncated=bool(result.get("truncated")),
             counted=False,
             labelled=False,
@@ -1408,6 +1712,9 @@ def _run_page(
     directories: Sequence[Path],
     published: Published | None = None,
     found: int = 0,
+    *,
+    within: str = "",
+    breadcrumb: tuple[Crumb, ...] = (),
 ) -> RunPage:
     """``summary.json`` as the page a reader opens first: the counts, the run, the index."""
     question_set = _object(summary, "question_set")
@@ -1417,9 +1724,13 @@ def _run_page(
     shuffle = _object(summary, "shuffle")
     session = _object(summary, "session_settings")
     verdicts = _object(summary, "verdicts")
+    listed = _listed_directories(summary)
     return RunPage(
+        within=within,
+        breadcrumb=breadcrumb,
         published=published,
         directories=found,
+        wrote=None if listed is None else len(listed),
         run_id=_text(summary, "run_id"),
         format=_text(summary, "format"),
         exit_status=_integer(summary, "exit_status"),
@@ -1483,7 +1794,7 @@ def _run_page(
     )
 
 
-def _filters(entries: Sequence[Entry], run_id: str) -> tuple[FilterPage, ...]:
+def _filters(entries: Sequence[Entry], run_id: str, *, within: str = "") -> tuple[FilterPage, ...]:
     """The restrictions of the index that this run has rows for, in a fixed order.
 
     Every one is a subset of the rows above it and states its own rule in a sentence: no
@@ -1503,6 +1814,7 @@ def _filters(entries: Sequence[Entry], run_id: str) -> tuple[FilterPage, ...]:
             run_id=run_id,
             of=of,
             entries=tuple(rows),
+            within=within,
         )
 
     views: list[FilterPage] = [
@@ -1772,10 +2084,8 @@ def _optional_text(document: Json, key: str, *, absent: str = "") -> str:
 
 
 def _integer(document: Json, key: str) -> int:
-    value = document.get(key)
-    if not isinstance(value, int) or isinstance(value, bool):
-        raise UnreadableRecord(f"{key} is not a whole number: {value!r}")
-    return value
+    """One count, by the same rule the site builder and the selector read one under."""
+    return whole_count(document, key, UnreadableRecord)
 
 
 def _optional_integer(document: Json, key: str, default: int) -> int:
@@ -1830,6 +2140,7 @@ __all__ = [
     "NOT_EQUAL",
     "NOT_EQUAL_DIRECTORY",
     "PAGE_FILE",
+    "ROWS_ON_A_PAGE",
     "SECOND_RECORD_FILE",
     "SMELLS_FILE",
     "STATIC",
@@ -1838,6 +2149,7 @@ __all__ = [
     "TEST_SUITE_READING",
     "Cell",
     "Column",
+    "Crumb",
     "Difference",
     "Entry",
     "Fact",

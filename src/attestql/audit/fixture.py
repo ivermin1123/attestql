@@ -44,6 +44,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from attestql.audit.backend import Backend, TableName
+from attestql.evidence.render import write_text_atomically
 from attestql.evidence.types import FixtureDigest
 
 CACHE_FILE = "fixture.json"
@@ -87,7 +88,7 @@ def fixture_digest(
         backend.identity(), schema_digest, with_content_digests=with_content_digests, tables=wanted
     )
     cached = _read_cache(directory)
-    hit = _entry(cached.get(key), signal, source_digest)
+    hit = _entry(cached.get(key), signal, source_digest, schema_digest)
     if hit is not None:
         return hit
     digest = FixtureDigest(
@@ -114,16 +115,22 @@ def _key(
     return "\n".join((identity, schema_digest, depth, ",".join(name.text for name in tables)))
 
 
-def _entry(payload: object, signal: Mapping[str, str], source_digest: str) -> FixtureDigest | None:
+def _entry(
+    payload: object, signal: Mapping[str, str], source_digest: str, schema_digest: str
+) -> FixtureDigest | None:
     """A cached measurement as a digest, or ``None`` when the file does not hold one.
 
     ``signal`` is what the server says about those tables now. An entry measured under
     another one describes data this run does not have, so it is a miss and not a hit whose
     counts happen to be old.
 
-    The source file's digest is not read from the cache. It describes a file this run was
-    given rather than the server the rest of the entry was measured on, so it is the
-    caller's and the cached entry never gets to state it.
+    Neither the source file's digest nor the schema's is read from the cache. The source
+    file's describes a file this run was given rather than the server the rest of the entry
+    was measured on. The schema's was read from the server a moment ago and is part of the
+    key this entry was found under, so the two cannot differ unless the file was edited by
+    hand, and the value returned then has to be the one that was measured: a record states
+    the fixture it was made against, which is a precondition of replaying it, and a hand
+    edited cache used to make every new record state a fixture identity nobody measured.
     """
     if not isinstance(payload, dict):
         return None
@@ -135,7 +142,7 @@ def _entry(payload: object, signal: Mapping[str, str], source_digest: str) -> Fi
         if measured != dict(signal):
             return None
         return FixtureDigest(
-            schema_digest=str(entry["schema_digest"]),
+            schema_digest=schema_digest,
             row_counts={str(key): int(value) for key, value in entry["row_counts"].items()},
             content_digests={
                 str(key): str(value) for key, value in entry["content_digests"].items()
@@ -175,9 +182,9 @@ def _read_cache(directory: Path) -> dict[str, Any]:
 def _write_cache(directory: Path, entries: Mapping[str, Any]) -> None:
     directory.mkdir(parents=True, exist_ok=True)
     document = {"format": CACHE_FORMAT, "entries": dict(entries)}
-    (directory / CACHE_FILE).write_text(
+    write_text_atomically(
+        directory / CACHE_FILE,
         json.dumps(document, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
-        encoding="utf-8",
     )
 
 

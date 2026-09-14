@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import tempfile
 from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass, fields
@@ -70,9 +72,49 @@ def digest_of(document: Json) -> str:
     return f"sha256:{hashlib.sha256(payload.encode('utf-8')).hexdigest()}"
 
 
+PARTIAL_SUFFIX = ".partial"
+"""What a write in progress is named with, until the move that finishes it.
+
+Named here because a rerun of an output directory has to recognise one: a process killed
+between the open and the move leaves a file this tool wrote, and a directory that is this
+run's evidence and no other's holds none of them."""
+
+
 def write_json(path: Path, document: Json) -> None:
+    write_text_atomically(path, json.dumps(document, indent=2, ensure_ascii=False) + "\n")
+
+
+def write_text_atomically(path: Path, text: str) -> None:
+    """Write the whole of ``text`` to ``path``, or leave what was there.
+
+    Through a temporary file in the same directory and then ``os.replace``, which is atomic
+    on every platform this runs on. Writing to the final path directly meant an interrupted
+    run left a half written file under a name a reader takes as a whole one: a question
+    directory with a truncated record in it and no summary to say the run never finished.
+    The rerun marker means the next run would clear it, so what this protects is the reader
+    who opens the directory in between.
+
+    The temporary file is in the destination's own directory because ``os.replace`` is only
+    atomic within one filesystem, and it is removed if the write or the move fails, so a
+    failure leaves neither a half written file nor a stray one.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(document, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    handle = tempfile.NamedTemporaryFile(  # noqa: SIM115
+        mode="w",
+        encoding="utf-8",
+        dir=path.parent,
+        prefix=f".{path.name}.",
+        suffix=PARTIAL_SUFFIX,
+        delete=False,
+    )
+    partial = Path(handle.name)
+    try:
+        with handle:
+            handle.write(text)
+        os.replace(partial, path)
+    except BaseException:
+        partial.unlink(missing_ok=True)
+        raise
 
 
 def result_digest(result: ExecutionResult, descriptor: SerializationDescriptor) -> str:
@@ -87,15 +129,23 @@ def result_json(
     descriptor: SerializationDescriptor,
     *,
     bound: int = ROWS_IN_ARTIFACT,
+    result_hash: str | None = None,
 ) -> Json:
-    """A bounded view of a result, with the hash taken over all of it."""
+    """A bounded view of a result, with the hash taken over all of it.
+
+    ``result_hash`` is that hash where the caller already took it over this same result
+    under this same descriptor: rendering the result again to arrive at the string it is
+    holding would be the same reading twice. A caller with none passes nothing and the
+    hash is taken here.
+    """
+    taken = result_digest(result, descriptor) if result_hash is None else result_hash
     return {
         "columns": [{"name": c.name, "declared_type": c.declared_type} for c in result.columns],
         "row_count": len(result.rows),
         "truncated": result.truncated,
         "rows_shown": min(bound, len(result.rows)),
         "rows": [json_row(row) for row in result.rows[:bound]],
-        "result_hash": result_digest(result, descriptor),
+        "result_hash": taken,
     }
 
 
@@ -185,7 +235,7 @@ def statement_source_json(source: StatementSource) -> Json:
     }
 
 
-def record_json(record: EvidenceRecord) -> Json:
+def record_json(record: EvidenceRecord, *, result_hash: str | None = None) -> Json:
     """Every field of the record, whole, in a form a reader can diff.
 
     The result is written in full rather than bounded: the record holds all of it and the
@@ -194,9 +244,17 @@ def record_json(record: EvidenceRecord) -> Json:
 
     Two hashes are added at the end. ``result_hash`` is the sha256 of the result under the
     canonical serialization the record itself declares, names included; R-ORD compares that
-    rendering byte for byte with the columns taken by position, so the names are evidence. ``record_hash`` is the sha256 of this document with its keys sorted,
-    taken with ``result_hash`` already in it and ``record_hash`` not yet in it, so a reader
-    checks it by deleting that one key and hashing what is left.
+    rendering byte for byte with the columns taken by position, so the names are evidence.
+    ``record_hash`` is the sha256 of this document with its keys sorted, taken with
+    ``result_hash`` already in it and ``record_hash`` not yet in it, so a reader checks it
+    by deleting that one key and hashing what is left.
+
+    The argument of the same name is that first hash where the caller already took it over
+    this record's own result: one comparison states the digest of each result in the
+    counterexample and again in the record beside it, and rendering the result a second
+    time to arrive at a string already in hand was one reading too many. Nothing believes
+    it for long. The loader takes both hashes again from the document it reads, which is
+    what lets a page state "recomputed from this JSON" beside them.
     """
     settings = record.session_settings_in_force
     document: Json = {
@@ -273,12 +331,15 @@ def record_json(record: EvidenceRecord) -> Json:
             "the rendering and the record disagree on the field set: "
             f"{sorted(set(document) ^ declared)}"
         )
-    document["result_hash"] = result_digest(record.result, record.serialization)
+    document["result_hash"] = (
+        result_digest(record.result, record.serialization) if result_hash is None else result_hash
+    )
     document["record_hash"] = digest_of(document)
     return document
 
 
 __all__ = [
+    "PARTIAL_SUFFIX",
     "ROWS_IN_ARTIFACT",
     "Json",
     "RowDifference",
@@ -293,4 +354,5 @@ __all__ = [
     "row_difference_json",
     "statement_source_json",
     "write_json",
+    "write_text_atomically",
 ]

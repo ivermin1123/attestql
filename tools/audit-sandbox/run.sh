@@ -29,8 +29,8 @@
 # password. A child therefore reaches this server as the read-only auditor and as nothing else.
 set -euo pipefail
 
-here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-repo_root="$(cd "$here/../.." && pwd)"
+here="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+repo_root="$(cd -P "$here/../.." && pwd -P)"
 fixture="$here/fixture.sql"
 container="attestql-audit-sandbox"
 image="postgres@sha256:c1b3783309b6499c795eed7c20135a1a4d25cae1b575c3d52c6f536129a1b109"
@@ -43,8 +43,18 @@ if [ $# -lt 3 ] || [ "$2" != "--" ]; then
 fi
 out="$1"
 shift 2
+# Refused before the directory is made, because a link is the one shape of this argument that
+# the check below cannot decide: what it points at today is not what it points at during the
+# run, and the harness writes a server's whole data directory through it.
+if [ -L "$out" ]; then
+  echo "the output directory must not be a symlink: $out" >&2
+  exit 2
+fi
 mkdir -p "$out"
-out="$(cd "$out" && pwd)"
+# `cd -P` and `pwd -P`, not the logical pair: a logical path keeps every symlink in it, so a
+# link pointing back into the repository resolved to a path outside it and walked through the
+# check below. `render.py` does the same check on a resolved path, which is what this is now.
+out="$(cd -P "$out" && pwd -P)"
 case "$out" in
   "$repo_root" | "$repo_root"/*)
     echo "the output directory must be outside the repository: $out" >&2

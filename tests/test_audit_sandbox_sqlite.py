@@ -80,7 +80,7 @@ here reaches it and both lines end with the zero that says the run counted."""
 GOLD_ONLY_LINE = f"6 questions: 0 NOT_EQUAL, 5 smells fired{NOTHING_TIMED_OUT}"
 PREDICTION_LINE = (
     "6 questions: 3 NOT_EQUAL, 5 smells fired, "
-    "0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation)"
+    "0 credited by BIRD but NOT_EQUAL (0 multiplicity, 0 type, 0 order, 0 truncation, 0 other)"
     f"{NOTHING_TIMED_OUT}"
 )
 """The whole of what a run prints last, stated here so that a change to the fixture, the
@@ -204,6 +204,7 @@ def test_the_summary_names_the_engine_the_file_and_the_grammar_that_judged_this_
         "query_only",
         "journal_mode",
         "data_version",
+        "automatic_index",
     }
 
 

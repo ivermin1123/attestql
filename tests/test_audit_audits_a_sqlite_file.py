@@ -61,7 +61,12 @@ from attestql.evidence.serialize import (
     typed_row,
     typed_value,
 )
-from attestql.evidence.types import ENGINE_SQLITE, QuestionMetadata, StatementSource
+from attestql.evidence.types import (
+    ENGINE_SQLITE,
+    QuestionMetadata,
+    SessionSettings,
+    StatementSource,
+)
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 TIMEOUT_SECONDS = 10
@@ -174,12 +179,15 @@ def test_the_identity_names_the_version_the_file_and_its_size(
     assert backend.effective_database_role() == "file"
 
 
-def test_the_session_states_the_nine_readings_and_none_of_the_seven_preconditions(
+def test_the_session_states_the_ten_readings_and_none_of_the_seven_preconditions(
     backend: SqliteBackend,
 ) -> None:
     """A SQLite record states no session setting that decides comparability, so the seven are
     absent rather than filled with a value the engine does not hold, and what the file can be
-    asked about itself is recorded instead (ADR-0014 point 2)."""
+    asked about itself is recorded instead (ADR-0014 point 2).
+
+    Ten since 2026-09-13: `automatic_index` is a setting this tool itself turns off for a plan
+    variant and gives back after, so a record states what its statement ran under."""
     settings = backend.session_settings()
 
     assert settings.engine == ENGINE_SQLITE
@@ -200,6 +208,7 @@ def test_the_session_states_the_nine_readings_and_none_of_the_seven_precondition
         "query_only",
         "journal_mode",
         "data_version",
+        "automatic_index",
     }
     assert settings.recorded["query_only"] == "1", "the envelope is what the run held"
     assert "BINARY" in settings.recorded["collation_list"]
@@ -208,6 +217,33 @@ def test_the_session_states_the_nine_readings_and_none_of_the_seven_precondition
         "what is recorded is what the file was observed doing"
     )
     assert backend.session_settings() is settings, "read once for a whole run"
+
+
+COUNTED_IN_WORDS = {8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve"}
+"""The number a sentence about the readings spells, for the counts that sentence can hold."""
+
+
+def test_the_two_sentences_that_count_the_readings_count_the_ones_there_are(
+    backend: SqliteBackend,
+) -> None:
+    """A contract that states a number the code contradicts is worse than one stating none.
+
+    Both of these said nine after ``automatic_index`` became the tenth: the backend's own
+    sentence and the record type that lists the keys by name. A reader checking a record
+    against the contract was told that a key in front of them does not exist, which is the
+    one thing a record type is read for.
+    """
+    recorded = backend.session_settings().recorded
+    counted = COUNTED_IN_WORDS[len(recorded)]
+
+    read_back = " ".join((SqliteBackend.session_settings.__doc__ or "").split())
+    assert f"The {counted} settings a SQLite file can be asked for" in read_back
+    assert f"None of the {counted} blocks a comparison" in read_back
+
+    stated = " ".join((SessionSettings.__doc__ or "").split())
+    assert f"On SQLite it is the {counted} a file can be asked for" in stated
+    for name in recorded:
+        assert f"``{name}``" in stated, name
 
 
 def test_each_storage_class_comes_back_as_the_python_type_a_record_can_render(
@@ -634,6 +670,30 @@ def test_a_rerun_over_the_copies_reads_the_copies_and_the_audited_one_never_does
         backend.execute_shuffled(unordered, statement_timeout_seconds=TIMEOUT_SECONDS)
 
 
+def test_the_envelope_goes_back_on_when_the_copies_could_not_be_made(
+    backend: SqliteBackend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """``query_only`` is turned off for the copies alone, and back on whatever they did.
+
+    It was put back on the line after the loop, so anything raised out of the loop left the
+    second connection writable for the rest of the run: a file that had gone since the
+    catalogue was read, or a relation the rowid probe could not ask about, and a connection
+    this tool said it would not have.
+    """
+
+    def refuses(self: SqliteBackend, connection: sqlite3.Connection, name: TableName) -> bool:
+        raise BackendRefused("prepare_shuffled_copies", "the database file has gone")
+
+    monkeypatch.setattr(SqliteBackend, "_has_a_row_identity", refuses)
+
+    with pytest.raises(BackendRefused, match="the database file has gone"):
+        backend.prepare_shuffled_copies((TableName("", "drivers"),), seed="a-seed", row_limit=1000)
+
+    writing = backend._shuffle_connection  # pyright: ignore[reportPrivateUsage]
+    assert writing is not None, "the connection the copies are made on was opened"
+    assert writing.execute("PRAGMA query_only").fetchone()[0] == 1
+
+
 def test_the_copies_are_written_in_the_order_the_seed_fixes(backend: SqliteBackend) -> None:
     """Seeded rather than random, so a run reproduces; over the source row's rowid rather than
     over its values, so two identical rows still land in two places."""
@@ -673,6 +733,63 @@ def test_the_copies_name_what_they_did_not_cover_and_why(backend: SqliteBackend)
         assert prepared.unreachable[TableName("", "fast")] == WITHOUT_A_ROW_IDENTITY
     finally:
         backend.drop_shuffled_copies()
+
+
+def test_only_the_rowid_answer_is_read_as_a_relation_without_a_row_identity(
+    backend: SqliteBackend, audited_file: Path
+) -> None:
+    """Every refusal used to read as "this relation has no rowid".
+
+    A file that could not be read, or a relation that had gone since the catalogue was read,
+    therefore became a table the shuffle skipped: a probe covering less of the data than the
+    record it wrote says it covered, with nothing anywhere saying so. Asked of the classifier
+    itself, because the two answers are one message apart and everything around it is the
+    same call.
+    """
+    connection = sqlite3.connect(audited_file)
+    try:
+        identify = backend._has_a_row_identity  # pyright: ignore[reportPrivateUsage]
+
+        assert identify(connection, TableName("main", "drivers")) is True
+        assert identify(connection, TableName("main", "keyed")) is False, "WITHOUT ROWID"
+        assert identify(connection, TableName("main", "fast")) is False, "a view"
+        with pytest.raises(BackendRefused, match="no such table"):
+            identify(connection, TableName("main", "seasons"))
+    finally:
+        connection.close()
+
+
+def test_a_relation_with_no_rowid_is_still_the_one_answer_that_is_not_an_error(
+    backend: SqliteBackend,
+) -> None:
+    """The other half of the same classification, so that narrowing it did not lose the case
+    it was there for: a view and a WITHOUT ROWID table are both reported, not raised."""
+    prepared = backend.prepare_shuffled_copies(
+        (TableName("", "keyed"), TableName("", "fast")), seed="a-seed", row_limit=1000
+    )
+    try:
+        assert prepared.unreachable[TableName("", "keyed")] == WITHOUT_A_ROW_IDENTITY
+        assert prepared.unreachable[TableName("", "fast")] == WITHOUT_A_ROW_IDENTITY
+    finally:
+        backend.drop_shuffled_copies()
+
+
+def test_the_plan_control_is_given_back_the_value_it_had(audited_file: Path) -> None:
+    """It was given back a fixed 1, which is right on a build that ships the default and
+    wrong on one that does not: a run that never asked for the control would have turned it
+    on, and every statement after the first plan variant would read its tables another way
+    than the statements before it, inside one run whose record states one session."""
+    backend = SqliteBackend.connect(str(audited_file))
+    before = backend.session_settings().recorded["automatic_index"]
+
+    backend.execute_plan_variant(
+        "SELECT driverid FROM drivers", statement_timeout_seconds=TIMEOUT_SECONDS
+    )
+
+    assert backend.session_settings().recorded["automatic_index"] == before, (
+        "the connection is back where the run found it"
+    )
+    assert before in {"0", "1"}, "and the record states which of the two it was"
 
 
 def test_a_name_the_file_does_not_hold_is_reported_and_the_rest_is_still_copied(

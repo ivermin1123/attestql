@@ -131,6 +131,39 @@ A hash aggregate spills at ``work_mem`` times this, so a server holding another 
 spills where this one does not and the two settings decide the summation order together.
 Two is PostgreSQL 16's own default and is stated for the same reason as the value above."""
 
+DEFAULT_SCHEMA = "public"
+"""Where a table named without a schema is looked for. BIRD's gold names bare tables and
+the dump loads them into one schema, so an unqualified name means this one, stated here
+rather than left to whatever the session's search path happens to be."""
+
+SEARCH_PATH = f"SET LOCAL search_path = {DEFAULT_SCHEMA}"
+"""Which schema an unqualified name in the audited statement resolves to, pinned.
+
+Everything this tool measures and everything it says about what it measured is about
+``public``: the fixture digest names ``public.results``, the row counts are of ``public``,
+and the tables a statement was read as naming are resolved there. The envelope did not set
+it, so the statement itself resolved against whatever path the session happened to arrive
+with, and the gold and the prediction could have read ``other.results`` under a digest
+describing ``public.results``. Nothing about what a record means depends on the session the
+run was started from now.
+
+``SET LOCAL``, so it holds for the statement's own transaction and is gone with the
+rollback, and it is set before the read-back rather than in ``before``: it is the envelope
+and not a variant of one execution. ``execute_shuffled`` puts the scratch schema ahead of
+``public`` afterwards, which is a variant and runs where the variants run.
+
+``pg_catalog`` is not named because PostgreSQL searches it first whatever the path says, and
+naming it would only move it."""
+
+ENVELOPE_SETTINGS: tuple[tuple[str, str, str], ...] = (
+    ("search_path", SEARCH_PATH, DEFAULT_SCHEMA),
+)
+"""The settings of the envelope that are neither the timeout nor the gather: each one's
+name, the statement that sets it, and what ``pg_settings`` reports when it is held.
+
+``search_path`` reads back as ``public`` rather than as the list a session is usually found
+holding, because that view reports the path as it stands and this one has one entry."""
+
 MEMORY_SETTINGS: tuple[tuple[str, str, str], ...] = (
     ("work_mem", WORK_MEM, "4096"),
     ("hash_mem_multiplier", HASH_MEM_MULTIPLIER, "2"),
@@ -163,7 +196,6 @@ at the first execution."""
 
 RECORDED_SETTINGS: tuple[str, ...] = (
     "statement_timeout",
-    "search_path",
     "server_version",
     "server_version_num",
     "transaction_read_only",
@@ -171,6 +203,11 @@ RECORDED_SETTINGS: tuple[str, ...] = (
     "server_encoding",
 )
 """What is read back beside the preconditions, recorded and never blocking.
+
+``search_path`` was here until 2026-09-13 and is not any more. It is the envelope's now, so
+what a record states of it is read where an execution holds it, beside the two memory
+settings and for the same reason: the session's own value would state a path no statement
+resolved against.
 
 ``server_version`` is here beside the number because the number says 160004 and the build
 string says which PostgreSQL that was, which is what a reader of two summaries compares.
@@ -237,11 +274,6 @@ What a probe forgives a rerun for changing, named here because which types they 
 property of how this engine adds and not of the probe. A result column carries the server's
 own type name, which is what these are spelled as.
 """
-
-DEFAULT_SCHEMA = "public"
-"""Where a table named without a schema is looked for. BIRD's gold names bare tables and
-the dump loads them into one schema, so an unqualified name means this one, stated here
-rather than left to whatever the session's search path happens to be."""
 
 DEFAULT_SCRATCH_SCHEMA = "attestql_scratch"
 """The schema the shuffled copies are made in, which this tool never creates or drops.
@@ -357,12 +389,15 @@ class LoaderRegistry(Protocol):
 
 
 class Connection(Protocol):
-    """What this module needs from a connection: cursors, and the loaders it registers."""
+    """What this module needs from a connection: cursors, the loaders it registers, and the
+    way to give it back."""
 
     @property
     def adapters(self) -> LoaderRegistry: ...
 
     def cursor(self) -> Cursor: ...
+
+    def close(self) -> None: ...
 
 
 class PostgresBackend:
@@ -379,6 +414,7 @@ class PostgresBackend:
     ) -> None:
         self._connection = connection
         self._identity: str | None = None
+        self._role: str | None = None
         self._session_settings: SessionSettings | None = None
         self._database_locale_read: Mapping[str, str] | None = None
         self._shuffled: ShuffledCopies | None = None
@@ -431,7 +467,17 @@ class PostgresBackend:
         return self._identity
 
     def effective_database_role(self) -> str:
-        return str(self._one("SELECT current_user", step="role")[0])
+        """What the statements run as, read once and repeated after that.
+
+        The role belongs to the connection and nothing this backend sends moves it: the
+        envelope every statement opens inside sets the schema path, the memory bounds and
+        the timeout, and no role. A run asks for this once for each record it builds and
+        once for each comparison it makes, which against a server across a network was
+        that many round trips for an answer that cannot have changed.
+        """
+        if self._role is None:
+            self._role = str(self._one("SELECT current_user", step="role")[0])
+        return self._role
 
     def default_collation(self) -> str:
         """The database's ``datcollate``, which is the precondition of the four read here."""
@@ -489,7 +535,7 @@ class PostgresBackend:
                 raise BackendRefused(
                     "session_settings", f"the session reported no value for {missing}"
                 )
-            held = self._memory_in_force()
+            held = self._envelope_in_force()
             locale = self._database_locale()
             self._session_settings = SessionSettings(
                 engine=ENGINE_POSTGRESQL,
@@ -502,33 +548,38 @@ class PostgresBackend:
                 hash_mem_multiplier=held["hash_mem_multiplier"],
                 recorded={
                     **{name: read_back[name] for name in RECORDED_SETTINGS if name in read_back},
+                    **{name: held[name] for name, _, _ in ENVELOPE_SETTINGS},
                     **{name: locale[name] for name in RECORDED_DATABASE_LOCALE},
                 },
             )
         return self._session_settings
 
-    def _memory_in_force(self) -> Mapping[str, str]:
-        """What ``MEMORY_SETTINGS`` holds, measured where an execution would hold it.
+    def _envelope_in_force(self) -> Mapping[str, str]:
+        """What the envelope's own statements hold, measured where an execution holds them.
 
-        One read-only transaction, the same two statements every execution sends, the same
+        One read-only transaction, the same statements every execution sends, the same
         read-back, and a rollback. The read-back is not a formality here either: a server
-        that refused one of the two would otherwise put a value into a record that no
+        that refused one of them would otherwise put a value into a record that no
         statement of the run could reach, and every execution would then refuse anyway.
+
+        The two memory settings and the search path, and not the session's own values for
+        any of them: this tool sets all three on every execution, so what the session was
+        found holding is a bound and a path no statement of the run ran under.
         """
-        cursor = self._cursor("memory_settings")
+        cursor = self._cursor("envelope_settings")
         try:
             try:
                 cursor.execute("BEGIN READ ONLY")
-                for _, statement, _ in MEMORY_SETTINGS:
+                for _, statement, _ in (*MEMORY_SETTINGS, *ENVELOPE_SETTINGS):
                     cursor.execute(statement)
                 cursor.execute(
                     "SELECT name, setting FROM pg_settings WHERE name = ANY(%s)",
-                    [[name for name, _, _ in MEMORY_SETTINGS]],
+                    [[name for name, _, _ in (*MEMORY_SETTINGS, *ENVELOPE_SETTINGS)]],
                 )
                 held = {str(row[0]): str(row[1]) for row in cursor.fetchall()}
             except psycopg.Error as failed:
-                raise BackendRefused("memory_settings", str(failed).strip()) from failed
-            _require_the_memory("memory_settings", held)
+                raise BackendRefused("envelope_settings", str(failed).strip()) from failed
+            _require_the_envelope_settings("envelope_settings", held)
         finally:
             _roll_back(cursor)
         return held
@@ -586,7 +637,7 @@ class PostgresBackend:
                 )
                 cursor.fetchall()
                 cursor.execute(NO_PARALLEL_AGGREGATION)
-                for _, statement, _ in MEMORY_SETTINGS:
+                for _, statement, _ in (*MEMORY_SETTINGS, *ENVELOPE_SETTINGS):
                     cursor.execute(statement)
             except psycopg.Error as failed:
                 # The envelope itself, which is where a connection that went away between
@@ -833,6 +884,23 @@ class PostgresBackend:
         finally:
             self._release_the_scratch_schema()
 
+    def close(self) -> None:
+        """Drop what this run made, give the schema back, and close the connection.
+
+        In that order and each in a finally, so that a drop the server refused still
+        releases the lock and still closes the socket: a connection left open holds a
+        session on the server, and the advisory lock with it would keep every later run out
+        of a scratch schema nobody is reading.
+
+        Safe more than once: the drop is already re-entrant, and psycopg's own ``close`` on
+        a closed connection does nothing.
+        """
+        try:
+            self.drop_shuffled_copies()
+        finally:
+            with suppress(psycopg.Error):
+                self._connection.close()
+
     def _hold_the_scratch_schema(self) -> None:
         """Take the run's advisory lock on the scratch schema, once, under a bounded wait.
 
@@ -1050,7 +1118,7 @@ class PostgresBackend:
                         "statement_timeout",
                         "transaction_read_only",
                         "max_parallel_workers_per_gather",
-                        *(name for name, _, _ in MEMORY_SETTINGS),
+                        *(name for name, _, _ in (*MEMORY_SETTINGS, *ENVELOPE_SETTINGS)),
                     ]
                 ],
             )
@@ -1075,7 +1143,7 @@ class PostgresBackend:
                 "max_parallel_workers_per_gather was set to 0 and the session holds "
                 f"{held.get('max_parallel_workers_per_gather', 'nothing')}",
             )
-        _require_the_memory("read_back", held)
+        _require_the_envelope_settings("read_back", held)
 
     def _columns(self, described: Sequence[tuple[str, int]]) -> tuple[ColumnType, ...]:
         """The projection, with the server's own name for each result type oid."""
@@ -1154,15 +1222,16 @@ def _as_text(value: object) -> str:
     return "" if value is None else str(value)
 
 
-def _require_the_memory(step: str, held: Mapping[str, str]) -> None:
-    """Refuse unless the transaction holds both memory settings the envelope sets.
+def _require_the_envelope_settings(step: str, held: Mapping[str, str]) -> None:
+    """Refuse unless the transaction holds every setting the envelope sets by statement.
 
     One rule for the two places that set them: before a statement is sent, and where the
     settings a record states are measured. The value compared is what ``pg_settings``
     reports, so ``work_mem`` is named in the kilobytes that view renders it in and not in
-    the ``4MB`` the statement spelled.
+    the ``4MB`` the statement spelled, and ``search_path`` is the one entry the path was set
+    to rather than the list the session arrived with.
     """
-    for name, _, expected in MEMORY_SETTINGS:
+    for name, _, expected in (*MEMORY_SETTINGS, *ENVELOPE_SETTINGS):
         if held.get(name) != expected:
             raise ReadBackDrift(
                 step,
