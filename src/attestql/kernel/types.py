@@ -2,6 +2,18 @@
 
 Only these frozen dataclasses cross the boundary between the product and a
 kernel adapter. No driver objects, no parser nodes, no harness types.
+
+Amended 2026-09-14: the boundary itself is gone. ``kernel/ports.py`` held ``SqlValidator``,
+``QueryExecutor`` and ``KernelIdentity``, nothing implemented them, nothing called them, and
+the one caller of ``admit`` ran it after its statement had already executed, which is not the
+promise a validated statement makes. The port protocols and ``ExecutionContext`` went with
+phase 5 and the shared result types stayed, as ADR-0013 point 7 now records. Docstrings below
+still name those protocols where they say who a type was written for; they describe a tree
+this one no longer is. What the audit reaches from here is ``ColumnType``,
+``ExecutionResult``, ``ExecutionLimits`` and ``BoundParameter``; nothing under ``src/`` now
+imports ``ValidatedStatement``, ``admit``, ``ResultWidthProof``, ``ProjectedColumnWidth``,
+``ValidationRejected`` or ``KernelVersions``, and they are left standing rather than deleted
+because the plan removes the ports and the ritual and not the types.
 """
 
 from __future__ import annotations
@@ -50,31 +62,6 @@ class ExecutionLimits:
             value = getattr(self, field.name)
             if not isinstance(value, int) or isinstance(value, bool) or value < 1:
                 raise ValueError(f"{field.name} must be a positive int")
-
-
-@dataclass(frozen=True)
-class ExecutionContext:
-    """Whose data one execution may read, decided by the server and by nothing else.
-
-    ``execute(statement)`` had no place to say this, so an executor had to derive it
-    from the statement or accept it from whoever called. Both routes let the caller
-    choose. This type is the place, and it is built server-side after authorization.
-
-    There is no field for a presented tenant, a DSN, a pool key or an RLS setting. A
-    request that carries one is refused for want of somewhere to put it, rather than
-    having it silently dropped, and no field added to the SQL substitutes for this.
-    Immutable for the request.
-    """
-
-    request_id: str
-    authorized_tenant: str
-    tenant_login_role: str
-    authorization_policy_version: str
-
-    def __post_init__(self) -> None:
-        for field in fields(self):
-            if not getattr(self, field.name):
-                raise ValueError(f"{field.name} is required")
 
 
 @dataclass(frozen=True)

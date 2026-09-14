@@ -1,10 +1,11 @@
 """A complete record is built from what one execution produced, or it is not built.
 
-The builder is exercised through the kernel's own admission and the executor port rather
-than around them: the statement comes out of ``admit`` and the result out of a stub behind
-``QueryExecutor``, so what the tests observe is a record of an admission and an execution
-rather than of values assembled beside them. The inputs are this file's own; a record that
-could only be built from a catalogue would be a record of the catalogue.
+The builder is handed what an execution produced: the statement's text, the parser that read
+it and what that parser checked, and the result. Until 2026-09-14 those four arrived as one
+``ValidatedStatement`` built by ``admit``, and this file exercised the admission and the
+executor port around it; phase 5 removed both, because an admission taken after the statement
+has run is not the promise a validated statement makes. The inputs are this file's own; a
+record that could only be built from a catalogue would be a record of the catalogue.
 
 Two failures have their own tests because the plan names them. A record that stores
 the question and the SQL but not the bound parameters is the one this module exists
@@ -40,17 +41,11 @@ from attestql.evidence.types import (
     SortKey,
     StatementSource,
 )
-from attestql.kernel.ports import QueryExecutor
 from attestql.kernel.types import (
     BoundParameter,
     ColumnType,
-    ExecutionContext,
     ExecutionLimits,
     ExecutionResult,
-    ProjectedColumnWidth,
-    ResultWidthProof,
-    ValidatedStatement,
-    admit,
 )
 
 CLOCK = datetime(2026, 7, 1, 12, 0, tzinfo=UTC)
@@ -66,10 +61,6 @@ CHECKS = ("single_statement", "select_only", "parameter_shape")
 PARAMETERS = (
     BoundParameter(1, CLOCK - timedelta(days=30), "timestamptz"),
     BoundParameter(2, CLOCK, "timestamptz"),
-)
-WIDTH_PROOF = ResultWidthProof(
-    columns=(ProjectedColumnWidth("active_accounts", "int8", 20, 8),),
-    policy_version="width-policy-under-test",
 )
 QUESTION = QuestionMetadata(
     question_id="q-under-test",
@@ -102,38 +93,20 @@ FIXTURE = FixtureDigest(
 )
 
 
-class _StubExecutor:
-    """Reports a fixed result, the limits it was told were in force, and its identity."""
-
-    def __init__(self, limits: ExecutionLimits, *, backend: str = BACKEND) -> None:
-        self._limits = limits
-        self._backend = backend
-
-    def execute(self, statement: ValidatedStatement, context: ExecutionContext) -> ExecutionResult:
-        assert statement.sql == SQL
-        assert context.authorized_tenant
-        return ExecutionResult(
-            columns=(ColumnType("active_accounts", "bigint"),),
-            rows=ROWS,
-            backend_identity=self._backend,
-            limits_in_force=self._limits,
-            truncated=False,
-        )
+def _executed(limits: ExecutionLimits, *, backend: str = BACKEND) -> ExecutionResult:
+    """One result as a backend would have returned it, with the limits it ran under."""
+    return ExecutionResult(
+        columns=(ColumnType("active_accounts", "bigint"),),
+        rows=ROWS,
+        backend_identity=backend,
+        limits_in_force=limits,
+        truncated=False,
+    )
 
 
 @pytest.fixture
 def execution_limits() -> ExecutionLimits:
     return ExecutionLimits(statement_timeout_ms=5000)
-
-
-@pytest.fixture
-def execution_context() -> ExecutionContext:
-    return ExecutionContext(
-        request_id="run-under-test",
-        authorized_tenant="tenant-under-test",
-        tenant_login_role="attestql_readonly_under_test",
-        authorization_policy_version="authorization-policy-under-test",
-    )
 
 
 @pytest.fixture
@@ -156,22 +129,18 @@ def identity() -> ExecutionIdentity:
 
 
 @pytest.fixture
-def executed(
-    execution_limits: ExecutionLimits, execution_context: ExecutionContext
-) -> tuple[ValidatedStatement, ExecutionResult]:
-    """One admission and one execution through the port, as a caller would do it."""
-    statement = admit(SQL, PARAMETERS, "validator-under-test", CHECKS, WIDTH_PROOF)
-    executor: QueryExecutor = _StubExecutor(execution_limits)
-    return statement, executor.execute(statement, execution_context)
+def executed(execution_limits: ExecutionLimits) -> ExecutionResult:
+    """One execution, as a caller hands it over: the result, under the limits it ran with."""
+    return _executed(execution_limits)
 
 
 @pytest.fixture
 def build(
-    executed: tuple[ValidatedStatement, ExecutionResult],
+    executed: ExecutionResult,
     identity: ExecutionIdentity,
     serialization_descriptor: SerializationDescriptor,
 ) -> Any:
-    statement, result = executed
+    result = executed
 
     def factory(**overrides: Any) -> EvidenceRecord:
         arguments: dict[str, Any] = dict(
@@ -179,8 +148,10 @@ def build(
             question=QUESTION,
             question_set_version=QUESTION_SET_VERSION,
             statement_source=SOURCE,
-            statement=statement,
-            bound_parameters=statement.parameters,
+            executed_sql=SQL,
+            validator_version="validator-under-test",
+            checks_passed=CHECKS,
+            bound_parameters=PARAMETERS,
             result=result,
             identity=identity,
             session_settings_in_force=SETTINGS,
@@ -222,15 +193,15 @@ def test_a_record_is_built_from_an_execution_through_the_kernel_ports(build: Any
 
 def test_every_value_the_execution_states_is_taken_from_the_execution(
     build: Any,
-    executed: tuple[ValidatedStatement, ExecutionResult],
+    executed: ExecutionResult,
     identity: ExecutionIdentity,
 ) -> None:
-    statement, result = executed
+    result = executed
     record = build()
-    assert record.executed_sql == statement.sql
-    assert record.bound_parameters == statement.parameters
-    assert record.validator_version == statement.validator_version
-    assert record.validation_outcome.checks_run == statement.checks_passed
+    assert record.executed_sql == SQL
+    assert record.bound_parameters == PARAMETERS
+    assert record.validator_version == "validator-under-test"
+    assert record.validation_outcome.checks_run == CHECKS
     assert record.backend_identity_at_checkout == result.backend_identity
     assert record.result is result
     assert record.row_count == len(result.rows)
@@ -254,55 +225,37 @@ def test_the_measurements_the_caller_took_are_the_caller_s_and_not_a_module_cons
 
 
 def test_the_backend_a_record_names_is_the_one_the_result_reported(
-    build: Any,
-    execution_limits: ExecutionLimits,
-    execution_context: ExecutionContext,
+    build: Any, execution_limits: ExecutionLimits
 ) -> None:
     """Not a value configured beside the run: change the server, change the record."""
     other = "PostgreSQL 16.4 on aarch64, backend 9001"
-    statement = admit(SQL, PARAMETERS, "validator-under-test", CHECKS, WIDTH_PROOF)
-    executor: QueryExecutor = _StubExecutor(execution_limits, backend=other)
-    record = build(statement=statement, result=executor.execute(statement, execution_context))
+
+    record = build(result=_executed(execution_limits, backend=other))
+
     assert record.backend_identity_at_checkout == other
 
 
 def test_a_record_for_a_parameterized_statement_without_its_parameters_cannot_be_built(
     build: Any,
 ) -> None:
-    with pytest.raises(IncompleteEvidence, match="not the parameters the validator admitted"):
+    """The SQL names two placeholders, so a record stating no parameter is unbuildable.
+
+    The refusal read "not the parameters the validator admitted" until 2026-09-14, when the
+    admission went: there is one parameter list now and nothing for it to disagree with, so
+    what refuses this is the check that was ever about the record, the SQL's own placeholders
+    against what the record states is bound to them.
+    """
+    with pytest.raises(IncompleteEvidence, match="placeholders"):
         build(bound_parameters=())
 
 
-def test_a_record_cannot_state_parameter_values_the_validator_did_not_admit(
-    build: Any, executed: tuple[ValidatedStatement, ExecutionResult]
-) -> None:
-    statement, _ = executed
-    shifted = tuple(
-        BoundParameter(
-            parameter.position,
-            parameter.value + timedelta(days=1)
-            if isinstance(parameter.value, datetime)
-            else parameter.value,
-            parameter.declared_type,
-        )
-        for parameter in statement.parameters
-    )
-    assert shifted != statement.parameters
-    with pytest.raises(IncompleteEvidence, match="not the parameters the validator admitted"):
-        build(bound_parameters=shifted)
-
-
 def test_a_statement_whose_placeholders_are_not_all_bound_cannot_be_recorded(build: Any) -> None:
-    """The admitted parameter list can be empty while the text still asks for a value."""
-    unbound = admit(
-        "SELECT count(*) AS n FROM usage_event WHERE event_ts >= $1",
-        (),
-        "validator-under-test",
-        ("single_statement",),
-        ResultWidthProof((ProjectedColumnWidth("n", "int8", 20, 8),), "width-policy-under-test"),
-    )
+    """The parameter list can be empty while the text still asks for a value."""
     with pytest.raises(IncompleteEvidence, match="placeholders"):
-        build(statement=unbound, bound_parameters=())
+        build(
+            executed_sql="SELECT count(*) AS n FROM usage_event WHERE event_ts >= $1",
+            bound_parameters=(),
+        )
 
 
 def test_a_record_cannot_state_a_row_count_its_own_result_contradicts(make_record: Any) -> None:

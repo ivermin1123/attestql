@@ -86,26 +86,10 @@ from attestql.evidence.types import (
     SortKey,
     StatementSource,
 )
-from attestql.kernel.types import (
-    ExecutionResult,
-    ProjectedColumnWidth,
-    ResultWidthProof,
-    ValidatedStatement,
-    admit,
-)
+from attestql.kernel.types import ExecutionResult
 
 DEFAULT_STATEMENT_TIMEOUT_SECONDS = 30
 """How long one statement of an audit may run. Set on the session and read back."""
-
-WIDTH_POLICY_VERSION = "audit:observed-widths"
-"""What the width proof on an audited statement is, named for what it is.
-
-A real proof bounds a projection before the statement is sent, from a policy over a known
-schema. An audit runs arbitrary benchmark SQL against a database it did not design and has
-no such policy, so the widths are measured from the rendering of what came back. The
-record does not carry this: ADR-0013 dropped ``policy_version`` because a version naming a
-measurement taken after the fact states nothing a reader can rely on. It exists because
-``admit`` requires a proof, and it is named so that nothing here reads as one."""
 
 COUNTEREXAMPLE_FORMAT = "attestql/audit/counterexample/2"
 """What the layout below is, for a reader who opens one of these files.
@@ -715,41 +699,6 @@ def mechanism_json(found: Mechanism) -> Json:
     }
 
 
-def width_proof(
-    result: ExecutionResult, serialization: SerializationDescriptor
-) -> ResultWidthProof:
-    """The widths this execution measured, which is not the same thing as a width proof."""
-    widths: list[ProjectedColumnWidth] = []
-    for index, column in enumerate(result.columns):
-        widest = _widest(result, index, serialization)
-        widths.append(
-            ProjectedColumnWidth(
-                name=column.name,
-                declared_type=column.declared_type,
-                max_encoded_bytes=widest,
-                max_decoded_bytes=widest,
-            )
-        )
-    return ResultWidthProof(columns=tuple(widths), policy_version=WIDTH_POLICY_VERSION)
-
-
-def _widest(result: ExecutionResult, index: int, serialization: SerializationDescriptor) -> int:
-    cells = (
-        len(serialization.render_value(row[index]).encode(serialization.encoding))
-        for row in result.rows
-    )
-    return max((*cells, 1))
-
-
-def _admitted(
-    parsed: ParsedStatement, result: ExecutionResult, serialization: SerializationDescriptor
-) -> ValidatedStatement:
-    parser = parsed.parser
-    return admit(
-        parsed.sql, (), parser.validator, parser.checks, width_proof(result, serialization)
-    )
-
-
 ORDERING_KEY_NAMES_NO_COLUMN = (
     "the top level ORDER BY key {token} names no column of {tables} and no column this "
     "statement projects; this engine's grammar reads such a token as a column where one of "
@@ -837,7 +786,9 @@ def _execute_and_record(
         question=question,
         question_set_version=question_set_version,
         statement_source=statement_source,
-        statement=_admitted(parsed, result, serialization),
+        executed_sql=parsed.sql,
+        validator_version=parsed.parser.validator,
+        checks_passed=parsed.parser.checks,
         bound_parameters=(),
         result=result,
         identity=identity,
@@ -1166,7 +1117,6 @@ __all__ = [
     "TEST_SUITE_EX_METHOD",
     "TEST_SUITE_EX_SOURCE",
     "VERDICT_READING",
-    "WIDTH_POLICY_VERSION",
     "BirdEx",
     "Comparison",
     "ComparisonRefused",
@@ -1184,6 +1134,5 @@ __all__ = [
     "sided",
     "test_suite_ex",
     "test_suite_ex_json",
-    "width_proof",
     "write_comparison",
 ]

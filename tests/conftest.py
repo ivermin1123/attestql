@@ -25,7 +25,6 @@ from attestql.evidence.serialize import SerializationDescriptor
 from attestql.kernel.types import (
     BoundParameter,
     ColumnType,
-    ExecutionContext,
     ExecutionLimits,
     ExecutionResult,
     ProjectedColumnWidth,
@@ -109,16 +108,6 @@ def validated_statement(
     bound_parameters: tuple[BoundParameter, ...], result_width_proof: ResultWidthProof
 ) -> ValidatedStatement:
     return admit(TEST_SQL, bound_parameters, "validator-test", TEST_CHECKS, result_width_proof)
-
-
-@pytest.fixture
-def execution_context() -> ExecutionContext:
-    return ExecutionContext(
-        request_id="run-test",
-        authorized_tenant="sandbox-test",
-        tenant_login_role="attestql_readonly_test",
-        authorization_policy_version="authorization-policy-test",
-    )
 
 
 @pytest.fixture
