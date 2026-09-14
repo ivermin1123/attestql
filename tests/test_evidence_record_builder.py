@@ -184,7 +184,7 @@ def make_record(build: Any) -> Any:
     return factory
 
 
-def test_a_record_is_built_from_an_execution_through_the_kernel_ports(build: Any) -> None:
+def test_a_record_is_built_from_an_execution_and_the_values_its_caller_states(build: Any) -> None:
     record = build()
     assert isinstance(record, EvidenceRecord)
     for field in dataclasses.fields(EvidenceRecord):

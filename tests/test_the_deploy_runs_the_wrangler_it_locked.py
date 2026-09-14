@@ -81,6 +81,21 @@ def test_the_deploy_still_pins_every_action_it_uses_by_commit() -> None:
         )
 
 
+def test_the_locked_tree_is_one_dependabot_updates() -> None:
+    """A lockfile nothing bumps is a lockfile that ages, and this one installs into a deploy.
+
+    The three other surfaces this repository pins are already tracked; the Node one arrived
+    with the lockfile and would otherwise be the only pinned tree with no weekly pull request
+    behind it.
+    """
+    configured = (REPOSITORY / ".github" / "dependabot.yml").read_text("utf-8")
+
+    assert 'package-ecosystem: "npm"' in configured, (
+        "nothing updates package-lock.json, so the version the deploy installs is frozen at "
+        "whatever day it was written"
+    )
+
+
 def test_the_gate_s_node_tools_stay_on_npx_and_are_not_in_the_manifest() -> None:
     """Locking a tool that holds no credential would state a trust the gate does not need."""
     recipes = (REPOSITORY / "justfile").read_text("utf-8")

@@ -55,6 +55,7 @@ from attestql.audit.cli import DEFAULT_SCRATCH_SCHEMA, SERIALIZATION
 from attestql.audit.cli import main as audit_main
 from attestql.audit.compare import (
     Comparison,
+    ComparisonRefused,
     bird_ex,
     record_statement,
     test_suite_ex,
@@ -500,6 +501,13 @@ def _not_comparable(out: Path, audit: Path) -> None:
         for name in ("fixture.sqlite", SECOND_FIXTURE)
     )
     verdict = compare_r_ord(gold, second)
+    try:
+        suite = test_suite_ex(gold.result, second.result, sql, engine="sqlite")
+    except ComparisonRefused as refused:
+        # What the run loop does with the same refusal: the question is an error under the
+        # run's own side and writes no directory, and the rest of the build goes on.
+        print(f"q{question_id} ERROR run: {refused}")
+        return
     comparison = Comparison(
         question=metadata,
         replay_rule=ReplayRule.R_ORD,
@@ -512,7 +520,7 @@ def _not_comparable(out: Path, audit: Path) -> None:
         gold_ordering=parsed.ordering,
         second_ordering=parsed.ordering,
         bird_ex=bird_ex(gold.result, second.result, engine="sqlite"),
-        test_suite_ex=test_suite_ex(gold.result, second.result, sql, engine="sqlite"),
+        test_suite_ex=suite,
         mechanism=None,
     )
     found = all_smells(

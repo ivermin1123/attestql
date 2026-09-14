@@ -372,10 +372,11 @@ class Cursor(Protocol):
     def description(self) -> Sequence[ColumnDescription] | None: ...
 
     @property
-    def rowcount(self) -> int: ...
-
-    """How many rows the statement returned, which the driver knows before this module asks
-    for any of them, and which is negative where a statement returned no result at all."""
+    def rowcount(self) -> int:
+        """How many rows the statement returned, which the driver knows before this module
+        asks for any of them, and which is negative where a statement returned no result at
+        all."""
+        ...
 
     def execute(self, query: object, params: Sequence[object] | None = None) -> object: ...
 
