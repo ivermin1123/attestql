@@ -317,7 +317,10 @@ class Comparison:
     gold: EvidenceRecord
     second: EvidenceRecord
     gold_result_hash: str
+    """The digest of ``gold.result`` under ``gold.serialization``, taken once here and
+    stated wherever this comparison is written out rather than taken again."""
     second_result_hash: str
+    """The digest of ``second.result``, taken once for the same reason."""
     differing_rows: RowDifference
     gold_ordering: tuple[OrderingKey, ...]
     second_ordering: tuple[OrderingKey, ...]
@@ -1028,13 +1031,19 @@ def counterexample_json(comparison: Comparison) -> Json:
         "gold": {
             "executed_sql": comparison.gold.executed_sql,
             "own_ordering": _ordering_json(comparison.gold_ordering),
-            "result": result_json(comparison.gold.result, serialization),
+            "result": result_json(
+                comparison.gold.result, serialization, result_hash=comparison.gold_result_hash
+            ),
             "record": GOLD_RECORD_FILE,
         },
         "second": {
             "executed_sql": comparison.second.executed_sql,
             "own_ordering": _ordering_json(comparison.second_ordering),
-            "result": result_json(comparison.second.result, comparison.second.serialization),
+            "result": result_json(
+                comparison.second.result,
+                comparison.second.serialization,
+                result_hash=comparison.second_result_hash,
+            ),
             "record": SECOND_RECORD_FILE,
         },
         "canonical_ordering": [
@@ -1057,10 +1066,22 @@ def counterexample_json(comparison: Comparison) -> Json:
 
 
 def write_comparison(comparison: Comparison, directory: Path) -> None:
-    """The counterexample and both evidence records, as three files in one directory."""
+    """The counterexample and both evidence records, as three files in one directory.
+
+    Each result's digest is stated three times across the three files, and read once: the
+    counterexample states it beside the bounded view of the result and again in the pair of
+    hashes, and the record states it over the whole of the result. It is the digest this
+    comparison already holds, so the result is not rendered again to write it out.
+    """
     write_json(directory / COUNTEREXAMPLE_FILE, counterexample_json(comparison))
-    write_json(directory / GOLD_RECORD_FILE, record_json(comparison.gold))
-    write_json(directory / SECOND_RECORD_FILE, record_json(comparison.second))
+    write_json(
+        directory / GOLD_RECORD_FILE,
+        record_json(comparison.gold, result_hash=comparison.gold_result_hash),
+    )
+    write_json(
+        directory / SECOND_RECORD_FILE,
+        record_json(comparison.second, result_hash=comparison.second_result_hash),
+    )
 
 
 __all__ = [

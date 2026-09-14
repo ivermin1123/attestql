@@ -583,6 +583,24 @@ def test_the_session_settings_are_read_once_and_repeated_after_that() -> None:
     assert sum(1 for line in asked if "pg_database" in line) == 1
 
 
+def test_the_database_role_is_read_once_and_repeated_after_that() -> None:
+    """The role the statements run as is asked for once per record and once per comparison.
+
+    Nothing this backend sends can move it. The envelope every statement opens inside sets
+    the schema path, the memory bounds and the timeout and no role, so the second question
+    could only say what the first one said, and against a server across a network it was a
+    round trip for an answer already in hand.
+    """
+    connection = FakeConnection()
+    backend = _backend(connection)
+    role = backend.effective_database_role()
+    assert role == "bird_reader"
+    assert backend.effective_database_role() == role
+    assert [line for line in connection.log if line == "SELECT current_user"] == [
+        "SELECT current_user"
+    ]
+
+
 def test_a_session_that_cannot_report_a_precondition_setting_is_refused() -> None:
     connection = FakeConnection(settings={"statement_timeout": "30000"})
     with pytest.raises(BackendRefused, match="reported no value for"):

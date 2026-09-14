@@ -412,6 +412,7 @@ class PostgresBackend:
     ) -> None:
         self._connection = connection
         self._identity: str | None = None
+        self._role: str | None = None
         self._session_settings: SessionSettings | None = None
         self._database_locale_read: Mapping[str, str] | None = None
         self._shuffled: ShuffledCopies | None = None
@@ -464,7 +465,17 @@ class PostgresBackend:
         return self._identity
 
     def effective_database_role(self) -> str:
-        return str(self._one("SELECT current_user", step="role")[0])
+        """What the statements run as, read once and repeated after that.
+
+        The role belongs to the connection and nothing this backend sends moves it: the
+        envelope every statement opens inside sets the schema path, the memory bounds and
+        the timeout, and no role. A run asks for this once for each record it builds and
+        once for each comparison it makes, which against a server across a network was
+        that many round trips for an answer that cannot have changed.
+        """
+        if self._role is None:
+            self._role = str(self._one("SELECT current_user", step="role")[0])
+        return self._role
 
     def default_collation(self) -> str:
         """The database's ``datcollate``, which is the precondition of the four read here."""

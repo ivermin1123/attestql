@@ -699,10 +699,13 @@ def not_a_function_of_the_data(
     """
     name = NOT_A_FUNCTION_OF_THE_DATA
     rule = parsed.replay_rule
+    baseline_hash = result_digest(baseline, settings.serialization)
     payload: Json = {
         "rule": rule.value,
-        "baseline_result_hash": result_digest(baseline, settings.serialization),
-        "baseline_result": result_json(baseline, settings.serialization, bound=ROWS_IN_EVIDENCE),
+        "baseline_result_hash": baseline_hash,
+        "baseline_result": result_json(
+            baseline, settings.serialization, bound=ROWS_IN_EVIDENCE, result_hash=baseline_hash
+        ),
         "planner_statistics": _planner_statistics_json(backend, parsed),
     }
     reruns: list[_Rerun] = []
@@ -785,12 +788,15 @@ def _rerun(
         return
     verdict = compare_results(baseline, result, rule=rule, serialization=settings.serialization)
     differs = verdict.result is ComparabilityResult.NOT_EQUAL
+    rerun_hash = result_digest(result, settings.serialization)
     payload[variant] = {
         "run": True,
         "verdict": verdict.result.value,
         "differs": differs,
-        "result_hash": result_digest(result, settings.serialization),
-        "result": result_json(result, settings.serialization, bound=ROWS_IN_EVIDENCE),
+        "result_hash": rerun_hash,
+        "result": result_json(
+            result, settings.serialization, bound=ROWS_IN_EVIDENCE, result_hash=rerun_hash
+        ),
     }
     reruns.append(_Rerun(variant=variant, result=result, differs=differs))
 
