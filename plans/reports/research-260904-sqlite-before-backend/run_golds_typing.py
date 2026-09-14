@@ -14,18 +14,26 @@ values BIRD's evaluator would otherwise tell apart.
 
 import json
 import multiprocessing as mp
+import os
 import sqlite3
 import sys
 import time
 
 sys.path.insert(
     0,
-    "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/work-rd/scripts",
+    os.environ.get("MEASURE_WORK", ".") + "/work-rd/scripts",
 )
 from load_golds import load
 
-D = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/data/zip/minidev/MINIDEV/dev_databases"
-W = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/work-rd"
+SCRATCH = os.environ.get("MEASURE_WORK", ".")
+"""The directory this run worked in, which held `data/` and `work-r*/`.
+
+Read from the environment and not written here: the run of 2026-09-04 used a scratch
+directory belonging to the session that made it, and one machine's layout is not something
+this repository publishes. The default is what a rerun from that directory reads."""
+
+D = f"{SCRATCH}/data/zip/minidev/MINIDEV/dev_databases"
+W = f"{SCRATCH}/work-rd"
 
 
 def _run_one(db_id, sql, q):

@@ -37,6 +37,15 @@ HF_QUESTIONS = WORK / "data/hf/mini_dev_sqlite-00000-of-00001.json"
 DATABASES = WORK / "data/zip/minidev/MINIDEV/dev_databases"
 
 
+def under_work(path: Path) -> str:
+    """A path as a document here states it: relative to the work directory when it is inside it.
+
+    The work directory is what a rerun fills, so a path relative to it is the same path on
+    another machine, and an absolute one states the layout of the machine that ran this.
+    """
+    return str(path.relative_to(WORK)) if path.is_relative_to(WORK) else str(path)
+
+
 def database(db_id: str) -> str:
     """The file upstream's ``connect_db`` opens for that database, as upstream lays it out."""
     return str(DATABASES / db_id / f"{db_id}.sqlite")
@@ -121,7 +130,7 @@ def main() -> None:
             "bird-bench/mini_dev evaluation/evaluation_utils.py execute_sql + "
             "evaluation_ex.py calculate_ex, commit b3d4bcbb, SQLite path unmodified"
         ),
-        "databases": str(DATABASES),
+        "databases": under_work(DATABASES),
         "positions": len(rows),
         "ex_sum": total,
         "ex_percent": round(100.0 * total / len(rows), 2),

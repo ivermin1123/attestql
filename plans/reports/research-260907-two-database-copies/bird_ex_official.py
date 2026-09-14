@@ -25,6 +25,15 @@ ZIP_QUESTIONS = WORK / "data/zip/minidev/MINIDEV/mini_dev_sqlite.json"
 HF_QUESTIONS = WORK / "data/hf/mini_dev_sqlite-00000-of-00001.json"
 
 
+def under_work(path: Path) -> str:
+    """A path as a document here states it: relative to the work directory when it is inside it.
+
+    The work directory is what a rerun fills, so a path relative to it is the same path on
+    another machine, and an absolute one states the layout of the machine that ran this.
+    """
+    return str(path.relative_to(WORK)) if path.is_relative_to(WORK) else str(path)
+
+
 def golds() -> list[tuple[int, str, str]]:
     zip_entries = json.loads(ZIP_QUESTIONS.read_text())
     by_id = {entry["question_id"]: entry for entry in json.loads(HF_QUESTIONS.read_text())}
@@ -99,7 +108,7 @@ def main() -> None:
             "bird-bench/mini_dev evaluation/evaluation_utils.py execute_sql + "
             "evaluation_ex.py calculate_ex, commit b3d4bcbb, SQLite path unmodified"
         ),
-        "databases": str(databases),
+        "databases": under_work(databases),
         "positions": len(rows),
         "ex_sum": total,
         "ex_percent": round(100.0 * total / len(rows), 2),

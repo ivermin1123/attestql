@@ -10,11 +10,18 @@ import shutil
 import sqlite3
 import sys
 
-D = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/data/zip/minidev/MINIDEV/dev_databases"
-W = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/work-rd"
+D = os.environ.get("MEASURE_WORK", ".") + "/data/zip/minidev/MINIDEV/dev_databases"
+W = os.environ.get("MEASURE_WORK", ".") + "/work-rd"
 
 sys.path.insert(0, f"{W}/scripts")
 from load_golds import SETS, load  # noqa: E402
+
+SCRATCH = os.environ.get("MEASURE_WORK", ".")
+"""The directory this run worked in, which held `data/` and `work-r*/`.
+
+Read from the environment and not written here: the run of 2026-09-04 used a scratch
+directory belonging to the session that made it, and one machine's layout is not something
+this repository publishes. The default is what a rerun from that directory reads."""
 
 out = {}
 

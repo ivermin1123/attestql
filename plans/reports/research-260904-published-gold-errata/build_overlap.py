@@ -20,20 +20,20 @@ and sha256 in the report):
 
 import csv
 import json
+import os
 import re
 from pathlib import Path
 
-D = Path(
-    "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/"
-    "51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/data"
-)
-W = Path(
-    "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/"
-    "51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/work-rc"
-)
-REPORT_DIR = Path(
-    "/Users/hoangle/Desktop/code/attestql-research/plans/reports/research-260904-published-gold-errata"
-)
+SCRATCH = os.environ.get("MEASURE_WORK", ".")
+"""The directory this run worked in, which held `data/` and `work-r*/`.
+
+Read from the environment and not written here: the run of 2026-09-04 used a scratch
+directory belonging to the session that made it, and one machine's layout is not something
+this repository publishes. The default is what a rerun from that directory reads."""
+
+D = Path(f"{SCRATCH}/data")
+W = Path(f"{SCRATCH}/work-rc")
+REPORT_DIR = Path(__file__).resolve().parent
 
 
 def norm(s):

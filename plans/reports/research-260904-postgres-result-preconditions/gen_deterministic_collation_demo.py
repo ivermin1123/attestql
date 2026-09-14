@@ -2,11 +2,19 @@
 deterministic collations; ordering operators (<,>,<=,>=) are not. Task R-B item 2/3."""
 
 import json
+import os
 from pathlib import Path
 
 import psycopg
 
-D = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/data"
+SCRATCH = os.environ.get("MEASURE_WORK", ".")
+"""The directory this run worked in, which held `data/` and `work-r*/`.
+
+Read from the environment and not written here: the run of 2026-09-04 used a scratch
+directory belonging to the session that made it, and one machine's layout is not something
+this repository publishes. The default is what a rerun from that directory reads."""
+
+D = f"{SCRATCH}/data"
 W = Path(__file__).resolve().parent
 
 with open(f"{D}/hf/mini_dev_pg-00000-of-00001.json") as f:

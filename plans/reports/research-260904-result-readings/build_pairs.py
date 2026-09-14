@@ -15,14 +15,21 @@ import json
 import os
 from pathlib import Path
 
-R = "/Users/hoangle/Desktop/code/attestql-research/plans/reports/prediction-mode-260904-real-predictions"
-D = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/data"
-W = "/private/tmp/claude-501/-Users-hoangle-Desktop-code-attestql/51c539ba-76fd-46dc-8441-ddbacaec3449/scratchpad/work-ra"
+SCRATCH = os.environ.get("MEASURE_WORK", ".")
+"""The directory this run worked in, which held `data/` and `work-r*/`.
+
+Read from the environment and not written here: the run of 2026-09-04 used a scratch
+directory belonging to the session that made it, and one machine's layout is not something
+this repository publishes. The default is what a rerun from that directory reads."""
+
+R = Path(__file__).resolve().parents[1] / "prediction-mode-260904-real-predictions"
+D = f"{SCRATCH}/data"
+W = f"{SCRATCH}/work-ra"
 
 
 def main():
-    classification = json.loads(Path(f"{R}/classification.json").read_text())
-    verdicts = json.loads(Path(f"{R}/verdicts-hf.json").read_text())
+    classification = json.loads((R / "classification.json").read_text())
+    verdicts = json.loads((R / "verdicts-hf.json").read_text())
     gold_list = json.loads(Path(f"{D}/hf/mini_dev_pg-00000-of-00001.json").read_text())
     gold_by_id = {g["question_id"]: g for g in gold_list}
 
