@@ -34,7 +34,7 @@ not decide alone.
 | [3](phase-3-the-two-high-findings.md) | LOGIC-02, LOGIC-17, LOGIC-03, and release 0.3.1 | phase 1 | done 2026-09-12 |
 | [4](phase-4-group-b.md) | 18 findings the review grouped as low risk | phase 3 | done 2026-09-14 at `57bb352`, after `plans/reports/review-260914-0935-phase-4-merge-gate.md` |
 | [5](phase-5-decided-behaviour.md) | LOGIC-22, LOGIC-21, PERF-01, ARCH-03, SEC-02, CI-03, HYG-04 | phase 3 | done 2026-09-14 at `bbbe9fa`, after `plans/reports/review-260914-1045-phase-5-merge-gate.md` |
-| [6](phase-6-structure.md) | The three refactors, CQ-L3-05, TEST-01, CI-05 | phase 4, phase 5 | open |
+| [6](phase-6-structure.md) | The three refactors, CQ-L3-05, TEST-01, CI-05 | phase 4, phase 5 | done 2026-09-14 at `12f1c29`, after `plans/reports/review-260914-1345-phase-6-merge-gate.md` |
 
 Phase 1 comes first for two reasons that are not preference. The ruleset of phase 2 blocks
 force-push, so a rewrite has to precede it or be undone to run. And the 11.1 MB measurement file
