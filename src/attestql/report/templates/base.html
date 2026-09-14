@@ -9,6 +9,17 @@
    published runs exist, and a page that is not what it will be says so on itself rather
    than in a note somewhere else.
 
+   `description` is every page's own and is always written: it is what a search result and a
+   link preview show under the title, and until 2026-09-13 the head held the charset, the
+   viewport, the title and the stylesheet and nothing else. `canonical` is the address this
+   page is served at and is the publisher's to give: a report `attestql report` wrote is a
+   directory on somebody's disk and has no address, so it carries no canonical link and no
+   social card either. `icon` is the same, a path under `static` or nothing.
+
+   The `noscript` rule hides the one chip that does something. With scripting off it cannot
+   do it, and a button that does nothing when pressed is worse than no button; everything
+   else on the page is rendered markup and reads as it is.
+
    `static` is where the stylesheet, the script and the fonts are, and `root` is where the
    pages are. They are the same for a report `attestql report` wrote, which carries its own
    copy of them; a site rendering a hundred and twenty runs points every page at one shared
@@ -20,7 +31,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ page.title }}</title>
+<meta name="description" content="{{ page.description }}">
+{% if canonical %}
+<link rel="canonical" href="{{ canonical }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:title" content="{{ page.title }}">
+<meta property="og:description" content="{{ page.description }}">
+<meta name="twitter:card" content="summary">
+{% endif %}
+{% if icon %}
+<link rel="icon" href="{{ static }}{{ icon }}">
+{% endif %}
 <link rel="stylesheet" href="{{ static }}static/report.css">
+<noscript><style>.chip--mechanism { display: none; }</style></noscript>
 </head>
 <body>
 {% if banner %}

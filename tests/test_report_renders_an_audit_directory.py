@@ -50,10 +50,13 @@ from attestql.report.render import (
     MARKER_TEXT,
     NOT_EQUAL_DIRECTORY,
     PAGE_FILE,
+    ROWS_ON_A_PAGE,
     SECOND_RECORD_FILE,
     SMELLS_FILE,
     STATIC,
     SUMMARY_FILE,
+    Crumb,
+    question_page,
 )
 
 pytestmark = pytest.mark.sandbox_sqlite
@@ -1140,3 +1143,129 @@ def test_a_rerun_clears_the_classification_the_render_before_it_copied(
     assert not (out / "classification.json").exists()
     assert not (out / "classification-source.json").exists()
     assert "classification.json" in MARKER_TEXT, "the marker says what is removed"
+
+
+def test_a_page_states_what_it_is_and_a_local_report_states_no_address(
+    rendered: Rendered,
+) -> None:
+    """The head held the charset, the viewport, the title and the stylesheet and nothing else.
+
+    A description is what a search result and a link preview show under the title, so every
+    page writes one. A canonical link is the publisher's: a report on somebody's disk is not
+    served anywhere, so it states no address, no social card and no icon, and the site's own
+    build is what fills those in.
+    """
+    markup = (rendered.out / PAGE_FILE).read_text(encoding="utf-8")
+    question = (rendered.out / "q879" / PAGE_FILE).read_text(encoding="utf-8")
+
+    for page in (markup, question):
+        assert '<meta name="description" content="' in page
+        assert 'rel="canonical"' not in page
+        assert 'property="og:' not in page
+    assert "q879" in question and "NOT_EQUAL" in question
+
+
+def test_a_question_page_title_is_the_question_alone_without_a_publisher_to_place_it(
+    rendered: Rendered,
+) -> None:
+    """`within` is the publisher's, and one directory knows of no other run."""
+    page = question_page(rendered.audit / "q879")
+
+    assert page.title == "q879 NOT_EQUAL"
+    assert page.within == ""
+
+
+def test_a_question_page_title_names_where_the_run_sits_when_it_is_told(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """Seventeen prediction runs of one question gave seventeen pages titled `q1435
+    NOT_EQUAL`, which is what a tab, a bookmark and a search result show."""
+    render_report(rendered.audit, tmp_path / "report", within="minidev-pg gpt-4")
+
+    markup = (tmp_path / "report" / "q879" / PAGE_FILE).read_text(encoding="utf-8")
+
+    assert "<title>q879 NOT_EQUAL, minidev-pg gpt-4</title>" in markup
+
+
+def test_the_run_page_has_a_way_back_up_only_where_the_publisher_gave_one(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """A reader arriving from a shared link had the run and no link to the group or the
+    benchmark above it, although both have pages. A report of one directory has neither."""
+    render_report(
+        rendered.audit,
+        tmp_path / "with",
+        breadcrumb=(Crumb(label="minidev-pg", href="../index.html"),),
+    )
+    render_report(rendered.audit, tmp_path / "without")
+
+    with_crumbs = (tmp_path / "with" / PAGE_FILE).read_text(encoding="utf-8")
+    without = (tmp_path / "without" / PAGE_FILE).read_text(encoding="utf-8")
+
+    assert 'class="breadcrumb"' in with_crumbs
+    assert ">minidev-pg</a>" in with_crumbs
+    assert 'class="breadcrumb"' not in without
+
+
+def test_a_record_shows_a_bounded_reading_of_its_result_and_links_the_whole(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """Two pages of the 2026-09-08 build weighed 1,806 kB with 16,616 row elements in them.
+
+    The bytes were never the problem and the page was inside its budget either way: what a
+    browser lays out is. The count on the line is still the whole count, and the JSON the
+    rows were read from is copied beside the page and linked from under the table.
+    """
+    audit = _copy_audit(rendered, tmp_path)
+    record = audit / "q879" / GOLD_RECORD_FILE
+    document = cast("dict[str, Any]", json.loads(record.read_text(encoding="utf-8")))
+    result = cast("dict[str, Any]", document["result"])
+    result["rows"] = [result["rows"][0]] * (ROWS_ON_A_PAGE + 20)
+    result["row_count"] = ROWS_ON_A_PAGE + 20
+    record.write_text(json.dumps(document), encoding="utf-8")
+
+    render_report(audit, tmp_path / "report")
+
+    markup = (tmp_path / "report" / "q879" / PAGE_FILE).read_text(encoding="utf-8")
+    assert markup.count('<tr class="rows__row') <= ROWS_ON_A_PAGE + 10, "the shown rows"
+    assert f"{ROWS_ON_A_PAGE} of them here" in markup
+    assert f'href="{GOLD_RECORD_FILE}"' in markup
+    assert (tmp_path / "report" / "q879" / GOLD_RECORD_FILE).is_file(), "and it is there"
+
+
+def test_a_report_holding_no_question_says_so_instead_of_an_empty_table(
+    rendered: Rendered, tmp_path: Path
+) -> None:
+    """The rows table beside it has said `no rows` since it was written, and a reader meeting
+    a table with nothing under its headings cannot tell a run that audited nothing from a
+    page that failed to list what it audited."""
+    audit = _copy_audit(rendered, tmp_path)
+    for directory in sorted(audit.glob("q*")):
+        shutil.rmtree(directory)
+    summary = document(audit / SUMMARY_FILE)
+    summary["question_set"]["audited"] = 0
+    summary["verdicts"] = {}
+    write(audit / SUMMARY_FILE, summary)
+
+    render_report(audit, tmp_path / "report")
+
+    assert "no questions" in (tmp_path / "report" / PAGE_FILE).read_text(encoding="utf-8")
+
+
+def test_the_one_chip_that_does_something_states_its_state_and_is_hidden_without_a_script(
+    rendered: Rendered,
+) -> None:
+    """With scripting off it was a button with no handler and no state to announce.
+
+    The marking is on before any script runs, so the markup says so; a screen reader can
+    report a toggle that states `aria-pressed` and cannot report one that does not. Where
+    there is no script at all the chip is not offered, because a button that cannot do what
+    it says is worse than no button.
+    """
+    markup = (rendered.out / "q879" / PAGE_FILE).read_text(encoding="utf-8")
+
+    assert (
+        'class="chip chip--warn chip--mechanism" data-marks="statements" aria-pressed="true"'
+        in (markup)
+    )
+    assert "<noscript><style>.chip--mechanism { display: none; }</style></noscript>" in markup

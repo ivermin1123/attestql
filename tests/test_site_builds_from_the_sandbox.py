@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import io
 import json
+import re
 import shutil
 import tomllib
 from contextlib import redirect_stdout
@@ -787,3 +788,86 @@ def test_the_selector_and_the_build_refuse_the_same_count(tmp_path: Path) -> Non
         assert read({"value": 0}, "value") == 0
 
     assert whole_count({"value": 7}, "value", site.BuildRefused) == 7, "the rule they share"
+
+
+def test_every_page_states_what_it_is_and_where_it_is_served(built: Path) -> None:
+    """The head of all 673 deployed pages held the charset, the viewport, the title and the
+    stylesheet and nothing else.
+
+    A description is what a search result and a link preview show under the title. A canonical
+    link is what tells a search engine that the same run under a preview deployment and under
+    attestql.com is one page and not two.
+    """
+    pages = sorted(built.rglob(PAGE_FILE))
+    assert pages, "the build wrote pages"
+
+    for page in pages:
+        markup = page.read_text(encoding="utf-8")
+        served = f"{site.SITE_URL}/{page.parent.relative_to(built).as_posix().strip('.')}".rstrip(
+            "/"
+        )
+        assert '<meta name="description" content="' in markup, page
+        assert f'<link rel="canonical" href="{served}/">' in markup, page
+        assert '<meta property="og:title"' in markup, page
+        assert f'href="{site.STATIC_DIRECTORY}/{site.ICON_FILE}"' in markup or "../" in markup, page
+
+
+def test_the_build_writes_the_four_files_a_site_is_expected_to_have(built: Path) -> None:
+    """None of them existed, so a mistyped address met the host's own page, every tab carried
+    a blank icon, and a search engine was given no list of what is here."""
+    robots = (built / site.ROBOTS_FILE).read_text(encoding="utf-8")
+    sitemap = (built / site.SITEMAP_FILE).read_text(encoding="utf-8")
+    not_found = (built / site.NOT_FOUND_FILE).read_text(encoding="utf-8")
+
+    assert (built / site.STATIC_DIRECTORY / site.ICON_FILE).is_file()
+    assert robots.splitlines()[0] == "User-agent: *"
+    assert f"Sitemap: {site.SITE_URL}/{site.SITEMAP_FILE}" in robots
+    assert sitemap.startswith('<?xml version="1.0" encoding="UTF-8"?>')
+    assert sitemap.count("<loc>") == len(sorted(built.rglob(PAGE_FILE))), "every page, once"
+    assert f"<loc>{site.SITE_URL}/</loc>" in sitemap
+    # Served at every address that holds no page, so it is the canonical version of none.
+    assert "404" in not_found
+    assert 'rel="canonical"' not in not_found
+    assert 'href="/index.html"' in not_found, "root-relative, because it is served anywhere"
+
+
+def test_the_sitemap_lists_a_page_for_every_line_and_no_line_without_a_page(
+    built: Path,
+) -> None:
+    """A line pointing at nothing is worse than no sitemap: it is a page a search engine goes
+    looking for and does not find."""
+    sitemap = (built / site.SITEMAP_FILE).read_text(encoding="utf-8")
+    listed = re.findall(r"<loc>(.*?)</loc>", sitemap)
+
+    for address in listed:
+        under = address.removeprefix(f"{site.SITE_URL}/").strip("/")
+        assert (built / under / PAGE_FILE).is_file(), address
+    assert len(listed) == len(set(listed)), "each page once"
+
+
+def test_no_two_pages_of_the_site_carry_the_same_title(built: Path) -> None:
+    """Measured on the 2026-09-08 build: 673 pages, 584 distinct titles, `q1435 NOT_EQUAL`
+    seventeen times. A title is what a tab, a bookmark and a search result show, so seventeen
+    of one is a reader who cannot tell which run they are looking at."""
+    titles = [
+        re.findall(r"<title>(.*?)</title>", page.read_text(encoding="utf-8"))[0]
+        for page in sorted(built.rglob(PAGE_FILE))
+    ]
+
+    repeated = {title for title in titles if titles.count(title) > 1}
+
+    assert not repeated, repeated
+
+
+def test_a_run_page_of_the_site_has_the_way_back_up_that_a_local_report_does_not(
+    built: Path,
+) -> None:
+    """The group and the benchmark have pages and the run had no link to either."""
+    run = built / site.RUNS_DIRECTORY / site.SANDBOX_BENCHMARK / site.SANDBOX_RUN / PAGE_FILE
+    page = read(run)
+
+    up = site._up(f"{site.RUNS_DIRECTORY}/{site.SANDBOX_BENCHMARK}/{site.SANDBOX_RUN}")  # pyright: ignore[reportPrivateUsage]
+
+    assert 'class="breadcrumb"' in run.read_text(encoding="utf-8")
+    assert f"{up}{site.RUNS_DIRECTORY}/{PAGE_FILE}" in page.links, "the runs index"
+    assert f"{up}{site.RUNS_DIRECTORY}/{site.SANDBOX_BENCHMARK}/{PAGE_FILE}" in page.links

@@ -3,7 +3,12 @@
    A filter page is the run page's index with rows left out, so the markup of that index
    exists once and both callers render it through this macro. `root` is what a page has to
    put in front of a question's own path to reach it: nothing on the run page, one step up
-   from `not-equal/`, two from `by-mechanism/<class>/`. #}
+   from `not-equal/`, two from `by-mechanism/<class>/`.
+
+   A run with no question at all renders the sentence rather than an empty table: the rows
+   table beside it has said `no rows` since it was written, and a reader meeting a table with
+   nothing under its headings cannot tell a run that audited nothing from a page that failed
+   to list what it audited. #}
 {% macro index_table(entries, root) %}
 <div class="rows__region">
   <table class="index__table">
@@ -27,6 +32,8 @@
         <td>{% for probe in entry.probes %}<span class="chip chip--warn">{{ probe }}</span> {% endfor %}</td>
         <td>{% if entry.note %}<span class="warn">{{ entry.note }}</span>{% else %}{{ entry.question_text }}{% endif %}</td>
       </tr>
+      {% else %}
+      <tr><td class="index__none ink-2" colspan="6">no questions</td></tr>
       {% endfor %}
     </tbody>
   </table>

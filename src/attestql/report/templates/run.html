@@ -3,7 +3,12 @@
 
    The counts are the summary's own. The index is one row per directory the run wrote,
    and then the questions that wrote none: a statement that could not be run has no
-   evidence to open, so it is a row here with the side that failed and the message. #}
+   evidence to open, so it is a row here with the side that failed and the message.
+
+   The breadcrumb is the publisher's and is empty for a report `attestql report` wrote, which
+   is one directory with nothing above it. A run page had no way up until 2026-09-13 although
+   its group and its benchmark both have pages, so a reader arriving from a shared link had
+   the run and no way to the rest of the set it belongs to. #}
 {% extends "base.html" %}
 {% from "_files.html" import file_links %}
 {% from "_figure.html" import figure_block %}
@@ -20,6 +25,15 @@
 {% endblock %}
 
 {% block content %}
+{% if page.breadcrumb %}
+<nav class="breadcrumb" aria-label="where this run sits">
+  <ol class="breadcrumb__list">
+    {% for crumb in page.breadcrumb %}
+    <li class="breadcrumb__step"><a href="{{ crumb.href }}">{{ crumb.label }}</a></li>
+    {% endfor %}
+  </ol>
+</nav>
+{% endif %}
 {% if page.published %}
 <section class="published" id="published">
   <h2>The whole of this run is a release asset</h2>

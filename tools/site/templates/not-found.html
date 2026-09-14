@@ -1,0 +1,42 @@
+{# The page the host serves where no page is.
+
+   Written by this build rather than left to the host's own, so that a reader who mistyped a
+   run or followed a link to a run this site no longer publishes is one click from the right
+   one rather than at a dead end with nothing on it.
+
+   Every link here is root-relative, because this one file is served at every address that
+   holds no page: a relative link would resolve against whatever the reader typed. For the
+   same reason the page states no canonical link, being the canonical version of nothing. #}
+{% extends "base.html" %}
+
+{% block strip %}
+<header class="strip strip--run">
+  <h1 class="strip__title">No page here</h1>
+  <p class="strip__facts">
+    <span class="chip chip--rule">404</span>
+  </p>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="index" id="elsewhere">
+  <h2>Where the pages are</h2>
+  <p>This address holds no page. Nothing has been removed: every run this site has published is still under the runs index, and the whole of each one is a release asset its own page names.</p>
+  <ul class="files__list">
+    <li><a href="{{ root }}index.html">The landing page</a></li>
+    <li><a href="{{ root }}runs/index.html">Every published run</a></li>
+    <li><a href="{{ root }}method/index.html">What the tool computes</a></li>
+  </ul>
+</section>
+
+{% if page.benchmarks %}
+<section class="index" id="benchmarks">
+  <h2>The benchmarks</h2>
+  <ul class="files__list">
+    {% for benchmark in page.benchmarks %}
+    <li><a href="{{ root }}{{ benchmark.slug }}/index.html">{{ benchmark.name }}</a> <span class="ink-2">{{ benchmark.runs|length }} runs</span></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

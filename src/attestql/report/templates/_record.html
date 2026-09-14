@@ -2,7 +2,12 @@
 
    The record holds every row of its result, so the rows are inside a disclosure and the
    count is on the summary line: a reader who wants them opens them, and a reader who
-   wants the hash reads it without waiting for a thousand rows. #}
+   wants the hash reads it without waiting for a thousand rows.
+
+   The rows on the page are the first of them and the summary says how many, because a page
+   that laid out every row of a ten thousand row result is a document a browser works
+   through however little of it anybody reads. The whole result is in the JSON copied beside
+   the page, and the line under the table links it. #}
 {% macro record_block(record, rows_table) %}
 <article class="record record--{{ record.side }}" id="record-{{ record.side }}">
   <h3 class="record__name">{{ record.side }}: <span class="mono">{{ record.file }}</span></h3>
@@ -26,8 +31,11 @@
   </p>
   {% endfor %}
   <details class="record__result">
-    <summary>the result this record holds, {{ record.result.total }}</summary>
+    <summary>the result this record holds, {{ record.result.total }}{% if record.result.partial %}, {{ record.result.rows_shown }} of them here{% endif %}</summary>
     {{ rows_table(record.result) }}
+    {% if record.result.partial %}
+    <p class="record__whole ink-2">The whole result is in <a href="{{ record.file }}"><span class="mono">{{ record.file }}</span></a>, beside this page.</p>
+    {% endif %}
   </details>
   <details class="record__block">
     <summary>what ran, and where</summary>
