@@ -61,6 +61,8 @@ there discards an EQUAL or NOT_EQUAL that did not rest on the abandoned search. 
 recorded decision of 2026-09-10 (the question is an ERROR) and the branch keeps it; whether the
 verdict should instead stand with the secondary reading marked as refused is a question about the
 counterexample record's shape and is the owner's to answer.
+Answered 2026-09-14: the owner keeps the recorded decision. A budget hit is the question's ERROR,
+and the counterexample record's shape does not change.
 
 ## What was verified clean
 

@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use AttestQL in a paper or a benchmark audit, cite it as below and name the release you ran."
+title: "AttestQL"
+abstract: "Audit text-to-SQL gold and predictions on PostgreSQL or SQLite with typed replay evidence: run both statements on the shipped data, compare them with duplicates, order and declared types kept beside the benchmark's own set reading, and write an evidence record and the differing rows for every disagreement."
+type: software
+authors:
+  - family-names: "Le"
+    given-names: "Hoang"
+repository-code: "https://github.com/ivermin1123/attestql"
+url: "https://attestql.com"
+license: Apache-2.0
+version: "0.3.1"
+date-released: "2026-09-12"
+keywords:
+  - text-to-sql
+  - benchmark
+  - evaluation
+  - sql
+  - postgresql
+  - sqlite
+  - audit
