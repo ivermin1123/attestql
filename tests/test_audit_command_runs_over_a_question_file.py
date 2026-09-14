@@ -1239,7 +1239,7 @@ def test_a_reading_this_tool_will_not_finish_is_one_question_s_error_line(
     side, because the reading is around the two statements rather than either of them, and the
     line names the step the way a backend's refusal names its own.
     """
-    monkeypatch.setattr(compare, "PERMUTATION_NODE_BUDGET", 3)
+    monkeypatch.setattr(compare, "PERMUTATION_WORK_BUDGET", 3)
     names = (("a", "text"), ("b", "text"), ("c", "text"))
     write(tmp_path / "questions.json", [question(207, "toxicology", ELEMENTS)])
     write(tmp_path / "predictions.json", {"207": ELEMENTS_ONE_ROW})
@@ -1258,7 +1258,7 @@ def test_a_reading_this_tool_will_not_finish_is_one_question_s_error_line(
 
     assert "ERROR" in lines.written[0]
     assert "run: comparison:" in lines.written[0]
-    assert "partial orders this tool will try" in lines.written[0]
+    assert "rows of comparison this tool will spend" in lines.written[0]
     assert summary.errors[0].step == "comparison"
     assert summary.errors[0].side == "run"
     assert summary.question_directories == (), "a question that errored writes no directory"

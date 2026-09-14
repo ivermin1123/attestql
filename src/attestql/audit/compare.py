@@ -315,25 +315,39 @@ class Comparison:
     disagreement to explain and a NOT_COMPARABLE names its own preconditions."""
 
 
-PERMUTATION_NODE_BUDGET = 1_000_000
-"""How many partial column orders the test-suite search will try before it refuses.
+PERMUTATION_WORK_BUDGET = 20_000_000
+"""How many rows of comparison the test-suite search will spend on one pair before it refuses.
 
 The search asks whether some order of the second result's columns makes the two results
 equal, which is what the reference evaluator asks. It is pruned by value set: a column may
 stand where a gold column stands only if every value it holds is a value that column holds,
 which on every result this project has measured leaves one order or none. A result whose
 columns all hold the same values prunes nothing, and then the search is a walk over every
-order of its columns, which at twelve columns is 479,001,600 leaves.
+order of its columns, which at twelve columns is 479,001,600 of them.
 
-The measurement: over the 256 pairs this project has, the 252 published counterexamples under
-``tools/site/data`` and the four the packaged demo compares, every result is one, two or three
-columns wide and the most nodes any search visits is 4. Walked to the end rather than stopped
-at the first order that agrees, the widest of them is 16 nodes, the whole of a three-column
-tree. Ten times that is 160, which would refuse a legitimate ten-column result before it
-started, so the bound is set by what it has to let through rather than by what has been seen:
-a result of nine columns whose every column holds the same values is 986,410 nodes and
-completes inside this, and one of ten columns is 9,864,101 and does not. Nothing between those
-two has been seen in a benchmark or a prediction file.
+**The unit is rows compared, not orders tried**, because the orders are not what costs: every
+complete order is one pass building the second result under it, so a search is orders times
+rows and a bound on orders alone calls a walk over a hundred rows and one over a million the
+same size. Each complete order is charged the rows it compares and each partial order one
+unit, which is what the walk between them costs.
+
+**The default is a measured time.** On the machine this was set on, a pair of eight columns
+whose every column holds every value and which no order of them equates spends 20,229,281
+units and takes 10.40 seconds, which is 1,944,582 rows compared per second. Three other
+shapes of the same pair agree within a quarter: seven columns and 500 rows at 2,428,904 a
+second, eight columns and 100 rows at 2,107,924, six columns and 5,000 rows at 2,391,609. The
+bound is the slowest of those times ten seconds, to one significant figure, so a search that
+reaches it has taken about ten seconds of one core here.
+
+**That is not a wall clock and must not be read as one.** The rate is this machine's; a
+slower one spends the same units over more seconds, and ``--statement-timeout`` is set on the
+database session and covers nothing this comparison does after the rows are back. What the
+bound guarantees is that the work is finite and named, not when it ends.
+
+What it costs a real pair: over the 256 this project has, the 252 published counterexamples
+under ``tools/site/data`` and the four the packaged demo compares, the most any search spends
+is 4 units, the widest paired result is 3 columns and the longest is 1,664 rows. The bound is
+five million times the largest of those.
 
 Past it the question is an ERROR naming this bound, and that is a departure from the reference
 evaluator, which has no bound and would go on. ``docs/audit-command.md`` says so where the
@@ -528,9 +542,12 @@ def _admitted_column_permutations(
     columns are forty thousand orders here and sixteen million there.
 
     A pair whose columns all hold the same values prunes nothing, and then this is a walk over
-    every order of the columns. The partial orders are counted and the search refuses past
-    ``PERMUTATION_NODE_BUDGET`` rather than going on, which is where this tool departs from the
-    evaluator it otherwise reproduces.
+    every order of the columns. What the walk costs is counted and the search refuses past
+    ``PERMUTATION_WORK_BUDGET`` rather than going on, which is where this tool departs from the
+    evaluator it otherwise reproduces. The count is the rows the caller compares, because that
+    is where the time goes: every complete order costs one pass over the second result, and a
+    count of orders alone would call a search over a hundred rows and one over a million the
+    same size.
     """
     gold_holds = [{row[column] for row in gold} for column in range(columns)]
     second_holds = [{row[column] for row in second} for column in range(columns)]
@@ -542,24 +559,31 @@ def _admitted_column_permutations(
         )
         for column in range(columns)
     ]
+    rows = len(second)
+    spent = 0
 
-    visited = 0
+    def refuse() -> ComparisonRefused:
+        return ComparisonRefused(
+            f"the search for a column order making the two results equal passed the "
+            f"{PERMUTATION_WORK_BUDGET} rows of comparison this tool will spend on one, over "
+            f"{columns} columns whose values do not tell them apart and {rows} rows that every "
+            f"order of them is compared over. The reading this search answers is BIRD's own "
+            f"test-suite check, which has no such bound, so this question is an error here "
+            f"rather than a number that reading would eventually reach."
+        )
 
     def extend(taken: tuple[int, ...]) -> Iterator[tuple[int, ...]]:
-        nonlocal visited
-        visited += 1
-        if visited > PERMUTATION_NODE_BUDGET:
-            raise ComparisonRefused(
-                f"the search for a column order making the two results equal passed the "
-                f"{PERMUTATION_NODE_BUDGET} partial orders this tool will try, over "
-                f"{columns} columns whose values do not tell them apart. The reading this "
-                f"search answers is BIRD's own test-suite check, which has no such bound, so "
-                f"this question is an error here rather than a number that reading would "
-                f"eventually reach."
-            )
+        nonlocal spent
         if len(taken) == columns:
+            # What the caller is about to do with this order: one pass over the rows.
+            spent += rows
+            if spent > PERMUTATION_WORK_BUDGET:
+                raise refuse()
             yield taken
             return
+        spent += 1
+        if spent > PERMUTATION_WORK_BUDGET:
+            raise refuse()
         for candidate in admitted[len(taken)]:
             if candidate not in taken:
                 yield from extend((*taken, candidate))
@@ -1108,7 +1132,7 @@ __all__ = [
     "MECHANISM_TRUNCATION",
     "MECHANISM_TYPE",
     "ORDERING_KEY_NAMES_NO_COLUMN",
-    "PERMUTATION_NODE_BUDGET",
+    "PERMUTATION_WORK_BUDGET",
     "PROJECTION_NAMES_READING",
     "SECOND_RECORD_FILE",
     "SIDE_GOLD",

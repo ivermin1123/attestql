@@ -277,13 +277,26 @@ finish inside 30 s there alone.
   second departure is a bound: the search for a column order that makes the two results equal is
   pruned by value set, which on every result this project has measured leaves one order or none,
   but a pair whose columns all hold the same values prunes nothing and the search is then a walk
-  over every order of the columns, 479,001,600 leaves at twelve of them. Past 1,000,000 partial
-  orders the question is an ERROR naming that bound, where the evaluator has no bound and would
-  go on. The measurement behind the number: over the 256 pairs this project has, the widest
-  result is three columns and the most partial orders any search visits is 4; the bound is set
-  instead by what it has to let through, which is that a nine-column result whose every column
-  holds the same values is 986,410 partial orders and completes, and a ten-column one is
-  9,864,101 and does not.
+  over every order of the columns, 479,001,600 of them at twelve columns, each compared over
+  every row. **Past 20,000,000 rows of comparison the question is an ERROR naming that bound**,
+  where the evaluator has no bound and would go on. The bound is on rows compared and not on
+  orders tried, because the orders are not what costs: a complete order is one pass over the
+  second result, so the work is orders times rows and a bound on orders alone would call a walk
+  over a hundred rows and one over a million the same size. Each complete order is charged the
+  rows it compares and each partial order one unit.
+- What that number was measured against, and what it does not promise. A pair of eight columns
+  whose every column holds every value and which no order of them equates spends 20,229,281 units
+  and takes 10.40 seconds on the machine this was set on, which is 1,944,582 rows compared per
+  second; three other shapes of the same pair agree within a quarter (2,428,904 a second at seven
+  columns and 500 rows, 2,107,924 at eight columns and 100 rows, 2,391,609 at six columns and
+  5,000 rows). The bound is the slowest of those rates times ten seconds, to one significant
+  figure. **It is not a wall-clock guarantee and must not be read as one:** the rate is one
+  machine's, a slower one spends the same units over more seconds, and `--statement-timeout` is
+  set on the database session and covers nothing a comparison does after the rows are back. What
+  the bound guarantees is that the work is finite and named. What it costs a real pair: over the
+  256 this project has, the 252 published counterexamples and the four the demo compares, the
+  most any search spends is 4 units, the widest paired result is three columns and the longest is
+  1,664 rows, so the bound is five million times the largest measured spend.
 - A pair of numbers equal under R-ORD is not therefore equal under R-SET: R-ORD compares the
   canonical rendering, where a numeric is written at six decimals, and R-SET compares the values
   as the result returned them, so two numbers that first differ past the sixth decimal are EQUAL
