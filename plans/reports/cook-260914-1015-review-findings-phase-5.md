@@ -52,6 +52,10 @@ before a fetch, so the refusal happens before a row becomes a Python object. SQL
 before reading, so the backend fetches one row past the bound and refuses on what it holds: one
 page more than the budget, never the whole result.
 
+One thing this commit did not cover, found by the merge gate and fixed in `8cdd4f7` below:
+the SQLite content digest of `--fixture-digest full` is a second whole-relation read and went
+through an unbounded `fetchall`.
+
 Files: `src/attestql/audit/backend.py` (`ROW_BUDGET`,
 `refuse_a_result_past_the_row_budget`), `src/attestql/audit/postgres.py`,
 `src/attestql/audit/sqlite.py`, `docs/audit-command.md`, and two test files. Four tests, two per
@@ -79,6 +83,11 @@ ninth and the tenth.
 This is a deliberate departure from the reference evaluator the tool imitates, and it is written
 down in `docs/audit-command.md` where `bird_ex` is described, beside the partial-order bound. The
 claims register is the coordinator's and was not touched.
+
+**The merge gate replaced this whole bound**, unit and default and measurements together; `b5d3050`
+below is what stands, and every number in the two paragraphs above is superseded by the ones there.
+The bound on partial orders did not bound what it claimed to bound, and two of its measurements did
+not survive re-measurement.
 
 Files: `src/attestql/audit/compare.py` (`PERMUTATION_NODE_BUDGET`, `ComparisonRefused`),
 `src/attestql/audit/cli.py`, `docs/audit-command.md`, and two test files. Three tests; the first
@@ -254,11 +263,126 @@ cannot hold beside ARCH-03; the seventeen tests the other commits added are what
   as `test_report_tokens_meet_contrast.py`, reporting a credential-shaped value. No credential was
   read or printed; the match is on a filename.
 
+## Merge-gate fixes
+
+One reviewer read the seven commits and returned MERGE AFTER FIXES. Three more commits, on top and
+never rewriting what is under them, each gate-green through the chained form and each with a test
+that fails before it where behaviour changes.
+
+### 8. `b5d3050` fix(audit): the comparison budget counts the rows it compares, not the orders it tries
+
+The blocking one, and the reviewer was right: the bound counted partial orders, and the orders are
+not what costs. `agrees()` rebuilds the whole second result at every complete order, so the cost is
+orders times rows times columns. The reviewer measured 9.82 seconds for a search of 109,601 orders
+at 500 rows; the same search over a result at the 200,000-row budget would have run for hours of one
+core with no error fired, and `--statement-timeout` is set on the database session and ends when the
+rows come back.
+
+The unit is rows compared now. Each complete order is charged the rows it compares and each partial
+order one unit, and the constant is `PERMUTATION_WORK_BUDGET`. The accounting is exact: the
+pathological pair below spends its computed units under a budget of exactly that number and refuses
+under one less, which is how the count was checked rather than assumed.
+
+**The default, measured on this machine.** A pair of eight columns whose every column holds every
+value and which no order of them equates spends 20,229,281 units in 10.40 seconds, which is
+1,944,582 rows compared per second. Three other shapes of the same pair agree within a quarter:
+2,428,904 a second at seven columns and 500 rows, 2,107,924 at eight columns and 100 rows, 2,391,609
+at six columns and 5,000 rows. The bound is the slowest of those rates times ten seconds, to one
+significant figure: **20,000,000**. It is not a wall-clock guarantee and the document says so.
+
+**What it costs a real pair, re-measured.** Every one of the 252 published counterexamples and the
+four the demo compares was replayed through `test_suite_ex` with the real code, and the work each
+spends was found by bisecting the budget, the smallest budget a pair completes under being what it
+spends. The most any of them spends is 4 units, the widest paired result is 3 columns and the
+longest is 1,664 rows, so the bound is five million times the largest measured spend.
+
+Files: `src/attestql/audit/compare.py`, `docs/audit-command.md`, and two test files. Three
+tests, at the budget and one past it, plus
+`test_the_budget_counts_the_rows_compared_and_not_the_orders_tried`, which is the fix itself:
+the same three-column search over two rows and over six costs 5 units and 9. Gate green.
+
+### 9. `8cdd4f7` fix(sqlite): the content digest is bounded by the row budget it left uncovered
+
+PERF-01 bounded the results of statements and left the other read that holds a whole relation alone.
+On SQLite, `--fixture-digest full` runs `SELECT *` over every table a gold names through one
+`fetchall` and renders every row, which is the data itself in this process at once.
+
+A table longer than the budget stops the run: a tool error and exit 2 rather than a question's ERROR
+line, because the digest is taken once before the first question, so there is no question whose line
+could carry it and nothing has been audited when it happens. The message names the table, its exact
+length, the bound, and that the default digest of schema and exact row counts reads no rows. The
+refusal has a type of its own, `ContentDigestRefused`, because a backend refusal during the fixture
+measurement is recorded and the run goes on, which is right for a server that will not answer and
+wrong for this. The rows are read ten thousand at a time, so what is held when the bound is crossed
+is the pages read so far. PostgreSQL digests on the server and holds nothing here.
+
+Files: `src/attestql/audit/backend.py`, `src/attestql/audit/sqlite.py`, `src/attestql/audit/cli.py`,
+`docs/audit-command.md`, `tests/test_audit_audits_a_sqlite_file.py`. Three tests on a generated
+table: the boundary is digested whole, one row past it refuses, and a whole run asked for the full
+digest over it exits 2 having written no summary. The document also states, in the same place, that
+the shuffle and the plan-variant executions are bounded by the same constant, which they are: every
+execution on both engines goes through the one `_execute` each backend has. Gate green.
+
+### 10. `f287657` fix(audit): five small things the reviewer found beside the two budgets
+
+The cursor protocol's `rowcount` carried its explanation as a class-body expression standing after
+the stub body, and it is the method's docstring now. ADR-0014's estimate still listed
+`kernel/ports.py` among what stays, and gained one `Amended 2026-09-14` clause. The record builder's
+first test was named for the kernel ports it was built through and is named for what it tests now.
+`tools/report-stress/build.py` called `test_suite_ex` outside any handler, so the one refusal that
+reading can raise would have left a maintainer script as a traceback; it is handled the way the run
+loop handles it, as an error line under the run's own side with no directory written.
+`package-lock.json` was the only pinned tree in this repository with nothing bumping it, and
+Dependabot tracks the npm ecosystem weekly beside the other three.
+
+Files: `src/attestql/audit/postgres.py`,
+`docs/adr/0014-sqlite-backend-behind-the-same-evidence-record.md`,
+`tests/test_evidence_record_builder.py`, `tools/report-stress/build.py`, `.github/dependabot.yml`,
+`tests/test_the_deploy_runs_the_wrangler_it_locked.py`. One test that fails first,
+`test_the_locked_tree_is_one_dependabot_updates`; the other four change no behaviour a test can
+reach. Gate green.
+
+### The numbers this report had wrong
+
+**The 23.** The commit body of `92ca39c` says "the suite is 23 tests shorter". 23 is the number of
+collected cases, not of tests. 17 of them are tests of the removed cluster: 16 in
+`tests/test_stub_surface.py` (3 parametrisations of the stub call table, 6 of the context's refused
+fields, 4 of its required values, and three tests of one case each) and 1 in
+`tests/test_evidence_record_builder.py`. The other 6 are the parametrisations `test_boundary.py`
+makes over every source file, which lost their file when `kernel/ports.py` was deleted; a source
+file contributes exactly 6, which is what the collector says today. The reconciliation table below
+counts collected cases and is right as it stands; the commit message's word "tests" is wrong, and
+the commit is not rewritten.
+
+**The 4 partial orders and the 16.** The sentence "over the 256 pairs this project has, every result
+is one, two or three columns wide and the most nodes any search visits is 4 ... the widest of them
+is 16 nodes" did not survive re-measurement with the real code. The widest paired result is 3
+columns, which stands. The maximum node count is 2, not 4, and the 16 was the size of a
+three-column tree walked to the end, which no published pair walks. The sentence is not repaired but
+replaced, because the unit it counted is no longer the unit the bound is on: what is measured now is
+4 units of rows compared, over the same 252 pairs and the same four demo pairs.
+
+**The 15,429 beside the pairs.** It is the longest published result of any kind, and the longest
+published *pair* is 1,664 rows. The row budget's own measurement, which is about results and not
+pairs, is unaffected.
+
+### Checks after the merge-gate fixes
+
+`just check` green at `f287657`: **1,283 passed and 34 skipped**, then 34 in the PostgreSQL sandbox
+and 130 in the SQLite sandbox. `attestql demo` still produces the same run as `main` at `9a545a0`:
+the printed block is identical line for line, both runs write the same 26 files, and 22 of the 24
+JSON documents are byte-identical once the clock, the run id and the hashes over them are set aside,
+the two others being the fixture's per-run change counter and two elapsed times.
+`uv run python tools/site/build.py` builds the 121 published runs into a scratch directory: 2,181
+files and 32,670,870 bytes, the same numbers as before these fixes.
+
 Status: DONE
 Summary: The seven findings of phase 5 are closed as seven commits in the dispatch's order, each
-gate-green through the chained form, with a test that fails first wherever behaviour changed and a
-stated reason where none was added.
-Concerns: the suite is six tests smaller than the stated acceptance because ARCH-03 removed 23
-tests of the cluster it deleted; and SEC-02's lockfile is asserted but never exercised, because
-running wrangler or deploying is out of scope for a worker, so the first real proof of `npm ci` in
-that workflow is its next run on `main`.
+gate-green through the chained form, and the merge gate's four fixes as three more on top of them,
+with a test that fails first wherever behaviour changed and a stated reason where none was added.
+Concerns: the suite is one test smaller than the stated acceptance of 1,284, at 1,283, because
+ARCH-03 removed 17 tests of the cluster it deleted and six parametrisations went with the file;
+SEC-02's lockfile is asserted but never exercised, because running wrangler or deploying is out of
+scope for a worker, so the first real proof of `npm ci` in that workflow is its next run on `main`;
+and the comparison budget's default is a time on one machine, which is stated as such everywhere it
+appears and is the honest limit of what a work bound can promise.
