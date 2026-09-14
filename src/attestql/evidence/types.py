@@ -181,10 +181,10 @@ class SessionSettings:
     PostgreSQL that is the statement timeout, the search path, the server version, whether
     the transaction was read only, what the gather was free to do, the server encoding, and
     the provider, ICU locale and version of the collation that sorted the text. On SQLite it
-    is the nine a file can be asked for: ``sqlite_version``, ``encoding``,
+    is the ten a file can be asked for: ``sqlite_version``, ``encoding``,
     ``compile_options``, ``collation_list``, ``case_sensitive_like``,
-    ``reverse_unordered_selects``, ``query_only``, ``journal_mode`` and ``data_version``
-    (ADR-0014). None of it blocks a comparison, and all of it is in the record so a reader
+    ``reverse_unordered_selects``, ``query_only``, ``journal_mode``, ``data_version`` and
+    ``automatic_index`` (ADR-0014, amended 2026-09-13 for the tenth). None of it blocks a comparison, and all of it is in the record so a reader
     can see the session that produced the result.
 
     ``recorded`` states the session outside any one statement's own transaction. The

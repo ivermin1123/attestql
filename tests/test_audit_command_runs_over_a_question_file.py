@@ -46,6 +46,7 @@ from attestql.audit.cli import (
     NoStatement,
     ToolError,
     audit,
+    connect_and_audit,
     main,
     parse_arguments,
     read_predictions,
@@ -264,6 +265,33 @@ def test_an_id_too_long_to_be_a_directory_name_is_refused_before_the_run(
     path = write(tmp_path / "questions.json", [question(10**300, "formula_1", ELEMENTS)])
     with pytest.raises(ToolError, match="which is outside 0 to 999999999"):
         read_questions(path)
+
+
+def test_a_question_file_no_run_could_use_is_refused_before_a_database_is_opened(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The refusal the file earns, ahead of the one the connection would earn.
+
+    The command read the file inside the run and the run was handed a backend, so a SQLite
+    dsn was opened and its data copied, and a PostgreSQL dsn was connected to and a scratch
+    schema locked, for a run whose first act was to refuse the file it was given. Here the
+    database is not there either: the answer is about the file, which is what was wrong.
+    """
+    path = write(tmp_path / "questions.json", [question(10**12, "formula_1", ELEMENTS)])
+    status = connect_and_audit(
+        options(
+            tmp_path,
+            engine=SQLITE,
+            dsn=str(tmp_path / "no-such-database.sqlite"),
+            questions=path,
+        ),
+        Lines(),
+    )
+
+    assert status == 2
+    said = capsys.readouterr().err
+    assert "which is outside 0 to 999999999" in said
+    assert "the database could not be reached" not in said, "the file is answered for first"
 
 
 def test_the_largest_id_the_packaged_demo_audits_is_inside_the_bound() -> None:

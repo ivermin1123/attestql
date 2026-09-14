@@ -206,12 +206,19 @@ def test_the_command_gives_the_backend_back_when_the_run_is_over(tmp_path: Path)
 
 
 def test_a_run_that_failed_gives_the_backend_back_as_well(tmp_path: Path) -> None:
-    """The close is in a finally, so a run that could not start still releases what it took."""
+    """The close is in a finally, so a run that could not start still releases what it took.
+
+    What stops this one is the output directory: it holds a file no audit wrote, which is
+    refused untouched, and by then the backend is open.
+    """
     backend = FakeBackend({}, row_counts={"atom": 2})
+    out = tmp_path / "audit"
+    out.mkdir()
+    (out / "a-file-of-the-reader-s-own.txt").write_text("kept", encoding="utf-8")
     options = AuditOptions(
         dsn="host=nowhere dbname=none",
-        questions=tmp_path / "no-such-question-file.json",
-        out=tmp_path / "audit",
+        questions=_questions(tmp_path),
+        out=out,
         engine=Engine(
             name="an-engine-of-the-test's-own",
             connect=_always(backend),
@@ -222,3 +229,35 @@ def test_a_run_that_failed_gives_the_backend_back_as_well(tmp_path: Path) -> Non
 
     assert connect_and_audit(options, Lines()) == 2
     assert backend.closed == 1
+
+
+def test_a_question_file_no_run_could_use_takes_no_backend_to_give_back(tmp_path: Path) -> None:
+    """Nothing is given back because nothing was taken.
+
+    The file is read before the connect, so a question file this run cannot use costs no
+    session, no private copy of a SQLite database and no scratch schema. The run reads the
+    file again for itself; what is checked here is that the refusal comes first.
+    """
+    backend = FakeBackend({}, row_counts={"atom": 2})
+    opened = 0
+
+    def connect(target: str, /, *, scratch: str) -> Backend:
+        nonlocal opened
+        opened += 1
+        return backend
+
+    options = AuditOptions(
+        dsn="host=nowhere dbname=none",
+        questions=tmp_path / "no-such-question-file.json",
+        out=tmp_path / "audit",
+        engine=Engine(
+            name="an-engine-of-the-test's-own",
+            connect=connect,
+            parse=parse_statement,
+            parser=PARSER,
+        ),
+    )
+
+    assert connect_and_audit(options, Lines()) == 2
+    assert opened == 0, "the file is answered for before a database is opened"
+    assert backend.closed == 0

@@ -535,11 +535,14 @@ class SqliteBackend:
         return ""
 
     def session_settings(self) -> SessionSettings:
-        """The nine settings a SQLite file can be asked for, and the seven it does not hold.
+        """The ten settings a SQLite file can be asked for, and the seven it does not hold.
 
-        Read once and repeated after that, as the identity is. None of the nine blocks a
+        Read once and repeated after that, as the identity is. None of the ten blocks a
         comparison: a SQLite record states no session setting that decides comparability,
-        which is why the seven named fields are absent and everything read is recorded.
+        which is why the seven named fields are absent and everything read is recorded. The
+        tenth is ``automatic_index``, recorded since 2026-09-13 because the shuffle probe
+        turns it off for a plan variant and gives it back after, and a record states the
+        value that was in force over its own statement.
         """
         if self._session_settings is None:
             recorded = {

@@ -61,7 +61,12 @@ from attestql.evidence.serialize import (
     typed_row,
     typed_value,
 )
-from attestql.evidence.types import ENGINE_SQLITE, QuestionMetadata, StatementSource
+from attestql.evidence.types import (
+    ENGINE_SQLITE,
+    QuestionMetadata,
+    SessionSettings,
+    StatementSource,
+)
 from attestql.kernel.types import ColumnType, ExecutionLimits, ExecutionResult
 
 TIMEOUT_SECONDS = 10
@@ -212,6 +217,33 @@ def test_the_session_states_the_ten_readings_and_none_of_the_seven_preconditions
         "what is recorded is what the file was observed doing"
     )
     assert backend.session_settings() is settings, "read once for a whole run"
+
+
+COUNTED_IN_WORDS = {8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve"}
+"""The number a sentence about the readings spells, for the counts that sentence can hold."""
+
+
+def test_the_two_sentences_that_count_the_readings_count_the_ones_there_are(
+    backend: SqliteBackend,
+) -> None:
+    """A contract that states a number the code contradicts is worse than one stating none.
+
+    Both of these said nine after ``automatic_index`` became the tenth: the backend's own
+    sentence and the record type that lists the keys by name. A reader checking a record
+    against the contract was told that a key in front of them does not exist, which is the
+    one thing a record type is read for.
+    """
+    recorded = backend.session_settings().recorded
+    counted = COUNTED_IN_WORDS[len(recorded)]
+
+    read_back = " ".join((SqliteBackend.session_settings.__doc__ or "").split())
+    assert f"The {counted} settings a SQLite file can be asked for" in read_back
+    assert f"None of the {counted} blocks a comparison" in read_back
+
+    stated = " ".join((SessionSettings.__doc__ or "").split())
+    assert f"On SQLite it is the {counted} a file can be asked for" in stated
+    for name in recorded:
+        assert f"``{name}``" in stated, name
 
 
 def test_each_storage_class_comes_back_as_the_python_type_a_record_can_render(

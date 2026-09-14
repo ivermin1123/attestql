@@ -32,13 +32,16 @@ whatever it holds, because a URI is where a password is written, and so is a key
 that names one; the password comes from ``PGPASSWORD`` or ``~/.pgpass`` through the
 driver, is never read by this module, and appears in no line, file or error.
 
-**Nothing aborts a run except the tool failing to start.** Failing to start is reading the
-question file, reading the predictions file, making the output directory and clearing the
-run before it out of it, and asking the backend what it is; nothing after that. A gold that
-does not parse, a statement that times out, a table this database does not hold, a value
-with no rendering, a server that went away between two questions: each is that question's
-``ERROR`` line with the message, an entry in the summary's ``errors``, and the run goes on
-to the next question and still writes ``summary.json``.
+**What aborts a run is the tool failing to start, and a write it cannot make.** Failing to
+start is reading the question file, reading the predictions file, making the output
+directory and clearing the run before it out of it, and asking the backend what it is. After
+that one thing still stops the run: a question directory or a summary that cannot be
+written. A run that cannot write its evidence has failed as a tool whatever it found, so it
+is a ``ToolError`` and exit 2 rather than a traceback and exit 1. A gold that does not parse,
+a statement that times out, a table this database does not hold, a value with no rendering, a
+server that went away between two questions: each is that question's ``ERROR`` line with the
+message, an entry in the summary's ``errors``, and the run goes on to the next question and
+still writes ``summary.json``.
 
 **An error is not the exit status.** ADR-0013 point 2 fixes 0 for no disagreement, 1 for
 at least one NOT_EQUAL and 2 for a tool error, and a question the run could not answer is
@@ -183,7 +186,8 @@ Nine digits is the bound because it is far past every id any published BIRD file
 largest is 1533) and past the six-digit synthetic ids the packaged demo audits, and short
 enough that ``q<id>`` is a name every filesystem can hold. What matters is not the number: it
 is that an id outside it is refused before the backend opens, by a message naming the entry,
-rather than by a traceback in the middle of a run."""
+rather than by a traceback in the middle of a run. ``connect_and_audit`` reads the question
+file before it connects for that reason."""
 SUMMARY_FORMAT = "attestql/audit/summary/2"
 """What the layout of ``summary.json`` is, for a reader who opens one.
 
@@ -1992,6 +1996,17 @@ def connect_and_audit(options: AuditOptions, writer: Writer) -> int:
     of the run is read by. Nothing below this line asks which engine it is, so a second
     engine is a second entry in the registry and a branch nowhere.
     """
+    try:
+        read_questions(options.questions, options.ids)
+    except ToolError as unusable:
+        # Read before anything is opened, and read again by the run for itself. The read
+        # needs no backend and the file is where a run is refused most often, so a question
+        # file this run cannot use is its own refusal rather than a session opened, a copy of
+        # the data made and a scratch schema locked for a run that then refuses. What is
+        # carried past this line is nothing: the run reads the file itself, so there is no
+        # second reading of it for a caller to have to keep in step with the first.
+        print(f"{PROGRAM}: {unusable}", file=sys.stderr)
+        return 2
     try:
         backend = options.engine.connect(options.dsn, scratch=options.scratch_schema)
         _say_what_was_copied(backend, options.dsn)
