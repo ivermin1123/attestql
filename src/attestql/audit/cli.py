@@ -97,6 +97,7 @@ from attestql.audit.compare import (
     SIDE_PREDICTION,
     SIDE_RUN,
     Comparison,
+    ComparisonRefused,
     SideFailed,
     compare_statements,
     record_statement,
@@ -1303,7 +1304,8 @@ def _audit_questions(
             # is the run: a refusal that named nothing narrower came from around the two
             # statements rather than from either of them.
             refusal = failed.failed
-            step = refusal.step if isinstance(refusal, BackendRefused) else "statement"
+            named = (BackendRefused, ComparisonRefused)
+            step = refusal.step if isinstance(refusal, named) else "statement"
             message = " ".join(str(refusal).split())
             if isinstance(refusal, StatementTimedOut):
                 counted.timed_out.setdefault(failed.side, []).append(question.question_id)

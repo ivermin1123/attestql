@@ -273,7 +273,17 @@ finish inside 30 s there alone.
   keeps duplicate rows, keeps row order when the gold's text holds ORDER BY, and still admits a
   projection whose columns came back in another order. Its DISTINCT strip is not mirrored, because
   that evaluator rewrites both statements and runs them again and these rows are already fetched,
-  so it stands for that evaluator's answer only where neither statement holds a DISTINCT.
+  so it stands for that evaluator's answer only where neither statement holds a DISTINCT. The
+  second departure is a bound: the search for a column order that makes the two results equal is
+  pruned by value set, which on every result this project has measured leaves one order or none,
+  but a pair whose columns all hold the same values prunes nothing and the search is then a walk
+  over every order of the columns, 479,001,600 leaves at twelve of them. Past 1,000,000 partial
+  orders the question is an ERROR naming that bound, where the evaluator has no bound and would
+  go on. The measurement behind the number: over the 256 pairs this project has, the widest
+  result is three columns and the most partial orders any search visits is 4; the bound is set
+  instead by what it has to let through, which is that a nine-column result whose every column
+  holds the same values is 986,410 partial orders and completes, and a ten-column one is
+  9,864,101 and does not.
 - A pair of numbers equal under R-ORD is not therefore equal under R-SET: R-ORD compares the
   canonical rendering, where a numeric is written at six decimals, and R-SET compares the values
   as the result returned them, so two numbers that first differ past the sixth decimal are EQUAL

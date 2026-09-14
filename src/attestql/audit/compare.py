@@ -331,6 +331,47 @@ class Comparison:
     disagreement to explain and a NOT_COMPARABLE names its own preconditions."""
 
 
+PERMUTATION_NODE_BUDGET = 1_000_000
+"""How many partial column orders the test-suite search will try before it refuses.
+
+The search asks whether some order of the second result's columns makes the two results
+equal, which is what the reference evaluator asks. It is pruned by value set: a column may
+stand where a gold column stands only if every value it holds is a value that column holds,
+which on every result this project has measured leaves one order or none. A result whose
+columns all hold the same values prunes nothing, and then the search is a walk over every
+order of its columns, which at twelve columns is 479,001,600 leaves.
+
+The measurement: over the 256 pairs this project has, the 252 published counterexamples under
+``tools/site/data`` and the four the packaged demo compares, every result is one, two or three
+columns wide and the most nodes any search visits is 4. Walked to the end rather than stopped
+at the first order that agrees, the widest of them is 16 nodes, the whole of a three-column
+tree. Ten times that is 160, which would refuse a legitimate ten-column result before it
+started, so the bound is set by what it has to let through rather than by what has been seen:
+a result of nine columns whose every column holds the same values is 986,410 nodes and
+completes inside this, and one of ten columns is 9,864,101 and does not. Nothing between those
+two has been seen in a benchmark or a prediction file.
+
+Past it the question is an ERROR naming this bound, and that is a departure from the reference
+evaluator, which has no bound and would go on. ``docs/audit-command.md`` says so where the
+imitation is claimed: on a pathological pair this tool reports an error where BIRD's own
+scorer would eventually report a number.
+"""
+
+
+class ComparisonRefused(RuntimeError):
+    """A reading over two results this tool will not finish, named like a backend's refusal.
+
+    ``step`` is what a run's ERROR line carries in front of the message, the way a refusal
+    from a backend carries the step that refused. The reading is not the database's and not
+    the parser's, so it is neither of their refusals and has a type of its own.
+    """
+
+    def __init__(self, detail: str) -> None:
+        self.step = "comparison"
+        self.detail = detail
+        super().__init__(f"{self.step}: {detail}")
+
+
 class SideFailed(Exception):
     """A question that could not be answered, and the side of it that could not.
 
@@ -360,7 +401,7 @@ def sided(side: str) -> Generator[None]:
         yield
     except SideFailed:
         raise
-    except (StatementRefused, BackendRefused, UnsupportedValue) as failed:
+    except (StatementRefused, BackendRefused, ComparisonRefused, UnsupportedValue) as failed:
         raise SideFailed(side, failed) from failed
 
 
@@ -501,6 +542,11 @@ def _admitted_column_permutations(
     and drops it on the next line. That is its own rule applied one column earlier, and it
     is what keeps a wide result from being a walk over every column raised to itself: eight
     columns are forty thousand orders here and sixteen million there.
+
+    A pair whose columns all hold the same values prunes nothing, and then this is a walk over
+    every order of the columns. The partial orders are counted and the search refuses past
+    ``PERMUTATION_NODE_BUDGET`` rather than going on, which is where this tool departs from the
+    evaluator it otherwise reproduces.
     """
     gold_holds = [{row[column] for row in gold} for column in range(columns)]
     second_holds = [{row[column] for row in second} for column in range(columns)]
@@ -513,7 +559,20 @@ def _admitted_column_permutations(
         for column in range(columns)
     ]
 
+    visited = 0
+
     def extend(taken: tuple[int, ...]) -> Iterator[tuple[int, ...]]:
+        nonlocal visited
+        visited += 1
+        if visited > PERMUTATION_NODE_BUDGET:
+            raise ComparisonRefused(
+                f"the search for a column order making the two results equal passed the "
+                f"{PERMUTATION_NODE_BUDGET} partial orders this tool will try, over "
+                f"{columns} columns whose values do not tell them apart. The reading this "
+                f"search answers is BIRD's own test-suite check, which has no such bound, so "
+                f"this question is an error here rather than a number that reading would "
+                f"eventually reach."
+            )
         if len(taken) == columns:
             yield taken
             return
@@ -1098,6 +1157,7 @@ __all__ = [
     "MECHANISM_TRUNCATION",
     "MECHANISM_TYPE",
     "ORDERING_KEY_NAMES_NO_COLUMN",
+    "PERMUTATION_NODE_BUDGET",
     "PROJECTION_NAMES_READING",
     "SECOND_RECORD_FILE",
     "SIDE_GOLD",
@@ -1109,6 +1169,7 @@ __all__ = [
     "WIDTH_POLICY_VERSION",
     "BirdEx",
     "Comparison",
+    "ComparisonRefused",
     "Mechanism",
     "RecordedStatement",
     "SideFailed",
