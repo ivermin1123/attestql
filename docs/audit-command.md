@@ -216,6 +216,22 @@ the server's result buffer before this tool asks for anything, and the count is 
 cursor before a single row becomes a Python object, so what the bound keeps out of the process
 is the copy a record would be built from, which is the one that costs an object per cell.
 
+The same bound covers the other read that holds a whole relation, and with it every such read
+this tool makes. `--fixture-digest full` renders every row of every table a gold names in order
+to digest it, which on SQLite means reading those tables into this process; a table longer than
+200,000 rows there is **the run refusing to start**, naming the table, its exact length and the
+bound, and not one question's ERROR line. It is a tool error and exit 2 because the digest is
+taken once for the whole run before anything is audited, so there is no question whose line
+could carry it and nothing has been audited when it happens; the default digest, the schema and
+the exact row counts, is still available over the same tables and reads no rows at all. The
+rows are read a page at a time, so what is held when the bound is crossed is the pages read so
+far and not the table. On PostgreSQL the same digest is computed on the server, which hands
+back one string per table, so nothing there is bounded because nothing there is held.
+
+The shuffle and the plan-variant executions of the probes are bounded too, and by the same
+constant: both go through the one execute path each backend has, so a probe re-reading a result
+past the bound is that question's ERROR exactly as the first reading of it would be.
+
 ## The statement budget
 
 `--statement-timeout SECONDS`, 30 by default, bounds every statement the run sends, gold and

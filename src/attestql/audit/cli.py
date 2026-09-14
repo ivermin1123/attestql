@@ -78,6 +78,7 @@ from attestql.audit.backend import (
     READ_THROUGH_PRIVATE_COPY,
     Backend,
     BackendRefused,
+    ContentDigestRefused,
     PlannerStatistics,
     ShuffledCopies,
     StatementTimedOut,
@@ -1158,9 +1159,13 @@ def _run_fixture(backend: Backend, tables: Sequence[TableName], options: AuditOp
     read; the others are named in the summary, each under the word for what it is, and
     error on the lines of the questions that used them.
 
-    Nothing here ends a run. A backend that will not answer at all leaves the run without a
-    digest and with the reason recorded, and every question then fails on its own line with
-    the server's message rather than the run stopping with nothing audited.
+    Nothing here ends a run except one thing. A backend that will not answer at all leaves the
+    run without a digest and with the reason recorded, and every question then fails on its own
+    line with the server's message rather than the run stopping with nothing audited. The
+    exception is a table the content digest cannot read inside the row budget: the operator
+    asked for a digest of every row and there is no such digest to give, no question to attach
+    the refusal to, and the default digest over the same tables still exists, so that is a tool
+    error before anything has run rather than a line under every question.
     """
     if not tables:
         return _Measured(None, (), (), (), "", {})
@@ -1180,6 +1185,8 @@ def _run_fixture(backend: Backend, tables: Sequence[TableName], options: AuditOp
             directory=options.out,
             with_content_digests=options.with_content_digests,
         )
+    except ContentDigestRefused as refused:
+        raise ToolError(str(refused)) from refused
     except BackendRefused as refused:
         return _Measured(None, present, missing, lookup.unreadable, _refusal(refused), {})
     return _Measured(

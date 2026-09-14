@@ -33,6 +33,7 @@ from attestql.audit import sqlite
 from attestql.audit.backend import (
     READ_THROUGH_PRIVATE_COPY,
     BackendRefused,
+    ContentDigestRefused,
     ReadBackDrift,
     StatementTimedOut,
     TableName,
@@ -705,6 +706,51 @@ def test_a_result_past_the_row_budget_is_that_question_s_error_and_is_never_cut(
     assert "Nothing is cut" in refused.value.detail
 
 
+def _counted_table(path: Path, rows: int) -> Path:
+    """A file holding one table of exactly that many rows, generated rather than written."""
+    connection = sqlite3.connect(path)
+    with connection:
+        connection.execute("CREATE TABLE counted (i INTEGER)")
+        connection.executemany("INSERT INTO counted VALUES (?)", ((at,) for at in range(rows)))
+    connection.close()
+    return path
+
+
+def test_a_table_inside_the_row_budget_is_digested_whole(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The boundary is inside: a table exactly as long as the budget still has a digest."""
+    monkeypatch.setattr(sqlite, "ROW_BUDGET", 4)
+    backend = SqliteBackend.connect(str(_counted_table(tmp_path / "counted.sqlite", 4)))
+
+    digests = backend.content_digests([TableName("", "counted")])
+
+    assert digests["main.counted"].startswith("sha256:")
+
+
+def test_a_table_past_the_row_budget_stops_the_run_rather_than_being_digested(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The other whole-relation read this tool makes, and the only one that ends a run.
+
+    ``--fixture-digest full`` renders every row of every table a gold names, which is the
+    data itself in this process at once, and it went through one ``fetchall`` with nothing in
+    front of it. It is refused before the rows are held rather than after, and it is a tool
+    error and not a question's: the digest is taken once for the whole run before anything is
+    audited, so there is no question whose line could carry it, and the default digest over
+    the same tables is still there to be taken.
+    """
+    monkeypatch.setattr(sqlite, "ROW_BUDGET", 4)
+    backend = SqliteBackend.connect(str(_counted_table(tmp_path / "counted.sqlite", 5)))
+
+    with pytest.raises(ContentDigestRefused) as refused:
+        backend.content_digests([TableName("", "counted")])
+
+    assert "main.counted holds 5 rows, past the 4" in refused.value.detail
+    assert "--fixture-digest full" in refused.value.detail
+    assert "the default digest is the schema and the exact row counts" in refused.value.detail
+
+
 def test_the_envelope_goes_back_on_when_the_copies_could_not_be_made(
     backend: SqliteBackend, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1089,6 +1135,54 @@ def test_a_whole_audit_runs_on_a_sqlite_file_and_the_summary_says_which_engine(
     assert document["fixture"]["row_counts"] == {"main.drivers": 3, "main.results": 3}
     assert document["backend_identity"].startswith("SQLite ")
     assert document["effective_database_role"] == "file"
+
+
+def test_a_full_digest_over_a_table_past_the_row_budget_stops_before_a_question_runs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The refusal reaches the operator as the run refusing to start, and writes nothing.
+
+    The digest is taken once, before the first question, so there is no line to carry this
+    and nothing has been audited when it happens. The operator asked for a reading of every
+    row and is told the table, its length, the bound and that the default digest over the
+    same tables needs no such read.
+    """
+    monkeypatch.setattr(sqlite, "ROW_BUDGET", 4)
+    audited = _counted_table(tmp_path / "counted.sqlite", 5)
+    questions = tmp_path / "questions.json"
+    questions.write_text(
+        json.dumps(
+            {
+                "questions": [
+                    {
+                        "question_id": 1,
+                        "db_id": "counted",
+                        "question": "How many rows are there?",
+                        "evidence": "",
+                        "SQL": "SELECT count(*) FROM counted",
+                        "difficulty": "simple",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    options = AuditOptions(
+        dsn=str(audited),
+        questions=questions,
+        out=tmp_path / "audit",
+        engine=SQLITE,
+        fixture_digest="full",
+        data_as_of=datetime(2026, 9, 5, tzinfo=UTC),
+    )
+
+    status = connect_and_audit(options, Lines())
+
+    assert status == 2, "a run that cannot start is the tool failing and not a disagreement"
+    said = capsys.readouterr().err
+    assert "main.counted holds 5 rows, past the 4" in said
+    assert "the default digest is the schema and the exact row counts" in said
+    assert not (tmp_path / "audit" / SUMMARY_FILE).exists(), "nothing was audited"
 
 
 def test_the_summary_states_where_the_copies_were_made_and_not_what_was_asked_for(

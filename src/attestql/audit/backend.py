@@ -151,7 +151,30 @@ records this repository publishes under ``tools/site/data`` is 15,429 (Mini-Dev 
 `gpt-4-turbo` prediction), and the largest the packaged demo produces is 4. This is the first
 round number past ten times that measurement, so every result either of them holds is inside
 it by an order of magnitude, and a run that reaches it is reading something neither has seen.
+
+Two reads are bounded by it, because two reads hold a whole relation. One is a statement's
+result, on either engine, and that is the question's own error. The other is the SQLite
+content digest of ``--fixture-digest full``, which reads every row of every referenced table
+and renders it; that one is taken once for the whole run before any question, so it is a tool
+error rather than a question's, and ``ContentDigestRefused`` below is what carries it. The
+PostgreSQL content digest is computed on the server and brings back one string per table, so
+it holds nothing here and needs no bound.
 """
+
+
+class ContentDigestRefused(Exception):
+    """A table the content digest would have to hold whole, longer than the row budget.
+
+    Not a ``BackendRefused``, and deliberately: a refusal from the backend during the fixture
+    measurement is recorded and the run goes on with every question failing on its own line,
+    which is right for a server that will not answer and wrong for this. There is no question
+    to attach it to, the operator asked for a digest that cannot be taken, and the default
+    digest can still be taken over the same tables, so the run stops and says so.
+    """
+
+    def __init__(self, detail: str) -> None:
+        self.detail = detail
+        super().__init__(detail)
 
 
 def refuse_a_result_past_the_row_budget(rows: int, budget: int) -> None:
@@ -504,6 +527,7 @@ __all__ = [
     "ROW_BUDGET",
     "Backend",
     "BackendRefused",
+    "ContentDigestRefused",
     "PlannerStatistics",
     "ReadBackDrift",
     "ShuffledCopies",

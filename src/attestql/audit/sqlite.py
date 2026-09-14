@@ -72,7 +72,7 @@ import sqlite3
 import tempfile
 import time
 import weakref
-from collections.abc import Callable, Generator, Iterable, Mapping, Sequence
+from collections.abc import Callable, Generator, Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager, suppress
 from decimal import Decimal
 from pathlib import Path
@@ -83,6 +83,7 @@ from attestql.audit.backend import (
     READ_THROUGH_PRIVATE_COPY,
     ROW_BUDGET,
     BackendRefused,
+    ContentDigestRefused,
     PlannerStatistics,
     ReadBackDrift,
     ShuffledCopies,
@@ -178,6 +179,14 @@ this module stopped is told from one the file refused.
 Every other error is the engine's own answer about the statement and keeps its own message,
 however long the statement had been running when it arrived: a clock that has passed the
 deadline does not turn a missing table into a slow one."""
+
+READ_PAGE_ROWS = 10_000
+"""How many rows the content digest asks the driver for at a time.
+
+One page rather than the whole table, so a table longer than the row budget is refused while
+about a page of it is held instead of after all of it has been. The number is a page and not
+a bound: it decides how often this asks the driver for more, and nothing a record states.
+"""
 
 PROGRESS_INSTRUCTIONS = 1000
 """How often the statement timeout is checked, in SQLite virtual-machine instructions.
@@ -736,17 +745,61 @@ class SqliteBackend:
         the order they are stored in: the shuffled copies of a later probe hold the same
         rows in another physical order and digest the same.
         """
-        digests: dict[str, str] = {}
-        for name in self._measured(tables):
-            rows = self._all(
-                _sql("SELECT * FROM {schema}.{table}", **_over(name)), step="content_digests"
-            )
-            running = hashlib.sha256()
-            for rendered in sorted(_rendered_row(row) for row in rows):
-                running.update(rendered)
-                running.update(b"\n")
-            digests[name.text] = f"sha256:{running.hexdigest()}"
-        return digests
+        return {name.text: self._content_digest(name) for name in self._measured(tables)}
+
+    def _content_digest(self, name: TableName) -> str:
+        """One table's digest, read a page at a time and refused past the row budget.
+
+        The rows are read in chunks and rendered as they arrive, so what this holds while it
+        finds out how long a table is stays the rendered rows plus one chunk rather than the
+        whole table twice. Past the budget the run stops: this read is the other place a whole
+        relation reaches the process, and the digest that reaches it is the one the operator
+        asked for with ``--fixture-digest full``, so it is answered rather than done anyway.
+        """
+        statement = _sql("SELECT * FROM {schema}.{table}", **_over(name))
+        rendered: list[bytes] = []
+        for row in self._pages(statement, step="content_digests"):
+            rendered.append(_rendered_row(row))
+            if len(rendered) > ROW_BUDGET:
+                raise ContentDigestRefused(
+                    f"{name.text} holds {self._counted(name)} rows, past the {ROW_BUDGET} this "
+                    f"tool will read into one content digest. The digest of "
+                    f"`--fixture-digest full` renders every row of every table a gold names, "
+                    f"which is the whole of the data in this process at once; the default "
+                    f"digest is the schema and the exact row counts and reads none of them."
+                )
+        running = hashlib.sha256()
+        for line in sorted(rendered):
+            running.update(line)
+            running.update(b"\n")
+        return f"sha256:{running.hexdigest()}"
+
+    def _counted(self, name: TableName) -> int:
+        """That table's exact length, asked for once and only to name it in a refusal."""
+        return int(
+            self._one(
+                _sql("SELECT count(*) FROM {schema}.{table}", **_over(name)), step="content_digests"
+            )[0]
+        )
+
+    def _pages(self, statement: str, *, step: str) -> Iterator[tuple[Any, ...]]:
+        """Every row of one question, a page at a time rather than in one list."""
+        try:
+            cursor = self._connection.execute(statement)
+        except sqlite3.Error as failed:
+            raise BackendRefused(step, str(failed).strip()) from failed
+        try:
+            while True:
+                try:
+                    page = cursor.fetchmany(READ_PAGE_ROWS)
+                except sqlite3.Error as failed:
+                    raise BackendRefused(step, str(failed).strip()) from failed
+                if not page:
+                    return
+                yield from page
+        finally:
+            with suppress(sqlite3.Error):
+                cursor.close()
 
     def content_signal(self, tables: Sequence[TableName]) -> Mapping[str, str]:
         """What moves when the file moves: its size, its mtime, and its two version counters.
