@@ -38,3 +38,42 @@ jobs:
       - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
       - run: uv sync --locked
       - run: just check
+
+  wheel:
+    # `release.yml` already builds the wheel, installs it and runs the demo out of it, but only on
+    # a tag: a wheel that left a template or a data file behind is found there with the version
+    # already cut, and the fix costs another tag. The same check belongs on every push, where a
+    # commit is what gets fixed. It runs on both supported versions rather than on the one the
+    # release builds with, because one pure-Python wheel serves both and they do not resolve the
+    # same dependency tree.
+    #
+    # `just check` cannot see any of this. It runs against `src/`, with every file where the
+    # repository put it; what a wheel holds is the build backend's decision, and the environment
+    # below holds the wheel and its dependencies and nothing else, so an import or a data file
+    # that only works from a checkout fails here.
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python }}
+      - run: uv build
+      - name: The wheel installs into an environment holding nothing else
+        run: |
+          uv venv --python "${{ matrix.python }}" "$RUNNER_TEMP/wheel"
+          uv pip install --python "$RUNNER_TEMP/wheel/bin/python" --no-cache dist/*.whl
+      - name: The installed command states its version and runs the demo
+        # The demo exits 1 over its own sandbox because three of its six golds disagree with
+        # their corrections, which is the finding and not an error, so the status is asserted
+        # rather than left to end the step: 0 would redden every run and a dropped status would
+        # pass a demo that had crashed.
+        run: |
+          "$RUNNER_TEMP/wheel/bin/attestql" --version
+          demo_status=0
+          "$RUNNER_TEMP/wheel/bin/attestql" demo --out "$RUNNER_TEMP/demo" || demo_status=$?
+          test "$demo_status" -eq 1
