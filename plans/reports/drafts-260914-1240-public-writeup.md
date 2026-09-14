@@ -77,9 +77,10 @@ Python 3.11+, Apache-2.0, every number in the README has an owning artifact and 
 
 ## Before sending, on the day
 
-- Release 0.4.0 exists on PyPI and the site's 121 runs are made again with it; the numbers above
-  are re-read from the claims register at that commit and changed here if any moved.
-- `CITATION.cff` names 0.4.0 and its release date.
+- Release 0.4.0 exists on PyPI and the site's 121 runs are made again with it: done 2026-09-14
+  (register rows A54 and N8). The numbers above are measurement rows, A17, A25, A35, A36 and A53,
+  which the refresh did not touch, and they were re-read against the register the same day.
+- `CITATION.cff` names 0.4.0 and 2026-09-14: done in the release commit `b574bdd`.
 - The README's first screen leads with the two commands (the review's step 3), so a reader from
   the post meets what the post promised.
 - Re-read U5 to U7 for replies (the date set was 2026-09-21); if a maintainer answered, the note in

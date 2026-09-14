@@ -71,25 +71,32 @@ def test_the_notes_refuse_a_manifest_that_is_not_json(tmp_path: Path) -> None:
     assert notes.main([str(path), "v0.0.0"]) == 2
 
 
-def test_the_notes_state_what_moved_in_the_bytes_of_a_record() -> None:
+def test_the_notes_state_what_moved_in_the_bytes_of_a_record(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """A reader comparing two records of one question has to be able to explain the diff.
 
     The tool changes that move those bytes are named in the notes published with the
-    archives, because the archives are where the records are.
+    archives, because the archives are where the records are. The tuple is empty between
+    releases, so the entries are supplied here: what is tested is that every entry the
+    release states reaches the notes under the heading, whatever the entries are.
     """
+    moved = (
+        "A PostgreSQL record states one more setting than it did.",
+        "A SQLite record writes one key in another position.",
+    )
+    monkeypatch.setattr(notes, "RECORD_BYTES_MOVED", moved)
+
     written = notes.render(
         {"tag": "v0.3.2", "assets": [{"name": "a.tar.gz", "bytes": 1, "directories": 1}]},
         "v0.3.2",
     )
 
-    assert notes.RECORD_BYTES_MOVED, "this release moves them"
     assert notes.RECORD_BYTES_HEADING in written
-    for moved in notes.RECORD_BYTES_MOVED:
-        assert moved in written
-    path = next(moved for moved in notes.RECORD_BYTES_MOVED if "search_path" in moved)
-    assert "a line in a new position" in path, (
-        "search_path is written where the envelope sets it and no longer where the session "
-        "reported it, so the key moves in the object and a diff shows a moved line"
+    for sentence in moved:
+        assert f"- {sentence}" in written
+    assert written.index(notes.RECORD_BYTES_HEADING) < written.index(moved[0]), (
+        "the heading comes before what it heads"
     )
 
 

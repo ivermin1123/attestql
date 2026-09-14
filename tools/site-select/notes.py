@@ -23,22 +23,7 @@ from typing import Any, cast
 
 RECORD_BYTES_HEADING = "What moved in the bytes of a record since the last release"
 
-RECORD_BYTES_MOVED: tuple[str, ...] = (
-    "A PostgreSQL record's session settings block states the `search_path` its own statement "
-    "ran under rather than the one the session was started with, because the envelope pins "
-    "it now: every execution resolves an unqualified name against `public`, which is the "
-    "schema the fixture digest and the row counts beside it were always about. A run made "
-    'from a session holding the usual `"$user", public` therefore records `public` where '
-    "it used to record that. The key moves as well as the value: `search_path` is written "
-    "where the envelope sets it rather than where the session reported it, so a reader "
-    "diffing two records of one question sees a line in a new position and not only a "
-    "changed one.",
-    "A SQLite record's session settings block holds a tenth setting, `automatic_index`. The "
-    "shuffle probe's plan variant turns that pragma off and gives it back, so the value in "
-    "force over a statement is now stated rather than assumed to be the build's default. A "
-    "SQLite record of the same question made before and after this release differs by those "
-    "bytes and by nothing else.",
-)
+RECORD_BYTES_MOVED: tuple[str, ...] = ()
 """Every change in this release that moves the bytes of a record of the same question.
 
 A record is what a replay is checked against, so two records of one question that differ

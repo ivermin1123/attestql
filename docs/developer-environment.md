@@ -208,7 +208,8 @@ release the rule above describes and is where the rule starts rather than at a t
 The published tags are left as they are: a version number is a reference other people hold, and
 renaming one to tidy it would move something already in use. This paragraph is the correction.
 
-Phases 4 and 5 of the review findings carry `feat` commits, so the next release is **0.4.0**.
+Phases 4 to 6 of the review findings carry `feat` commits, so the release after 0.3.1 was
+**0.4.0**, tagged 2026-09-14 at `b574bdd`.
 
 **Which tags get a GitHub release.** Every tag that publishes a version to PyPI. The workflow
 makes none: it publishes to PyPI and stops, so the release page is made by hand at the tag, and
