@@ -10,6 +10,10 @@ release date are filled in when 0.4.0 exists. Three pieces, in the order the rev
 2026-09-12 proposed: two direct notes to the people whose own work the numbers touch, then one
 public post.
 
+On hold since 2026-09-15 by the owner's decision: none of the three has been sent and nothing
+was posted. The state of the project at that moment is `handoff-260915-0953-state-at-pause.md`,
+and the list at the end of this report runs again on the day one of them goes out.
+
 ## 1. To the group behind the 52.8 % measurement
 
 Where: a new issue on `uiuc-kang-lab/text_to_sql_benchmarks`, the repository of "Pervasive
